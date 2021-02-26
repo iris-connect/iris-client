@@ -1,0 +1,35 @@
+########################################################
+# provides a Postgresql database and a Pgadmin
+# DB: login = postgres:postgres; hostname = postgres; volume = psqldata_iris
+# Pgadmin: login = postgres@healthIMIS.de:postgres; port = 5555
+########################################################
+version: '3'
+services:
+  postgres:
+    image: postgres
+    hostname: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MULTIPLE_DATABASES: iris_public,iris_hd
+      #POSTGRES_DB: iris
+    volumes:
+      - psqldata_iris:/var/lib/postgresql/data
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - 5555:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@healthIMIS.de
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    restart: unless-stopped
+
+volumes:
+  psqldata_iris: 
