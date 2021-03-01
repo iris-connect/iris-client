@@ -75,7 +75,7 @@ public class DataRequestHdController {
 		requests.save(dataRequest);
 
 		log.debug(
-			"Request - PUT hd client + saved: {} (Checkcodes: {}, {} and {})",
+			"Request - PUT from hd client + saved: {} (Checkcodes: {}, {} and {})",
 			dataRequest.getId().toString(),
 			dataRequest.getCheckCodeName(),
 			dataRequest.getCheckCodeDayOfBirth(),

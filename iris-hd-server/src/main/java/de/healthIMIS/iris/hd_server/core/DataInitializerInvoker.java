@@ -31,7 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@Profile("!prod")
+@Profile({
+	"psql_compose_db",
+	"h2_db" })
 @Order(100)
 class DataInitializerInvoker implements ApplicationRunner {
 

@@ -14,25 +14,36 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server.core;
 
-import java.net.InetAddress;
+import java.time.LocalDateTime;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-/**
- * @author Jens Kutzsche
- *
- */
-@ConstructorBinding
-@RequiredArgsConstructor
-@ConfigurationProperties("iris")
+@Entity
+@Table(name = "sync_times")
+@EqualsAndHashCode(of = "dataType")
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @Getter
-public class IrisHdServerProperties {
+public class SyncTimes {
 
-	private final @NonNull InetAddress publicServerAddress;
-	private final @NonNull Integer publicServerPort;
+	@Id
+	@Enumerated(EnumType.STRING)
+	private DataTypes dataType;
+	private LocalDateTime lastSync;
+
+	public enum DataTypes {
+		Requests,
+		Submissions
+	}
 }

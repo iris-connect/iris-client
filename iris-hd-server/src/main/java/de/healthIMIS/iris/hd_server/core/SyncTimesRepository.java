@@ -14,25 +14,9 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server.core;
 
-import java.net.InetAddress;
+import org.springframework.data.repository.CrudRepository;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
+import de.healthIMIS.iris.hd_server.core.SyncTimes.DataTypes;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-
-/**
- * @author Jens Kutzsche
- *
- */
-@ConstructorBinding
-@RequiredArgsConstructor
-@ConfigurationProperties("iris")
-@Getter
-public class IrisHdServerProperties {
-
-	private final @NonNull InetAddress publicServerAddress;
-	private final @NonNull Integer publicServerPort;
+public interface SyncTimesRepository extends CrudRepository<SyncTimes, DataTypes> {
 }

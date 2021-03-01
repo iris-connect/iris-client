@@ -14,6 +14,10 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
@@ -21,6 +25,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
@@ -37,6 +42,9 @@ public class IrisHdServerApplication {
 		SpringApplication.run(IrisHdServerApplication.class, args);
 	}
 
+	@Autowired
+	Environment env;
+
 	@Bean
 	public RestTemplate getRestTemplate(RestTemplateBuilder builder) {
 		return builder.build();
@@ -45,8 +53,14 @@ public class IrisHdServerApplication {
 	@Bean
 	FlywayMigrationStrategy getFlywayMigrationStrategy() {
 
-		if (log.isDebugEnabled()) {
-			return flyway -> {
+		return flyway -> {
+
+			var profiles_clean = List.of("psql_compose_db");
+			if (Arrays.stream(env.getActiveProfiles()).anyMatch(profiles_clean::contains)) {
+				flyway.clean();
+			}
+
+			if (log.isDebugEnabled()) {
 
 				var results = flyway.validateWithResult();
 
@@ -59,12 +73,10 @@ public class IrisHdServerApplication {
 							? " | ErrorCode: " + errorDetails.errorCode + " | ErrorMessage: " + errorDetails.errorMessage
 							: "");
 				});
+			}
 
-				flyway.migrate();
-			};
-		} else {
-			return null;
-		}
+			flyway.migrate();
+		};
 	}
 
 	@Configuration

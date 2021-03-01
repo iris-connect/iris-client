@@ -53,7 +53,9 @@ public class DataSubmissionHdController {
 		var dtos =
 			StreamSupport.stream(dataSubmissions.spliterator(), false).map(it -> DataSubmissionClientOutputDto.of(it)).collect(Collectors.toList());
 
-		log.debug("Submission - GET internal: {}", dtos.stream().map(DataSubmissionClientOutputDto::getRequestId).collect(Collectors.joining(", ")));
+		log.debug(
+			"Submission - GET from hd client: {}",
+			dtos.stream().map(DataSubmissionClientOutputDto::getRequestId).collect(Collectors.joining(", ")));
 
 		return dtos;
 	}

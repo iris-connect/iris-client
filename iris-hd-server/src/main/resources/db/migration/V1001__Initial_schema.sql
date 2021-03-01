@@ -38,6 +38,12 @@ CREATE TABLE data_submission (
 	CONSTRAINT submission_pkey PRIMARY KEY (submission_id)
 );
 
+CREATE TABLE sync_times (
+    data_type varchar(50) NOT NULL,    
+    last_sync timestamp NOT NULL,
+    CONSTRAINT sync_times_pkey PRIMARY KEY (data_type)
+);
+
 --CREATE INDEX data_request_ref_id ON data_request (ref_id);
 CREATE INDEX data_submission_department_id ON data_submission (department_id);
 CREATE INDEX data_submission_request_id ON data_submission (request_id);
