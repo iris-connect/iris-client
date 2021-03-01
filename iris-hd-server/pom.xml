@@ -136,19 +136,13 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>dockerfile-maven-plugin</artifactId>
-				<version>1.4.13</version>
-				<configuration>
-					<repository>
-						${docker.image.prefix}/${project.artifactId}
-					</repository>
-					<buildArgs>
-						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
-					</buildArgs>
+					<image>
+						<name>${docker.image.prefix}/${project.artifactId}:${project.version}</name>
+						<env>
+							<!-- embeds environment variables into an image: https://github.com/paketo-buildpacks/environment-variables -->
+							<BPE_SPRING_PROFILES_ACTIVE>docker</BPE_SPRING_PROFILES_ACTIVE>
+						</env>
+					</image>
 				</configuration>
 			</plugin>
 		</plugins>

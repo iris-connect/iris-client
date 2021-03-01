@@ -9,7 +9,6 @@ version: '3'
 services:
   postgres:
     image: postgres
-    hostname: postgres
     ports:
       - 5432:5432
     environment:
@@ -33,23 +32,22 @@ services:
       PGADMIN_DEFAULT_PASSWORD: postgres
     restart: unless-stopped
 
-  iris_public:
-    image: de.health_imis/iris-public-server
-    hostname: iris_public
+  iris-public:
+    image: de.health_imis/iris-public-server:0.0.1-SNAPSHOT
     depends_on:
       - postgres
     ports:
       - 8880:8080
     restart: unless-stopped
 
-#  iris_hd:
-#    image: de.health_imis/iris-hd-server
-#    depends_on:
-#      - postgres
-#      - iris_public
-#    ports:
-#      - 8881:8080
-#    restart: unless-stopped
+  iris-hd:
+    image: de.health_imis/iris-hd-server:0.0.1-SNAPSHOT
+    depends_on:
+      - postgres
+      - iris-public
+    ports:
+      - 8881:8080
+    restart: unless-stopped
     
 volumes:
   psqldata_iris: 
