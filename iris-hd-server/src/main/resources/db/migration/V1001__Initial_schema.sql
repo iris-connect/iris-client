@@ -26,7 +26,6 @@ CREATE TABLE data_request_feature (
 
 CREATE TABLE data_submission (
 	submission_id uuid NOT NULL,
-	submission_type varchar(31),
 	request_id uuid NOT NULL,
 	department_id uuid NOT NULL,
 	salt varchar(50) NOT NULL,

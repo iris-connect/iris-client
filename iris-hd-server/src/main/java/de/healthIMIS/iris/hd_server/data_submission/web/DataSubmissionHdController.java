@@ -16,7 +16,6 @@ package de.healthIMIS.iris.hd_server.data_submission.web;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,8 +49,7 @@ public class DataSubmissionHdController {
 
 		submissions.deleteAll(dataSubmissions.toList());
 
-		var dtos =
-			StreamSupport.stream(dataSubmissions.spliterator(), false).map(it -> DataSubmissionClientOutputDto.of(it)).collect(Collectors.toList());
+		var dtos = dataSubmissions.stream().map(it -> DataSubmissionClientOutputDto.of(it)).collect(Collectors.toList());
 
 		log.debug(
 			"Submission - GET from hd client: {}",
