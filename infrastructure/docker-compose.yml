@@ -9,11 +9,12 @@ services:
     image: postgres
     hostname: postgres
     ports:
-      - 5432:5432
+      # to avoid conflicts with the DB for Sormas
+      - 5433:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_MULTIPLE_DATABASES: iris_public,iris_hd
+      POSTGRES_MULTIPLE_DATABASES: iris_public,iris_hd,iris_client
       #POSTGRES_DB: iris
     volumes:
       - psqldata_iris:/var/lib/postgresql/data

@@ -10,11 +10,11 @@ services:
   postgres:
     image: postgres
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_MULTIPLE_DATABASES: iris_public,iris_hd
+      POSTGRES_MULTIPLE_DATABASES: iris_public,iris_hd,iris_client
       #POSTGRES_DB: iris
     volumes:
       - psqldata_iris:/var/lib/postgresql/data
@@ -37,16 +37,26 @@ services:
     depends_on:
       - postgres
     ports:
-      - 8880:8080
+      - 8843:8443
     restart: unless-stopped
 
-  iris-hd:
-    image: de.health_imis/iris-hd-server:0.0.1-SNAPSHOT
+#  iris-hd:
+#    image: de.health_imis/iris-hd-server:0.0.1-SNAPSHOT
+#    depends_on:
+#      - postgres
+#      - iris-public
+#    ports:
+#      - 8881:8080
+#    restart: unless-stopped
+
+  iris-client:
+    image: de.health_imis/iris-client-sormas-sidecar:0.0.1-SNAPSHOT
     depends_on:
       - postgres
       - iris-public
-    ports:
-      - 8881:8080
+    environment:
+      - IRIS_SORMAS_USER=IRIS
+      - IRIS_SORMAS_PASSWORD=
     restart: unless-stopped
     
 volumes:
