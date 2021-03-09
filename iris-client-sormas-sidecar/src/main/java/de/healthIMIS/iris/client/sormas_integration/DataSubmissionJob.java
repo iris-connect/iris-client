@@ -15,6 +15,7 @@
 package de.healthIMIS.iris.client.sormas_integration;
 
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -34,6 +35,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
@@ -83,6 +85,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Profile("!inttest")
 class DataSubmissionJob {
+
+	static final String ENCRYPTION_ALGORITHM = "AES";
+	static final String KEY_ENCRYPTION_ALGORITHM = "RSA";
+	static final String TRANSFORMATION = "RSA/ECB/PKCS1Padding";
 
 	private final @NonNull SyncTimesRepository syncTimes;
 	private final @NonNull CaseControllerApi sormasCaseApi;
@@ -183,7 +189,9 @@ class DataSubmissionJob {
 
 			ContactPersonList contactList;
 			try {
-				contactList = mapper.readValue(decryptContent(it.getEncryptedData(), it.getKeyReferenz()), ContactPersonList.class);
+
+				var content = decryptContent(it.getEncryptedData(), it.getKeyReferenz(), it.getSecret());
+				contactList = mapper.readValue(content, ContactPersonList.class);
 			} catch (JsonProcessingException
 				| InvalidKeyException
 				| UnrecoverableKeyException
@@ -242,24 +250,38 @@ class DataSubmissionJob {
 		});
 	}
 
-	private String decryptContent(String content, String keyReferenz)
+	private String decryptContent(String content, String keyReferenz, String encryptedSecretKeyString)
 		throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException,
 		BadPaddingException, UnrecoverableKeyException, KeyStoreException {
 
 		var encryptedArray = Base64.getDecoder().decode(content);
+		var encryptedSecretKey = Base64.getDecoder().decode(encryptedSecretKeyString);
 
 		var privateKey = keyStore.getKey(keyReferenz, null);
 
-		var cipher = Cipher.getInstance("RSA");
-		cipher.init(Cipher.DECRYPT_MODE, privateKey);
+		var secretKey = decryptSecretKey(encryptedSecretKey, privateKey);
 
-		byte[] decryptedArray = cipher.doFinal(encryptedArray);
-		String decryptedString = new String(decryptedArray);
-		System.out.println("Info Decrypt");
-		System.out.println("Decrypted Array length: " + decryptedArray.length);
-		System.out.println("Decrypted String:       " + decryptedString);
+		return decryptText(secretKey, encryptedArray);
+	}
 
-		return decryptedString;
+	private byte[] decryptSecretKey(byte[] encryptedSecretKey, Key privateKey)
+		throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+
+		var cipher = Cipher.getInstance(TRANSFORMATION);
+		cipher.init(Cipher.PRIVATE_KEY, privateKey);
+
+		return cipher.doFinal(encryptedSecretKey);
+	}
+
+	private String decryptText(byte[] secretKey, byte[] encryptedText)
+		throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+
+		var originalKey = new SecretKeySpec(secretKey, 0, secretKey.length, ENCRYPTION_ALGORITHM);
+
+		var cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
+		cipher.init(Cipher.DECRYPT_MODE, originalKey);
+
+		return new String(cipher.doFinal(encryptedText));
 	}
 
 	private void createTask(DataRequest request, ContactDto contact) {
@@ -326,7 +348,7 @@ class DataSubmissionJob {
 
 		private final UUID departmentId;
 
-		private final String salt;
+		private final String secret;
 
 		private final String keyReferenz;
 
