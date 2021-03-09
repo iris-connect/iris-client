@@ -336,7 +336,7 @@ class DataSubmissionJob {
 	}
 
 	public enum Feature {
-		Contact,
+		Contacts,
 		Events,
 		Guests
 	}

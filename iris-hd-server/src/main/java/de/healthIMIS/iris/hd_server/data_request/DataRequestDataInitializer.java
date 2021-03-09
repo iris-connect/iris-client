@@ -72,7 +72,7 @@ public class DataRequestDataInitializer implements DataInitializer {
 				null,
 				"IRIS User ID",
 				"User ID",
-				EnumSet.of(Feature.Contact),
+				EnumSet.of(Feature.Contacts),
 				Status.Open));
 
 		list.add(
@@ -87,7 +87,7 @@ public class DataRequestDataInitializer implements DataInitializer {
 				Instant.now().minus(2, ChronoUnit.DAYS),
 				"IRIS User ID",
 				"User ID",
-				EnumSet.of(Feature.Contact, Feature.Events),
+				EnumSet.of(Feature.Contacts, Feature.Events),
 				Status.Open));
 
 		list.add(
@@ -102,7 +102,7 @@ public class DataRequestDataInitializer implements DataInitializer {
 				Instant.now().minus(2, ChronoUnit.DAYS),
 				"IRIS User ID",
 				"User ID",
-				EnumSet.of(Feature.Contact),
+				EnumSet.of(Feature.Contacts),
 				Status.Open));
 
 		requests.saveAll(list);

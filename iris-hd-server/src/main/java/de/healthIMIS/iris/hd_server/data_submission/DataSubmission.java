@@ -100,7 +100,7 @@ public class DataSubmission extends Aggregate<DataSubmission, DataSubmission.Dat
 	}
 
 	public enum Feature {
-		Contact,
+		Contacts,
 		Events,
 		Guests
 	}

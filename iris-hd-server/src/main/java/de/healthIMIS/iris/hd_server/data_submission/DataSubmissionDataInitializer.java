@@ -55,7 +55,7 @@ class DataSubmissionDataInitializer implements DataInitializer {
 				"salt",
 				"key",
 				"DATA OF CONTACTS",
-				Feature.Contact));
+				Feature.Contacts));
 
 		list.add(
 			new DataSubmission(
