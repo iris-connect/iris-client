@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>IRIS</title>
+<link rel="stylesheet" th:href="@{/styles.css}" />
+</head>
+
+<body>
+	<h1>Willkommen bei IRIS Webanwendung</h1>
+	<img th:src="@{/images/iris-logo.png}" width="250" />
+
+	<form method="POST" th:action="@{/selection}" th:object="${selection}">
+		<div>Datenanfrage von 
+			<span th:text="${hd}">HD</span>
+		</div>
+	
+		<h3>nächsten Möglichkeiten:</h3>
+		<div th:each="option : ${options}">
+			<input name="option" type="checkbox" th:value="${option}" /> <span
+				th:if="${option == 'Contacts'}">Kontakte übermitteln<br /></span> <span
+				th:if="${option == 'Events'}">Ereignisse übermitteln<br /></span> <span
+				th:if="${option == 'Guests'}">Gäste/Teilnehmer übermitteln<br /></span>
+		</div>
+
+		<input type="hidden" th:field="*{code}" id="code" />
+
+		<button>Auswahl bestätigen</button>
+	</form>
+</body>
+</html>
