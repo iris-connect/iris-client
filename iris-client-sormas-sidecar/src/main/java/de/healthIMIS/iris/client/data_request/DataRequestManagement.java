@@ -20,7 +20,9 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.zip.CRC32;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -105,6 +107,7 @@ public class DataRequestManagement {
 
 		var dataRequest = new DataRequest(
 			refId,
+			findValidTeleCode(),
 			checkCode1.getOrNull(),
 			checkCode2.getOrNull(),
 			determineRandomCheckCode(),
@@ -116,7 +119,7 @@ public class DataRequestManagement {
 
 		log.trace("Request job - PUT to server is sent: {}", dataRequest.getId().toString());
 
-		var dto = DataRequestDto.of(dataRequest, clientProperties.getClientId());
+		var dto = DataRequestDto.of(dataRequest, clientProperties.getClientId(), clientProperties.getRkiCode());
 
 		rest.put(
 			"https://{address}:{port}/hd/data-requests/{id}",
@@ -136,10 +139,63 @@ public class DataRequestManagement {
 		return Optional.ofNullable(devProperties).map(IrisClientDevProperties::getRandomCheckcode).orElseGet(() -> randomAlphabetic(10));
 	}
 
+	private String findValidTeleCode() {
+
+		var teleCode = generateTeleCode();
+
+		return requests.isTeleCodeAvailable(teleCode) ? teleCode : findValidTeleCode();
+	}
+
+	private String generateTeleCode() {
+
+		var checkCode = RandomStringUtils.random(
+			9,
+			'A',
+			'B',
+			'C',
+			'D',
+			'E',
+			'F',
+			'G',
+			'H',
+			'K',
+			'M',
+			'N',
+			'P',
+			'Q',
+			'R',
+			'S',
+			'T',
+			'U',
+			'V',
+			'W',
+			'X',
+			'Y',
+			'Z',
+			'2',
+			'3',
+			'4',
+			'5',
+			'6',
+			'7',
+			'8',
+			'9');
+
+		var bytes = checkCode.getBytes();
+		var crc32 = new CRC32();
+		crc32.update(bytes, 0, bytes.length);
+		var sum = crc32.getValue() % 16;
+
+		return checkCode + Long.toHexString(sum).toUpperCase();
+	}
+
 	@Data
 	static class DataRequestDto {
 
 		private final String departmentId;
+		private final String rkiCode;
+
+		private final String teleCode;
 
 		private final String checkCodeName;
 		private final String checkCodeDayOfBirth;
@@ -151,10 +207,12 @@ public class DataRequestManagement {
 		private final Set<Feature> features;
 		private final Status status;
 
-		static DataRequestDto of(DataRequest request, UUID departmentId) {
+		static DataRequestDto of(DataRequest request, UUID departmentId, String rkiCode) {
 
 			return new DataRequestDto(
 				departmentId.toString(),
+				rkiCode,
+				request.getTeleCode(),
 				request.getCheckCodeOne(),
 				request.getCheckCodeTwo(),
 				request.getCheckCodeRandom(),

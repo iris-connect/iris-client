@@ -3,6 +3,7 @@ CREATE TABLE data_request (
 	ref_id varchar(50) NOT NULL,
 	iris_user_id varchar(50) NOT NULL,
 	sormas_user_id varchar(50) NOT NULL,
+	tele_code varchar(10) NOT NULL,
 	check_code_one varchar(50) NULL,
 	check_code_two varchar(50) NULL,
 	check_code_random varchar(50) NULL,
@@ -24,6 +25,7 @@ CREATE TABLE data_request_feature (
 );
 
 CREATE INDEX data_request_ref_id ON data_request (ref_id);
+CREATE INDEX data_request_tele_code ON data_request (tele_code);
 
 CREATE TABLE sync_times (
     data_type varchar(50) NOT NULL,    

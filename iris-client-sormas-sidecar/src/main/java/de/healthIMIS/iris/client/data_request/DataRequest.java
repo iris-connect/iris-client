@@ -54,6 +54,8 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	private String irisUserId;
 	private String sormasUserId;
 
+	private String teleCode;
+
 	private String checkCodeOne;
 	private String checkCodeTwo;
 	private String checkCodeRandom;
@@ -73,6 +75,7 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 
 	public DataRequest(
 		SormasRefId refId,
+		String teleCode,
 		String checkCodeOne,
 		String checkCodeTwo,
 		String checkCodeRandom,
@@ -86,6 +89,7 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 
 		this.id = DataRequestIdentifier.of(UUID.randomUUID());
 		this.refId = refId;
+		this.teleCode = teleCode;
 		this.checkCodeOne = checkCodeOne;
 		this.checkCodeTwo = checkCodeTwo;
 		this.checkCodeRandom = checkCodeRandom;

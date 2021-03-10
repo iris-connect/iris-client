@@ -17,6 +17,7 @@ package de.healthIMIS.iris.client.sormas_integration;
 import static java.time.format.DateTimeFormatter.ofLocalizedDateTime;
 import static java.time.format.FormatStyle.MEDIUM;
 import static org.apache.commons.lang3.StringUtils.defaultString;
+import static org.apache.commons.lang3.StringUtils.joinWith;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -148,10 +149,10 @@ class DataRequestJob {
 
 				task.setStatusChangeDate(now);
 				task.setTaskStatus(TaskStatus.DONE);
-				task.setCreatorComment(defaultString(task.getCreatorComment()) + irisMessage);
+				task.setAssigneeReply(joinWith("\n\n", task.getAssigneeReply(), irisMessage).strip());
 				taskControllerApi.postTasks(List.of(task));
 
-				caseDto.setAdditionalDetails(defaultString(caseDto.getAdditionalDetails()) + irisMessage);
+				caseDto.setAdditionalDetails(joinWith("\n\n", caseDto.getAdditionalDetails(), irisMessage).strip());
 				sormasCaseApi.postCases(List.of(caseDto));
 
 				if (StringUtils.isNoneBlank(person.getEmailAddress())) {
@@ -195,9 +196,10 @@ class DataRequestJob {
 
 	private String createNoteTextForIrisRequest(DataRequest dataRequest, Instant now) {
 		return String.format(
-			"\nKontaktnachverfolgung über IRIS gestartet am %s\nIRIS-Code: %s\nPrüfcode: %s",
+			"Kontaktnachverfolgung über IRIS gestartet am %s\nIRIS-Code: %s\nTelecode: %s\nPrüfcode: %s",
 			now.atZone(ZoneId.systemDefault()).format(ofLocalizedDateTime(MEDIUM)),
 			dataRequest.getId(),
+			dataRequest.getTeleCode(),
 			defaultString(dataRequest.getCheckCodeRandom()));
 	}
 

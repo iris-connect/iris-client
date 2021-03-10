@@ -187,6 +187,8 @@ class DataSubmissionJob {
 
 		Arrays.stream(dtos).forEach(it -> {
 
+			var request = dataRequests.findById(it.getRequestId()).get();
+
 			ContactPersonList contactList;
 			try {
 
@@ -208,8 +210,6 @@ class DataSubmissionJob {
 
 			var contacts = contactList.getContactPersons();
 			for (ContactPerson contactPerson : contacts) {
-
-				var request = dataRequests.findById(it.getRequestId()).get();
 
 				var person = new PersonDto();
 				person.setUuid(SormasRefId.of().toString());

@@ -37,6 +37,7 @@ public class IrisClientProperties {
 
 	private final @NonNull UUID clientId;
 	private final @NonNull String departmentName;
+	private final @NonNull String rkiCode;
 
 	private Resource keyStore;
 	private String keyStorePassword = RandomStringUtils.randomAlphabetic(10);
