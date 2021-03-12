@@ -152,7 +152,6 @@ class DataRequestJob {
 				task.setAssigneeReply(joinWith("\n\n", task.getAssigneeReply(), irisMessage).strip());
 				taskControllerApi.postTasks(List.of(task));
 
-				caseDto.setAdditionalDetails(joinWith("\n\n", caseDto.getAdditionalDetails(), irisMessage).strip());
 				sormasCaseApi.postCases(List.of(caseDto));
 
 				if (StringUtils.isNoneBlank(person.getEmailAddress())) {
