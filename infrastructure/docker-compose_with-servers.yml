@@ -54,9 +54,9 @@ services:
     depends_on:
       - postgres
       - iris-public
-    environment:
-      - IRIS_SORMAS_USER=IRIS
-      - IRIS_SORMAS_PASSWORD=
+    env_file:
+      # you must use this file set the access parameters for SORMAS 
+      - sormas.env
     restart: unless-stopped
     
 volumes:
