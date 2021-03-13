@@ -14,6 +14,9 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.core;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -40,6 +43,9 @@ import org.bouncycastle.jce.X509Principal;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -110,9 +116,12 @@ class KeyGenJob {
 
 		var dto = DepartmentDto.of(properties.getDepartmentName(), keyReferenz.toString(), pub64.toString());
 
+		var headers = new HttpHeaders();
+		headers.setContentType(new MediaType(APPLICATION_JSON, UTF_8));
+
 		rest.put(
 			"https://{address}:{port}/hd/departments/{id}",
-			dto,
+			new HttpEntity<>(dto, headers),
 			connectProperties.getServerAddress().getHostName(),
 			connectProperties.getServerPort(),
 			departmentId);

@@ -14,6 +14,8 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyStore;
@@ -281,7 +283,7 @@ class DataSubmissionJob {
 		var cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
 		cipher.init(Cipher.DECRYPT_MODE, originalKey);
 
-		return new String(cipher.doFinal(encryptedText));
+		return new String(cipher.doFinal(encryptedText), UTF_8);
 	}
 
 	private void createTask(DataRequest request, ContactDto contact) {

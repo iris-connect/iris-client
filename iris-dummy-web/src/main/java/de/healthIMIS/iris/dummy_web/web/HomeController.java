@@ -1,5 +1,8 @@
 package de.healthIMIS.iris.dummy_web.web;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -27,6 +30,9 @@ import org.springframework.hateoas.client.Hop;
 import org.springframework.hateoas.client.LinkDiscoverer;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.hateoas.mediatype.hal.HalLinkDiscoverer;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -237,7 +243,10 @@ public class HomeController {
 		log.debug("\nContent of the data submission unencrypted:\n %s", content);
 		log.info("\n\n");
 
-		rest.postForObject(link.getHref(), submission, DataRequestDto.class);
+		var headers = new HttpHeaders();
+		headers.setContentType(new MediaType(APPLICATION_JSON, UTF_8));
+
+		rest.postForObject(link.getHref(), new HttpEntity<>(submission, headers), DataRequestDto.class);
 	}
 
 	/**

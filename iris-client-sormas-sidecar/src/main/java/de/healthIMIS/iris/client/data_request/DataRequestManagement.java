@@ -14,7 +14,9 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_request;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -24,6 +26,9 @@ import java.util.zip.CRC32;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -121,9 +126,12 @@ public class DataRequestManagement {
 
 		var dto = DataRequestDto.of(dataRequest, clientProperties.getClientId(), clientProperties.getRkiCode());
 
+		var headers = new HttpHeaders();
+		headers.setContentType(new MediaType(APPLICATION_JSON, UTF_8));
+
 		rest.put(
 			"https://{address}:{port}/hd/data-requests/{id}",
-			dto,
+			new HttpEntity<>(dto, headers),
 			properties.getServerAddress().getHostName(),
 			properties.getServerPort(),
 			dataRequest.getId());
