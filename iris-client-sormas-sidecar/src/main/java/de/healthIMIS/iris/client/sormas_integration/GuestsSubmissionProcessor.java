@@ -99,9 +99,9 @@ public class GuestsSubmissionProcessor extends DataSubmissionProcessor {
 
 			System.out.println(sormasPersonApi.postPersons(List.of(person)));
 			System.out.println(sormasParticipantApi.postEventParticipants(List.of(participant)));
-
-			createTask(request, request.getRefId());
 		}
+
+		createTask(request, request.getRefId());
 	}
 
 	private PersonDto createPersonDto(Guest guest) {
