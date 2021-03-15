@@ -14,27 +14,13 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
-import java.security.InvalidKeyException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.spec.InvalidKeySpecException;
 import java.time.Instant;
 import java.util.List;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.healthIMIS.iris.client.core.SormasRefId;
 import de.healthIMIS.iris.client.data_request.DataRequest;
 import de.healthIMIS.iris.client.data_submission.model.ContactPerson;
 import de.healthIMIS.iris.client.data_submission.model.ContactPersonList;
-import de.healthIMIS.iris.client.sormas_integration.DataSubmissionJob.DataSubmissionDto;
 import de.healthIMIS.sormas.client.api.ContactControllerApi;
 import de.healthIMIS.sormas.client.api.PersonControllerApi;
 import de.healthIMIS.sormas.client.api.TaskControllerApi;
@@ -47,6 +33,7 @@ import de.healthIMIS.sormas.client.model.HealthConditionsDto;
 import de.healthIMIS.sormas.client.model.PersonDto;
 import de.healthIMIS.sormas.client.model.PersonReferenceDto;
 import de.healthIMIS.sormas.client.model.TaskContext;
+import de.healthIMIS.sormas.client.model.TaskDto;
 import de.healthIMIS.sormas.client.model.TaskPriority;
 import de.healthIMIS.sormas.client.model.TaskType;
 import de.healthIMIS.sormas.client.model.UserReferenceDto;
@@ -54,48 +41,25 @@ import de.healthIMIS.sormas.client.model.UserReferenceDto;
 /**
  * @author Jens Kutzsche
  */
-public class ContactsSubmissionProcessor extends DataSubmissionProcessor {
+public class ContactsSubmissionProcessor extends DataSubmissionSubProcessor<ContactPersonList> {
 
 	private PersonControllerApi sormasPersonApi;
 	private ContactControllerApi sormasContactApi;
 
 	public ContactsSubmissionProcessor(
-		DataSubmissionDto submissionDto,
 		DataRequest request,
-		KeyStore keyStore,
-		ObjectMapper mapper,
 		TaskControllerApi taskApi,
 		PersonControllerApi sormasPersonApi,
 		ContactControllerApi sormasContactApi) {
 
-		super(submissionDto, request, keyStore, mapper, taskApi);
+		super(request, taskApi);
 
 		this.sormasPersonApi = sormasPersonApi;
 		this.sormasContactApi = sormasContactApi;
 	}
 
 	@Override
-	public void process() {
-
-		ContactPersonList contactList;
-		try {
-
-			var content = decryptContent(submissionDto.getEncryptedData(), submissionDto.getKeyReferenz(), submissionDto.getSecret());
-			contactList = mapper.readValue(content, ContactPersonList.class);
-
-		} catch (JsonProcessingException
-			| InvalidKeyException
-			| UnrecoverableKeyException
-			| NoSuchAlgorithmException
-			| NoSuchPaddingException
-			| InvalidKeySpecException
-			| IllegalBlockSizeException
-			| BadPaddingException
-			| KeyStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		}
+	public void process(ContactPersonList contactList) {
 
 		for (var contactPerson : contactList.getContactPersons()) {
 
@@ -105,7 +69,7 @@ public class ContactsSubmissionProcessor extends DataSubmissionProcessor {
 			System.out.println(sormasPersonApi.postPersons(List.of(person)));
 			System.out.println(sormasContactApi.postContacts(List.of(contact)));
 
-			createTask(request, contact);
+			createAndTransmitTask(it -> customizeTask(it, contact));
 		}
 	}
 
@@ -145,19 +109,17 @@ public class ContactsSubmissionProcessor extends DataSubmissionProcessor {
 		return contact;
 	}
 
-	private void createTask(DataRequest request, ContactDto contact) {
+	private TaskDto customizeTask(TaskDto task, ContactDto contact) {
 
-		var newTask = createTask(request);
-
-		newTask.setCreatorComment("Kontakt neu angelegt, bitte weiter bearbeiten");
-		newTask.setTaskType(TaskType.CONTACT_FOLLOW_UP);
+		task.setCreatorComment("Kontakt neu angelegt, bitte weiter bearbeiten");
+		task.setTaskType(TaskType.CONTACT_FOLLOW_UP);
 
 		var contRef = new ContactReferenceDto();
 		contRef.setUuid(contact.getUuid());
-		newTask.setContact(contRef);
-		newTask.setTaskContext(TaskContext.CONTACT);
-		newTask.setPriority(TaskPriority.NORMAL);
+		task.setContact(contRef);
+		task.setTaskContext(TaskContext.CONTACT);
+		task.setPriority(TaskPriority.NORMAL);
 
-		System.out.println(taskApi.postTasks(List.of(newTask)));
+		return task;
 	}
 }

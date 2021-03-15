@@ -162,10 +162,17 @@ class DataSubmissionJob {
 		var request = dataRequests.findById(it.getRequestId()).get();
 
 		switch (it.feature) {
-		case Contacts:
-			return new ContactsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasPersonApi, sormasContactApi);
-		case Events:
-			return new EventsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasEventApi, sormasParticipantApi, sormasPersonApi);
+		case Contacts_Events:
+			return new ContactsEventsSubmissionProcessor(
+				it,
+				request,
+				keyStore,
+				mapper,
+				sormasTaskApi,
+				sormasPersonApi,
+				sormasContactApi,
+				sormasEventApi,
+				sormasParticipantApi);
 		case Guests:
 			return new GuestsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasParticipantApi, sormasPersonApi);
 		default:
@@ -215,8 +222,7 @@ class DataSubmissionJob {
 	}
 
 	public enum Feature {
-		Contacts,
-		Events,
+		Contacts_Events,
 		Guests
 	}
 }

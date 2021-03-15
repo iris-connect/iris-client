@@ -134,8 +134,7 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	}
 
 	public enum Feature {
-		Contacts,
-		Events,
+		Contacts_Events,
 		Guests
 	}
 

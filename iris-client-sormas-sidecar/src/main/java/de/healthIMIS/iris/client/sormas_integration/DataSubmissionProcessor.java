@@ -23,7 +23,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.spec.InvalidKeySpecException;
-import java.time.ZonedDateTime;
 import java.util.Base64;
 
 import javax.crypto.BadPaddingException;
@@ -32,36 +31,67 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.healthIMIS.iris.client.core.SormasRefId;
 import de.healthIMIS.iris.client.data_request.DataRequest;
 import de.healthIMIS.iris.client.sormas_integration.DataSubmissionJob.DataSubmissionDto;
 import de.healthIMIS.sormas.client.api.TaskControllerApi;
-import de.healthIMIS.sormas.client.model.TaskDto;
-import de.healthIMIS.sormas.client.model.TaskStatus;
-import de.healthIMIS.sormas.client.model.UserReferenceDto;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author Jens Kutzsche
  */
-@RequiredArgsConstructor
 @Getter
-abstract class DataSubmissionProcessor {
+abstract class DataSubmissionProcessor<T> extends DataSubmissionSubProcessor<T> {
 
 	static final String ENCRYPTION_ALGORITHM = "AES";
 	static final String KEY_ENCRYPTION_ALGORITHM = "RSA";
 	static final String TRANSFORMATION = "RSA/ECB/PKCS1Padding";
 
-	protected final DataSubmissionDto submissionDto;
-	protected final DataRequest request;
-	protected final KeyStore keyStore;
-	protected final ObjectMapper mapper;
-	protected final TaskControllerApi taskApi;
+	private final DataSubmissionDto submissionDto;
+	private final Class<T> dtoType;
+	private final KeyStore keyStore;
+	private final ObjectMapper mapper;
 
-	abstract void process();
+	public DataSubmissionProcessor(
+		DataSubmissionDto submissionDto,
+		Class<T> dtoType,
+		DataRequest request,
+		KeyStore keyStore,
+		ObjectMapper mapper,
+		TaskControllerApi taskApi) {
+
+		super(request, taskApi);
+
+		this.submissionDto = submissionDto;
+		this.dtoType = dtoType;
+		this.keyStore = keyStore;
+		this.mapper = mapper;
+	}
+
+	void process() {
+		try {
+
+			var content = decryptContent(submissionDto.getEncryptedData(), submissionDto.getKeyReferenz(), submissionDto.getSecret());
+			var dto = mapper.readValue(content, dtoType);
+
+			process(dto);
+
+		} catch (JsonProcessingException
+			| InvalidKeyException
+			| UnrecoverableKeyException
+			| NoSuchAlgorithmException
+			| NoSuchPaddingException
+			| InvalidKeySpecException
+			| IllegalBlockSizeException
+			| BadPaddingException
+			| KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+	}
 
 	protected String decryptContent(String content, String keyReferenz, String encryptedSecretKeyString)
 		throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException,
@@ -95,26 +125,5 @@ abstract class DataSubmissionProcessor {
 		cipher.init(Cipher.DECRYPT_MODE, originalKey);
 
 		return new String(cipher.doFinal(encryptedText), UTF_8);
-	}
-
-	protected TaskDto createTask(DataRequest request) {
-		var newTask = new TaskDto();
-
-		newTask.setUuid(SormasRefId.random().toString());
-
-		var nowDate = ZonedDateTime.now().withSecond(0);
-		newTask.setDueDate(nowDate.toInstant());
-		newTask.setPerceivedStart(nowDate.plusDays(1).toInstant());
-
-		newTask.setTaskStatus(TaskStatus.PENDING);
-
-		var userRef = new UserReferenceDto();
-		userRef.setUuid(request.getSormasUserId());
-		newTask.setAssigneeUser(userRef);
-
-		userRef = new UserReferenceDto();
-		userRef.setUuid(request.getIrisUserId());
-		newTask.setCreatorUser(userRef);
-		return newTask;
 	}
 }

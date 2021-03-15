@@ -14,19 +14,9 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
-import java.security.InvalidKeyException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.healthIMIS.iris.client.core.SormasRefId;
@@ -41,6 +31,7 @@ import de.healthIMIS.sormas.client.model.EventParticipantDto;
 import de.healthIMIS.sormas.client.model.EventReferenceDto;
 import de.healthIMIS.sormas.client.model.PersonDto;
 import de.healthIMIS.sormas.client.model.TaskContext;
+import de.healthIMIS.sormas.client.model.TaskDto;
 import de.healthIMIS.sormas.client.model.TaskPriority;
 import de.healthIMIS.sormas.client.model.TaskType;
 import de.healthIMIS.sormas.client.model.UserReferenceDto;
@@ -48,7 +39,7 @@ import de.healthIMIS.sormas.client.model.UserReferenceDto;
 /**
  * @author Jens Kutzsche
  */
-public class GuestsSubmissionProcessor extends DataSubmissionProcessor {
+public class GuestsSubmissionProcessor extends DataSubmissionProcessor<GuestList> {
 
 	private EventParticipantControllerApi sormasParticipantApi;
 	private PersonControllerApi sormasPersonApi;
@@ -62,37 +53,16 @@ public class GuestsSubmissionProcessor extends DataSubmissionProcessor {
 		EventParticipantControllerApi sormasParticipantApi,
 		PersonControllerApi sormasPersonApi) {
 
-		super(submissionDto, request, keyStore, mapper, taskApi);
+		super(submissionDto, GuestList.class, request, keyStore, mapper, taskApi);
 
 		this.sormasParticipantApi = sormasParticipantApi;
 		this.sormasPersonApi = sormasPersonApi;
 	}
 
 	@Override
-	public void process() {
+	public void process(GuestList guestList) {
 
-		GuestList guestList;
-		try {
-
-			var content = decryptContent(submissionDto.getEncryptedData(), submissionDto.getKeyReferenz(), submissionDto.getSecret());
-			guestList = mapper.readValue(content, GuestList.class);
-
-		} catch (JsonProcessingException
-			| InvalidKeyException
-			| UnrecoverableKeyException
-			| NoSuchAlgorithmException
-			| NoSuchPaddingException
-			| InvalidKeySpecException
-			| IllegalBlockSizeException
-			| BadPaddingException
-			| KeyStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		}
-
-		var guests = guestList.getGuests();
-		for (var guest : guests) {
+		for (var guest : guestList.getGuests()) {
 
 			var person = createPersonDto(guest);
 			var participant = createParticipantDto(person);
@@ -101,7 +71,7 @@ public class GuestsSubmissionProcessor extends DataSubmissionProcessor {
 			System.out.println(sormasParticipantApi.postEventParticipants(List.of(participant)));
 		}
 
-		createTask(request, request.getRefId());
+		createAndTransmitTask(it -> customizeTask(it, request.getRefId()));
 	}
 
 	private PersonDto createPersonDto(Guest guest) {
@@ -129,19 +99,17 @@ public class GuestsSubmissionProcessor extends DataSubmissionProcessor {
 		return participant;
 	}
 
-	private void createTask(DataRequest request, SormasRefId eventId) {
+	private TaskDto customizeTask(TaskDto task, SormasRefId eventId) {
 
-		var newTask = createTask(request);
-
-		newTask.setCreatorComment("Teilnehmer zu Ereignis hinzugefügt, bitte weiter bearbeiten");
-		newTask.setTaskType(TaskType.EVENT_CONTINUE_INVESTIGATION);
+		task.setCreatorComment("Teilnehmer zu Ereignis hinzugefügt, bitte weiter bearbeiten");
+		task.setTaskType(TaskType.EVENT_CONTINUE_INVESTIGATION);
 
 		var eventRef = new EventReferenceDto();
 		eventRef.setUuid(eventId.toString());
-		newTask.setEvent(eventRef);
-		newTask.setTaskContext(TaskContext.EVENT);
-		newTask.setPriority(TaskPriority.NORMAL);
+		task.setEvent(eventRef);
+		task.setTaskContext(TaskContext.EVENT);
+		task.setPriority(TaskPriority.NORMAL);
 
-		System.out.println(taskApi.postTasks(List.of(newTask)));
+		return task;
 	}
 }

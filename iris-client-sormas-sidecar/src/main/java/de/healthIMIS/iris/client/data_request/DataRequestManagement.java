@@ -100,7 +100,7 @@ public class DataRequestManagement {
 			Option.none(),
 			irisUserId,
 			sormasUserId,
-			Set.of(Feature.Contacts, Feature.Events));
+			Set.of(Feature.Contacts_Events));
 	}
 
 	public DataRequest createGuestsRequest(
