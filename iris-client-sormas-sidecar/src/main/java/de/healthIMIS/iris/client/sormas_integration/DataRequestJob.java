@@ -164,7 +164,7 @@ class DataRequestJob {
 					sormasUserId);
 
 				var now = Instant.now();
-				var irisMessage = createNoteTextForIrisRequest(dataRequest, now);
+				var irisMessage = createNoteTextForIrisRequest("Kontaktnachverfolgung", dataRequest, now);
 
 				task.setStatusChangeDate(now);
 				task.setTaskStatus(TaskStatus.DONE);
@@ -240,7 +240,7 @@ class DataRequestJob {
 				sormasUserId);
 
 			var now = Instant.now();
-			var irisMessage = createNoteTextForIrisRequest(dataRequest, now);
+			var irisMessage = createNoteTextForIrisRequest("Ereignisnachverfolgung", dataRequest, now);
 
 			task.setStatusChangeDate(now);
 			task.setTaskStatus(TaskStatus.DONE);
@@ -263,13 +263,16 @@ class DataRequestJob {
 		}
 	}
 
-	private String createNoteTextForIrisRequest(DataRequest dataRequest, Instant now) {
+	private String createNoteTextForIrisRequest(String title, DataRequest dataRequest, Instant now) {
 		return String.format(
-			"Kontaktnachverfolgung über IRIS gestartet am %s\nIRIS-Code: %s\nTelecode: %s\nPrüfcode: %s",
+			"%s über IRIS gestartet am %s\nIRIS-Code: %s\nTele-Code: %s (für mündliche Übermittlung)",//\nPrüfcode: %s",
+			title,
 			now.atZone(ZoneId.systemDefault()).format(ofLocalizedDateTime(MEDIUM)),
 			dataRequest.getId(),
-			dataRequest.getTeleCode(),
-			defaultString(dataRequest.getCheckCodeRandom()));
+			dataRequest.getTeleCode()/*
+										 * ,
+										 * defaultString(dataRequest.getCheckCodeRandom())
+										 */);
 	}
 
 	private Option<String> calculateBirthdayCheckCodes(PersonDto person) {
