@@ -10,6 +10,7 @@ CREATE TABLE data_request (
 	check_code_random varchar(50) NULL,
 	request_start timestamp NULL,
 	request_end timestamp NULL,
+	request_details text NULL,
 	status varchar(50) NOT NULL,
 	created timestamp NOT NULL,
 	last_modified timestamp NOT NULL,

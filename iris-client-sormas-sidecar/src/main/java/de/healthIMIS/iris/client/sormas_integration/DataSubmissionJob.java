@@ -167,6 +167,7 @@ class DataSubmissionJob {
 		case Events:
 			return new EventsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasEventApi, sormasParticipantApi, sormasPersonApi);
 		case Guests:
+			return new GuestsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasParticipantApi, sormasPersonApi);
 		default:
 			return null;
 		}

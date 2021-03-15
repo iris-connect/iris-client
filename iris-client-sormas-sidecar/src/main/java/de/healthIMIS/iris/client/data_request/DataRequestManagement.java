@@ -97,9 +97,33 @@ public class DataRequestManagement {
 			checkCodeBirthday,
 			Option.of(startDate),
 			endDate,
+			Option.none(),
 			irisUserId,
 			sormasUserId,
 			Set.of(Feature.Contacts, Feature.Events));
+	}
+
+	public DataRequest createGuestsRequest(
+		SormasRefId refId,
+		Option<String> checkCodeZip,
+		Option<String> checkCodeBirthday,
+		Instant startDate,
+		Option<Instant> endDate,
+		String requestDetails,
+		String irisUserId,
+		String sormasUserId) {
+
+		return createDataRequest(
+			refId,
+			Option.none(),
+			checkCodeZip,
+			checkCodeBirthday,
+			Option.of(startDate),
+			endDate,
+			Option.of(requestDetails),
+			irisUserId,
+			sormasUserId,
+			Set.of(Feature.Guests));
 	}
 
 	DataRequest createDataRequest(
@@ -109,6 +133,7 @@ public class DataRequestManagement {
 		Option<String> checkCode2,
 		Option<Instant> startDate,
 		Option<Instant> endDate,
+		Option<String> requestDetails,
 		String irisUserId,
 		String sormasUserId,
 		Set<Feature> feature) {
@@ -122,6 +147,7 @@ public class DataRequestManagement {
 			determineRandomCheckCode(),
 			startDate.getOrNull(),
 			endDate.getOrNull(),
+			requestDetails.getOrNull(),
 			irisUserId,
 			sormasUserId,
 			feature);
@@ -216,6 +242,8 @@ public class DataRequestManagement {
 		private final Instant requestStart;
 		private final Instant requestEnd;
 
+		private final String requestDetails;
+
 		private final Set<Feature> features;
 		private final Status status;
 
@@ -230,6 +258,7 @@ public class DataRequestManagement {
 				request.getCheckCodeRandom(),
 				request.getRequestStart(),
 				request.getRequestEnd(),
+				request.getRequestDetails(),
 				request.getFeatures(),
 				request.getStatus());
 		}

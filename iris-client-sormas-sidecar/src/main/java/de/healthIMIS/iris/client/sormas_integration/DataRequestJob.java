@@ -38,13 +38,16 @@ import de.healthIMIS.iris.client.data_request.DataRequest;
 import de.healthIMIS.iris.client.data_request.DataRequestManagement;
 import de.healthIMIS.iris.client.sormas_integration.SyncTimes.DataTypes;
 import de.healthIMIS.sormas.client.api.CaseControllerApi;
+import de.healthIMIS.sormas.client.api.EventControllerApi;
 import de.healthIMIS.sormas.client.api.PersonControllerApi;
 import de.healthIMIS.sormas.client.api.SampleControllerApi;
 import de.healthIMIS.sormas.client.api.TaskControllerApi;
 import de.healthIMIS.sormas.client.model.CaseDataDto;
+import de.healthIMIS.sormas.client.model.FacilityType;
 import de.healthIMIS.sormas.client.model.PathogenTestResultType;
 import de.healthIMIS.sormas.client.model.PersonDto;
 import de.healthIMIS.sormas.client.model.SampleDto;
+import de.healthIMIS.sormas.client.model.TaskContext;
 import de.healthIMIS.sormas.client.model.TaskDto;
 import de.healthIMIS.sormas.client.model.TaskPriority;
 import de.healthIMIS.sormas.client.model.TaskStatus;
@@ -63,10 +66,15 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("!inttest")
 class DataRequestJob {
 
+	public static final String MAIL_PATTERN =
+		"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+	private static final Pattern MAIL_REGEX = Pattern.compile(MAIL_PATTERN, Pattern.CASE_INSENSITIVE);
+
 	private final @NonNull SyncTimesRepository syncTimes;
 	private final @NonNull CaseControllerApi sormasCaseApi;
 	private final @NonNull PersonControllerApi sormasPersonApi;
 	private final @NonNull TaskControllerApi taskControllerApi;
+	private final @NonNull EventControllerApi eventControllerApi;
 	private final @NonNull SampleControllerApi sampleControllerApi;
 	private final @NonNull DataRequestManagement dataRequests;
 
@@ -83,7 +91,7 @@ class DataRequestJob {
 
 		try {
 
-			tasks.stream().sorted(Comparator.comparing(TaskDto::getChangeDate)).map(this::handleTask).forEach(it -> {
+			tasks.stream().sorted(Comparator.comparing(TaskDto::getChangeDate)).filter(this::isRelevant).map(this::handleTask).forEach(it -> {
 
 				if (it.getChangeDate() != null) {
 					syncTimes.save(SyncTimes.of(DataTypes.Tasks, it.getChangeDate()));
@@ -108,14 +116,16 @@ class DataRequestJob {
 
 	private TaskDto handleTask(TaskDto task) {
 
-		if (isRelevant(task)) {
-
-			switch (task.getTaskContext()) {
-			case CASE: {
-				handleCaseTask(task);
-			}
-			default:
-			}
+		switch (task.getTaskContext()) {
+		case CASE: {
+			handleCaseTask(task);
+			break;
+		}
+		case EVENT: {
+			handleEventTask(task);
+			break;
+		}
+		default:
 		}
 
 		return task;
@@ -200,6 +210,59 @@ class DataRequestJob {
 		}
 	}
 
+	private void handleEventTask(TaskDto task) {
+
+		var events = eventControllerApi.getByUuids14(List.of(task.getEvent().getUuid()));
+
+		if (!events.isEmpty()) {
+
+			var eventDto = events.get(0);
+
+			var eventId = SormasRefId.of(eventDto.getUuid());
+			var sormasUserId = task.getCreatorUser().getUuid();
+			var irisUserId = task.getAssigneeUser().getUuid();
+			var checkCodeZipCode = calculateZipCodeCheckCodes(eventDto.getEventLocation().getPostalCode());
+			var checkCodeFacilityType = calculateFacilityTypeCheckCodes(eventDto.getEventLocation().getFacilityType());
+
+			var startDate = eventDto.getStartDate();
+			var endDate = eventDto.getEndDate();
+
+			var requestDetails = task.getCreatorComment();
+
+			var dataRequest = dataRequests.createGuestsRequest(
+				eventId,
+				checkCodeZipCode,
+				checkCodeFacilityType,
+				startDate,
+				Option.of(endDate),
+				requestDetails,
+				irisUserId,
+				sormasUserId);
+
+			var now = Instant.now();
+			var irisMessage = createNoteTextForIrisRequest(dataRequest, now);
+
+			task.setStatusChangeDate(now);
+			task.setTaskStatus(TaskStatus.DONE);
+			task.setAssigneeReply(joinWith("\n\n", task.getAssigneeReply(), irisMessage).strip());
+			taskControllerApi.postTasks(List.of(task));
+
+			var matcher = MAIL_REGEX.matcher(eventDto.getEventDesc());
+
+			Option<String> email = Option.when(matcher.find(), matcher::group);
+
+			if (email.isDefined()) {
+
+				log.info("With Mail");
+
+			} else {
+
+				log.info("Without Mail! Timestamp: {}", task.getChangeDate().toEpochMilli());
+
+			}
+		}
+	}
+
 	private String createNoteTextForIrisRequest(DataRequest dataRequest, Instant now) {
 		return String.format(
 			"Kontaktnachverfolgung über IRIS gestartet am %s\nIRIS-Code: %s\nTelecode: %s\nPrüfcode: %s",
@@ -232,6 +295,24 @@ class DataRequestJob {
 		return DigestUtils.md5Hex(name);
 	}
 
+	private Option<String> calculateZipCodeCheckCodes(String zipCode) {
+
+		if (zipCode == null) {
+			return Option.none();
+		}
+
+		return Option.of(DigestUtils.md5Hex(StringUtils.trim(zipCode)));
+	}
+
+	private Option<String> calculateFacilityTypeCheckCodes(FacilityType facilityType) {
+
+		if (facilityType == null) {
+			return Option.none();
+		}
+
+		return Option.of(DigestUtils.md5Hex(facilityType.toString()));
+	}
+
 	private Option<Instant> positivSampleDate(CaseDataDto caseDto) {
 
 		var samples = sampleControllerApi.getByCaseUuids(List.of(caseDto.getUuid()));
@@ -257,7 +338,8 @@ class DataRequestJob {
 
 	private boolean isRelevant(TaskDto it) {
 
-		return it.getTaskType() == TaskType.CONTACT_TRACING
+		return ((it.getTaskContext() == TaskContext.CASE && it.getTaskType() == TaskType.CONTACT_TRACING)
+			|| (it.getTaskContext() == TaskContext.EVENT && it.getTaskType() == TaskType.EVENT_INVESTIGATION))
 			&& it.getTaskStatus() == TaskStatus.PENDING
 			&& it.getAssigneeUser().getCaption().contains("IRIS");
 	}
