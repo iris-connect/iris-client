@@ -82,6 +82,7 @@ public class DataRequestManagement {
 
 	public DataRequest createContactEventRequest(
 		SormasRefId refId,
+		SormasRefId personId,
 		String checkCodeName,
 		Option<String> checkCodeBirthday,
 		Instant startDate,
@@ -91,6 +92,7 @@ public class DataRequestManagement {
 
 		return createDataRequest(
 			refId,
+			Option.of(personId),
 			Option.of(checkCodeName),
 			checkCodeBirthday,
 			Option.of(startDate),
@@ -102,6 +104,7 @@ public class DataRequestManagement {
 
 	DataRequest createDataRequest(
 		SormasRefId refId,
+		Option<SormasRefId> personId,
 		Option<String> checkCode1,
 		Option<String> checkCode2,
 		Option<Instant> startDate,
@@ -112,6 +115,7 @@ public class DataRequestManagement {
 
 		var dataRequest = new DataRequest(
 			refId,
+			personId.getOrNull(),
 			findValidTeleCode(),
 			checkCode1.getOrNull(),
 			checkCode2.getOrNull(),
@@ -136,7 +140,7 @@ public class DataRequestManagement {
 			properties.getServerPort(),
 			dataRequest.getId());
 
-		log.debug("Request job - PUT to server sent: {}", dataRequest.getId().toString());
+		log.debug("Request job - PUT to server sent: {}; Features = {}", dataRequest.getId().toString(), dataRequest.getFeatures());
 
 		dataRequest = requests.save(dataRequest);
 

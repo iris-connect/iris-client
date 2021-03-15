@@ -14,30 +14,13 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.spec.InvalidKeySpecException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
@@ -47,35 +30,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.healthIMIS.iris.client.core.IrisClientProperties;
 import de.healthIMIS.iris.client.core.IrisProperties;
-import de.healthIMIS.iris.client.core.SormasRefId;
-import de.healthIMIS.iris.client.data_request.DataRequest;
 import de.healthIMIS.iris.client.data_request.DataRequestManagement;
-import de.healthIMIS.iris.client.data_submission.model.ContactPerson;
-import de.healthIMIS.iris.client.data_submission.model.ContactPersonList;
 import de.healthIMIS.sormas.client.api.CaseControllerApi;
 import de.healthIMIS.sormas.client.api.ContactControllerApi;
+import de.healthIMIS.sormas.client.api.EventControllerApi;
+import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
 import de.healthIMIS.sormas.client.api.PersonControllerApi;
 import de.healthIMIS.sormas.client.api.SampleControllerApi;
 import de.healthIMIS.sormas.client.api.TaskControllerApi;
-import de.healthIMIS.sormas.client.model.CaseReferenceDto;
-import de.healthIMIS.sormas.client.model.ContactClassification;
-import de.healthIMIS.sormas.client.model.ContactDto;
-import de.healthIMIS.sormas.client.model.ContactReferenceDto;
-import de.healthIMIS.sormas.client.model.Disease;
-import de.healthIMIS.sormas.client.model.HealthConditionsDto;
-import de.healthIMIS.sormas.client.model.PersonDto;
-import de.healthIMIS.sormas.client.model.PersonReferenceDto;
-import de.healthIMIS.sormas.client.model.TaskContext;
-import de.healthIMIS.sormas.client.model.TaskDto;
-import de.healthIMIS.sormas.client.model.TaskPriority;
-import de.healthIMIS.sormas.client.model.TaskStatus;
-import de.healthIMIS.sormas.client.model.TaskType;
-import de.healthIMIS.sormas.client.model.UserReferenceDto;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -88,16 +54,14 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("!inttest")
 class DataSubmissionJob {
 
-	static final String ENCRYPTION_ALGORITHM = "AES";
-	static final String KEY_ENCRYPTION_ALGORITHM = "RSA";
-	static final String TRANSFORMATION = "RSA/ECB/PKCS1Padding";
-
 	private final @NonNull SyncTimesRepository syncTimes;
 	private final @NonNull CaseControllerApi sormasCaseApi;
 	private final @NonNull PersonControllerApi sormasPersonApi;
 	private final @NonNull TaskControllerApi sormasTaskApi;
 	private final @NonNull SampleControllerApi sormasSampleApi;
 	private final @NonNull ContactControllerApi sormasContactApi;
+	private final @NonNull EventControllerApi sormasEventApi;
+	private final @NonNull EventParticipantControllerApi sormasParticipantApi;
 	private final @NonNull DataRequestManagement dataRequests;
 	private final @NonNull RestTemplate rest;
 	private final @NonNull IrisClientProperties clientProperties;
@@ -115,6 +79,8 @@ class DataSubmissionJob {
 		@NonNull SampleControllerApi sormasSampleApi,
 		@NonNull ContactControllerApi sormasContactApi,
 		@NonNull DataRequestManagement dataRequests,
+		@NonNull EventControllerApi sormasEventApi,
+		@NonNull EventParticipantControllerApi participantControllerApi,
 		@NonNull @Qualifier("iris-rest") RestTemplate rest,
 		@NonNull IrisClientProperties clientProperties,
 		@NonNull IrisProperties properties,
@@ -127,6 +93,8 @@ class DataSubmissionJob {
 		this.sormasTaskApi = sormasTaskApi;
 		this.sormasSampleApi = sormasSampleApi;
 		this.sormasContactApi = sormasContactApi;
+		this.sormasEventApi = sormasEventApi;
+		this.sormasParticipantApi = participantControllerApi;
 		this.dataRequests = dataRequests;
 		this.rest = rest;
 		this.clientProperties = clientProperties;
@@ -186,136 +154,22 @@ class DataSubmissionJob {
 	}
 
 	private void handleDtos(DataSubmissionDto[] dtos) {
-
-		Arrays.stream(dtos).forEach(it -> {
-
-			var request = dataRequests.findById(it.getRequestId()).get();
-
-			ContactPersonList contactList;
-			try {
-
-				var content = decryptContent(it.getEncryptedData(), it.getKeyReferenz(), it.getSecret());
-				contactList = mapper.readValue(content, ContactPersonList.class);
-			} catch (JsonProcessingException
-				| InvalidKeyException
-				| UnrecoverableKeyException
-				| NoSuchAlgorithmException
-				| NoSuchPaddingException
-				| InvalidKeySpecException
-				| IllegalBlockSizeException
-				| BadPaddingException
-				| KeyStoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return;
-			}
-
-			var contacts = contactList.getContactPersons();
-			for (ContactPerson contactPerson : contacts) {
-
-				var person = new PersonDto();
-				person.setUuid(SormasRefId.of().toString());
-//				person.setSex(Sex.UNKNOWN);
-				person.setAddresses(List.of());
-				person.setFirstName(contactPerson.getFirstName());
-				person.setLastName(contactPerson.getLastName());
-
-				var contact = new ContactDto();
-				contact.setUuid(SormasRefId.of().toString());
-				contact.setDisease(Disease.CORONAVIRUS);
-				contact.setReportDateTime(Instant.now());
-				contact.setContactClassification(ContactClassification.UNCONFIRMED);
-
-				var persRef = new PersonReferenceDto();
-				persRef.setUuid(person.getUuid());
-				contact.setPerson(persRef);
-
-				var caseRef = new CaseReferenceDto();
-				caseRef.setUuid(request.getRefId().toString());
-				contact.setCaze(caseRef);
-
-				var userRef = new UserReferenceDto();
-				userRef.setUuid(request.getIrisUserId());
-				contact.setReportingUser(userRef);
-
-				var healtConditions = new HealthConditionsDto();
-				healtConditions.setCreationDate(Instant.now());
-				healtConditions.setUuid(SormasRefId.of().toString());
-				contact.setHealthConditions(healtConditions);
-
-				System.out.println(sormasPersonApi.postPersons(List.of(person)));
-				System.out.println(sormasContactApi.postContacts(List.of(contact)));
-
-				createTask(request, contact);
-
-			}
-		});
+		Arrays.stream(dtos).map(this::mapToStrategie).forEach(DataSubmissionProcessor::process);
 	}
 
-	private String decryptContent(String content, String keyReferenz, String encryptedSecretKeyString)
-		throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException,
-		BadPaddingException, UnrecoverableKeyException, KeyStoreException {
+	private DataSubmissionProcessor mapToStrategie(DataSubmissionDto it) {
 
-		var encryptedArray = Base64.getDecoder().decode(content);
-		var encryptedSecretKey = Base64.getDecoder().decode(encryptedSecretKeyString);
+		var request = dataRequests.findById(it.getRequestId()).get();
 
-		var privateKey = keyStore.getKey(keyReferenz, null);
-
-		var secretKey = decryptSecretKey(encryptedSecretKey, privateKey);
-
-		return decryptText(secretKey, encryptedArray);
-	}
-
-	private byte[] decryptSecretKey(byte[] encryptedSecretKey, Key privateKey)
-		throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-
-		var cipher = Cipher.getInstance(TRANSFORMATION);
-		cipher.init(Cipher.PRIVATE_KEY, privateKey);
-
-		return cipher.doFinal(encryptedSecretKey);
-	}
-
-	private String decryptText(byte[] secretKey, byte[] encryptedText)
-		throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-
-		var originalKey = new SecretKeySpec(secretKey, 0, secretKey.length, ENCRYPTION_ALGORITHM);
-
-		var cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
-		cipher.init(Cipher.DECRYPT_MODE, originalKey);
-
-		return new String(cipher.doFinal(encryptedText), UTF_8);
-	}
-
-	private void createTask(DataRequest request, ContactDto contact) {
-
-		var newTask = new TaskDto();
-
-		newTask.setUuid(SormasRefId.of().toString());
-
-		var nowDate = ZonedDateTime.now().withSecond(0);
-		newTask.setDueDate(nowDate.toInstant());
-		newTask.setPerceivedStart(nowDate.plusDays(1).toInstant());
-
-		newTask.setTaskStatus(TaskStatus.PENDING);
-
-		var userRef = new UserReferenceDto();
-		userRef.setUuid(request.getSormasUserId());
-		newTask.setAssigneeUser(userRef);
-
-		userRef = new UserReferenceDto();
-		userRef.setUuid(request.getIrisUserId());
-		newTask.setCreatorUser(userRef);
-
-		newTask.setCreatorComment("Kontakt neu angelegt, bitte weiter bearbeiten");
-		newTask.setTaskType(TaskType.CONTACT_FOLLOW_UP);
-
-		var contRef = new ContactReferenceDto();
-		contRef.setUuid(contact.getUuid());
-		newTask.setContact(contRef);
-		newTask.setTaskContext(TaskContext.CONTACT);
-		newTask.setPriority(TaskPriority.NORMAL);
-
-		System.out.println(sormasTaskApi.postTasks(List.of(newTask)));
+		switch (it.feature) {
+		case Contacts:
+			return new ContactsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasPersonApi, sormasContactApi);
+		case Events:
+			return new EventsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasEventApi, sormasParticipantApi, sormasPersonApi);
+		case Guests:
+		default:
+			return null;
+		}
 	}
 
 	private void saveLastSync(ResponseEntity<DataSubmissionDto[]> response) {

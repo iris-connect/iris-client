@@ -19,6 +19,7 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -51,6 +52,8 @@ import lombok.Setter;
 public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestIdentifier> {
 
 	private SormasRefId refId;
+	@AttributeOverride(name = "refId", column = @Column(name = "personId"))
+	private SormasRefId personId;
 	private String irisUserId;
 	private String sormasUserId;
 
@@ -75,6 +78,7 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 
 	public DataRequest(
 		SormasRefId refId,
+		SormasRefId personId,
 		String teleCode,
 		String checkCodeOne,
 		String checkCodeTwo,
@@ -89,6 +93,7 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 
 		this.id = DataRequestIdentifier.of(UUID.randomUUID());
 		this.refId = refId;
+		this.personId = personId;
 		this.teleCode = teleCode;
 		this.checkCodeOne = checkCodeOne;
 		this.checkCodeTwo = checkCodeTwo;

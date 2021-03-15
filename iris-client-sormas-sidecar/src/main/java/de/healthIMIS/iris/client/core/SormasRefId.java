@@ -34,7 +34,7 @@ public class SormasRefId implements Serializable {
 
 	final String refId;
 
-	public static SormasRefId of() {
+	public static SormasRefId random() {
 
 		java.util.UUID randomUuid = java.util.UUID.randomUUID();
 

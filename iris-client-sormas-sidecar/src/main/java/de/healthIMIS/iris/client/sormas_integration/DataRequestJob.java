@@ -24,6 +24,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -134,6 +135,7 @@ class DataRequestJob {
 				var person = persons.get(0);
 
 				var caseId = SormasRefId.of(caseDto.getUuid());
+				var personId = SormasRefId.of(person.getUuid());
 				var sormasUserId = task.getCreatorUser().getUuid();
 				var irisUserId = task.getAssigneeUser().getUuid();
 				var checkCodeName = calculateNameCheckCodes(person);
@@ -141,8 +143,15 @@ class DataRequestJob {
 
 				var startDate = firstRelevantSymptomDate(caseDto).orElse(positivSampleDate(caseDto)).get();
 
-				var dataRequest = dataRequests
-					.createContactEventRequest(caseId, checkCodeName, checkCodeBirthday, startDate, Option.none(), irisUserId, sormasUserId);
+				var dataRequest = dataRequests.createContactEventRequest(
+					caseId,
+					personId,
+					checkCodeName,
+					checkCodeBirthday,
+					startDate,
+					Option.none(),
+					irisUserId,
+					sormasUserId);
 
 				var now = Instant.now();
 				var irisMessage = createNoteTextForIrisRequest(dataRequest, now);
@@ -152,8 +161,6 @@ class DataRequestJob {
 				task.setAssigneeReply(joinWith("\n\n", task.getAssigneeReply(), irisMessage).strip());
 				taskControllerApi.postTasks(List.of(task));
 
-				sormasCaseApi.postCases(List.of(caseDto));
-
 				if (StringUtils.isNoneBlank(person.getEmailAddress())) {
 
 					log.info("With Mail");
@@ -162,7 +169,7 @@ class DataRequestJob {
 
 					var newTask = new TaskDto();
 
-					newTask.setUuid(SormasRefId.of().toString());
+					newTask.setUuid(SormasRefId.random().toString());
 
 					newTask.setCreationDate(now);
 					newTask.setChangeDate(now);

@@ -31,6 +31,8 @@ import org.springframework.web.client.RestTemplate;
 
 import de.healthIMIS.sormas.client.api.CaseControllerApi;
 import de.healthIMIS.sormas.client.api.ContactControllerApi;
+import de.healthIMIS.sormas.client.api.EventControllerApi;
+import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
 import de.healthIMIS.sormas.client.api.PersonControllerApi;
 import de.healthIMIS.sormas.client.api.SampleControllerApi;
 import de.healthIMIS.sormas.client.api.TaskControllerApi;
@@ -79,6 +81,18 @@ public class SormasIntegrationConfig {
 	public ContactControllerApi contactControllerApi() {
 
 		return new ContactControllerApi(apiClient());
+	}
+
+	@Bean
+	public EventControllerApi eventControllerApi() {
+
+		return new EventControllerApi(apiClient());
+	}
+
+	@Bean
+	public EventParticipantControllerApi participantControllerApi() {
+
+		return new EventParticipantControllerApi(apiClient());
 	}
 
 	@Bean

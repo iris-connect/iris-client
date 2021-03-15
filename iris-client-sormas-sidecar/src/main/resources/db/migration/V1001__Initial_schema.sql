@@ -1,6 +1,7 @@
 CREATE TABLE data_request (
 	request_id uuid NOT NULL,
 	ref_id varchar(50) NOT NULL,
+	person_id varchar(50) NULL,
 	iris_user_id varchar(50) NOT NULL,
 	sormas_user_id varchar(50) NOT NULL,
 	tele_code varchar(10) NOT NULL,
