@@ -16,8 +16,11 @@ package de.healthIMIS.iris.client.sormas_integration;
 
 import static java.time.format.DateTimeFormatter.ofLocalizedDateTime;
 import static java.time.format.FormatStyle.MEDIUM;
+import static org.apache.commons.codec.binary.Base64.encodeBase64String;
+import static org.apache.commons.codec.digest.DigestUtils.md5;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.joinWith;
+import static org.apache.commons.lang3.StringUtils.trim;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -26,7 +29,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -280,7 +282,7 @@ class DataRequestJob {
 		if (person.getBirthdateYYYY() != null && person.getBirthdateMM() != null && person.getBirthdateDD() != null) {
 
 			var date = person.getBirthdateYYYY() * 10000 + person.getBirthdateMM() * 100 + person.getBirthdateDD();
-			var dateHash = DigestUtils.md5Hex(Integer.toString(date));
+			var dateHash = encodeBase64String(md5(Integer.toString(date)));
 
 			return Option.of(dateHash);
 		}
@@ -295,7 +297,7 @@ class DataRequestJob {
 
 		var name = (firstName + lastName).toLowerCase().replaceAll("[^\\pL\\pN]", "");
 
-		return DigestUtils.md5Hex(name);
+		return encodeBase64String(md5(name));
 	}
 
 	private Option<String> calculateZipCodeCheckCodes(String zipCode) {
@@ -304,7 +306,7 @@ class DataRequestJob {
 			return Option.none();
 		}
 
-		return Option.of(DigestUtils.md5Hex(StringUtils.trim(zipCode)));
+		return Option.of(encodeBase64String(md5(trim(zipCode))));
 	}
 
 	private Option<String> calculateFacilityTypeCheckCodes(FacilityType facilityType) {
@@ -313,7 +315,7 @@ class DataRequestJob {
 			return Option.none();
 		}
 
-		return Option.of(DigestUtils.md5Hex(facilityType.toString()));
+		return Option.of(encodeBase64String(md5(facilityType.toString())));
 	}
 
 	private Option<Instant> positivSampleDate(CaseDataDto caseDto) {
