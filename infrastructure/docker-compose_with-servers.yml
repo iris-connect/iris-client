@@ -1,9 +1,9 @@
 ########################################################
 # provides IRIS servers together with a Postgresql database and a Pgadmin
-# DB: login = postgres:postgres; hostname = postgres; volume = psqldata_iris
+# DB: login = postgres:postgres; hostname = postgres; port = 5433; volume = psqldata_iris
 # Pgadmin: login = postgres@healthIMIS.de:postgres; port = 5555
-# IRIS public: port = 8880
-# IRIS hd: port = 8881
+# IRIS public: port = 8843
+# IRIS hd: port = 8844
 ########################################################
 version: '3'
 services:
@@ -46,7 +46,7 @@ services:
 #      - postgres
 #      - iris-public
 #    ports:
-#      - 8881:8080
+#      - 8844:8443
 #    restart: unless-stopped
 
   iris-client:
