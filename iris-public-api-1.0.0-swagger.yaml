@@ -64,12 +64,6 @@ paths:
               operationId: getDataRequestByCode
               parameters:
                 code: 'Code from health department'
-            GetDataRequestByTeleCode:
-              description: 'This link allows to fetch the parameters of a data request for a teleCode.'
-              operationId: getDataRequestByTeleCode
-              parameters:
-                teleCode: 'teleCode from health department'
-                zip: 'zip-code of the person'
             GetNotifications: #TODO!
               description: 'This link allows to fetch notifications for a data request and the associated data submissions.'
               #operationId: getNotifications
@@ -83,31 +77,6 @@ paths:
       operationId: getDataRequestByCode
       parameters:
         - $ref: '#/components/parameters/Code'
-      responses:
-        '200':
-          $ref: '#/components/responses/DataRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-  /data-requests:
-    get:
-      summary: 'Returns the data request for a teleCode.'
-      operationId: getDataRequestByTeleCode
-      parameters:
-        - name: teleCode
-          in: query
-          required: true
-          description: 'The teleCode of a data request given by the health department.'
-          schema:
-            type: string
-        - name: zip
-          in: query
-          required: true
-          description: 'The zip-code from the address of the person whose data is to be requested.'
-          schema:
-            type: string
-            format: zip-code
       responses:
         '200':
           $ref: '#/components/responses/DataRequest'
