@@ -10,14 +10,18 @@ info:
     The public API of IRIS (Integration of Remote systems into Infection control Software). Through this API, the many contact tracking apps and the like can submit your data to health departments via IRIS.
     
     The process as an overview
-    
+
       1. The health department knows about an infected person, creates a case, and starts tracking via IRIS.
       2. For tracking purposes, a unique code is generated and communicated to the index case (preferably by mail).
       3. The index case uses the code in an app with IRIS connectivity to submit its contacts and events visited. For this purpose, the code is copied into the app.
       4. The app uses the code to get the health department key and other information from the IRIS server.
       5. The app encrypts the data and transmits it to the IRIS system via the post endpoints.
       6. The IRIS system transmits the data to the health department.
-      
+      7. If the infected person has visited an event or location (such as a store, hairdresser or restaurant), the health department can search for the location in IRIS.
+      8. If the location uses an IRIS enabled app, the health department can request the location's contact data for a specifc timespan. 
+      9. Same as in step 5) the IRIS enabled app encrypts the data and transmits it to the IRIS system via the post endpoints.
+      10. The IRIS system transmits the location's contact data to the health department.
+
     ### Encryption of the data to be transmitted (contact data)
 
     In order to be not limited in the amount of data, a hybrid encryption with symmetric encryption of the data and asymmetric encryption of the symmetric key is used for the encryption of the contact data.
