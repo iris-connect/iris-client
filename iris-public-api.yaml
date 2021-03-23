@@ -245,7 +245,7 @@ components:
       required: 
         - healthDepartment
         - created
-        - key
+        - keyOfHealthDepartment
         - keyReferenz
       readOnly: true
       properties:
@@ -688,7 +688,6 @@ components:
       required:
         - "code"
         - "locationId"
-        - "keyOfHealthDepartment"
         - "start"
         - "end"
       properties:
