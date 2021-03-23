@@ -50,9 +50,12 @@ info:
   license:
     name: GNU AGPL v3
     url: https://www.gnu.org/licenses/agpl-3.0
+
 paths:
   /:
     get:
+      tags:
+        - "Information"
       summary: 'Entry point returns next steps by links.'
       description: 'Entry point for the clients of the API. From here, they are guided through the API by means of links.'
       responses:
@@ -73,6 +76,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
   /data-requests/{code}:
     get:
+      tags:
+        - "Information"
       summary: 'Returns the data request for a code.'
       operationId: getDataRequestByCode
       parameters:
@@ -86,6 +91,8 @@ paths:
           $ref: '#/components/responses/NotFound'
   /data-submissions/{code}/contacts_events:
     post:
+      tags:
+        - "Data Requests"
       summary: 'Receives a data submission of contacts and events for the health department and transmits them in the further process.'
       operationId: postContactsEventsSubmission
       parameters:
@@ -108,6 +115,8 @@ paths:
           $ref: '#/components/responses/UnprocessableEntity'
   /data-submissions/{code}/guests:
     post:
+      tags:
+        - "Data Requests"
       summary: 'Receives a data submission of guests for the health department and transmits them in the further process.'
       operationId: postGuestsSubmission
       parameters:
@@ -128,6 +137,60 @@ paths:
           $ref: '#/components/responses/NotFound'
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
+  /search-index/locations:
+    post: 
+      summary: 'Recives contact information about locations that can be used to search for a specific location that was visited by a potentially infected person.'
+      description: 'Locations are identifed by an ID that is owned by the provider. If an ID already exists, the information is overidden.'
+      operationId: postLocationsToSearchIndex
+      tags:
+        - "Location Search Index"
+      requestBody:
+        required: true
+        content: 
+          application/json; charset=UTF-8:            
+            schema: 
+              $ref: '#/components/schemas/LocationList'
+      responses:
+        '201':
+            description: 'Locations created'            
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'     
+  /search-index/locations/{id}:
+    delete: 
+      summary: 'Deletes contact information about a specific location identified by the provider owned ID.'
+      operationId: deleteLocationFromSearchIndex
+      tags:
+        - "Location Search Index"
+      parameters:
+        - $ref: '#/components/parameters/LocationId'
+      responses:
+        '200':
+            description: 'Location deleted'            
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /iris/data-request:
+    post: 
+      tags:
+        - "Location Data Requests"
+      description: 'Recives request from IRIS for provide contact data.'
+      requestBody:
+        required: true
+        content: 
+          application/json; charset=UTF-8:            
+            schema: 
+              $ref: '#/components/schemas/LocationDataRequest'
+      responses:
+        '200':
+          description: 'Request accepted'        
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'     
+
 components:
   responses:
     NotFound:
@@ -168,6 +231,13 @@ components:
       schema:
         type: string
         format: uuid
+    LocationId:
+      name: id
+      in: path
+      required: true
+      description: 'The unique ID of a location in the context of the provider.'
+      schema:
+        type: string        
   schemas:
     DataRequest:
       description: 'A data request with all parameters relevant for the data submission.'
@@ -518,3 +588,115 @@ components:
       - THEATER
       - UNIVERSITY
       - ZOO
+    LocationList:
+      type: object
+      required:
+        - "locations"
+      properties:
+        locations: 
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationInformation'          
+    LocationInformation:
+      type: object
+      required:
+        - "id"
+        - "name"
+        - "contact"
+      properties:
+        id:
+          type: string
+          description: 'Interne ID (beim Provider)'
+          example: '5eddd61036d39a0ff8b11fdb'
+        name:
+          type: string
+          description: 'Name des Standorts'
+          example: 'Restaurant Alberts'
+        publicKey:
+          type: string
+          description: 'Öffentlicher Schlüssel, ggf. für Nachrichtenaustausch'
+        contact:
+          $ref: '#/components/schemas/LocationContact'
+          description: 'Kontaktperson des Standorts'
+        contexts:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationContext'
+    LocationContact:
+      type: object
+      required:
+        - "address"
+      properties:
+        officialName:
+          type: string
+          description: 'Offizieller Unternehmensname'
+          example: 'Darfichrein GmbH'
+        representative:
+          type: string
+          description: 'Ansprechpartner für dieses Unternehmen'
+          example: 'Silke '
+        address:
+          $ref: '#/components/schemas/LocationAddress'
+          description: 'Anschrift des Standorts'
+        ownerEmail:
+          type: string
+          description: 'E-Mail des Inhabers'
+          example: 'covid@restaurant.de'
+        email:
+          type: string
+          description: 'ggf. E-Mail einer weiteren Kontaktperson'
+          example: 'covid2@restaurant.de'
+        phone:
+          type: string
+          description: 'Telefonnummer eines Ansprechpartners'
+          example: 'die bleibt privat :-)'
+    LocationContext:
+      type: object
+      description: 'Ein Standort hat ggf. weitere Informationen wie Tische/Räume, etc.'
+      properties:
+        id:
+          type: string
+          description: 'Interne ID des Kontext'
+          example: '5f4bfff742c1bf5f72918851'
+        name:
+          type: string
+          description: 'Bezeichnung'
+          example: 'Raum 0815'
+    LocationAddress:
+      required:
+        - street
+        - city
+        - zip
+      properties:
+        street:
+          type: string
+          description: 'street + number'
+          example: 'Türkenstr. 7'
+        city:
+          type: string
+          description: 'Stadt'
+          example: 'München'
+        zip:
+          type: string
+          description: 'Postleitzahl'
+          example: '80333'
+
+    LocationDataRequest:
+      description: 'All information needed to create a new TracingTicket'
+      allOf:
+        - $ref: '#/components/schemas/DataRequest'
+      required:
+        - "code"
+        - "locationId"
+        - "keyOfHealthDepartment"
+        - "start"
+        - "end"
+      properties:
+        code:
+          type: string
+          description: 'The tracing code.'
+          example: 'a57b-e17b-9460'
+        locationId:
+          type: string
+          description: 'The id of the location.'
+          example: '35b7df90-8670-409a-9375-15a56fd995c1'
