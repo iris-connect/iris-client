@@ -92,7 +92,7 @@ paths:
   /data-submissions/{code}/contacts_events:
     post:
       tags:
-        - "Data Requests"
+        - "Data Submissions"
       summary: 'Receives a data submission of contacts and events for the health department and transmits them in the further process.'
       operationId: postContactsEventsSubmission
       parameters:
@@ -116,7 +116,7 @@ paths:
   /data-submissions/{code}/guests:
     post:
       tags:
-        - "Data Requests"
+        - "Data Submissions"
       summary: 'Receives a data submission of guests for the health department and transmits them in the further process.'
       operationId: postGuestsSubmission
       parameters:
