@@ -3,6 +3,13 @@ servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/jekutzsche/iris_public/1.0.0
+tags:
+  - name: "Information"
+  - name: "Location Search Index"    
+  - name: "Location Data Requests"
+    description: "Implemented by the provider"
+  - name: "Data Submissions"    
+    
 info:
   title: 'IRIS Public API'
   version: 0.2.0
