@@ -145,7 +145,7 @@ paths:
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
   /search-index/locations:
-    post: 
+    put: 
       summary: 'Recives contact information about locations that can be used to search for a specific location that was visited by a potentially infected person.'
       description: 'Locations are identifed by an ID that is owned by the provider. If an ID already exists, the information is overidden.'
       operationId: postLocationsToSearchIndex
