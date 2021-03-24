@@ -24,7 +24,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>11</java.version>
-		<!-- <docker.image.prefix>de.health_imis</docker.image.prefix> -->
 		<docker.image.prefix>inoeg</docker.image.prefix>
 		<vavr-version>0.10.3</vavr-version>
 	</properties>
