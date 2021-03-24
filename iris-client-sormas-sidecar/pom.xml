@@ -153,12 +153,11 @@
 							<!-- with GraalVM <BP_BOOT_NATIVE_IMAGE>true</BP_BOOT_NATIVE_IMAGE> -->
 						</env>
 					</image>
-					<publish>false</publish>
 					<docker>
 						<publishRegistry>
-							<token>${env.DOCKER_HUB_TOKEN}</token>
-							<!-- <username></username>
-							<password></password>
+							<username>${env.DOCKER_HUB_USER}</username>
+							<password>${env.DOCKER_HUB_PW}</password>
+							<!-- <token>${env.DOCKER_HUB_TOKEN}</token>
 							<url>https://docker.example.com/v1/</url>
 							<email>user@example.com</email>-->
 						</publishRegistry>
