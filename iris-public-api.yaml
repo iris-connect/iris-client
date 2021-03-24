@@ -262,7 +262,7 @@ components:
         - healthDepartment
         - created
         - keyOfHealthDepartment
-        - keyReferenz
+        - keyReference
       readOnly: true
       properties:
         healthDepartment:
@@ -271,7 +271,7 @@ components:
         keyOfHealthDepartment:
           description: 'The key of the requesting health department that must be used for encryption. The key is encoded with Base64.'
           type: string
-        keyReferenz:
+        keyReference:
           description: 'Reference id of the given key. This reference must be included in the submission in order to identify the correct private key for decryption at the health department.'
           type: string
         start:
@@ -290,7 +290,7 @@ components:
       type: object
       required: 
         - checkCode
-        - keyReferenz
+        - keyReference
         - secret
       properties:
         checkCode:
@@ -311,8 +311,8 @@ components:
           description: 'The encrypted secret key for encryption. (`keyToTransport` in the general description of the API.)'
           type: string
           nullable: true
-        keyReferenz:
-          description: 'Reference to the used encryption key. This must be the value from keyReferenz of the DataRequest as this matches the passed and thus used key.'
+        keyReference:
+          description: 'Reference to the used encryption key. This must be the value from keyReference of the DataRequest as this matches the passed and thus used key.'
           type: string
     ContactsEventsSubmission:
       allOf:
