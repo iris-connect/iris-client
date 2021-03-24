@@ -289,24 +289,9 @@ components:
       description: 'Basic data type of a data submission which contains the unencrypted metadata needed for processing.'
       type: object
       required: 
-        - checkCode
         - keyReference
         - secret
       properties:
-        checkCode:
-          description: >
-            An array of up to three check codes, one of them must be correct for the data to be accepted.
-        
-            1. Base64 encoded md5 hash of the index person's name (current first name + last name) in lower case and all non alphanumeric characters removed (RegEx for remove = [^\pL\pN]); ⇒ e.g. Max Hammer = Base64(MD5("maxhammer"))
-            
-            2. Base64 encoded md5 hash of the date of birth of the index person as yyyymmdd ⇒ e.g. 01.01.2000 = Base64(MD5("20000101"))
-            
-            3. As fallback a random string which the health department can announce and which is used as it was transmitted.
-          type: array
-          items:
-            type: string
-            minItems: 1
-            maxItems: 3
         secret:
           description: 'The encrypted secret key for encryption. (`keyToTransport` in the general description of the API.)'
           type: string
@@ -323,20 +308,13 @@ components:
               $ref: '#/components/schemas/ContactsAndEvents'
     ContactsAndEvents:
       description: 'This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64!(`dataToTransport` in the general description of the API.)'
+      required:
+        - dataProvider
       properties:
         contacts:
           $ref: '#/components/schemas/ContactPersonList'
         events:
           $ref: '#/components/schemas/EventList'
-    ContactPersonList:
-      description: 'A collection of contact persons who had contact with the queried person during the queried time. This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64!'
-      required:
-        - contactPersons
-      properties:
-        contactPersons:
-          type: array
-          items:
-            $ref: '#/components/schemas/ContactPerson'
         dataProvider:
           type: object
           properties:
@@ -347,6 +325,15 @@ components:
             dateOfBirth:
               type: string
               format: date
+    ContactPersonList:
+      description: 'A collection of contact persons who had contact with the queried person during the queried time. This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64!'
+      required:
+        - contactPersons
+      properties:
+        contactPersons:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContactPerson'
         startDate:
           description: 'Start date of contacts for this list.'
           type: string
@@ -398,16 +385,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Event'
-        dataProvider:
-          type: object
-          properties:
-            firstName:
-              type: string
-            lastName:
-              type: string
-            dateOfBirth:
-              type: string
-              format: date
         startDate:
           description: 'Start date of visits for this list.'
           type: string
@@ -442,6 +419,7 @@ components:
       type: object
       required:
         - guests
+        - dataProvider
       properties:
         guests:
           type: array
