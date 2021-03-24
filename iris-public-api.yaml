@@ -74,11 +74,6 @@ paths:
               operationId: getDataRequestByCode
               parameters:
                 code: 'Code from health department'
-            GetNotifications: #TODO!
-              description: 'This link allows to fetch notifications for a data request and the associated data submissions.'
-              #operationId: getNotifications
-              parameters:
-                code: 'Code from health department'
         '401':
           $ref: '#/components/responses/Unauthorized'
   /data-requests/{code}:
@@ -226,11 +221,6 @@ components:
           operationId: postGuestsSubmission
           parameters:
             code: 'The code from the data request.'
-        GetNotifications: #TODO!
-          description: 'This link allows to fetch notifications for this data request and the associated data submissions.'
-          #operationId: getNotifications
-          parameters:
-            code: 'The code from the data request.'
   parameters:
     Code:
       name: code
@@ -260,9 +250,9 @@ components:
       type: object
       required: 
         - healthDepartment
-        - created
         - keyOfHealthDepartment
         - keyReference
+        - start
       readOnly: true
       properties:
         healthDepartment:
@@ -685,7 +675,6 @@ components:
       required:
         - "submissionUri"
         - "locationId"
-        - "start"
         - "end"
       properties:
         submissionUri:
