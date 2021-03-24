@@ -669,6 +669,9 @@ components:
     LocationContext:
       type: object
       description: 'Ein Standort hat ggf. weitere Informationen wie Tische/Räume, etc.'
+      required:
+        - "id"
+        - "name"
       properties:
         id:
           type: string
