@@ -151,8 +151,8 @@ paths:
             schema: 
               $ref: '#/components/schemas/LocationList'
       responses:
-        '201':
-            description: 'Locations created'            
+        '204':
+            description: 'Locations added to search index'            
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
