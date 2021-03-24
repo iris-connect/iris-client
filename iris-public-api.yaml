@@ -193,7 +193,6 @@ paths:
 security:
   - ApiKeyAuth: []
      
-
 components:
   responses:
     NotFound:
@@ -701,10 +700,10 @@ components:
         - "start"
         - "end"
       properties:
-        code:
+        submissionUri:
           type: string
-          description: 'The tracing code.'
-          example: 'a57b-e17b-9460'
+          description: 'The URI that can be used to submit contact data for this tracing code.'
+          example: 'https://iris.inoeg.de/api/data-submissions/{code}/guests'
         locationId:
           type: string
           description: 'The id of the location.'
