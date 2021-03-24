@@ -695,7 +695,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/DataRequest'
       required:
-        - "code"
+        - "submissionUri"
         - "locationId"
         - "start"
         - "end"
