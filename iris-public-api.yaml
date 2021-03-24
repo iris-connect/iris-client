@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.0.0  
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
@@ -189,7 +189,10 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
-          $ref: '#/components/responses/UnprocessableEntity'     
+          $ref: '#/components/responses/UnprocessableEntity'
+security:
+  - ApiKeyAuth: []
+     
 
 components:
   responses:
@@ -237,7 +240,14 @@ components:
       required: true
       description: 'The unique ID of a location in the context of the provider.'
       schema:
-        type: string        
+        type: string
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-IRIS-API-KEY
+      in: header
+        
   schemas:
     DataRequest:
       description: 'A data request with all parameters relevant for the data submission.'
