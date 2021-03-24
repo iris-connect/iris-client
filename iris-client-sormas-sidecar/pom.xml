@@ -24,7 +24,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>11</java.version>
-		<docker.image.prefix>de.health_imis</docker.image.prefix>
+		<!-- <docker.image.prefix>de.health_imis</docker.image.prefix> -->
+		<docker.image.prefix>inoeg</docker.image.prefix>
 		<vavr-version>0.10.3</vavr-version>
 	</properties>
 
@@ -131,6 +132,7 @@
 	<build>
 		<plugins>
 			<plugin>
+				<!-- https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#build-image -->
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
@@ -148,8 +150,19 @@
 						<env>
 							<!-- embeds environment variables into an image: https://github.com/paketo-buildpacks/environment-variables -->
 							<BPE_SPRING_PROFILES_ACTIVE>docker</BPE_SPRING_PROFILES_ACTIVE>
+							<!-- with GraalVM <BP_BOOT_NATIVE_IMAGE>true</BP_BOOT_NATIVE_IMAGE> -->
 						</env>
 					</image>
+					<publish>false</publish>
+					<docker>
+						<publishRegistry>
+							<token>${env.DOCKER_HUB_TOKEN}</token>
+							<!-- <username></username>
+							<password></password>
+							<url>https://docker.example.com/v1/</url>
+							<email>user@example.com</email>-->
+						</publishRegistry>
+					</docker>
 				</configuration>
 			</plugin>
 		</plugins>

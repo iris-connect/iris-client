@@ -1,0 +1,52 @@
+# https://buildpacks.io/docs/buildpack-author-guide/publishing-with-github-actions/
+
+name: Build, package and publish iris-client-sormas-sidecar and deploy to docker.io
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - iris-client-sormas-sidecar/**
+      - .github/workflows/client-sormas-sidecar_develop.yml
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+    
+#      - name: Set up JDK 11
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: 11
+    
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+    
+#      - name: setup-pack
+#        uses: buildpacks/github-actions/setup-pack@v4.1.0
+    
+#      - uses: docker/login-action@v1
+#        with:
+#          registry: docker.io
+#          username: ${{ secrets.DOCKER_HUB_USER }}
+#          password: ${{ secrets.DOCKER_HUB_PASS }}
+    
+      - name: build sormas API client
+        run: mvn -B install --file iris-sormas-api-client/pom.xml
+        
+      - name: build, package and publish the image
+        run: mvn -B spring-boot:build-image --file iris-client-sormas-sidecar/pom.xml -Dspring-boot.build-image.publish=true
+        env:
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
