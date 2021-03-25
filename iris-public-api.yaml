@@ -368,10 +368,13 @@ components:
                 address:
                   $ref: '#/components/schemas/Address'
             contactInformation:
-              description: 'Additional informations about the last contact with the queried person.'
+              description: 'Additional informations about the contact(s) with the queried person.'
               type: object
               properties:
-                date:
+                firstContactDate:
+                  type: string
+                  format: date
+                lastContactDate:
                   type: string
                   format: date
                 contactCategory:
