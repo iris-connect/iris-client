@@ -74,6 +74,14 @@ paths:
               operationId: getDataRequestByCode
               parameters:
                 code: 'Code from health department'
+            PutLocationsToSearchIndex:
+              description: 'This link is used to provide contact information about locations for the search index.'
+              operationId: putLocationsToSearchIndex
+            DeleteLocationsFromSearchIndex:
+              description: 'This link is used to delete the contact information of a location from the search index.'
+              operationId: deleteLocationFromSearchIndex
+              parameters:
+                id: 'The ID of the location'
         '401':
           $ref: '#/components/responses/Unauthorized'
   /data-requests/{code}:
@@ -285,7 +293,6 @@ components:
         secret:
           description: 'The encrypted secret key for encryption. (`keyToTransport` in the general description of the API.)'
           type: string
-          nullable: true
         keyReference:
           description: 'Reference to the used encryption key. This must be the value from keyReference of the DataRequest as this matches the passed and thus used key.'
           type: string
@@ -293,12 +300,16 @@ components:
       allOf:
         - $ref: '#/components/schemas/DataSubmission'
         - type: object
+          required:
+            - encryptedData
           properties:
             encryptedData:
               $ref: '#/components/schemas/ContactsAndEvents'
     ContactsAndEvents:
       description: 'This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64!(`dataToTransport` in the general description of the API.)'
       required:
+        - contacts
+        - events
         - dataProvider
       properties:
         contacts:
@@ -307,6 +318,10 @@ components:
           $ref: '#/components/schemas/EventList'
         dataProvider:
           type: object
+          required:
+            - firstName
+            - lastName
+            - dateOfBirth
           properties:
             firstName:
               type: string
@@ -385,6 +400,8 @@ components:
           format: date
     Event:
       description: 'An event, location or occasion visited by the queried person during the queried time.'
+      required:
+            - name
       properties:
         name:
           description: 'Name of the event'
@@ -401,6 +418,8 @@ components:
       allOf:
         - $ref: '#/components/schemas/DataSubmission'
         - type: object
+          required:
+            - encryptedData
           properties:
             encryptedData:
               $ref: '#/components/schemas/GuestList'
@@ -417,14 +436,21 @@ components:
             $ref: '#/components/schemas/Guest'
         dataProvider:
           type: object
+          required:
+            - name
+            - address
           properties:
             name:
               description: Name of Location, Institution or Organizer
               type: string
-            facilityType:
-              $ref: '#/components/schemas/FacilityType'
             address:
-              $ref: '#/components/schemas/Address'
+              required: 
+                - street
+                - houseNumber
+                - zipCode
+                - city
+              allOf:
+                - $ref: '#/components/schemas/Address'
         additionalInformation:
           description: 'Additional informations about the guest list and the event or location.'
           type: string
@@ -523,55 +549,6 @@ components:
       - MEDIUM_RISK_MED
       - LOW_RISK
       - NO_RISK
-    FacilityType:
-      description: 'Type of a facility that provides data on request.'
-      type: string
-      nullable: true
-      enum:
-      - ASSOCIATION
-      - BUSINESS
-      - CAMPSITE
-      - CANTINE
-      - CHILDRENS_DAY_CARE
-      - CHILDRENS_HOME
-      - CORRECTIONAL_FACILITY
-      - CRUISE_SHIP
-      - ELDERLY_DAY_CARE
-      - EVENT_VENUE
-      - FOOD_STALL
-      - HOLIDAY_CAMP
-      - HOMELESS_SHELTER
-      - HOSPITAL
-      - HOSTEL
-      - HOTEL
-      - KINDERGARTEN
-      - LABORATORY
-      - MASS_ACCOMMODATION
-      - MILITARY_BARRACKS
-      - MOBILE_NURSING_SERVICE
-      - OTHER_ACCOMMODATION
-      - OTHER_CARE_FACILITY
-      - OTHER_CATERING_OUTLET
-      - OTHER_EDUCATIONAL_FACILITY
-      - OTHER_LEISURE_FACILITY
-      - OTHER_MEDICAL_FACILITY
-      - OTHER_RESIDENCE
-      - OTHER_WORKING_PLACE
-      - OTHER_COMMERCE
-      - OUTPATIENT_TREATMENT_FACILITY
-      - PLACE_OF_WORSHIP
-      - PUBLIC_PLACE
-      - REFUGEE_ACCOMMODATION
-      - REHAB_FACILITY
-      - RESTAURANT
-      - RETIREMENT_HOME
-      - RETAIL
-      - WHOLESALE
-      - SCHOOL
-      - SWIMMING_POOL
-      - THEATER
-      - UNIVERSITY
-      - ZOO
     LocationList:
       type: object
       required:
@@ -601,12 +578,12 @@ components:
           description: 'Öffentlicher Schlüssel, ggf. für Nachrichtenaustausch'
         contact:
           $ref: '#/components/schemas/LocationContact'
-          description: 'Kontaktperson des Standorts'
         contexts:
           type: array
           items:
             $ref: '#/components/schemas/LocationContext'
     LocationContact:
+      description: 'Kontaktperson des Standorts'
       type: object
       required:
         - "address"
@@ -621,7 +598,6 @@ components:
           example: 'Silke '
         address:
           $ref: '#/components/schemas/LocationAddress'
-          description: 'Anschrift des Standorts'
         ownerEmail:
           type: string
           description: 'E-Mail des Inhabers'
@@ -650,6 +626,7 @@ components:
           description: 'Bezeichnung'
           example: 'Raum 0815'
     LocationAddress:
+      description: 'Anschrift des Standorts'
       required:
         - street
         - city
