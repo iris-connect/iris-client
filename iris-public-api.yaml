@@ -33,7 +33,7 @@ info:
 
     In order to be not limited in the amount of data, a hybrid encryption with symmetric encryption of the data and asymmetric encryption of the symmetric key is used for the encryption of the contact data.
 
-      1. The apps and applications get the public key of the health department as a 2048-bit RSA key from the IRIS+ server. This key is base64-encoded in the Private Enhanced Mail (PEM) format.
+      1. The apps and applications get the public key of the health department as a 4096-bit RSA key from the IRIS+ server. This key is base64-encoded in the Private Enhanced Mail (PEM) format.
       2. The app generates a 256-bit AES key.
       3. With this key the data is encrypted (algorithm: AES).
       4. The AES key must be encrypted with the public RSA key of the health department. (algorithm: RSA with Optimal Asymmetric Encryption Padding (OAEP))
@@ -150,7 +150,7 @@ paths:
   /search-index/locations:
     put: 
       summary: 'Recives contact information about locations that can be used to search for a specific location that was visited by a potentially infected person.'
-      description: 'Locations are identifed by an ID that is owned by the provider. If an ID already exists, the information is overidden.'
+      description: 'Locations are identifed by an ID that is owned by the provider. If an ID already exists, the information is overidden. The IDs are handled separately for each provider based on their authentication, so there is no overlap of ID between providers.'
       operationId: postLocationsToSearchIndex
       tags:
         - "Location Search Index"
@@ -186,6 +186,7 @@ paths:
     post: 
       tags:
         - "Location Data Requests"
+        - "Implemented by the apps"
       description: 'Recives request from IRIS for provide contact data.'
       requestBody:
         required: true
