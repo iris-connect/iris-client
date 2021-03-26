@@ -115,8 +115,8 @@ paths:
             schema:
               $ref: '#/components/schemas/ContactsEventsSubmission'
       responses:
-        '201':
-          $ref: '#/components/responses/DataRequest'
+        '202':
+          description: 'Submission was accepted and saved for later processing by the client in the health department.'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -139,8 +139,8 @@ paths:
             schema:
               $ref: '#/components/schemas/GuestsSubmission'
       responses:
-        '201':
-          $ref: '#/components/responses/DataRequest'
+        '202':
+          description: 'Submission was accepted and saved for later processing by the client in the health department.'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -162,7 +162,7 @@ paths:
               $ref: '#/components/schemas/LocationList'
       responses:
         '204':
-            description: 'Locations added to search index'            
+            description: 'Locations added to search index'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -195,7 +195,7 @@ paths:
             schema: 
               $ref: '#/components/schemas/LocationDataRequest'
       responses:
-        '200':
+        '202':
           description: 'Request accepted'        
         '401':
           $ref: '#/components/responses/Unauthorized'
