@@ -2,7 +2,20 @@
   <div>
     <h1 class="text-h3 mb-6">Ereignisnachverfolgungen</h1>
     <div class="mb-6">
-      <v-btn :to="routeEventTrackingForm"> NEUE NACHVERFOLGUNG STARTEN </v-btn>
+      <v-dialog
+          transition="dialog-bottom-transition"
+          max-width="98%"
+          width="1600px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="primary"
+              v-bind="attrs"
+              v-on="on"
+            >Neue Ereignisverfolgung starten</v-btn>
+          </template>
+          <EventTrackingFormView></EventTrackingFormView>
+        </v-dialog>
     </div>
     <v-card>
       <p>DISCLAIMER: DEMO TABELLE</p>
@@ -29,11 +42,14 @@
 <script lang="ts">
 import { ROUTE_NAME_EVENT_TRACKING_FORM } from "@/router";
 import { Component, Vue } from "vue-property-decorator";
-
-@Component
-export default class EventTrackingFormView extends Vue {
+import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
+@Component({
+    components: {
+        "EventTrackingFormView": EventTrackingFormView
+    }
+})
+export default class EventTrackingListView extends Vue {
   routeEventTrackingForm = ROUTE_NAME_EVENT_TRACKING_FORM;
-
   tableData = {
     search: "",
     headers: [
