@@ -1,0 +1,668 @@
+openapi: 3.0.0  
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/jekutzsche/iris_public/0.2.0
+tags:
+  - name: "Information"
+  - name: "Location Search Index"    
+  - name: "Location Data Requests"
+    description: "Implemented by the provider"
+  - name: "Data Submissions"    
+    
+info:
+  title: 'IRIS Public API'
+  version: 0.2.0
+  description: >
+    The public API of IRIS (Integration of Remote systems into Infection control Software). Through this API, the many contact tracking apps and the like can submit your data to health departments via IRIS.
+    
+    The process as an overview
+
+      1. The health department knows about an infected person, creates a case, and starts tracking via IRIS.
+      2. For tracking purposes, a unique code is generated and communicated to the index case (preferably by mail).
+      3. The index case uses the code in an app with IRIS connectivity to submit its contacts and events visited. For this purpose, the code is copied into the app.
+      4. The app uses the code to get the health department key and other information from the IRIS server.
+      5. The app encrypts the data and transmits it to the IRIS system via the post endpoints.
+      6. The IRIS system transmits the data to the health department.
+      7. If the infected person has visited an event or location (such as a store, hairdresser or restaurant), the health department can search for the location in IRIS.
+      8. If the location uses an IRIS enabled app, the health department can request the location's contact data for a specifc timespan. 
+      9. Same as in step 5) the IRIS enabled app encrypts the data and transmits it to the IRIS system via the post endpoints.
+      10. The IRIS system transmits the location's contact data to the health department.
+
+    ### Encryption of the data to be transmitted (contact data)
+
+    In order to be not limited in the amount of data, a hybrid encryption with symmetric encryption of the data and asymmetric encryption of the symmetric key is used for the encryption of the contact data.
+
+      1. The apps and applications get the public key of the health department as a 4096-bit RSA key from the IRIS+ server. This key is base64-encoded in the Private Enhanced Mail (PEM) format.
+      2. The app generates a 256-bit AES key.
+      3. With this key the data is encrypted (algorithm: AES).
+      4. The AES key must be encrypted with the public RSA key of the health department. (algorithm: RSA with Optimal Asymmetric Encryption Padding (OAEP))
+      5. The encrypted AES key and the encrypted content must be transmitted base64 encoded.
+      
+      #### Schematic sequence
+
+      ```
+      pubKeyEncryption = publicKeyFromPem(givenPublicKey);
+      contentKey = generateAESKey();
+
+      encrypted = contentKey.encrypt(content);
+      keyEncrypted = pubKeyEncryption.encrypt(contentKey, "RSA/NONE/OAEPWithSHA3-256AndMGF1Padding");
+
+      dataToTransport = base64Encode(encrypted);
+      keyToTransport = base64Encode(keyEncrypted);
+      ```
+  contact:
+    name: Jens Kutzsche (IMIS)
+    email: jens.kutzsche@gebea.de
+  license:
+    name: GNU AGPL v3
+    url: https://www.gnu.org/licenses/agpl-3.0
+
+paths:
+  /:
+    get:
+      tags:
+        - "Information"
+      summary: 'Entry point returns next steps by links.'
+      description: 'Entry point for the clients of the API. From here, they are guided through the API by means of links.'
+      responses:
+        200:
+          description: 'Links for the next posible steps.'
+          links:
+            GetDataRequestByCode:
+              description: 'This link allows to fetch the parameters of a data request for a code.'
+              operationId: getDataRequestByCode
+              parameters:
+                code: 'Code from health department'
+            PutLocationsToSearchIndex:
+              description: 'This link is used to provide contact information about locations for the search index.'
+              operationId: putLocationsToSearchIndex
+            DeleteLocationsFromSearchIndex:
+              description: 'This link is used to delete the contact information of a location from the search index.'
+              operationId: deleteLocationFromSearchIndex
+              parameters:
+                id: 'The ID of the location'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /data-requests/{code}:
+    get:
+      tags:
+        - "Information"
+      summary: 'Returns the data request for a code.'
+      operationId: getDataRequestByCode
+      parameters:
+        - $ref: '#/components/parameters/Code'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /data-submissions/{code}/contacts_events:
+    post:
+      tags:
+        - "Data Submissions"
+      summary: 'Receives a data submission of contacts and events for the health department and transmits them in the further process.'
+      operationId: postContactsEventsSubmission
+      parameters:
+        - $ref: '#/components/parameters/Code'
+      requestBody:
+        required: true
+        content:
+          #application/vnd.iris.api.v1+hal+json; charset=UTF-8:
+          application/json; charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/ContactsEventsSubmission'
+      responses:
+        '202':
+          description: 'Submission was accepted and saved for later processing by the client in the health department.'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+  /data-submissions/{code}/guests:
+    post:
+      tags:
+        - "Data Submissions"
+      summary: 'Receives a data submission of guests for the health department and transmits them in the further process.'
+      operationId: postGuestsSubmission
+      parameters:
+        - $ref: '#/components/parameters/Code'
+      requestBody:
+        required: true
+        content:
+          #application/vnd.iris.api.v1+hal+json; charset=UTF-8:
+          application/json; charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/GuestsSubmission'
+      responses:
+        '202':
+          description: 'Submission was accepted and saved for later processing by the client in the health department.'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+  /search-index/locations:
+    put: 
+      summary: 'Recives contact information about locations that can be used to search for a specific location that was visited by a potentially infected person.'
+      description: 'Locations are identifed by an ID that is owned by the provider. If an ID already exists, the information is overidden. The IDs are handled separately for each provider based on their authentication, so there is no overlap of ID between providers.'
+      operationId: postLocationsToSearchIndex
+      tags:
+        - "Location Search Index"
+      requestBody:
+        required: true
+        content: 
+          application/json; charset=UTF-8:            
+            schema: 
+              $ref: '#/components/schemas/LocationList'
+      responses:
+        '204':
+            description: 'Locations added to search index'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'     
+  /search-index/locations/{id}:
+    delete: 
+      summary: 'Deletes contact information about a specific location identified by the provider owned ID.'
+      operationId: deleteLocationFromSearchIndex
+      tags:
+        - "Location Search Index"
+      parameters:
+        - $ref: '#/components/parameters/LocationId'
+      responses:
+        '200':
+            description: 'Location deleted'            
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /iris/data-request:
+    post: 
+      tags:
+        - "Location Data Requests"
+        - "Implemented by the apps"
+      description: 'Recives request from IRIS for provide contact data.'
+      requestBody:
+        required: true
+        content: 
+          application/json; charset=UTF-8:            
+            schema: 
+              $ref: '#/components/schemas/LocationDataRequest'
+      responses:
+        '202':
+          description: 'Request accepted'        
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+security:
+  - ApiKeyAuth: []
+     
+components:
+  responses:
+    NotFound:
+      description: 'The specified resource was not found.'
+    Unauthorized:
+      description: 'The client is unauthorized to access this API.'
+    UnprocessableEntity:
+      description: 'The transferred entity is not expected for the data request.'
+    DataRequest:
+      description: 'A data request with all parameters relevant for the data submission and the links to the next possible steps for data submission.'
+      content:
+        #application/vnd.iris.api.v1+hal+json:
+        application/hal+json:
+          schema:
+           $ref: '#/components/schemas/DataRequest'
+      links:
+        PostContactsEventsSubmission:
+          description: 'If this link is present, the data for contacts and events can be submitted via it.'
+          operationId: postContactsEventsSubmission
+          parameters:
+            code: 'The code from the data request.'
+        PostGuestsSubmission:
+          description: 'If this link is present, the data for guests can be submitted via it.'
+          operationId: postGuestsSubmission
+          parameters:
+            code: 'The code from the data request.'
+  parameters:
+    Code:
+      name: code
+      in: path
+      required: true
+      description: 'The unique code of a data request in format of a UUID sent by the health department.'
+      schema:
+        type: string
+#        pattern: '^[2-9A-HKMNP-Z]{4}-[2-9A-HKMNP-Z]{4}-[2-9A-HKMNP-Z]{4}$'
+    LocationId:
+      name: id
+      in: path
+      required: true
+      description: 'The unique ID of a location in the context of the provider.'
+      schema:
+        type: string
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-IRIS-API-KEY
+      in: header
+        
+  schemas:
+    DataRequest:
+      description: 'A data request with all parameters relevant for the data submission.'
+      type: object
+      required: 
+        - healthDepartment
+        - keyOfHealthDepartment
+        - keyReference
+        - start
+      readOnly: true
+      properties:
+        healthDepartment:
+          description: 'Name of the requesting health department.'
+          type: string
+        keyOfHealthDepartment:
+          description: 'The key of the requesting health department that must be used for encryption. The key is encoded with Base64.'
+          type: string
+        keyReference:
+          description: 'Reference id of the given key. This reference must be included in the submission in order to identify the correct private key for decryption at the health department.'
+          type: string
+        start:
+          description: 'The start time for which data should be submitted with this request.'
+          type: string
+          format: date-time
+        end:
+          description: 'The end time for which data should be submitted with this request.'
+          type: string
+          format: date-time
+        requestDetails:
+          description: 'Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).'
+          type: string
+    DataSubmission:
+      description: 'Basic data type of a data submission which contains the unencrypted metadata needed for processing.'
+      type: object
+      required: 
+        - keyReference
+        - secret
+      properties:
+        secret:
+          description: 'The encrypted secret key for encryption. (`keyToTransport` in the general description of the API.)'
+          type: string
+        keyReference:
+          description: 'Reference to the used encryption key. This must be the value from keyReference of the DataRequest as this matches the passed and thus used key.'
+          type: string
+    ContactsEventsSubmission:
+      allOf:
+        - $ref: '#/components/schemas/DataSubmission'
+        - type: object
+          required:
+            - encryptedData
+          properties:
+            encryptedData:
+              $ref: '#/components/schemas/ContactsAndEvents'
+    ContactsAndEvents:
+      description: 'This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64!(`dataToTransport` in the general description of the API.)'
+      required:
+        - contacts
+        - events
+        - dataProvider
+      properties:
+        contacts:
+          $ref: '#/components/schemas/ContactPersonList'
+        events:
+          $ref: '#/components/schemas/EventList'
+        dataProvider:
+          type: object
+          required:
+            - firstName
+            - lastName
+            - dateOfBirth
+          properties:
+            firstName:
+              type: string
+            lastName:
+              type: string
+            dateOfBirth:
+              type: string
+              format: date
+    ContactPersonList:
+      description: 'A collection of contact persons who had contact with the queried person during the queried time. This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64!'
+      required:
+        - contactPersons
+      properties:
+        contactPersons:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContactPerson'
+        startDate:
+          description: 'Start date of contacts for this list.'
+          type: string
+          format: date
+        endDate:
+          description: 'End date of contacts for this list.'
+          type: string
+          format: date
+    ContactPerson:
+      description: 'Extended person data type for contact persons who had contact with the queried person during the queried time.'
+      allOf:
+        - $ref: '#/components/schemas/Person'
+        - type: object
+          properties:
+            workPlace:
+              description: 'Additional informations about the work place of the contact person.'
+              type: object
+              properties:
+                name:
+                  description: 'Name of work place'
+                  type: string
+                pointOfContact:
+                  type: string
+                phone:
+                  type: string
+                  format: phone
+                address:
+                  $ref: '#/components/schemas/Address'
+            contactInformation:
+              description: 'Additional informations about the contact(s) with the queried person.'
+              type: object
+              properties:
+                firstContactDate:
+                  type: string
+                  format: date
+                lastContactDate:
+                  type: string
+                  format: date
+                contactCategory:
+                  $ref: '#/components/schemas/ContactCategory'
+                basicConditions:
+                  description: 
+                    'Informations about the basic conditions such as: from, to, place, inside|outside, mask yes|no, distance >=|< 1,5m, ventilated yes|no, remarks.'
+                  type: string
+    EventList:
+      type: object
+      description: 'A collection of events visited by the queried person during the queried time. This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64!'
+      required:
+        - events
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        startDate:
+          description: 'Start date of visits for this list.'
+          type: string
+          format: date
+        endDate:
+          description: 'End date of visits for this list.'
+          type: string
+          format: date
+    Event:
+      description: 'An event, location or occasion visited by the queried person during the queried time.'
+      required:
+            - name
+      properties:
+        name:
+          description: 'Name of the event'
+          type: string
+        phone:
+          type: string
+          format: phone
+        address:
+          $ref: '#/components/schemas/Address'
+        additionalInformation:
+          description: 'Additional informations about the event.'
+          type: string
+    GuestsSubmission:
+      allOf:
+        - $ref: '#/components/schemas/DataSubmission'
+        - type: object
+          required:
+            - encryptedData
+          properties:
+            encryptedData:
+              $ref: '#/components/schemas/GuestList'
+    GuestList:
+      description: 'A collection of guests who attended a queried event or location in the queried time. This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64! (`dataToTransport` in the general description of the API.)'
+      type: object
+      required:
+        - guests
+        - dataProvider
+      properties:
+        guests:
+          type: array
+          items:
+            $ref: '#/components/schemas/Guest'
+        dataProvider:
+          type: object
+          required:
+            - name
+            - address
+          properties:
+            name:
+              description: Name of Location, Institution or Organizer
+              type: string
+            address:
+              required: 
+                - street
+                - houseNumber
+                - zipCode
+                - city
+              allOf:
+                - $ref: '#/components/schemas/Address'
+        additionalInformation:
+          description: 'Additional informations about the guest list and the event or location.'
+          type: string
+        startDate:
+          description: 'Start date/time of attendance for this guest list.'
+          type: string
+          format: date-time
+        endDate:
+          description: 'End date/time of attendance for this guest list.'
+          type: string
+          format: date-time
+    Guest:
+      description: 'Extended person data type for a guest who attended a queried event or location in the queried time.'
+      allOf:
+        - $ref: '#/components/schemas/Person'
+        - type: object
+          properties:
+            attendanceInformation:
+              type: object
+              properties:
+                descriptionOfParticipation:
+                  description: 'Description of the type of participation.'
+                  type: string
+                  example: 'Guest or Staff'
+                attendFrom:
+                  description: 'Start date/time of attendance of this guest.'
+                  type: string
+                  format: date-time
+                attendTo:
+                  description: 'End date/time of attendance of this guest.'
+                  type: string
+                  format: date-time
+                additionalInformation:
+                  description: 'Additional informations about the attendance.'
+                  type: string
+                  example: 'Table: 3; Floor: 2'
+            identityChecked:
+              description: 'The app indicates whether the data are verified with respect to identity (e.g. by phone number) = TRUE or whether they are unverified form inputs = FALSE.'
+              type: boolean
+    Person:
+      description: 'Basic data type of a person.'
+      type: object
+      required: 
+        - firstName
+        - lastName
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        sex:
+          $ref: '#/components/schemas/Sex'
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          format: phone
+        mobilPhone:
+          type: string
+          format: phone
+        address:
+          $ref: '#/components/schemas/Address'
+    Address:
+      type: object
+      nullable: true
+      properties:
+        street:
+          type: string
+        houseNumber:
+          type: string
+          format: house-number
+        zipCode:
+          type: string
+          format: zip-code
+        city:
+          type: string
+    Sex:
+      type: string
+      default: UNKNOWN
+      enum:
+      - MALE
+      - FEMALE
+      - OTHER
+      - UNKNOWN
+    ContactCategory:
+      description: 'Category of contact that describes the intensity and thus the risk of infection of the contact.'
+      type: string
+      nullable: true
+      enum:
+      - HIGH_RISK
+      - HIGH_RISK_MED
+      - MEDIUM_RISK_MED
+      - LOW_RISK
+      - NO_RISK
+    LocationList:
+      type: object
+      required:
+        - "locations"
+      properties:
+        locations: 
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationInformation'          
+    LocationInformation:
+      type: object
+      required:
+        - "id"
+        - "name"
+        - "contact"
+      properties:
+        id:
+          type: string
+          description: 'Interne ID (beim Provider)'
+          example: '5eddd61036d39a0ff8b11fdb'
+        name:
+          type: string
+          description: 'Name des Standorts'
+          example: 'Restaurant Alberts'
+        publicKey:
+          type: string
+          description: 'Öffentlicher Schlüssel, ggf. für Nachrichtenaustausch'
+        contact:
+          $ref: '#/components/schemas/LocationContact'
+        contexts:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationContext'
+    LocationContact:
+      description: 'Kontaktperson des Standorts'
+      type: object
+      required:
+        - "address"
+      properties:
+        officialName:
+          type: string
+          description: 'Offizieller Unternehmensname'
+          example: 'Darfichrein GmbH'
+        representative:
+          type: string
+          description: 'Ansprechpartner für dieses Unternehmen'
+          example: 'Silke '
+        address:
+          $ref: '#/components/schemas/LocationAddress'
+        ownerEmail:
+          type: string
+          description: 'E-Mail des Inhabers'
+          example: 'covid@restaurant.de'
+        email:
+          type: string
+          description: 'ggf. E-Mail einer weiteren Kontaktperson'
+          example: 'covid2@restaurant.de'
+        phone:
+          type: string
+          description: 'Telefonnummer eines Ansprechpartners'
+          example: 'die bleibt privat :-)'
+    LocationContext:
+      type: object
+      description: 'Ein Standort hat ggf. weitere Informationen wie Tische/Räume, etc.'
+      required:
+        - "id"
+        - "name"
+      properties:
+        id:
+          type: string
+          description: 'Interne ID des Kontext'
+          example: '5f4bfff742c1bf5f72918851'
+        name:
+          type: string
+          description: 'Bezeichnung'
+          example: 'Raum 0815'
+    LocationAddress:
+      description: 'Anschrift des Standorts'
+      required:
+        - street
+        - city
+        - zip
+      properties:
+        street:
+          type: string
+          description: 'street + number'
+          example: 'Türkenstr. 7'
+        city:
+          type: string
+          description: 'Stadt'
+          example: 'München'
+        zip:
+          type: string
+          description: 'Postleitzahl'
+          example: '80333'
+
+    LocationDataRequest:
+      description: 'All information needed to create a new TracingTicket'
+      allOf:
+        - $ref: '#/components/schemas/DataRequest'
+      required:
+        - "submissionUri"
+        - "locationId"
+        - "end"
+      properties:
+        submissionUri:
+          type: string
+          description: 'The URI that can be used to submit contact data for this tracing code.'
+          example: 'https://iris.inoeg.de/api/data-submissions/{code}/guests'
+        locationId:
+          type: string
+          description: 'The id of the location.'
+          example: '35b7df90-8670-409a-9375-15a56fd995c1'
