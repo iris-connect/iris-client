@@ -182,12 +182,19 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-  /iris/data-request:
+  /{data_request_endpoint}:
     post: 
       tags:
         - "Location Data Requests"
         - "Implemented by the apps"
       description: 'Recives request from IRIS for provide contact data.'
+      parameters: 
+        - in: path
+          name: data_request_endpoint
+          required: true
+          description: 'Endpoint as configured by provider'
+          schema:
+            type: string
       requestBody:
         required: true
         content: 
@@ -471,9 +478,14 @@ components:
       allOf:
         - $ref: '#/components/schemas/Person'
         - type: object
+          required:
+            - attendanceInformation
           properties:
             attendanceInformation:
               type: object
+              required:
+                - attendFrom
+                - attendTo
               properties:
                 descriptionOfParticipation:
                   description: 'Description of the type of participation.'
@@ -666,3 +678,8 @@ components:
           type: string
           description: 'The id of the location.'
           example: '35b7df90-8670-409a-9375-15a56fd995c1'
+# for next version
+#       contexts:
+#          type: array
+#          items:
+#            $ref: '#/components/schemas/LocationContext'        
