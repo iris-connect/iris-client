@@ -27,96 +27,71 @@ import java.util.Map;
 @Ignore
 public class SormasToSormasControllerApiTest {
 
-    private final SormasToSormasControllerApi api = new SormasToSormasControllerApi();
+	private final SormasToSormasControllerApi api = new SormasToSormasControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void saveReturnedCaseTest() {
-        SormasToSormasEncryptedDataDto body = null;
-        api.saveReturnedCase(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void saveReturnedCaseTest() {
+		SormasToSormasEncryptedDataDto body = null;
+		api.saveReturnedCase(body);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void saveReturnedContactTest() {
-        SormasToSormasEncryptedDataDto body = null;
-        api.saveReturnedContact(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void saveSharedCaseTest() {
-        SormasToSormasEncryptedDataDto body = null;
-        api.saveSharedCase(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void saveReturnedContactTest() {
+		SormasToSormasEncryptedDataDto body = null;
+		api.saveReturnedContact(body);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void saveSharedContactTest() {
-        SormasToSormasEncryptedDataDto body = null;
-        api.saveSharedContact(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void syncSharedCasesTest() {
-        SormasToSormasEncryptedDataDto body = null;
-        api.syncSharedCases(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void saveSharedCaseTest() {
+		SormasToSormasEncryptedDataDto body = null;
+		api.saveSharedCase(body);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void syncSharedContactsTest() {
-        SormasToSormasEncryptedDataDto body = null;
-        api.syncSharedContacts(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void saveSharedContactTest() {
+		SormasToSormasEncryptedDataDto body = null;
+		api.saveSharedContact(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void syncSharedCasesTest() {
+		SormasToSormasEncryptedDataDto body = null;
+		api.syncSharedCases(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void syncSharedContactsTest() {
+		SormasToSormasEncryptedDataDto body = null;
+		api.syncSharedContacts(body);
+
+		// TODO: test validations
+	}
 }

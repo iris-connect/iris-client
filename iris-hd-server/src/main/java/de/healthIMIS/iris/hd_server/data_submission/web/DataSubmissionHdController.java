@@ -14,13 +14,6 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server.data_submission.web;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import de.healthIMIS.iris.hd_server.core.DepartmentIdentifier;
 import de.healthIMIS.iris.hd_server.data_submission.DataSubmission;
 import de.healthIMIS.iris.hd_server.data_submission.DataSubmission.Feature;
@@ -29,6 +22,13 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller of the internal end-points for health department site to exchange data submissions.
@@ -43,7 +43,8 @@ public class DataSubmissionHdController {
 	private final @NonNull DataSubmissionRepository submissions;
 
 	@GetMapping("/hd/data-submissions")
-	List<DataSubmissionClientOutputDto> getDataSubmissions(@RequestParam("departmentId") DepartmentIdentifier departmentId) {
+	List<DataSubmissionClientOutputDto> getDataSubmissions(
+			@RequestParam("departmentId") DepartmentIdentifier departmentId) {
 
 		var dataSubmissions = submissions.findAllByDepartmentId(departmentId);
 
@@ -51,9 +52,8 @@ public class DataSubmissionHdController {
 
 		var dtos = dataSubmissions.stream().map(it -> DataSubmissionClientOutputDto.of(it)).collect(Collectors.toList());
 
-		log.debug(
-			"Submission - GET from hd client: {}",
-			dtos.stream().map(DataSubmissionClientOutputDto::getRequestId).collect(Collectors.joining(", ")));
+		log.debug("Submission - GET from hd client: {}",
+				dtos.stream().map(DataSubmissionClientOutputDto::getRequestId).collect(Collectors.joining(", ")));
 
 		return dtos;
 	}
@@ -62,14 +62,9 @@ public class DataSubmissionHdController {
 	static class DataSubmissionClientOutputDto {
 
 		static DataSubmissionClientOutputDto of(DataSubmission submission) {
-			return new DataSubmissionClientOutputDto(
-				submission.getId().toString(),
-				submission.getRequestId().toString(),
-				submission.getDepartmentId().toString(),
-				submission.getSalt(),
-				submission.getKeyReferenz(),
-				submission.getEncryptedData(),
-				submission.getFeature());
+			return new DataSubmissionClientOutputDto(submission.getId().toString(), submission.getRequestId().toString(),
+					submission.getDepartmentId().toString(), submission.getSalt(), submission.getKeyReferenz(),
+					submission.getEncryptedData(), submission.getFeature());
 		}
 
 		private final String id;

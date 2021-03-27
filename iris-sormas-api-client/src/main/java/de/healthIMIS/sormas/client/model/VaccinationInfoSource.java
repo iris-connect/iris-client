@@ -21,32 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets VaccinationInfoSource
  */
 public enum VaccinationInfoSource {
-  VACCINATION_CARD("VACCINATION_CARD"),
-  ORAL_COMMUNICATION("ORAL_COMMUNICATION");
+	VACCINATION_CARD("VACCINATION_CARD"), ORAL_COMMUNICATION("ORAL_COMMUNICATION");
 
-  private String value;
+	private String value;
 
-  VaccinationInfoSource(String value) {
-    this.value = value;
-  }
+	VaccinationInfoSource(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static VaccinationInfoSource fromValue(String text) {
-    for (VaccinationInfoSource b : VaccinationInfoSource.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static VaccinationInfoSource fromValue(String text) {
+		for (VaccinationInfoSource b : VaccinationInfoSource.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

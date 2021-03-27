@@ -24,370 +24,379 @@ import de.healthIMIS.sormas.client.model.RegionReferenceDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.time.Instant;
+
 /**
  * FacilityDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class FacilityDto {
-  @JsonProperty("creationDate")
-  private Instant creationDate = null;
+	@JsonProperty("creationDate")
+	private Instant creationDate = null;
 
-  @JsonProperty("changeDate")
-  private Instant changeDate = null;
+	@JsonProperty("changeDate")
+	private Instant changeDate = null;
 
-  @JsonProperty("uuid")
-  private String uuid = null;
+	@JsonProperty("uuid")
+	private String uuid = null;
 
-  @JsonProperty("name")
-  private String name = null;
+	@JsonProperty("name")
+	private String name = null;
 
-  @JsonProperty("region")
-  private RegionReferenceDto region = null;
+	@JsonProperty("region")
+	private RegionReferenceDto region = null;
 
-  @JsonProperty("district")
-  private DistrictReferenceDto district = null;
+	@JsonProperty("district")
+	private DistrictReferenceDto district = null;
 
-  @JsonProperty("community")
-  private CommunityReferenceDto community = null;
+	@JsonProperty("community")
+	private CommunityReferenceDto community = null;
 
-  @JsonProperty("city")
-  private String city = null;
+	@JsonProperty("city")
+	private String city = null;
 
-  @JsonProperty("latitude")
-  private Double latitude = null;
+	@JsonProperty("latitude")
+	private Double latitude = null;
 
-  @JsonProperty("longitude")
-  private Double longitude = null;
+	@JsonProperty("longitude")
+	private Double longitude = null;
 
-  @JsonProperty("type")
-  private FacilityType type = null;
+	@JsonProperty("type")
+	private FacilityType type = null;
 
-  @JsonProperty("publicOwnership")
-  private Boolean publicOwnership = null;
+	@JsonProperty("publicOwnership")
+	private Boolean publicOwnership = null;
 
-  @JsonProperty("archived")
-  private Boolean archived = null;
+	@JsonProperty("archived")
+	private Boolean archived = null;
 
-  @JsonProperty("externalID")
-  private String externalID = null;
+	@JsonProperty("externalID")
+	private String externalID = null;
 
-  public FacilityDto creationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-    return this;
-  }
+	public FacilityDto creationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+		return this;
+	}
 
-   /**
-   * Get creationDate
-   * @return creationDate
-  **/
-  @Schema(description = "")
-  public Instant getCreationDate() {
-    return creationDate;
-  }
+	/**
+	 * Get creationDate
+	 * 
+	 * @return creationDate
+	 **/
+	@Schema(description = "")
+	public Instant getCreationDate() {
+		return creationDate;
+	}
 
-  public void setCreationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-  }
+	public void setCreationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+	}
 
-  public FacilityDto changeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-    return this;
-  }
+	public FacilityDto changeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+		return this;
+	}
 
-   /**
-   * Get changeDate
-   * @return changeDate
-  **/
-  @Schema(description = "")
-  public Instant getChangeDate() {
-    return changeDate;
-  }
+	/**
+	 * Get changeDate
+	 * 
+	 * @return changeDate
+	 **/
+	@Schema(description = "")
+	public Instant getChangeDate() {
+		return changeDate;
+	}
 
-  public void setChangeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-  }
+	public void setChangeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+	}
 
-  public FacilityDto uuid(String uuid) {
-    this.uuid = uuid;
-    return this;
-  }
+	public FacilityDto uuid(String uuid) {
+		this.uuid = uuid;
+		return this;
+	}
 
-   /**
-   * Get uuid
-   * @return uuid
-  **/
-  @Schema(description = "")
-  public String getUuid() {
-    return uuid;
-  }
+	/**
+	 * Get uuid
+	 * 
+	 * @return uuid
+	 **/
+	@Schema(description = "")
+	public String getUuid() {
+		return uuid;
+	}
 
-  public void setUuid(String uuid) {
-    this.uuid = uuid;
-  }
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
-  public FacilityDto name(String name) {
-    this.name = name;
-    return this;
-  }
+	public FacilityDto name(String name) {
+		this.name = name;
+		return this;
+	}
 
-   /**
-   * Get name
-   * @return name
-  **/
-  @Schema(description = "")
-  public String getName() {
-    return name;
-  }
+	/**
+	 * Get name
+	 * 
+	 * @return name
+	 **/
+	@Schema(description = "")
+	public String getName() {
+		return name;
+	}
 
-  public void setName(String name) {
-    this.name = name;
-  }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-  public FacilityDto region(RegionReferenceDto region) {
-    this.region = region;
-    return this;
-  }
+	public FacilityDto region(RegionReferenceDto region) {
+		this.region = region;
+		return this;
+	}
 
-   /**
-   * Get region
-   * @return region
-  **/
-  @Schema(description = "")
-  public RegionReferenceDto getRegion() {
-    return region;
-  }
+	/**
+	 * Get region
+	 * 
+	 * @return region
+	 **/
+	@Schema(description = "")
+	public RegionReferenceDto getRegion() {
+		return region;
+	}
 
-  public void setRegion(RegionReferenceDto region) {
-    this.region = region;
-  }
+	public void setRegion(RegionReferenceDto region) {
+		this.region = region;
+	}
 
-  public FacilityDto district(DistrictReferenceDto district) {
-    this.district = district;
-    return this;
-  }
+	public FacilityDto district(DistrictReferenceDto district) {
+		this.district = district;
+		return this;
+	}
 
-   /**
-   * Get district
-   * @return district
-  **/
-  @Schema(description = "")
-  public DistrictReferenceDto getDistrict() {
-    return district;
-  }
+	/**
+	 * Get district
+	 * 
+	 * @return district
+	 **/
+	@Schema(description = "")
+	public DistrictReferenceDto getDistrict() {
+		return district;
+	}
 
-  public void setDistrict(DistrictReferenceDto district) {
-    this.district = district;
-  }
+	public void setDistrict(DistrictReferenceDto district) {
+		this.district = district;
+	}
 
-  public FacilityDto community(CommunityReferenceDto community) {
-    this.community = community;
-    return this;
-  }
+	public FacilityDto community(CommunityReferenceDto community) {
+		this.community = community;
+		return this;
+	}
 
-   /**
-   * Get community
-   * @return community
-  **/
-  @Schema(description = "")
-  public CommunityReferenceDto getCommunity() {
-    return community;
-  }
+	/**
+	 * Get community
+	 * 
+	 * @return community
+	 **/
+	@Schema(description = "")
+	public CommunityReferenceDto getCommunity() {
+		return community;
+	}
 
-  public void setCommunity(CommunityReferenceDto community) {
-    this.community = community;
-  }
+	public void setCommunity(CommunityReferenceDto community) {
+		this.community = community;
+	}
 
-  public FacilityDto city(String city) {
-    this.city = city;
-    return this;
-  }
+	public FacilityDto city(String city) {
+		this.city = city;
+		return this;
+	}
 
-   /**
-   * Get city
-   * @return city
-  **/
-  @Schema(description = "")
-  public String getCity() {
-    return city;
-  }
+	/**
+	 * Get city
+	 * 
+	 * @return city
+	 **/
+	@Schema(description = "")
+	public String getCity() {
+		return city;
+	}
 
-  public void setCity(String city) {
-    this.city = city;
-  }
+	public void setCity(String city) {
+		this.city = city;
+	}
 
-  public FacilityDto latitude(Double latitude) {
-    this.latitude = latitude;
-    return this;
-  }
+	public FacilityDto latitude(Double latitude) {
+		this.latitude = latitude;
+		return this;
+	}
 
-   /**
-   * Get latitude
-   * @return latitude
-  **/
-  @Schema(description = "")
-  public Double getLatitude() {
-    return latitude;
-  }
+	/**
+	 * Get latitude
+	 * 
+	 * @return latitude
+	 **/
+	@Schema(description = "")
+	public Double getLatitude() {
+		return latitude;
+	}
 
-  public void setLatitude(Double latitude) {
-    this.latitude = latitude;
-  }
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
 
-  public FacilityDto longitude(Double longitude) {
-    this.longitude = longitude;
-    return this;
-  }
+	public FacilityDto longitude(Double longitude) {
+		this.longitude = longitude;
+		return this;
+	}
 
-   /**
-   * Get longitude
-   * @return longitude
-  **/
-  @Schema(description = "")
-  public Double getLongitude() {
-    return longitude;
-  }
+	/**
+	 * Get longitude
+	 * 
+	 * @return longitude
+	 **/
+	@Schema(description = "")
+	public Double getLongitude() {
+		return longitude;
+	}
 
-  public void setLongitude(Double longitude) {
-    this.longitude = longitude;
-  }
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
 
-  public FacilityDto type(FacilityType type) {
-    this.type = type;
-    return this;
-  }
+	public FacilityDto type(FacilityType type) {
+		this.type = type;
+		return this;
+	}
 
-   /**
-   * Get type
-   * @return type
-  **/
-  @Schema(description = "")
-  public FacilityType getType() {
-    return type;
-  }
+	/**
+	 * Get type
+	 * 
+	 * @return type
+	 **/
+	@Schema(description = "")
+	public FacilityType getType() {
+		return type;
+	}
 
-  public void setType(FacilityType type) {
-    this.type = type;
-  }
+	public void setType(FacilityType type) {
+		this.type = type;
+	}
 
-  public FacilityDto publicOwnership(Boolean publicOwnership) {
-    this.publicOwnership = publicOwnership;
-    return this;
-  }
+	public FacilityDto publicOwnership(Boolean publicOwnership) {
+		this.publicOwnership = publicOwnership;
+		return this;
+	}
 
-   /**
-   * Get publicOwnership
-   * @return publicOwnership
-  **/
-  @Schema(description = "")
-  public Boolean isPublicOwnership() {
-    return publicOwnership;
-  }
+	/**
+	 * Get publicOwnership
+	 * 
+	 * @return publicOwnership
+	 **/
+	@Schema(description = "")
+	public Boolean isPublicOwnership() {
+		return publicOwnership;
+	}
 
-  public void setPublicOwnership(Boolean publicOwnership) {
-    this.publicOwnership = publicOwnership;
-  }
+	public void setPublicOwnership(Boolean publicOwnership) {
+		this.publicOwnership = publicOwnership;
+	}
 
-  public FacilityDto archived(Boolean archived) {
-    this.archived = archived;
-    return this;
-  }
+	public FacilityDto archived(Boolean archived) {
+		this.archived = archived;
+		return this;
+	}
 
-   /**
-   * Get archived
-   * @return archived
-  **/
-  @Schema(description = "")
-  public Boolean isArchived() {
-    return archived;
-  }
+	/**
+	 * Get archived
+	 * 
+	 * @return archived
+	 **/
+	@Schema(description = "")
+	public Boolean isArchived() {
+		return archived;
+	}
 
-  public void setArchived(Boolean archived) {
-    this.archived = archived;
-  }
+	public void setArchived(Boolean archived) {
+		this.archived = archived;
+	}
 
-  public FacilityDto externalID(String externalID) {
-    this.externalID = externalID;
-    return this;
-  }
+	public FacilityDto externalID(String externalID) {
+		this.externalID = externalID;
+		return this;
+	}
 
-   /**
-   * Get externalID
-   * @return externalID
-  **/
-  @Schema(description = "")
-  public String getExternalID() {
-    return externalID;
-  }
+	/**
+	 * Get externalID
+	 * 
+	 * @return externalID
+	 **/
+	@Schema(description = "")
+	public String getExternalID() {
+		return externalID;
+	}
 
-  public void setExternalID(String externalID) {
-    this.externalID = externalID;
-  }
+	public void setExternalID(String externalID) {
+		this.externalID = externalID;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		FacilityDto facilityDto = (FacilityDto) o;
+		return Objects.equals(this.creationDate, facilityDto.creationDate)
+				&& Objects.equals(this.changeDate, facilityDto.changeDate) && Objects.equals(this.uuid, facilityDto.uuid)
+				&& Objects.equals(this.name, facilityDto.name) && Objects.equals(this.region, facilityDto.region)
+				&& Objects.equals(this.district, facilityDto.district) && Objects.equals(this.community, facilityDto.community)
+				&& Objects.equals(this.city, facilityDto.city) && Objects.equals(this.latitude, facilityDto.latitude)
+				&& Objects.equals(this.longitude, facilityDto.longitude) && Objects.equals(this.type, facilityDto.type)
+				&& Objects.equals(this.publicOwnership, facilityDto.publicOwnership)
+				&& Objects.equals(this.archived, facilityDto.archived)
+				&& Objects.equals(this.externalID, facilityDto.externalID);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    FacilityDto facilityDto = (FacilityDto) o;
-    return Objects.equals(this.creationDate, facilityDto.creationDate) &&
-        Objects.equals(this.changeDate, facilityDto.changeDate) &&
-        Objects.equals(this.uuid, facilityDto.uuid) &&
-        Objects.equals(this.name, facilityDto.name) &&
-        Objects.equals(this.region, facilityDto.region) &&
-        Objects.equals(this.district, facilityDto.district) &&
-        Objects.equals(this.community, facilityDto.community) &&
-        Objects.equals(this.city, facilityDto.city) &&
-        Objects.equals(this.latitude, facilityDto.latitude) &&
-        Objects.equals(this.longitude, facilityDto.longitude) &&
-        Objects.equals(this.type, facilityDto.type) &&
-        Objects.equals(this.publicOwnership, facilityDto.publicOwnership) &&
-        Objects.equals(this.archived, facilityDto.archived) &&
-        Objects.equals(this.externalID, facilityDto.externalID);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(creationDate, changeDate, uuid, name, region, district, community, city, latitude, longitude,
+				type, publicOwnership, archived, externalID);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(creationDate, changeDate, uuid, name, region, district, community, city, latitude, longitude, type, publicOwnership, archived, externalID);
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class FacilityDto {\n");
 
+		sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
+		sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
+		sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
+		sb.append("    name: ").append(toIndentedString(name)).append("\n");
+		sb.append("    region: ").append(toIndentedString(region)).append("\n");
+		sb.append("    district: ").append(toIndentedString(district)).append("\n");
+		sb.append("    community: ").append(toIndentedString(community)).append("\n");
+		sb.append("    city: ").append(toIndentedString(city)).append("\n");
+		sb.append("    latitude: ").append(toIndentedString(latitude)).append("\n");
+		sb.append("    longitude: ").append(toIndentedString(longitude)).append("\n");
+		sb.append("    type: ").append(toIndentedString(type)).append("\n");
+		sb.append("    publicOwnership: ").append(toIndentedString(publicOwnership)).append("\n");
+		sb.append("    archived: ").append(toIndentedString(archived)).append("\n");
+		sb.append("    externalID: ").append(toIndentedString(externalID)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class FacilityDto {\n");
-    
-    sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
-    sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
-    sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    region: ").append(toIndentedString(region)).append("\n");
-    sb.append("    district: ").append(toIndentedString(district)).append("\n");
-    sb.append("    community: ").append(toIndentedString(community)).append("\n");
-    sb.append("    city: ").append(toIndentedString(city)).append("\n");
-    sb.append("    latitude: ").append(toIndentedString(latitude)).append("\n");
-    sb.append("    longitude: ").append(toIndentedString(longitude)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    publicOwnership: ").append(toIndentedString(publicOwnership)).append("\n");
-    sb.append("    archived: ").append(toIndentedString(archived)).append("\n");
-    sb.append("    externalID: ").append(toIndentedString(externalID)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

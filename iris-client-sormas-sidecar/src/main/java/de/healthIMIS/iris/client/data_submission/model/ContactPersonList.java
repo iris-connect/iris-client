@@ -1,5 +1,7 @@
 package de.healthIMIS.iris.client.data_submission.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,21 +12,19 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /**
- * A collection of contact persons who had contact with the queried person during the queried time. This data must be encrypted with the key
- * of health department from DataRequest.keyOfHealthDepartment!
+ * A collection of contact persons who had contact with the queried person during the queried time. This data must be
+ * encrypted with the key of health department from DataRequest.keyOfHealthDepartment!
  */
 @Schema(
-	description = "A collection of contact persons who had contact with the queried person during the queried time. This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment!")
+		description = "A collection of contact persons who had contact with the queried person during the queried time. This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment!")
 @Valid
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-02-18T08:11:24.698Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen",
+		date = "2021-02-18T08:11:24.698Z[GMT]")
 
 public class ContactPersonList {
 
-	@JsonProperty("contactPersons")
-	@Valid
+	@JsonProperty("contactPersons") @Valid
 	private List<ContactPerson> contactPersons = new ArrayList<ContactPerson>();
 
 	@JsonProperty("dataProvider")
@@ -135,9 +135,9 @@ public class ContactPersonList {
 		}
 		ContactPersonList contactPersonList = (ContactPersonList) o;
 		return Objects.equals(this.contactPersons, contactPersonList.contactPersons)
-			&& Objects.equals(this.dataProvider, contactPersonList.dataProvider)
-			&& Objects.equals(this.startDate, contactPersonList.startDate)
-			&& Objects.equals(this.endDate, contactPersonList.endDate);
+				&& Objects.equals(this.dataProvider, contactPersonList.dataProvider)
+				&& Objects.equals(this.startDate, contactPersonList.startDate)
+				&& Objects.equals(this.endDate, contactPersonList.endDate);
 	}
 
 	@Override
@@ -159,8 +159,7 @@ public class ContactPersonList {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

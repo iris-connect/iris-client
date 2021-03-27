@@ -21,39 +21,34 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets TreatmentType
  */
 public enum TreatmentType {
-  DRUG_INTAKE("DRUG_INTAKE"),
-  ORAL_REHYDRATION_SALTS("ORAL_REHYDRATION_SALTS"),
-  BLOOD_TRANSFUSION("BLOOD_TRANSFUSION"),
-  RENAL_REPLACEMENT_THERAPY("RENAL_REPLACEMENT_THERAPY"),
-  IV_FLUID_THERAPY("IV_FLUID_THERAPY"),
-  OXYGEN_THERAPY("OXYGEN_THERAPY"),
-  INVASIVE_MECHANICAL_VENTILATION("INVASIVE_MECHANICAL_VENTILATION"),
-  VASOPRESSORS_INOTROPES("VASOPRESSORS_INOTROPES"),
-  OTHER("OTHER");
+	DRUG_INTAKE("DRUG_INTAKE"), ORAL_REHYDRATION_SALTS("ORAL_REHYDRATION_SALTS"), BLOOD_TRANSFUSION(
+			"BLOOD_TRANSFUSION"), RENAL_REPLACEMENT_THERAPY("RENAL_REPLACEMENT_THERAPY"), IV_FLUID_THERAPY(
+					"IV_FLUID_THERAPY"), OXYGEN_THERAPY("OXYGEN_THERAPY"), INVASIVE_MECHANICAL_VENTILATION(
+							"INVASIVE_MECHANICAL_VENTILATION"), VASOPRESSORS_INOTROPES("VASOPRESSORS_INOTROPES"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  TreatmentType(String value) {
-    this.value = value;
-  }
+	TreatmentType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static TreatmentType fromValue(String text) {
-    for (TreatmentType b : TreatmentType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static TreatmentType fromValue(String text) {
+		for (TreatmentType b : TreatmentType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

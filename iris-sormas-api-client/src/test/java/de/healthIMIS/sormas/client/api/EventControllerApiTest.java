@@ -28,95 +28,70 @@ import java.util.Map;
 @Ignore
 public class EventControllerApiTest {
 
-    private final EventControllerApi api = new EventControllerApi();
+	private final EventControllerApi api = new EventControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllActiveUuids4Test() {
-        List<String> response = api.getAllActiveUuids4();
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllActiveUuids4Test() {
+		List<String> response = api.getAllActiveUuids4();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllEventsTest() {
-        Long since = null;
-        List<EventDto> response = api.getAllEvents(since);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getArchivedUuidsSince1Test() {
-        Long since = null;
-        List<String> response = api.getArchivedUuidsSince1(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllEventsTest() {
+		Long since = null;
+		List<EventDto> response = api.getAllEvents(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids14Test() {
-        List<String> body = null;
-        List<EventDto> response = api.getByUuids14(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getDeletedUuidsSince3Test() {
-        Long since = null;
-        List<String> response = api.getDeletedUuidsSince3(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getArchivedUuidsSince1Test() {
+		Long since = null;
+		List<String> response = api.getArchivedUuidsSince1(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postEventsTest() {
-        List<EventDto> body = null;
-        List<PushResult> response = api.postEvents(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids14Test() {
+		List<String> body = null;
+		List<EventDto> response = api.getByUuids14(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getDeletedUuidsSince3Test() {
+		Long since = null;
+		List<String> response = api.getDeletedUuidsSince3(since);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postEventsTest() {
+		List<EventDto> body = null;
+		List<PushResult> response = api.postEvents(body);
+
+		// TODO: test validations
+	}
 }

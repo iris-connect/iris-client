@@ -8,8 +8,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * A collection of guests who attended a queried event or location in the queried time. This data must be encrypted with the key of health
- * department from DataRequest.keyOfHealthDepartment!
+ * A collection of guests who attended a queried event or location in the queried time. This data must be encrypted with
+ * the key of health department from DataRequest.keyOfHealthDepartment!
  */
 
 public class GuestList {
@@ -134,11 +134,9 @@ public class GuestList {
 			return false;
 		}
 		GuestList guestList = (GuestList) o;
-		return Objects.equals(this.guests, guestList.guests)
-			&& Objects.equals(this.dataProvider, guestList.dataProvider)
-			&& Objects.equals(this.additionalInformation, guestList.additionalInformation)
-			&& Objects.equals(this.startDate, guestList.startDate)
-			&& Objects.equals(this.endDate, guestList.endDate);
+		return Objects.equals(this.guests, guestList.guests) && Objects.equals(this.dataProvider, guestList.dataProvider)
+				&& Objects.equals(this.additionalInformation, guestList.additionalInformation)
+				&& Objects.equals(this.startDate, guestList.startDate) && Objects.equals(this.endDate, guestList.endDate);
 	}
 
 	@Override
@@ -161,8 +159,7 @@ public class GuestList {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

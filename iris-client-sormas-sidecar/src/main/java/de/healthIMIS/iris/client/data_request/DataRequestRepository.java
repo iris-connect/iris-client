@@ -14,10 +14,10 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_request;
 
+import de.healthIMIS.iris.client.data_request.DataRequest.DataRequestIdentifier;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-
-import de.healthIMIS.iris.client.data_request.DataRequest.DataRequestIdentifier;
 
 /**
  * @author Jens Kutzsche

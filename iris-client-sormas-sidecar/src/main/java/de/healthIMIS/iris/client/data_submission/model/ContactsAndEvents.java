@@ -1,5 +1,7 @@
 package de.healthIMIS.iris.client.data_submission.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -8,13 +10,12 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /**
  * ContactsAndEvents
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-15T08:55:58.116Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen",
+		date = "2021-03-15T08:55:58.116Z[GMT]")
 
 public class ContactsAndEvents {
 
@@ -75,7 +76,8 @@ public class ContactsAndEvents {
 			return false;
 		}
 		ContactsAndEvents contactsAndEvents = (ContactsAndEvents) o;
-		return Objects.equals(this.contacts, contactsAndEvents.contacts) && Objects.equals(this.events, contactsAndEvents.events);
+		return Objects.equals(this.contacts, contactsAndEvents.contacts)
+				&& Objects.equals(this.events, contactsAndEvents.events);
 	}
 
 	@Override
@@ -95,8 +97,7 @@ public class ContactsAndEvents {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

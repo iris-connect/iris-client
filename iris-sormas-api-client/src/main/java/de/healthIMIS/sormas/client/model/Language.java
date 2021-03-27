@@ -21,43 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets Language
  */
 public enum Language {
-  EN("EN"),
-  EN_NG("EN_NG"),
-  EN_GH("EN_GH"),
-  EN_AF("EN_AF"),
-  FR("FR"),
-  FR_CH("FR_CH"),
-  DE("DE"),
-  DE_CH("DE_CH"),
-  ES_EC("ES_EC"),
-  ES_CU("ES_CU"),
-  IT("IT"),
-  IT_CH("IT_CH"),
-  FI("FI");
+	EN("EN"), EN_NG("EN_NG"), EN_GH("EN_GH"), EN_AF("EN_AF"), FR("FR"), FR_CH("FR_CH"), DE("DE"), DE_CH("DE_CH"), ES_EC(
+			"ES_EC"), ES_CU("ES_CU"), IT("IT"), IT_CH("IT_CH"), FI("FI");
 
-  private String value;
+	private String value;
 
-  Language(String value) {
-    this.value = value;
-  }
+	Language(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static Language fromValue(String text) {
-    for (Language b : Language.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static Language fromValue(String text) {
+		for (Language b : Language.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

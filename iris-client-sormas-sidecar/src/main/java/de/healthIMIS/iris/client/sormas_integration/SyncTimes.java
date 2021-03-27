@@ -14,6 +14,12 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.time.Instant;
 
 import javax.persistence.Entity;
@@ -21,12 +27,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @Table(name = "sync_times")
@@ -48,10 +48,6 @@ public class SyncTimes {
 	// }
 
 	enum DataTypes {
-		Persons,
-		Cases,
-		Contacts,
-		Tasks,
-		Submissions
+		Persons, Cases, Contacts, Tasks, Submissions
 	}
 }

@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets TracingApp
  */
 public enum TracingApp {
-  CORONA_WARN_APP("CORONA_WARN_APP"),
-  OTHER("OTHER"),
-  UNKNOWN("UNKNOWN");
+	CORONA_WARN_APP("CORONA_WARN_APP"), OTHER("OTHER"), UNKNOWN("UNKNOWN");
 
-  private String value;
+	private String value;
 
-  TracingApp(String value) {
-    this.value = value;
-  }
+	TracingApp(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static TracingApp fromValue(String text) {
-    for (TracingApp b : TracingApp.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static TracingApp fromValue(String text) {
+		for (TracingApp b : TracingApp.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

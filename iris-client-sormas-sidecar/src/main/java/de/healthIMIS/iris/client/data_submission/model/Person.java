@@ -1,5 +1,7 @@
 package de.healthIMIS.iris.client.data_submission.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -8,14 +10,13 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /**
  * Basic data type of a person.
  */
 @Schema(description = "Basic data type of a person.")
 @Valid
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-02-18T08:11:24.698Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen",
+		date = "2021-02-18T08:11:24.698Z[GMT]")
 
 public class Person {
 
@@ -217,14 +218,10 @@ public class Person {
 			return false;
 		}
 		Person person = (Person) o;
-		return Objects.equals(this.firstName, person.firstName)
-			&& Objects.equals(this.lastName, person.lastName)
-			&& Objects.equals(this.dateOfBirth, person.dateOfBirth)
-			&& Objects.equals(this.sex, person.sex)
-			&& Objects.equals(this.email, person.email)
-			&& Objects.equals(this.phone, person.phone)
-			&& Objects.equals(this.mobilPhone, person.mobilPhone)
-			&& Objects.equals(this.address, person.address);
+		return Objects.equals(this.firstName, person.firstName) && Objects.equals(this.lastName, person.lastName)
+				&& Objects.equals(this.dateOfBirth, person.dateOfBirth) && Objects.equals(this.sex, person.sex)
+				&& Objects.equals(this.email, person.email) && Objects.equals(this.phone, person.phone)
+				&& Objects.equals(this.mobilPhone, person.mobilPhone) && Objects.equals(this.address, person.address);
 	}
 
 	@Override
@@ -250,8 +247,7 @@ public class Person {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

@@ -21,36 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets Salutation
  */
 public enum Salutation {
-  MR("MR"),
-  MRS("MRS"),
-  MR_AND_MRS("MR_AND_MRS"),
-  FAMILY("FAMILY"),
-  GUARDIAN_OF_MINOR("GUARDIAN_OF_MINOR"),
-  OTHER("OTHER");
+	MR("MR"), MRS("MRS"), MR_AND_MRS("MR_AND_MRS"), FAMILY("FAMILY"), GUARDIAN_OF_MINOR("GUARDIAN_OF_MINOR"), OTHER(
+			"OTHER");
 
-  private String value;
+	private String value;
 
-  Salutation(String value) {
-    this.value = value;
-  }
+	Salutation(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static Salutation fromValue(String text) {
-    for (Salutation b : Salutation.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static Salutation fromValue(String text) {
+		for (Salutation b : Salutation.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

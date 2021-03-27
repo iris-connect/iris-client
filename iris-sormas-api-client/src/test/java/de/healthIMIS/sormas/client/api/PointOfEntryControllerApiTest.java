@@ -27,50 +27,37 @@ import java.util.Map;
 @Ignore
 public class PointOfEntryControllerApiTest {
 
-    private final PointOfEntryControllerApi api = new PointOfEntryControllerApi();
+	private final PointOfEntryControllerApi api = new PointOfEntryControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAll5Test() {
-        Long since = null;
-        List<PointOfEntryDto> response = api.getAll5(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAll5Test() {
+		Long since = null;
+		List<PointOfEntryDto> response = api.getAll5(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids13Test() {
-        List<String> response = api.getAllUuids13();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids19Test() {
-        List<String> body = null;
-        List<PointOfEntryDto> response = api.getByUuids19(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids13Test() {
+		List<String> response = api.getAllUuids13();
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids19Test() {
+		List<String> body = null;
+		List<PointOfEntryDto> response = api.getByUuids19(body);
+
+		// TODO: test validations
+	}
 }

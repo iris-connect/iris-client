@@ -1,5 +1,7 @@
 package de.healthIMIS.iris.client.data_submission.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -7,13 +9,12 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /**
  * GuestListDataProvider
  */
 @Valid
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-02-18T08:11:24.698Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen",
+		date = "2021-02-18T08:11:24.698Z[GMT]")
 
 public class GuestListDataProvider {
 
@@ -75,7 +76,8 @@ public class GuestListDataProvider {
 			return false;
 		}
 		GuestListDataProvider guestListDataProvider = (GuestListDataProvider) o;
-		return Objects.equals(this.name, guestListDataProvider.name) && Objects.equals(this.address, guestListDataProvider.address);
+		return Objects.equals(this.name, guestListDataProvider.name)
+				&& Objects.equals(this.address, guestListDataProvider.address);
 	}
 
 	@Override
@@ -95,8 +97,7 @@ public class GuestListDataProvider {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

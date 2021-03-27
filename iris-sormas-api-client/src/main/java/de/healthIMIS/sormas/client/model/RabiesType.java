@@ -21,32 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets RabiesType
  */
 public enum RabiesType {
-  FURIOUS_RABIES("FURIOUS_RABIES"),
-  PARALYTIC_RABIES("PARALYTIC_RABIES");
+	FURIOUS_RABIES("FURIOUS_RABIES"), PARALYTIC_RABIES("PARALYTIC_RABIES");
 
-  private String value;
+	private String value;
 
-  RabiesType(String value) {
-    this.value = value;
-  }
+	RabiesType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static RabiesType fromValue(String text) {
-    for (RabiesType b : RabiesType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static RabiesType fromValue(String text) {
+		for (RabiesType b : RabiesType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets ContactTracingContactType
  */
 public enum ContactTracingContactType {
-  TELEPHONE("TELEPHONE"),
-  SMS("SMS"),
-  EMAIL("EMAIL");
+	TELEPHONE("TELEPHONE"), SMS("SMS"), EMAIL("EMAIL");
 
-  private String value;
+	private String value;
 
-  ContactTracingContactType(String value) {
-    this.value = value;
-  }
+	ContactTracingContactType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static ContactTracingContactType fromValue(String text) {
-    for (ContactTracingContactType b : ContactTracingContactType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static ContactTracingContactType fromValue(String text) {
+		for (ContactTracingContactType b : ContactTracingContactType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

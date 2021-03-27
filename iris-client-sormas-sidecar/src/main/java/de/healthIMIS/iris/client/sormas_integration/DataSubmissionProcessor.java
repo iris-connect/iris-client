@@ -14,7 +14,12 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.charset.StandardCharsets.*;
+
+import de.healthIMIS.iris.client.data_request.DataRequest;
+import de.healthIMIS.iris.client.sormas_integration.DataSubmissionJob.DataSubmissionDto;
+import de.healthIMIS.sormas.client.api.TaskControllerApi;
+import lombok.Getter;
 
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -34,11 +39,6 @@ import javax.crypto.spec.SecretKeySpec;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.healthIMIS.iris.client.data_request.DataRequest;
-import de.healthIMIS.iris.client.sormas_integration.DataSubmissionJob.DataSubmissionDto;
-import de.healthIMIS.sormas.client.api.TaskControllerApi;
-import lombok.Getter;
-
 /**
  * @author Jens Kutzsche
  */
@@ -54,13 +54,8 @@ abstract class DataSubmissionProcessor<T> extends DataSubmissionSubProcessor<T> 
 	private final KeyStore keyStore;
 	private final ObjectMapper mapper;
 
-	public DataSubmissionProcessor(
-		DataSubmissionDto submissionDto,
-		Class<T> dtoType,
-		DataRequest request,
-		KeyStore keyStore,
-		ObjectMapper mapper,
-		TaskControllerApi taskApi) {
+	public DataSubmissionProcessor(DataSubmissionDto submissionDto, Class<T> dtoType, DataRequest request,
+			KeyStore keyStore, ObjectMapper mapper, TaskControllerApi taskApi) {
 
 		super(request, taskApi);
 
@@ -73,20 +68,15 @@ abstract class DataSubmissionProcessor<T> extends DataSubmissionSubProcessor<T> 
 	void process() {
 		try {
 
-			var content = decryptContent(submissionDto.getEncryptedData(), submissionDto.getKeyReferenz(), submissionDto.getSecret());
+			var content = decryptContent(submissionDto.getEncryptedData(), submissionDto.getKeyReferenz(),
+					submissionDto.getSecret());
 			var dto = mapper.readValue(content, dtoType);
 
 			process(dto);
 
-		} catch (JsonProcessingException
-			| InvalidKeyException
-			| UnrecoverableKeyException
-			| NoSuchAlgorithmException
-			| NoSuchPaddingException
-			| InvalidKeySpecException
-			| IllegalBlockSizeException
-			| BadPaddingException
-			| KeyStoreException e) {
+		} catch (JsonProcessingException | InvalidKeyException | UnrecoverableKeyException | NoSuchAlgorithmException
+				| NoSuchPaddingException | InvalidKeySpecException | IllegalBlockSizeException | BadPaddingException
+				| KeyStoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return;
@@ -94,8 +84,8 @@ abstract class DataSubmissionProcessor<T> extends DataSubmissionSubProcessor<T> 
 	}
 
 	protected String decryptContent(String content, String keyReferenz, String encryptedSecretKeyString)
-		throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException,
-		BadPaddingException, UnrecoverableKeyException, KeyStoreException {
+			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException,
+			IllegalBlockSizeException, BadPaddingException, UnrecoverableKeyException, KeyStoreException {
 
 		var encryptedArray = Base64.getDecoder().decode(content);
 		var encryptedSecretKey = Base64.getDecoder().decode(encryptedSecretKeyString);
@@ -107,8 +97,8 @@ abstract class DataSubmissionProcessor<T> extends DataSubmissionSubProcessor<T> 
 		return decryptText(secretKey, encryptedArray);
 	}
 
-	private byte[] decryptSecretKey(byte[] encryptedSecretKey, Key privateKey)
-		throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+	private byte[] decryptSecretKey(byte[] encryptedSecretKey, Key privateKey) throws InvalidKeyException,
+			NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 
 		var cipher = Cipher.getInstance(TRANSFORMATION);
 		cipher.init(Cipher.PRIVATE_KEY, privateKey);
@@ -116,8 +106,8 @@ abstract class DataSubmissionProcessor<T> extends DataSubmissionSubProcessor<T> 
 		return cipher.doFinal(encryptedSecretKey);
 	}
 
-	private String decryptText(byte[] secretKey, byte[] encryptedText)
-		throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+	private String decryptText(byte[] secretKey, byte[] encryptedText) throws NoSuchAlgorithmException,
+			NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
 		var originalKey = new SecretKeySpec(secretKey, 0, secretKey.length, ENCRYPTION_ALGORITHM);
 

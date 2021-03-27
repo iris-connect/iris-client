@@ -28,65 +28,48 @@ import java.util.Map;
 @Ignore
 public class ActionControllerApiTest {
 
-    private final ActionControllerApi api = new ActionControllerApi();
+	private final ActionControllerApi api = new ActionControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllTest() {
-        Long since = null;
-        List<ActionDto> response = api.getAll(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllTest() {
+		Long since = null;
+		List<ActionDto> response = api.getAll(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuidsTest() {
-        List<String> response = api.getAllUuids();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuidsTest() {
-        List<String> body = null;
-        List<ActionDto> response = api.getByUuids(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuidsTest() {
+		List<String> response = api.getAllUuids();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postActionsTest() {
-        List<ActionDto> body = null;
-        List<PushResult> response = api.postActions(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuidsTest() {
+		List<String> body = null;
+		List<ActionDto> response = api.getByUuids(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postActionsTest() {
+		List<ActionDto> body = null;
+		List<PushResult> response = api.postActions(body);
+
+		// TODO: test validations
+	}
 }

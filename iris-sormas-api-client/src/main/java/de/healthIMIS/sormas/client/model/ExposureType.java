@@ -21,40 +21,33 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets ExposureType
  */
 public enum ExposureType {
-  WORK("WORK"),
-  TRAVEL("TRAVEL"),
-  SPORT("SPORT"),
-  VISIT("VISIT"),
-  GATHERING("GATHERING"),
-  HABITATION("HABITATION"),
-  PERSONAL_SERVICES("PERSONAL_SERVICES"),
-  BURIAL("BURIAL"),
-  ANIMAL_CONTACT("ANIMAL_CONTACT"),
-  OTHER("OTHER");
+	WORK("WORK"), TRAVEL("TRAVEL"), SPORT("SPORT"), VISIT("VISIT"), GATHERING("GATHERING"), HABITATION(
+			"HABITATION"), PERSONAL_SERVICES(
+					"PERSONAL_SERVICES"), BURIAL("BURIAL"), ANIMAL_CONTACT("ANIMAL_CONTACT"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  ExposureType(String value) {
-    this.value = value;
-  }
+	ExposureType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static ExposureType fromValue(String text) {
-    for (ExposureType b : ExposureType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static ExposureType fromValue(String text) {
+		for (ExposureType b : ExposureType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

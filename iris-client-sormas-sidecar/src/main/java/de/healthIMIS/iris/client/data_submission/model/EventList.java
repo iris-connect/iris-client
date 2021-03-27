@@ -1,5 +1,7 @@
 package de.healthIMIS.iris.client.data_submission.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,21 +12,19 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /**
- * A collection of events visited by the queried person during the queried time. This data must be encrypted with the key of health
- * department from DataRequest.keyOfHealthDepartment!
+ * A collection of events visited by the queried person during the queried time. This data must be encrypted with the
+ * key of health department from DataRequest.keyOfHealthDepartment!
  */
 @Schema(
-	description = "A collection of events visited by the queried person during the queried time. This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment!")
+		description = "A collection of events visited by the queried person during the queried time. This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment!")
 @Valid
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-02-18T08:11:24.698Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen",
+		date = "2021-02-18T08:11:24.698Z[GMT]")
 
 public class EventList {
 
-	@JsonProperty("events")
-	@Valid
+	@JsonProperty("events") @Valid
 	private List<Event> events = new ArrayList<Event>();
 
 	@JsonProperty("dataProvider")
@@ -134,10 +134,8 @@ public class EventList {
 			return false;
 		}
 		EventList eventList = (EventList) o;
-		return Objects.equals(this.events, eventList.events)
-			&& Objects.equals(this.dataProvider, eventList.dataProvider)
-			&& Objects.equals(this.startDate, eventList.startDate)
-			&& Objects.equals(this.endDate, eventList.endDate);
+		return Objects.equals(this.events, eventList.events) && Objects.equals(this.dataProvider, eventList.dataProvider)
+				&& Objects.equals(this.startDate, eventList.startDate) && Objects.equals(this.endDate, eventList.endDate);
 	}
 
 	@Override
@@ -159,8 +157,7 @@ public class EventList {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

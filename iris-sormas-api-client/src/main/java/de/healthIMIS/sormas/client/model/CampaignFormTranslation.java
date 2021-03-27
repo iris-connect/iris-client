@@ -18,94 +18,95 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * CampaignFormTranslation
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class CampaignFormTranslation {
-  @JsonProperty("elementId")
-  private String elementId = null;
+	@JsonProperty("elementId")
+	private String elementId = null;
 
-  @JsonProperty("caption")
-  private String caption = null;
+	@JsonProperty("caption")
+	private String caption = null;
 
-  public CampaignFormTranslation elementId(String elementId) {
-    this.elementId = elementId;
-    return this;
-  }
+	public CampaignFormTranslation elementId(String elementId) {
+		this.elementId = elementId;
+		return this;
+	}
 
-   /**
-   * Get elementId
-   * @return elementId
-  **/
-  @Schema(description = "")
-  public String getElementId() {
-    return elementId;
-  }
+	/**
+	 * Get elementId
+	 * 
+	 * @return elementId
+	 **/
+	@Schema(description = "")
+	public String getElementId() {
+		return elementId;
+	}
 
-  public void setElementId(String elementId) {
-    this.elementId = elementId;
-  }
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}
 
-  public CampaignFormTranslation caption(String caption) {
-    this.caption = caption;
-    return this;
-  }
+	public CampaignFormTranslation caption(String caption) {
+		this.caption = caption;
+		return this;
+	}
 
-   /**
-   * Get caption
-   * @return caption
-  **/
-  @Schema(description = "")
-  public String getCaption() {
-    return caption;
-  }
+	/**
+	 * Get caption
+	 * 
+	 * @return caption
+	 **/
+	@Schema(description = "")
+	public String getCaption() {
+		return caption;
+	}
 
-  public void setCaption(String caption) {
-    this.caption = caption;
-  }
+	public void setCaption(String caption) {
+		this.caption = caption;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		CampaignFormTranslation campaignFormTranslation = (CampaignFormTranslation) o;
+		return Objects.equals(this.elementId, campaignFormTranslation.elementId)
+				&& Objects.equals(this.caption, campaignFormTranslation.caption);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    CampaignFormTranslation campaignFormTranslation = (CampaignFormTranslation) o;
-    return Objects.equals(this.elementId, campaignFormTranslation.elementId) &&
-        Objects.equals(this.caption, campaignFormTranslation.caption);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(elementId, caption);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(elementId, caption);
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class CampaignFormTranslation {\n");
 
+		sb.append("    elementId: ").append(toIndentedString(elementId)).append("\n");
+		sb.append("    caption: ").append(toIndentedString(caption)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class CampaignFormTranslation {\n");
-    
-    sb.append("    elementId: ").append(toIndentedString(elementId)).append("\n");
-    sb.append("    caption: ").append(toIndentedString(caption)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

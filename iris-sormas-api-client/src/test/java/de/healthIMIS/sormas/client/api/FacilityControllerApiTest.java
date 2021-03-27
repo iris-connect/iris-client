@@ -27,66 +27,49 @@ import java.util.Map;
 @Ignore
 public class FacilityControllerApiTest {
 
-    private final FacilityControllerApi api = new FacilityControllerApi();
+	private final FacilityControllerApi api = new FacilityControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllByRegionTest() {
-        String regionUuid = null;
-        Long since = null;
-        List<FacilityDto> response = api.getAllByRegion(regionUuid, since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllByRegionTest() {
+		String regionUuid = null;
+		Long since = null;
+		List<FacilityDto> response = api.getAllByRegion(regionUuid, since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids10Test() {
-        List<String> response = api.getAllUuids10();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllWithoutRegionTest() {
-        Long since = null;
-        List<FacilityDto> response = api.getAllWithoutRegion(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids10Test() {
+		List<String> response = api.getAllUuids10();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids15Test() {
-        List<String> body = null;
-        List<FacilityDto> response = api.getByUuids15(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllWithoutRegionTest() {
+		Long since = null;
+		List<FacilityDto> response = api.getAllWithoutRegion(since);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids15Test() {
+		List<String> body = null;
+		List<FacilityDto> response = api.getByUuids15(body);
+
+		// TODO: test validations
+	}
 }

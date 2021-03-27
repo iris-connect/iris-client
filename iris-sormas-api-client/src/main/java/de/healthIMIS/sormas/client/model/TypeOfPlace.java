@@ -21,38 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets TypeOfPlace
  */
 public enum TypeOfPlace {
-  FACILITY("FACILITY"),
-  FESTIVITIES("FESTIVITIES"),
-  HOME("HOME"),
-  MEANS_OF_TRANSPORT("MEANS_OF_TRANSPORT"),
-  PUBLIC_PLACE("PUBLIC_PLACE"),
-  SCATTERED("SCATTERED"),
-  UNKNOWN("UNKNOWN"),
-  OTHER("OTHER");
+	FACILITY("FACILITY"), FESTIVITIES("FESTIVITIES"), HOME("HOME"), MEANS_OF_TRANSPORT(
+			"MEANS_OF_TRANSPORT"), PUBLIC_PLACE("PUBLIC_PLACE"), SCATTERED("SCATTERED"), UNKNOWN("UNKNOWN"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  TypeOfPlace(String value) {
-    this.value = value;
-  }
+	TypeOfPlace(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static TypeOfPlace fromValue(String text) {
-    for (TypeOfPlace b : TypeOfPlace.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static TypeOfPlace fromValue(String text) {
+		for (TypeOfPlace b : TypeOfPlace.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

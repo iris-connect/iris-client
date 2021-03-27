@@ -24,255 +24,263 @@ import de.healthIMIS.sormas.client.model.RegionReferenceDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.time.Instant;
+
 /**
  * FeatureConfigurationDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class FeatureConfigurationDto {
-  @JsonProperty("creationDate")
-  private Instant creationDate = null;
+	@JsonProperty("creationDate")
+	private Instant creationDate = null;
 
-  @JsonProperty("changeDate")
-  private Instant changeDate = null;
+	@JsonProperty("changeDate")
+	private Instant changeDate = null;
 
-  @JsonProperty("uuid")
-  private String uuid = null;
+	@JsonProperty("uuid")
+	private String uuid = null;
 
-  @JsonProperty("featureType")
-  private FeatureType featureType = null;
+	@JsonProperty("featureType")
+	private FeatureType featureType = null;
 
-  @JsonProperty("region")
-  private RegionReferenceDto region = null;
+	@JsonProperty("region")
+	private RegionReferenceDto region = null;
 
-  @JsonProperty("district")
-  private DistrictReferenceDto district = null;
+	@JsonProperty("district")
+	private DistrictReferenceDto district = null;
 
-  @JsonProperty("disease")
-  private Disease disease = null;
+	@JsonProperty("disease")
+	private Disease disease = null;
 
-  @JsonProperty("endDate")
-  private Instant endDate = null;
+	@JsonProperty("endDate")
+	private Instant endDate = null;
 
-  @JsonProperty("enabled")
-  private Boolean enabled = null;
+	@JsonProperty("enabled")
+	private Boolean enabled = null;
 
-  public FeatureConfigurationDto creationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-    return this;
-  }
+	public FeatureConfigurationDto creationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+		return this;
+	}
 
-   /**
-   * Get creationDate
-   * @return creationDate
-  **/
-  @Schema(description = "")
-  public Instant getCreationDate() {
-    return creationDate;
-  }
+	/**
+	 * Get creationDate
+	 * 
+	 * @return creationDate
+	 **/
+	@Schema(description = "")
+	public Instant getCreationDate() {
+		return creationDate;
+	}
 
-  public void setCreationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-  }
+	public void setCreationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+	}
 
-  public FeatureConfigurationDto changeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-    return this;
-  }
+	public FeatureConfigurationDto changeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+		return this;
+	}
 
-   /**
-   * Get changeDate
-   * @return changeDate
-  **/
-  @Schema(description = "")
-  public Instant getChangeDate() {
-    return changeDate;
-  }
+	/**
+	 * Get changeDate
+	 * 
+	 * @return changeDate
+	 **/
+	@Schema(description = "")
+	public Instant getChangeDate() {
+		return changeDate;
+	}
 
-  public void setChangeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-  }
+	public void setChangeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+	}
 
-  public FeatureConfigurationDto uuid(String uuid) {
-    this.uuid = uuid;
-    return this;
-  }
+	public FeatureConfigurationDto uuid(String uuid) {
+		this.uuid = uuid;
+		return this;
+	}
 
-   /**
-   * Get uuid
-   * @return uuid
-  **/
-  @Schema(description = "")
-  public String getUuid() {
-    return uuid;
-  }
+	/**
+	 * Get uuid
+	 * 
+	 * @return uuid
+	 **/
+	@Schema(description = "")
+	public String getUuid() {
+		return uuid;
+	}
 
-  public void setUuid(String uuid) {
-    this.uuid = uuid;
-  }
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
-  public FeatureConfigurationDto featureType(FeatureType featureType) {
-    this.featureType = featureType;
-    return this;
-  }
+	public FeatureConfigurationDto featureType(FeatureType featureType) {
+		this.featureType = featureType;
+		return this;
+	}
 
-   /**
-   * Get featureType
-   * @return featureType
-  **/
-  @Schema(description = "")
-  public FeatureType getFeatureType() {
-    return featureType;
-  }
+	/**
+	 * Get featureType
+	 * 
+	 * @return featureType
+	 **/
+	@Schema(description = "")
+	public FeatureType getFeatureType() {
+		return featureType;
+	}
 
-  public void setFeatureType(FeatureType featureType) {
-    this.featureType = featureType;
-  }
+	public void setFeatureType(FeatureType featureType) {
+		this.featureType = featureType;
+	}
 
-  public FeatureConfigurationDto region(RegionReferenceDto region) {
-    this.region = region;
-    return this;
-  }
+	public FeatureConfigurationDto region(RegionReferenceDto region) {
+		this.region = region;
+		return this;
+	}
 
-   /**
-   * Get region
-   * @return region
-  **/
-  @Schema(description = "")
-  public RegionReferenceDto getRegion() {
-    return region;
-  }
+	/**
+	 * Get region
+	 * 
+	 * @return region
+	 **/
+	@Schema(description = "")
+	public RegionReferenceDto getRegion() {
+		return region;
+	}
 
-  public void setRegion(RegionReferenceDto region) {
-    this.region = region;
-  }
+	public void setRegion(RegionReferenceDto region) {
+		this.region = region;
+	}
 
-  public FeatureConfigurationDto district(DistrictReferenceDto district) {
-    this.district = district;
-    return this;
-  }
+	public FeatureConfigurationDto district(DistrictReferenceDto district) {
+		this.district = district;
+		return this;
+	}
 
-   /**
-   * Get district
-   * @return district
-  **/
-  @Schema(description = "")
-  public DistrictReferenceDto getDistrict() {
-    return district;
-  }
+	/**
+	 * Get district
+	 * 
+	 * @return district
+	 **/
+	@Schema(description = "")
+	public DistrictReferenceDto getDistrict() {
+		return district;
+	}
 
-  public void setDistrict(DistrictReferenceDto district) {
-    this.district = district;
-  }
+	public void setDistrict(DistrictReferenceDto district) {
+		this.district = district;
+	}
 
-  public FeatureConfigurationDto disease(Disease disease) {
-    this.disease = disease;
-    return this;
-  }
+	public FeatureConfigurationDto disease(Disease disease) {
+		this.disease = disease;
+		return this;
+	}
 
-   /**
-   * Get disease
-   * @return disease
-  **/
-  @Schema(description = "")
-  public Disease getDisease() {
-    return disease;
-  }
+	/**
+	 * Get disease
+	 * 
+	 * @return disease
+	 **/
+	@Schema(description = "")
+	public Disease getDisease() {
+		return disease;
+	}
 
-  public void setDisease(Disease disease) {
-    this.disease = disease;
-  }
+	public void setDisease(Disease disease) {
+		this.disease = disease;
+	}
 
-  public FeatureConfigurationDto endDate(Instant endDate) {
-    this.endDate = endDate;
-    return this;
-  }
+	public FeatureConfigurationDto endDate(Instant endDate) {
+		this.endDate = endDate;
+		return this;
+	}
 
-   /**
-   * Get endDate
-   * @return endDate
-  **/
-  @Schema(description = "")
-  public Instant getEndDate() {
-    return endDate;
-  }
+	/**
+	 * Get endDate
+	 * 
+	 * @return endDate
+	 **/
+	@Schema(description = "")
+	public Instant getEndDate() {
+		return endDate;
+	}
 
-  public void setEndDate(Instant endDate) {
-    this.endDate = endDate;
-  }
+	public void setEndDate(Instant endDate) {
+		this.endDate = endDate;
+	}
 
-  public FeatureConfigurationDto enabled(Boolean enabled) {
-    this.enabled = enabled;
-    return this;
-  }
+	public FeatureConfigurationDto enabled(Boolean enabled) {
+		this.enabled = enabled;
+		return this;
+	}
 
-   /**
-   * Get enabled
-   * @return enabled
-  **/
-  @Schema(description = "")
-  public Boolean isEnabled() {
-    return enabled;
-  }
+	/**
+	 * Get enabled
+	 * 
+	 * @return enabled
+	 **/
+	@Schema(description = "")
+	public Boolean isEnabled() {
+		return enabled;
+	}
 
-  public void setEnabled(Boolean enabled) {
-    this.enabled = enabled;
-  }
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		FeatureConfigurationDto featureConfigurationDto = (FeatureConfigurationDto) o;
+		return Objects.equals(this.creationDate, featureConfigurationDto.creationDate)
+				&& Objects.equals(this.changeDate, featureConfigurationDto.changeDate)
+				&& Objects.equals(this.uuid, featureConfigurationDto.uuid)
+				&& Objects.equals(this.featureType, featureConfigurationDto.featureType)
+				&& Objects.equals(this.region, featureConfigurationDto.region)
+				&& Objects.equals(this.district, featureConfigurationDto.district)
+				&& Objects.equals(this.disease, featureConfigurationDto.disease)
+				&& Objects.equals(this.endDate, featureConfigurationDto.endDate)
+				&& Objects.equals(this.enabled, featureConfigurationDto.enabled);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    FeatureConfigurationDto featureConfigurationDto = (FeatureConfigurationDto) o;
-    return Objects.equals(this.creationDate, featureConfigurationDto.creationDate) &&
-        Objects.equals(this.changeDate, featureConfigurationDto.changeDate) &&
-        Objects.equals(this.uuid, featureConfigurationDto.uuid) &&
-        Objects.equals(this.featureType, featureConfigurationDto.featureType) &&
-        Objects.equals(this.region, featureConfigurationDto.region) &&
-        Objects.equals(this.district, featureConfigurationDto.district) &&
-        Objects.equals(this.disease, featureConfigurationDto.disease) &&
-        Objects.equals(this.endDate, featureConfigurationDto.endDate) &&
-        Objects.equals(this.enabled, featureConfigurationDto.enabled);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(creationDate, changeDate, uuid, featureType, region, district, disease, endDate, enabled);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(creationDate, changeDate, uuid, featureType, region, district, disease, endDate, enabled);
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class FeatureConfigurationDto {\n");
 
+		sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
+		sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
+		sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
+		sb.append("    featureType: ").append(toIndentedString(featureType)).append("\n");
+		sb.append("    region: ").append(toIndentedString(region)).append("\n");
+		sb.append("    district: ").append(toIndentedString(district)).append("\n");
+		sb.append("    disease: ").append(toIndentedString(disease)).append("\n");
+		sb.append("    endDate: ").append(toIndentedString(endDate)).append("\n");
+		sb.append("    enabled: ").append(toIndentedString(enabled)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class FeatureConfigurationDto {\n");
-    
-    sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
-    sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
-    sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
-    sb.append("    featureType: ").append(toIndentedString(featureType)).append("\n");
-    sb.append("    region: ").append(toIndentedString(region)).append("\n");
-    sb.append("    district: ").append(toIndentedString(district)).append("\n");
-    sb.append("    disease: ").append(toIndentedString(disease)).append("\n");
-    sb.append("    endDate: ").append(toIndentedString(endDate)).append("\n");
-    sb.append("    enabled: ").append(toIndentedString(enabled)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

@@ -14,18 +14,17 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server.core;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 import java.net.InetAddress;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-
 /**
  * @author Jens Kutzsche
- *
  */
 @ConstructorBinding
 @RequiredArgsConstructor

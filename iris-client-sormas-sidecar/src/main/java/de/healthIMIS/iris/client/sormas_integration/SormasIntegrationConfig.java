@@ -14,6 +14,15 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
+import de.healthIMIS.sormas.client.api.CaseControllerApi;
+import de.healthIMIS.sormas.client.api.ContactControllerApi;
+import de.healthIMIS.sormas.client.api.EventControllerApi;
+import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
+import de.healthIMIS.sormas.client.api.PersonControllerApi;
+import de.healthIMIS.sormas.client.api.SampleControllerApi;
+import de.healthIMIS.sormas.client.api.TaskControllerApi;
+import de.healthIMIS.sormas.client.invoker.ApiClient;
+
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -28,15 +37,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-
-import de.healthIMIS.sormas.client.api.CaseControllerApi;
-import de.healthIMIS.sormas.client.api.ContactControllerApi;
-import de.healthIMIS.sormas.client.api.EventControllerApi;
-import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
-import de.healthIMIS.sormas.client.api.PersonControllerApi;
-import de.healthIMIS.sormas.client.api.SampleControllerApi;
-import de.healthIMIS.sormas.client.api.TaskControllerApi;
-import de.healthIMIS.sormas.client.invoker.ApiClient;
 
 /**
  * @author Jens Kutzsche
@@ -100,7 +100,8 @@ public class SormasIntegrationConfig {
 
 		ApiClient apiClient = new IrisApiClient();
 		// apiClient.setBasePath("https://sormas-docker-test.com/sormas-rest");
-		apiClient.setBasePath(String.format("http://%s:%s/sormas-rest", properties.getServerAddress().getHostAddress(), properties.getServerPort()));
+		apiClient.setBasePath(String.format("http://%s:%s/sormas-rest", properties.getServerAddress().getHostAddress(),
+				properties.getServerPort()));
 		apiClient.setUsername(properties.getUser().trim());
 		apiClient.setPassword(properties.getPassword().trim());
 
@@ -112,7 +113,7 @@ public class SormasIntegrationConfig {
 		@Override
 		protected RestTemplate buildRestTemplate() {
 
-//			var restTemplate = super.buildRestTemplate();
+			// var restTemplate = super.buildRestTemplate();
 
 			var customRequestFactory = new HttpComponentsClientHttpRequestFactory();
 

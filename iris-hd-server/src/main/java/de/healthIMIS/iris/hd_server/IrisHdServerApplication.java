@@ -14,11 +14,10 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server;
 
-import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
-import static org.springframework.http.HttpMethod.PATCH;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
-import static org.springframework.http.HttpMethod.resolve;
+import static org.apache.commons.lang3.StringUtils.*;
+import static org.springframework.http.HttpMethod.*;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,8 +45,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.CharacterEncodingFilter;
-
-import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication
 @EnableJpaAuditing(dateTimeProviderRef = "irisDateTimeProvider")
@@ -85,8 +82,7 @@ public class IrisHdServerApplication {
 
 					var errorDetails = it.errorDetails;
 
-					log.debug(
-						"ValidateOutput: " + it.description + errorDetails != null
+					log.debug("ValidateOutput: " + it.description + errorDetails != null
 							? " | ErrorCode: " + errorDetails.errorCode + " | ErrorMessage: " + errorDetails.errorMessage
 							: "");
 				});
@@ -113,7 +109,7 @@ public class IrisHdServerApplication {
 
 		@Override
 		protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+				throws ServletException, IOException {
 
 			if (isUpdateMethod(request) && isUtf8Missing(request)) {
 
@@ -136,6 +132,5 @@ public class IrisHdServerApplication {
 
 	@Configuration
 	@EnableScheduling
-	static class SchedulingProperties {
-	}
+	static class SchedulingProperties {}
 }

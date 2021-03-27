@@ -27,50 +27,37 @@ import java.util.Map;
 @Ignore
 public class CountryControllerApiTest {
 
-    private final CountryControllerApi api = new CountryControllerApi();
+	private final CountryControllerApi api = new CountryControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAll3Test() {
-        Long since = null;
-        List<CountryDto> response = api.getAll3(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAll3Test() {
+		Long since = null;
+		List<CountryDto> response = api.getAll3(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids7Test() {
-        List<String> response = api.getAllUuids7();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids10Test() {
-        List<String> body = null;
-        List<CountryDto> response = api.getByUuids10(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids7Test() {
+		List<String> response = api.getAllUuids7();
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids10Test() {
+		List<String> body = null;
+		List<CountryDto> response = api.getByUuids10(body);
+
+		// TODO: test validations
+	}
 }

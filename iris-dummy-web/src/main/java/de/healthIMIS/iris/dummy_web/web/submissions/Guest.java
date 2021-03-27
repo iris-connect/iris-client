@@ -62,8 +62,7 @@ public class Guest extends Person {
 		}
 		Guest guest = (Guest) o;
 		return Objects.equals(this.attendanceInformation, guest.attendanceInformation)
-			&& Objects.equals(this.identityChecked, guest.identityChecked)
-			&& super.equals(o);
+				&& Objects.equals(this.identityChecked, guest.identityChecked) && super.equals(o);
 	}
 
 	@Override
@@ -83,8 +82,7 @@ public class Guest extends Person {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

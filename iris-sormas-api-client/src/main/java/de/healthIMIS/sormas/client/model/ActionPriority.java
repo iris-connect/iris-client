@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets ActionPriority
  */
 public enum ActionPriority {
-  HIGH("HIGH"),
-  NORMAL("NORMAL"),
-  LOW("LOW");
+	HIGH("HIGH"), NORMAL("NORMAL"), LOW("LOW");
 
-  private String value;
+	private String value;
 
-  ActionPriority(String value) {
-    this.value = value;
-  }
+	ActionPriority(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static ActionPriority fromValue(String text) {
-    for (ActionPriority b : ActionPriority.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static ActionPriority fromValue(String text) {
+		for (ActionPriority b : ActionPriority.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

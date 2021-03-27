@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets YesNoUnknown
  */
 public enum YesNoUnknown {
-  YES("YES"),
-  NO("NO"),
-  UNKNOWN("UNKNOWN");
+	YES("YES"), NO("NO"), UNKNOWN("UNKNOWN");
 
-  private String value;
+	private String value;
 
-  YesNoUnknown(String value) {
-    this.value = value;
-  }
+	YesNoUnknown(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static YesNoUnknown fromValue(String text) {
-    for (YesNoUnknown b : YesNoUnknown.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static YesNoUnknown fromValue(String text) {
+		for (YesNoUnknown b : YesNoUnknown.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

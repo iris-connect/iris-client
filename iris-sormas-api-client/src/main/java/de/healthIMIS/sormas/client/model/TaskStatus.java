@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets TaskStatus
  */
 public enum TaskStatus {
-  PENDING("PENDING"),
-  DONE("DONE"),
-  REMOVED("REMOVED"),
-  NOT_EXECUTABLE("NOT_EXECUTABLE");
+	PENDING("PENDING"), DONE("DONE"), REMOVED("REMOVED"), NOT_EXECUTABLE("NOT_EXECUTABLE");
 
-  private String value;
+	private String value;
 
-  TaskStatus(String value) {
-    this.value = value;
-  }
+	TaskStatus(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static TaskStatus fromValue(String text) {
-    for (TaskStatus b : TaskStatus.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static TaskStatus fromValue(String text) {
+		for (TaskStatus b : TaskStatus.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

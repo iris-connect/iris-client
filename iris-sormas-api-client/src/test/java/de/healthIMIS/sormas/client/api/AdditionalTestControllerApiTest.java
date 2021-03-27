@@ -28,65 +28,48 @@ import java.util.Map;
 @Ignore
 public class AdditionalTestControllerApiTest {
 
-    private final AdditionalTestControllerApi api = new AdditionalTestControllerApi();
+	private final AdditionalTestControllerApi api = new AdditionalTestControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllActiveUuidsTest() {
-        List<String> response = api.getAllActiveUuids();
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllActiveUuidsTest() {
+		List<String> response = api.getAllActiveUuids();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllAdditionalTestsTest() {
-        Long since = null;
-        List<AdditionalTestDto> response = api.getAllAdditionalTests(since);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids1Test() {
-        List<String> body = null;
-        List<AdditionalTestDto> response = api.getByUuids1(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllAdditionalTestsTest() {
+		Long since = null;
+		List<AdditionalTestDto> response = api.getAllAdditionalTests(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postAdditionalTestsTest() {
-        List<AdditionalTestDto> body = null;
-        List<PushResult> response = api.postAdditionalTests(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids1Test() {
+		List<String> body = null;
+		List<AdditionalTestDto> response = api.getByUuids1(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postAdditionalTestsTest() {
+		List<AdditionalTestDto> body = null;
+		List<PushResult> response = api.postAdditionalTests(body);
+
+		// TODO: test validations
+	}
 }

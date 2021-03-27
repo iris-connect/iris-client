@@ -21,32 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets CaseOrigin
  */
 public enum CaseOrigin {
-  IN_COUNTRY("IN_COUNTRY"),
-  POINT_OF_ENTRY("POINT_OF_ENTRY");
+	IN_COUNTRY("IN_COUNTRY"), POINT_OF_ENTRY("POINT_OF_ENTRY");
 
-  private String value;
+	private String value;
 
-  CaseOrigin(String value) {
-    this.value = value;
-  }
+	CaseOrigin(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static CaseOrigin fromValue(String text) {
-    for (CaseOrigin b : CaseOrigin.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static CaseOrigin fromValue(String text) {
+		for (CaseOrigin b : CaseOrigin.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

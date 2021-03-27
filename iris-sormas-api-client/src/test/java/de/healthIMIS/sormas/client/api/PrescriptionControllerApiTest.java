@@ -28,65 +28,48 @@ import java.util.Map;
 @Ignore
 public class PrescriptionControllerApiTest {
 
-    private final PrescriptionControllerApi api = new PrescriptionControllerApi();
+	private final PrescriptionControllerApi api = new PrescriptionControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllActiveUuids6Test() {
-        List<String> response = api.getAllActiveUuids6();
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllActiveUuids6Test() {
+		List<String> response = api.getAllActiveUuids6();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllPrescriptionsTest() {
-        Long since = null;
-        List<PrescriptionDto> response = api.getAllPrescriptions(since);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids20Test() {
-        List<String> body = null;
-        List<PrescriptionDto> response = api.getByUuids20(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllPrescriptionsTest() {
+		Long since = null;
+		List<PrescriptionDto> response = api.getAllPrescriptions(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postPrescriptionsTest() {
-        List<PrescriptionDto> body = null;
-        List<PushResult> response = api.postPrescriptions(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids20Test() {
+		List<String> body = null;
+		List<PrescriptionDto> response = api.getByUuids20(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postPrescriptionsTest() {
+		List<PrescriptionDto> body = null;
+		List<PushResult> response = api.postPrescriptions(body);
+
+		// TODO: test validations
+	}
 }

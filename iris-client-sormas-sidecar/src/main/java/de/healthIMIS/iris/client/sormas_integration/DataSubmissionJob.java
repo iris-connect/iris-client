@@ -14,6 +14,20 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
+import de.healthIMIS.iris.client.core.IrisClientProperties;
+import de.healthIMIS.iris.client.core.IrisProperties;
+import de.healthIMIS.iris.client.data_request.DataRequestManagement;
+import de.healthIMIS.sormas.client.api.CaseControllerApi;
+import de.healthIMIS.sormas.client.api.ContactControllerApi;
+import de.healthIMIS.sormas.client.api.EventControllerApi;
+import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
+import de.healthIMIS.sormas.client.api.PersonControllerApi;
+import de.healthIMIS.sormas.client.api.SampleControllerApi;
+import de.healthIMIS.sormas.client.api.TaskControllerApi;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+
 import java.security.KeyStore;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -31,20 +45,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import de.healthIMIS.iris.client.core.IrisClientProperties;
-import de.healthIMIS.iris.client.core.IrisProperties;
-import de.healthIMIS.iris.client.data_request.DataRequestManagement;
-import de.healthIMIS.sormas.client.api.CaseControllerApi;
-import de.healthIMIS.sormas.client.api.ContactControllerApi;
-import de.healthIMIS.sormas.client.api.EventControllerApi;
-import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
-import de.healthIMIS.sormas.client.api.PersonControllerApi;
-import de.healthIMIS.sormas.client.api.SampleControllerApi;
-import de.healthIMIS.sormas.client.api.TaskControllerApi;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Jens Kutzsche
@@ -71,21 +71,13 @@ class DataSubmissionJob {
 
 	private long errorCounter = 0;
 
-	public DataSubmissionJob(
-		@NonNull SyncTimesRepository syncTimes,
-		@NonNull CaseControllerApi sormasCaseApi,
-		@NonNull PersonControllerApi sormasPersonApi,
-		@NonNull TaskControllerApi sormasTaskApi,
-		@NonNull SampleControllerApi sormasSampleApi,
-		@NonNull ContactControllerApi sormasContactApi,
-		@NonNull DataRequestManagement dataRequests,
-		@NonNull EventControllerApi sormasEventApi,
-		@NonNull EventParticipantControllerApi participantControllerApi,
-		@NonNull @Qualifier("iris-rest") RestTemplate rest,
-		@NonNull IrisClientProperties clientProperties,
-		@NonNull IrisProperties properties,
-		@NonNull ObjectMapper mapper,
-		@NonNull KeyStore keyStore) {
+	public DataSubmissionJob(@NonNull SyncTimesRepository syncTimes, @NonNull CaseControllerApi sormasCaseApi,
+			@NonNull PersonControllerApi sormasPersonApi, @NonNull TaskControllerApi sormasTaskApi,
+			@NonNull SampleControllerApi sormasSampleApi, @NonNull ContactControllerApi sormasContactApi,
+			@NonNull DataRequestManagement dataRequests, @NonNull EventControllerApi sormasEventApi,
+			@NonNull EventParticipantControllerApi participantControllerApi,
+			@NonNull @Qualifier("iris-rest") RestTemplate rest, @NonNull IrisClientProperties clientProperties,
+			@NonNull IrisProperties properties, @NonNull ObjectMapper mapper, @NonNull KeyStore keyStore) {
 
 		this.syncTimes = syncTimes;
 		this.sormasCaseApi = sormasCaseApi;
@@ -108,30 +100,23 @@ class DataSubmissionJob {
 
 		log.trace("Submission job - start");
 
-		var lastSync = syncTimes.findById(SyncTimes.DataTypes.Submissions)
-			.map(SyncTimes::getLastSync)
-			.map(it -> it.atZone(ZoneId.systemDefault()).toLocalDateTime())
-			.orElse(LocalDateTime.of(2000, 01, 01, 00, 00));
+		var lastSync = syncTimes.findById(SyncTimes.DataTypes.Submissions).map(SyncTimes::getLastSync)
+				.map(it -> it.atZone(ZoneId.systemDefault()).toLocalDateTime()).orElse(LocalDateTime.of(2000, 01, 01, 00, 00));
 
 		try {
 
 			log.trace("Submission job - GET to server is sent");
 
-			var response = rest.getForEntity(
-				"https://{address}:{port}/hd/data-submissions?departmentId={depId}&from={from}",
-				DataSubmissionDto[].class,
-				properties.getServerAddress().getHostName(),
-				properties.getServerPort(),
-				clientProperties.getClientId(),
-				lastSync);
+			var response = rest.getForEntity("https://{address}:{port}/hd/data-submissions?departmentId={depId}&from={from}",
+					DataSubmissionDto[].class, properties.getServerAddress().getHostName(), properties.getServerPort(),
+					clientProperties.getClientId(), lastSync);
 
 			handleDtos(response.getBody());
 
 			saveLastSync(response);
 
-			log.debug(
-				"Submission job - GET to public server sent: {}",
-				Arrays.stream(response.getBody()).map(it -> it.getRequestId().toString()).collect(Collectors.joining(", ")));
+			log.debug("Submission job - GET to public server sent: {}",
+					Arrays.stream(response.getBody()).map(it -> it.getRequestId().toString()).collect(Collectors.joining(", ")));
 
 			callDeleteEndpoint(lastSync);
 
@@ -145,7 +130,9 @@ class DataSubmissionJob {
 
 			if (errorCounter == 1 || errorCounter % 20 == 0) {
 				if (log.isTraceEnabled()) {
-					log.warn(String.format("Submission job - can't submit data submissions from server for %s tries!", errorCounter), e);
+					log.warn(
+							String.format("Submission job - can't submit data submissions from server for %s tries!", errorCounter),
+							e);
 				} else {
 					log.warn("Submission job - can't submit data submissions from server for {} tries!", errorCounter);
 				}
@@ -162,21 +149,14 @@ class DataSubmissionJob {
 		var request = dataRequests.findById(it.getRequestId()).get();
 
 		switch (it.feature) {
-		case Contacts_Events:
-			return new ContactsEventsSubmissionProcessor(
-				it,
-				request,
-				keyStore,
-				mapper,
-				sormasTaskApi,
-				sormasPersonApi,
-				sormasContactApi,
-				sormasEventApi,
-				sormasParticipantApi);
-		case Guests:
-			return new GuestsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasParticipantApi, sormasPersonApi);
-		default:
-			return null;
+			case Contacts_Events:
+				return new ContactsEventsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasPersonApi,
+						sormasContactApi, sormasEventApi, sormasParticipantApi);
+			case Guests:
+				return new GuestsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasParticipantApi,
+						sormasPersonApi);
+			default:
+				return null;
 		}
 	}
 
@@ -193,12 +173,9 @@ class DataSubmissionJob {
 
 		log.trace("Submission job - DELETE to public server is sent");
 
-		rest.delete(
-			"https://{address}:{port}/hd/data-submissions?departmentId={depId}&from={from}",
-			properties.getServerAddress().getHostName(),
-			properties.getServerPort(),
-			clientProperties.getClientId(),
-			lastSync);
+		rest.delete("https://{address}:{port}/hd/data-submissions?departmentId={depId}&from={from}",
+				properties.getServerAddress().getHostName(), properties.getServerPort(), clientProperties.getClientId(),
+				lastSync);
 
 		log.trace("Submission job - DELETE to public server sent");
 	}
@@ -222,7 +199,6 @@ class DataSubmissionJob {
 	}
 
 	public enum Feature {
-		Contacts_Events,
-		Guests
+		Contacts_Events, Guests
 	}
 }

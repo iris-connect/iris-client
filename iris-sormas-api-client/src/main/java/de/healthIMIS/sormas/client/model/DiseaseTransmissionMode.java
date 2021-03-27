@@ -21,36 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets DiseaseTransmissionMode
  */
 public enum DiseaseTransmissionMode {
-  HUMAN_TO_HUMAN("HUMAN_TO_HUMAN"),
-  ANIMAL("ANIMAL"),
-  ENVIRONMENT("ENVIRONMENT"),
-  FOOD("FOOD"),
-  VECTOR_BORNE("VECTOR_BORNE"),
-  UNKNOWN("UNKNOWN");
+	HUMAN_TO_HUMAN("HUMAN_TO_HUMAN"), ANIMAL("ANIMAL"), ENVIRONMENT("ENVIRONMENT"), FOOD("FOOD"), VECTOR_BORNE(
+			"VECTOR_BORNE"), UNKNOWN("UNKNOWN");
 
-  private String value;
+	private String value;
 
-  DiseaseTransmissionMode(String value) {
-    this.value = value;
-  }
+	DiseaseTransmissionMode(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static DiseaseTransmissionMode fromValue(String text) {
-    for (DiseaseTransmissionMode b : DiseaseTransmissionMode.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static DiseaseTransmissionMode fromValue(String text) {
+		for (DiseaseTransmissionMode b : DiseaseTransmissionMode.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

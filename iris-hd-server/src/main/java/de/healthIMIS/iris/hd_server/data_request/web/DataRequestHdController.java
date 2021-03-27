@@ -14,6 +14,18 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server.data_request.web;
 
+import de.healthIMIS.iris.hd_server.core.DepartmentIdentifier;
+import de.healthIMIS.iris.hd_server.core.SormasRefId;
+import de.healthIMIS.iris.hd_server.data_request.DataRequest;
+import de.healthIMIS.iris.hd_server.data_request.DataRequest.DataRequestIdentifier;
+import de.healthIMIS.iris.hd_server.data_request.DataRequest.Feature;
+import de.healthIMIS.iris.hd_server.data_request.DataRequest.Status;
+import de.healthIMIS.iris.hd_server.data_request.DataRequestRepository;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.Instant;
 import java.util.Set;
 
@@ -26,18 +38,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import de.healthIMIS.iris.hd_server.core.DepartmentIdentifier;
-import de.healthIMIS.iris.hd_server.core.SormasRefId;
-import de.healthIMIS.iris.hd_server.data_request.DataRequest;
-import de.healthIMIS.iris.hd_server.data_request.DataRequest.DataRequestIdentifier;
-import de.healthIMIS.iris.hd_server.data_request.DataRequest.Feature;
-import de.healthIMIS.iris.hd_server.data_request.DataRequest.Status;
-import de.healthIMIS.iris.hd_server.data_request.DataRequestRepository;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Controller of the internal end-points for health department site to exchange data requests.
@@ -53,33 +53,17 @@ public class DataRequestHdController {
 
 	@PutMapping("/hd/data-requests/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
-	DataRequestClientInputDto putDataRequest(
-		@PathVariable("id") DataRequestIdentifier id,
-		@Valid @RequestBody DataRequestClientInputDto payload,
-		Errors errors) {
+	DataRequestClientInputDto putDataRequest(@PathVariable("id") DataRequestIdentifier id,
+			@Valid @RequestBody DataRequestClientInputDto payload, Errors errors) {
 
-		var dataRequest = new DataRequest(
-			id,
-			payload.departmentId,
-			payload.refId,
-			payload.checkCodeName,
-			payload.checkCodeDayOfBirth,
-			payload.checkCodeRandom,
-			payload.requestStart,
-			payload.requestEnd,
-			payload.irisUserId,
-			payload.sormasUserId,
-			payload.features,
-			payload.status);
+		var dataRequest = new DataRequest(id, payload.departmentId, payload.refId, payload.checkCodeName,
+				payload.checkCodeDayOfBirth, payload.checkCodeRandom, payload.requestStart, payload.requestEnd,
+				payload.irisUserId, payload.sormasUserId, payload.features, payload.status);
 
 		requests.save(dataRequest);
 
-		log.debug(
-			"Request - PUT from hd client + saved: {} (Checkcodes: {}, {} and {})",
-			dataRequest.getId().toString(),
-			dataRequest.getCheckCodeName(),
-			dataRequest.getCheckCodeDayOfBirth(),
-			dataRequest.getCheckCodeRandom());
+		log.debug("Request - PUT from hd client + saved: {} (Checkcodes: {}, {} and {})", dataRequest.getId().toString(),
+				dataRequest.getCheckCodeName(), dataRequest.getCheckCodeDayOfBirth(), dataRequest.getCheckCodeRandom());
 
 		return payload;
 	}

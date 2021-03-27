@@ -14,11 +14,11 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client;
 
-import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
-import static org.springframework.http.HttpMethod.PATCH;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
-import static org.springframework.http.HttpMethod.resolve;
+import static org.apache.commons.lang3.StringUtils.*;
+import static org.springframework.http.HttpMethod.*;
+
+import de.healthIMIS.iris.client.core.IrisClientProperties;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -65,9 +65,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 
-import de.healthIMIS.iris.client.core.IrisClientProperties;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @SpringBootApplication
 @EnableJpaAuditing(dateTimeProviderRef = "irisDateTimeProvider")
@@ -94,7 +91,8 @@ public class IrisClientSormasSidecarApplication {
 
 	@Bean
 	@ConditionalOnProperty(name = "iris.client.key-store", matchIfMissing = true)
-	KeyStore getKeyStore(IrisClientProperties properties) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+	KeyStore getKeyStore(IrisClientProperties properties)
+			throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
 
 		KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
 
@@ -107,21 +105,20 @@ public class IrisClientSormasSidecarApplication {
 	@Bean
 	Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
 		return builder -> {
-			builder.postConfigurer(
-				it -> {
-					// for SORMAS timestamps
-					it.disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
-				});
+			builder.postConfigurer(it -> {
+				// for SORMAS timestamps
+				it.disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
+			});
 		};
 	}
 
 	@Bean(name = "iris-rest")
-	RestTemplate getIrisRestTemplate(RestTemplateBuilder builder)
-		throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException {
+	RestTemplate getIrisRestTemplate(RestTemplateBuilder builder) throws KeyManagementException,
+			UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException {
 
-		var sslContext = new SSLContextBuilder().loadTrustMaterial(trustStore.getURL(), trustStorePassword.toCharArray(), (chain, authType) -> false)
-			.loadKeyMaterial(keyStore.getURL(), keyStorePassword.toCharArray(), keyPassword.toCharArray())
-			.build();
+		var sslContext = new SSLContextBuilder()
+				.loadTrustMaterial(trustStore.getURL(), trustStorePassword.toCharArray(), (chain, authType) -> false)
+				.loadKeyMaterial(keyStore.getURL(), keyStorePassword.toCharArray(), keyPassword.toCharArray()).build();
 
 		var socketFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
 		var httpClient = HttpClientBuilder.create().setSSLSocketFactory(socketFactory).build();
@@ -129,9 +126,9 @@ public class IrisClientSormasSidecarApplication {
 		var restTemplate = builder.build();
 		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
-//		if (log.isDebugEnabled()) {
-//			restTemplate.setInterceptors(List.of(new RequestResponseLoggingInterceptor()));
-//		}
+		// if (log.isDebugEnabled()) {
+		// restTemplate.setInterceptors(List.of(new RequestResponseLoggingInterceptor()));
+		// }
 
 		return restTemplate;
 	}
@@ -141,9 +138,9 @@ public class IrisClientSormasSidecarApplication {
 
 		var restTemplate = builder.build();
 
-//		if (log.isDebugEnabled()) {
-//			restTemplate.setInterceptors(List.of(new RequestResponseLoggingInterceptor()));
-//		}
+		// if (log.isDebugEnabled()) {
+		// restTemplate.setInterceptors(List.of(new RequestResponseLoggingInterceptor()));
+		// }
 
 		return restTemplate;
 	}
@@ -166,8 +163,7 @@ public class IrisClientSormasSidecarApplication {
 
 					var errorDetails = it.errorDetails;
 
-					log.debug(
-						"ValidateOutput: " + it.description + errorDetails != null
+					log.debug("ValidateOutput: " + it.description + errorDetails != null
 							? " | ErrorCode: " + errorDetails.errorCode + " | ErrorMessage: " + errorDetails.errorMessage
 							: "");
 				});
@@ -194,7 +190,7 @@ public class IrisClientSormasSidecarApplication {
 
 		@Override
 		protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+				throws ServletException, IOException {
 
 			if (isUpdateMethod(request) && isUtf8Missing(request)) {
 
@@ -217,6 +213,5 @@ public class IrisClientSormasSidecarApplication {
 
 	@Configuration
 	@EnableScheduling
-	static class SchedulingProperties {
-	}
+	static class SchedulingProperties {}
 }

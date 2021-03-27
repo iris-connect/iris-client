@@ -21,39 +21,34 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets ReportingType
  */
 public enum ReportingType {
-  DOCTOR("DOCTOR"),
-  FORWARDING("FORWARDING"),
-  HOSPITAL_OR_STATIONARY_CARE("HOSPITAL_OR_STATIONARY_CARE"),
-  COMMUNITY_FACILITY("COMMUNITY_FACILITY"),
-  LABORATORY("LABORATORY"),
-  OWN_DETERMINATION("OWN_DETERMINATION"),
-  NOT_DETERMINABLE("NOT_DETERMINABLE"),
-  NOT_RAISED("NOT_RAISED"),
-  OTHER("OTHER");
+	DOCTOR("DOCTOR"), FORWARDING("FORWARDING"), HOSPITAL_OR_STATIONARY_CARE(
+			"HOSPITAL_OR_STATIONARY_CARE"), COMMUNITY_FACILITY("COMMUNITY_FACILITY"), LABORATORY(
+					"LABORATORY"), OWN_DETERMINATION(
+							"OWN_DETERMINATION"), NOT_DETERMINABLE("NOT_DETERMINABLE"), NOT_RAISED("NOT_RAISED"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  ReportingType(String value) {
-    this.value = value;
-  }
+	ReportingType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static ReportingType fromValue(String text) {
-    for (ReportingType b : ReportingType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static ReportingType fromValue(String text) {
+		for (ReportingType b : ReportingType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

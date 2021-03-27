@@ -21,35 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets FollowUpStatus
  */
 public enum FollowUpStatus {
-  FOLLOW_UP("FOLLOW_UP"),
-  COMPLETED("COMPLETED"),
-  CANCELED("CANCELED"),
-  LOST("LOST"),
-  NO_FOLLOW_UP("NO_FOLLOW_UP");
+	FOLLOW_UP("FOLLOW_UP"), COMPLETED("COMPLETED"), CANCELED("CANCELED"), LOST("LOST"), NO_FOLLOW_UP("NO_FOLLOW_UP");
 
-  private String value;
+	private String value;
 
-  FollowUpStatus(String value) {
-    this.value = value;
-  }
+	FollowUpStatus(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static FollowUpStatus fromValue(String text) {
-    for (FollowUpStatus b : FollowUpStatus.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static FollowUpStatus fromValue(String text) {
+		for (FollowUpStatus b : FollowUpStatus.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

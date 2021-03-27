@@ -24,171 +24,175 @@ import java.time.OffsetDateTime;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * UserRoleConfigDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class UserRoleConfigDto {
-  @JsonProperty("creationDate")
-  private Instant creationDate = null;
+	@JsonProperty("creationDate")
+	private Instant creationDate = null;
 
-  @JsonProperty("changeDate")
-  private Instant changeDate = null;
+	@JsonProperty("changeDate")
+	private Instant changeDate = null;
 
-  @JsonProperty("uuid")
-  private String uuid = null;
+	@JsonProperty("uuid")
+	private String uuid = null;
 
-  @JsonProperty("userRole")
-  private UserRole userRole = null;
+	@JsonProperty("userRole")
+	private UserRole userRole = null;
 
-  @JsonProperty("userRights")
-  private List<UserRight> userRights = null;
+	@JsonProperty("userRights")
+	private List<UserRight> userRights = null;
 
-  public UserRoleConfigDto creationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-    return this;
-  }
+	public UserRoleConfigDto creationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+		return this;
+	}
 
-   /**
-   * Get creationDate
-   * @return creationDate
-  **/
-  @Schema(description = "")
-  public Instant getCreationDate() {
-    return creationDate;
-  }
+	/**
+	 * Get creationDate
+	 * 
+	 * @return creationDate
+	 **/
+	@Schema(description = "")
+	public Instant getCreationDate() {
+		return creationDate;
+	}
 
-  public void setCreationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-  }
+	public void setCreationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+	}
 
-  public UserRoleConfigDto changeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-    return this;
-  }
+	public UserRoleConfigDto changeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+		return this;
+	}
 
-   /**
-   * Get changeDate
-   * @return changeDate
-  **/
-  @Schema(description = "")
-  public Instant getChangeDate() {
-    return changeDate;
-  }
+	/**
+	 * Get changeDate
+	 * 
+	 * @return changeDate
+	 **/
+	@Schema(description = "")
+	public Instant getChangeDate() {
+		return changeDate;
+	}
 
-  public void setChangeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-  }
+	public void setChangeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+	}
 
-  public UserRoleConfigDto uuid(String uuid) {
-    this.uuid = uuid;
-    return this;
-  }
+	public UserRoleConfigDto uuid(String uuid) {
+		this.uuid = uuid;
+		return this;
+	}
 
-   /**
-   * Get uuid
-   * @return uuid
-  **/
-  @Schema(description = "")
-  public String getUuid() {
-    return uuid;
-  }
+	/**
+	 * Get uuid
+	 * 
+	 * @return uuid
+	 **/
+	@Schema(description = "")
+	public String getUuid() {
+		return uuid;
+	}
 
-  public void setUuid(String uuid) {
-    this.uuid = uuid;
-  }
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
-  public UserRoleConfigDto userRole(UserRole userRole) {
-    this.userRole = userRole;
-    return this;
-  }
+	public UserRoleConfigDto userRole(UserRole userRole) {
+		this.userRole = userRole;
+		return this;
+	}
 
-   /**
-   * Get userRole
-   * @return userRole
-  **/
-  @Schema(description = "")
-  public UserRole getUserRole() {
-    return userRole;
-  }
+	/**
+	 * Get userRole
+	 * 
+	 * @return userRole
+	 **/
+	@Schema(description = "")
+	public UserRole getUserRole() {
+		return userRole;
+	}
 
-  public void setUserRole(UserRole userRole) {
-    this.userRole = userRole;
-  }
+	public void setUserRole(UserRole userRole) {
+		this.userRole = userRole;
+	}
 
-  public UserRoleConfigDto userRights(List<UserRight> userRights) {
-    this.userRights = userRights;
-    return this;
-  }
+	public UserRoleConfigDto userRights(List<UserRight> userRights) {
+		this.userRights = userRights;
+		return this;
+	}
 
-  public UserRoleConfigDto addUserRightsItem(UserRight userRightsItem) {
-    if (this.userRights == null) {
-      this.userRights = new ArrayList<>();
-    }
-    this.userRights.add(userRightsItem);
-    return this;
-  }
+	public UserRoleConfigDto addUserRightsItem(UserRight userRightsItem) {
+		if (this.userRights == null) {
+			this.userRights = new ArrayList<>();
+		}
+		this.userRights.add(userRightsItem);
+		return this;
+	}
 
-   /**
-   * Get userRights
-   * @return userRights
-  **/
-  @Schema(description = "")
-  public List<UserRight> getUserRights() {
-    return userRights;
-  }
+	/**
+	 * Get userRights
+	 * 
+	 * @return userRights
+	 **/
+	@Schema(description = "")
+	public List<UserRight> getUserRights() {
+		return userRights;
+	}
 
-  public void setUserRights(List<UserRight> userRights) {
-    this.userRights = userRights;
-  }
+	public void setUserRights(List<UserRight> userRights) {
+		this.userRights = userRights;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		UserRoleConfigDto userRoleConfigDto = (UserRoleConfigDto) o;
+		return Objects.equals(this.creationDate, userRoleConfigDto.creationDate)
+				&& Objects.equals(this.changeDate, userRoleConfigDto.changeDate)
+				&& Objects.equals(this.uuid, userRoleConfigDto.uuid)
+				&& Objects.equals(this.userRole, userRoleConfigDto.userRole)
+				&& Objects.equals(this.userRights, userRoleConfigDto.userRights);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    UserRoleConfigDto userRoleConfigDto = (UserRoleConfigDto) o;
-    return Objects.equals(this.creationDate, userRoleConfigDto.creationDate) &&
-        Objects.equals(this.changeDate, userRoleConfigDto.changeDate) &&
-        Objects.equals(this.uuid, userRoleConfigDto.uuid) &&
-        Objects.equals(this.userRole, userRoleConfigDto.userRole) &&
-        Objects.equals(this.userRights, userRoleConfigDto.userRights);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(creationDate, changeDate, uuid, userRole, userRights);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(creationDate, changeDate, uuid, userRole, userRights);
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class UserRoleConfigDto {\n");
 
+		sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
+		sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
+		sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
+		sb.append("    userRole: ").append(toIndentedString(userRole)).append("\n");
+		sb.append("    userRights: ").append(toIndentedString(userRights)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class UserRoleConfigDto {\n");
-    
-    sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
-    sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
-    sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
-    sb.append("    userRole: ").append(toIndentedString(userRole)).append("\n");
-    sb.append("    userRights: ").append(toIndentedString(userRights)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

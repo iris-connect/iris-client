@@ -24,286 +24,295 @@ import java.time.OffsetDateTime;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * EpiDataDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class EpiDataDto {
-  @JsonProperty("creationDate")
-  private Instant creationDate = null;
+	@JsonProperty("creationDate")
+	private Instant creationDate = null;
 
-  @JsonProperty("changeDate")
-  private Instant changeDate = null;
+	@JsonProperty("changeDate")
+	private Instant changeDate = null;
 
-  @JsonProperty("uuid")
-  private String uuid = null;
+	@JsonProperty("uuid")
+	private String uuid = null;
 
-  @JsonProperty("pseudonymized")
-  private Boolean pseudonymized = null;
+	@JsonProperty("pseudonymized")
+	private Boolean pseudonymized = null;
 
-  @JsonProperty("exposureDetailsKnown")
-  private YesNoUnknown exposureDetailsKnown = null;
+	@JsonProperty("exposureDetailsKnown")
+	private YesNoUnknown exposureDetailsKnown = null;
 
-  @JsonProperty("contactWithSourceCaseKnown")
-  private YesNoUnknown contactWithSourceCaseKnown = null;
+	@JsonProperty("contactWithSourceCaseKnown")
+	private YesNoUnknown contactWithSourceCaseKnown = null;
 
-  @JsonProperty("highTransmissionRiskArea")
-  private YesNoUnknown highTransmissionRiskArea = null;
+	@JsonProperty("highTransmissionRiskArea")
+	private YesNoUnknown highTransmissionRiskArea = null;
 
-  @JsonProperty("largeOutbreaksArea")
-  private YesNoUnknown largeOutbreaksArea = null;
+	@JsonProperty("largeOutbreaksArea")
+	private YesNoUnknown largeOutbreaksArea = null;
 
-  @JsonProperty("areaInfectedAnimals")
-  private YesNoUnknown areaInfectedAnimals = null;
+	@JsonProperty("areaInfectedAnimals")
+	private YesNoUnknown areaInfectedAnimals = null;
 
-  @JsonProperty("exposures")
-  private List<ExposureDto> exposures = null;
+	@JsonProperty("exposures")
+	private List<ExposureDto> exposures = null;
 
-  public EpiDataDto creationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-    return this;
-  }
+	public EpiDataDto creationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+		return this;
+	}
 
-   /**
-   * Get creationDate
-   * @return creationDate
-  **/
-  @Schema(description = "")
-  public Instant getCreationDate() {
-    return creationDate;
-  }
+	/**
+	 * Get creationDate
+	 * 
+	 * @return creationDate
+	 **/
+	@Schema(description = "")
+	public Instant getCreationDate() {
+		return creationDate;
+	}
 
-  public void setCreationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-  }
+	public void setCreationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+	}
 
-  public EpiDataDto changeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-    return this;
-  }
+	public EpiDataDto changeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+		return this;
+	}
 
-   /**
-   * Get changeDate
-   * @return changeDate
-  **/
-  @Schema(description = "")
-  public Instant getChangeDate() {
-    return changeDate;
-  }
+	/**
+	 * Get changeDate
+	 * 
+	 * @return changeDate
+	 **/
+	@Schema(description = "")
+	public Instant getChangeDate() {
+		return changeDate;
+	}
 
-  public void setChangeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-  }
+	public void setChangeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+	}
 
-  public EpiDataDto uuid(String uuid) {
-    this.uuid = uuid;
-    return this;
-  }
+	public EpiDataDto uuid(String uuid) {
+		this.uuid = uuid;
+		return this;
+	}
 
-   /**
-   * Get uuid
-   * @return uuid
-  **/
-  @Schema(description = "")
-  public String getUuid() {
-    return uuid;
-  }
+	/**
+	 * Get uuid
+	 * 
+	 * @return uuid
+	 **/
+	@Schema(description = "")
+	public String getUuid() {
+		return uuid;
+	}
 
-  public void setUuid(String uuid) {
-    this.uuid = uuid;
-  }
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
-  public EpiDataDto pseudonymized(Boolean pseudonymized) {
-    this.pseudonymized = pseudonymized;
-    return this;
-  }
+	public EpiDataDto pseudonymized(Boolean pseudonymized) {
+		this.pseudonymized = pseudonymized;
+		return this;
+	}
 
-   /**
-   * Get pseudonymized
-   * @return pseudonymized
-  **/
-  @Schema(description = "")
-  public Boolean isPseudonymized() {
-    return pseudonymized;
-  }
+	/**
+	 * Get pseudonymized
+	 * 
+	 * @return pseudonymized
+	 **/
+	@Schema(description = "")
+	public Boolean isPseudonymized() {
+		return pseudonymized;
+	}
 
-  public void setPseudonymized(Boolean pseudonymized) {
-    this.pseudonymized = pseudonymized;
-  }
+	public void setPseudonymized(Boolean pseudonymized) {
+		this.pseudonymized = pseudonymized;
+	}
 
-  public EpiDataDto exposureDetailsKnown(YesNoUnknown exposureDetailsKnown) {
-    this.exposureDetailsKnown = exposureDetailsKnown;
-    return this;
-  }
+	public EpiDataDto exposureDetailsKnown(YesNoUnknown exposureDetailsKnown) {
+		this.exposureDetailsKnown = exposureDetailsKnown;
+		return this;
+	}
 
-   /**
-   * Get exposureDetailsKnown
-   * @return exposureDetailsKnown
-  **/
-  @Schema(description = "")
-  public YesNoUnknown getExposureDetailsKnown() {
-    return exposureDetailsKnown;
-  }
+	/**
+	 * Get exposureDetailsKnown
+	 * 
+	 * @return exposureDetailsKnown
+	 **/
+	@Schema(description = "")
+	public YesNoUnknown getExposureDetailsKnown() {
+		return exposureDetailsKnown;
+	}
 
-  public void setExposureDetailsKnown(YesNoUnknown exposureDetailsKnown) {
-    this.exposureDetailsKnown = exposureDetailsKnown;
-  }
+	public void setExposureDetailsKnown(YesNoUnknown exposureDetailsKnown) {
+		this.exposureDetailsKnown = exposureDetailsKnown;
+	}
 
-  public EpiDataDto contactWithSourceCaseKnown(YesNoUnknown contactWithSourceCaseKnown) {
-    this.contactWithSourceCaseKnown = contactWithSourceCaseKnown;
-    return this;
-  }
+	public EpiDataDto contactWithSourceCaseKnown(YesNoUnknown contactWithSourceCaseKnown) {
+		this.contactWithSourceCaseKnown = contactWithSourceCaseKnown;
+		return this;
+	}
 
-   /**
-   * Get contactWithSourceCaseKnown
-   * @return contactWithSourceCaseKnown
-  **/
-  @Schema(description = "")
-  public YesNoUnknown getContactWithSourceCaseKnown() {
-    return contactWithSourceCaseKnown;
-  }
+	/**
+	 * Get contactWithSourceCaseKnown
+	 * 
+	 * @return contactWithSourceCaseKnown
+	 **/
+	@Schema(description = "")
+	public YesNoUnknown getContactWithSourceCaseKnown() {
+		return contactWithSourceCaseKnown;
+	}
 
-  public void setContactWithSourceCaseKnown(YesNoUnknown contactWithSourceCaseKnown) {
-    this.contactWithSourceCaseKnown = contactWithSourceCaseKnown;
-  }
+	public void setContactWithSourceCaseKnown(YesNoUnknown contactWithSourceCaseKnown) {
+		this.contactWithSourceCaseKnown = contactWithSourceCaseKnown;
+	}
 
-  public EpiDataDto highTransmissionRiskArea(YesNoUnknown highTransmissionRiskArea) {
-    this.highTransmissionRiskArea = highTransmissionRiskArea;
-    return this;
-  }
+	public EpiDataDto highTransmissionRiskArea(YesNoUnknown highTransmissionRiskArea) {
+		this.highTransmissionRiskArea = highTransmissionRiskArea;
+		return this;
+	}
 
-   /**
-   * Get highTransmissionRiskArea
-   * @return highTransmissionRiskArea
-  **/
-  @Schema(description = "")
-  public YesNoUnknown getHighTransmissionRiskArea() {
-    return highTransmissionRiskArea;
-  }
+	/**
+	 * Get highTransmissionRiskArea
+	 * 
+	 * @return highTransmissionRiskArea
+	 **/
+	@Schema(description = "")
+	public YesNoUnknown getHighTransmissionRiskArea() {
+		return highTransmissionRiskArea;
+	}
 
-  public void setHighTransmissionRiskArea(YesNoUnknown highTransmissionRiskArea) {
-    this.highTransmissionRiskArea = highTransmissionRiskArea;
-  }
+	public void setHighTransmissionRiskArea(YesNoUnknown highTransmissionRiskArea) {
+		this.highTransmissionRiskArea = highTransmissionRiskArea;
+	}
 
-  public EpiDataDto largeOutbreaksArea(YesNoUnknown largeOutbreaksArea) {
-    this.largeOutbreaksArea = largeOutbreaksArea;
-    return this;
-  }
+	public EpiDataDto largeOutbreaksArea(YesNoUnknown largeOutbreaksArea) {
+		this.largeOutbreaksArea = largeOutbreaksArea;
+		return this;
+	}
 
-   /**
-   * Get largeOutbreaksArea
-   * @return largeOutbreaksArea
-  **/
-  @Schema(description = "")
-  public YesNoUnknown getLargeOutbreaksArea() {
-    return largeOutbreaksArea;
-  }
+	/**
+	 * Get largeOutbreaksArea
+	 * 
+	 * @return largeOutbreaksArea
+	 **/
+	@Schema(description = "")
+	public YesNoUnknown getLargeOutbreaksArea() {
+		return largeOutbreaksArea;
+	}
 
-  public void setLargeOutbreaksArea(YesNoUnknown largeOutbreaksArea) {
-    this.largeOutbreaksArea = largeOutbreaksArea;
-  }
+	public void setLargeOutbreaksArea(YesNoUnknown largeOutbreaksArea) {
+		this.largeOutbreaksArea = largeOutbreaksArea;
+	}
 
-  public EpiDataDto areaInfectedAnimals(YesNoUnknown areaInfectedAnimals) {
-    this.areaInfectedAnimals = areaInfectedAnimals;
-    return this;
-  }
+	public EpiDataDto areaInfectedAnimals(YesNoUnknown areaInfectedAnimals) {
+		this.areaInfectedAnimals = areaInfectedAnimals;
+		return this;
+	}
 
-   /**
-   * Get areaInfectedAnimals
-   * @return areaInfectedAnimals
-  **/
-  @Schema(description = "")
-  public YesNoUnknown getAreaInfectedAnimals() {
-    return areaInfectedAnimals;
-  }
+	/**
+	 * Get areaInfectedAnimals
+	 * 
+	 * @return areaInfectedAnimals
+	 **/
+	@Schema(description = "")
+	public YesNoUnknown getAreaInfectedAnimals() {
+		return areaInfectedAnimals;
+	}
 
-  public void setAreaInfectedAnimals(YesNoUnknown areaInfectedAnimals) {
-    this.areaInfectedAnimals = areaInfectedAnimals;
-  }
+	public void setAreaInfectedAnimals(YesNoUnknown areaInfectedAnimals) {
+		this.areaInfectedAnimals = areaInfectedAnimals;
+	}
 
-  public EpiDataDto exposures(List<ExposureDto> exposures) {
-    this.exposures = exposures;
-    return this;
-  }
+	public EpiDataDto exposures(List<ExposureDto> exposures) {
+		this.exposures = exposures;
+		return this;
+	}
 
-  public EpiDataDto addExposuresItem(ExposureDto exposuresItem) {
-    if (this.exposures == null) {
-      this.exposures = new ArrayList<>();
-    }
-    this.exposures.add(exposuresItem);
-    return this;
-  }
+	public EpiDataDto addExposuresItem(ExposureDto exposuresItem) {
+		if (this.exposures == null) {
+			this.exposures = new ArrayList<>();
+		}
+		this.exposures.add(exposuresItem);
+		return this;
+	}
 
-   /**
-   * Get exposures
-   * @return exposures
-  **/
-  @Schema(description = "")
-  public List<ExposureDto> getExposures() {
-    return exposures;
-  }
+	/**
+	 * Get exposures
+	 * 
+	 * @return exposures
+	 **/
+	@Schema(description = "")
+	public List<ExposureDto> getExposures() {
+		return exposures;
+	}
 
-  public void setExposures(List<ExposureDto> exposures) {
-    this.exposures = exposures;
-  }
+	public void setExposures(List<ExposureDto> exposures) {
+		this.exposures = exposures;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		EpiDataDto epiDataDto = (EpiDataDto) o;
+		return Objects.equals(this.creationDate, epiDataDto.creationDate)
+				&& Objects.equals(this.changeDate, epiDataDto.changeDate) && Objects.equals(this.uuid, epiDataDto.uuid)
+				&& Objects.equals(this.pseudonymized, epiDataDto.pseudonymized)
+				&& Objects.equals(this.exposureDetailsKnown, epiDataDto.exposureDetailsKnown)
+				&& Objects.equals(this.contactWithSourceCaseKnown, epiDataDto.contactWithSourceCaseKnown)
+				&& Objects.equals(this.highTransmissionRiskArea, epiDataDto.highTransmissionRiskArea)
+				&& Objects.equals(this.largeOutbreaksArea, epiDataDto.largeOutbreaksArea)
+				&& Objects.equals(this.areaInfectedAnimals, epiDataDto.areaInfectedAnimals)
+				&& Objects.equals(this.exposures, epiDataDto.exposures);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    EpiDataDto epiDataDto = (EpiDataDto) o;
-    return Objects.equals(this.creationDate, epiDataDto.creationDate) &&
-        Objects.equals(this.changeDate, epiDataDto.changeDate) &&
-        Objects.equals(this.uuid, epiDataDto.uuid) &&
-        Objects.equals(this.pseudonymized, epiDataDto.pseudonymized) &&
-        Objects.equals(this.exposureDetailsKnown, epiDataDto.exposureDetailsKnown) &&
-        Objects.equals(this.contactWithSourceCaseKnown, epiDataDto.contactWithSourceCaseKnown) &&
-        Objects.equals(this.highTransmissionRiskArea, epiDataDto.highTransmissionRiskArea) &&
-        Objects.equals(this.largeOutbreaksArea, epiDataDto.largeOutbreaksArea) &&
-        Objects.equals(this.areaInfectedAnimals, epiDataDto.areaInfectedAnimals) &&
-        Objects.equals(this.exposures, epiDataDto.exposures);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(creationDate, changeDate, uuid, pseudonymized, exposureDetailsKnown, contactWithSourceCaseKnown,
+				highTransmissionRiskArea, largeOutbreaksArea, areaInfectedAnimals, exposures);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(creationDate, changeDate, uuid, pseudonymized, exposureDetailsKnown, contactWithSourceCaseKnown, highTransmissionRiskArea, largeOutbreaksArea, areaInfectedAnimals, exposures);
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class EpiDataDto {\n");
 
+		sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
+		sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
+		sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
+		sb.append("    pseudonymized: ").append(toIndentedString(pseudonymized)).append("\n");
+		sb.append("    exposureDetailsKnown: ").append(toIndentedString(exposureDetailsKnown)).append("\n");
+		sb.append("    contactWithSourceCaseKnown: ").append(toIndentedString(contactWithSourceCaseKnown)).append("\n");
+		sb.append("    highTransmissionRiskArea: ").append(toIndentedString(highTransmissionRiskArea)).append("\n");
+		sb.append("    largeOutbreaksArea: ").append(toIndentedString(largeOutbreaksArea)).append("\n");
+		sb.append("    areaInfectedAnimals: ").append(toIndentedString(areaInfectedAnimals)).append("\n");
+		sb.append("    exposures: ").append(toIndentedString(exposures)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class EpiDataDto {\n");
-    
-    sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
-    sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
-    sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
-    sb.append("    pseudonymized: ").append(toIndentedString(pseudonymized)).append("\n");
-    sb.append("    exposureDetailsKnown: ").append(toIndentedString(exposureDetailsKnown)).append("\n");
-    sb.append("    contactWithSourceCaseKnown: ").append(toIndentedString(contactWithSourceCaseKnown)).append("\n");
-    sb.append("    highTransmissionRiskArea: ").append(toIndentedString(highTransmissionRiskArea)).append("\n");
-    sb.append("    largeOutbreaksArea: ").append(toIndentedString(largeOutbreaksArea)).append("\n");
-    sb.append("    areaInfectedAnimals: ").append(toIndentedString(areaInfectedAnimals)).append("\n");
-    sb.append("    exposures: ").append(toIndentedString(exposures)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

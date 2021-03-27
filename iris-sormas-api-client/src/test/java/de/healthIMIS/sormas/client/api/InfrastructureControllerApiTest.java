@@ -28,21 +28,16 @@ import java.util.Map;
 @Ignore
 public class InfrastructureControllerApiTest {
 
-    private final InfrastructureControllerApi api = new InfrastructureControllerApi();
+	private final InfrastructureControllerApi api = new InfrastructureControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getInfrastructureSyncDataTest() {
-        InfrastructureChangeDatesDto body = null;
-        InfrastructureSyncDto response = api.getInfrastructureSyncData(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getInfrastructureSyncDataTest() {
+		InfrastructureChangeDatesDto body = null;
+		InfrastructureSyncDto response = api.getInfrastructureSyncData(body);
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
 }

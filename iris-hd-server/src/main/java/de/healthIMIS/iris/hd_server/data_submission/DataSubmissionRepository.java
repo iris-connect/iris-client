@@ -14,11 +14,11 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server.data_submission;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.util.Streamable;
-
 import de.healthIMIS.iris.hd_server.core.DepartmentIdentifier;
 import de.healthIMIS.iris.hd_server.data_submission.DataSubmission.DataSubmissionIdentifier;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.util.Streamable;
 
 /**
  * @author Jens Kutzsche

@@ -14,11 +14,11 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.core;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
 /**
  * @author Jens Kutzsche
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @ConfigurationProperties("iris.client.dev")
 @Getter
-//@Profile("dev_env")
+// @Profile("dev_env")
 public class IrisClientDevProperties {
 
 	private final String randomCheckcode; // for easier development

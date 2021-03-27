@@ -1,14 +1,14 @@
 package de.healthIMIS.iris.hd_server.core;
 
-import java.io.Serializable;
-import java.util.UUID;
-
-import javax.persistence.Embeddable;
-
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+
+import java.io.Serializable;
+import java.util.UUID;
+
+import javax.persistence.Embeddable;
 
 @Embeddable
 @EqualsAndHashCode

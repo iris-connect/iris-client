@@ -8,11 +8,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ContactCategory {
 
-	HIGH_RISK("HIGH_RISK"),
-	HIGH_RISK_MED("HIGH_RISK_MED"),
-	MEDIUM_RISK_MED("MEDIUM_RISK_MED"),
-	LOW_RISK("LOW_RISK"),
-	NO_RISK("NO_RISK");
+	HIGH_RISK("HIGH_RISK"), HIGH_RISK_MED("HIGH_RISK_MED"), MEDIUM_RISK_MED("MEDIUM_RISK_MED"), LOW_RISK(
+			"LOW_RISK"), NO_RISK("NO_RISK");
 
 	private String value;
 

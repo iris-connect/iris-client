@@ -14,9 +14,6 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
-import java.time.Instant;
-import java.util.List;
-
 import de.healthIMIS.iris.client.core.SormasRefId;
 import de.healthIMIS.iris.client.data_request.DataRequest;
 import de.healthIMIS.iris.client.data_submission.model.ContactPerson;
@@ -24,19 +21,10 @@ import de.healthIMIS.iris.client.data_submission.model.ContactPersonList;
 import de.healthIMIS.sormas.client.api.ContactControllerApi;
 import de.healthIMIS.sormas.client.api.PersonControllerApi;
 import de.healthIMIS.sormas.client.api.TaskControllerApi;
-import de.healthIMIS.sormas.client.model.CaseReferenceDto;
-import de.healthIMIS.sormas.client.model.ContactClassification;
-import de.healthIMIS.sormas.client.model.ContactDto;
-import de.healthIMIS.sormas.client.model.ContactReferenceDto;
-import de.healthIMIS.sormas.client.model.Disease;
-import de.healthIMIS.sormas.client.model.HealthConditionsDto;
-import de.healthIMIS.sormas.client.model.PersonDto;
-import de.healthIMIS.sormas.client.model.PersonReferenceDto;
-import de.healthIMIS.sormas.client.model.TaskContext;
-import de.healthIMIS.sormas.client.model.TaskDto;
-import de.healthIMIS.sormas.client.model.TaskPriority;
-import de.healthIMIS.sormas.client.model.TaskType;
-import de.healthIMIS.sormas.client.model.UserReferenceDto;
+import de.healthIMIS.sormas.client.model.*;
+
+import java.time.Instant;
+import java.util.List;
 
 /**
  * @author Jens Kutzsche
@@ -46,11 +34,8 @@ public class ContactsSubmissionProcessor extends DataSubmissionSubProcessor<Cont
 	private PersonControllerApi sormasPersonApi;
 	private ContactControllerApi sormasContactApi;
 
-	public ContactsSubmissionProcessor(
-		DataRequest request,
-		TaskControllerApi taskApi,
-		PersonControllerApi sormasPersonApi,
-		ContactControllerApi sormasContactApi) {
+	public ContactsSubmissionProcessor(DataRequest request, TaskControllerApi taskApi,
+			PersonControllerApi sormasPersonApi, ContactControllerApi sormasContactApi) {
 
 		super(request, taskApi);
 
@@ -76,7 +61,7 @@ public class ContactsSubmissionProcessor extends DataSubmissionSubProcessor<Cont
 	private PersonDto createPersonDto(ContactPerson contactPerson) {
 		var person = new PersonDto();
 		person.setUuid(SormasRefId.random().toString());
-//			person.setSex(Sex.UNKNOWN);
+		// person.setSex(Sex.UNKNOWN);
 		person.setAddresses(List.of());
 		person.setFirstName(contactPerson.getFirstName());
 		person.setLastName(contactPerson.getLastName());

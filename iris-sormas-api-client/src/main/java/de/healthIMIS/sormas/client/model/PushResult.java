@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets PushResult
  */
 public enum PushResult {
-  OK("OK"),
-  TOO_OLD("TOO_OLD"),
-  ERROR("ERROR");
+	OK("OK"), TOO_OLD("TOO_OLD"), ERROR("ERROR");
 
-  private String value;
+	private String value;
 
-  PushResult(String value) {
-    this.value = value;
-  }
+	PushResult(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static PushResult fromValue(String text) {
-    for (PushResult b : PushResult.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static PushResult fromValue(String text) {
+		for (PushResult b : PushResult.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

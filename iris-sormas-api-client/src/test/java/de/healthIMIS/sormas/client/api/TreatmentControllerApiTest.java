@@ -28,65 +28,48 @@ import java.util.Map;
 @Ignore
 public class TreatmentControllerApiTest {
 
-    private final TreatmentControllerApi api = new TreatmentControllerApi();
+	private final TreatmentControllerApi api = new TreatmentControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllActiveUuids9Test() {
-        List<String> response = api.getAllActiveUuids9();
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllActiveUuids9Test() {
+		List<String> response = api.getAllActiveUuids9();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllTreatmentsTest() {
-        Long since = null;
-        List<TreatmentDto> response = api.getAllTreatments(since);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids24Test() {
-        List<String> body = null;
-        List<TreatmentDto> response = api.getByUuids24(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllTreatmentsTest() {
+		Long since = null;
+		List<TreatmentDto> response = api.getAllTreatments(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postTreatmentsTest() {
-        List<TreatmentDto> body = null;
-        List<PushResult> response = api.postTreatments(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids24Test() {
+		List<String> body = null;
+		List<TreatmentDto> response = api.getByUuids24(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postTreatmentsTest() {
+		List<TreatmentDto> body = null;
+		List<PushResult> response = api.postTreatments(body);
+
+		// TODO: test validations
+	}
 }

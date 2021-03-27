@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets AnimalCondition
  */
 public enum AnimalCondition {
-  ALIVE("ALIVE"),
-  DEAD("DEAD"),
-  PROCESSED("PROCESSED"),
-  UNKNOWN("UNKNOWN");
+	ALIVE("ALIVE"), DEAD("DEAD"), PROCESSED("PROCESSED"), UNKNOWN("UNKNOWN");
 
-  private String value;
+	private String value;
 
-  AnimalCondition(String value) {
-    this.value = value;
-  }
+	AnimalCondition(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static AnimalCondition fromValue(String text) {
-    for (AnimalCondition b : AnimalCondition.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static AnimalCondition fromValue(String text) {
+		for (AnimalCondition b : AnimalCondition.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

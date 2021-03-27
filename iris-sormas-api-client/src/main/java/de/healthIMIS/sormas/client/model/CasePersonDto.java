@@ -20,94 +20,94 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import de.healthIMIS.sormas.client.model.CaseDataDto;
 import de.healthIMIS.sormas.client.model.PersonDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * CasePersonDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class CasePersonDto {
-  @JsonProperty("caze")
-  private CaseDataDto caze = null;
+	@JsonProperty("caze")
+	private CaseDataDto caze = null;
 
-  @JsonProperty("person")
-  private PersonDto person = null;
+	@JsonProperty("person")
+	private PersonDto person = null;
 
-  public CasePersonDto caze(CaseDataDto caze) {
-    this.caze = caze;
-    return this;
-  }
+	public CasePersonDto caze(CaseDataDto caze) {
+		this.caze = caze;
+		return this;
+	}
 
-   /**
-   * Get caze
-   * @return caze
-  **/
-  @Schema(description = "")
-  public CaseDataDto getCaze() {
-    return caze;
-  }
+	/**
+	 * Get caze
+	 * 
+	 * @return caze
+	 **/
+	@Schema(description = "")
+	public CaseDataDto getCaze() {
+		return caze;
+	}
 
-  public void setCaze(CaseDataDto caze) {
-    this.caze = caze;
-  }
+	public void setCaze(CaseDataDto caze) {
+		this.caze = caze;
+	}
 
-  public CasePersonDto person(PersonDto person) {
-    this.person = person;
-    return this;
-  }
+	public CasePersonDto person(PersonDto person) {
+		this.person = person;
+		return this;
+	}
 
-   /**
-   * Get person
-   * @return person
-  **/
-  @Schema(description = "")
-  public PersonDto getPerson() {
-    return person;
-  }
+	/**
+	 * Get person
+	 * 
+	 * @return person
+	 **/
+	@Schema(description = "")
+	public PersonDto getPerson() {
+		return person;
+	}
 
-  public void setPerson(PersonDto person) {
-    this.person = person;
-  }
+	public void setPerson(PersonDto person) {
+		this.person = person;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		CasePersonDto casePersonDto = (CasePersonDto) o;
+		return Objects.equals(this.caze, casePersonDto.caze) && Objects.equals(this.person, casePersonDto.person);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    CasePersonDto casePersonDto = (CasePersonDto) o;
-    return Objects.equals(this.caze, casePersonDto.caze) &&
-        Objects.equals(this.person, casePersonDto.person);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(caze, person);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(caze, person);
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class CasePersonDto {\n");
 
+		sb.append("    caze: ").append(toIndentedString(caze)).append("\n");
+		sb.append("    person: ").append(toIndentedString(person)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class CasePersonDto {\n");
-    
-    sb.append("    caze: ").append(toIndentedString(caze)).append("\n");
-    sb.append("    person: ").append(toIndentedString(person)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

@@ -19,5 +19,4 @@ package de.healthIMIS.iris.hd_server.core;
  * 
  * @author Jens Kutzsche
  */
-public interface Id {
-}
+public interface Id {}

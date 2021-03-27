@@ -14,11 +14,6 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
-import java.security.KeyStore;
-import java.util.List;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.healthIMIS.iris.client.core.SormasRefId;
 import de.healthIMIS.iris.client.data_request.DataRequest;
 import de.healthIMIS.iris.client.data_submission.model.Guest;
@@ -36,6 +31,11 @@ import de.healthIMIS.sormas.client.model.TaskPriority;
 import de.healthIMIS.sormas.client.model.TaskType;
 import de.healthIMIS.sormas.client.model.UserReferenceDto;
 
+import java.security.KeyStore;
+import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * @author Jens Kutzsche
  */
@@ -44,14 +44,9 @@ public class GuestsSubmissionProcessor extends DataSubmissionProcessor<GuestList
 	private EventParticipantControllerApi sormasParticipantApi;
 	private PersonControllerApi sormasPersonApi;
 
-	public GuestsSubmissionProcessor(
-		DataSubmissionDto submissionDto,
-		DataRequest request,
-		KeyStore keyStore,
-		ObjectMapper mapper,
-		TaskControllerApi taskApi,
-		EventParticipantControllerApi sormasParticipantApi,
-		PersonControllerApi sormasPersonApi) {
+	public GuestsSubmissionProcessor(DataSubmissionDto submissionDto, DataRequest request, KeyStore keyStore,
+			ObjectMapper mapper, TaskControllerApi taskApi, EventParticipantControllerApi sormasParticipantApi,
+			PersonControllerApi sormasPersonApi) {
 
 		super(submissionDto, GuestList.class, request, keyStore, mapper, taskApi);
 
@@ -77,7 +72,7 @@ public class GuestsSubmissionProcessor extends DataSubmissionProcessor<GuestList
 	private PersonDto createPersonDto(Guest guest) {
 		var person = new PersonDto();
 		person.setUuid(SormasRefId.random().toString());
-//			person.setSex(Sex.UNKNOWN);
+		// person.setSex(Sex.UNKNOWN);
 		person.setAddresses(List.of());
 		person.setFirstName(guest.getFirstName());
 		person.setLastName(guest.getLastName());

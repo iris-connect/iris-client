@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets PointOfEntryType
  */
 public enum PointOfEntryType {
-  AIRPORT("AIRPORT"),
-  SEAPORT("SEAPORT"),
-  GROUND_CROSSING("GROUND_CROSSING"),
-  OTHER("OTHER");
+	AIRPORT("AIRPORT"), SEAPORT("SEAPORT"), GROUND_CROSSING("GROUND_CROSSING"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  PointOfEntryType(String value) {
-    this.value = value;
-  }
+	PointOfEntryType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static PointOfEntryType fromValue(String text) {
-    for (PointOfEntryType b : PointOfEntryType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static PointOfEntryType fromValue(String text) {
+		for (PointOfEntryType b : PointOfEntryType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

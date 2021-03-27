@@ -14,24 +14,6 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_request;
 
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-
 import de.healthIMIS.iris.client.core.Aggregate;
 import de.healthIMIS.iris.client.core.Id;
 import de.healthIMIS.iris.client.core.SormasRefId;
@@ -41,6 +23,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.persistence.*;
 
 /**
  * @author Jens Kutzsche
@@ -69,29 +58,17 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 
 	private @Lob String requestDetails;
 
-	@Enumerated(EnumType.STRING)
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "data_request_feature", joinColumns = @JoinColumn(name = "request_id"))
-	@Column(name = "feature", nullable = false)
+	@Enumerated(EnumType.STRING) @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
+			name = "data_request_feature",
+			joinColumns = @JoinColumn(name = "request_id")) @Column(name = "feature", nullable = false)
 	private Set<Feature> features;
 
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
+	@Column(nullable = false) @Enumerated(EnumType.STRING)
 	private Status status = Status.Open;
 
-	public DataRequest(
-		SormasRefId refId,
-		SormasRefId personId,
-		String teleCode,
-		String checkCodeOne,
-		String checkCodeTwo,
-		String checkCodeRandom,
-		Instant requestStart,
-		Instant requestEnd,
-		String requestDetails,
-		String irisUserId,
-		String sormasUserId,
-		Set<Feature> features) {
+	public DataRequest(SormasRefId refId, SormasRefId personId, String teleCode, String checkCodeOne, String checkCodeTwo,
+			String checkCodeRandom, Instant requestStart, Instant requestEnd, String requestDetails, String irisUserId,
+			String sormasUserId, Set<Feature> features) {
 
 		super();
 
@@ -134,8 +111,7 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	}
 
 	public enum Feature {
-		Contacts_Events,
-		Guests
+		Contacts_Events, Guests
 	}
 
 	public enum Status {

@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets CaseOutcome
  */
 public enum CaseOutcome {
-  NO_OUTCOME("NO_OUTCOME"),
-  DECEASED("DECEASED"),
-  RECOVERED("RECOVERED"),
-  UNKNOWN("UNKNOWN");
+	NO_OUTCOME("NO_OUTCOME"), DECEASED("DECEASED"), RECOVERED("RECOVERED"), UNKNOWN("UNKNOWN");
 
-  private String value;
+	private String value;
 
-  CaseOutcome(String value) {
-    this.value = value;
-  }
+	CaseOutcome(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static CaseOutcome fromValue(String text) {
-    for (CaseOutcome b : CaseOutcome.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static CaseOutcome fromValue(String text) {
+		for (CaseOutcome b : CaseOutcome.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

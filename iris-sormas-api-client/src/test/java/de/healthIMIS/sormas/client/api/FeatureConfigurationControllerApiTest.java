@@ -27,65 +27,48 @@ import java.util.Map;
 @Ignore
 public class FeatureConfigurationControllerApiTest {
 
-    private final FeatureConfigurationControllerApi api = new FeatureConfigurationControllerApi();
+	private final FeatureConfigurationControllerApi api = new FeatureConfigurationControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllFeatureConfigurationsTest() {
-        Long since = null;
-        List<FeatureConfigurationDto> response = api.getAllFeatureConfigurations(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllFeatureConfigurationsTest() {
+		Long since = null;
+		List<FeatureConfigurationDto> response = api.getAllFeatureConfigurations(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids11Test() {
-        List<String> response = api.getAllUuids11();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids16Test() {
-        List<String> body = null;
-        List<FeatureConfigurationDto> response = api.getByUuids16(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids11Test() {
+		List<String> response = api.getAllUuids11();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getDeletedUuidsTest() {
-        Long since = null;
-        List<String> response = api.getDeletedUuids(since);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids16Test() {
+		List<String> body = null;
+		List<FeatureConfigurationDto> response = api.getByUuids16(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getDeletedUuidsTest() {
+		Long since = null;
+		List<String> response = api.getDeletedUuids(since);
+
+		// TODO: test validations
+	}
 }

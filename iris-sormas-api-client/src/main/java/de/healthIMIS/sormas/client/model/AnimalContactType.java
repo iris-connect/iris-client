@@ -21,35 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets AnimalContactType
  */
 public enum AnimalContactType {
-  BITE("BITE"),
-  TOUCH("TOUCH"),
-  SCRATCH("SCRATCH"),
-  LICK("LICK"),
-  OTHER("OTHER");
+	BITE("BITE"), TOUCH("TOUCH"), SCRATCH("SCRATCH"), LICK("LICK"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  AnimalContactType(String value) {
-    this.value = value;
-  }
+	AnimalContactType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static AnimalContactType fromValue(String text) {
-    for (AnimalContactType b : AnimalContactType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static AnimalContactType fromValue(String text) {
+		for (AnimalContactType b : AnimalContactType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

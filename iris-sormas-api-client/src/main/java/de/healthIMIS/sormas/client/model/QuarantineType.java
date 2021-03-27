@@ -21,38 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets QuarantineType
  */
 public enum QuarantineType {
-  HOME("HOME"),
-  INSTITUTIONELL("INSTITUTIONELL"),
-  HOSPITAL("HOSPITAL"),
-  HOTEL("HOTEL"),
-  ASYLUM_ACCOMMODATION("ASYLUM_ACCOMMODATION"),
-  NONE("NONE"),
-  UNKNOWN("UNKNOWN"),
-  OTHER("OTHER");
+	HOME("HOME"), INSTITUTIONELL("INSTITUTIONELL"), HOSPITAL("HOSPITAL"), HOTEL("HOTEL"), ASYLUM_ACCOMMODATION(
+			"ASYLUM_ACCOMMODATION"), NONE("NONE"), UNKNOWN("UNKNOWN"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  QuarantineType(String value) {
-    this.value = value;
-  }
+	QuarantineType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static QuarantineType fromValue(String text) {
-    for (QuarantineType b : QuarantineType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static QuarantineType fromValue(String text) {
+		for (QuarantineType b : QuarantineType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

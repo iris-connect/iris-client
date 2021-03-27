@@ -29,110 +29,81 @@ import java.util.Map;
 @Ignore
 public class CaseControllerApiTest {
 
-    private final CaseControllerApi api = new CaseControllerApi();
+	private final CaseControllerApi api = new CaseControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllCasesTest() {
-        Long since = null;
-        List<CaseDataDto> response = api.getAllCases(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllCasesTest() {
+		Long since = null;
+		List<CaseDataDto> response = api.getAllCases(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids5Test() {
-        List<String> response = api.getAllUuids5();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getArchivedUuidsSinceTest() {
-        Long since = null;
-        List<String> response = api.getArchivedUuidsSince(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids5Test() {
+		List<String> response = api.getAllUuids5();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids6Test() {
-        List<String> body = null;
-        List<CaseDataDto> response = api.getByUuids6(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getDeletedUuidsSinceTest() {
-        Long since = null;
-        List<String> response = api.getDeletedUuidsSince(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getArchivedUuidsSinceTest() {
+		Long since = null;
+		List<String> response = api.getArchivedUuidsSince(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getDuplicatesTest() {
-        CasePersonDto body = null;
-        List<CasePersonDto> response = api.getDuplicates(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postCasesTest() {
-        List<CaseDataDto> body = null;
-        List<PushResult> response = api.postCases(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids6Test() {
+		List<String> body = null;
+		List<CaseDataDto> response = api.getByUuids6(body);
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getDeletedUuidsSinceTest() {
+		Long since = null;
+		List<String> response = api.getDeletedUuidsSince(since);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getDuplicatesTest() {
+		CasePersonDto body = null;
+		List<CasePersonDto> response = api.getDuplicates(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postCasesTest() {
+		List<CaseDataDto> body = null;
+		List<PushResult> response = api.postCases(body);
+
+		// TODO: test validations
+	}
 }

@@ -14,14 +14,14 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server.core;
 
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
 import javax.persistence.Embeddable;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-
-import lombok.Getter;
 
 /**
  * Encapsulates entity metadata

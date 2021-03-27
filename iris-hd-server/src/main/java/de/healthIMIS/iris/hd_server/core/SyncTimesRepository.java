@@ -14,9 +14,8 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server.core;
 
-import org.springframework.data.repository.CrudRepository;
-
 import de.healthIMIS.iris.hd_server.core.SyncTimes.DataTypes;
 
-public interface SyncTimesRepository extends CrudRepository<SyncTimes, DataTypes> {
-}
+import org.springframework.data.repository.CrudRepository;
+
+public interface SyncTimesRepository extends CrudRepository<SyncTimes, DataTypes> {}

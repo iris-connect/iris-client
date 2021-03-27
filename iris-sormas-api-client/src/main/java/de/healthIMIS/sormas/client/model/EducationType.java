@@ -21,36 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets EducationType
  */
 public enum EducationType {
-  NONE("NONE"),
-  NURSERY("NURSERY"),
-  PRIMARY("PRIMARY"),
-  SECONDARY("SECONDARY"),
-  TERTIARY("TERTIARY"),
-  OTHER("OTHER");
+	NONE("NONE"), NURSERY("NURSERY"), PRIMARY("PRIMARY"), SECONDARY("SECONDARY"), TERTIARY("TERTIARY"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  EducationType(String value) {
-    this.value = value;
-  }
+	EducationType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static EducationType fromValue(String text) {
-    for (EducationType b : EducationType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static EducationType fromValue(String text) {
+		for (EducationType b : EducationType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

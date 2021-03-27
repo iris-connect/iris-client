@@ -20,102 +20,103 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * SormasToSormasEncryptedDataDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class SormasToSormasEncryptedDataDto {
-  @JsonProperty("organizationId")
-  private String organizationId = null;
+	@JsonProperty("organizationId")
+	private String organizationId = null;
 
-  @JsonProperty("data")
-  private List<byte[]> data = null;
+	@JsonProperty("data")
+	private List<byte[]> data = null;
 
-  public SormasToSormasEncryptedDataDto organizationId(String organizationId) {
-    this.organizationId = organizationId;
-    return this;
-  }
+	public SormasToSormasEncryptedDataDto organizationId(String organizationId) {
+		this.organizationId = organizationId;
+		return this;
+	}
 
-   /**
-   * Get organizationId
-   * @return organizationId
-  **/
-  @Schema(description = "")
-  public String getOrganizationId() {
-    return organizationId;
-  }
+	/**
+	 * Get organizationId
+	 * 
+	 * @return organizationId
+	 **/
+	@Schema(description = "")
+	public String getOrganizationId() {
+		return organizationId;
+	}
 
-  public void setOrganizationId(String organizationId) {
-    this.organizationId = organizationId;
-  }
+	public void setOrganizationId(String organizationId) {
+		this.organizationId = organizationId;
+	}
 
-  public SormasToSormasEncryptedDataDto data(List<byte[]> data) {
-    this.data = data;
-    return this;
-  }
+	public SormasToSormasEncryptedDataDto data(List<byte[]> data) {
+		this.data = data;
+		return this;
+	}
 
-  public SormasToSormasEncryptedDataDto addDataItem(byte[] dataItem) {
-    if (this.data == null) {
-      this.data = new ArrayList<>();
-    }
-    this.data.add(dataItem);
-    return this;
-  }
+	public SormasToSormasEncryptedDataDto addDataItem(byte[] dataItem) {
+		if (this.data == null) {
+			this.data = new ArrayList<>();
+		}
+		this.data.add(dataItem);
+		return this;
+	}
 
-   /**
-   * Get data
-   * @return data
-  **/
-  @Schema(description = "")
-  public List<byte[]> getData() {
-    return data;
-  }
+	/**
+	 * Get data
+	 * 
+	 * @return data
+	 **/
+	@Schema(description = "")
+	public List<byte[]> getData() {
+		return data;
+	}
 
-  public void setData(List<byte[]> data) {
-    this.data = data;
-  }
+	public void setData(List<byte[]> data) {
+		this.data = data;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		SormasToSormasEncryptedDataDto sormasToSormasEncryptedDataDto = (SormasToSormasEncryptedDataDto) o;
+		return Objects.equals(this.organizationId, sormasToSormasEncryptedDataDto.organizationId)
+				&& Objects.equals(this.data, sormasToSormasEncryptedDataDto.data);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    SormasToSormasEncryptedDataDto sormasToSormasEncryptedDataDto = (SormasToSormasEncryptedDataDto) o;
-    return Objects.equals(this.organizationId, sormasToSormasEncryptedDataDto.organizationId) &&
-        Objects.equals(this.data, sormasToSormasEncryptedDataDto.data);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(organizationId, data);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(organizationId, data);
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class SormasToSormasEncryptedDataDto {\n");
 
+		sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
+		sb.append("    data: ").append(toIndentedString(data)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class SormasToSormasEncryptedDataDto {\n");
-    
-    sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
-    sb.append("    data: ").append(toIndentedString(data)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

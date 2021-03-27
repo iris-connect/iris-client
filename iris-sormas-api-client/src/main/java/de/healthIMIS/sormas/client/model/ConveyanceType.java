@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets ConveyanceType
  */
 public enum ConveyanceType {
-  CAR("CAR"),
-  BUS("BUS"),
-  MOTORBIKE("MOTORBIKE"),
-  OTHER("OTHER");
+	CAR("CAR"), BUS("BUS"), MOTORBIKE("MOTORBIKE"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  ConveyanceType(String value) {
-    this.value = value;
-  }
+	ConveyanceType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static ConveyanceType fromValue(String text) {
-    for (ConveyanceType b : ConveyanceType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static ConveyanceType fromValue(String text) {
+		for (ConveyanceType b : ConveyanceType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

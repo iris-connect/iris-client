@@ -27,50 +27,37 @@ import java.util.Map;
 @Ignore
 public class OutbreakControllerApiTest {
 
-    private final OutbreakControllerApi api = new OutbreakControllerApi();
+	private final OutbreakControllerApi api = new OutbreakControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getActiveSinceTest() {
-        Long since = null;
-        List<OutbreakDto> response = api.getActiveSince(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getActiveSinceTest() {
+		Long since = null;
+		List<OutbreakDto> response = api.getActiveSince(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getActiveUuidsTest() {
-        List<String> response = api.getActiveUuids();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getInactiveUuidsSinceTest() {
-        Long since = null;
-        List<String> response = api.getInactiveUuidsSince(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getActiveUuidsTest() {
+		List<String> response = api.getActiveUuids();
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getInactiveUuidsSinceTest() {
+		Long since = null;
+		List<String> response = api.getInactiveUuidsSince(since);
+
+		// TODO: test validations
+	}
 }

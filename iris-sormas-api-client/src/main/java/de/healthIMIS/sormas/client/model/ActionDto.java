@@ -27,416 +27,427 @@ import de.healthIMIS.sormas.client.model.UserReferenceDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.time.Instant;
+
 /**
  * ActionDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class ActionDto {
-  @JsonProperty("creationDate")
-  private Instant creationDate = null;
-
-  @JsonProperty("changeDate")
-  private Instant changeDate = null;
-
-  @JsonProperty("uuid")
-  private String uuid = null;
-
-  @JsonProperty("actionContext")
-  private ActionContext actionContext = null;
-
-  @JsonProperty("event")
-  private EventReferenceDto event = null;
-
-  @JsonProperty("actionMeasure")
-  private ActionMeasure actionMeasure = null;
-
-  @JsonProperty("priority")
-  private ActionPriority priority = null;
-
-  @JsonProperty("date")
-  private Instant date = null;
-
-  @JsonProperty("actionStatus")
-  private ActionStatus actionStatus = null;
-
-  @JsonProperty("statusChangeDate")
-  private Instant statusChangeDate = null;
-
-  @JsonProperty("creatorUser")
-  private UserReferenceDto creatorUser = null;
-
-  @JsonProperty("title")
-  private String title = null;
-
-  @JsonProperty("description")
-  private String description = null;
-
-  @JsonProperty("reply")
-  private String reply = null;
-
-  @JsonProperty("lastModifiedBy")
-  private UserReferenceDto lastModifiedBy = null;
-
-  @JsonProperty("contextReference")
-  private ReferenceDto contextReference = null;
-
-  public ActionDto creationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-    return this;
-  }
-
-   /**
-   * Get creationDate
-   * @return creationDate
-  **/
-  @Schema(description = "")
-  public Instant getCreationDate() {
-    return creationDate;
-  }
-
-  public void setCreationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-  }
-
-  public ActionDto changeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-    return this;
-  }
-
-   /**
-   * Get changeDate
-   * @return changeDate
-  **/
-  @Schema(description = "")
-  public Instant getChangeDate() {
-    return changeDate;
-  }
-
-  public void setChangeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-  }
-
-  public ActionDto uuid(String uuid) {
-    this.uuid = uuid;
-    return this;
-  }
-
-   /**
-   * Get uuid
-   * @return uuid
-  **/
-  @Schema(description = "")
-  public String getUuid() {
-    return uuid;
-  }
-
-  public void setUuid(String uuid) {
-    this.uuid = uuid;
-  }
-
-  public ActionDto actionContext(ActionContext actionContext) {
-    this.actionContext = actionContext;
-    return this;
-  }
-
-   /**
-   * Get actionContext
-   * @return actionContext
-  **/
-  @Schema(required = true, description = "")
-  public ActionContext getActionContext() {
-    return actionContext;
-  }
-
-  public void setActionContext(ActionContext actionContext) {
-    this.actionContext = actionContext;
-  }
-
-  public ActionDto event(EventReferenceDto event) {
-    this.event = event;
-    return this;
-  }
-
-   /**
-   * Get event
-   * @return event
-  **/
-  @Schema(description = "")
-  public EventReferenceDto getEvent() {
-    return event;
-  }
-
-  public void setEvent(EventReferenceDto event) {
-    this.event = event;
-  }
-
-  public ActionDto actionMeasure(ActionMeasure actionMeasure) {
-    this.actionMeasure = actionMeasure;
-    return this;
-  }
-
-   /**
-   * Get actionMeasure
-   * @return actionMeasure
-  **/
-  @Schema(description = "")
-  public ActionMeasure getActionMeasure() {
-    return actionMeasure;
-  }
-
-  public void setActionMeasure(ActionMeasure actionMeasure) {
-    this.actionMeasure = actionMeasure;
-  }
-
-  public ActionDto priority(ActionPriority priority) {
-    this.priority = priority;
-    return this;
-  }
-
-   /**
-   * Get priority
-   * @return priority
-  **/
-  @Schema(description = "")
-  public ActionPriority getPriority() {
-    return priority;
-  }
-
-  public void setPriority(ActionPriority priority) {
-    this.priority = priority;
-  }
-
-  public ActionDto date(Instant date) {
-    this.date = date;
-    return this;
-  }
-
-   /**
-   * Get date
-   * @return date
-  **/
-  @Schema(required = true, description = "")
-  public Instant getDate() {
-    return date;
-  }
-
-  public void setDate(Instant date) {
-    this.date = date;
-  }
-
-  public ActionDto actionStatus(ActionStatus actionStatus) {
-    this.actionStatus = actionStatus;
-    return this;
-  }
-
-   /**
-   * Get actionStatus
-   * @return actionStatus
-  **/
-  @Schema(description = "")
-  public ActionStatus getActionStatus() {
-    return actionStatus;
-  }
-
-  public void setActionStatus(ActionStatus actionStatus) {
-    this.actionStatus = actionStatus;
-  }
-
-  public ActionDto statusChangeDate(Instant statusChangeDate) {
-    this.statusChangeDate = statusChangeDate;
-    return this;
-  }
-
-   /**
-   * Get statusChangeDate
-   * @return statusChangeDate
-  **/
-  @Schema(description = "")
-  public Instant getStatusChangeDate() {
-    return statusChangeDate;
-  }
-
-  public void setStatusChangeDate(Instant statusChangeDate) {
-    this.statusChangeDate = statusChangeDate;
-  }
-
-  public ActionDto creatorUser(UserReferenceDto creatorUser) {
-    this.creatorUser = creatorUser;
-    return this;
-  }
-
-   /**
-   * Get creatorUser
-   * @return creatorUser
-  **/
-  @Schema(description = "")
-  public UserReferenceDto getCreatorUser() {
-    return creatorUser;
-  }
-
-  public void setCreatorUser(UserReferenceDto creatorUser) {
-    this.creatorUser = creatorUser;
-  }
-
-  public ActionDto title(String title) {
-    this.title = title;
-    return this;
-  }
-
-   /**
-   * Get title
-   * @return title
-  **/
-  @Schema(description = "")
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public ActionDto description(String description) {
-    this.description = description;
-    return this;
-  }
-
-   /**
-   * Get description
-   * @return description
-  **/
-  @Schema(description = "")
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public ActionDto reply(String reply) {
-    this.reply = reply;
-    return this;
-  }
-
-   /**
-   * Get reply
-   * @return reply
-  **/
-  @Schema(description = "")
-  public String getReply() {
-    return reply;
-  }
-
-  public void setReply(String reply) {
-    this.reply = reply;
-  }
-
-  public ActionDto lastModifiedBy(UserReferenceDto lastModifiedBy) {
-    this.lastModifiedBy = lastModifiedBy;
-    return this;
-  }
-
-   /**
-   * Get lastModifiedBy
-   * @return lastModifiedBy
-  **/
-  @Schema(description = "")
-  public UserReferenceDto getLastModifiedBy() {
-    return lastModifiedBy;
-  }
-
-  public void setLastModifiedBy(UserReferenceDto lastModifiedBy) {
-    this.lastModifiedBy = lastModifiedBy;
-  }
-
-  public ActionDto contextReference(ReferenceDto contextReference) {
-    this.contextReference = contextReference;
-    return this;
-  }
-
-   /**
-   * Get contextReference
-   * @return contextReference
-  **/
-  @Schema(description = "")
-  public ReferenceDto getContextReference() {
-    return contextReference;
-  }
-
-  public void setContextReference(ReferenceDto contextReference) {
-    this.contextReference = contextReference;
-  }
-
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ActionDto actionDto = (ActionDto) o;
-    return Objects.equals(this.creationDate, actionDto.creationDate) &&
-        Objects.equals(this.changeDate, actionDto.changeDate) &&
-        Objects.equals(this.uuid, actionDto.uuid) &&
-        Objects.equals(this.actionContext, actionDto.actionContext) &&
-        Objects.equals(this.event, actionDto.event) &&
-        Objects.equals(this.actionMeasure, actionDto.actionMeasure) &&
-        Objects.equals(this.priority, actionDto.priority) &&
-        Objects.equals(this.date, actionDto.date) &&
-        Objects.equals(this.actionStatus, actionDto.actionStatus) &&
-        Objects.equals(this.statusChangeDate, actionDto.statusChangeDate) &&
-        Objects.equals(this.creatorUser, actionDto.creatorUser) &&
-        Objects.equals(this.title, actionDto.title) &&
-        Objects.equals(this.description, actionDto.description) &&
-        Objects.equals(this.reply, actionDto.reply) &&
-        Objects.equals(this.lastModifiedBy, actionDto.lastModifiedBy) &&
-        Objects.equals(this.contextReference, actionDto.contextReference);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(creationDate, changeDate, uuid, actionContext, event, actionMeasure, priority, date, actionStatus, statusChangeDate, creatorUser, title, description, reply, lastModifiedBy, contextReference);
-  }
-
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ActionDto {\n");
-    
-    sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
-    sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
-    sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
-    sb.append("    actionContext: ").append(toIndentedString(actionContext)).append("\n");
-    sb.append("    event: ").append(toIndentedString(event)).append("\n");
-    sb.append("    actionMeasure: ").append(toIndentedString(actionMeasure)).append("\n");
-    sb.append("    priority: ").append(toIndentedString(priority)).append("\n");
-    sb.append("    date: ").append(toIndentedString(date)).append("\n");
-    sb.append("    actionStatus: ").append(toIndentedString(actionStatus)).append("\n");
-    sb.append("    statusChangeDate: ").append(toIndentedString(statusChangeDate)).append("\n");
-    sb.append("    creatorUser: ").append(toIndentedString(creatorUser)).append("\n");
-    sb.append("    title: ").append(toIndentedString(title)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    reply: ").append(toIndentedString(reply)).append("\n");
-    sb.append("    lastModifiedBy: ").append(toIndentedString(lastModifiedBy)).append("\n");
-    sb.append("    contextReference: ").append(toIndentedString(contextReference)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@JsonProperty("creationDate")
+	private Instant creationDate = null;
+
+	@JsonProperty("changeDate")
+	private Instant changeDate = null;
+
+	@JsonProperty("uuid")
+	private String uuid = null;
+
+	@JsonProperty("actionContext")
+	private ActionContext actionContext = null;
+
+	@JsonProperty("event")
+	private EventReferenceDto event = null;
+
+	@JsonProperty("actionMeasure")
+	private ActionMeasure actionMeasure = null;
+
+	@JsonProperty("priority")
+	private ActionPriority priority = null;
+
+	@JsonProperty("date")
+	private Instant date = null;
+
+	@JsonProperty("actionStatus")
+	private ActionStatus actionStatus = null;
+
+	@JsonProperty("statusChangeDate")
+	private Instant statusChangeDate = null;
+
+	@JsonProperty("creatorUser")
+	private UserReferenceDto creatorUser = null;
+
+	@JsonProperty("title")
+	private String title = null;
+
+	@JsonProperty("description")
+	private String description = null;
+
+	@JsonProperty("reply")
+	private String reply = null;
+
+	@JsonProperty("lastModifiedBy")
+	private UserReferenceDto lastModifiedBy = null;
+
+	@JsonProperty("contextReference")
+	private ReferenceDto contextReference = null;
+
+	public ActionDto creationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+		return this;
+	}
+
+	/**
+	 * Get creationDate
+	 * 
+	 * @return creationDate
+	 **/
+	@Schema(description = "")
+	public Instant getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public ActionDto changeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+		return this;
+	}
+
+	/**
+	 * Get changeDate
+	 * 
+	 * @return changeDate
+	 **/
+	@Schema(description = "")
+	public Instant getChangeDate() {
+		return changeDate;
+	}
+
+	public void setChangeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+	}
+
+	public ActionDto uuid(String uuid) {
+		this.uuid = uuid;
+		return this;
+	}
+
+	/**
+	 * Get uuid
+	 * 
+	 * @return uuid
+	 **/
+	@Schema(description = "")
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public ActionDto actionContext(ActionContext actionContext) {
+		this.actionContext = actionContext;
+		return this;
+	}
+
+	/**
+	 * Get actionContext
+	 * 
+	 * @return actionContext
+	 **/
+	@Schema(required = true, description = "")
+	public ActionContext getActionContext() {
+		return actionContext;
+	}
+
+	public void setActionContext(ActionContext actionContext) {
+		this.actionContext = actionContext;
+	}
+
+	public ActionDto event(EventReferenceDto event) {
+		this.event = event;
+		return this;
+	}
+
+	/**
+	 * Get event
+	 * 
+	 * @return event
+	 **/
+	@Schema(description = "")
+	public EventReferenceDto getEvent() {
+		return event;
+	}
+
+	public void setEvent(EventReferenceDto event) {
+		this.event = event;
+	}
+
+	public ActionDto actionMeasure(ActionMeasure actionMeasure) {
+		this.actionMeasure = actionMeasure;
+		return this;
+	}
+
+	/**
+	 * Get actionMeasure
+	 * 
+	 * @return actionMeasure
+	 **/
+	@Schema(description = "")
+	public ActionMeasure getActionMeasure() {
+		return actionMeasure;
+	}
+
+	public void setActionMeasure(ActionMeasure actionMeasure) {
+		this.actionMeasure = actionMeasure;
+	}
+
+	public ActionDto priority(ActionPriority priority) {
+		this.priority = priority;
+		return this;
+	}
+
+	/**
+	 * Get priority
+	 * 
+	 * @return priority
+	 **/
+	@Schema(description = "")
+	public ActionPriority getPriority() {
+		return priority;
+	}
+
+	public void setPriority(ActionPriority priority) {
+		this.priority = priority;
+	}
+
+	public ActionDto date(Instant date) {
+		this.date = date;
+		return this;
+	}
+
+	/**
+	 * Get date
+	 * 
+	 * @return date
+	 **/
+	@Schema(required = true, description = "")
+	public Instant getDate() {
+		return date;
+	}
+
+	public void setDate(Instant date) {
+		this.date = date;
+	}
+
+	public ActionDto actionStatus(ActionStatus actionStatus) {
+		this.actionStatus = actionStatus;
+		return this;
+	}
+
+	/**
+	 * Get actionStatus
+	 * 
+	 * @return actionStatus
+	 **/
+	@Schema(description = "")
+	public ActionStatus getActionStatus() {
+		return actionStatus;
+	}
+
+	public void setActionStatus(ActionStatus actionStatus) {
+		this.actionStatus = actionStatus;
+	}
+
+	public ActionDto statusChangeDate(Instant statusChangeDate) {
+		this.statusChangeDate = statusChangeDate;
+		return this;
+	}
+
+	/**
+	 * Get statusChangeDate
+	 * 
+	 * @return statusChangeDate
+	 **/
+	@Schema(description = "")
+	public Instant getStatusChangeDate() {
+		return statusChangeDate;
+	}
+
+	public void setStatusChangeDate(Instant statusChangeDate) {
+		this.statusChangeDate = statusChangeDate;
+	}
+
+	public ActionDto creatorUser(UserReferenceDto creatorUser) {
+		this.creatorUser = creatorUser;
+		return this;
+	}
+
+	/**
+	 * Get creatorUser
+	 * 
+	 * @return creatorUser
+	 **/
+	@Schema(description = "")
+	public UserReferenceDto getCreatorUser() {
+		return creatorUser;
+	}
+
+	public void setCreatorUser(UserReferenceDto creatorUser) {
+		this.creatorUser = creatorUser;
+	}
+
+	public ActionDto title(String title) {
+		this.title = title;
+		return this;
+	}
+
+	/**
+	 * Get title
+	 * 
+	 * @return title
+	 **/
+	@Schema(description = "")
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public ActionDto description(String description) {
+		this.description = description;
+		return this;
+	}
+
+	/**
+	 * Get description
+	 * 
+	 * @return description
+	 **/
+	@Schema(description = "")
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public ActionDto reply(String reply) {
+		this.reply = reply;
+		return this;
+	}
+
+	/**
+	 * Get reply
+	 * 
+	 * @return reply
+	 **/
+	@Schema(description = "")
+	public String getReply() {
+		return reply;
+	}
+
+	public void setReply(String reply) {
+		this.reply = reply;
+	}
+
+	public ActionDto lastModifiedBy(UserReferenceDto lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+		return this;
+	}
+
+	/**
+	 * Get lastModifiedBy
+	 * 
+	 * @return lastModifiedBy
+	 **/
+	@Schema(description = "")
+	public UserReferenceDto getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(UserReferenceDto lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
+
+	public ActionDto contextReference(ReferenceDto contextReference) {
+		this.contextReference = contextReference;
+		return this;
+	}
+
+	/**
+	 * Get contextReference
+	 * 
+	 * @return contextReference
+	 **/
+	@Schema(description = "")
+	public ReferenceDto getContextReference() {
+		return contextReference;
+	}
+
+	public void setContextReference(ReferenceDto contextReference) {
+		this.contextReference = contextReference;
+	}
+
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		ActionDto actionDto = (ActionDto) o;
+		return Objects.equals(this.creationDate, actionDto.creationDate)
+				&& Objects.equals(this.changeDate, actionDto.changeDate) && Objects.equals(this.uuid, actionDto.uuid)
+				&& Objects.equals(this.actionContext, actionDto.actionContext) && Objects.equals(this.event, actionDto.event)
+				&& Objects.equals(this.actionMeasure, actionDto.actionMeasure)
+				&& Objects.equals(this.priority, actionDto.priority) && Objects.equals(this.date, actionDto.date)
+				&& Objects.equals(this.actionStatus, actionDto.actionStatus)
+				&& Objects.equals(this.statusChangeDate, actionDto.statusChangeDate)
+				&& Objects.equals(this.creatorUser, actionDto.creatorUser) && Objects.equals(this.title, actionDto.title)
+				&& Objects.equals(this.description, actionDto.description) && Objects.equals(this.reply, actionDto.reply)
+				&& Objects.equals(this.lastModifiedBy, actionDto.lastModifiedBy)
+				&& Objects.equals(this.contextReference, actionDto.contextReference);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(creationDate, changeDate, uuid, actionContext, event, actionMeasure, priority, date,
+				actionStatus, statusChangeDate, creatorUser, title, description, reply, lastModifiedBy, contextReference);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class ActionDto {\n");
+
+		sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
+		sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
+		sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
+		sb.append("    actionContext: ").append(toIndentedString(actionContext)).append("\n");
+		sb.append("    event: ").append(toIndentedString(event)).append("\n");
+		sb.append("    actionMeasure: ").append(toIndentedString(actionMeasure)).append("\n");
+		sb.append("    priority: ").append(toIndentedString(priority)).append("\n");
+		sb.append("    date: ").append(toIndentedString(date)).append("\n");
+		sb.append("    actionStatus: ").append(toIndentedString(actionStatus)).append("\n");
+		sb.append("    statusChangeDate: ").append(toIndentedString(statusChangeDate)).append("\n");
+		sb.append("    creatorUser: ").append(toIndentedString(creatorUser)).append("\n");
+		sb.append("    title: ").append(toIndentedString(title)).append("\n");
+		sb.append("    description: ").append(toIndentedString(description)).append("\n");
+		sb.append("    reply: ").append(toIndentedString(reply)).append("\n");
+		sb.append("    lastModifiedBy: ").append(toIndentedString(lastModifiedBy)).append("\n");
+		sb.append("    contextReference: ").append(toIndentedString(contextReference)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

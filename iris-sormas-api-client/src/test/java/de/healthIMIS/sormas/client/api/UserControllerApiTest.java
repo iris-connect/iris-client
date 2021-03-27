@@ -27,50 +27,37 @@ import java.util.Map;
 @Ignore
 public class UserControllerApiTest {
 
-    private final UserControllerApi api = new UserControllerApi();
+	private final UserControllerApi api = new UserControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAll8Test() {
-        Long since = null;
-        List<UserDto> response = api.getAll8(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAll8Test() {
+		Long since = null;
+		List<UserDto> response = api.getAll8(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids15Test() {
-        List<String> response = api.getAllUuids15();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids25Test() {
-        List<String> body = null;
-        List<UserDto> response = api.getByUuids25(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids15Test() {
+		List<String> response = api.getAllUuids15();
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids25Test() {
+		List<String> body = null;
+		List<UserDto> response = api.getByUuids25(body);
+
+		// TODO: test validations
+	}
 }

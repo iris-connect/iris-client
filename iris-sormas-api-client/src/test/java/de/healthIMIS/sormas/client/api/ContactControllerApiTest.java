@@ -28,80 +28,59 @@ import java.util.Map;
 @Ignore
 public class ContactControllerApiTest {
 
-    private final ContactControllerApi api = new ContactControllerApi();
+	private final ContactControllerApi api = new ContactControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllActiveUuids2Test() {
-        List<String> response = api.getAllActiveUuids2();
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllActiveUuids2Test() {
+		List<String> response = api.getAllActiveUuids2();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllContactsTest() {
-        Long since = null;
-        List<ContactDto> response = api.getAllContacts(since);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids9Test() {
-        List<String> body = null;
-        List<ContactDto> response = api.getByUuids9(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllContactsTest() {
+		Long since = null;
+		List<ContactDto> response = api.getAllContacts(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getDeletedUuidsSince1Test() {
-        Long since = null;
-        List<String> response = api.getDeletedUuidsSince1(since);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postContactsTest() {
-        List<ContactDto> body = null;
-        List<PushResult> response = api.postContacts(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids9Test() {
+		List<String> body = null;
+		List<ContactDto> response = api.getByUuids9(body);
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getDeletedUuidsSince1Test() {
+		Long since = null;
+		List<String> response = api.getDeletedUuidsSince1(since);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postContactsTest() {
+		List<ContactDto> body = null;
+		List<PushResult> response = api.postContacts(body);
+
+		// TODO: test validations
+	}
 }

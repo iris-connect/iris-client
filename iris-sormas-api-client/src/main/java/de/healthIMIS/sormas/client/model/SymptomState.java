@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets SymptomState
  */
 public enum SymptomState {
-  YES("YES"),
-  NO("NO"),
-  UNKNOWN("UNKNOWN");
+	YES("YES"), NO("NO"), UNKNOWN("UNKNOWN");
 
-  private String value;
+	private String value;
 
-  SymptomState(String value) {
-    this.value = value;
-  }
+	SymptomState(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static SymptomState fromValue(String text) {
-    for (SymptomState b : SymptomState.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static SymptomState fromValue(String text) {
+		for (SymptomState b : SymptomState.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

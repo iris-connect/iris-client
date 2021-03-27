@@ -21,35 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets EventSourceType
  */
 public enum EventSourceType {
-  NOT_APPLICABLE("NOT_APPLICABLE"),
-  MEDIA_NEWS("MEDIA_NEWS"),
-  HOTLINE_PERSON("HOTLINE_PERSON"),
-  MATHEMATICAL_MODEL("MATHEMATICAL_MODEL"),
-  INSTITUTIONAL_PARTNER("INSTITUTIONAL_PARTNER");
+	NOT_APPLICABLE("NOT_APPLICABLE"), MEDIA_NEWS("MEDIA_NEWS"), HOTLINE_PERSON("HOTLINE_PERSON"), MATHEMATICAL_MODEL(
+			"MATHEMATICAL_MODEL"), INSTITUTIONAL_PARTNER("INSTITUTIONAL_PARTNER");
 
-  private String value;
+	private String value;
 
-  EventSourceType(String value) {
-    this.value = value;
-  }
+	EventSourceType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static EventSourceType fromValue(String text) {
-    for (EventSourceType b : EventSourceType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static EventSourceType fromValue(String text) {
+		for (EventSourceType b : EventSourceType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

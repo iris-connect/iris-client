@@ -27,50 +27,37 @@ import java.util.Map;
 @Ignore
 public class DiseaseConfigurationControllerApiTest {
 
-    private final DiseaseConfigurationControllerApi api = new DiseaseConfigurationControllerApi();
+	private final DiseaseConfigurationControllerApi api = new DiseaseConfigurationControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllDiseaseConfigurationsTest() {
-        Long since = null;
-        List<DiseaseConfigurationDto> response = api.getAllDiseaseConfigurations(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllDiseaseConfigurationsTest() {
+		Long since = null;
+		List<DiseaseConfigurationDto> response = api.getAllDiseaseConfigurations(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids8Test() {
-        List<String> response = api.getAllUuids8();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids11Test() {
-        List<String> body = null;
-        List<DiseaseConfigurationDto> response = api.getByUuids11(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids8Test() {
+		List<String> response = api.getAllUuids8();
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids11Test() {
+		List<String> body = null;
+		List<DiseaseConfigurationDto> response = api.getByUuids11(body);
+
+		// TODO: test validations
+	}
 }

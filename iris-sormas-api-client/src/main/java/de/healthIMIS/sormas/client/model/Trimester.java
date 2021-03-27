@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets Trimester
  */
 public enum Trimester {
-  FIRST("FIRST"),
-  SECOND("SECOND"),
-  THIRD("THIRD"),
-  UNKNOWN("UNKNOWN");
+	FIRST("FIRST"), SECOND("SECOND"), THIRD("THIRD"), UNKNOWN("UNKNOWN");
 
-  private String value;
+	private String value;
 
-  Trimester(String value) {
-    this.value = value;
-  }
+	Trimester(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static Trimester fromValue(String text) {
-    for (Trimester b : Trimester.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static Trimester fromValue(String text) {
+		for (Trimester b : Trimester.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

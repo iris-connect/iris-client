@@ -19,72 +19,71 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import de.healthIMIS.sormas.client.model.ClassificationCriteriaDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * ClassificationNoneOfCriteriaDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class ClassificationNoneOfCriteriaDto extends ClassificationCriteriaDto {
-  @JsonProperty("criteriaName")
-  private String criteriaName = null;
+	@JsonProperty("criteriaName")
+	private String criteriaName = null;
 
-  public ClassificationNoneOfCriteriaDto criteriaName(String criteriaName) {
-    this.criteriaName = criteriaName;
-    return this;
-  }
+	public ClassificationNoneOfCriteriaDto criteriaName(String criteriaName) {
+		this.criteriaName = criteriaName;
+		return this;
+	}
 
-   /**
-   * Get criteriaName
-   * @return criteriaName
-  **/
-  @Schema(description = "")
-  public String getCriteriaName() {
-    return criteriaName;
-  }
+	/**
+	 * Get criteriaName
+	 * 
+	 * @return criteriaName
+	 **/
+	@Schema(description = "")
+	public String getCriteriaName() {
+		return criteriaName;
+	}
 
-  public void setCriteriaName(String criteriaName) {
-    this.criteriaName = criteriaName;
-  }
+	public void setCriteriaName(String criteriaName) {
+		this.criteriaName = criteriaName;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		ClassificationNoneOfCriteriaDto classificationNoneOfCriteriaDto = (ClassificationNoneOfCriteriaDto) o;
+		return Objects.equals(this.criteriaName, classificationNoneOfCriteriaDto.criteriaName) && super.equals(o);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ClassificationNoneOfCriteriaDto classificationNoneOfCriteriaDto = (ClassificationNoneOfCriteriaDto) o;
-    return Objects.equals(this.criteriaName, classificationNoneOfCriteriaDto.criteriaName) &&
-        super.equals(o);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(criteriaName, super.hashCode());
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(criteriaName, super.hashCode());
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class ClassificationNoneOfCriteriaDto {\n");
+		sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+		sb.append("    criteriaName: ").append(toIndentedString(criteriaName)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ClassificationNoneOfCriteriaDto {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    criteriaName: ").append(toIndentedString(criteriaName)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

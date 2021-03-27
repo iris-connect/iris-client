@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets PlagueType
  */
 public enum PlagueType {
-  BUBONIC("BUBONIC"),
-  PNEUMONIC("PNEUMONIC"),
-  SEPTICAEMIC("SEPTICAEMIC");
+	BUBONIC("BUBONIC"), PNEUMONIC("PNEUMONIC"), SEPTICAEMIC("SEPTICAEMIC");
 
-  private String value;
+	private String value;
 
-  PlagueType(String value) {
-    this.value = value;
-  }
+	PlagueType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static PlagueType fromValue(String text) {
-    for (PlagueType b : PlagueType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static PlagueType fromValue(String text) {
+		for (PlagueType b : PlagueType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

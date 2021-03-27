@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets EndOfIsolationReason
  */
 public enum EndOfIsolationReason {
-  RECOVERED("RECOVERED"),
-  DIED("DIED"),
-  LOST_TO_FOLLOW_UP("LOST_TO_FOLLOW_UP"),
-  OTHER("OTHER");
+	RECOVERED("RECOVERED"), DIED("DIED"), LOST_TO_FOLLOW_UP("LOST_TO_FOLLOW_UP"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  EndOfIsolationReason(String value) {
-    this.value = value;
-  }
+	EndOfIsolationReason(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static EndOfIsolationReason fromValue(String text) {
-    for (EndOfIsolationReason b : EndOfIsolationReason.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static EndOfIsolationReason fromValue(String text) {
+		for (EndOfIsolationReason b : EndOfIsolationReason.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

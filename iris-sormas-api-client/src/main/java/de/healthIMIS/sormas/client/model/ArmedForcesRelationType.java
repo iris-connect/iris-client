@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets ArmedForcesRelationType
  */
 public enum ArmedForcesRelationType {
-  UNKNOWN("UNKNOWN"),
-  NO_RELATION("NO_RELATION"),
-  CIVIL("CIVIL"),
-  SOLDIER_OR_RELATIVE("SOLDIER_OR_RELATIVE");
+	UNKNOWN("UNKNOWN"), NO_RELATION("NO_RELATION"), CIVIL("CIVIL"), SOLDIER_OR_RELATIVE("SOLDIER_OR_RELATIVE");
 
-  private String value;
+	private String value;
 
-  ArmedForcesRelationType(String value) {
-    this.value = value;
-  }
+	ArmedForcesRelationType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static ArmedForcesRelationType fromValue(String text) {
-    for (ArmedForcesRelationType b : ArmedForcesRelationType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static ArmedForcesRelationType fromValue(String text) {
+		for (ArmedForcesRelationType b : ArmedForcesRelationType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

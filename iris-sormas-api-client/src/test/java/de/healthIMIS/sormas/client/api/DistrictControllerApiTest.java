@@ -27,50 +27,37 @@ import java.util.Map;
 @Ignore
 public class DistrictControllerApiTest {
 
-    private final DistrictControllerApi api = new DistrictControllerApi();
+	private final DistrictControllerApi api = new DistrictControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAll4Test() {
-        Long since = null;
-        List<DistrictDto> response = api.getAll4(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAll4Test() {
+		Long since = null;
+		List<DistrictDto> response = api.getAll4(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids9Test() {
-        List<String> response = api.getAllUuids9();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids12Test() {
-        List<String> body = null;
-        List<DistrictDto> response = api.getByUuids12(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids9Test() {
+		List<String> response = api.getAllUuids9();
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids12Test() {
+		List<String> body = null;
+		List<DistrictDto> response = api.getByUuids12(body);
+
+		// TODO: test validations
+	}
 }

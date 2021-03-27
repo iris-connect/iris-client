@@ -28,10 +28,12 @@ public class IrisDummyWebApplication {
 	}
 
 	@Bean
-	RestTemplate getRestTemplate(RestTemplateBuilder builder) throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
+	RestTemplate getRestTemplate(RestTemplateBuilder builder)
+			throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
-		var sslContext = new SSLContextBuilder().loadTrustMaterial((chain, authType) -> true) // trust all server certificates
-			.build();
+		var sslContext = new SSLContextBuilder().loadTrustMaterial((chain, authType) -> true) // trust all server
+																																													// certificates
+				.build();
 
 		var socketFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
 		var httpClient = HttpClientBuilder.create().setSSLSocketFactory(socketFactory).build();
@@ -45,7 +47,8 @@ public class IrisDummyWebApplication {
 	@Bean
 	Traverson getTraverson(IrisProperties properties, RestTemplate rest) {
 
-		var uriStr = String.format("https://%s:%s/", properties.getServerAddress().getHostAddress(), properties.getServerPort());
+		var uriStr = String.format("https://%s:%s/", properties.getServerAddress().getHostAddress(),
+				properties.getServerPort());
 		var traverson = new Traverson(URI.create(uriStr), MediaTypes.HAL_JSON);
 		traverson.setRestOperations(rest);
 

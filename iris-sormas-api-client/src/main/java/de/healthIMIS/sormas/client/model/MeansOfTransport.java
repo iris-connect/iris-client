@@ -21,35 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets MeansOfTransport
  */
 public enum MeansOfTransport {
-  BUS("BUS"),
-  FERRY("FERRY"),
-  PLANE("PLANE"),
-  TRAIN("TRAIN"),
-  OTHER("OTHER");
+	BUS("BUS"), FERRY("FERRY"), PLANE("PLANE"), TRAIN("TRAIN"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  MeansOfTransport(String value) {
-    this.value = value;
-  }
+	MeansOfTransport(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static MeansOfTransport fromValue(String text) {
-    for (MeansOfTransport b : MeansOfTransport.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static MeansOfTransport fromValue(String text) {
+		for (MeansOfTransport b : MeansOfTransport.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

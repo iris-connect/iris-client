@@ -20,255 +20,264 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.time.Instant;
+
 /**
  * SormasToSormasOriginInfoDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class SormasToSormasOriginInfoDto {
-  @JsonProperty("creationDate")
-  private Instant creationDate = null;
+	@JsonProperty("creationDate")
+	private Instant creationDate = null;
 
-  @JsonProperty("changeDate")
-  private Instant changeDate = null;
+	@JsonProperty("changeDate")
+	private Instant changeDate = null;
 
-  @JsonProperty("uuid")
-  private String uuid = null;
+	@JsonProperty("uuid")
+	private String uuid = null;
 
-  @JsonProperty("organizationId")
-  private String organizationId = null;
+	@JsonProperty("organizationId")
+	private String organizationId = null;
 
-  @JsonProperty("senderName")
-  private String senderName = null;
+	@JsonProperty("senderName")
+	private String senderName = null;
 
-  @JsonProperty("senderEmail")
-  private String senderEmail = null;
+	@JsonProperty("senderEmail")
+	private String senderEmail = null;
 
-  @JsonProperty("senderPhoneNumber")
-  private String senderPhoneNumber = null;
+	@JsonProperty("senderPhoneNumber")
+	private String senderPhoneNumber = null;
 
-  @JsonProperty("ownershipHandedOver")
-  private Boolean ownershipHandedOver = null;
+	@JsonProperty("ownershipHandedOver")
+	private Boolean ownershipHandedOver = null;
 
-  @JsonProperty("comment")
-  private String comment = null;
+	@JsonProperty("comment")
+	private String comment = null;
 
-  public SormasToSormasOriginInfoDto creationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-    return this;
-  }
+	public SormasToSormasOriginInfoDto creationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+		return this;
+	}
 
-   /**
-   * Get creationDate
-   * @return creationDate
-  **/
-  @Schema(description = "")
-  public Instant getCreationDate() {
-    return creationDate;
-  }
+	/**
+	 * Get creationDate
+	 * 
+	 * @return creationDate
+	 **/
+	@Schema(description = "")
+	public Instant getCreationDate() {
+		return creationDate;
+	}
 
-  public void setCreationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-  }
+	public void setCreationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+	}
 
-  public SormasToSormasOriginInfoDto changeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-    return this;
-  }
+	public SormasToSormasOriginInfoDto changeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+		return this;
+	}
 
-   /**
-   * Get changeDate
-   * @return changeDate
-  **/
-  @Schema(description = "")
-  public Instant getChangeDate() {
-    return changeDate;
-  }
+	/**
+	 * Get changeDate
+	 * 
+	 * @return changeDate
+	 **/
+	@Schema(description = "")
+	public Instant getChangeDate() {
+		return changeDate;
+	}
 
-  public void setChangeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-  }
+	public void setChangeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+	}
 
-  public SormasToSormasOriginInfoDto uuid(String uuid) {
-    this.uuid = uuid;
-    return this;
-  }
+	public SormasToSormasOriginInfoDto uuid(String uuid) {
+		this.uuid = uuid;
+		return this;
+	}
 
-   /**
-   * Get uuid
-   * @return uuid
-  **/
-  @Schema(description = "")
-  public String getUuid() {
-    return uuid;
-  }
+	/**
+	 * Get uuid
+	 * 
+	 * @return uuid
+	 **/
+	@Schema(description = "")
+	public String getUuid() {
+		return uuid;
+	}
 
-  public void setUuid(String uuid) {
-    this.uuid = uuid;
-  }
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
-  public SormasToSormasOriginInfoDto organizationId(String organizationId) {
-    this.organizationId = organizationId;
-    return this;
-  }
+	public SormasToSormasOriginInfoDto organizationId(String organizationId) {
+		this.organizationId = organizationId;
+		return this;
+	}
 
-   /**
-   * Get organizationId
-   * @return organizationId
-  **/
-  @Schema(description = "")
-  public String getOrganizationId() {
-    return organizationId;
-  }
+	/**
+	 * Get organizationId
+	 * 
+	 * @return organizationId
+	 **/
+	@Schema(description = "")
+	public String getOrganizationId() {
+		return organizationId;
+	}
 
-  public void setOrganizationId(String organizationId) {
-    this.organizationId = organizationId;
-  }
+	public void setOrganizationId(String organizationId) {
+		this.organizationId = organizationId;
+	}
 
-  public SormasToSormasOriginInfoDto senderName(String senderName) {
-    this.senderName = senderName;
-    return this;
-  }
+	public SormasToSormasOriginInfoDto senderName(String senderName) {
+		this.senderName = senderName;
+		return this;
+	}
 
-   /**
-   * Get senderName
-   * @return senderName
-  **/
-  @Schema(description = "")
-  public String getSenderName() {
-    return senderName;
-  }
+	/**
+	 * Get senderName
+	 * 
+	 * @return senderName
+	 **/
+	@Schema(description = "")
+	public String getSenderName() {
+		return senderName;
+	}
 
-  public void setSenderName(String senderName) {
-    this.senderName = senderName;
-  }
+	public void setSenderName(String senderName) {
+		this.senderName = senderName;
+	}
 
-  public SormasToSormasOriginInfoDto senderEmail(String senderEmail) {
-    this.senderEmail = senderEmail;
-    return this;
-  }
+	public SormasToSormasOriginInfoDto senderEmail(String senderEmail) {
+		this.senderEmail = senderEmail;
+		return this;
+	}
 
-   /**
-   * Get senderEmail
-   * @return senderEmail
-  **/
-  @Schema(description = "")
-  public String getSenderEmail() {
-    return senderEmail;
-  }
+	/**
+	 * Get senderEmail
+	 * 
+	 * @return senderEmail
+	 **/
+	@Schema(description = "")
+	public String getSenderEmail() {
+		return senderEmail;
+	}
 
-  public void setSenderEmail(String senderEmail) {
-    this.senderEmail = senderEmail;
-  }
+	public void setSenderEmail(String senderEmail) {
+		this.senderEmail = senderEmail;
+	}
 
-  public SormasToSormasOriginInfoDto senderPhoneNumber(String senderPhoneNumber) {
-    this.senderPhoneNumber = senderPhoneNumber;
-    return this;
-  }
+	public SormasToSormasOriginInfoDto senderPhoneNumber(String senderPhoneNumber) {
+		this.senderPhoneNumber = senderPhoneNumber;
+		return this;
+	}
 
-   /**
-   * Get senderPhoneNumber
-   * @return senderPhoneNumber
-  **/
-  @Schema(description = "")
-  public String getSenderPhoneNumber() {
-    return senderPhoneNumber;
-  }
+	/**
+	 * Get senderPhoneNumber
+	 * 
+	 * @return senderPhoneNumber
+	 **/
+	@Schema(description = "")
+	public String getSenderPhoneNumber() {
+		return senderPhoneNumber;
+	}
 
-  public void setSenderPhoneNumber(String senderPhoneNumber) {
-    this.senderPhoneNumber = senderPhoneNumber;
-  }
+	public void setSenderPhoneNumber(String senderPhoneNumber) {
+		this.senderPhoneNumber = senderPhoneNumber;
+	}
 
-  public SormasToSormasOriginInfoDto ownershipHandedOver(Boolean ownershipHandedOver) {
-    this.ownershipHandedOver = ownershipHandedOver;
-    return this;
-  }
+	public SormasToSormasOriginInfoDto ownershipHandedOver(Boolean ownershipHandedOver) {
+		this.ownershipHandedOver = ownershipHandedOver;
+		return this;
+	}
 
-   /**
-   * Get ownershipHandedOver
-   * @return ownershipHandedOver
-  **/
-  @Schema(description = "")
-  public Boolean isOwnershipHandedOver() {
-    return ownershipHandedOver;
-  }
+	/**
+	 * Get ownershipHandedOver
+	 * 
+	 * @return ownershipHandedOver
+	 **/
+	@Schema(description = "")
+	public Boolean isOwnershipHandedOver() {
+		return ownershipHandedOver;
+	}
 
-  public void setOwnershipHandedOver(Boolean ownershipHandedOver) {
-    this.ownershipHandedOver = ownershipHandedOver;
-  }
+	public void setOwnershipHandedOver(Boolean ownershipHandedOver) {
+		this.ownershipHandedOver = ownershipHandedOver;
+	}
 
-  public SormasToSormasOriginInfoDto comment(String comment) {
-    this.comment = comment;
-    return this;
-  }
+	public SormasToSormasOriginInfoDto comment(String comment) {
+		this.comment = comment;
+		return this;
+	}
 
-   /**
-   * Get comment
-   * @return comment
-  **/
-  @Schema(description = "")
-  public String getComment() {
-    return comment;
-  }
+	/**
+	 * Get comment
+	 * 
+	 * @return comment
+	 **/
+	@Schema(description = "")
+	public String getComment() {
+		return comment;
+	}
 
-  public void setComment(String comment) {
-    this.comment = comment;
-  }
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		SormasToSormasOriginInfoDto sormasToSormasOriginInfoDto = (SormasToSormasOriginInfoDto) o;
+		return Objects.equals(this.creationDate, sormasToSormasOriginInfoDto.creationDate)
+				&& Objects.equals(this.changeDate, sormasToSormasOriginInfoDto.changeDate)
+				&& Objects.equals(this.uuid, sormasToSormasOriginInfoDto.uuid)
+				&& Objects.equals(this.organizationId, sormasToSormasOriginInfoDto.organizationId)
+				&& Objects.equals(this.senderName, sormasToSormasOriginInfoDto.senderName)
+				&& Objects.equals(this.senderEmail, sormasToSormasOriginInfoDto.senderEmail)
+				&& Objects.equals(this.senderPhoneNumber, sormasToSormasOriginInfoDto.senderPhoneNumber)
+				&& Objects.equals(this.ownershipHandedOver, sormasToSormasOriginInfoDto.ownershipHandedOver)
+				&& Objects.equals(this.comment, sormasToSormasOriginInfoDto.comment);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    SormasToSormasOriginInfoDto sormasToSormasOriginInfoDto = (SormasToSormasOriginInfoDto) o;
-    return Objects.equals(this.creationDate, sormasToSormasOriginInfoDto.creationDate) &&
-        Objects.equals(this.changeDate, sormasToSormasOriginInfoDto.changeDate) &&
-        Objects.equals(this.uuid, sormasToSormasOriginInfoDto.uuid) &&
-        Objects.equals(this.organizationId, sormasToSormasOriginInfoDto.organizationId) &&
-        Objects.equals(this.senderName, sormasToSormasOriginInfoDto.senderName) &&
-        Objects.equals(this.senderEmail, sormasToSormasOriginInfoDto.senderEmail) &&
-        Objects.equals(this.senderPhoneNumber, sormasToSormasOriginInfoDto.senderPhoneNumber) &&
-        Objects.equals(this.ownershipHandedOver, sormasToSormasOriginInfoDto.ownershipHandedOver) &&
-        Objects.equals(this.comment, sormasToSormasOriginInfoDto.comment);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(creationDate, changeDate, uuid, organizationId, senderName, senderEmail, senderPhoneNumber,
+				ownershipHandedOver, comment);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(creationDate, changeDate, uuid, organizationId, senderName, senderEmail, senderPhoneNumber, ownershipHandedOver, comment);
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class SormasToSormasOriginInfoDto {\n");
 
+		sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
+		sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
+		sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
+		sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
+		sb.append("    senderName: ").append(toIndentedString(senderName)).append("\n");
+		sb.append("    senderEmail: ").append(toIndentedString(senderEmail)).append("\n");
+		sb.append("    senderPhoneNumber: ").append(toIndentedString(senderPhoneNumber)).append("\n");
+		sb.append("    ownershipHandedOver: ").append(toIndentedString(ownershipHandedOver)).append("\n");
+		sb.append("    comment: ").append(toIndentedString(comment)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class SormasToSormasOriginInfoDto {\n");
-    
-    sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
-    sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
-    sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
-    sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
-    sb.append("    senderName: ").append(toIndentedString(senderName)).append("\n");
-    sb.append("    senderEmail: ").append(toIndentedString(senderEmail)).append("\n");
-    sb.append("    senderPhoneNumber: ").append(toIndentedString(senderPhoneNumber)).append("\n");
-    sb.append("    ownershipHandedOver: ").append(toIndentedString(ownershipHandedOver)).append("\n");
-    sb.append("    comment: ").append(toIndentedString(comment)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

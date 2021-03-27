@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets ContactStatus
  */
 public enum ContactStatus {
-  ACTIVE("ACTIVE"),
-  CONVERTED("CONVERTED"),
-  DROPPED("DROPPED");
+	ACTIVE("ACTIVE"), CONVERTED("CONVERTED"), DROPPED("DROPPED");
 
-  private String value;
+	private String value;
 
-  ContactStatus(String value) {
-    this.value = value;
-  }
+	ContactStatus(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static ContactStatus fromValue(String text) {
-    for (ContactStatus b : ContactStatus.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static ContactStatus fromValue(String text) {
+		for (ContactStatus b : ContactStatus.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

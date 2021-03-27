@@ -14,10 +14,6 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
-import java.security.KeyStore;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.healthIMIS.iris.client.data_request.DataRequest;
 import de.healthIMIS.iris.client.data_submission.model.ContactsAndEvents;
 import de.healthIMIS.iris.client.sormas_integration.DataSubmissionJob.DataSubmissionDto;
@@ -27,6 +23,10 @@ import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
 import de.healthIMIS.sormas.client.api.PersonControllerApi;
 import de.healthIMIS.sormas.client.api.TaskControllerApi;
 
+import java.security.KeyStore;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * @author Jens Kutzsche
  */
@@ -35,21 +35,16 @@ public class ContactsEventsSubmissionProcessor extends DataSubmissionProcessor<C
 	private ContactsSubmissionProcessor contactsProcessor;
 	private EventsSubmissionProcessor eventsProcessor;
 
-	public ContactsEventsSubmissionProcessor(
-		DataSubmissionDto submissionDto,
-		DataRequest request,
-		KeyStore keyStore,
-		ObjectMapper mapper,
-		TaskControllerApi sormasTaskApi,
-		PersonControllerApi sormasPersonApi,
-		ContactControllerApi sormasContactApi,
-		EventControllerApi sormasEventApi,
-		EventParticipantControllerApi sormasParticipantApi) {
+	public ContactsEventsSubmissionProcessor(DataSubmissionDto submissionDto, DataRequest request, KeyStore keyStore,
+			ObjectMapper mapper, TaskControllerApi sormasTaskApi, PersonControllerApi sormasPersonApi,
+			ContactControllerApi sormasContactApi, EventControllerApi sormasEventApi,
+			EventParticipantControllerApi sormasParticipantApi) {
 
 		super(submissionDto, ContactsAndEvents.class, request, keyStore, mapper, sormasTaskApi);
 
 		contactsProcessor = new ContactsSubmissionProcessor(request, sormasTaskApi, sormasPersonApi, sormasContactApi);
-		eventsProcessor = new EventsSubmissionProcessor(request, sormasTaskApi, sormasEventApi, sormasParticipantApi, sormasPersonApi);
+		eventsProcessor = new EventsSubmissionProcessor(request, sormasTaskApi, sormasEventApi, sormasParticipantApi,
+				sormasPersonApi);
 	}
 
 	@Override

@@ -21,35 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets ContactIdentificationSource
  */
 public enum ContactIdentificationSource {
-  CASE_PERSON("CASE_PERSON"),
-  CONTACT_PERSON("CONTACT_PERSON"),
-  TRACING_APP("TRACING_APP"),
-  OTHER("OTHER"),
-  UNKNOWN("UNKNOWN");
+	CASE_PERSON("CASE_PERSON"), CONTACT_PERSON("CONTACT_PERSON"), TRACING_APP("TRACING_APP"), OTHER("OTHER"), UNKNOWN(
+			"UNKNOWN");
 
-  private String value;
+	private String value;
 
-  ContactIdentificationSource(String value) {
-    this.value = value;
-  }
+	ContactIdentificationSource(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static ContactIdentificationSource fromValue(String text) {
-    for (ContactIdentificationSource b : ContactIdentificationSource.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static ContactIdentificationSource fromValue(String text) {
+		for (ContactIdentificationSource b : ContactIdentificationSource.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

@@ -14,11 +14,6 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server.data_submission;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
-import org.springframework.stereotype.Component;
-
 import de.healthIMIS.iris.hd_server.core.DataInitializer;
 import de.healthIMIS.iris.hd_server.data_request.DataRequestDataInitializer;
 import de.healthIMIS.iris.hd_server.data_submission.DataSubmission.DataSubmissionIdentifier;
@@ -26,13 +21,20 @@ import de.healthIMIS.iris.hd_server.data_submission.DataSubmission.Feature;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
+import org.springframework.stereotype.Component;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 class DataSubmissionDataInitializer implements DataInitializer {
 
-	static final DataSubmissionIdentifier SUBMISSION_ID_1 = DataSubmissionIdentifier.of(UUID.fromString("6ad7760e-e6cf-4849-992f-a658a8f938e3"));
-	static final DataSubmissionIdentifier SUBMISSION_ID_2 = DataSubmissionIdentifier.of(UUID.fromString("eea45b6e-b0fb-4f30-9563-575b1de10774"));
+	static final DataSubmissionIdentifier SUBMISSION_ID_1 = DataSubmissionIdentifier
+			.of(UUID.fromString("6ad7760e-e6cf-4849-992f-a658a8f938e3"));
+	static final DataSubmissionIdentifier SUBMISSION_ID_2 = DataSubmissionIdentifier
+			.of(UUID.fromString("eea45b6e-b0fb-4f30-9563-575b1de10774"));
 
 	private final DataSubmissionRepository submissions;
 
@@ -47,25 +49,11 @@ class DataSubmissionDataInitializer implements DataInitializer {
 
 		var list = new ArrayList<DataSubmission>();
 
-		list.add(
-			new DataSubmission(
-				SUBMISSION_ID_1,
-				DataRequestDataInitializer.REQ_ID_1,
-				DataRequestDataInitializer.DEPARTMENT_ID_1,
-				"salt",
-				"key",
-				"DATA OF CONTACTS",
-				Feature.Contacts));
+		list.add(new DataSubmission(SUBMISSION_ID_1, DataRequestDataInitializer.REQ_ID_1,
+				DataRequestDataInitializer.DEPARTMENT_ID_1, "salt", "key", "DATA OF CONTACTS", Feature.Contacts));
 
-		list.add(
-			new DataSubmission(
-				SUBMISSION_ID_2,
-				DataRequestDataInitializer.REQ_ID_1,
-				DataRequestDataInitializer.DEPARTMENT_ID_1,
-				"salt",
-				"key",
-				"DATA OF EVENTS",
-				Feature.Events));
+		list.add(new DataSubmission(SUBMISSION_ID_2, DataRequestDataInitializer.REQ_ID_1,
+				DataRequestDataInitializer.DEPARTMENT_ID_1, "salt", "key", "DATA OF EVENTS", Feature.Events));
 
 		submissions.saveAll(list);
 	}

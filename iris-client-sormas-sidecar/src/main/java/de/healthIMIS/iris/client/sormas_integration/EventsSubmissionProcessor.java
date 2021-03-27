@@ -14,9 +14,6 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
-import java.time.Instant;
-import java.util.List;
-
 import de.healthIMIS.iris.client.core.SormasRefId;
 import de.healthIMIS.iris.client.data_request.DataRequest;
 import de.healthIMIS.iris.client.data_submission.model.Event;
@@ -25,18 +22,10 @@ import de.healthIMIS.sormas.client.api.EventControllerApi;
 import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
 import de.healthIMIS.sormas.client.api.PersonControllerApi;
 import de.healthIMIS.sormas.client.api.TaskControllerApi;
-import de.healthIMIS.sormas.client.model.CaseReferenceDto;
-import de.healthIMIS.sormas.client.model.Disease;
-import de.healthIMIS.sormas.client.model.EventDto;
-import de.healthIMIS.sormas.client.model.EventParticipantDto;
-import de.healthIMIS.sormas.client.model.EventReferenceDto;
-import de.healthIMIS.sormas.client.model.EventStatus;
-import de.healthIMIS.sormas.client.model.LocationDto;
-import de.healthIMIS.sormas.client.model.TaskContext;
-import de.healthIMIS.sormas.client.model.TaskDto;
-import de.healthIMIS.sormas.client.model.TaskPriority;
-import de.healthIMIS.sormas.client.model.TaskType;
-import de.healthIMIS.sormas.client.model.UserReferenceDto;
+import de.healthIMIS.sormas.client.model.*;
+
+import java.time.Instant;
+import java.util.List;
 
 /**
  * @author Jens Kutzsche
@@ -47,12 +36,8 @@ public class EventsSubmissionProcessor extends DataSubmissionSubProcessor<EventL
 	private EventParticipantControllerApi sormasParticipantApi;
 	private PersonControllerApi sormasPersonApi;
 
-	public EventsSubmissionProcessor(
-		DataRequest request,
-		TaskControllerApi taskApi,
-		EventControllerApi sormasEventApi,
-		EventParticipantControllerApi sormasParticipantApi,
-		PersonControllerApi sormasPersonApi) {
+	public EventsSubmissionProcessor(DataRequest request, TaskControllerApi taskApi, EventControllerApi sormasEventApi,
+			EventParticipantControllerApi sormasParticipantApi, PersonControllerApi sormasPersonApi) {
 
 		super(request, taskApi);
 

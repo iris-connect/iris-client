@@ -27,21 +27,16 @@ import java.util.Map;
 @Ignore
 public class ClassificationControllerApiTest {
 
-    private final ClassificationControllerApi api = new ClassificationControllerApi();
+	private final ClassificationControllerApi api = new ClassificationControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAll1Test() {
-        Long since = null;
-        List<DiseaseClassificationCriteriaDto> response = api.getAll1(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAll1Test() {
+		Long since = null;
+		List<DiseaseClassificationCriteriaDto> response = api.getAll1(since);
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
 }

@@ -22,80 +22,79 @@ import de.healthIMIS.sormas.client.model.PathogenTestType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * ClassificationPathogenTestCriteriaDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class ClassificationPathogenTestCriteriaDto extends ClassificationCaseCriteriaDto {
-  @JsonProperty("testTypes")
-  private List<PathogenTestType> testTypes = null;
+	@JsonProperty("testTypes")
+	private List<PathogenTestType> testTypes = null;
 
-  public ClassificationPathogenTestCriteriaDto testTypes(List<PathogenTestType> testTypes) {
-    this.testTypes = testTypes;
-    return this;
-  }
+	public ClassificationPathogenTestCriteriaDto testTypes(List<PathogenTestType> testTypes) {
+		this.testTypes = testTypes;
+		return this;
+	}
 
-  public ClassificationPathogenTestCriteriaDto addTestTypesItem(PathogenTestType testTypesItem) {
-    if (this.testTypes == null) {
-      this.testTypes = new ArrayList<>();
-    }
-    this.testTypes.add(testTypesItem);
-    return this;
-  }
+	public ClassificationPathogenTestCriteriaDto addTestTypesItem(PathogenTestType testTypesItem) {
+		if (this.testTypes == null) {
+			this.testTypes = new ArrayList<>();
+		}
+		this.testTypes.add(testTypesItem);
+		return this;
+	}
 
-   /**
-   * Get testTypes
-   * @return testTypes
-  **/
-  @Schema(description = "")
-  public List<PathogenTestType> getTestTypes() {
-    return testTypes;
-  }
+	/**
+	 * Get testTypes
+	 * 
+	 * @return testTypes
+	 **/
+	@Schema(description = "")
+	public List<PathogenTestType> getTestTypes() {
+		return testTypes;
+	}
 
-  public void setTestTypes(List<PathogenTestType> testTypes) {
-    this.testTypes = testTypes;
-  }
+	public void setTestTypes(List<PathogenTestType> testTypes) {
+		this.testTypes = testTypes;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		ClassificationPathogenTestCriteriaDto classificationPathogenTestCriteriaDto = (ClassificationPathogenTestCriteriaDto) o;
+		return Objects.equals(this.testTypes, classificationPathogenTestCriteriaDto.testTypes) && super.equals(o);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ClassificationPathogenTestCriteriaDto classificationPathogenTestCriteriaDto = (ClassificationPathogenTestCriteriaDto) o;
-    return Objects.equals(this.testTypes, classificationPathogenTestCriteriaDto.testTypes) &&
-        super.equals(o);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(testTypes, super.hashCode());
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(testTypes, super.hashCode());
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class ClassificationPathogenTestCriteriaDto {\n");
+		sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+		sb.append("    testTypes: ").append(toIndentedString(testTypes)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ClassificationPathogenTestCriteriaDto {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    testTypes: ").append(toIndentedString(testTypes)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

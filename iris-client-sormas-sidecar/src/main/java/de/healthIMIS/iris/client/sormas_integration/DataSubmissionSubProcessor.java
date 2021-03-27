@@ -14,10 +14,6 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.function.UnaryOperator;
-
 import de.healthIMIS.iris.client.core.SormasRefId;
 import de.healthIMIS.iris.client.data_request.DataRequest;
 import de.healthIMIS.sormas.client.api.TaskControllerApi;
@@ -26,6 +22,10 @@ import de.healthIMIS.sormas.client.model.TaskStatus;
 import de.healthIMIS.sormas.client.model.UserReferenceDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.function.UnaryOperator;
 
 /**
  * @author Jens Kutzsche

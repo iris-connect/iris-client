@@ -21,40 +21,39 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets ActionMeasure
  */
 public enum ActionMeasure {
-  PROHIBITION_OF_ENTRY_AND_WORK_CASES("PROHIBITION_OF_ENTRY_AND_WORK_CASES"),
-  SAMPLE_COLLECTION("SAMPLE_COLLECTION"),
-  FORWARDING_TO_NATIONAL_REFERENCE_CENTER("FORWARDING_TO_NATIONAL_REFERENCE_CENTER"),
-  CONTACT_FOLLOW_UP("CONTACT_FOLLOW_UP"),
-  VERIFICATION_OF_VACCINATION_IMMUNIZATION("VERIFICATION_OF_VACCINATION_IMMUNIZATION"),
-  POST_EXPOSURE_PROPHYLAXIS_VACCINATION("POST_EXPOSURE_PROPHYLAXIS_VACCINATION"),
-  CLOSURE_OF_FACILITY("CLOSURE_OF_FACILITY"),
-  PROHIBITION_OF_ENTRY_AND_WORK_CONTACTS("PROHIBITION_OF_ENTRY_AND_WORK_CONTACTS"),
-  POPULATION_INFORMATION("POPULATION_INFORMATION"),
-  OTHER("OTHER");
+	PROHIBITION_OF_ENTRY_AND_WORK_CASES("PROHIBITION_OF_ENTRY_AND_WORK_CASES"), SAMPLE_COLLECTION(
+			"SAMPLE_COLLECTION"), FORWARDING_TO_NATIONAL_REFERENCE_CENTER(
+					"FORWARDING_TO_NATIONAL_REFERENCE_CENTER"), CONTACT_FOLLOW_UP(
+							"CONTACT_FOLLOW_UP"), VERIFICATION_OF_VACCINATION_IMMUNIZATION(
+									"VERIFICATION_OF_VACCINATION_IMMUNIZATION"), POST_EXPOSURE_PROPHYLAXIS_VACCINATION(
+											"POST_EXPOSURE_PROPHYLAXIS_VACCINATION"), CLOSURE_OF_FACILITY(
+													"CLOSURE_OF_FACILITY"), PROHIBITION_OF_ENTRY_AND_WORK_CONTACTS(
+															"PROHIBITION_OF_ENTRY_AND_WORK_CONTACTS"), POPULATION_INFORMATION(
+																	"POPULATION_INFORMATION"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  ActionMeasure(String value) {
-    this.value = value;
-  }
+	ActionMeasure(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static ActionMeasure fromValue(String text) {
-    for (ActionMeasure b : ActionMeasure.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static ActionMeasure fromValue(String text) {
+		for (ActionMeasure b : ActionMeasure.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

@@ -27,64 +27,47 @@ import java.util.Map;
 @Ignore
 public class InfoControllerApiTest {
 
-    private final InfoControllerApi api = new InfoControllerApi();
+	private final InfoControllerApi api = new InfoControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAppUrlTest() {
-        String appVersion = null;
-        String response = api.getAppUrl(appVersion);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAppUrlTest() {
+		String appVersion = null;
+		String response = api.getAppUrl(appVersion);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getLocaleTest() {
-        String response = api.getLocale();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getVersion1Test() {
-        String response = api.getVersion1();
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getLocaleTest() {
+		String response = api.getLocale();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void isCompatibleToApiTest() {
-        String appVersion = null;
-        CompatibilityCheckResponse response = api.isCompatibleToApi(appVersion);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getVersion1Test() {
+		String response = api.getVersion1();
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void isCompatibleToApiTest() {
+		String appVersion = null;
+		CompatibilityCheckResponse response = api.isCompatibleToApi(appVersion);
+
+		// TODO: test validations
+	}
 }

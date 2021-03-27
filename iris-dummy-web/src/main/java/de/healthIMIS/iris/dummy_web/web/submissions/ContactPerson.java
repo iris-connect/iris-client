@@ -63,8 +63,7 @@ public class ContactPerson extends Person {
 		}
 		ContactPerson contactPerson = (ContactPerson) o;
 		return Objects.equals(this.workPlace, contactPerson.workPlace)
-			&& Objects.equals(this.contactInformation, contactPerson.contactInformation)
-			&& super.equals(o);
+				&& Objects.equals(this.contactInformation, contactPerson.contactInformation) && super.equals(o);
 	}
 
 	@Override
@@ -84,8 +83,7 @@ public class ContactPerson extends Person {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

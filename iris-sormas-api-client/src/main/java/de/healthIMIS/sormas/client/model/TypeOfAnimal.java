@@ -21,45 +21,33 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets TypeOfAnimal
  */
 public enum TypeOfAnimal {
-  BAT("BAT"),
-  POULTRY("POULTRY"),
-  CAMEL("CAMEL"),
-  CANIDAE("CANIDAE"),
-  CAT("CAT"),
-  CATTLE("CATTLE"),
-  DOG("DOG"),
-  PRIMATE("PRIMATE"),
-  SNAKE("SNAKE"),
-  SWINE("SWINE"),
-  RABBIT("RABBIT"),
-  RODENT("RODENT"),
-  TICK("TICK"),
-  FLEA("FLEA"),
-  OTHER("OTHER");
+	BAT("BAT"), POULTRY("POULTRY"), CAMEL("CAMEL"), CANIDAE("CANIDAE"), CAT("CAT"), CATTLE("CATTLE"), DOG("DOG"), PRIMATE(
+			"PRIMATE"), SNAKE(
+					"SNAKE"), SWINE("SWINE"), RABBIT("RABBIT"), RODENT("RODENT"), TICK("TICK"), FLEA("FLEA"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  TypeOfAnimal(String value) {
-    this.value = value;
-  }
+	TypeOfAnimal(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static TypeOfAnimal fromValue(String text) {
-    for (TypeOfAnimal b : TypeOfAnimal.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static TypeOfAnimal fromValue(String text) {
+		for (TypeOfAnimal b : TypeOfAnimal.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

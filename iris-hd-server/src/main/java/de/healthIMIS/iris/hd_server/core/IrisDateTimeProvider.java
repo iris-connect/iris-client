@@ -14,6 +14,10 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server.core;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.temporal.TemporalAccessor;
@@ -26,10 +30,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  * DateTimeProvider to configure the Metadata of Entities for test scenarios

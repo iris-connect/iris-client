@@ -21,32 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets SpecimenCondition
  */
 public enum SpecimenCondition {
-  ADEQUATE("ADEQUATE"),
-  NOT_ADEQUATE("NOT_ADEQUATE");
+	ADEQUATE("ADEQUATE"), NOT_ADEQUATE("NOT_ADEQUATE");
 
-  private String value;
+	private String value;
 
-  SpecimenCondition(String value) {
-    this.value = value;
-  }
+	SpecimenCondition(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static SpecimenCondition fromValue(String text) {
-    for (SpecimenCondition b : SpecimenCondition.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static SpecimenCondition fromValue(String text) {
+		for (SpecimenCondition b : SpecimenCondition.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

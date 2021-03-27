@@ -28,65 +28,48 @@ import java.util.Map;
 @Ignore
 public class PersonControllerApiTest {
 
-    private final PersonControllerApi api = new PersonControllerApi();
+	private final PersonControllerApi api = new PersonControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllPersonsTest() {
-        Long since = null;
-        List<PersonDto> response = api.getAllPersons(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllPersonsTest() {
+		Long since = null;
+		List<PersonDto> response = api.getAllPersons(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids12Test() {
-        List<String> response = api.getAllUuids12();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids18Test() {
-        List<String> body = null;
-        List<PersonDto> response = api.getByUuids18(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids12Test() {
+		List<String> response = api.getAllUuids12();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postPersonsTest() {
-        List<PersonDto> body = null;
-        List<PushResult> response = api.postPersons(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids18Test() {
+		List<String> body = null;
+		List<PersonDto> response = api.getByUuids18(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postPersonsTest() {
+		List<PersonDto> body = null;
+		List<PushResult> response = api.postPersons(body);
+
+		// TODO: test validations
+	}
 }

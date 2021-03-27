@@ -14,20 +14,15 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.core;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static java.nio.charset.StandardCharsets.*;
+import static org.springframework.http.MediaType.*;
+
+import lombok.Data;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigInteger;
-import java.security.InvalidKeyException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.SignatureException;
+import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
@@ -50,10 +45,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import lombok.Data;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * @author Jens Kutzsche
  */
@@ -69,11 +60,8 @@ class KeyGenJob {
 	private final @NonNull KeyStore keyStore;
 	private final @NonNull RestTemplate rest;
 
-	public KeyGenJob(
-		@NonNull IrisClientProperties properties,
-		IrisProperties connectProperties,
-		@NonNull KeyStore keyStore,
-		@Qualifier("iris-rest") @NonNull RestTemplate rest) {
+	public KeyGenJob(@NonNull IrisClientProperties properties, IrisProperties connectProperties,
+			@NonNull KeyStore keyStore, @Qualifier("iris-rest") @NonNull RestTemplate rest) {
 		this.properties = properties;
 		this.connectProperties = connectProperties;
 		this.keyStore = keyStore;
@@ -82,9 +70,8 @@ class KeyGenJob {
 
 	@Scheduled(cron = "0 0 3 * * ?")
 	@PostConstruct
-	void run()
-		throws NoSuchAlgorithmException, KeyStoreException, CertificateEncodingException, InvalidKeyException, IllegalStateException,
-		NoSuchProviderException, SignatureException {
+	void run() throws NoSuchAlgorithmException, KeyStoreException, CertificateEncodingException, InvalidKeyException,
+			IllegalStateException, NoSuchProviderException, SignatureException {
 
 		var generator = KeyPairGenerator.getInstance("RSA");
 		generator.initialize(2048);
@@ -106,9 +93,9 @@ class KeyGenJob {
 
 		var encoder = Base64.getEncoder();
 		var pub64 = new StringBuilder();
-//		pub64.append("-----BEGIN RSA PRIVATE KEY-----\n");
+		// pub64.append("-----BEGIN RSA PRIVATE KEY-----\n");
 		pub64.append(encoder.encodeToString(pub.getEncoded()));
-//		pub64.append("\n-----END RSA PRIVATE KEY-----\n");
+		// pub64.append("\n-----END RSA PRIVATE KEY-----\n");
 
 		String departmentId = properties.getClientId().toString();
 
@@ -119,26 +106,21 @@ class KeyGenJob {
 		var headers = new HttpHeaders();
 		headers.setContentType(new MediaType(APPLICATION_JSON, UTF_8));
 
-		rest.put(
-			"https://{address}:{port}/hd/departments/{id}",
-			new HttpEntity<>(dto, headers),
-			connectProperties.getServerAddress().getHostName(),
-			connectProperties.getServerPort(),
-			departmentId);
+		rest.put("https://{address}:{port}/hd/departments/{id}", new HttpEntity<>(dto, headers),
+				connectProperties.getServerAddress().getHostName(), connectProperties.getServerPort(), departmentId);
 
 		log.debug("Keygen job - PUT to server sent: {}", departmentId);
 	}
 
-	public X509Certificate generateCertificate(KeyPair keyPair)
-		throws CertificateEncodingException, InvalidKeyException, IllegalStateException, NoSuchProviderException, NoSuchAlgorithmException,
-		SignatureException {
+	public X509Certificate generateCertificate(KeyPair keyPair) throws CertificateEncodingException, InvalidKeyException,
+			IllegalStateException, NoSuchProviderException, NoSuchAlgorithmException, SignatureException {
 		Date startDate = new Date(System.currentTimeMillis() - 1 * 60 * 60 * 1000);
 		Date endDate = new Date(System.currentTimeMillis() + 3 * 24 * 60 * 60 * 1000);
 
 		var cert = new X509V3CertificateGenerator();
-		cert.setSerialNumber(BigInteger.valueOf(1));   //or generate a random number  
-		cert.setSubjectDN(new X509Principal("CN=localhost"));  //see examples to add O,OU etc  
-		cert.setIssuerDN(new X509Principal("CN=localhost")); //same since it is self-signed  
+		cert.setSerialNumber(BigInteger.valueOf(1)); // or generate a random number
+		cert.setSubjectDN(new X509Principal("CN=localhost")); // see examples to add O,OU etc
+		cert.setIssuerDN(new X509Principal("CN=localhost")); // same since it is self-signed
 		cert.setPublicKey(keyPair.getPublic());
 		cert.setNotBefore(startDate);
 		cert.setNotAfter(endDate);

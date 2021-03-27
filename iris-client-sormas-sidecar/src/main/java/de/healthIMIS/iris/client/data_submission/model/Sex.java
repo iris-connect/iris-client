@@ -8,10 +8,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum Sex {
 
-	MALE("MALE"),
-	FEMALE("FEMALE"),
-	OTHER("OTHER"),
-	UNKNOWN("UNKNOWN");
+	MALE("MALE"), FEMALE("FEMALE"), OTHER("OTHER"), UNKNOWN("UNKNOWN");
 
 	private String value;
 

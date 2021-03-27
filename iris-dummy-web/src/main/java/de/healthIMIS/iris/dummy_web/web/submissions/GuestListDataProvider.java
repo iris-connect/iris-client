@@ -83,8 +83,8 @@ public class GuestListDataProvider {
 		}
 		GuestListDataProvider guestListDataProvider = (GuestListDataProvider) o;
 		return Objects.equals(this.name, guestListDataProvider.name)
-			&& Objects.equals(this.facilityType, guestListDataProvider.facilityType)
-			&& Objects.equals(this.address, guestListDataProvider.address);
+				&& Objects.equals(this.facilityType, guestListDataProvider.facilityType)
+				&& Objects.equals(this.address, guestListDataProvider.address);
 	}
 
 	@Override
@@ -105,8 +105,7 @@ public class GuestListDataProvider {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

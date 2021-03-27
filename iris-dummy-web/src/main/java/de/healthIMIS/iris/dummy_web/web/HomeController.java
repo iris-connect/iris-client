@@ -1,7 +1,17 @@
 package de.healthIMIS.iris.dummy_web.web;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static java.nio.charset.StandardCharsets.*;
+import static org.springframework.http.MediaType.*;
+
+import de.healthIMIS.iris.dummy_web.Contacts;
+import de.healthIMIS.iris.dummy_web.IrisProperties;
+import de.healthIMIS.iris.dummy_web.RequestCode;
+import de.healthIMIS.iris.dummy_web.Selection;
+import de.healthIMIS.iris.dummy_web.web.submissions.ContactPerson;
+import de.healthIMIS.iris.dummy_web.web.submissions.ContactPersonList;
+import de.healthIMIS.iris.dummy_web.web.submissions.DataSubmissionDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -46,16 +56,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.healthIMIS.iris.dummy_web.Contacts;
-import de.healthIMIS.iris.dummy_web.IrisProperties;
-import de.healthIMIS.iris.dummy_web.RequestCode;
-import de.healthIMIS.iris.dummy_web.Selection;
-import de.healthIMIS.iris.dummy_web.web.submissions.ContactPerson;
-import de.healthIMIS.iris.dummy_web.web.submissions.ContactPersonList;
-import de.healthIMIS.iris.dummy_web.web.submissions.DataSubmissionDto;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @Controller
 @RequestMapping("/")
@@ -92,23 +92,21 @@ public class HomeController {
 
 		var dataRequest = traverson.follow(getByCodeHop).toObject(DataRequestDto.class);
 
-		log.info(
-			"\nData request from healt department {} for the period {} to {}\n\n",
-			dataRequest.getHealthDepartment(),
-			dataRequest.getStart(),
-			dataRequest.getEnd());
+		log.info("\nData request from healt department {} for the period {} to {}\n\n", dataRequest.getHealthDepartment(),
+				dataRequest.getStart(), dataRequest.getEnd());
 
-		// determines the existing links for the next POST operation 
+		// determines the existing links for the next POST operation
 		var response = traverson.follow(getByCodeHop).toObject(String.class);
 
 		var postContacts = discoverer.findLinkWithRel("PostContactsSubmission", response);
 		var postEvents = discoverer.findLinkWithRel("PostEventsSubmission", response);
 		var postGuests = discoverer.findLinkWithRel("PostGuestsSubmission", response);
 
-		var links = Stream.of(postContacts, postEvents, postGuests).flatMap(Optional<Link>::stream).collect(Collectors.toList());
+		var links = Stream.of(postContacts, postEvents, postGuests).flatMap(Optional<Link>::stream)
+				.collect(Collectors.toList());
 
 		if (links.isEmpty()) {
-			// exit the method if there is no link 
+			// exit the method if there is no link
 			return "home";
 		}
 
@@ -143,8 +141,8 @@ public class HomeController {
 
 	@PostMapping("/contacts")
 	public String processContacts(@Valid @ModelAttribute("") Contacts contacts, Errors errors, Model model)
-		throws JsonMappingException, JsonProcessingException, NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException,
-		InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException {
+			throws JsonMappingException, JsonProcessingException, NoSuchAlgorithmException, InvalidKeyException,
+			NoSuchPaddingException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException {
 		if (errors.hasErrors()) {
 			return "contacts";
 		}
@@ -153,7 +151,7 @@ public class HomeController {
 
 		var getByCodeHop = Hop.rel("GetDataRequestByCode").withParameter("code", contacts.getCode());
 
-		// determines the existing links for the next POST operation 
+		// determines the existing links for the next POST operation
 		var response = traverson.follow(getByCodeHop).toObject(String.class);
 		var dataRequest = traverson.follow(getByCodeHop).toObject(DataRequestDto.class);
 
@@ -192,8 +190,8 @@ public class HomeController {
 	 * Encrypts the content with the given key from data request.
 	 */
 	private String encryptContent(String content, SecretKey secretKey)
-		throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException,
-		BadPaddingException {
+			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException,
+			IllegalBlockSizeException, BadPaddingException {
 
 		var encryptedArray = encryptText(content, secretKey);
 
@@ -213,8 +211,8 @@ public class HomeController {
 		return generator.generateKey();
 	}
 
-	byte[] encryptText(String textToEncrypt, SecretKey secretKey)
-		throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException {
+	byte[] encryptText(String textToEncrypt, SecretKey secretKey) throws IllegalBlockSizeException, BadPaddingException,
+			InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException {
 
 		var cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
 		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -222,8 +220,8 @@ public class HomeController {
 		return cipher.doFinal(textToEncrypt.getBytes());
 	}
 
-	byte[] encryptSecretKey(SecretKey secretKey, PublicKey publicKey)
-		throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException {
+	byte[] encryptSecretKey(SecretKey secretKey, PublicKey publicKey) throws IllegalBlockSizeException,
+			BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException {
 
 		var cipher = Cipher.getInstance(TRANSFORMATION);
 		cipher.init(Cipher.PUBLIC_KEY, publicKey);
@@ -236,8 +234,8 @@ public class HomeController {
 	 */
 	private void postSubmission(Link link, String content, String encryptedSecretKey, String keyReferenz) {
 
-		var submission =
-			new DataSubmissionDto().checkCode(determineCheckcode()).keyReferenz(keyReferenz).secret(encryptedSecretKey).encryptedData(content);
+		var submission = new DataSubmissionDto().checkCode(determineCheckcode()).keyReferenz(keyReferenz)
+				.secret(encryptedSecretKey).encryptedData(content);
 
 		log.info("\nData submission is sent to healt department with key referenz '%s'", keyReferenz);
 		log.debug("\nContent of the data submission unencrypted:\n %s", content);

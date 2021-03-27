@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets ContactClassification
  */
 public enum ContactClassification {
-  UNCONFIRMED("UNCONFIRMED"),
-  CONFIRMED("CONFIRMED"),
-  NO_CONTACT("NO_CONTACT");
+	UNCONFIRMED("UNCONFIRMED"), CONFIRMED("CONFIRMED"), NO_CONTACT("NO_CONTACT");
 
-  private String value;
+	private String value;
 
-  ContactClassification(String value) {
-    this.value = value;
-  }
+	ContactClassification(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static ContactClassification fromValue(String text) {
-    for (ContactClassification b : ContactClassification.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static ContactClassification fromValue(String text) {
+		for (ContactClassification b : ContactClassification.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

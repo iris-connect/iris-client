@@ -28,65 +28,48 @@ import java.util.Map;
 @Ignore
 public class AggregateReportControllerApiTest {
 
-    private final AggregateReportControllerApi api = new AggregateReportControllerApi();
+	private final AggregateReportControllerApi api = new AggregateReportControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllAggregateReportsTest() {
-        Long since = null;
-        List<AggregateReportDto> response = api.getAllAggregateReports(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllAggregateReportsTest() {
+		Long since = null;
+		List<AggregateReportDto> response = api.getAllAggregateReports(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids1Test() {
-        List<String> response = api.getAllUuids1();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids2Test() {
-        List<String> body = null;
-        List<AggregateReportDto> response = api.getByUuids2(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids1Test() {
+		List<String> response = api.getAllUuids1();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postAggregateReportsTest() {
-        List<AggregateReportDto> body = null;
-        List<PushResult> response = api.postAggregateReports(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids2Test() {
+		List<String> body = null;
+		List<AggregateReportDto> response = api.getByUuids2(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postAggregateReportsTest() {
+		List<AggregateReportDto> body = null;
+		List<PushResult> response = api.postAggregateReports(body);
+
+		// TODO: test validations
+	}
 }

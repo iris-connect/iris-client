@@ -107,9 +107,9 @@ public class GuestAttendanceInformation {
 		}
 		GuestAttendanceInformation guestAttendanceInformation = (GuestAttendanceInformation) o;
 		return Objects.equals(this.descriptionOfParticipation, guestAttendanceInformation.descriptionOfParticipation)
-			&& Objects.equals(this.attendFrom, guestAttendanceInformation.attendFrom)
-			&& Objects.equals(this.attendTo, guestAttendanceInformation.attendTo)
-			&& Objects.equals(this.additionalInformation, guestAttendanceInformation.additionalInformation);
+				&& Objects.equals(this.attendFrom, guestAttendanceInformation.attendFrom)
+				&& Objects.equals(this.attendTo, guestAttendanceInformation.attendTo)
+				&& Objects.equals(this.additionalInformation, guestAttendanceInformation.additionalInformation);
 	}
 
 	@Override
@@ -131,8 +131,7 @@ public class GuestAttendanceInformation {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

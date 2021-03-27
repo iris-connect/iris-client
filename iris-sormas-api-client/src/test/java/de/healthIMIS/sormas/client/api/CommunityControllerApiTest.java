@@ -27,50 +27,37 @@ import java.util.Map;
 @Ignore
 public class CommunityControllerApiTest {
 
-    private final CommunityControllerApi api = new CommunityControllerApi();
+	private final CommunityControllerApi api = new CommunityControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAll2Test() {
-        Long since = null;
-        List<CommunityDto> response = api.getAll2(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAll2Test() {
+		Long since = null;
+		List<CommunityDto> response = api.getAll2(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids6Test() {
-        List<String> response = api.getAllUuids6();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids8Test() {
-        List<String> body = null;
-        List<CommunityDto> response = api.getByUuids8(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids6Test() {
+		List<String> response = api.getAllUuids6();
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids8Test() {
+		List<String> body = null;
+		List<CommunityDto> response = api.getByUuids8(body);
+
+		// TODO: test validations
+	}
 }

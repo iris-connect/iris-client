@@ -21,33 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets DengueFeverType
  */
 public enum DengueFeverType {
-  DENGUE_FEVER("DENGUE_FEVER"),
-  DENGUE_HEMORRHAGIC_FEVER("DENGUE_HEMORRHAGIC_FEVER"),
-  DENUGE_SHOCK_SYNDROME("DENUGE_SHOCK_SYNDROME");
+	DENGUE_FEVER("DENGUE_FEVER"), DENGUE_HEMORRHAGIC_FEVER("DENGUE_HEMORRHAGIC_FEVER"), DENUGE_SHOCK_SYNDROME(
+			"DENUGE_SHOCK_SYNDROME");
 
-  private String value;
+	private String value;
 
-  DengueFeverType(String value) {
-    this.value = value;
-  }
+	DengueFeverType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static DengueFeverType fromValue(String text) {
-    for (DengueFeverType b : DengueFeverType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static DengueFeverType fromValue(String text) {
+		for (DengueFeverType b : DengueFeverType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

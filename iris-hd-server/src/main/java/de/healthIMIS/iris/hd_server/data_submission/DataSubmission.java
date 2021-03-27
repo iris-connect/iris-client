@@ -14,6 +14,17 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server.data_submission;
 
+import de.healthIMIS.iris.hd_server.core.Aggregate;
+import de.healthIMIS.iris.hd_server.core.DepartmentIdentifier;
+import de.healthIMIS.iris.hd_server.core.Id;
+import de.healthIMIS.iris.hd_server.data_request.DataRequest.DataRequestIdentifier;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -26,17 +37,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.Inheritance;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-
-import de.healthIMIS.iris.hd_server.core.Aggregate;
-import de.healthIMIS.iris.hd_server.core.DepartmentIdentifier;
-import de.healthIMIS.iris.hd_server.core.Id;
-import de.healthIMIS.iris.hd_server.data_request.DataRequest.DataRequestIdentifier;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  * A data submission from an app of a citizen or event/location operator to the health department.
@@ -59,18 +59,11 @@ public class DataSubmission extends Aggregate<DataSubmission, DataSubmission.Dat
 	private String keyReferenz;
 	private @Lob String encryptedData;
 
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
+	@Enumerated(EnumType.STRING) @Column(nullable = false)
 	private Feature feature;
 
-	public DataSubmission(
-		DataSubmissionIdentifier id,
-		DataRequestIdentifier requestId,
-		DepartmentIdentifier departmentId,
-		String salt,
-		String keyReferenz,
-		String encryptedData,
-		Feature feature) {
+	public DataSubmission(DataSubmissionIdentifier id, DataRequestIdentifier requestId, DepartmentIdentifier departmentId,
+			String salt, String keyReferenz, String encryptedData, Feature feature) {
 
 		super();
 
@@ -100,8 +93,6 @@ public class DataSubmission extends Aggregate<DataSubmission, DataSubmission.Dat
 	}
 
 	public enum Feature {
-		Contacts,
-		Events,
-		Guests
+		Contacts, Events, Guests
 	}
 }

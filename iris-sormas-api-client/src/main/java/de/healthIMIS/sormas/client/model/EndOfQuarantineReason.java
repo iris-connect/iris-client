@@ -21,34 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets EndOfQuarantineReason
  */
 public enum EndOfQuarantineReason {
-  ASYMPTOMATIC("ASYMPTOMATIC"),
-  ISOLATED_AS_CASE("ISOLATED_AS_CASE"),
-  LOST_TO_FOLLOWUP("LOST_TO_FOLLOWUP"),
-  OTHER("OTHER");
+	ASYMPTOMATIC("ASYMPTOMATIC"), ISOLATED_AS_CASE("ISOLATED_AS_CASE"), LOST_TO_FOLLOWUP("LOST_TO_FOLLOWUP"), OTHER(
+			"OTHER");
 
-  private String value;
+	private String value;
 
-  EndOfQuarantineReason(String value) {
-    this.value = value;
-  }
+	EndOfQuarantineReason(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static EndOfQuarantineReason fromValue(String text) {
-    for (EndOfQuarantineReason b : EndOfQuarantineReason.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static EndOfQuarantineReason fromValue(String text) {
+		for (EndOfQuarantineReason b : EndOfQuarantineReason.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

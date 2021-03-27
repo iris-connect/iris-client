@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets VisitStatus
  */
 public enum VisitStatus {
-  UNAVAILABLE("UNAVAILABLE"),
-  UNCOOPERATIVE("UNCOOPERATIVE"),
-  COOPERATIVE("COOPERATIVE");
+	UNAVAILABLE("UNAVAILABLE"), UNCOOPERATIVE("UNCOOPERATIVE"), COOPERATIVE("COOPERATIVE");
 
-  private String value;
+	private String value;
 
-  VisitStatus(String value) {
-    this.value = value;
-  }
+	VisitStatus(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static VisitStatus fromValue(String text) {
-    for (VisitStatus b : VisitStatus.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static VisitStatus fromValue(String text) {
+		for (VisitStatus b : VisitStatus.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

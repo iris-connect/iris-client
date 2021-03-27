@@ -27,50 +27,37 @@ import java.util.Map;
 @Ignore
 public class UserRoleConfigControllerApiTest {
 
-    private final UserRoleConfigControllerApi api = new UserRoleConfigControllerApi();
+	private final UserRoleConfigControllerApi api = new UserRoleConfigControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAll9Test() {
-        Long since = null;
-        List<UserRoleConfigDto> response = api.getAll9(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAll9Test() {
+		Long since = null;
+		List<UserRoleConfigDto> response = api.getAll9(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids16Test() {
-        List<String> response = api.getAllUuids16();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getDeletedUuids1Test() {
-        Long since = null;
-        List<String> response = api.getDeletedUuids1(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids16Test() {
+		List<String> response = api.getAllUuids16();
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getDeletedUuids1Test() {
+		Long since = null;
+		List<String> response = api.getDeletedUuids1(since);
+
+		// TODO: test validations
+	}
 }

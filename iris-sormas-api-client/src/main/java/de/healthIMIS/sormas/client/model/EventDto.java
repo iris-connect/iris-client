@@ -33,1129 +33,1176 @@ import de.healthIMIS.sormas.client.model.YesNoUnknown;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.time.Instant;
+
 /**
  * EventDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class EventDto {
-  @JsonProperty("creationDate")
-  private Instant creationDate = null;
+	@JsonProperty("creationDate")
+	private Instant creationDate = null;
 
-  @JsonProperty("changeDate")
-  private Instant changeDate = null;
+	@JsonProperty("changeDate")
+	private Instant changeDate = null;
 
-  @JsonProperty("uuid")
-  private String uuid = null;
+	@JsonProperty("uuid")
+	private String uuid = null;
 
-  @JsonProperty("pseudonymized")
-  private Boolean pseudonymized = null;
+	@JsonProperty("pseudonymized")
+	private Boolean pseudonymized = null;
 
-  @JsonProperty("superordinateEvent")
-  private EventReferenceDto superordinateEvent = null;
+	@JsonProperty("superordinateEvent")
+	private EventReferenceDto superordinateEvent = null;
 
-  @JsonProperty("eventStatus")
-  private EventStatus eventStatus = null;
+	@JsonProperty("eventStatus")
+	private EventStatus eventStatus = null;
 
-  @JsonProperty("riskLevel")
-  private RiskLevel riskLevel = null;
+	@JsonProperty("riskLevel")
+	private RiskLevel riskLevel = null;
 
-  @JsonProperty("eventInvestigationStatus")
-  private EventInvestigationStatus eventInvestigationStatus = null;
+	@JsonProperty("eventInvestigationStatus")
+	private EventInvestigationStatus eventInvestigationStatus = null;
 
-  @JsonProperty("eventInvestigationStartDate")
-  private Instant eventInvestigationStartDate = null;
+	@JsonProperty("eventInvestigationStartDate")
+	private Instant eventInvestigationStartDate = null;
 
-  @JsonProperty("eventInvestigationEndDate")
-  private Instant eventInvestigationEndDate = null;
+	@JsonProperty("eventInvestigationEndDate")
+	private Instant eventInvestigationEndDate = null;
 
-  @JsonProperty("externalId")
-  private String externalId = null;
+	@JsonProperty("externalId")
+	private String externalId = null;
 
-  @JsonProperty("externalToken")
-  private String externalToken = null;
+	@JsonProperty("externalToken")
+	private String externalToken = null;
 
-  @JsonProperty("eventTitle")
-  private String eventTitle = null;
+	@JsonProperty("eventTitle")
+	private String eventTitle = null;
 
-  @JsonProperty("eventDesc")
-  private String eventDesc = null;
+	@JsonProperty("eventDesc")
+	private String eventDesc = null;
 
-  @JsonProperty("nosocomial")
-  private YesNoUnknown nosocomial = null;
+	@JsonProperty("nosocomial")
+	private YesNoUnknown nosocomial = null;
 
-  @JsonProperty("startDate")
-  private Instant startDate = null;
+	@JsonProperty("startDate")
+	private Instant startDate = null;
 
-  @JsonProperty("endDate")
-  private Instant endDate = null;
+	@JsonProperty("endDate")
+	private Instant endDate = null;
 
-  @JsonProperty("reportDateTime")
-  private Instant reportDateTime = null;
+	@JsonProperty("reportDateTime")
+	private Instant reportDateTime = null;
 
-  @JsonProperty("reportingUser")
-  private UserReferenceDto reportingUser = null;
+	@JsonProperty("reportingUser")
+	private UserReferenceDto reportingUser = null;
 
-  @JsonProperty("evolutionDate")
-  private Instant evolutionDate = null;
+	@JsonProperty("evolutionDate")
+	private Instant evolutionDate = null;
 
-  @JsonProperty("evolutionComment")
-  private String evolutionComment = null;
+	@JsonProperty("evolutionComment")
+	private String evolutionComment = null;
 
-  @JsonProperty("eventLocation")
-  private LocationDto eventLocation = null;
+	@JsonProperty("eventLocation")
+	private LocationDto eventLocation = null;
 
-  @JsonProperty("typeOfPlace")
-  private TypeOfPlace typeOfPlace = null;
+	@JsonProperty("typeOfPlace")
+	private TypeOfPlace typeOfPlace = null;
 
-  @JsonProperty("meansOfTransport")
-  private MeansOfTransport meansOfTransport = null;
+	@JsonProperty("meansOfTransport")
+	private MeansOfTransport meansOfTransport = null;
 
-  @JsonProperty("meansOfTransportDetails")
-  private String meansOfTransportDetails = null;
+	@JsonProperty("meansOfTransportDetails")
+	private String meansOfTransportDetails = null;
 
-  @JsonProperty("connectionNumber")
-  private String connectionNumber = null;
+	@JsonProperty("connectionNumber")
+	private String connectionNumber = null;
 
-  @JsonProperty("travelDate")
-  private Instant travelDate = null;
+	@JsonProperty("travelDate")
+	private Instant travelDate = null;
 
-  @JsonProperty("srcType")
-  private EventSourceType srcType = null;
+	@JsonProperty("srcType")
+	private EventSourceType srcType = null;
 
-  @JsonProperty("srcInstitutionalPartnerType")
-  private InstitutionalPartnerType srcInstitutionalPartnerType = null;
+	@JsonProperty("srcInstitutionalPartnerType")
+	private InstitutionalPartnerType srcInstitutionalPartnerType = null;
 
-  @JsonProperty("srcInstitutionalPartnerTypeDetails")
-  private String srcInstitutionalPartnerTypeDetails = null;
+	@JsonProperty("srcInstitutionalPartnerTypeDetails")
+	private String srcInstitutionalPartnerTypeDetails = null;
 
-  @JsonProperty("srcFirstName")
-  private String srcFirstName = null;
+	@JsonProperty("srcFirstName")
+	private String srcFirstName = null;
 
-  @JsonProperty("srcLastName")
-  private String srcLastName = null;
+	@JsonProperty("srcLastName")
+	private String srcLastName = null;
 
-  @JsonProperty("srcTelNo")
-  private String srcTelNo = null;
+	@JsonProperty("srcTelNo")
+	private String srcTelNo = null;
 
-  @JsonProperty("srcEmail")
-  private String srcEmail = null;
-
-  @JsonProperty("srcMediaWebsite")
-  private String srcMediaWebsite = null;
-
-  @JsonProperty("srcMediaName")
-  private String srcMediaName = null;
-
-  @JsonProperty("srcMediaDetails")
-  private String srcMediaDetails = null;
-
-  @JsonProperty("disease")
-  private Disease disease = null;
-
-  @JsonProperty("diseaseDetails")
-  private String diseaseDetails = null;
-
-  @JsonProperty("surveillanceOfficer")
-  private UserReferenceDto surveillanceOfficer = null;
-
-  @JsonProperty("typeOfPlaceText")
-  private String typeOfPlaceText = null;
-
-  @JsonProperty("reportLat")
-  private Double reportLat = null;
-
-  @JsonProperty("reportLon")
-  private Double reportLon = null;
-
-  @JsonProperty("reportLatLonAccuracy")
-  private Float reportLatLonAccuracy = null;
-
-  @JsonProperty("transregionalOutbreak")
-  private YesNoUnknown transregionalOutbreak = null;
-
-  @JsonProperty("diseaseTransmissionMode")
-  private DiseaseTransmissionMode diseaseTransmissionMode = null;
-
-  @JsonProperty("multiDayEvent")
-  private Boolean multiDayEvent = null;
-
-  public EventDto creationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-    return this;
-  }
-
-   /**
-   * Get creationDate
-   * @return creationDate
-  **/
-  @Schema(description = "")
-  public Instant getCreationDate() {
-    return creationDate;
-  }
-
-  public void setCreationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-  }
-
-  public EventDto changeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-    return this;
-  }
-
-   /**
-   * Get changeDate
-   * @return changeDate
-  **/
-  @Schema(description = "")
-  public Instant getChangeDate() {
-    return changeDate;
-  }
-
-  public void setChangeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-  }
-
-  public EventDto uuid(String uuid) {
-    this.uuid = uuid;
-    return this;
-  }
-
-   /**
-   * Get uuid
-   * @return uuid
-  **/
-  @Schema(description = "")
-  public String getUuid() {
-    return uuid;
-  }
-
-  public void setUuid(String uuid) {
-    this.uuid = uuid;
-  }
-
-  public EventDto pseudonymized(Boolean pseudonymized) {
-    this.pseudonymized = pseudonymized;
-    return this;
-  }
-
-   /**
-   * Get pseudonymized
-   * @return pseudonymized
-  **/
-  @Schema(description = "")
-  public Boolean isPseudonymized() {
-    return pseudonymized;
-  }
-
-  public void setPseudonymized(Boolean pseudonymized) {
-    this.pseudonymized = pseudonymized;
-  }
-
-  public EventDto superordinateEvent(EventReferenceDto superordinateEvent) {
-    this.superordinateEvent = superordinateEvent;
-    return this;
-  }
-
-   /**
-   * Get superordinateEvent
-   * @return superordinateEvent
-  **/
-  @Schema(description = "")
-  public EventReferenceDto getSuperordinateEvent() {
-    return superordinateEvent;
-  }
-
-  public void setSuperordinateEvent(EventReferenceDto superordinateEvent) {
-    this.superordinateEvent = superordinateEvent;
-  }
-
-  public EventDto eventStatus(EventStatus eventStatus) {
-    this.eventStatus = eventStatus;
-    return this;
-  }
-
-   /**
-   * Get eventStatus
-   * @return eventStatus
-  **/
-  @Schema(required = true, description = "")
-  public EventStatus getEventStatus() {
-    return eventStatus;
-  }
-
-  public void setEventStatus(EventStatus eventStatus) {
-    this.eventStatus = eventStatus;
-  }
-
-  public EventDto riskLevel(RiskLevel riskLevel) {
-    this.riskLevel = riskLevel;
-    return this;
-  }
-
-   /**
-   * Get riskLevel
-   * @return riskLevel
-  **/
-  @Schema(description = "")
-  public RiskLevel getRiskLevel() {
-    return riskLevel;
-  }
-
-  public void setRiskLevel(RiskLevel riskLevel) {
-    this.riskLevel = riskLevel;
-  }
-
-  public EventDto eventInvestigationStatus(EventInvestigationStatus eventInvestigationStatus) {
-    this.eventInvestigationStatus = eventInvestigationStatus;
-    return this;
-  }
-
-   /**
-   * Get eventInvestigationStatus
-   * @return eventInvestigationStatus
-  **/
-  @Schema(description = "")
-  public EventInvestigationStatus getEventInvestigationStatus() {
-    return eventInvestigationStatus;
-  }
-
-  public void setEventInvestigationStatus(EventInvestigationStatus eventInvestigationStatus) {
-    this.eventInvestigationStatus = eventInvestigationStatus;
-  }
-
-  public EventDto eventInvestigationStartDate(Instant eventInvestigationStartDate) {
-    this.eventInvestigationStartDate = eventInvestigationStartDate;
-    return this;
-  }
-
-   /**
-   * Get eventInvestigationStartDate
-   * @return eventInvestigationStartDate
-  **/
-  @Schema(description = "")
-  public Instant getEventInvestigationStartDate() {
-    return eventInvestigationStartDate;
-  }
-
-  public void setEventInvestigationStartDate(Instant eventInvestigationStartDate) {
-    this.eventInvestigationStartDate = eventInvestigationStartDate;
-  }
-
-  public EventDto eventInvestigationEndDate(Instant eventInvestigationEndDate) {
-    this.eventInvestigationEndDate = eventInvestigationEndDate;
-    return this;
-  }
-
-   /**
-   * Get eventInvestigationEndDate
-   * @return eventInvestigationEndDate
-  **/
-  @Schema(description = "")
-  public Instant getEventInvestigationEndDate() {
-    return eventInvestigationEndDate;
-  }
-
-  public void setEventInvestigationEndDate(Instant eventInvestigationEndDate) {
-    this.eventInvestigationEndDate = eventInvestigationEndDate;
-  }
-
-  public EventDto externalId(String externalId) {
-    this.externalId = externalId;
-    return this;
-  }
-
-   /**
-   * Get externalId
-   * @return externalId
-  **/
-  @Schema(description = "")
-  public String getExternalId() {
-    return externalId;
-  }
-
-  public void setExternalId(String externalId) {
-    this.externalId = externalId;
-  }
-
-  public EventDto externalToken(String externalToken) {
-    this.externalToken = externalToken;
-    return this;
-  }
-
-   /**
-   * Get externalToken
-   * @return externalToken
-  **/
-  @Schema(description = "")
-  public String getExternalToken() {
-    return externalToken;
-  }
-
-  public void setExternalToken(String externalToken) {
-    this.externalToken = externalToken;
-  }
-
-  public EventDto eventTitle(String eventTitle) {
-    this.eventTitle = eventTitle;
-    return this;
-  }
-
-   /**
-   * Get eventTitle
-   * @return eventTitle
-  **/
-  @Schema(description = "")
-  public String getEventTitle() {
-    return eventTitle;
-  }
-
-  public void setEventTitle(String eventTitle) {
-    this.eventTitle = eventTitle;
-  }
-
-  public EventDto eventDesc(String eventDesc) {
-    this.eventDesc = eventDesc;
-    return this;
-  }
-
-   /**
-   * Get eventDesc
-   * @return eventDesc
-  **/
-  @Schema(required = true, description = "")
-  public String getEventDesc() {
-    return eventDesc;
-  }
-
-  public void setEventDesc(String eventDesc) {
-    this.eventDesc = eventDesc;
-  }
-
-  public EventDto nosocomial(YesNoUnknown nosocomial) {
-    this.nosocomial = nosocomial;
-    return this;
-  }
-
-   /**
-   * Get nosocomial
-   * @return nosocomial
-  **/
-  @Schema(description = "")
-  public YesNoUnknown getNosocomial() {
-    return nosocomial;
-  }
-
-  public void setNosocomial(YesNoUnknown nosocomial) {
-    this.nosocomial = nosocomial;
-  }
-
-  public EventDto startDate(Instant startDate) {
-    this.startDate = startDate;
-    return this;
-  }
-
-   /**
-   * Get startDate
-   * @return startDate
-  **/
-  @Schema(description = "")
-  public Instant getStartDate() {
-    return startDate;
-  }
-
-  public void setStartDate(Instant startDate) {
-    this.startDate = startDate;
-  }
-
-  public EventDto endDate(Instant endDate) {
-    this.endDate = endDate;
-    return this;
-  }
-
-   /**
-   * Get endDate
-   * @return endDate
-  **/
-  @Schema(description = "")
-  public Instant getEndDate() {
-    return endDate;
-  }
-
-  public void setEndDate(Instant endDate) {
-    this.endDate = endDate;
-  }
-
-  public EventDto reportDateTime(Instant reportDateTime) {
-    this.reportDateTime = reportDateTime;
-    return this;
-  }
-
-   /**
-   * Get reportDateTime
-   * @return reportDateTime
-  **/
-  @Schema(required = true, description = "")
-  public Instant getReportDateTime() {
-    return reportDateTime;
-  }
-
-  public void setReportDateTime(Instant reportDateTime) {
-    this.reportDateTime = reportDateTime;
-  }
-
-  public EventDto reportingUser(UserReferenceDto reportingUser) {
-    this.reportingUser = reportingUser;
-    return this;
-  }
-
-   /**
-   * Get reportingUser
-   * @return reportingUser
-  **/
-  @Schema(required = true, description = "")
-  public UserReferenceDto getReportingUser() {
-    return reportingUser;
-  }
-
-  public void setReportingUser(UserReferenceDto reportingUser) {
-    this.reportingUser = reportingUser;
-  }
-
-  public EventDto evolutionDate(Instant evolutionDate) {
-    this.evolutionDate = evolutionDate;
-    return this;
-  }
-
-   /**
-   * Get evolutionDate
-   * @return evolutionDate
-  **/
-  @Schema(description = "")
-  public Instant getEvolutionDate() {
-    return evolutionDate;
-  }
-
-  public void setEvolutionDate(Instant evolutionDate) {
-    this.evolutionDate = evolutionDate;
-  }
-
-  public EventDto evolutionComment(String evolutionComment) {
-    this.evolutionComment = evolutionComment;
-    return this;
-  }
-
-   /**
-   * Get evolutionComment
-   * @return evolutionComment
-  **/
-  @Schema(description = "")
-  public String getEvolutionComment() {
-    return evolutionComment;
-  }
-
-  public void setEvolutionComment(String evolutionComment) {
-    this.evolutionComment = evolutionComment;
-  }
-
-  public EventDto eventLocation(LocationDto eventLocation) {
-    this.eventLocation = eventLocation;
-    return this;
-  }
-
-   /**
-   * Get eventLocation
-   * @return eventLocation
-  **/
-  @Schema(description = "")
-  public LocationDto getEventLocation() {
-    return eventLocation;
-  }
-
-  public void setEventLocation(LocationDto eventLocation) {
-    this.eventLocation = eventLocation;
-  }
-
-  public EventDto typeOfPlace(TypeOfPlace typeOfPlace) {
-    this.typeOfPlace = typeOfPlace;
-    return this;
-  }
-
-   /**
-   * Get typeOfPlace
-   * @return typeOfPlace
-  **/
-  @Schema(description = "")
-  public TypeOfPlace getTypeOfPlace() {
-    return typeOfPlace;
-  }
-
-  public void setTypeOfPlace(TypeOfPlace typeOfPlace) {
-    this.typeOfPlace = typeOfPlace;
-  }
-
-  public EventDto meansOfTransport(MeansOfTransport meansOfTransport) {
-    this.meansOfTransport = meansOfTransport;
-    return this;
-  }
-
-   /**
-   * Get meansOfTransport
-   * @return meansOfTransport
-  **/
-  @Schema(description = "")
-  public MeansOfTransport getMeansOfTransport() {
-    return meansOfTransport;
-  }
-
-  public void setMeansOfTransport(MeansOfTransport meansOfTransport) {
-    this.meansOfTransport = meansOfTransport;
-  }
-
-  public EventDto meansOfTransportDetails(String meansOfTransportDetails) {
-    this.meansOfTransportDetails = meansOfTransportDetails;
-    return this;
-  }
-
-   /**
-   * Get meansOfTransportDetails
-   * @return meansOfTransportDetails
-  **/
-  @Schema(description = "")
-  public String getMeansOfTransportDetails() {
-    return meansOfTransportDetails;
-  }
-
-  public void setMeansOfTransportDetails(String meansOfTransportDetails) {
-    this.meansOfTransportDetails = meansOfTransportDetails;
-  }
-
-  public EventDto connectionNumber(String connectionNumber) {
-    this.connectionNumber = connectionNumber;
-    return this;
-  }
-
-   /**
-   * Get connectionNumber
-   * @return connectionNumber
-  **/
-  @Schema(description = "")
-  public String getConnectionNumber() {
-    return connectionNumber;
-  }
-
-  public void setConnectionNumber(String connectionNumber) {
-    this.connectionNumber = connectionNumber;
-  }
-
-  public EventDto travelDate(Instant travelDate) {
-    this.travelDate = travelDate;
-    return this;
-  }
-
-   /**
-   * Get travelDate
-   * @return travelDate
-  **/
-  @Schema(description = "")
-  public Instant getTravelDate() {
-    return travelDate;
-  }
-
-  public void setTravelDate(Instant travelDate) {
-    this.travelDate = travelDate;
-  }
-
-  public EventDto srcType(EventSourceType srcType) {
-    this.srcType = srcType;
-    return this;
-  }
-
-   /**
-   * Get srcType
-   * @return srcType
-  **/
-  @Schema(description = "")
-  public EventSourceType getSrcType() {
-    return srcType;
-  }
-
-  public void setSrcType(EventSourceType srcType) {
-    this.srcType = srcType;
-  }
-
-  public EventDto srcInstitutionalPartnerType(InstitutionalPartnerType srcInstitutionalPartnerType) {
-    this.srcInstitutionalPartnerType = srcInstitutionalPartnerType;
-    return this;
-  }
-
-   /**
-   * Get srcInstitutionalPartnerType
-   * @return srcInstitutionalPartnerType
-  **/
-  @Schema(description = "")
-  public InstitutionalPartnerType getSrcInstitutionalPartnerType() {
-    return srcInstitutionalPartnerType;
-  }
-
-  public void setSrcInstitutionalPartnerType(InstitutionalPartnerType srcInstitutionalPartnerType) {
-    this.srcInstitutionalPartnerType = srcInstitutionalPartnerType;
-  }
-
-  public EventDto srcInstitutionalPartnerTypeDetails(String srcInstitutionalPartnerTypeDetails) {
-    this.srcInstitutionalPartnerTypeDetails = srcInstitutionalPartnerTypeDetails;
-    return this;
-  }
-
-   /**
-   * Get srcInstitutionalPartnerTypeDetails
-   * @return srcInstitutionalPartnerTypeDetails
-  **/
-  @Schema(description = "")
-  public String getSrcInstitutionalPartnerTypeDetails() {
-    return srcInstitutionalPartnerTypeDetails;
-  }
-
-  public void setSrcInstitutionalPartnerTypeDetails(String srcInstitutionalPartnerTypeDetails) {
-    this.srcInstitutionalPartnerTypeDetails = srcInstitutionalPartnerTypeDetails;
-  }
-
-  public EventDto srcFirstName(String srcFirstName) {
-    this.srcFirstName = srcFirstName;
-    return this;
-  }
-
-   /**
-   * Get srcFirstName
-   * @return srcFirstName
-  **/
-  @Schema(description = "")
-  public String getSrcFirstName() {
-    return srcFirstName;
-  }
-
-  public void setSrcFirstName(String srcFirstName) {
-    this.srcFirstName = srcFirstName;
-  }
-
-  public EventDto srcLastName(String srcLastName) {
-    this.srcLastName = srcLastName;
-    return this;
-  }
-
-   /**
-   * Get srcLastName
-   * @return srcLastName
-  **/
-  @Schema(description = "")
-  public String getSrcLastName() {
-    return srcLastName;
-  }
-
-  public void setSrcLastName(String srcLastName) {
-    this.srcLastName = srcLastName;
-  }
-
-  public EventDto srcTelNo(String srcTelNo) {
-    this.srcTelNo = srcTelNo;
-    return this;
-  }
-
-   /**
-   * Get srcTelNo
-   * @return srcTelNo
-  **/
-  @Schema(description = "")
-  public String getSrcTelNo() {
-    return srcTelNo;
-  }
-
-  public void setSrcTelNo(String srcTelNo) {
-    this.srcTelNo = srcTelNo;
-  }
-
-  public EventDto srcEmail(String srcEmail) {
-    this.srcEmail = srcEmail;
-    return this;
-  }
-
-   /**
-   * Get srcEmail
-   * @return srcEmail
-  **/
-  @Schema(description = "")
-  public String getSrcEmail() {
-    return srcEmail;
-  }
-
-  public void setSrcEmail(String srcEmail) {
-    this.srcEmail = srcEmail;
-  }
-
-  public EventDto srcMediaWebsite(String srcMediaWebsite) {
-    this.srcMediaWebsite = srcMediaWebsite;
-    return this;
-  }
-
-   /**
-   * Get srcMediaWebsite
-   * @return srcMediaWebsite
-  **/
-  @Schema(description = "")
-  public String getSrcMediaWebsite() {
-    return srcMediaWebsite;
-  }
-
-  public void setSrcMediaWebsite(String srcMediaWebsite) {
-    this.srcMediaWebsite = srcMediaWebsite;
-  }
-
-  public EventDto srcMediaName(String srcMediaName) {
-    this.srcMediaName = srcMediaName;
-    return this;
-  }
-
-   /**
-   * Get srcMediaName
-   * @return srcMediaName
-  **/
-  @Schema(description = "")
-  public String getSrcMediaName() {
-    return srcMediaName;
-  }
-
-  public void setSrcMediaName(String srcMediaName) {
-    this.srcMediaName = srcMediaName;
-  }
-
-  public EventDto srcMediaDetails(String srcMediaDetails) {
-    this.srcMediaDetails = srcMediaDetails;
-    return this;
-  }
-
-   /**
-   * Get srcMediaDetails
-   * @return srcMediaDetails
-  **/
-  @Schema(description = "")
-  public String getSrcMediaDetails() {
-    return srcMediaDetails;
-  }
-
-  public void setSrcMediaDetails(String srcMediaDetails) {
-    this.srcMediaDetails = srcMediaDetails;
-  }
-
-  public EventDto disease(Disease disease) {
-    this.disease = disease;
-    return this;
-  }
-
-   /**
-   * Get disease
-   * @return disease
-  **/
-  @Schema(description = "")
-  public Disease getDisease() {
-    return disease;
-  }
-
-  public void setDisease(Disease disease) {
-    this.disease = disease;
-  }
-
-  public EventDto diseaseDetails(String diseaseDetails) {
-    this.diseaseDetails = diseaseDetails;
-    return this;
-  }
-
-   /**
-   * Get diseaseDetails
-   * @return diseaseDetails
-  **/
-  @Schema(description = "")
-  public String getDiseaseDetails() {
-    return diseaseDetails;
-  }
-
-  public void setDiseaseDetails(String diseaseDetails) {
-    this.diseaseDetails = diseaseDetails;
-  }
-
-  public EventDto surveillanceOfficer(UserReferenceDto surveillanceOfficer) {
-    this.surveillanceOfficer = surveillanceOfficer;
-    return this;
-  }
-
-   /**
-   * Get surveillanceOfficer
-   * @return surveillanceOfficer
-  **/
-  @Schema(description = "")
-  public UserReferenceDto getSurveillanceOfficer() {
-    return surveillanceOfficer;
-  }
-
-  public void setSurveillanceOfficer(UserReferenceDto surveillanceOfficer) {
-    this.surveillanceOfficer = surveillanceOfficer;
-  }
-
-  public EventDto typeOfPlaceText(String typeOfPlaceText) {
-    this.typeOfPlaceText = typeOfPlaceText;
-    return this;
-  }
-
-   /**
-   * Get typeOfPlaceText
-   * @return typeOfPlaceText
-  **/
-  @Schema(description = "")
-  public String getTypeOfPlaceText() {
-    return typeOfPlaceText;
-  }
-
-  public void setTypeOfPlaceText(String typeOfPlaceText) {
-    this.typeOfPlaceText = typeOfPlaceText;
-  }
-
-  public EventDto reportLat(Double reportLat) {
-    this.reportLat = reportLat;
-    return this;
-  }
-
-   /**
-   * Get reportLat
-   * @return reportLat
-  **/
-  @Schema(description = "")
-  public Double getReportLat() {
-    return reportLat;
-  }
-
-  public void setReportLat(Double reportLat) {
-    this.reportLat = reportLat;
-  }
-
-  public EventDto reportLon(Double reportLon) {
-    this.reportLon = reportLon;
-    return this;
-  }
-
-   /**
-   * Get reportLon
-   * @return reportLon
-  **/
-  @Schema(description = "")
-  public Double getReportLon() {
-    return reportLon;
-  }
-
-  public void setReportLon(Double reportLon) {
-    this.reportLon = reportLon;
-  }
-
-  public EventDto reportLatLonAccuracy(Float reportLatLonAccuracy) {
-    this.reportLatLonAccuracy = reportLatLonAccuracy;
-    return this;
-  }
-
-   /**
-   * Get reportLatLonAccuracy
-   * @return reportLatLonAccuracy
-  **/
-  @Schema(description = "")
-  public Float getReportLatLonAccuracy() {
-    return reportLatLonAccuracy;
-  }
-
-  public void setReportLatLonAccuracy(Float reportLatLonAccuracy) {
-    this.reportLatLonAccuracy = reportLatLonAccuracy;
-  }
-
-  public EventDto transregionalOutbreak(YesNoUnknown transregionalOutbreak) {
-    this.transregionalOutbreak = transregionalOutbreak;
-    return this;
-  }
-
-   /**
-   * Get transregionalOutbreak
-   * @return transregionalOutbreak
-  **/
-  @Schema(description = "")
-  public YesNoUnknown getTransregionalOutbreak() {
-    return transregionalOutbreak;
-  }
-
-  public void setTransregionalOutbreak(YesNoUnknown transregionalOutbreak) {
-    this.transregionalOutbreak = transregionalOutbreak;
-  }
-
-  public EventDto diseaseTransmissionMode(DiseaseTransmissionMode diseaseTransmissionMode) {
-    this.diseaseTransmissionMode = diseaseTransmissionMode;
-    return this;
-  }
-
-   /**
-   * Get diseaseTransmissionMode
-   * @return diseaseTransmissionMode
-  **/
-  @Schema(description = "")
-  public DiseaseTransmissionMode getDiseaseTransmissionMode() {
-    return diseaseTransmissionMode;
-  }
-
-  public void setDiseaseTransmissionMode(DiseaseTransmissionMode diseaseTransmissionMode) {
-    this.diseaseTransmissionMode = diseaseTransmissionMode;
-  }
-
-  public EventDto multiDayEvent(Boolean multiDayEvent) {
-    this.multiDayEvent = multiDayEvent;
-    return this;
-  }
-
-   /**
-   * Get multiDayEvent
-   * @return multiDayEvent
-  **/
-  @Schema(description = "")
-  public Boolean isMultiDayEvent() {
-    return multiDayEvent;
-  }
-
-  public void setMultiDayEvent(Boolean multiDayEvent) {
-    this.multiDayEvent = multiDayEvent;
-  }
-
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    EventDto eventDto = (EventDto) o;
-    return Objects.equals(this.creationDate, eventDto.creationDate) &&
-        Objects.equals(this.changeDate, eventDto.changeDate) &&
-        Objects.equals(this.uuid, eventDto.uuid) &&
-        Objects.equals(this.pseudonymized, eventDto.pseudonymized) &&
-        Objects.equals(this.superordinateEvent, eventDto.superordinateEvent) &&
-        Objects.equals(this.eventStatus, eventDto.eventStatus) &&
-        Objects.equals(this.riskLevel, eventDto.riskLevel) &&
-        Objects.equals(this.eventInvestigationStatus, eventDto.eventInvestigationStatus) &&
-        Objects.equals(this.eventInvestigationStartDate, eventDto.eventInvestigationStartDate) &&
-        Objects.equals(this.eventInvestigationEndDate, eventDto.eventInvestigationEndDate) &&
-        Objects.equals(this.externalId, eventDto.externalId) &&
-        Objects.equals(this.externalToken, eventDto.externalToken) &&
-        Objects.equals(this.eventTitle, eventDto.eventTitle) &&
-        Objects.equals(this.eventDesc, eventDto.eventDesc) &&
-        Objects.equals(this.nosocomial, eventDto.nosocomial) &&
-        Objects.equals(this.startDate, eventDto.startDate) &&
-        Objects.equals(this.endDate, eventDto.endDate) &&
-        Objects.equals(this.reportDateTime, eventDto.reportDateTime) &&
-        Objects.equals(this.reportingUser, eventDto.reportingUser) &&
-        Objects.equals(this.evolutionDate, eventDto.evolutionDate) &&
-        Objects.equals(this.evolutionComment, eventDto.evolutionComment) &&
-        Objects.equals(this.eventLocation, eventDto.eventLocation) &&
-        Objects.equals(this.typeOfPlace, eventDto.typeOfPlace) &&
-        Objects.equals(this.meansOfTransport, eventDto.meansOfTransport) &&
-        Objects.equals(this.meansOfTransportDetails, eventDto.meansOfTransportDetails) &&
-        Objects.equals(this.connectionNumber, eventDto.connectionNumber) &&
-        Objects.equals(this.travelDate, eventDto.travelDate) &&
-        Objects.equals(this.srcType, eventDto.srcType) &&
-        Objects.equals(this.srcInstitutionalPartnerType, eventDto.srcInstitutionalPartnerType) &&
-        Objects.equals(this.srcInstitutionalPartnerTypeDetails, eventDto.srcInstitutionalPartnerTypeDetails) &&
-        Objects.equals(this.srcFirstName, eventDto.srcFirstName) &&
-        Objects.equals(this.srcLastName, eventDto.srcLastName) &&
-        Objects.equals(this.srcTelNo, eventDto.srcTelNo) &&
-        Objects.equals(this.srcEmail, eventDto.srcEmail) &&
-        Objects.equals(this.srcMediaWebsite, eventDto.srcMediaWebsite) &&
-        Objects.equals(this.srcMediaName, eventDto.srcMediaName) &&
-        Objects.equals(this.srcMediaDetails, eventDto.srcMediaDetails) &&
-        Objects.equals(this.disease, eventDto.disease) &&
-        Objects.equals(this.diseaseDetails, eventDto.diseaseDetails) &&
-        Objects.equals(this.surveillanceOfficer, eventDto.surveillanceOfficer) &&
-        Objects.equals(this.typeOfPlaceText, eventDto.typeOfPlaceText) &&
-        Objects.equals(this.reportLat, eventDto.reportLat) &&
-        Objects.equals(this.reportLon, eventDto.reportLon) &&
-        Objects.equals(this.reportLatLonAccuracy, eventDto.reportLatLonAccuracy) &&
-        Objects.equals(this.transregionalOutbreak, eventDto.transregionalOutbreak) &&
-        Objects.equals(this.diseaseTransmissionMode, eventDto.diseaseTransmissionMode) &&
-        Objects.equals(this.multiDayEvent, eventDto.multiDayEvent);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(creationDate, changeDate, uuid, pseudonymized, superordinateEvent, eventStatus, riskLevel, eventInvestigationStatus, eventInvestigationStartDate, eventInvestigationEndDate, externalId, externalToken, eventTitle, eventDesc, nosocomial, startDate, endDate, reportDateTime, reportingUser, evolutionDate, evolutionComment, eventLocation, typeOfPlace, meansOfTransport, meansOfTransportDetails, connectionNumber, travelDate, srcType, srcInstitutionalPartnerType, srcInstitutionalPartnerTypeDetails, srcFirstName, srcLastName, srcTelNo, srcEmail, srcMediaWebsite, srcMediaName, srcMediaDetails, disease, diseaseDetails, surveillanceOfficer, typeOfPlaceText, reportLat, reportLon, reportLatLonAccuracy, transregionalOutbreak, diseaseTransmissionMode, multiDayEvent);
-  }
-
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class EventDto {\n");
-    
-    sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
-    sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
-    sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
-    sb.append("    pseudonymized: ").append(toIndentedString(pseudonymized)).append("\n");
-    sb.append("    superordinateEvent: ").append(toIndentedString(superordinateEvent)).append("\n");
-    sb.append("    eventStatus: ").append(toIndentedString(eventStatus)).append("\n");
-    sb.append("    riskLevel: ").append(toIndentedString(riskLevel)).append("\n");
-    sb.append("    eventInvestigationStatus: ").append(toIndentedString(eventInvestigationStatus)).append("\n");
-    sb.append("    eventInvestigationStartDate: ").append(toIndentedString(eventInvestigationStartDate)).append("\n");
-    sb.append("    eventInvestigationEndDate: ").append(toIndentedString(eventInvestigationEndDate)).append("\n");
-    sb.append("    externalId: ").append(toIndentedString(externalId)).append("\n");
-    sb.append("    externalToken: ").append(toIndentedString(externalToken)).append("\n");
-    sb.append("    eventTitle: ").append(toIndentedString(eventTitle)).append("\n");
-    sb.append("    eventDesc: ").append(toIndentedString(eventDesc)).append("\n");
-    sb.append("    nosocomial: ").append(toIndentedString(nosocomial)).append("\n");
-    sb.append("    startDate: ").append(toIndentedString(startDate)).append("\n");
-    sb.append("    endDate: ").append(toIndentedString(endDate)).append("\n");
-    sb.append("    reportDateTime: ").append(toIndentedString(reportDateTime)).append("\n");
-    sb.append("    reportingUser: ").append(toIndentedString(reportingUser)).append("\n");
-    sb.append("    evolutionDate: ").append(toIndentedString(evolutionDate)).append("\n");
-    sb.append("    evolutionComment: ").append(toIndentedString(evolutionComment)).append("\n");
-    sb.append("    eventLocation: ").append(toIndentedString(eventLocation)).append("\n");
-    sb.append("    typeOfPlace: ").append(toIndentedString(typeOfPlace)).append("\n");
-    sb.append("    meansOfTransport: ").append(toIndentedString(meansOfTransport)).append("\n");
-    sb.append("    meansOfTransportDetails: ").append(toIndentedString(meansOfTransportDetails)).append("\n");
-    sb.append("    connectionNumber: ").append(toIndentedString(connectionNumber)).append("\n");
-    sb.append("    travelDate: ").append(toIndentedString(travelDate)).append("\n");
-    sb.append("    srcType: ").append(toIndentedString(srcType)).append("\n");
-    sb.append("    srcInstitutionalPartnerType: ").append(toIndentedString(srcInstitutionalPartnerType)).append("\n");
-    sb.append("    srcInstitutionalPartnerTypeDetails: ").append(toIndentedString(srcInstitutionalPartnerTypeDetails)).append("\n");
-    sb.append("    srcFirstName: ").append(toIndentedString(srcFirstName)).append("\n");
-    sb.append("    srcLastName: ").append(toIndentedString(srcLastName)).append("\n");
-    sb.append("    srcTelNo: ").append(toIndentedString(srcTelNo)).append("\n");
-    sb.append("    srcEmail: ").append(toIndentedString(srcEmail)).append("\n");
-    sb.append("    srcMediaWebsite: ").append(toIndentedString(srcMediaWebsite)).append("\n");
-    sb.append("    srcMediaName: ").append(toIndentedString(srcMediaName)).append("\n");
-    sb.append("    srcMediaDetails: ").append(toIndentedString(srcMediaDetails)).append("\n");
-    sb.append("    disease: ").append(toIndentedString(disease)).append("\n");
-    sb.append("    diseaseDetails: ").append(toIndentedString(diseaseDetails)).append("\n");
-    sb.append("    surveillanceOfficer: ").append(toIndentedString(surveillanceOfficer)).append("\n");
-    sb.append("    typeOfPlaceText: ").append(toIndentedString(typeOfPlaceText)).append("\n");
-    sb.append("    reportLat: ").append(toIndentedString(reportLat)).append("\n");
-    sb.append("    reportLon: ").append(toIndentedString(reportLon)).append("\n");
-    sb.append("    reportLatLonAccuracy: ").append(toIndentedString(reportLatLonAccuracy)).append("\n");
-    sb.append("    transregionalOutbreak: ").append(toIndentedString(transregionalOutbreak)).append("\n");
-    sb.append("    diseaseTransmissionMode: ").append(toIndentedString(diseaseTransmissionMode)).append("\n");
-    sb.append("    multiDayEvent: ").append(toIndentedString(multiDayEvent)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@JsonProperty("srcEmail")
+	private String srcEmail = null;
+
+	@JsonProperty("srcMediaWebsite")
+	private String srcMediaWebsite = null;
+
+	@JsonProperty("srcMediaName")
+	private String srcMediaName = null;
+
+	@JsonProperty("srcMediaDetails")
+	private String srcMediaDetails = null;
+
+	@JsonProperty("disease")
+	private Disease disease = null;
+
+	@JsonProperty("diseaseDetails")
+	private String diseaseDetails = null;
+
+	@JsonProperty("surveillanceOfficer")
+	private UserReferenceDto surveillanceOfficer = null;
+
+	@JsonProperty("typeOfPlaceText")
+	private String typeOfPlaceText = null;
+
+	@JsonProperty("reportLat")
+	private Double reportLat = null;
+
+	@JsonProperty("reportLon")
+	private Double reportLon = null;
+
+	@JsonProperty("reportLatLonAccuracy")
+	private Float reportLatLonAccuracy = null;
+
+	@JsonProperty("transregionalOutbreak")
+	private YesNoUnknown transregionalOutbreak = null;
+
+	@JsonProperty("diseaseTransmissionMode")
+	private DiseaseTransmissionMode diseaseTransmissionMode = null;
+
+	@JsonProperty("multiDayEvent")
+	private Boolean multiDayEvent = null;
+
+	public EventDto creationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+		return this;
+	}
+
+	/**
+	 * Get creationDate
+	 * 
+	 * @return creationDate
+	 **/
+	@Schema(description = "")
+	public Instant getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public EventDto changeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+		return this;
+	}
+
+	/**
+	 * Get changeDate
+	 * 
+	 * @return changeDate
+	 **/
+	@Schema(description = "")
+	public Instant getChangeDate() {
+		return changeDate;
+	}
+
+	public void setChangeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+	}
+
+	public EventDto uuid(String uuid) {
+		this.uuid = uuid;
+		return this;
+	}
+
+	/**
+	 * Get uuid
+	 * 
+	 * @return uuid
+	 **/
+	@Schema(description = "")
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public EventDto pseudonymized(Boolean pseudonymized) {
+		this.pseudonymized = pseudonymized;
+		return this;
+	}
+
+	/**
+	 * Get pseudonymized
+	 * 
+	 * @return pseudonymized
+	 **/
+	@Schema(description = "")
+	public Boolean isPseudonymized() {
+		return pseudonymized;
+	}
+
+	public void setPseudonymized(Boolean pseudonymized) {
+		this.pseudonymized = pseudonymized;
+	}
+
+	public EventDto superordinateEvent(EventReferenceDto superordinateEvent) {
+		this.superordinateEvent = superordinateEvent;
+		return this;
+	}
+
+	/**
+	 * Get superordinateEvent
+	 * 
+	 * @return superordinateEvent
+	 **/
+	@Schema(description = "")
+	public EventReferenceDto getSuperordinateEvent() {
+		return superordinateEvent;
+	}
+
+	public void setSuperordinateEvent(EventReferenceDto superordinateEvent) {
+		this.superordinateEvent = superordinateEvent;
+	}
+
+	public EventDto eventStatus(EventStatus eventStatus) {
+		this.eventStatus = eventStatus;
+		return this;
+	}
+
+	/**
+	 * Get eventStatus
+	 * 
+	 * @return eventStatus
+	 **/
+	@Schema(required = true, description = "")
+	public EventStatus getEventStatus() {
+		return eventStatus;
+	}
+
+	public void setEventStatus(EventStatus eventStatus) {
+		this.eventStatus = eventStatus;
+	}
+
+	public EventDto riskLevel(RiskLevel riskLevel) {
+		this.riskLevel = riskLevel;
+		return this;
+	}
+
+	/**
+	 * Get riskLevel
+	 * 
+	 * @return riskLevel
+	 **/
+	@Schema(description = "")
+	public RiskLevel getRiskLevel() {
+		return riskLevel;
+	}
+
+	public void setRiskLevel(RiskLevel riskLevel) {
+		this.riskLevel = riskLevel;
+	}
+
+	public EventDto eventInvestigationStatus(EventInvestigationStatus eventInvestigationStatus) {
+		this.eventInvestigationStatus = eventInvestigationStatus;
+		return this;
+	}
+
+	/**
+	 * Get eventInvestigationStatus
+	 * 
+	 * @return eventInvestigationStatus
+	 **/
+	@Schema(description = "")
+	public EventInvestigationStatus getEventInvestigationStatus() {
+		return eventInvestigationStatus;
+	}
+
+	public void setEventInvestigationStatus(EventInvestigationStatus eventInvestigationStatus) {
+		this.eventInvestigationStatus = eventInvestigationStatus;
+	}
+
+	public EventDto eventInvestigationStartDate(Instant eventInvestigationStartDate) {
+		this.eventInvestigationStartDate = eventInvestigationStartDate;
+		return this;
+	}
+
+	/**
+	 * Get eventInvestigationStartDate
+	 * 
+	 * @return eventInvestigationStartDate
+	 **/
+	@Schema(description = "")
+	public Instant getEventInvestigationStartDate() {
+		return eventInvestigationStartDate;
+	}
+
+	public void setEventInvestigationStartDate(Instant eventInvestigationStartDate) {
+		this.eventInvestigationStartDate = eventInvestigationStartDate;
+	}
+
+	public EventDto eventInvestigationEndDate(Instant eventInvestigationEndDate) {
+		this.eventInvestigationEndDate = eventInvestigationEndDate;
+		return this;
+	}
+
+	/**
+	 * Get eventInvestigationEndDate
+	 * 
+	 * @return eventInvestigationEndDate
+	 **/
+	@Schema(description = "")
+	public Instant getEventInvestigationEndDate() {
+		return eventInvestigationEndDate;
+	}
+
+	public void setEventInvestigationEndDate(Instant eventInvestigationEndDate) {
+		this.eventInvestigationEndDate = eventInvestigationEndDate;
+	}
+
+	public EventDto externalId(String externalId) {
+		this.externalId = externalId;
+		return this;
+	}
+
+	/**
+	 * Get externalId
+	 * 
+	 * @return externalId
+	 **/
+	@Schema(description = "")
+	public String getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(String externalId) {
+		this.externalId = externalId;
+	}
+
+	public EventDto externalToken(String externalToken) {
+		this.externalToken = externalToken;
+		return this;
+	}
+
+	/**
+	 * Get externalToken
+	 * 
+	 * @return externalToken
+	 **/
+	@Schema(description = "")
+	public String getExternalToken() {
+		return externalToken;
+	}
+
+	public void setExternalToken(String externalToken) {
+		this.externalToken = externalToken;
+	}
+
+	public EventDto eventTitle(String eventTitle) {
+		this.eventTitle = eventTitle;
+		return this;
+	}
+
+	/**
+	 * Get eventTitle
+	 * 
+	 * @return eventTitle
+	 **/
+	@Schema(description = "")
+	public String getEventTitle() {
+		return eventTitle;
+	}
+
+	public void setEventTitle(String eventTitle) {
+		this.eventTitle = eventTitle;
+	}
+
+	public EventDto eventDesc(String eventDesc) {
+		this.eventDesc = eventDesc;
+		return this;
+	}
+
+	/**
+	 * Get eventDesc
+	 * 
+	 * @return eventDesc
+	 **/
+	@Schema(required = true, description = "")
+	public String getEventDesc() {
+		return eventDesc;
+	}
+
+	public void setEventDesc(String eventDesc) {
+		this.eventDesc = eventDesc;
+	}
+
+	public EventDto nosocomial(YesNoUnknown nosocomial) {
+		this.nosocomial = nosocomial;
+		return this;
+	}
+
+	/**
+	 * Get nosocomial
+	 * 
+	 * @return nosocomial
+	 **/
+	@Schema(description = "")
+	public YesNoUnknown getNosocomial() {
+		return nosocomial;
+	}
+
+	public void setNosocomial(YesNoUnknown nosocomial) {
+		this.nosocomial = nosocomial;
+	}
+
+	public EventDto startDate(Instant startDate) {
+		this.startDate = startDate;
+		return this;
+	}
+
+	/**
+	 * Get startDate
+	 * 
+	 * @return startDate
+	 **/
+	@Schema(description = "")
+	public Instant getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Instant startDate) {
+		this.startDate = startDate;
+	}
+
+	public EventDto endDate(Instant endDate) {
+		this.endDate = endDate;
+		return this;
+	}
+
+	/**
+	 * Get endDate
+	 * 
+	 * @return endDate
+	 **/
+	@Schema(description = "")
+	public Instant getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Instant endDate) {
+		this.endDate = endDate;
+	}
+
+	public EventDto reportDateTime(Instant reportDateTime) {
+		this.reportDateTime = reportDateTime;
+		return this;
+	}
+
+	/**
+	 * Get reportDateTime
+	 * 
+	 * @return reportDateTime
+	 **/
+	@Schema(required = true, description = "")
+	public Instant getReportDateTime() {
+		return reportDateTime;
+	}
+
+	public void setReportDateTime(Instant reportDateTime) {
+		this.reportDateTime = reportDateTime;
+	}
+
+	public EventDto reportingUser(UserReferenceDto reportingUser) {
+		this.reportingUser = reportingUser;
+		return this;
+	}
+
+	/**
+	 * Get reportingUser
+	 * 
+	 * @return reportingUser
+	 **/
+	@Schema(required = true, description = "")
+	public UserReferenceDto getReportingUser() {
+		return reportingUser;
+	}
+
+	public void setReportingUser(UserReferenceDto reportingUser) {
+		this.reportingUser = reportingUser;
+	}
+
+	public EventDto evolutionDate(Instant evolutionDate) {
+		this.evolutionDate = evolutionDate;
+		return this;
+	}
+
+	/**
+	 * Get evolutionDate
+	 * 
+	 * @return evolutionDate
+	 **/
+	@Schema(description = "")
+	public Instant getEvolutionDate() {
+		return evolutionDate;
+	}
+
+	public void setEvolutionDate(Instant evolutionDate) {
+		this.evolutionDate = evolutionDate;
+	}
+
+	public EventDto evolutionComment(String evolutionComment) {
+		this.evolutionComment = evolutionComment;
+		return this;
+	}
+
+	/**
+	 * Get evolutionComment
+	 * 
+	 * @return evolutionComment
+	 **/
+	@Schema(description = "")
+	public String getEvolutionComment() {
+		return evolutionComment;
+	}
+
+	public void setEvolutionComment(String evolutionComment) {
+		this.evolutionComment = evolutionComment;
+	}
+
+	public EventDto eventLocation(LocationDto eventLocation) {
+		this.eventLocation = eventLocation;
+		return this;
+	}
+
+	/**
+	 * Get eventLocation
+	 * 
+	 * @return eventLocation
+	 **/
+	@Schema(description = "")
+	public LocationDto getEventLocation() {
+		return eventLocation;
+	}
+
+	public void setEventLocation(LocationDto eventLocation) {
+		this.eventLocation = eventLocation;
+	}
+
+	public EventDto typeOfPlace(TypeOfPlace typeOfPlace) {
+		this.typeOfPlace = typeOfPlace;
+		return this;
+	}
+
+	/**
+	 * Get typeOfPlace
+	 * 
+	 * @return typeOfPlace
+	 **/
+	@Schema(description = "")
+	public TypeOfPlace getTypeOfPlace() {
+		return typeOfPlace;
+	}
+
+	public void setTypeOfPlace(TypeOfPlace typeOfPlace) {
+		this.typeOfPlace = typeOfPlace;
+	}
+
+	public EventDto meansOfTransport(MeansOfTransport meansOfTransport) {
+		this.meansOfTransport = meansOfTransport;
+		return this;
+	}
+
+	/**
+	 * Get meansOfTransport
+	 * 
+	 * @return meansOfTransport
+	 **/
+	@Schema(description = "")
+	public MeansOfTransport getMeansOfTransport() {
+		return meansOfTransport;
+	}
+
+	public void setMeansOfTransport(MeansOfTransport meansOfTransport) {
+		this.meansOfTransport = meansOfTransport;
+	}
+
+	public EventDto meansOfTransportDetails(String meansOfTransportDetails) {
+		this.meansOfTransportDetails = meansOfTransportDetails;
+		return this;
+	}
+
+	/**
+	 * Get meansOfTransportDetails
+	 * 
+	 * @return meansOfTransportDetails
+	 **/
+	@Schema(description = "")
+	public String getMeansOfTransportDetails() {
+		return meansOfTransportDetails;
+	}
+
+	public void setMeansOfTransportDetails(String meansOfTransportDetails) {
+		this.meansOfTransportDetails = meansOfTransportDetails;
+	}
+
+	public EventDto connectionNumber(String connectionNumber) {
+		this.connectionNumber = connectionNumber;
+		return this;
+	}
+
+	/**
+	 * Get connectionNumber
+	 * 
+	 * @return connectionNumber
+	 **/
+	@Schema(description = "")
+	public String getConnectionNumber() {
+		return connectionNumber;
+	}
+
+	public void setConnectionNumber(String connectionNumber) {
+		this.connectionNumber = connectionNumber;
+	}
+
+	public EventDto travelDate(Instant travelDate) {
+		this.travelDate = travelDate;
+		return this;
+	}
+
+	/**
+	 * Get travelDate
+	 * 
+	 * @return travelDate
+	 **/
+	@Schema(description = "")
+	public Instant getTravelDate() {
+		return travelDate;
+	}
+
+	public void setTravelDate(Instant travelDate) {
+		this.travelDate = travelDate;
+	}
+
+	public EventDto srcType(EventSourceType srcType) {
+		this.srcType = srcType;
+		return this;
+	}
+
+	/**
+	 * Get srcType
+	 * 
+	 * @return srcType
+	 **/
+	@Schema(description = "")
+	public EventSourceType getSrcType() {
+		return srcType;
+	}
+
+	public void setSrcType(EventSourceType srcType) {
+		this.srcType = srcType;
+	}
+
+	public EventDto srcInstitutionalPartnerType(InstitutionalPartnerType srcInstitutionalPartnerType) {
+		this.srcInstitutionalPartnerType = srcInstitutionalPartnerType;
+		return this;
+	}
+
+	/**
+	 * Get srcInstitutionalPartnerType
+	 * 
+	 * @return srcInstitutionalPartnerType
+	 **/
+	@Schema(description = "")
+	public InstitutionalPartnerType getSrcInstitutionalPartnerType() {
+		return srcInstitutionalPartnerType;
+	}
+
+	public void setSrcInstitutionalPartnerType(InstitutionalPartnerType srcInstitutionalPartnerType) {
+		this.srcInstitutionalPartnerType = srcInstitutionalPartnerType;
+	}
+
+	public EventDto srcInstitutionalPartnerTypeDetails(String srcInstitutionalPartnerTypeDetails) {
+		this.srcInstitutionalPartnerTypeDetails = srcInstitutionalPartnerTypeDetails;
+		return this;
+	}
+
+	/**
+	 * Get srcInstitutionalPartnerTypeDetails
+	 * 
+	 * @return srcInstitutionalPartnerTypeDetails
+	 **/
+	@Schema(description = "")
+	public String getSrcInstitutionalPartnerTypeDetails() {
+		return srcInstitutionalPartnerTypeDetails;
+	}
+
+	public void setSrcInstitutionalPartnerTypeDetails(String srcInstitutionalPartnerTypeDetails) {
+		this.srcInstitutionalPartnerTypeDetails = srcInstitutionalPartnerTypeDetails;
+	}
+
+	public EventDto srcFirstName(String srcFirstName) {
+		this.srcFirstName = srcFirstName;
+		return this;
+	}
+
+	/**
+	 * Get srcFirstName
+	 * 
+	 * @return srcFirstName
+	 **/
+	@Schema(description = "")
+	public String getSrcFirstName() {
+		return srcFirstName;
+	}
+
+	public void setSrcFirstName(String srcFirstName) {
+		this.srcFirstName = srcFirstName;
+	}
+
+	public EventDto srcLastName(String srcLastName) {
+		this.srcLastName = srcLastName;
+		return this;
+	}
+
+	/**
+	 * Get srcLastName
+	 * 
+	 * @return srcLastName
+	 **/
+	@Schema(description = "")
+	public String getSrcLastName() {
+		return srcLastName;
+	}
+
+	public void setSrcLastName(String srcLastName) {
+		this.srcLastName = srcLastName;
+	}
+
+	public EventDto srcTelNo(String srcTelNo) {
+		this.srcTelNo = srcTelNo;
+		return this;
+	}
+
+	/**
+	 * Get srcTelNo
+	 * 
+	 * @return srcTelNo
+	 **/
+	@Schema(description = "")
+	public String getSrcTelNo() {
+		return srcTelNo;
+	}
+
+	public void setSrcTelNo(String srcTelNo) {
+		this.srcTelNo = srcTelNo;
+	}
+
+	public EventDto srcEmail(String srcEmail) {
+		this.srcEmail = srcEmail;
+		return this;
+	}
+
+	/**
+	 * Get srcEmail
+	 * 
+	 * @return srcEmail
+	 **/
+	@Schema(description = "")
+	public String getSrcEmail() {
+		return srcEmail;
+	}
+
+	public void setSrcEmail(String srcEmail) {
+		this.srcEmail = srcEmail;
+	}
+
+	public EventDto srcMediaWebsite(String srcMediaWebsite) {
+		this.srcMediaWebsite = srcMediaWebsite;
+		return this;
+	}
+
+	/**
+	 * Get srcMediaWebsite
+	 * 
+	 * @return srcMediaWebsite
+	 **/
+	@Schema(description = "")
+	public String getSrcMediaWebsite() {
+		return srcMediaWebsite;
+	}
+
+	public void setSrcMediaWebsite(String srcMediaWebsite) {
+		this.srcMediaWebsite = srcMediaWebsite;
+	}
+
+	public EventDto srcMediaName(String srcMediaName) {
+		this.srcMediaName = srcMediaName;
+		return this;
+	}
+
+	/**
+	 * Get srcMediaName
+	 * 
+	 * @return srcMediaName
+	 **/
+	@Schema(description = "")
+	public String getSrcMediaName() {
+		return srcMediaName;
+	}
+
+	public void setSrcMediaName(String srcMediaName) {
+		this.srcMediaName = srcMediaName;
+	}
+
+	public EventDto srcMediaDetails(String srcMediaDetails) {
+		this.srcMediaDetails = srcMediaDetails;
+		return this;
+	}
+
+	/**
+	 * Get srcMediaDetails
+	 * 
+	 * @return srcMediaDetails
+	 **/
+	@Schema(description = "")
+	public String getSrcMediaDetails() {
+		return srcMediaDetails;
+	}
+
+	public void setSrcMediaDetails(String srcMediaDetails) {
+		this.srcMediaDetails = srcMediaDetails;
+	}
+
+	public EventDto disease(Disease disease) {
+		this.disease = disease;
+		return this;
+	}
+
+	/**
+	 * Get disease
+	 * 
+	 * @return disease
+	 **/
+	@Schema(description = "")
+	public Disease getDisease() {
+		return disease;
+	}
+
+	public void setDisease(Disease disease) {
+		this.disease = disease;
+	}
+
+	public EventDto diseaseDetails(String diseaseDetails) {
+		this.diseaseDetails = diseaseDetails;
+		return this;
+	}
+
+	/**
+	 * Get diseaseDetails
+	 * 
+	 * @return diseaseDetails
+	 **/
+	@Schema(description = "")
+	public String getDiseaseDetails() {
+		return diseaseDetails;
+	}
+
+	public void setDiseaseDetails(String diseaseDetails) {
+		this.diseaseDetails = diseaseDetails;
+	}
+
+	public EventDto surveillanceOfficer(UserReferenceDto surveillanceOfficer) {
+		this.surveillanceOfficer = surveillanceOfficer;
+		return this;
+	}
+
+	/**
+	 * Get surveillanceOfficer
+	 * 
+	 * @return surveillanceOfficer
+	 **/
+	@Schema(description = "")
+	public UserReferenceDto getSurveillanceOfficer() {
+		return surveillanceOfficer;
+	}
+
+	public void setSurveillanceOfficer(UserReferenceDto surveillanceOfficer) {
+		this.surveillanceOfficer = surveillanceOfficer;
+	}
+
+	public EventDto typeOfPlaceText(String typeOfPlaceText) {
+		this.typeOfPlaceText = typeOfPlaceText;
+		return this;
+	}
+
+	/**
+	 * Get typeOfPlaceText
+	 * 
+	 * @return typeOfPlaceText
+	 **/
+	@Schema(description = "")
+	public String getTypeOfPlaceText() {
+		return typeOfPlaceText;
+	}
+
+	public void setTypeOfPlaceText(String typeOfPlaceText) {
+		this.typeOfPlaceText = typeOfPlaceText;
+	}
+
+	public EventDto reportLat(Double reportLat) {
+		this.reportLat = reportLat;
+		return this;
+	}
+
+	/**
+	 * Get reportLat
+	 * 
+	 * @return reportLat
+	 **/
+	@Schema(description = "")
+	public Double getReportLat() {
+		return reportLat;
+	}
+
+	public void setReportLat(Double reportLat) {
+		this.reportLat = reportLat;
+	}
+
+	public EventDto reportLon(Double reportLon) {
+		this.reportLon = reportLon;
+		return this;
+	}
+
+	/**
+	 * Get reportLon
+	 * 
+	 * @return reportLon
+	 **/
+	@Schema(description = "")
+	public Double getReportLon() {
+		return reportLon;
+	}
+
+	public void setReportLon(Double reportLon) {
+		this.reportLon = reportLon;
+	}
+
+	public EventDto reportLatLonAccuracy(Float reportLatLonAccuracy) {
+		this.reportLatLonAccuracy = reportLatLonAccuracy;
+		return this;
+	}
+
+	/**
+	 * Get reportLatLonAccuracy
+	 * 
+	 * @return reportLatLonAccuracy
+	 **/
+	@Schema(description = "")
+	public Float getReportLatLonAccuracy() {
+		return reportLatLonAccuracy;
+	}
+
+	public void setReportLatLonAccuracy(Float reportLatLonAccuracy) {
+		this.reportLatLonAccuracy = reportLatLonAccuracy;
+	}
+
+	public EventDto transregionalOutbreak(YesNoUnknown transregionalOutbreak) {
+		this.transregionalOutbreak = transregionalOutbreak;
+		return this;
+	}
+
+	/**
+	 * Get transregionalOutbreak
+	 * 
+	 * @return transregionalOutbreak
+	 **/
+	@Schema(description = "")
+	public YesNoUnknown getTransregionalOutbreak() {
+		return transregionalOutbreak;
+	}
+
+	public void setTransregionalOutbreak(YesNoUnknown transregionalOutbreak) {
+		this.transregionalOutbreak = transregionalOutbreak;
+	}
+
+	public EventDto diseaseTransmissionMode(DiseaseTransmissionMode diseaseTransmissionMode) {
+		this.diseaseTransmissionMode = diseaseTransmissionMode;
+		return this;
+	}
+
+	/**
+	 * Get diseaseTransmissionMode
+	 * 
+	 * @return diseaseTransmissionMode
+	 **/
+	@Schema(description = "")
+	public DiseaseTransmissionMode getDiseaseTransmissionMode() {
+		return diseaseTransmissionMode;
+	}
+
+	public void setDiseaseTransmissionMode(DiseaseTransmissionMode diseaseTransmissionMode) {
+		this.diseaseTransmissionMode = diseaseTransmissionMode;
+	}
+
+	public EventDto multiDayEvent(Boolean multiDayEvent) {
+		this.multiDayEvent = multiDayEvent;
+		return this;
+	}
+
+	/**
+	 * Get multiDayEvent
+	 * 
+	 * @return multiDayEvent
+	 **/
+	@Schema(description = "")
+	public Boolean isMultiDayEvent() {
+		return multiDayEvent;
+	}
+
+	public void setMultiDayEvent(Boolean multiDayEvent) {
+		this.multiDayEvent = multiDayEvent;
+	}
+
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		EventDto eventDto = (EventDto) o;
+		return Objects.equals(this.creationDate, eventDto.creationDate)
+				&& Objects.equals(this.changeDate, eventDto.changeDate) && Objects.equals(this.uuid, eventDto.uuid)
+				&& Objects.equals(this.pseudonymized, eventDto.pseudonymized)
+				&& Objects.equals(this.superordinateEvent, eventDto.superordinateEvent)
+				&& Objects.equals(this.eventStatus, eventDto.eventStatus) && Objects.equals(this.riskLevel, eventDto.riskLevel)
+				&& Objects.equals(this.eventInvestigationStatus, eventDto.eventInvestigationStatus)
+				&& Objects.equals(this.eventInvestigationStartDate, eventDto.eventInvestigationStartDate)
+				&& Objects.equals(this.eventInvestigationEndDate, eventDto.eventInvestigationEndDate)
+				&& Objects.equals(this.externalId, eventDto.externalId)
+				&& Objects.equals(this.externalToken, eventDto.externalToken)
+				&& Objects.equals(this.eventTitle, eventDto.eventTitle) && Objects.equals(this.eventDesc, eventDto.eventDesc)
+				&& Objects.equals(this.nosocomial, eventDto.nosocomial) && Objects.equals(this.startDate, eventDto.startDate)
+				&& Objects.equals(this.endDate, eventDto.endDate)
+				&& Objects.equals(this.reportDateTime, eventDto.reportDateTime)
+				&& Objects.equals(this.reportingUser, eventDto.reportingUser)
+				&& Objects.equals(this.evolutionDate, eventDto.evolutionDate)
+				&& Objects.equals(this.evolutionComment, eventDto.evolutionComment)
+				&& Objects.equals(this.eventLocation, eventDto.eventLocation)
+				&& Objects.equals(this.typeOfPlace, eventDto.typeOfPlace)
+				&& Objects.equals(this.meansOfTransport, eventDto.meansOfTransport)
+				&& Objects.equals(this.meansOfTransportDetails, eventDto.meansOfTransportDetails)
+				&& Objects.equals(this.connectionNumber, eventDto.connectionNumber)
+				&& Objects.equals(this.travelDate, eventDto.travelDate) && Objects.equals(this.srcType, eventDto.srcType)
+				&& Objects.equals(this.srcInstitutionalPartnerType, eventDto.srcInstitutionalPartnerType)
+				&& Objects.equals(this.srcInstitutionalPartnerTypeDetails, eventDto.srcInstitutionalPartnerTypeDetails)
+				&& Objects.equals(this.srcFirstName, eventDto.srcFirstName)
+				&& Objects.equals(this.srcLastName, eventDto.srcLastName) && Objects.equals(this.srcTelNo, eventDto.srcTelNo)
+				&& Objects.equals(this.srcEmail, eventDto.srcEmail)
+				&& Objects.equals(this.srcMediaWebsite, eventDto.srcMediaWebsite)
+				&& Objects.equals(this.srcMediaName, eventDto.srcMediaName)
+				&& Objects.equals(this.srcMediaDetails, eventDto.srcMediaDetails)
+				&& Objects.equals(this.disease, eventDto.disease)
+				&& Objects.equals(this.diseaseDetails, eventDto.diseaseDetails)
+				&& Objects.equals(this.surveillanceOfficer, eventDto.surveillanceOfficer)
+				&& Objects.equals(this.typeOfPlaceText, eventDto.typeOfPlaceText)
+				&& Objects.equals(this.reportLat, eventDto.reportLat) && Objects.equals(this.reportLon, eventDto.reportLon)
+				&& Objects.equals(this.reportLatLonAccuracy, eventDto.reportLatLonAccuracy)
+				&& Objects.equals(this.transregionalOutbreak, eventDto.transregionalOutbreak)
+				&& Objects.equals(this.diseaseTransmissionMode, eventDto.diseaseTransmissionMode)
+				&& Objects.equals(this.multiDayEvent, eventDto.multiDayEvent);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(creationDate, changeDate, uuid, pseudonymized, superordinateEvent, eventStatus, riskLevel,
+				eventInvestigationStatus, eventInvestigationStartDate, eventInvestigationEndDate, externalId, externalToken,
+				eventTitle, eventDesc, nosocomial, startDate, endDate, reportDateTime, reportingUser, evolutionDate,
+				evolutionComment, eventLocation, typeOfPlace, meansOfTransport, meansOfTransportDetails, connectionNumber,
+				travelDate, srcType, srcInstitutionalPartnerType, srcInstitutionalPartnerTypeDetails, srcFirstName, srcLastName,
+				srcTelNo, srcEmail, srcMediaWebsite, srcMediaName, srcMediaDetails, disease, diseaseDetails,
+				surveillanceOfficer, typeOfPlaceText, reportLat, reportLon, reportLatLonAccuracy, transregionalOutbreak,
+				diseaseTransmissionMode, multiDayEvent);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class EventDto {\n");
+
+		sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
+		sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
+		sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
+		sb.append("    pseudonymized: ").append(toIndentedString(pseudonymized)).append("\n");
+		sb.append("    superordinateEvent: ").append(toIndentedString(superordinateEvent)).append("\n");
+		sb.append("    eventStatus: ").append(toIndentedString(eventStatus)).append("\n");
+		sb.append("    riskLevel: ").append(toIndentedString(riskLevel)).append("\n");
+		sb.append("    eventInvestigationStatus: ").append(toIndentedString(eventInvestigationStatus)).append("\n");
+		sb.append("    eventInvestigationStartDate: ").append(toIndentedString(eventInvestigationStartDate)).append("\n");
+		sb.append("    eventInvestigationEndDate: ").append(toIndentedString(eventInvestigationEndDate)).append("\n");
+		sb.append("    externalId: ").append(toIndentedString(externalId)).append("\n");
+		sb.append("    externalToken: ").append(toIndentedString(externalToken)).append("\n");
+		sb.append("    eventTitle: ").append(toIndentedString(eventTitle)).append("\n");
+		sb.append("    eventDesc: ").append(toIndentedString(eventDesc)).append("\n");
+		sb.append("    nosocomial: ").append(toIndentedString(nosocomial)).append("\n");
+		sb.append("    startDate: ").append(toIndentedString(startDate)).append("\n");
+		sb.append("    endDate: ").append(toIndentedString(endDate)).append("\n");
+		sb.append("    reportDateTime: ").append(toIndentedString(reportDateTime)).append("\n");
+		sb.append("    reportingUser: ").append(toIndentedString(reportingUser)).append("\n");
+		sb.append("    evolutionDate: ").append(toIndentedString(evolutionDate)).append("\n");
+		sb.append("    evolutionComment: ").append(toIndentedString(evolutionComment)).append("\n");
+		sb.append("    eventLocation: ").append(toIndentedString(eventLocation)).append("\n");
+		sb.append("    typeOfPlace: ").append(toIndentedString(typeOfPlace)).append("\n");
+		sb.append("    meansOfTransport: ").append(toIndentedString(meansOfTransport)).append("\n");
+		sb.append("    meansOfTransportDetails: ").append(toIndentedString(meansOfTransportDetails)).append("\n");
+		sb.append("    connectionNumber: ").append(toIndentedString(connectionNumber)).append("\n");
+		sb.append("    travelDate: ").append(toIndentedString(travelDate)).append("\n");
+		sb.append("    srcType: ").append(toIndentedString(srcType)).append("\n");
+		sb.append("    srcInstitutionalPartnerType: ").append(toIndentedString(srcInstitutionalPartnerType)).append("\n");
+		sb.append("    srcInstitutionalPartnerTypeDetails: ").append(toIndentedString(srcInstitutionalPartnerTypeDetails))
+				.append("\n");
+		sb.append("    srcFirstName: ").append(toIndentedString(srcFirstName)).append("\n");
+		sb.append("    srcLastName: ").append(toIndentedString(srcLastName)).append("\n");
+		sb.append("    srcTelNo: ").append(toIndentedString(srcTelNo)).append("\n");
+		sb.append("    srcEmail: ").append(toIndentedString(srcEmail)).append("\n");
+		sb.append("    srcMediaWebsite: ").append(toIndentedString(srcMediaWebsite)).append("\n");
+		sb.append("    srcMediaName: ").append(toIndentedString(srcMediaName)).append("\n");
+		sb.append("    srcMediaDetails: ").append(toIndentedString(srcMediaDetails)).append("\n");
+		sb.append("    disease: ").append(toIndentedString(disease)).append("\n");
+		sb.append("    diseaseDetails: ").append(toIndentedString(diseaseDetails)).append("\n");
+		sb.append("    surveillanceOfficer: ").append(toIndentedString(surveillanceOfficer)).append("\n");
+		sb.append("    typeOfPlaceText: ").append(toIndentedString(typeOfPlaceText)).append("\n");
+		sb.append("    reportLat: ").append(toIndentedString(reportLat)).append("\n");
+		sb.append("    reportLon: ").append(toIndentedString(reportLon)).append("\n");
+		sb.append("    reportLatLonAccuracy: ").append(toIndentedString(reportLatLonAccuracy)).append("\n");
+		sb.append("    transregionalOutbreak: ").append(toIndentedString(transregionalOutbreak)).append("\n");
+		sb.append("    diseaseTransmissionMode: ").append(toIndentedString(diseaseTransmissionMode)).append("\n");
+		sb.append("    multiDayEvent: ").append(toIndentedString(multiDayEvent)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

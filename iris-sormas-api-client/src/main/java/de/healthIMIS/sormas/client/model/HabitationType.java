@@ -21,32 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets HabitationType
  */
 public enum HabitationType {
-  MEDICAL("MEDICAL"),
-  OTHER("OTHER");
+	MEDICAL("MEDICAL"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  HabitationType(String value) {
-    this.value = value;
-  }
+	HabitationType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static HabitationType fromValue(String text) {
-    for (HabitationType b : HabitationType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static HabitationType fromValue(String text) {
+		for (HabitationType b : HabitationType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

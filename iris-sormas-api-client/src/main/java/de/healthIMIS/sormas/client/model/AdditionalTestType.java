@@ -21,45 +21,34 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets AdditionalTestType
  */
 public enum AdditionalTestType {
-  HAEMOGLOBINURIA("HAEMOGLOBINURIA"),
-  PROTEINURIA("PROTEINURIA"),
-  HEMATURIA("HEMATURIA"),
-  ARTERIAL_VENOUS_BLOOD_GAS("ARTERIAL_VENOUS_BLOOD_GAS"),
-  ALT_SGPT("ALT_SGPT"),
-  AST_SGOT("AST_SGOT"),
-  CREATININE("CREATININE"),
-  POTASSIUM("POTASSIUM"),
-  UREA("UREA"),
-  HAEMOGLOBIN("HAEMOGLOBIN"),
-  TOTAL_BILIRUBIN("TOTAL_BILIRUBIN"),
-  CONJ_BILIRUBIN("CONJ_BILIRUBIN"),
-  WBC_COUNT("WBC_COUNT"),
-  PLATELETS("PLATELETS"),
-  PROTHROMBIN_TIME("PROTHROMBIN_TIME");
+	HAEMOGLOBINURIA("HAEMOGLOBINURIA"), PROTEINURIA("PROTEINURIA"), HEMATURIA("HEMATURIA"), ARTERIAL_VENOUS_BLOOD_GAS(
+			"ARTERIAL_VENOUS_BLOOD_GAS"), ALT_SGPT("ALT_SGPT"), AST_SGOT("AST_SGOT"), CREATININE("CREATININE"), POTASSIUM(
+					"POTASSIUM"), UREA("UREA"), HAEMOGLOBIN("HAEMOGLOBIN"), TOTAL_BILIRUBIN("TOTAL_BILIRUBIN"), CONJ_BILIRUBIN(
+							"CONJ_BILIRUBIN"), WBC_COUNT("WBC_COUNT"), PLATELETS("PLATELETS"), PROTHROMBIN_TIME("PROTHROMBIN_TIME");
 
-  private String value;
+	private String value;
 
-  AdditionalTestType(String value) {
-    this.value = value;
-  }
+	AdditionalTestType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static AdditionalTestType fromValue(String text) {
-    for (AdditionalTestType b : AdditionalTestType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static AdditionalTestType fromValue(String text) {
+		for (AdditionalTestType b : AdditionalTestType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

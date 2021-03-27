@@ -28,65 +28,48 @@ import java.util.Map;
 @Ignore
 public class VisitControllerApiTest {
 
-    private final VisitControllerApi api = new VisitControllerApi();
+	private final VisitControllerApi api = new VisitControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllActiveUuids10Test() {
-        List<String> response = api.getAllActiveUuids10();
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllActiveUuids10Test() {
+		List<String> response = api.getAllActiveUuids10();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllVisits1Test() {
-        Long since = null;
-        List<VisitDto> response = api.getAllVisits1(since);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids26Test() {
-        List<String> body = null;
-        List<VisitDto> response = api.getByUuids26(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllVisits1Test() {
+		Long since = null;
+		List<VisitDto> response = api.getAllVisits1(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postVisits1Test() {
-        List<VisitDto> body = null;
-        List<PushResult> response = api.postVisits1(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids26Test() {
+		List<String> body = null;
+		List<VisitDto> response = api.getByUuids26(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postVisits1Test() {
+		List<VisitDto> body = null;
+		List<PushResult> response = api.postVisits1(body);
+
+		// TODO: test validations
+	}
 }

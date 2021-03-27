@@ -27,50 +27,37 @@ import java.util.Map;
 @Ignore
 public class CampaignControllerApiTest {
 
-    private final CampaignControllerApi api = new CampaignControllerApi();
+	private final CampaignControllerApi api = new CampaignControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllCampaignFormData1Test() {
-        Long since = null;
-        List<CampaignDto> response = api.getAllCampaignFormData1(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllCampaignFormData1Test() {
+		Long since = null;
+		List<CampaignDto> response = api.getAllCampaignFormData1(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids4Test() {
-        List<String> response = api.getAllUuids4();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids5Test() {
-        List<String> body = null;
-        List<CampaignDto> response = api.getByUuids5(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids4Test() {
+		List<String> response = api.getAllUuids4();
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids5Test() {
+		List<String> body = null;
+		List<CampaignDto> response = api.getByUuids5(body);
+
+		// TODO: test validations
+	}
 }

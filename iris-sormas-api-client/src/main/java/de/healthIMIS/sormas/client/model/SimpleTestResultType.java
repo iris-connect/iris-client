@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets SimpleTestResultType
  */
 public enum SimpleTestResultType {
-  POSITIVE("POSITIVE"),
-  NEGATIVE("NEGATIVE"),
-  INDETERMINATE("INDETERMINATE");
+	POSITIVE("POSITIVE"), NEGATIVE("NEGATIVE"), INDETERMINATE("INDETERMINATE");
 
-  private String value;
+	private String value;
 
-  SimpleTestResultType(String value) {
-    this.value = value;
-  }
+	SimpleTestResultType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static SimpleTestResultType fromValue(String text) {
-    for (SimpleTestResultType b : SimpleTestResultType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static SimpleTestResultType fromValue(String text) {
+		for (SimpleTestResultType b : SimpleTestResultType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

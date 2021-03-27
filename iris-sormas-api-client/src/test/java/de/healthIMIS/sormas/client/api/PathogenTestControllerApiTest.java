@@ -28,95 +28,70 @@ import java.util.Map;
 @Ignore
 public class PathogenTestControllerApiTest {
 
-    private final PathogenTestControllerApi api = new PathogenTestControllerApi();
+	private final PathogenTestControllerApi api = new PathogenTestControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllActiveUuids5Test() {
-        List<String> response = api.getAllActiveUuids5();
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllActiveUuids5Test() {
+		List<String> response = api.getAllActiveUuids5();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllPathogenTestsTest() {
-        Long since = null;
-        List<PathogenTestDto> response = api.getAllPathogenTests(since);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getBySampleUuidsTest() {
-        List<String> body = null;
-        List<PathogenTestDto> response = api.getBySampleUuids(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllPathogenTestsTest() {
+		Long since = null;
+		List<PathogenTestDto> response = api.getAllPathogenTests(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids17Test() {
-        List<String> body = null;
-        List<PathogenTestDto> response = api.getByUuids17(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getDeletedUuidsSince4Test() {
-        Long since = null;
-        List<String> response = api.getDeletedUuidsSince4(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getBySampleUuidsTest() {
+		List<String> body = null;
+		List<PathogenTestDto> response = api.getBySampleUuids(body);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postPathogenTestsTest() {
-        List<PathogenTestDto> body = null;
-        List<PushResult> response = api.postPathogenTests(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids17Test() {
+		List<String> body = null;
+		List<PathogenTestDto> response = api.getByUuids17(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getDeletedUuidsSince4Test() {
+		Long since = null;
+		List<String> response = api.getDeletedUuidsSince4(since);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postPathogenTestsTest() {
+		List<PathogenTestDto> body = null;
+		List<PushResult> response = api.postPathogenTests(body);
+
+		// TODO: test validations
+	}
 }

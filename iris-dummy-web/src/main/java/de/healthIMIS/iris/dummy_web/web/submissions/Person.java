@@ -191,14 +191,10 @@ public class Person {
 			return false;
 		}
 		Person person = (Person) o;
-		return Objects.equals(this.firstName, person.firstName)
-			&& Objects.equals(this.lastName, person.lastName)
-			&& Objects.equals(this.dateOfBirth, person.dateOfBirth)
-			&& Objects.equals(this.sex, person.sex)
-			&& Objects.equals(this.email, person.email)
-			&& Objects.equals(this.phone, person.phone)
-			&& Objects.equals(this.mobilPhone, person.mobilPhone)
-			&& Objects.equals(this.address, person.address);
+		return Objects.equals(this.firstName, person.firstName) && Objects.equals(this.lastName, person.lastName)
+				&& Objects.equals(this.dateOfBirth, person.dateOfBirth) && Objects.equals(this.sex, person.sex)
+				&& Objects.equals(this.email, person.email) && Objects.equals(this.phone, person.phone)
+				&& Objects.equals(this.mobilPhone, person.mobilPhone) && Objects.equals(this.address, person.address);
 	}
 
 	@Override
@@ -224,8 +220,7 @@ public class Person {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

@@ -14,6 +14,10 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.core;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.temporal.TemporalAccessor;
@@ -22,14 +26,9 @@ import java.util.Optional;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  * @author Jens Kutzsche
@@ -63,7 +62,7 @@ public class IrisDateTimeProvider implements DateTimeProvider {
 	@ConstructorBinding
 	@ConfigurationProperties("date-time")
 	@RequiredArgsConstructor
-//	@Profile("!prod")
+	// @Profile("!prod")
 	public static class DateTimeProperties {
 
 		private final Period delta;

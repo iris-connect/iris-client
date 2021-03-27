@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets Sex
  */
 public enum Sex {
-  MALE("MALE"),
-  FEMALE("FEMALE"),
-  OTHER("OTHER"),
-  UNKNOWN("UNKNOWN");
+	MALE("MALE"), FEMALE("FEMALE"), OTHER("OTHER"), UNKNOWN("UNKNOWN");
 
-  private String value;
+	private String value;
 
-  Sex(String value) {
-    this.value = value;
-  }
+	Sex(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static Sex fromValue(String text) {
-    for (Sex b : Sex.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static Sex fromValue(String text) {
+		for (Sex b : Sex.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

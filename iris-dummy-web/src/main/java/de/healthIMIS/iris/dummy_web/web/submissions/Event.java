@@ -105,10 +105,9 @@ public class Event {
 			return false;
 		}
 		Event event = (Event) o;
-		return Objects.equals(this.name, event.name)
-			&& Objects.equals(this.phone, event.phone)
-			&& Objects.equals(this.address, event.address)
-			&& Objects.equals(this.additionalInformation, event.additionalInformation);
+		return Objects.equals(this.name, event.name) && Objects.equals(this.phone, event.phone)
+				&& Objects.equals(this.address, event.address)
+				&& Objects.equals(this.additionalInformation, event.additionalInformation);
 	}
 
 	@Override
@@ -130,8 +129,7 @@ public class Event {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

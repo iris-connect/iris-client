@@ -14,6 +14,10 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.core;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -21,13 +25,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.core.io.Resource;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-
 /**
  * @author Jens Kutzsche
- *
  */
 @ConstructorBinding
 @RequiredArgsConstructor

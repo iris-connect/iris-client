@@ -21,39 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets HospitalWardType
  */
 public enum HospitalWardType {
-  PEDIATRIC_INPATIENT("PEDIATRIC_INPATIENT"),
-  NURSERY("NURSERY"),
-  EPU("EPU"),
-  CHER("CHER"),
-  OPD("OPD"),
-  EYE("EYE"),
-  ENT("ENT"),
-  CARDIOLOGY("CARDIOLOGY"),
-  OTHER("OTHER");
+	PEDIATRIC_INPATIENT("PEDIATRIC_INPATIENT"), NURSERY("NURSERY"), EPU("EPU"), CHER("CHER"), OPD("OPD"), EYE("EYE"), ENT(
+			"ENT"), CARDIOLOGY("CARDIOLOGY"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  HospitalWardType(String value) {
-    this.value = value;
-  }
+	HospitalWardType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static HospitalWardType fromValue(String text) {
-    for (HospitalWardType b : HospitalWardType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static HospitalWardType fromValue(String text) {
+		for (HospitalWardType b : HospitalWardType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

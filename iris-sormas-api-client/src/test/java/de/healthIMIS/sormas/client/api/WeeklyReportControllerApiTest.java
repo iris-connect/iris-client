@@ -28,65 +28,48 @@ import java.util.Map;
 @Ignore
 public class WeeklyReportControllerApiTest {
 
-    private final WeeklyReportControllerApi api = new WeeklyReportControllerApi();
+	private final WeeklyReportControllerApi api = new WeeklyReportControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids17Test() {
-        List<String> response = api.getAllUuids17();
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids17Test() {
+		List<String> response = api.getAllUuids17();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllWeeklyReportsTest() {
-        Long since = null;
-        List<WeeklyReportDto> response = api.getAllWeeklyReports(since);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids27Test() {
-        List<String> body = null;
-        List<WeeklyReportDto> response = api.getByUuids27(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllWeeklyReportsTest() {
+		Long since = null;
+		List<WeeklyReportDto> response = api.getAllWeeklyReports(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postWeeklyReportsTest() {
-        List<WeeklyReportDto> body = null;
-        List<PushResult> response = api.postWeeklyReports(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids27Test() {
+		List<String> body = null;
+		List<WeeklyReportDto> response = api.getByUuids27(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postWeeklyReportsTest() {
+		List<WeeklyReportDto> body = null;
+		List<PushResult> response = api.postWeeklyReports(body);
+
+		// TODO: test validations
+	}
 }

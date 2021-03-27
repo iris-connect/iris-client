@@ -21,50 +21,36 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets SampleMaterial
  */
 public enum SampleMaterial {
-  BLOOD("BLOOD"),
-  SERA("SERA"),
-  STOOL("STOOL"),
-  NASAL_SWAB("NASAL_SWAB"),
-  THROAT_SWAB("THROAT_SWAB"),
-  NP_SWAB("NP_SWAB"),
-  RECTAL_SWAB("RECTAL_SWAB"),
-  CEREBROSPINAL_FLUID("CEREBROSPINAL_FLUID"),
-  CRUST("CRUST"),
-  TISSUE("TISSUE"),
-  URINE("URINE"),
-  CORNEA_PM("CORNEA_PM"),
-  SALIVA("SALIVA"),
-  URINE_PM("URINE_PM"),
-  NUCHAL_SKIN_BIOPSY("NUCHAL_SKIN_BIOPSY"),
-  SPUTUM("SPUTUM"),
-  ENDOTRACHEAL_ASPIRATE("ENDOTRACHEAL_ASPIRATE"),
-  BRONCHOALVEOLAR_LAVAGE("BRONCHOALVEOLAR_LAVAGE"),
-  BRAIN_TISSUE("BRAIN_TISSUE"),
-  OTHER("OTHER");
+	BLOOD("BLOOD"), SERA("SERA"), STOOL("STOOL"), NASAL_SWAB("NASAL_SWAB"), THROAT_SWAB("THROAT_SWAB"), NP_SWAB(
+			"NP_SWAB"), RECTAL_SWAB("RECTAL_SWAB"), CEREBROSPINAL_FLUID("CEREBROSPINAL_FLUID"), CRUST("CRUST"), TISSUE(
+					"TISSUE"), URINE("URINE"), CORNEA_PM("CORNEA_PM"), SALIVA(
+							"SALIVA"), URINE_PM("URINE_PM"), NUCHAL_SKIN_BIOPSY("NUCHAL_SKIN_BIOPSY"), SPUTUM(
+									"SPUTUM"), ENDOTRACHEAL_ASPIRATE("ENDOTRACHEAL_ASPIRATE"), BRONCHOALVEOLAR_LAVAGE(
+											"BRONCHOALVEOLAR_LAVAGE"), BRAIN_TISSUE("BRAIN_TISSUE"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  SampleMaterial(String value) {
-    this.value = value;
-  }
+	SampleMaterial(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static SampleMaterial fromValue(String text) {
-    for (SampleMaterial b : SampleMaterial.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static SampleMaterial fromValue(String text) {
+		for (SampleMaterial b : SampleMaterial.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

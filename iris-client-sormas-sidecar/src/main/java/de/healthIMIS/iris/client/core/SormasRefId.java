@@ -14,15 +14,15 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.core;
 
-import java.io.Serializable;
-import java.nio.ByteBuffer;
-
-import javax.persistence.Embeddable;
-
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+
+import java.io.Serializable;
+import java.nio.ByteBuffer;
+
+import javax.persistence.Embeddable;
 
 @Embeddable
 @EqualsAndHashCode

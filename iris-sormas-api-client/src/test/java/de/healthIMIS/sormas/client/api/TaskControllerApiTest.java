@@ -28,65 +28,48 @@ import java.util.Map;
 @Ignore
 public class TaskControllerApiTest {
 
-    private final TaskControllerApi api = new TaskControllerApi();
+	private final TaskControllerApi api = new TaskControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAll7Test() {
-        Long since = null;
-        List<TaskDto> response = api.getAll7(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAll7Test() {
+		Long since = null;
+		List<TaskDto> response = api.getAll7(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllActiveUuids8Test() {
-        List<String> response = api.getAllActiveUuids8();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids23Test() {
-        List<String> body = null;
-        List<TaskDto> response = api.getByUuids23(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllActiveUuids8Test() {
+		List<String> response = api.getAllActiveUuids8();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postTasksTest() {
-        List<TaskDto> body = null;
-        List<PushResult> response = api.postTasks(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids23Test() {
+		List<String> body = null;
+		List<TaskDto> response = api.getByUuids23(body);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postTasksTest() {
+		List<TaskDto> body = null;
+		List<PushResult> response = api.postTasks(body);
+
+		// TODO: test validations
+	}
 }

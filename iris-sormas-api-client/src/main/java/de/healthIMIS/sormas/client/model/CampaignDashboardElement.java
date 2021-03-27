@@ -18,186 +18,191 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * CampaignDashboardElement
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class CampaignDashboardElement {
-  @JsonProperty("diagramId")
-  private String diagramId = null;
+	@JsonProperty("diagramId")
+	private String diagramId = null;
 
-  @JsonProperty("tabId")
-  private String tabId = null;
+	@JsonProperty("tabId")
+	private String tabId = null;
 
-  @JsonProperty("subTabId")
-  private String subTabId = null;
+	@JsonProperty("subTabId")
+	private String subTabId = null;
 
-  @JsonProperty("order")
-  private Integer order = null;
+	@JsonProperty("order")
+	private Integer order = null;
 
-  @JsonProperty("width")
-  private Integer width = null;
+	@JsonProperty("width")
+	private Integer width = null;
 
-  @JsonProperty("height")
-  private Integer height = null;
+	@JsonProperty("height")
+	private Integer height = null;
 
-  public CampaignDashboardElement diagramId(String diagramId) {
-    this.diagramId = diagramId;
-    return this;
-  }
+	public CampaignDashboardElement diagramId(String diagramId) {
+		this.diagramId = diagramId;
+		return this;
+	}
 
-   /**
-   * Get diagramId
-   * @return diagramId
-  **/
-  @Schema(description = "")
-  public String getDiagramId() {
-    return diagramId;
-  }
+	/**
+	 * Get diagramId
+	 * 
+	 * @return diagramId
+	 **/
+	@Schema(description = "")
+	public String getDiagramId() {
+		return diagramId;
+	}
 
-  public void setDiagramId(String diagramId) {
-    this.diagramId = diagramId;
-  }
+	public void setDiagramId(String diagramId) {
+		this.diagramId = diagramId;
+	}
 
-  public CampaignDashboardElement tabId(String tabId) {
-    this.tabId = tabId;
-    return this;
-  }
+	public CampaignDashboardElement tabId(String tabId) {
+		this.tabId = tabId;
+		return this;
+	}
 
-   /**
-   * Get tabId
-   * @return tabId
-  **/
-  @Schema(description = "")
-  public String getTabId() {
-    return tabId;
-  }
+	/**
+	 * Get tabId
+	 * 
+	 * @return tabId
+	 **/
+	@Schema(description = "")
+	public String getTabId() {
+		return tabId;
+	}
 
-  public void setTabId(String tabId) {
-    this.tabId = tabId;
-  }
+	public void setTabId(String tabId) {
+		this.tabId = tabId;
+	}
 
-  public CampaignDashboardElement subTabId(String subTabId) {
-    this.subTabId = subTabId;
-    return this;
-  }
+	public CampaignDashboardElement subTabId(String subTabId) {
+		this.subTabId = subTabId;
+		return this;
+	}
 
-   /**
-   * Get subTabId
-   * @return subTabId
-  **/
-  @Schema(description = "")
-  public String getSubTabId() {
-    return subTabId;
-  }
+	/**
+	 * Get subTabId
+	 * 
+	 * @return subTabId
+	 **/
+	@Schema(description = "")
+	public String getSubTabId() {
+		return subTabId;
+	}
 
-  public void setSubTabId(String subTabId) {
-    this.subTabId = subTabId;
-  }
+	public void setSubTabId(String subTabId) {
+		this.subTabId = subTabId;
+	}
 
-  public CampaignDashboardElement order(Integer order) {
-    this.order = order;
-    return this;
-  }
+	public CampaignDashboardElement order(Integer order) {
+		this.order = order;
+		return this;
+	}
 
-   /**
-   * Get order
-   * @return order
-  **/
-  @Schema(description = "")
-  public Integer getOrder() {
-    return order;
-  }
+	/**
+	 * Get order
+	 * 
+	 * @return order
+	 **/
+	@Schema(description = "")
+	public Integer getOrder() {
+		return order;
+	}
 
-  public void setOrder(Integer order) {
-    this.order = order;
-  }
+	public void setOrder(Integer order) {
+		this.order = order;
+	}
 
-  public CampaignDashboardElement width(Integer width) {
-    this.width = width;
-    return this;
-  }
+	public CampaignDashboardElement width(Integer width) {
+		this.width = width;
+		return this;
+	}
 
-   /**
-   * Get width
-   * @return width
-  **/
-  @Schema(description = "")
-  public Integer getWidth() {
-    return width;
-  }
+	/**
+	 * Get width
+	 * 
+	 * @return width
+	 **/
+	@Schema(description = "")
+	public Integer getWidth() {
+		return width;
+	}
 
-  public void setWidth(Integer width) {
-    this.width = width;
-  }
+	public void setWidth(Integer width) {
+		this.width = width;
+	}
 
-  public CampaignDashboardElement height(Integer height) {
-    this.height = height;
-    return this;
-  }
+	public CampaignDashboardElement height(Integer height) {
+		this.height = height;
+		return this;
+	}
 
-   /**
-   * Get height
-   * @return height
-  **/
-  @Schema(description = "")
-  public Integer getHeight() {
-    return height;
-  }
+	/**
+	 * Get height
+	 * 
+	 * @return height
+	 **/
+	@Schema(description = "")
+	public Integer getHeight() {
+		return height;
+	}
 
-  public void setHeight(Integer height) {
-    this.height = height;
-  }
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		CampaignDashboardElement campaignDashboardElement = (CampaignDashboardElement) o;
+		return Objects.equals(this.diagramId, campaignDashboardElement.diagramId)
+				&& Objects.equals(this.tabId, campaignDashboardElement.tabId)
+				&& Objects.equals(this.subTabId, campaignDashboardElement.subTabId)
+				&& Objects.equals(this.order, campaignDashboardElement.order)
+				&& Objects.equals(this.width, campaignDashboardElement.width)
+				&& Objects.equals(this.height, campaignDashboardElement.height);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    CampaignDashboardElement campaignDashboardElement = (CampaignDashboardElement) o;
-    return Objects.equals(this.diagramId, campaignDashboardElement.diagramId) &&
-        Objects.equals(this.tabId, campaignDashboardElement.tabId) &&
-        Objects.equals(this.subTabId, campaignDashboardElement.subTabId) &&
-        Objects.equals(this.order, campaignDashboardElement.order) &&
-        Objects.equals(this.width, campaignDashboardElement.width) &&
-        Objects.equals(this.height, campaignDashboardElement.height);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(diagramId, tabId, subTabId, order, width, height);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(diagramId, tabId, subTabId, order, width, height);
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class CampaignDashboardElement {\n");
 
+		sb.append("    diagramId: ").append(toIndentedString(diagramId)).append("\n");
+		sb.append("    tabId: ").append(toIndentedString(tabId)).append("\n");
+		sb.append("    subTabId: ").append(toIndentedString(subTabId)).append("\n");
+		sb.append("    order: ").append(toIndentedString(order)).append("\n");
+		sb.append("    width: ").append(toIndentedString(width)).append("\n");
+		sb.append("    height: ").append(toIndentedString(height)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class CampaignDashboardElement {\n");
-    
-    sb.append("    diagramId: ").append(toIndentedString(diagramId)).append("\n");
-    sb.append("    tabId: ").append(toIndentedString(tabId)).append("\n");
-    sb.append("    subTabId: ").append(toIndentedString(subTabId)).append("\n");
-    sb.append("    order: ").append(toIndentedString(order)).append("\n");
-    sb.append("    width: ").append(toIndentedString(width)).append("\n");
-    sb.append("    height: ").append(toIndentedString(height)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

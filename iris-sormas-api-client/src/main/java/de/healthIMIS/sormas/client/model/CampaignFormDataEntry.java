@@ -18,94 +18,94 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * CampaignFormDataEntry
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class CampaignFormDataEntry {
-  @JsonProperty("id")
-  private String id = null;
+	@JsonProperty("id")
+	private String id = null;
 
-  @JsonProperty("value")
-  private Object value = null;
+	@JsonProperty("value")
+	private Object value = null;
 
-  public CampaignFormDataEntry id(String id) {
-    this.id = id;
-    return this;
-  }
+	public CampaignFormDataEntry id(String id) {
+		this.id = id;
+		return this;
+	}
 
-   /**
-   * Get id
-   * @return id
-  **/
-  @Schema(description = "")
-  public String getId() {
-    return id;
-  }
+	/**
+	 * Get id
+	 * 
+	 * @return id
+	 **/
+	@Schema(description = "")
+	public String getId() {
+		return id;
+	}
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-  public CampaignFormDataEntry value(Object value) {
-    this.value = value;
-    return this;
-  }
+	public CampaignFormDataEntry value(Object value) {
+		this.value = value;
+		return this;
+	}
 
-   /**
-   * Get value
-   * @return value
-  **/
-  @Schema(description = "")
-  public Object getValue() {
-    return value;
-  }
+	/**
+	 * Get value
+	 * 
+	 * @return value
+	 **/
+	@Schema(description = "")
+	public Object getValue() {
+		return value;
+	}
 
-  public void setValue(Object value) {
-    this.value = value;
-  }
+	public void setValue(Object value) {
+		this.value = value;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		CampaignFormDataEntry campaignFormDataEntry = (CampaignFormDataEntry) o;
+		return Objects.equals(this.id, campaignFormDataEntry.id) && Objects.equals(this.value, campaignFormDataEntry.value);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    CampaignFormDataEntry campaignFormDataEntry = (CampaignFormDataEntry) o;
-    return Objects.equals(this.id, campaignFormDataEntry.id) &&
-        Objects.equals(this.value, campaignFormDataEntry.value);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, value);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, value);
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class CampaignFormDataEntry {\n");
 
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    value: ").append(toIndentedString(value)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class CampaignFormDataEntry {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    value: ").append(toIndentedString(value)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

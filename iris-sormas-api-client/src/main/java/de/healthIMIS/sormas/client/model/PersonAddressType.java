@@ -21,37 +21,33 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets PersonAddressType
  */
 public enum PersonAddressType {
-  HOME("HOME"),
-  PLACE_OF_RESIDENCE("PLACE_OF_RESIDENCE"),
-  PLACE_OF_EXPOSURE("PLACE_OF_EXPOSURE"),
-  PLACE_OF_WORK("PLACE_OF_WORK"),
-  PLACE_OF_ISOLATION("PLACE_OF_ISOLATION"),
-  EVENT_LOCATION("EVENT_LOCATION"),
-  OTHER_ADDRESS("OTHER_ADDRESS");
+	HOME("HOME"), PLACE_OF_RESIDENCE("PLACE_OF_RESIDENCE"), PLACE_OF_EXPOSURE("PLACE_OF_EXPOSURE"), PLACE_OF_WORK(
+			"PLACE_OF_WORK"), PLACE_OF_ISOLATION(
+					"PLACE_OF_ISOLATION"), EVENT_LOCATION("EVENT_LOCATION"), OTHER_ADDRESS("OTHER_ADDRESS");
 
-  private String value;
+	private String value;
 
-  PersonAddressType(String value) {
-    this.value = value;
-  }
+	PersonAddressType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static PersonAddressType fromValue(String text) {
-    for (PersonAddressType b : PersonAddressType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static PersonAddressType fromValue(String text) {
+		for (PersonAddressType b : PersonAddressType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

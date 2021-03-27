@@ -27,50 +27,37 @@ import java.util.Map;
 @Ignore
 public class RegionControllerApiTest {
 
-    private final RegionControllerApi api = new RegionControllerApi();
+	private final RegionControllerApi api = new RegionControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAll6Test() {
-        Long since = null;
-        List<RegionDto> response = api.getAll6(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAll6Test() {
+		Long since = null;
+		List<RegionDto> response = api.getAll6(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids14Test() {
-        List<String> response = api.getAllUuids14();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids21Test() {
-        List<String> body = null;
-        List<RegionDto> response = api.getByUuids21(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids14Test() {
+		List<String> response = api.getAllUuids14();
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids21Test() {
+		List<String> body = null;
+		List<RegionDto> response = api.getByUuids21(body);
+
+		// TODO: test validations
+	}
 }

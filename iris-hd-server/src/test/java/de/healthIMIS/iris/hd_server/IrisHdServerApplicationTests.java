@@ -5,13 +5,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@ActiveProfiles({
-	"dev",
-	"inttest" })
+@ActiveProfiles({ "dev", "inttest" })
 class IrisHdServerApplicationTests {
 
 	@Test
-	void contextLoads() {
-	}
+	void contextLoads() {}
 
 }

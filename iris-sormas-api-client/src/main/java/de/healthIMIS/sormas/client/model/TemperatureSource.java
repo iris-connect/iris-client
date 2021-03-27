@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets TemperatureSource
  */
 public enum TemperatureSource {
-  AXILLARY("AXILLARY"),
-  ORAL("ORAL"),
-  RECTAL("RECTAL"),
-  NON_CONTACT("NON_CONTACT");
+	AXILLARY("AXILLARY"), ORAL("ORAL"), RECTAL("RECTAL"), NON_CONTACT("NON_CONTACT");
 
-  private String value;
+	private String value;
 
-  TemperatureSource(String value) {
-    this.value = value;
-  }
+	TemperatureSource(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static TemperatureSource fromValue(String text) {
-    for (TemperatureSource b : TemperatureSource.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static TemperatureSource fromValue(String text) {
+		for (TemperatureSource b : TemperatureSource.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

@@ -84,8 +84,8 @@ public class ContactPersonListDataProvider {
 		}
 		ContactPersonListDataProvider contactPersonListDataProvider = (ContactPersonListDataProvider) o;
 		return Objects.equals(this.firstName, contactPersonListDataProvider.firstName)
-			&& Objects.equals(this.lastName, contactPersonListDataProvider.lastName)
-			&& Objects.equals(this.dateOfBirth, contactPersonListDataProvider.dateOfBirth);
+				&& Objects.equals(this.lastName, contactPersonListDataProvider.lastName)
+				&& Objects.equals(this.dateOfBirth, contactPersonListDataProvider.dateOfBirth);
 	}
 
 	@Override
@@ -106,8 +106,7 @@ public class ContactPersonListDataProvider {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets CompatibilityCheckResponse
  */
 public enum CompatibilityCheckResponse {
-  COMPATIBLE("COMPATIBLE"),
-  TOO_OLD("TOO_OLD"),
-  TOO_NEW("TOO_NEW");
+	COMPATIBLE("COMPATIBLE"), TOO_OLD("TOO_OLD"), TOO_NEW("TOO_NEW");
 
-  private String value;
+	private String value;
 
-  CompatibilityCheckResponse(String value) {
-    this.value = value;
-  }
+	CompatibilityCheckResponse(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static CompatibilityCheckResponse fromValue(String text) {
-    for (CompatibilityCheckResponse b : CompatibilityCheckResponse.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static CompatibilityCheckResponse fromValue(String text) {
+		for (CompatibilityCheckResponse b : CompatibilityCheckResponse.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

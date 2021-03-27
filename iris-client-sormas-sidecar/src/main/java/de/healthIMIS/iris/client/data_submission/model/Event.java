@@ -1,19 +1,20 @@
 package de.healthIMIS.iris.client.data_submission.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.Objects;
 
 import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /**
  * An event, location or occasion visited by the queried person during the queried time.
  */
 @Schema(description = "An event, location or occasion visited by the queried person during the queried time.")
 @Valid
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-02-18T08:11:24.698Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen",
+		date = "2021-02-18T08:11:24.698Z[GMT]")
 
 public class Event {
 
@@ -119,10 +120,9 @@ public class Event {
 			return false;
 		}
 		Event event = (Event) o;
-		return Objects.equals(this.name, event.name)
-			&& Objects.equals(this.phone, event.phone)
-			&& Objects.equals(this.address, event.address)
-			&& Objects.equals(this.additionalInformation, event.additionalInformation);
+		return Objects.equals(this.name, event.name) && Objects.equals(this.phone, event.phone)
+				&& Objects.equals(this.address, event.address)
+				&& Objects.equals(this.additionalInformation, event.additionalInformation);
 	}
 
 	@Override
@@ -144,8 +144,7 @@ public class Event {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

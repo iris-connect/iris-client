@@ -14,8 +14,8 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
-import org.springframework.data.repository.CrudRepository;
-
 import de.healthIMIS.iris.client.sormas_integration.SyncTimes.DataTypes;
+
+import org.springframework.data.repository.CrudRepository;
 
 public interface SyncTimesRepository extends CrudRepository<SyncTimes, DataTypes> {}

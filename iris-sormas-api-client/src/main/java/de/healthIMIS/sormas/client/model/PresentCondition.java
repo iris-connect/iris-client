@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets PresentCondition
  */
 public enum PresentCondition {
-  ALIVE("ALIVE"),
-  DEAD("DEAD"),
-  BURIED("BURIED"),
-  UNKNOWN("UNKNOWN");
+	ALIVE("ALIVE"), DEAD("DEAD"), BURIED("BURIED"), UNKNOWN("UNKNOWN");
 
-  private String value;
+	private String value;
 
-  PresentCondition(String value) {
-    this.value = value;
-  }
+	PresentCondition(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static PresentCondition fromValue(String text) {
-    for (PresentCondition b : PresentCondition.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static PresentCondition fromValue(String text) {
+		for (PresentCondition b : PresentCondition.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

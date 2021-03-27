@@ -21,35 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets SymptomJournalStatus
  */
 public enum SymptomJournalStatus {
-  UNREGISTERED("UNREGISTERED"),
-  REGISTERED("REGISTERED"),
-  ACCEPTED("ACCEPTED"),
-  REJECTED("REJECTED"),
-  DELETED("DELETED");
+	UNREGISTERED("UNREGISTERED"), REGISTERED("REGISTERED"), ACCEPTED("ACCEPTED"), REJECTED("REJECTED"), DELETED(
+			"DELETED");
 
-  private String value;
+	private String value;
 
-  SymptomJournalStatus(String value) {
-    this.value = value;
-  }
+	SymptomJournalStatus(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static SymptomJournalStatus fromValue(String text) {
-    for (SymptomJournalStatus b : SymptomJournalStatus.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static SymptomJournalStatus fromValue(String text) {
+		for (SymptomJournalStatus b : SymptomJournalStatus.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

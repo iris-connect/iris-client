@@ -28,80 +28,59 @@ import java.util.Map;
 @Ignore
 public class EventParticipantControllerApiTest {
 
-    private final EventParticipantControllerApi api = new EventParticipantControllerApi();
+	private final EventParticipantControllerApi api = new EventParticipantControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllActiveUuids3Test() {
-        List<String> response = api.getAllActiveUuids3();
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllActiveUuids3Test() {
+		List<String> response = api.getAllActiveUuids3();
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllEventParticipantsAfterTest() {
-        Long since = null;
-        List<EventParticipantDto> response = api.getAllEventParticipantsAfter(since);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids13Test() {
-        List<String> body = null;
-        List<EventParticipantDto> response = api.getByUuids13(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllEventParticipantsAfterTest() {
+		Long since = null;
+		List<EventParticipantDto> response = api.getAllEventParticipantsAfter(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getDeletedUuidsSince2Test() {
-        Long since = null;
-        List<String> response = api.getDeletedUuidsSince2(since);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void postEventParticipantsTest() {
-        List<EventParticipantDto> body = null;
-        List<PushResult> response = api.postEventParticipants(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids13Test() {
+		List<String> body = null;
+		List<EventParticipantDto> response = api.getByUuids13(body);
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getDeletedUuidsSince2Test() {
+		Long since = null;
+		List<String> response = api.getDeletedUuidsSince2(since);
+
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void postEventParticipantsTest() {
+		List<EventParticipantDto> body = null;
+		List<PushResult> response = api.postEventParticipants(body);
+
+		// TODO: test validations
+	}
 }

@@ -1,5 +1,7 @@
 package de.healthIMIS.iris.client.data_submission.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -7,13 +9,12 @@ import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /**
  * GuestAttendanceInformation
  */
 @Valid
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-02-18T08:11:24.698Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen",
+		date = "2021-02-18T08:11:24.698Z[GMT]")
 
 public class GuestAttendanceInformation {
 
@@ -121,9 +122,9 @@ public class GuestAttendanceInformation {
 		}
 		GuestAttendanceInformation guestAttendanceInformation = (GuestAttendanceInformation) o;
 		return Objects.equals(this.descriptionOfParticipation, guestAttendanceInformation.descriptionOfParticipation)
-			&& Objects.equals(this.attendFrom, guestAttendanceInformation.attendFrom)
-			&& Objects.equals(this.attendTo, guestAttendanceInformation.attendTo)
-			&& Objects.equals(this.additionalInformation, guestAttendanceInformation.additionalInformation);
+				&& Objects.equals(this.attendFrom, guestAttendanceInformation.attendFrom)
+				&& Objects.equals(this.attendTo, guestAttendanceInformation.attendTo)
+				&& Objects.equals(this.additionalInformation, guestAttendanceInformation.additionalInformation);
 	}
 
 	@Override
@@ -145,8 +146,7 @@ public class GuestAttendanceInformation {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

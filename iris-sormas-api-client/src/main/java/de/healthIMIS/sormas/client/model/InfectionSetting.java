@@ -21,49 +21,38 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets InfectionSetting
  */
 public enum InfectionSetting {
-  UNKNOWN("UNKNOWN"),
-  AMBULATORY("AMBULATORY"),
-  MEDICAL_PRACTICE("MEDICAL_PRACTICE"),
-  OPERATIVE_1200("OPERATIVE_1200"),
-  HOSPITAL_1300("HOSPITAL_1300"),
-  OTHER_OUTPATIENT_FACILITY("OTHER_OUTPATIENT_FACILITY"),
-  STATIONARY("STATIONARY"),
-  HOSPITAL_2100("HOSPITAL_2100"),
-  NORMAL_WARD("NORMAL_WARD"),
-  OPERATIVE_2111("OPERATIVE_2111"),
-  NOT_OPERATIVE("NOT_OPERATIVE"),
-  HEMATOLOGICAL_ONCOLOGY("HEMATOLOGICAL_ONCOLOGY"),
-  CHILDREN_WARD("CHILDREN_WARD"),
-  NEONATOLOGY("NEONATOLOGY"),
-  INTENSIVE_CARE_UNIT("INTENSIVE_CARE_UNIT"),
-  OTHER_STATION("OTHER_STATION"),
-  NURSING_HOME("NURSING_HOME"),
-  REHAB_FACILITY("REHAB_FACILITY"),
-  OTHER_STATIONARY_FACILITY("OTHER_STATIONARY_FACILITY");
+	UNKNOWN("UNKNOWN"), AMBULATORY("AMBULATORY"), MEDICAL_PRACTICE("MEDICAL_PRACTICE"), OPERATIVE_1200(
+			"OPERATIVE_1200"), HOSPITAL_1300("HOSPITAL_1300"), OTHER_OUTPATIENT_FACILITY(
+					"OTHER_OUTPATIENT_FACILITY"), STATIONARY("STATIONARY"), HOSPITAL_2100("HOSPITAL_2100"), NORMAL_WARD(
+							"NORMAL_WARD"), OPERATIVE_2111("OPERATIVE_2111"), NOT_OPERATIVE("NOT_OPERATIVE"), HEMATOLOGICAL_ONCOLOGY(
+									"HEMATOLOGICAL_ONCOLOGY"), CHILDREN_WARD("CHILDREN_WARD"), NEONATOLOGY(
+											"NEONATOLOGY"), INTENSIVE_CARE_UNIT("INTENSIVE_CARE_UNIT"), OTHER_STATION(
+													"OTHER_STATION"), NURSING_HOME("NURSING_HOME"), REHAB_FACILITY(
+															"REHAB_FACILITY"), OTHER_STATIONARY_FACILITY("OTHER_STATIONARY_FACILITY");
 
-  private String value;
+	private String value;
 
-  InfectionSetting(String value) {
-    this.value = value;
-  }
+	InfectionSetting(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static InfectionSetting fromValue(String text) {
-    for (InfectionSetting b : InfectionSetting.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static InfectionSetting fromValue(String text) {
+		for (InfectionSetting b : InfectionSetting.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

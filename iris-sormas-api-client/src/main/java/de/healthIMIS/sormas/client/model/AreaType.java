@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets AreaType
  */
 public enum AreaType {
-  URBAN("URBAN"),
-  RURAL("RURAL"),
-  UNKNOWN("UNKNOWN");
+	URBAN("URBAN"), RURAL("RURAL"), UNKNOWN("UNKNOWN");
 
-  private String value;
+	private String value;
 
-  AreaType(String value) {
-    this.value = value;
-  }
+	AreaType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static AreaType fromValue(String text) {
-    for (AreaType b : AreaType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static AreaType fromValue(String text) {
+		for (AreaType b : AreaType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

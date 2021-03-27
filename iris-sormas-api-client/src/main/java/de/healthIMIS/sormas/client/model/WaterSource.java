@@ -21,35 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets WaterSource
  */
 public enum WaterSource {
-  PIPE_NETWORK("PIPE_NETWORK"),
-  COMMUNITY_BOREHOLE_WELL("COMMUNITY_BOREHOLE_WELL"),
-  PRIVATE_BOREHOLE_WELL("PRIVATE_BOREHOLE_WELL"),
-  STREAM("STREAM"),
-  OTHER("OTHER");
+	PIPE_NETWORK("PIPE_NETWORK"), COMMUNITY_BOREHOLE_WELL("COMMUNITY_BOREHOLE_WELL"), PRIVATE_BOREHOLE_WELL(
+			"PRIVATE_BOREHOLE_WELL"), STREAM("STREAM"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  WaterSource(String value) {
-    this.value = value;
-  }
+	WaterSource(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static WaterSource fromValue(String text) {
-    for (WaterSource b : WaterSource.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static WaterSource fromValue(String text) {
+		for (WaterSource b : WaterSource.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

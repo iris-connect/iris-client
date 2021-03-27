@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets TaskPriority
  */
 public enum TaskPriority {
-  HIGH("HIGH"),
-  NORMAL("NORMAL"),
-  LOW("LOW");
+	HIGH("HIGH"), NORMAL("NORMAL"), LOW("LOW");
 
-  private String value;
+	private String value;
 
-  TaskPriority(String value) {
-    this.value = value;
-  }
+	TaskPriority(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static TaskPriority fromValue(String text) {
-    for (TaskPriority b : TaskPriority.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static TaskPriority fromValue(String text) {
+		for (TaskPriority b : TaskPriority.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

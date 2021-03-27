@@ -26,36 +26,27 @@ import java.util.Map;
 @Ignore
 public class BAGExportControllerApiTest {
 
-    private final BAGExportControllerApi api = new BAGExportControllerApi();
+	private final BAGExportControllerApi api = new BAGExportControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void exportCasesTest() {
-        String body = null;
-        api.exportCases(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void exportCasesTest() {
+		String body = null;
+		api.exportCases(body);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void exportContactsTest() {
-        String body = null;
-        api.exportContacts(body);
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void exportContactsTest() {
+		String body = null;
+		api.exportContacts(body);
+
+		// TODO: test validations
+	}
 }

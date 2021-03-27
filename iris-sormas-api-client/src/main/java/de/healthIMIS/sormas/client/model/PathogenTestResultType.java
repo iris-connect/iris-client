@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets PathogenTestResultType
  */
 public enum PathogenTestResultType {
-  INDETERMINATE("INDETERMINATE"),
-  PENDING("PENDING"),
-  NEGATIVE("NEGATIVE"),
-  POSITIVE("POSITIVE");
+	INDETERMINATE("INDETERMINATE"), PENDING("PENDING"), NEGATIVE("NEGATIVE"), POSITIVE("POSITIVE");
 
-  private String value;
+	private String value;
 
-  PathogenTestResultType(String value) {
-    this.value = value;
-  }
+	PathogenTestResultType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static PathogenTestResultType fromValue(String text) {
-    for (PathogenTestResultType b : PathogenTestResultType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static PathogenTestResultType fromValue(String text) {
+		for (PathogenTestResultType b : PathogenTestResultType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

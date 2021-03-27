@@ -21,32 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets VisitOrigin
  */
 public enum VisitOrigin {
-  USER("USER"),
-  EXTERNAL_JOURNAL("EXTERNAL_JOURNAL");
+	USER("USER"), EXTERNAL_JOURNAL("EXTERNAL_JOURNAL");
 
-  private String value;
+	private String value;
 
-  VisitOrigin(String value) {
-    this.value = value;
-  }
+	VisitOrigin(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static VisitOrigin fromValue(String text) {
-    for (VisitOrigin b : VisitOrigin.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static VisitOrigin fromValue(String text) {
+		for (VisitOrigin b : VisitOrigin.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

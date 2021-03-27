@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets RiskLevel
  */
 public enum RiskLevel {
-  LOW("LOW"),
-  MODERATE("MODERATE"),
-  HIGH("HIGH"),
-  UNKNOWN("UNKNOWN");
+	LOW("LOW"), MODERATE("MODERATE"), HIGH("HIGH"), UNKNOWN("UNKNOWN");
 
-  private String value;
+	private String value;
 
-  RiskLevel(String value) {
-    this.value = value;
-  }
+	RiskLevel(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static RiskLevel fromValue(String text) {
-    for (RiskLevel b : RiskLevel.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static RiskLevel fromValue(String text) {
+		for (RiskLevel b : RiskLevel.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

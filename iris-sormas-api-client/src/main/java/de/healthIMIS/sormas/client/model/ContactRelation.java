@@ -21,35 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets ContactRelation
  */
 public enum ContactRelation {
-  SAME_HOUSEHOLD("SAME_HOUSEHOLD"),
-  FAMILY_MEMBER_OR_FRIEND("FAMILY_MEMBER_OR_FRIEND"),
-  SAME_ENVIRONMENT("SAME_ENVIRONMENT"),
-  MEDICAL_CARE("MEDICAL_CARE"),
-  OTHER("OTHER");
+	SAME_HOUSEHOLD("SAME_HOUSEHOLD"), FAMILY_MEMBER_OR_FRIEND("FAMILY_MEMBER_OR_FRIEND"), SAME_ENVIRONMENT(
+			"SAME_ENVIRONMENT"), MEDICAL_CARE("MEDICAL_CARE"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  ContactRelation(String value) {
-    this.value = value;
-  }
+	ContactRelation(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static ContactRelation fromValue(String text) {
-    for (ContactRelation b : ContactRelation.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static ContactRelation fromValue(String text) {
+		for (ContactRelation b : ContactRelation.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

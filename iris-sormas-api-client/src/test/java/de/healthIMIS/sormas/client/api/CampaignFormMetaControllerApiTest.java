@@ -27,50 +27,37 @@ import java.util.Map;
 @Ignore
 public class CampaignFormMetaControllerApiTest {
 
-    private final CampaignFormMetaControllerApi api = new CampaignFormMetaControllerApi();
+	private final CampaignFormMetaControllerApi api = new CampaignFormMetaControllerApi();
 
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllCampaignFormMetaTest() {
-        Long since = null;
-        List<CampaignFormMetaDto> response = api.getAllCampaignFormMeta(since);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllCampaignFormMetaTest() {
+		Long since = null;
+		List<CampaignFormMetaDto> response = api.getAllCampaignFormMeta(since);
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getAllUuids3Test() {
-        List<String> response = api.getAllUuids3();
+		// TODO: test validations
+	}
 
-        // TODO: test validations
-    }
-    /**
-     * 
-     *
-     * 
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getByUuids4Test() {
-        List<String> body = null;
-        List<CampaignFormMetaDto> response = api.getByUuids4(body);
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getAllUuids3Test() {
+		List<String> response = api.getAllUuids3();
 
-        // TODO: test validations
-    }
+		// TODO: test validations
+	}
+
+	/**
+	 * @throws ApiException if the Api call fails
+	 */
+	@Test
+	public void getByUuids4Test() {
+		List<String> body = null;
+		List<CampaignFormMetaDto> response = api.getByUuids4(body);
+
+		// TODO: test validations
+	}
 }

@@ -14,7 +14,19 @@
  *******************************************************************************/
 package de.healthIMIS.iris.hd_server.data_submission;
 
-import static de.healthIMIS.iris.hd_server.core.SyncTimes.DataTypes.Submissions;
+import static de.healthIMIS.iris.hd_server.core.SyncTimes.DataTypes.*;
+
+import de.healthIMIS.iris.hd_server.core.DepartmentIdentifier;
+import de.healthIMIS.iris.hd_server.core.IrisHdServerProperties;
+import de.healthIMIS.iris.hd_server.core.SyncTimes;
+import de.healthIMIS.iris.hd_server.core.SyncTimesRepository;
+import de.healthIMIS.iris.hd_server.data_request.DataRequest.DataRequestIdentifier;
+import de.healthIMIS.iris.hd_server.data_submission.DataSubmission.DataSubmissionIdentifier;
+import de.healthIMIS.iris.hd_server.data_submission.DataSubmission.Feature;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -30,18 +42,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import de.healthIMIS.iris.hd_server.core.DepartmentIdentifier;
-import de.healthIMIS.iris.hd_server.core.IrisHdServerProperties;
-import de.healthIMIS.iris.hd_server.core.SyncTimes;
-import de.healthIMIS.iris.hd_server.core.SyncTimesRepository;
-import de.healthIMIS.iris.hd_server.data_request.DataRequest.DataRequestIdentifier;
-import de.healthIMIS.iris.hd_server.data_submission.DataSubmission.DataSubmissionIdentifier;
-import de.healthIMIS.iris.hd_server.data_submission.DataSubmission.Feature;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Jens Kutzsche
@@ -64,41 +64,31 @@ class DataSubmissionSyncJob {
 
 		log.trace("Submission job - start");
 
-		var lastSync = syncTimes.findById(Submissions).map(SyncTimes::getLastSync).orElse(LocalDateTime.of(2000, 01, 01, 00, 00));
+		var lastSync = syncTimes.findById(Submissions).map(SyncTimes::getLastSync)
+				.orElse(LocalDateTime.of(2000, 01, 01, 00, 00));
 
 		try {
 
 			log.trace("Submission job - GET to public server is sent");
 
-			var response = rest.getForEntity(
-				"http://{address}:{port}/hd/data-submissions?from={from}",
-				DataSubmissionInternalInputDto[].class,
-				properties.getPublicServerAddress().getHostName(),
-				properties.getPublicServerPort(),
-				lastSync);
+			var response = rest.getForEntity("http://{address}:{port}/hd/data-submissions?from={from}",
+					DataSubmissionInternalInputDto[].class, properties.getPublicServerAddress().getHostName(),
+					properties.getPublicServerPort(), lastSync);
 
 			var dtos = response.getBody();
 
 			var dataSubmissions = Arrays.stream(dtos)
-				.map(
-					it -> new DataSubmission(
-						DataSubmissionIdentifier.of(it.id),
-						DataRequestIdentifier.of(it.requestId),
-						DepartmentIdentifier.of(it.departmentId),
-						it.salt,
-						it.keyReferenz,
-						it.encryptedData,
-						it.feature))
-				.collect(Collectors.toList());
+					.map(it -> new DataSubmission(DataSubmissionIdentifier.of(it.id), DataRequestIdentifier.of(it.requestId),
+							DepartmentIdentifier.of(it.departmentId), it.salt, it.keyReferenz, it.encryptedData, it.feature))
+					.collect(Collectors.toList());
 
 			submissions.deleteAll(dataSubmissions);
 			submissions.saveAll(dataSubmissions);
 
 			saveLastSync(response);
 
-			log.debug(
-				"Submission job - GET to public server sent: {}",
-				Arrays.stream(dtos).map(it -> it.getRequestId().toString()).collect(Collectors.joining(", ")));
+			log.debug("Submission job - GET to public server sent: {}",
+					Arrays.stream(dtos).map(it -> it.getRequestId().toString()).collect(Collectors.joining(", ")));
 
 			callDeleteEndpoint(lastSync);
 
@@ -112,7 +102,8 @@ class DataSubmissionSyncJob {
 
 			if (errorCounter == 1 || errorCounter % 20 == 0) {
 				if (log.isTraceEnabled()) {
-					log.warn(String.format("Submission job - can't submit data submissions from public server for %s tries!", errorCounter), e);
+					log.warn(String.format("Submission job - can't submit data submissions from public server for %s tries!",
+							errorCounter), e);
 				} else {
 					log.warn("Submission job - can't submit data submissions from public server for {} tries!", errorCounter);
 				}
@@ -133,11 +124,8 @@ class DataSubmissionSyncJob {
 
 		log.trace("Submission job - DELETE to public server is sent");
 
-		rest.delete(
-			"http://{address}:{port}/hd/data-submissions?from={from}",
-			properties.getPublicServerAddress().getHostName(),
-			properties.getPublicServerPort(),
-			lastSync);
+		rest.delete("http://{address}:{port}/hd/data-submissions?from={from}",
+				properties.getPublicServerAddress().getHostName(), properties.getPublicServerPort(), lastSync);
 
 		log.trace("Submission job - DELETE to public server sent");
 	}

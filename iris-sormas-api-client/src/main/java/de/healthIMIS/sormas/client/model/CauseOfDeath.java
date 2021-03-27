@@ -21,32 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets CauseOfDeath
  */
 public enum CauseOfDeath {
-  EPIDEMIC_DISEASE("EPIDEMIC_DISEASE"),
-  OTHER_CAUSE("OTHER_CAUSE");
+	EPIDEMIC_DISEASE("EPIDEMIC_DISEASE"), OTHER_CAUSE("OTHER_CAUSE");
 
-  private String value;
+	private String value;
 
-  CauseOfDeath(String value) {
-    this.value = value;
-  }
+	CauseOfDeath(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static CauseOfDeath fromValue(String text) {
-    for (CauseOfDeath b : CauseOfDeath.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static CauseOfDeath fromValue(String text) {
+		for (CauseOfDeath b : CauseOfDeath.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

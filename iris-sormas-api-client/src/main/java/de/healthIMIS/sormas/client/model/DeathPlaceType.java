@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets DeathPlaceType
  */
 public enum DeathPlaceType {
-  COMMUNITY("COMMUNITY"),
-  HOSPITAL("HOSPITAL"),
-  OTHER("OTHER");
+	COMMUNITY("COMMUNITY"), HOSPITAL("HOSPITAL"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  DeathPlaceType(String value) {
-    this.value = value;
-  }
+	DeathPlaceType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static DeathPlaceType fromValue(String text) {
-    for (DeathPlaceType b : DeathPlaceType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static DeathPlaceType fromValue(String text) {
+		for (DeathPlaceType b : DeathPlaceType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

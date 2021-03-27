@@ -21,33 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets SampleSource
  */
 public enum SampleSource {
-  HUMAN("HUMAN"),
-  ANIMAL("ANIMAL"),
-  ENVIRONMENT("ENVIRONMENT");
+	HUMAN("HUMAN"), ANIMAL("ANIMAL"), ENVIRONMENT("ENVIRONMENT");
 
-  private String value;
+	private String value;
 
-  SampleSource(String value) {
-    this.value = value;
-  }
+	SampleSource(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static SampleSource fromValue(String text) {
-    for (SampleSource b : SampleSource.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static SampleSource fromValue(String text) {
+		for (SampleSource b : SampleSource.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

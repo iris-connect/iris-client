@@ -21,31 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets ActionContext
  */
 public enum ActionContext {
-  EVENT("EVENT");
+	EVENT("EVENT");
 
-  private String value;
+	private String value;
 
-  ActionContext(String value) {
-    this.value = value;
-  }
+	ActionContext(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static ActionContext fromValue(String text) {
-    for (ActionContext b : ActionContext.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static ActionContext fromValue(String text) {
+		for (ActionContext b : ActionContext.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

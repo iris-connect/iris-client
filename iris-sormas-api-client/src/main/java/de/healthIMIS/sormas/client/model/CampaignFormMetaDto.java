@@ -24,248 +24,256 @@ import java.time.OffsetDateTime;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * CampaignFormMetaDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class CampaignFormMetaDto {
-  @JsonProperty("creationDate")
-  private Instant creationDate = null;
+	@JsonProperty("creationDate")
+	private Instant creationDate = null;
 
-  @JsonProperty("changeDate")
-  private Instant changeDate = null;
+	@JsonProperty("changeDate")
+	private Instant changeDate = null;
 
-  @JsonProperty("uuid")
-  private String uuid = null;
+	@JsonProperty("uuid")
+	private String uuid = null;
 
-  @JsonProperty("formId")
-  private String formId = null;
+	@JsonProperty("formId")
+	private String formId = null;
 
-  @JsonProperty("formName")
-  private String formName = null;
+	@JsonProperty("formName")
+	private String formName = null;
 
-  @JsonProperty("languageCode")
-  private String languageCode = null;
+	@JsonProperty("languageCode")
+	private String languageCode = null;
 
-  @JsonProperty("campaignFormElements")
-  private List<CampaignFormElement> campaignFormElements = null;
+	@JsonProperty("campaignFormElements")
+	private List<CampaignFormElement> campaignFormElements = null;
 
-  @JsonProperty("campaignFormTranslations")
-  private List<CampaignFormTranslations> campaignFormTranslations = null;
+	@JsonProperty("campaignFormTranslations")
+	private List<CampaignFormTranslations> campaignFormTranslations = null;
 
-  public CampaignFormMetaDto creationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-    return this;
-  }
+	public CampaignFormMetaDto creationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+		return this;
+	}
 
-   /**
-   * Get creationDate
-   * @return creationDate
-  **/
-  @Schema(description = "")
-  public Instant getCreationDate() {
-    return creationDate;
-  }
+	/**
+	 * Get creationDate
+	 * 
+	 * @return creationDate
+	 **/
+	@Schema(description = "")
+	public Instant getCreationDate() {
+		return creationDate;
+	}
 
-  public void setCreationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-  }
+	public void setCreationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+	}
 
-  public CampaignFormMetaDto changeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-    return this;
-  }
+	public CampaignFormMetaDto changeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+		return this;
+	}
 
-   /**
-   * Get changeDate
-   * @return changeDate
-  **/
-  @Schema(description = "")
-  public Instant getChangeDate() {
-    return changeDate;
-  }
+	/**
+	 * Get changeDate
+	 * 
+	 * @return changeDate
+	 **/
+	@Schema(description = "")
+	public Instant getChangeDate() {
+		return changeDate;
+	}
 
-  public void setChangeDate(Instant changeDate) {
-    this.changeDate = changeDate;
-  }
+	public void setChangeDate(Instant changeDate) {
+		this.changeDate = changeDate;
+	}
 
-  public CampaignFormMetaDto uuid(String uuid) {
-    this.uuid = uuid;
-    return this;
-  }
+	public CampaignFormMetaDto uuid(String uuid) {
+		this.uuid = uuid;
+		return this;
+	}
 
-   /**
-   * Get uuid
-   * @return uuid
-  **/
-  @Schema(description = "")
-  public String getUuid() {
-    return uuid;
-  }
+	/**
+	 * Get uuid
+	 * 
+	 * @return uuid
+	 **/
+	@Schema(description = "")
+	public String getUuid() {
+		return uuid;
+	}
 
-  public void setUuid(String uuid) {
-    this.uuid = uuid;
-  }
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
-  public CampaignFormMetaDto formId(String formId) {
-    this.formId = formId;
-    return this;
-  }
+	public CampaignFormMetaDto formId(String formId) {
+		this.formId = formId;
+		return this;
+	}
 
-   /**
-   * Get formId
-   * @return formId
-  **/
-  @Schema(description = "")
-  public String getFormId() {
-    return formId;
-  }
+	/**
+	 * Get formId
+	 * 
+	 * @return formId
+	 **/
+	@Schema(description = "")
+	public String getFormId() {
+		return formId;
+	}
 
-  public void setFormId(String formId) {
-    this.formId = formId;
-  }
+	public void setFormId(String formId) {
+		this.formId = formId;
+	}
 
-  public CampaignFormMetaDto formName(String formName) {
-    this.formName = formName;
-    return this;
-  }
+	public CampaignFormMetaDto formName(String formName) {
+		this.formName = formName;
+		return this;
+	}
 
-   /**
-   * Get formName
-   * @return formName
-  **/
-  @Schema(description = "")
-  public String getFormName() {
-    return formName;
-  }
+	/**
+	 * Get formName
+	 * 
+	 * @return formName
+	 **/
+	@Schema(description = "")
+	public String getFormName() {
+		return formName;
+	}
 
-  public void setFormName(String formName) {
-    this.formName = formName;
-  }
+	public void setFormName(String formName) {
+		this.formName = formName;
+	}
 
-  public CampaignFormMetaDto languageCode(String languageCode) {
-    this.languageCode = languageCode;
-    return this;
-  }
+	public CampaignFormMetaDto languageCode(String languageCode) {
+		this.languageCode = languageCode;
+		return this;
+	}
 
-   /**
-   * Get languageCode
-   * @return languageCode
-  **/
-  @Schema(description = "")
-  public String getLanguageCode() {
-    return languageCode;
-  }
+	/**
+	 * Get languageCode
+	 * 
+	 * @return languageCode
+	 **/
+	@Schema(description = "")
+	public String getLanguageCode() {
+		return languageCode;
+	}
 
-  public void setLanguageCode(String languageCode) {
-    this.languageCode = languageCode;
-  }
+	public void setLanguageCode(String languageCode) {
+		this.languageCode = languageCode;
+	}
 
-  public CampaignFormMetaDto campaignFormElements(List<CampaignFormElement> campaignFormElements) {
-    this.campaignFormElements = campaignFormElements;
-    return this;
-  }
+	public CampaignFormMetaDto campaignFormElements(List<CampaignFormElement> campaignFormElements) {
+		this.campaignFormElements = campaignFormElements;
+		return this;
+	}
 
-  public CampaignFormMetaDto addCampaignFormElementsItem(CampaignFormElement campaignFormElementsItem) {
-    if (this.campaignFormElements == null) {
-      this.campaignFormElements = new ArrayList<>();
-    }
-    this.campaignFormElements.add(campaignFormElementsItem);
-    return this;
-  }
+	public CampaignFormMetaDto addCampaignFormElementsItem(CampaignFormElement campaignFormElementsItem) {
+		if (this.campaignFormElements == null) {
+			this.campaignFormElements = new ArrayList<>();
+		}
+		this.campaignFormElements.add(campaignFormElementsItem);
+		return this;
+	}
 
-   /**
-   * Get campaignFormElements
-   * @return campaignFormElements
-  **/
-  @Schema(description = "")
-  public List<CampaignFormElement> getCampaignFormElements() {
-    return campaignFormElements;
-  }
+	/**
+	 * Get campaignFormElements
+	 * 
+	 * @return campaignFormElements
+	 **/
+	@Schema(description = "")
+	public List<CampaignFormElement> getCampaignFormElements() {
+		return campaignFormElements;
+	}
 
-  public void setCampaignFormElements(List<CampaignFormElement> campaignFormElements) {
-    this.campaignFormElements = campaignFormElements;
-  }
+	public void setCampaignFormElements(List<CampaignFormElement> campaignFormElements) {
+		this.campaignFormElements = campaignFormElements;
+	}
 
-  public CampaignFormMetaDto campaignFormTranslations(List<CampaignFormTranslations> campaignFormTranslations) {
-    this.campaignFormTranslations = campaignFormTranslations;
-    return this;
-  }
+	public CampaignFormMetaDto campaignFormTranslations(List<CampaignFormTranslations> campaignFormTranslations) {
+		this.campaignFormTranslations = campaignFormTranslations;
+		return this;
+	}
 
-  public CampaignFormMetaDto addCampaignFormTranslationsItem(CampaignFormTranslations campaignFormTranslationsItem) {
-    if (this.campaignFormTranslations == null) {
-      this.campaignFormTranslations = new ArrayList<>();
-    }
-    this.campaignFormTranslations.add(campaignFormTranslationsItem);
-    return this;
-  }
+	public CampaignFormMetaDto addCampaignFormTranslationsItem(CampaignFormTranslations campaignFormTranslationsItem) {
+		if (this.campaignFormTranslations == null) {
+			this.campaignFormTranslations = new ArrayList<>();
+		}
+		this.campaignFormTranslations.add(campaignFormTranslationsItem);
+		return this;
+	}
 
-   /**
-   * Get campaignFormTranslations
-   * @return campaignFormTranslations
-  **/
-  @Schema(description = "")
-  public List<CampaignFormTranslations> getCampaignFormTranslations() {
-    return campaignFormTranslations;
-  }
+	/**
+	 * Get campaignFormTranslations
+	 * 
+	 * @return campaignFormTranslations
+	 **/
+	@Schema(description = "")
+	public List<CampaignFormTranslations> getCampaignFormTranslations() {
+		return campaignFormTranslations;
+	}
 
-  public void setCampaignFormTranslations(List<CampaignFormTranslations> campaignFormTranslations) {
-    this.campaignFormTranslations = campaignFormTranslations;
-  }
+	public void setCampaignFormTranslations(List<CampaignFormTranslations> campaignFormTranslations) {
+		this.campaignFormTranslations = campaignFormTranslations;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		CampaignFormMetaDto campaignFormMetaDto = (CampaignFormMetaDto) o;
+		return Objects.equals(this.creationDate, campaignFormMetaDto.creationDate)
+				&& Objects.equals(this.changeDate, campaignFormMetaDto.changeDate)
+				&& Objects.equals(this.uuid, campaignFormMetaDto.uuid)
+				&& Objects.equals(this.formId, campaignFormMetaDto.formId)
+				&& Objects.equals(this.formName, campaignFormMetaDto.formName)
+				&& Objects.equals(this.languageCode, campaignFormMetaDto.languageCode)
+				&& Objects.equals(this.campaignFormElements, campaignFormMetaDto.campaignFormElements)
+				&& Objects.equals(this.campaignFormTranslations, campaignFormMetaDto.campaignFormTranslations);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    CampaignFormMetaDto campaignFormMetaDto = (CampaignFormMetaDto) o;
-    return Objects.equals(this.creationDate, campaignFormMetaDto.creationDate) &&
-        Objects.equals(this.changeDate, campaignFormMetaDto.changeDate) &&
-        Objects.equals(this.uuid, campaignFormMetaDto.uuid) &&
-        Objects.equals(this.formId, campaignFormMetaDto.formId) &&
-        Objects.equals(this.formName, campaignFormMetaDto.formName) &&
-        Objects.equals(this.languageCode, campaignFormMetaDto.languageCode) &&
-        Objects.equals(this.campaignFormElements, campaignFormMetaDto.campaignFormElements) &&
-        Objects.equals(this.campaignFormTranslations, campaignFormMetaDto.campaignFormTranslations);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(creationDate, changeDate, uuid, formId, formName, languageCode, campaignFormElements,
+				campaignFormTranslations);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(creationDate, changeDate, uuid, formId, formName, languageCode, campaignFormElements, campaignFormTranslations);
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class CampaignFormMetaDto {\n");
 
+		sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
+		sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
+		sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
+		sb.append("    formId: ").append(toIndentedString(formId)).append("\n");
+		sb.append("    formName: ").append(toIndentedString(formName)).append("\n");
+		sb.append("    languageCode: ").append(toIndentedString(languageCode)).append("\n");
+		sb.append("    campaignFormElements: ").append(toIndentedString(campaignFormElements)).append("\n");
+		sb.append("    campaignFormTranslations: ").append(toIndentedString(campaignFormTranslations)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class CampaignFormMetaDto {\n");
-    
-    sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
-    sb.append("    changeDate: ").append(toIndentedString(changeDate)).append("\n");
-    sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
-    sb.append("    formId: ").append(toIndentedString(formId)).append("\n");
-    sb.append("    formName: ").append(toIndentedString(formName)).append("\n");
-    sb.append("    languageCode: ").append(toIndentedString(languageCode)).append("\n");
-    sb.append("    campaignFormElements: ").append(toIndentedString(campaignFormElements)).append("\n");
-    sb.append("    campaignFormTranslations: ").append(toIndentedString(campaignFormTranslations)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }

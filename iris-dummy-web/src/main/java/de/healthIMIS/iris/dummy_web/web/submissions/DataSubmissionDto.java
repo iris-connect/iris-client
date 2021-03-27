@@ -66,8 +66,8 @@ public class DataSubmissionDto {
 	}
 
 	/**
-	 * An array of up to three check codes, one of them must be correct for the data to be accepted. For details, please refer to section
-	 * \"Prüfcode\" in concept at https://github.com/healthIMIS/IRIS-Concept/releases/latest
+	 * An array of up to three check codes, one of them must be correct for the data to be accepted. For details, please
+	 * refer to section \"Prüfcode\" in concept at https://github.com/healthIMIS/IRIS-Concept/releases/latest
 	 * 
 	 * @return checkCode
 	 **/
@@ -125,8 +125,8 @@ public class DataSubmissionDto {
 		}
 		DataSubmissionDto dataSubmission = (DataSubmissionDto) o;
 		return Objects.equals(this.checkCode, dataSubmission.checkCode)
-			&& Objects.equals(this.secret, dataSubmission.secret)
-			&& Objects.equals(this.keyReferenz, dataSubmission.keyReferenz);
+				&& Objects.equals(this.secret, dataSubmission.secret)
+				&& Objects.equals(this.keyReferenz, dataSubmission.keyReferenz);
 	}
 
 	@Override
@@ -147,8 +147,7 @@ public class DataSubmissionDto {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

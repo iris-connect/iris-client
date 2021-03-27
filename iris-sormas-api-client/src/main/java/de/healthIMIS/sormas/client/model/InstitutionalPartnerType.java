@@ -21,36 +21,33 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets InstitutionalPartnerType
  */
 public enum InstitutionalPartnerType {
-  HEALTH_INSURANCE("HEALTH_INSURANCE"),
-  TERRITORIAL_COMMUNITIES("TERRITORIAL_COMMUNITIES"),
-  NATIONAL_EDUCATION("NATIONAL_EDUCATION"),
-  HEALTH_ESTABLISHMENTS("HEALTH_ESTABLISHMENTS"),
-  MEDICO_SOCIAL_ESTABLISHMENTS("MEDICO_SOCIAL_ESTABLISHMENTS"),
-  OTHER("OTHER");
+	HEALTH_INSURANCE("HEALTH_INSURANCE"), TERRITORIAL_COMMUNITIES("TERRITORIAL_COMMUNITIES"), NATIONAL_EDUCATION(
+			"NATIONAL_EDUCATION"), HEALTH_ESTABLISHMENTS(
+					"HEALTH_ESTABLISHMENTS"), MEDICO_SOCIAL_ESTABLISHMENTS("MEDICO_SOCIAL_ESTABLISHMENTS"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  InstitutionalPartnerType(String value) {
-    this.value = value;
-  }
+	InstitutionalPartnerType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static InstitutionalPartnerType fromValue(String text) {
-    for (InstitutionalPartnerType b : InstitutionalPartnerType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static InstitutionalPartnerType fromValue(String text) {
+		for (InstitutionalPartnerType b : InstitutionalPartnerType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

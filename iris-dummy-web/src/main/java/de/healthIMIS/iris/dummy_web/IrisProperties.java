@@ -14,15 +14,15 @@
  *******************************************************************************/
 package de.healthIMIS.iris.dummy_web;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 import java.net.InetAddress;
 import java.time.LocalDate;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
-
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author Jens Kutzsche

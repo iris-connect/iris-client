@@ -14,6 +14,9 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.core;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
 import javax.persistence.EmbeddedId;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -25,9 +28,6 @@ import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-
 /**
  * Base class of aggregates in the sense of DDD
  * 
@@ -37,7 +37,8 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode(of = "id", callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
-public abstract class Aggregate<T extends Aggregate<T, ID>, ID extends Id> extends AbstractAggregateRoot<T> implements Persistable<ID> {
+public abstract class Aggregate<T extends Aggregate<T, ID>, ID extends Id> extends AbstractAggregateRoot<T>
+		implements Persistable<ID> {
 
 	protected @EmbeddedId ID id;
 	private Metadata metadata = new Metadata();

@@ -21,38 +21,35 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets CovidTestReason
  */
 public enum CovidTestReason {
-  PRESENCE_OF_SYMPTOMS("PRESENCE_OF_SYMPTOMS"),
-  OUTBREAK_INVESTIGATION_SCREENING("OUTBREAK_INVESTIGATION_SCREENING"),
-  COHORT_SCREENING("COHORT_SCREENING"),
-  REQUIREMENT_OF_EMPLOYER("REQUIREMENT_OF_EMPLOYER"),
-  DURING_QUARANTINE("DURING_QUARANTINE"),
-  AFTER_CONTACT_TRACING("AFTER_CONTACT_TRACING"),
-  SWISS_COVID_APP_NOTIFICATION("SWISS_COVID_APP_NOTIFICATION"),
-  OTHER_REASON("OTHER_REASON");
+	PRESENCE_OF_SYMPTOMS("PRESENCE_OF_SYMPTOMS"), OUTBREAK_INVESTIGATION_SCREENING(
+			"OUTBREAK_INVESTIGATION_SCREENING"), COHORT_SCREENING(
+					"COHORT_SCREENING"), REQUIREMENT_OF_EMPLOYER("REQUIREMENT_OF_EMPLOYER"), DURING_QUARANTINE(
+							"DURING_QUARANTINE"), AFTER_CONTACT_TRACING("AFTER_CONTACT_TRACING"), SWISS_COVID_APP_NOTIFICATION(
+									"SWISS_COVID_APP_NOTIFICATION"), OTHER_REASON("OTHER_REASON");
 
-  private String value;
+	private String value;
 
-  CovidTestReason(String value) {
-    this.value = value;
-  }
+	CovidTestReason(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static CovidTestReason fromValue(String text) {
-    for (CovidTestReason b : CovidTestReason.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static CovidTestReason fromValue(String text) {
+		for (CovidTestReason b : CovidTestReason.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

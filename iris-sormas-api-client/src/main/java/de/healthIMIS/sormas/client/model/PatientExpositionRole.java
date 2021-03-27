@@ -21,36 +21,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets PatientExpositionRole
  */
 public enum PatientExpositionRole {
-  NOT_COLLECTED("NOT_COLLECTED"),
-  UNKNOWN("UNKNOWN"),
-  WORKING_AT("WORKING_AT"),
-  ACCOMMODATED_IN("ACCOMMODATED_IN"),
-  CARED_FOR("CARED_FOR"),
-  OTHER("OTHER");
+	NOT_COLLECTED("NOT_COLLECTED"), UNKNOWN("UNKNOWN"), WORKING_AT("WORKING_AT"), ACCOMMODATED_IN(
+			"ACCOMMODATED_IN"), CARED_FOR("CARED_FOR"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  PatientExpositionRole(String value) {
-    this.value = value;
-  }
+	PatientExpositionRole(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static PatientExpositionRole fromValue(String text) {
-    for (PatientExpositionRole b : PatientExpositionRole.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static PatientExpositionRole fromValue(String text) {
+		for (PatientExpositionRole b : PatientExpositionRole.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

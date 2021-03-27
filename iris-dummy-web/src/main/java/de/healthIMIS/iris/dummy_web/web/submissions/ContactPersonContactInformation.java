@@ -62,8 +62,8 @@ public class ContactPersonContactInformation {
 	}
 
 	/**
-	 * Informations about the basic conditions such as: from, to, place, inside|outside, mask yes|no, distance >=|< 1,5m, ventilated yes|no,
-	 * remarks.
+	 * Informations about the basic conditions such as: from, to, place, inside|outside, mask yes|no, distance >=|< 1,5m,
+	 * ventilated yes|no, remarks.
 	 * 
 	 * @return basicConditions
 	 **/
@@ -86,8 +86,8 @@ public class ContactPersonContactInformation {
 		}
 		ContactPersonContactInformation contactPersonContactInformation = (ContactPersonContactInformation) o;
 		return Objects.equals(this.date, contactPersonContactInformation.date)
-			&& Objects.equals(this.contactCategory, contactPersonContactInformation.contactCategory)
-			&& Objects.equals(this.basicConditions, contactPersonContactInformation.basicConditions);
+				&& Objects.equals(this.contactCategory, contactPersonContactInformation.contactCategory)
+				&& Objects.equals(this.basicConditions, contactPersonContactInformation.basicConditions);
 	}
 
 	@Override
@@ -108,8 +108,7 @@ public class ContactPersonContactInformation {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(java.lang.Object o) {
 		if (o == null) {

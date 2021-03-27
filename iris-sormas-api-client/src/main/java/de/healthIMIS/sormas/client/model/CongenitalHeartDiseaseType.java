@@ -21,34 +21,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets CongenitalHeartDiseaseType
  */
 public enum CongenitalHeartDiseaseType {
-  PDA("PDA"),
-  PPS("PPS"),
-  VSD("VSD"),
-  OTHER("OTHER");
+	PDA("PDA"), PPS("PPS"), VSD("VSD"), OTHER("OTHER");
 
-  private String value;
+	private String value;
 
-  CongenitalHeartDiseaseType(String value) {
-    this.value = value;
-  }
+	CongenitalHeartDiseaseType(String value) {
+		this.value = value;
+	}
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
+	@JsonValue
+	public String getValue() {
+		return value;
+	}
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 
-  @JsonCreator
-  public static CongenitalHeartDiseaseType fromValue(String text) {
-    for (CongenitalHeartDiseaseType b : CongenitalHeartDiseaseType.values()) {
-      if (String.valueOf(b.value).equals(text)) {
-        return b;
-      }
-    }
-    return null;
-  }
+	@JsonCreator
+	public static CongenitalHeartDiseaseType fromValue(String text) {
+		for (CongenitalHeartDiseaseType b : CongenitalHeartDiseaseType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }
