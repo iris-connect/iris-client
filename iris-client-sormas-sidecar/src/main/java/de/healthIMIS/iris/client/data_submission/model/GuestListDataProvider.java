@@ -3,6 +3,7 @@ package de.healthIMIS.iris.client.data_submission.model;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -32,7 +33,8 @@ public class GuestListDataProvider {
 	 * 
 	 * @return name
 	 **/
-	@Schema(description = "Name of Location, Institution or Organizer")
+	@Schema(required = true, description = "Name of Location, Institution or Organizer")
+	@NotNull
 
 	public String getName() {
 		return name;
@@ -52,7 +54,8 @@ public class GuestListDataProvider {
 	 * 
 	 * @return address
 	 **/
-	@Schema(description = "")
+	@Schema(required = true, description = "")
+	@NotNull
 
 	@Valid
 	public Address getAddress() {
