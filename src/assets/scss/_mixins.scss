@@ -1,0 +1,24 @@
+.theme--light.v-btn {
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+a:active, .v-btn--active, a:hover{
+  outline-width: 0;
+  text-decoration: underline #46ff9f 3px;
+  text-underline-offset: 3px;
+}
+
+.theme--light.v-btn--active:hover::before, .theme--light.v-btn--active::before {
+  opacity: 0;
+}
+
+.v-data-table{
+  thead{
+    tr{
+      height: initial;
+    }
+  }
+  tr{
+    height: 100px;
+  }
+}

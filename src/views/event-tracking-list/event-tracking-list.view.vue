@@ -1,21 +1,32 @@
 <template>
   <div>
-    <div class="mb-6">
-      <v-dialog
-          transition="dialog-bottom-transition"
-          max-width="98%"
-          width="1600px"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="primary"
-              v-bind="attrs"
-              v-on="on"
-            >Neue Ereignisverfolgung starten</v-btn>
-          </template>
-          <EventTrackingFormView></EventTrackingFormView>
-        </v-dialog>
-    </div>
+    <v-row>
+      <v-col cols="8">
+        <div class="mb-6">
+          Status:
+          <v-btn class="ml-2 mr-2" color="white" v-on="on">Angefragt </v-btn>
+          <v-btn class="mr-2" color="white" v-on="on">Update </v-btn>
+          <v-btn class="mr-2" color="white" v-on="on">Geschlossen </v-btn>
+        </div>
+      </v-col>
+      <v-col cols="4">
+        <div class="mb-6">
+          <v-dialog
+            transition="dialog-bottom-transition"
+            max-width="98%"
+            width="1600px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn class="float-right" color="primary" v-bind="attrs" v-on="on"
+                >Neue Ereignisverfolgung starten
+              </v-btn>
+            </template>
+            <EventTrackingFormView></EventTrackingFormView>
+          </v-dialog>
+        </div>
+      </v-col>
+    </v-row>
+
     <v-card>
       <v-card-title>Ereignisnachverfolgungen</v-card-title>
       <v-card-subtitle>DISCLAIMER: DEMO TABELLE</v-card-subtitle>
@@ -28,29 +39,27 @@
           hide-details
         ></v-text-field>
         <v-data-table
-        :headers="tableData.headers"
-        :items="tableData.eventList"
-        :items-per-page="5"
-        class="elevation-1"
-        :search="tableData.search"
-      >
-        <template v-slot:item.status="{ item }">
-          <v-chip 
-            :color="getStatusColor(item.status)"
-            dark
-          >
-            {{ item.status }}
-          </v-chip>
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-btn
-          color="primary"
-          :to="'details/'+item.extID"
-          @click="selectItem(item)">
-            Details
-          </v-btn>
-        </template>
-      </v-data-table>
+          :headers="tableData.headers"
+          :items="tableData.eventList"
+          :items-per-page="5"
+          class="elevation-1 mt-5"
+          :search="tableData.search"
+        >
+          <template v-slot:item.status="{ item }">
+            <v-chip :color="getStatusColor(item.status)" dark>
+              {{ item.status }}
+            </v-chip>
+          </template>
+          <template v-slot:item.actions="{ item }">
+            <v-btn
+              color="primary"
+              :to="'details/' + item.extID"
+              @click="selectItem(item)"
+            >
+              Details
+            </v-btn>
+          </template>
+        </v-data-table>
       </v-card-text>
     </v-card>
   </div>
@@ -60,12 +69,12 @@
 import { ROUTE_NAME_EVENT_TRACKING_FORM } from "@/router";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
-@Component({
-    components: {
-        "EventTrackingFormView": EventTrackingFormView
-    }
-})
 
+@Component({
+  components: {
+    EventTrackingFormView: EventTrackingFormView,
+  },
+})
 export default class EventTrackingListView extends Vue {
   routeEventTrackingForm = ROUTE_NAME_EVENT_TRACKING_FORM;
   tableData = {
@@ -109,10 +118,11 @@ export default class EventTrackingListView extends Vue {
       },
     ],
   };
+
   getStatusColor(status: string) {
     if (status == "Angefragt") return "blue";
     else if (status == "UPDATE") return "red";
     else if (status == "Abgeschlossen") return "green";
-  };
+  }
 }
 </script>

@@ -9,4 +9,11 @@ export default new Vuetify({
     locales: { de },
     current: "de",
   },
+  theme: {
+    themes: {
+      light: {
+        primary: '#46ff9f', // #E53935
+      },
+    },
+  },
 });
