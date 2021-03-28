@@ -217,7 +217,7 @@ export default class EventTrackingFormView extends Vue {
     showDatePicker: false,
     showDatePickerEnd: false,
     rules: {
-      defined: [(v: unknown): string | boolean => !!v || "Pfilichtfeld"],
+      defined: [(v: unknown): string | boolean => !!v || "Pflichtfeld"],
     },
     valid: false,
   };
