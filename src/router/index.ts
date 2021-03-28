@@ -54,7 +54,7 @@ export const routes: Array<RouteConfig> = [
     path: ROUTE_NAME_INDEX_TRACKING_LIST,
     name: "Indexfälle",
     meta: {
-      menu:true
+      menu: true,
     },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
