@@ -30,8 +30,9 @@ services:
       - psqldata_iris:/var/lib/postgresql/data
       - ./docker/postgres/pg-init-scripts:/docker-entrypoint-initdb.d
     restart: unless-stopped
-    mem_limit: ${DB_MEM}
-    mem_reservation: ${DB_MEM_RESERVED}
+# do not work on Strato machine
+#    mem_limit: ${DB_MEM} 
+#    mem_reservation: ${DB_MEM_RESERVED}
     healthcheck:
       test: [ "CMD", "psql", "-U", "${SORMAS_POSTGRES_USER}", "-c", "SELECT 1;", "${SORMAS_DB_NAME}" ]
       interval: 30s
@@ -103,8 +104,8 @@ services:
       - sormas_sormas2sormas_iris:/opt/sormas/sormas2sormas
       - sormas_sormas-logs_iris:/opt/domains/sormas/logs
     restart: unless-stopped
-    mem_limit: ${APPSERVER_MEM}
-    mem_reservation: ${APPSERVER_MEM_RESERVED}
+#    mem_limit: ${APPSERVER_MEM}
+#    mem_reservation: ${APPSERVER_MEM_RESERVED}
     healthcheck:
       test: [ "CMD", "curl", "-f", "-I", "http://localhost:6080/sormas-ui/login" ]
       interval: 30s
@@ -120,8 +121,14 @@ services:
     ports:
       - 18443:8443
     restart: unless-stopped
-    mem_limit: ${IRIS_PUBLIC_MEM}
-    mem_reservation: ${IRIS_PUBLIC_MEM_RESERVED}
+#    mem_limit: ${IRIS_PUBLIC_MEM}
+#    mem_reservation: ${IRIS_PUBLIC_MEM_RESERVED}
+
+  iris-location:
+    image: inoeg/iris-location-service:0.0.1-SNAPSHOT
+    ports:
+      - 8080:8080
+    restart: unless-stopped
 
 #  iris-hd:
 #    image: de.health_imis/iris-hd-server:0.0.1-SNAPSHOT
@@ -145,8 +152,8 @@ services:
       # you must use this file set the access parameters for SORMAS 
       - iris-sormas.env
     restart: unless-stopped
-    mem_limit: ${IRIS_CLIENT_MEM}
-    mem_reservation: ${IRIS_CLIENT_MEM_RESERVED}
+#    mem_limit: ${IRIS_CLIENT_MEM}
+#    mem_reservation: ${IRIS_CLIENT_MEM_RESERVED}
 
 volumes:
   psqldata_iris: 
