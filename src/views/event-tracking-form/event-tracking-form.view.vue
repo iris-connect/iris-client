@@ -47,7 +47,7 @@
           <v-btn
           color="primary"
           @click="selectItem(item)">
-            Auswählen
+            Wählen
           </v-btn>
         </template>
       </v-data-table>
