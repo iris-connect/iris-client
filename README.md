@@ -37,3 +37,10 @@ npm run lint
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### API Client
+
+The api client was generated using a swagger code generator.
+
+The api spec and instructions for code generation can be found here:  
+<https://github.com/iris-gateway/IRIS>
