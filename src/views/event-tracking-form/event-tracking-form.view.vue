@@ -17,6 +17,18 @@
             width="200px"
           ></v-text-field>
         </v-col>
+        <v-col
+          cols="12"
+          md="4"
+        >
+          <v-text-field
+            v-model="form.model.name"
+            :disabled="eventCreationOngoing"
+            :rules="form.rules.defined"
+            label="Name"
+            width="200px"
+          ></v-text-field>
+        </v-col>
       </v-row>
       <v-text-field
           v-model="searchTable.search"
@@ -96,7 +108,7 @@
         </v-col>
         <v-col>
           <v-menu
-            v-model="form.showDatePicker"
+            v-model="form.showDatePickerEnd"
             :close-on-content-click="false"
             :nudge-right="40"
             lazy
@@ -110,7 +122,7 @@
               <v-text-field
                 label="Datum (Ende)"
                 readonly
-                :value="form.model.date"
+                :value="form.model.dateEnd"
                 v-on="on"
                 :rules="form.rules.defined"
                 required
@@ -119,9 +131,9 @@
             </template>
             <v-date-picker
               locale="en-in"
-              v-model="form.model.date"
+              v-model="form.model.dateEnd"
               no-title
-              @input="form.showDatePicker = false"
+              @input="form.showDatePickerEnd = false"
             ></v-date-picker>
           </v-menu>
         </v-col>
@@ -134,6 +146,18 @@
             required
             prepend-icon="mdi-clock"
           ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-textarea
+          name="requestComment"
+          label="Anfragendetails für den Betrieb"        
+          auto-grow
+          rows="1"
+          value=""
+          hint="Datenschutz-Hinweis: Die Anfragendetails werden an den Betrieb übermittelt!"
+        ></v-textarea>
         </v-col>
       </v-row>
       </v-container>
@@ -177,6 +201,7 @@ export default class EventTrackingFormView extends Vue {
     model: {
       externalId: "",
       date: "",
+      dateEnd: "",
       name: "",
       time: {
         from: "",
@@ -184,6 +209,7 @@ export default class EventTrackingFormView extends Vue {
       },
     },
     showDatePicker: false,
+    showDatePickerEnd: false,
     rules: {
       defined: [(v: unknown): string | boolean => !!v || "Pfilichtfeld"],
     },

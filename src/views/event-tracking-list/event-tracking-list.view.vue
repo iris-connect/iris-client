@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1 class="text-h3 mb-6">Ereignisnachverfolgungen</h1>
     <div class="mb-6">
       <v-dialog
           transition="dialog-bottom-transition"
@@ -18,8 +17,9 @@
         </v-dialog>
     </div>
     <v-card>
-      <p>DISCLAIMER: DEMO TABELLE</p>
-      <v-card-title>
+      <v-card-title>Ereignisnachverfolgungen</v-card-title>
+      <v-card-subtitle>DISCLAIMER: DEMO TABELLE</v-card-subtitle>
+      <v-card-text>
         <v-text-field
           v-model="tableData.search"
           append-icon="mdi-magnify"
@@ -27,8 +27,7 @@
           single-line
           hide-details
         ></v-text-field>
-      </v-card-title>
-      <v-data-table
+        <v-data-table
         :headers="tableData.headers"
         :items="tableData.eventList"
         :items-per-page="5"
@@ -52,6 +51,7 @@
           </v-btn>
         </template>
       </v-data-table>
+      </v-card-text>
     </v-card>
   </div>
 </template>
