@@ -3,7 +3,7 @@ services:
   postgres:
     build: ./docker/postgres
     command: -c 'config_file=/etc/postgresql/postgresql.conf'
-    ports:
+    expose:
       - 5432
     environment:
       POSTGRES_USER:
@@ -40,13 +40,13 @@ services:
       - DB_HOST=${DB_HOST}
       - DOMAIN_NAME=${DOMAIN_NAME}
       - DB_JDBC_MAXPOOLSIZE=${DB_JDBC_MAXPOOLSIZE}
-      - DB_NAME=${DB_NAME}
-      - DB_NAME_AUDIT=${DB_NAME_AUDIT}
+      - DB_NAME=${SORMAS_DB_NAME}
+      - DB_NAME_AUDIT=${SORMAS_DB_NAME_AUDIT}
       - MAIL_HOST=${MAIL_HOST}
       - MAIL_FROM=${MAIL_FROM}
       - SORMAS_VERSION=${SORMAS_VERSION}
       - LOCALE=${LOCALE}
-      - COUNTRY_NAME=${COUNTRY_NAME}
+      - COUNTRY_NAME=germany
       - EPIDPREFIX=${EPIDPREFIX}
       - SEPARATOR=${SEPARATOR}
       - EMAIL_SENDER_ADDRESS=${EMAIL_SENDER_ADDRESS}
@@ -80,8 +80,7 @@ services:
       timeout: 7s
       retries: 3
       start_period: 300s
-    ports:
-    - 6080
+
     depends_on:
       postgres:
         condition: service_healthy
@@ -91,14 +90,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    ports:
+    expose:
       - 8443
     restart: unless-stopped
 
 
   iris-location:
     image: inoeg/iris-location-service:0.0.1-SNAPSHOT
-    ports:
+    expose:
       - 8080
     restart: unless-stopped
 
