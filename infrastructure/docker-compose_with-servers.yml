@@ -31,7 +31,7 @@ services:
       - ./docker/postgres/pg-init-scripts:/docker-entrypoint-initdb.d
     restart: unless-stopped
 # do not work on Strato machine
-#    mem_limit: ${DB_MEM} 
+#    mem_limit: ${DB_MEM}
 #    mem_reservation: ${DB_MEM_RESERVED}
     healthcheck:
       test: [ "CMD", "psql", "-U", "${SORMAS_POSTGRES_USER}", "-c", "SELECT 1;", "${SORMAS_DB_NAME}" ]
@@ -154,6 +154,13 @@ services:
     restart: unless-stopped
 #    mem_limit: ${IRIS_CLIENT_MEM}
 #    mem_reservation: ${IRIS_CLIENT_MEM_RESERVED}
+
+  nginx:
+    build:
+      ./docker/nginx
+    ports:
+      443:443
+      80:80
 
 volumes:
   psqldata_iris: 
