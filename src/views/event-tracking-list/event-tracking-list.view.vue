@@ -50,14 +50,12 @@
           class="elevation-1 mt-5"
           :search="tableData.search"
         >
-          <!-- TODO fix eslint error -->
-          <template v-slot:item.status="{ item }">
+          <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
               {{ item.status }}
             </v-chip>
           </template>
-          <!-- TODO fix eslint error -->
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:[itemActionSlotName]="{ item }">
             <v-btn
               color="primary"
               :to="'details/' + item.extID"
@@ -131,12 +129,21 @@ export default class EventTrackingListView extends Vue {
     ],
   };
 
+  // TODO improve this - we need it to circumvent v-slot eslint errors
+  // https://stackoverflow.com/questions/61344980/v-slot-directive-doesnt-support-any-modifier
+  get itemStatusSlotName(): string {
+    return "item.status";
+  }
+  get itemActionSlotName(): string {
+    return "item.actions";
+  }
+
   on(): void {
     console.log("NOT IMPLEMENTED");
   }
 
-  selectItem(): void {
-    console.log("NOT IMPLEMENTED");
+  selectItem(item: unknown): void {
+    console.log("NOT IMPLEMENTED", item);
   }
 
   getStatusColor(status: string): string {

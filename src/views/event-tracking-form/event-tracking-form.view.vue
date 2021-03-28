@@ -40,20 +40,7 @@
           class="elevation-1"
           :search="searchTable.search"
         >
-          <template v-slot:item.address.combined="{ item }">
-            <v-list-item two-line>
-              <v-list-item-content>
-                <v-list-item-subtitle>{{
-                  item.address.street
-                }}</v-list-item-subtitle>
-                <v-list-item-content
-                  >{{ item.address.zip }}
-                  {{ item.address.city }}</v-list-item-content
-                >
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:[itemActionSlotName]="{ item }">
             <v-btn color="primary" @click="selectItem(item)"> Wählen </v-btn>
           </template>
         </v-data-table>
@@ -262,6 +249,12 @@ export default class EventTrackingFormView extends Vue {
         ...this.form.model,
       });
     }
+  }
+
+  // TODO improve this - we need it to circumvent v-slot eslint errors
+  // https://stackoverflow.com/questions/61344980/v-slot-directive-doesnt-support-any-modifier
+  get itemActionSlotName(): string {
+    return "item.actions";
   }
 }
 </script>
