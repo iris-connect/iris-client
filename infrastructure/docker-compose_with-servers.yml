@@ -124,6 +124,12 @@ services:
 #    mem_limit: ${IRIS_PUBLIC_MEM}
 #    mem_reservation: ${IRIS_PUBLIC_MEM_RESERVED}
 
+  iris-location:
+    image: inoeg/iris-location-service:0.0.1-SNAPSHOT
+    ports:
+      8080:8080
+    restart: unless-stopped
+
 #  iris-hd:
 #    image: de.health_imis/iris-hd-server:0.0.1-SNAPSHOT
 #    depends_on:
