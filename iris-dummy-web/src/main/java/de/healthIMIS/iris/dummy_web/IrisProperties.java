@@ -43,8 +43,4 @@ public class IrisProperties {
 	 * Date of birth of the user - is used for check code
 	 */
 	private LocalDate dateOfBirth = LocalDate.parse("1990-01-01");
-	/**
-	 * Random Checkcode - is used as fallback
-	 */
-	private String randomCode = "ABCDEFGHKL";
 }

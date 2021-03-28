@@ -234,8 +234,7 @@ public class HomeController {
 	 */
 	private void postSubmission(Link link, String content, String encryptedSecretKey, String keyReferenz) {
 
-		var submission = new DataSubmissionDto().checkCode(determineCheckcode()).keyReferenz(keyReferenz)
-				.secret(encryptedSecretKey).encryptedData(content);
+		var submission = new DataSubmissionDto().keyReferenz(keyReferenz).secret(encryptedSecretKey).encryptedData(content);
 
 		log.info("\nData submission is sent to healt department with key referenz '%s'", keyReferenz);
 		log.debug("\nContent of the data submission unencrypted:\n %s", content);
@@ -245,43 +244,5 @@ public class HomeController {
 		headers.setContentType(new MediaType(APPLICATION_JSON, UTF_8));
 
 		rest.postForObject(link.getHref(), new HttpEntity<>(submission, headers), DataRequestDto.class);
-	}
-
-	/**
-	 * Determines the check codes from the user data name and date of birth.
-	 * 
-	 * @return
-	 */
-	private List<String> determineCheckcode() {
-
-		var ret = new ArrayList<String>();
-
-		var name = properties.getName();
-		var dateOfBirth = properties.getDateOfBirth();
-		var randomCode = properties.getRandomCode();
-
-		if (name != null) {
-
-			var nameMod = name.toLowerCase().replaceAll("[^\\pL\\pN]", "");
-			var nameHash = DigestUtils.md5Hex(nameMod);
-			ret.add(nameHash);
-
-			log.debug("\nCheck code for name is MD5 of '%s' = '%s'\n\n", nameMod, nameHash);
-		}
-
-		if (dateOfBirth != null) {
-
-			var date = dateOfBirth.getYear() * 10000 + dateOfBirth.getMonthValue() * 100 + dateOfBirth.getDayOfMonth();
-			var dateHash = DigestUtils.md5Hex(Integer.toString(date));
-			ret.add(dateHash);
-
-			log.debug("\nCheck code for date of birth is MD5 of '%s' = '%s'\n\n", date, dateHash);
-		}
-
-		if (randomCode != null) {
-			ret.add(randomCode);
-		}
-
-		return ret;
 	}
 }

@@ -47,12 +47,6 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	private String irisUserId;
 	private String sormasUserId;
 
-	private String teleCode;
-
-	private String checkCodeOne;
-	private String checkCodeTwo;
-	private String checkCodeRandom;
-
 	private Instant requestStart;
 	private Instant requestEnd;
 
@@ -66,19 +60,14 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	@Column(nullable = false) @Enumerated(EnumType.STRING)
 	private Status status = Status.Open;
 
-	public DataRequest(SormasRefId refId, SormasRefId personId, String teleCode, String checkCodeOne, String checkCodeTwo,
-			String checkCodeRandom, Instant requestStart, Instant requestEnd, String requestDetails, String irisUserId,
-			String sormasUserId, Set<Feature> features) {
+	public DataRequest(SormasRefId refId, SormasRefId personId, Instant requestStart, Instant requestEnd,
+			String requestDetails, String irisUserId, String sormasUserId, Set<Feature> features) {
 
 		super();
 
 		this.id = DataRequestIdentifier.of(UUID.randomUUID());
 		this.refId = refId;
 		this.personId = personId;
-		this.teleCode = teleCode;
-		this.checkCodeOne = checkCodeOne;
-		this.checkCodeTwo = checkCodeTwo;
-		this.checkCodeRandom = checkCodeRandom;
 		this.requestStart = requestStart;
 		this.requestEnd = requestEnd;
 		this.requestDetails = requestDetails;

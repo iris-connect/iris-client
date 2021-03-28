@@ -65,17 +65,15 @@ public class DataRequestDataInitializer implements DataInitializer {
 
 		var list = new ArrayList<DataRequest>();
 
-		list.add(new DataRequest(REQ_ID_1, DEPARTMENT_ID_1, SORMAS_REF_ID_1, "e7fcc353b0b13024d48f74a718d8d721",
-				"c82c1cd77fbd144003b1e476718f66ce", "ABCDEFGHKL", Instant.now().minus(2, ChronoUnit.DAYS), null, "IRIS User ID",
-				"User ID", EnumSet.of(Feature.Contacts), Status.Open));
+		list.add(new DataRequest(REQ_ID_1, DEPARTMENT_ID_1, SORMAS_REF_ID_1, Instant.now().minus(2, ChronoUnit.DAYS), null,
+				"IRIS User ID", "User ID", EnumSet.of(Feature.Contacts), Status.Open));
 
-		list.add(new DataRequest(REQ_ID_2, DEPARTMENT_ID_1, SORMAS_REF_ID_2, "cd0087e4707045b33c144bf09305c2a5", null,
-				"9876543XYZ", Instant.now().minus(4, ChronoUnit.DAYS), Instant.now().minus(2, ChronoUnit.DAYS), "IRIS User ID",
-				"User ID", EnumSet.of(Feature.Contacts, Feature.Events), Status.Open));
+		list.add(new DataRequest(REQ_ID_2, DEPARTMENT_ID_1, SORMAS_REF_ID_2, Instant.now().minus(4, ChronoUnit.DAYS),
+				Instant.now().minus(2, ChronoUnit.DAYS), "IRIS User ID", "User ID",
+				EnumSet.of(Feature.Contacts, Feature.Events), Status.Open));
 
-		list.add(new DataRequest(REQ_ID_3, DEPARTMENT_ID_2, SORMAS_REF_ID_3, "bce7a55a7b8a8a89c33c4879fc545cc9", null,
-				"23456789AB", Instant.now().minus(4, ChronoUnit.DAYS), Instant.now().minus(2, ChronoUnit.DAYS), "IRIS User ID",
-				"User ID", EnumSet.of(Feature.Contacts), Status.Open));
+		list.add(new DataRequest(REQ_ID_3, DEPARTMENT_ID_2, SORMAS_REF_ID_3, Instant.now().minus(4, ChronoUnit.DAYS),
+				Instant.now().minus(2, ChronoUnit.DAYS), "IRIS User ID", "User ID", EnumSet.of(Feature.Contacts), Status.Open));
 
 		requests.saveAll(list);
 	}
