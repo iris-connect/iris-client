@@ -61,7 +61,7 @@
                     label="Datum (Beginn)"
                     readonly
                     :value="form.model.date"
-                    v-on="on"
+                    @click="on"
                     :rules="form.rules.defined"
                     required
                     prepend-icon="mdi-clock"
@@ -100,7 +100,7 @@
                     label="Datum (Ende)"
                     readonly
                     :value="form.model.dateEnd"
-                    v-on="on"
+                    @click="on"
                     :rules="form.rules.defined"
                     required
                     prepend-icon="mdi-calendar"
@@ -249,6 +249,10 @@ export default class EventTrackingFormView extends Vue {
         ...this.form.model,
       });
     }
+  }
+
+  on(): void {
+    console.log("NOT IMPLEMENTED");
   }
 
   // TODO improve this - we need it to circumvent v-slot eslint errors
