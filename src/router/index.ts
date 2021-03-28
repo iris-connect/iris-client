@@ -5,9 +5,11 @@ import Home from "../views/home/Home.vue";
 Vue.use(VueRouter);
 
 // TODO create router config which exports these constants
-const ROUTE_NAME_EVENT_TRACKING = "ereignisnachverfolgung";
+const ROUTE_NAME_EVENT_TRACKING = "ereignisse";
+const ROUTE_NAME_INDEX_TRACKING = "indexfaelle";
 export const ROUTE_NAME_EVENT_TRACKING_FORM = `/${ROUTE_NAME_EVENT_TRACKING}/starten`;
 export const ROUTE_NAME_EVENT_TRACKING_LIST = `/${ROUTE_NAME_EVENT_TRACKING}/liste`;
+export const ROUTE_NAME_INDEX_TRACKING_LIST = `/${ROUTE_NAME_INDEX_TRACKING}/liste`;
 
 export const ROUTE_NAME_HOME = "";
 
@@ -46,6 +48,20 @@ export const routes: Array<RouteConfig> = [
     component: () =>
       import(
         /* webpackChunkName: "about" */ "../views/event-tracking-list/event-tracking-list.view.vue"
+      ),
+  },
+  {
+    path: ROUTE_NAME_INDEX_TRACKING_LIST,
+    name: "Indexfälle",
+    meta: {
+      menu:true
+    },
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "../views/index-tracking-list/index-tracking-list.view.vue"
       ),
   },
 ];
