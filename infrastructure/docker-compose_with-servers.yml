@@ -18,21 +18,20 @@ services:
       POSTGRES_USER:
       POSTGRES_PASSWORD:
       POSTGRES_MULTIPLE_DATABASES:
-
+      
       SORMAS_POSTGRES_PASSWORD:
       SORMAS_POSTGRES_USER:
       SORMAS_DB_NAME:
       SORMAS_DB_NAME_AUDIT:
       TZ:
-
+      
       #POSTGRES_DB: iris
     volumes:
       - psqldata_iris:/var/lib/postgresql/data
       - ./docker/postgres/pg-init-scripts:/docker-entrypoint-initdb.d
     restart: unless-stopped
-    # do not work on Strato machine
-    #    mem_limit: ${DB_MEM}
-    #    mem_reservation: ${DB_MEM_RESERVED}
+    mem_limit: ${DB_MEM}
+    mem_reservation: ${DB_MEM_RESERVED}
     healthcheck:
       test: [ "CMD", "psql", "-U", "${SORMAS_POSTGRES_USER}", "-c", "SELECT 1;", "${SORMAS_DB_NAME}" ]
       interval: 30s
@@ -88,13 +87,13 @@ services:
       - JSON_LOGGING
       - CASEARCHIVEDAYS
       - EVENTARCHIVEDAYS
-
+      
       - CUSTOMBRANDING_ENABLED
       - CUSTOMBRANDING_NAME
       - CUSTOMBRANDING_LOGO_PATH
       - CUSTOMBRANDING_USE_LOGINSIDEBAR
       - CUSTOMBRANDING_LOGINBACKGROUND_PATH
-
+      
       - GEO_TEMPLATE
       - GEO_LONG_TEMPLATE
       - GEO_LAT_TEMPLATE
@@ -104,15 +103,15 @@ services:
       - sormas_sormas2sormas_iris:/opt/sormas/sormas2sormas
       - sormas_sormas-logs_iris:/opt/domains/sormas/logs
     restart: unless-stopped
-    #    mem_limit: ${APPSERVER_MEM}
-    #    mem_reservation: ${APPSERVER_MEM_RESERVED}
+    mem_limit: ${APPSERVER_MEM}
+    mem_reservation: ${APPSERVER_MEM_RESERVED}
     healthcheck:
       test: [ "CMD", "curl", "-f", "-I", "http://localhost:6080/sormas-ui/login" ]
       interval: 30s
       timeout: 7s
       retries: 3
       start_period: 60s
-
+    
   iris-public:
     image: inoeg/iris-public-server:0.0.1-SNAPSHOT
     depends_on:
@@ -121,23 +120,17 @@ services:
     ports:
       - 18443:8443
     restart: unless-stopped
-  #    mem_limit: ${IRIS_PUBLIC_MEM}
-  #    mem_reservation: ${IRIS_PUBLIC_MEM_RESERVED}
+    mem_limit: ${IRIS_PUBLIC_MEM}
+    mem_reservation: ${IRIS_PUBLIC_MEM_RESERVED}
 
-  iris-location:
-    image: inoeg/iris-location-service:0.0.1-SNAPSHOT
-    ports:
-      - 8080:8080
-    restart: unless-stopped
-
-  #  iris-hd:
-  #    image: de.health_imis/iris-hd-server:0.0.1-SNAPSHOT
-  #    depends_on:
-  #      - postgres
-  #      - iris-public
-  #    ports:
-  #      - 28443:8443
-  #    restart: unless-stopped
+#  iris-hd:
+#    image: de.health_imis/iris-hd-server:0.0.1-SNAPSHOT
+#    depends_on:
+#      - postgres
+#      - iris-public
+#    ports:
+#      - 28443:8443
+#    restart: unless-stopped
 
   iris-client:
     image: inoeg/iris-client-sormas-sidecar:0.0.1-SNAPSHOT
@@ -146,26 +139,17 @@ services:
         condition: service_healthy
       sormas:
         condition: service_healthy
-      iris-public:
+      iris-public: 
         condition: service_started
     env_file:
       # you must use this file set the access parameters for SORMAS 
       - iris-sormas.env
     restart: unless-stopped
-  #    mem_limit: ${IRIS_CLIENT_MEM}
-  #    mem_reservation: ${IRIS_CLIENT_MEM_RESERVED}
-
-  nginx:
-    build:
-      ./docker/nginx
-    ports:
-      - 443:443
-      - 80:80
-    volumes:
-      - "/etc/letsencrypt:/etc/letsencrypt"
+    mem_limit: ${IRIS_CLIENT_MEM}
+    mem_reservation: ${IRIS_CLIENT_MEM_RESERVED}
 
 volumes:
-  psqldata_iris:
+  psqldata_iris: 
   sormas_documents_iris:
   sormas_custom_iris:
   sormas_sormas2sormas_iris:
