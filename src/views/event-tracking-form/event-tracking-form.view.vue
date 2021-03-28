@@ -53,10 +53,7 @@
       </v-data-table>
       <v-container>
       <v-row>
-        <v-col
-          cols="12"
-          md="4"
-        >
+        <v-col>
           <v-menu
             v-model="form.showDatePicker"
             :close-on-content-click="false"
@@ -70,7 +67,7 @@
           >
             <template v-slot:activator="{ on }">
               <v-text-field
-                label="Datum"
+                label="Datum (Beginn)"
                 readonly
                 :value="form.model.date"
                 v-on="on"
@@ -96,6 +93,37 @@
             prepend-icon="mdi-clock"
             required
           ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-menu
+            v-model="form.showDatePicker"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            lazy
+            transition="scale-transition"
+            offset-y
+            full-width
+            max-width="290px"
+            min-width="290px"
+          >
+            <template v-slot:activator="{ on }">
+              <v-text-field
+                label="Datum (Ende)"
+                readonly
+                :value="form.model.date"
+                v-on="on"
+                :rules="form.rules.defined"
+                required
+                prepend-icon="mdi-calendar"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              locale="en-in"
+              v-model="form.model.date"
+              no-title
+              @input="form.showDatePicker = false"
+            ></v-date-picker>
+          </v-menu>
         </v-col>
         <v-col>
           <v-text-field
