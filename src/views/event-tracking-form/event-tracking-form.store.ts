@@ -1,46 +1,15 @@
+import {
+  Configuration,
+  DataRequestClient,
+  IrisClientFrontendApiFactory,
+  LocationInformation,
+} from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 
-// TODO import real location type as defined in swagger client
-type EventTrackingFormData = {
-  name: string;
-};
-
-// TODO import real location type as defined in swagger client
-type EventLocation = {
-  name: string;
-};
-
-// TODO import real query options type as defined in swagger client
-type EventLocationQueryOptions = {
-  name: string;
-  city: string;
-  zip: string;
-};
-
-// TODO import real location type as defined in swagger client
-const api = {
-  eventLocations: {
-    get: (options: EventLocationQueryOptions) => {
-      console.log("EVENT_LOCATIONS", "GET", options);
-      return new Promise((resolve) => {
-        setTimeout(resolve, 3000);
-      });
-    },
-  },
-  eventTrackings: {
-    put: (data: EventTrackingFormData) => {
-      console.log("EVENT_TRACKINGS", "PUT", data);
-      return new Promise((resolve) => {
-        setTimeout(resolve, 3000);
-      });
-    },
-  },
-};
-
 export type EventTrackingFormState = {
-  locations: EventLocation[] | null;
+  locations: LocationInformation[] | null;
   locationsLoading: boolean;
   eventCreationOngoing: boolean;
 };
@@ -50,7 +19,7 @@ export interface EventTrackingFormModule
   mutations: {
     setEventLocations(
       state: EventTrackingFormState,
-      locations: EventLocation[] | null
+      locations: LocationInformation[] | null
     ): void;
     setEventLocationsLoading(
       state: EventTrackingFormState,
@@ -64,11 +33,11 @@ export interface EventTrackingFormModule
   actions: {
     fetchEventLocations(
       { commit }: { commit: Commit },
-      queryOptions: EventLocationQueryOptions
+      keyword: string
     ): Promise<void>;
     createEventTracking(
       { commit }: { commit: Commit },
-      formData: EventTrackingFormData
+      formData: DataRequestClient
     ): Promise<void>;
   };
 }
@@ -83,7 +52,7 @@ const productDetail: EventTrackingFormModule = {
     };
   },
   mutations: {
-    setEventLocations(state, locations: EventLocation[] | null) {
+    setEventLocations(state, locations) {
       state.locations = locations;
     },
     setEventLocationsLoading(state, loading: boolean) {
@@ -94,20 +63,33 @@ const productDetail: EventTrackingFormModule = {
     },
   },
   actions: {
-    async fetchEventLocations({ commit }, queryOptions) {
-      let locations = null;
-      commit("setProductLoading", true);
+    async fetchEventLocations({ commit }, keyword) {
+      const client = IrisClientFrontendApiFactory(
+        new Configuration({
+          // TODO use basepath for iris-api-client (sidecar)
+          basePath: "/api",
+        })
+      );
+      let locations: LocationInformation[] | null = null;
+      commit("setEventLocationsLoading", true);
       try {
-        locations = await api.eventLocations.get(queryOptions);
+        locations = (await client.searchSearchKeywordGet(keyword)).data
+          .locations;
       } finally {
         commit("setEventLocations", locations);
         commit("setEventLocationsLoading", false);
       }
     },
-    async createEventTracking({ commit }, formData) {
+    async createEventTracking({ commit }, dataRequestClient) {
       commit("setEventCreationOngoing", true);
       try {
-        await api.eventTrackings.put(formData);
+        const client = IrisClientFrontendApiFactory(
+          new Configuration({
+            // TODO use basepath for iris-api-client (sidecar)
+            basePath: "/api",
+          })
+        );
+        await client.dataRequestsPost(dataRequestClient);
       } finally {
         commit("setEventCreationOngoing", false);
       }

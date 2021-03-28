@@ -4,9 +4,9 @@
       <v-col cols="8">
         <div class="mb-6">
           Status:
-          <v-btn class="ml-2 mr-2" color="white" v-on="on">Angefragt </v-btn>
-          <v-btn class="mr-2" color="white" v-on="on">Update </v-btn>
-          <v-btn class="mr-2" color="white" v-on="on">Geschlossen </v-btn>
+          <v-btn class="ml-2 mr-2" color="white" @click="on">Angefragt </v-btn>
+          <v-btn class="mr-2" color="white" @click="on">Update </v-btn>
+          <v-btn class="mr-2" color="white" @click="on">Geschlossen </v-btn>
         </div>
       </v-col>
       <v-col cols="4">
@@ -25,6 +25,7 @@
                 >Neue Ereignisverfolgung starten
               </v-btn>
             </template>
+            <!-- TODO do not use view like component -->
             <EventTrackingFormView></EventTrackingFormView>
           </v-dialog>
         </div>
@@ -49,12 +50,12 @@
           class="elevation-1 mt-5"
           :search="tableData.search"
         >
-          <template v-slot:item.status="{ item }">
+          <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
               {{ item.status }}
             </v-chip>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:[itemActionSlotName]="{ item }">
             <v-btn
               color="primary"
               :to="'details/' + item.extID"
@@ -73,10 +74,15 @@
 import { ROUTE_NAME_EVENT_TRACKING_FORM } from "@/router";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
+import store from "@/store";
 
 @Component({
   components: {
     EventTrackingFormView: EventTrackingFormView,
+  },
+  beforeRouteEnter: async (_from, _to, next) => {
+    await store.dispatch("eventTrackingForm/fetchEventLocations", "");
+    next();
   },
 })
 export default class EventTrackingListView extends Vue {
@@ -123,11 +129,29 @@ export default class EventTrackingListView extends Vue {
     ],
   };
 
+  // TODO improve this - we need it to circumvent v-slot eslint errors
+  // https://stackoverflow.com/questions/61344980/v-slot-directive-doesnt-support-any-modifier
+  get itemStatusSlotName(): string {
+    return "item.status";
+  }
+  get itemActionSlotName(): string {
+    return "item.actions";
+  }
+
+  on(): void {
+    console.log("NOT IMPLEMENTED");
+  }
+
+  selectItem(item: unknown): void {
+    console.log("NOT IMPLEMENTED", item);
+  }
+
   getStatusColor(status: string): string {
+    // TODO use enum / string literals
     if (status == "Angefragt") return "blue";
     else if (status == "UPDATE") return "red";
     else if (status == "Abgeschlossen") return "green";
-    else return "";
+    else throw Error("TODO this should not happen");
   }
 }
 </script>

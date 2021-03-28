@@ -6,9 +6,10 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "eslint '{src,docs}/**/*.{js,ts,vue}' --max-warnings 0 -f codeframe --fix"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
@@ -34,6 +35,9 @@
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^6.2.2",
+    "husky": "^5.2.0",
+    "lint-staged": "^10.5.4",
+    "miragejs": "^0.1.41",
     "node-sass": "^5.0.0",
     "prettier": "^2.2.1",
     "sass": "^1.32.0",
@@ -42,5 +46,13 @@
     "vue-cli-plugin-vuetify": "~2.3.1",
     "vue-template-compiler": "^2.6.11",
     "vuetify-loader": "^1.7.0"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,vue}": [
+      "npm run lint"
+    ]
   }
 }

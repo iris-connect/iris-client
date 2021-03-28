@@ -18,7 +18,7 @@ export const routes: Array<RouteConfig> = [
     path: `/${ROUTE_NAME_HOME}`,
     name: "Dashboard",
     meta: {
-      menu:true
+      menu: true,
     },
     component: Home,
   },
@@ -26,7 +26,7 @@ export const routes: Array<RouteConfig> = [
     path: ROUTE_NAME_EVENT_TRACKING_FORM,
     name: `${ROUTE_NAME_EVENT_TRACKING}-start`,
     meta: {
-      menu:false
+      menu: false,
     },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -40,7 +40,7 @@ export const routes: Array<RouteConfig> = [
     path: ROUTE_NAME_EVENT_TRACKING_LIST,
     name: `${ROUTE_NAME_EVENT_TRACKING}`,
     meta: {
-      menu:true
+      menu: true,
     },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -54,7 +54,7 @@ export const routes: Array<RouteConfig> = [
     path: ROUTE_NAME_INDEX_TRACKING_LIST,
     name: "Indexfälle",
     meta: {
-      menu:true
+      menu: true,
     },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route

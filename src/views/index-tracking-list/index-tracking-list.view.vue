@@ -4,9 +4,9 @@
       <v-col cols="8">
         <div class="mb-6">
           Status:
-          <v-btn class="ml-2 mr-2" color="white" v-on="on">Angefragt </v-btn>
-          <v-btn class="mr-2" color="white" v-on="on">Update </v-btn>
-          <v-btn class="mr-2" color="white" v-on="on">Geschlossen </v-btn>
+          <v-btn class="ml-2 mr-2" color="white" @click="on">Angefragt </v-btn>
+          <v-btn class="mr-2" color="white" @click="on">Update </v-btn>
+          <v-btn class="mr-2" color="white" @click="on">Geschlossen </v-btn>
         </div>
       </v-col>
       <v-col cols="4">
@@ -21,7 +21,7 @@
                 class="float-right"
                 color="primary"
                 v-bind="attrs"
-                v-on="on"
+                @click="on"
                 >Neue Infexfallverfolgung starten
               </v-btn>
             </template>
@@ -121,6 +121,10 @@ export default class EventTrackingListView extends Vue {
       },
     ],
   };
+
+  on(): void {
+    console.log("NOT IMPLEMENTED");
+  }
 
   getStatusColor(status: string): string {
     if (status == "Angefragt") return "blue";
