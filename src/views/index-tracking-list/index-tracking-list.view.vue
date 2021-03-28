@@ -17,7 +17,11 @@
             width="1600px"
           >
             <template v-slot:activator="{ on, attrs }">
-              <v-btn class="float-right" color="primary" v-bind="attrs" v-on="on"
+              <v-btn
+                class="float-right"
+                color="primary"
+                v-bind="attrs"
+                v-on="on"
                 >Neue Infexfallverfolgung starten
               </v-btn>
             </template>
@@ -118,10 +122,11 @@ export default class EventTrackingListView extends Vue {
     ],
   };
 
-  getStatusColor(status: string) {
+  getStatusColor(status: string): string {
     if (status == "Angefragt") return "blue";
     else if (status == "UPDATE") return "red";
     else if (status == "Abgeschlossen") return "green";
+    else return "";
   }
 }
 </script>
