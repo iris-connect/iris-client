@@ -36,6 +36,7 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^6.2.2",
     "node-sass": "^5.0.0",
+    "miragejs": "^0.1.41",
     "prettier": "^2.2.1",
     "sass": "^1.32.0",
     "sass-loader": "^10.1.1",

@@ -67,11 +67,11 @@ const productDetail: EventTrackingFormModule = {
       const client = IrisClientFrontendApiFactory(
         new Configuration({
           // TODO use basepath for iris-api-client (sidecar)
-          basePath: "https://iris-location.service/api",
+          basePath: "/api",
         })
       );
       let locations: LocationInformation[] | null = null;
-      commit("setProductLoading", true);
+      commit("setEventLocationsLoading", true);
       try {
         locations = (await client.searchSearchKeywordGet(keyword)).data
           .locations;
@@ -86,7 +86,7 @@ const productDetail: EventTrackingFormModule = {
         const client = IrisClientFrontendApiFactory(
           new Configuration({
             // TODO use basepath for iris-api-client (sidecar)
-            basePath: "https://iris-public-server.service/api",
+            basePath: "/api",
           })
         );
         await client.dataRequestsPost(dataRequestClient);

@@ -4,6 +4,12 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 
+import { makeMockAPIServer } from "@/server/mockAPIServer";
+
+if (process.env.NODE_ENV === "development") {
+  makeMockAPIServer();
+}
+
 Vue.config.productionTip = false;
 
 new Vue({

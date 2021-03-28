@@ -4,9 +4,9 @@
       <v-col cols="8">
         <div class="mb-6">
           Status:
-          <v-btn class="ml-2 mr-2" color="white" v-on="on">Angefragt </v-btn>
-          <v-btn class="mr-2" color="white" v-on="on">Update </v-btn>
-          <v-btn class="mr-2" color="white" v-on="on">Geschlossen </v-btn>
+          <v-btn class="ml-2 mr-2" color="white" @click="on">Angefragt </v-btn>
+          <v-btn class="mr-2" color="white" @click="on">Update </v-btn>
+          <v-btn class="mr-2" color="white" @click="on">Geschlossen </v-btn>
         </div>
       </v-col>
       <v-col cols="4">
@@ -25,6 +25,7 @@
                 >Neue Ereignisverfolgung starten
               </v-btn>
             </template>
+            <!-- TODO do not use view like component -->
             <EventTrackingFormView></EventTrackingFormView>
           </v-dialog>
         </div>
@@ -49,11 +50,13 @@
           class="elevation-1 mt-5"
           :search="tableData.search"
         >
+          <!-- TODO fix eslint error -->
           <template v-slot:item.status="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
               {{ item.status }}
             </v-chip>
           </template>
+          <!-- TODO fix eslint error -->
           <template v-slot:item.actions="{ item }">
             <v-btn
               color="primary"
@@ -73,10 +76,15 @@
 import { ROUTE_NAME_EVENT_TRACKING_FORM } from "@/router";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
+import store from "@/store";
 
 @Component({
   components: {
     EventTrackingFormView: EventTrackingFormView,
+  },
+  beforeRouteEnter: async (_from, _to, next) => {
+    await store.dispatch("eventTrackingForm/fetchEventLocations", "");
+    next();
   },
 })
 export default class EventTrackingListView extends Vue {
@@ -123,11 +131,20 @@ export default class EventTrackingListView extends Vue {
     ],
   };
 
+  on(): void {
+    console.log("NOT IMPLEMENTED");
+  }
+
+  selectItem(): void {
+    console.log("NOT IMPLEMENTED");
+  }
+
   getStatusColor(status: string): string {
+    // TODO use enum / string literals
     if (status == "Angefragt") return "blue";
     else if (status == "UPDATE") return "red";
     else if (status == "Abgeschlossen") return "green";
-    else return "";
+    else throw Error("TODO this should not happen");
   }
 }
 </script>
