@@ -72,7 +72,7 @@
                     :headers="searchTable.headers"
                     :items="locations"
                     :items-per-page="5"
-                    class="elevation-1"
+                    class="elevation-1 twolineTable"
                   >
                     <template v-slot:[itemActionSlotName]="{ item }">
                       <v-btn color="primary" @click="selectItem(item)">

@@ -37,7 +37,7 @@
           :headers="tableData.headers"
           :items="tableData.eventList"
           :items-per-page="5"
-          class="elevation-1 mt-5"
+          class="elevation-1 mt-5 twolineTable"
           :search="tableData.search"
         >
           <template v-slot:[itemStatusSlotName]="{ item }">
