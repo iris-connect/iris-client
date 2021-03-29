@@ -61,10 +61,10 @@
                     label="Datum (Beginn)"
                     readonly
                     :value="form.model.date"
-                    @click="on"
+                    v-on="on"
                     :rules="form.rules.defined"
                     required
-                    prepend-icon="mdi-clock"
+                    prepend-icon="mdi-calendar"
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -100,7 +100,7 @@
                     label="Datum (Ende)"
                     readonly
                     :value="form.model.dateEnd"
-                    @click="on"
+                    v-on="on"
                     :rules="form.rules.defined"
                     required
                     prepend-icon="mdi-calendar"
@@ -138,9 +138,7 @@
             </v-col>
           </v-row>
         </v-container>
-        <v-btn class="mt-4" color="" plain :to="routeEventTrackingList">
-          Abbrechen
-        </v-btn>
+        <v-btn class="mt-4" color="" plain> Abbrechen </v-btn>
         <v-btn
           :disabled="!form.valid || eventCreationOngoing"
           class="mt-4"
@@ -211,8 +209,8 @@ export default class EventTrackingFormView extends Vue {
   form = {
     model: {
       externalId: Math.floor(Math.random() * 1e20),
-      date: new Date().toDateString(),
-      dateEnd: new Date().toDateString(),
+      date: new Date().toISOString().split("T")[0],
+      dateEnd: new Date().toISOString().split("T")[0],
       name: "123",
       time: {
         from: "12:34",
