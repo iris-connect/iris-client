@@ -11,21 +11,13 @@
       </v-col>
       <v-col cols="4">
         <div class="mb-6">
-          <v-dialog
-            transition="dialog-bottom-transition"
-            max-width="98%"
-            width="1600px"
-          >
-            <template v-slot:activator="{ attrs }">
-              <v-btn
-                class="float-right"
-                color="primary"
-                v-bind="attrs"
-                :to="routeEventTrackingForm"
-                >Neue Ereignisverfolgung starten
-              </v-btn>
-            </template>
-          </v-dialog>
+          <v-btn
+            class="float-right"
+            color="primary"
+            v-bind="attrs"
+            :to="routeEventTrackingForm"
+            >Neue Ereignisverfolgung starten
+          </v-btn>
         </div>
       </v-col>
     </v-row>
