@@ -13,9 +13,6 @@ public class GuestListDataProvider {
 	@JsonProperty("name")
 	private String name = null;
 
-	@JsonProperty("facilityType")
-	private FacilityType facilityType = null;
-
 	@JsonProperty("address")
 	private Address address = null;
 
@@ -35,24 +32,6 @@ public class GuestListDataProvider {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public GuestListDataProvider facilityType(FacilityType facilityType) {
-		this.facilityType = facilityType;
-		return this;
-	}
-
-	/**
-	 * Get facilityType
-	 * 
-	 * @return facilityType
-	 **/
-	public FacilityType getFacilityType() {
-		return facilityType;
-	}
-
-	public void setFacilityType(FacilityType facilityType) {
-		this.facilityType = facilityType;
 	}
 
 	public GuestListDataProvider address(Address address) {
@@ -83,13 +62,12 @@ public class GuestListDataProvider {
 		}
 		GuestListDataProvider guestListDataProvider = (GuestListDataProvider) o;
 		return Objects.equals(this.name, guestListDataProvider.name)
-				&& Objects.equals(this.facilityType, guestListDataProvider.facilityType)
 				&& Objects.equals(this.address, guestListDataProvider.address);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, facilityType, address);
+		return Objects.hash(name, address);
 	}
 
 	@Override
@@ -98,7 +76,6 @@ public class GuestListDataProvider {
 		sb.append("class GuestListDataProvider {\n");
 
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
-		sb.append("    facilityType: ").append(toIndentedString(facilityType)).append("\n");
 		sb.append("    address: ").append(toIndentedString(address)).append("\n");
 		sb.append("}");
 		return sb.toString();
