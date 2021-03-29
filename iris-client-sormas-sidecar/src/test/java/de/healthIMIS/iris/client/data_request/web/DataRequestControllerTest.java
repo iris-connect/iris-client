@@ -1,37 +1,42 @@
 package de.healthIMIS.iris.client.data_request.web;
 
-import de.healthIMIS.iris.client.core.IrisClientProperties;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.security.KeyStore;
-
-@WebMvcTest(DataRequestController.class)
+@ActiveProfiles("dev")
+@SpringBootTest
+@AutoConfigureMockMvc
 class DataRequestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private IrisClientProperties irisClientProperties;
-
-    @MockBean
-    private KeyStore keyStore;
-
-    @BeforeEach
-    public void setup() {
-
+    @Test
+    public void getDataRequests() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/data-requests-client/locations")
+        ).andExpect(MockMvcResultMatchers.status().isNotImplemented()).andReturn();
     }
 
     @Test
-    public void test() {
+    public void getDataRequestByCode() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/data-requests-client/locations/123")
+        ).andExpect(MockMvcResultMatchers.status().isNotImplemented()).andReturn();
+    }
+
+    @Test
+    public void createDataRequest() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/data-requests-client/locations")
+                        .content("{}")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isNotImplemented()).andReturn();
     }
 
 }

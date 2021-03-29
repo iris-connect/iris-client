@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -72,9 +73,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 public class IrisClientSormasSidecarApplication {
 
 	public static void main(String[] args) {
-
-		Security.addProvider(new BouncyCastleProvider());
-
 		SpringApplication.run(IrisClientSormasSidecarApplication.class, args);
 	}
 
@@ -100,6 +98,11 @@ public class IrisClientSormasSidecarApplication {
 		ks.load(null, password);
 
 		return ks;
+	}
+
+	@PostConstruct
+	public void initBouncyCastle(){
+		Security.addProvider(new BouncyCastleProvider());
 	}
 
 	@Bean
@@ -173,16 +176,6 @@ public class IrisClientSormasSidecarApplication {
 		};
 	}
 
-	@Bean
-	CharacterEncodingFilter characterEncodingFilter() {
-
-		var filter = new UpdateRequestNeedCharacterEncodingFilter();
-
-		filter.setEncoding("UTF-8");
-		filter.setForceResponseEncoding(true);
-
-		return filter;
-	}
 
 	static final class UpdateRequestNeedCharacterEncodingFilter extends OrderedCharacterEncodingFilter {
 

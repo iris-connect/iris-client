@@ -97,7 +97,7 @@ class DataSubmissionJob {
 		this.keyStore = keyStore;
 	}
 
-	@Scheduled(fixedDelay = 15000)
+
 	void run() {
 
 		log.trace("Submission job - start");
