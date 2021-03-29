@@ -1,3 +1,4 @@
+import { DataRequestDetails } from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
 import { createServer } from "miragejs";
 
@@ -5,23 +6,30 @@ import { createServer } from "miragejs";
 export function makeMockAPIServer() {
   const server = createServer({
     routes() {
-      this.namespace = "api";
+      this.namespace = "";
 
-      this.post("/data-requests", () => {
+      this.post("/data-requests-client/locations", () => {
+        const created: Partial<DataRequestDetails> = {
+          code: "NEWREQUEST123",
+        };
+        return created;
+      });
+
+      this.get("/data-requests-client/locations", () => {
         return {
           locations: dummyLocations,
         };
       });
 
-      this.get("/data-requests", () => {
+      this.get("/search/mio", () => {
         return {
-          locations: dummyLocations,
+          locations: [dummyLocations[0]],
         };
       });
 
-      this.get("/search", () => {
+      this.get("/search/august", () => {
         return {
-          locations: dummyLocations,
+          locations: [dummyLocations[1]],
         };
       });
     },
