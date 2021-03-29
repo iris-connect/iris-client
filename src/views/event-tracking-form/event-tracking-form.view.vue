@@ -171,8 +171,8 @@ function getFormattedAddress(address: LocationAddress) {
 
 @Component({
   beforeRouteEnter: async (_from, _to, next) => {
-    await store.dispatch("eventTrackingForm/fetchEventLocations", "");
     next();
+    await store.dispatch("eventTrackingForm/fetchEventLocations", "");
   },
 })
 export default class EventTrackingFormView extends Vue {
