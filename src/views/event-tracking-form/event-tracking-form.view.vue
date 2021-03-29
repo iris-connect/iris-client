@@ -54,6 +54,9 @@
                         label="Suche nach Name/Adresse"
                         single-line
                         hide-details
+                        @keydown.enter="
+                          performSearch(locationSearchFormSearchText)
+                        "
                       ></v-text-field>
                     </v-col>
                     <v-col>
