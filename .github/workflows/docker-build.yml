@@ -23,4 +23,3 @@ jobs:
           registry: docker.pkg.github.com
           repository: iris-gateway/iris-client-frontend/iris-client-frontend
           tag_with_ref: true
-          path: src/
