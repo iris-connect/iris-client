@@ -32,6 +32,7 @@ import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
@@ -42,6 +43,7 @@ import org.springframework.web.client.RestTemplate;
  * @author Jens Kutzsche
  */
 @Configuration
+@ConditionalOnProperty("iris.sormas.user")
 public class SormasIntegrationConfig {
 
 	private final RestTemplate restTemplate;
