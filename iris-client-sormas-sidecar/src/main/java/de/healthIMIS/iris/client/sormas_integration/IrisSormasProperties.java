@@ -16,6 +16,7 @@ package de.healthIMIS.iris.client.sormas_integration;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.net.InetAddress;
 
@@ -37,4 +38,6 @@ public class IrisSormasProperties {
 	private final Integer serverPort;
 	private final String user;
 	private final String password;
+
+	private @Setter String irisUserId;
 }
