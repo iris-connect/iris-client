@@ -114,11 +114,13 @@ services:
       - iris-sormas.env
     restart: unless-stopped
 
-# iris-frontend
-  # image: inoeg/iris-frontend
-  # depends_on:
-  #  - iris-client
-
+  iris-frontend:
+    image: docker.pkg.github.com/iris-gateway/iris-client-frontend/iris-client-frontend:pr-12-merge
+    expose:
+      - 28080
+    depends_on:
+      - iris-client
+    restart: unless-stopped
 
   nginx:
     build:
