@@ -81,8 +81,8 @@ import store from "@/store";
     EventTrackingFormView: EventTrackingFormView,
   },
   beforeRouteEnter: async (_from, _to, next) => {
-    await store.dispatch("eventTrackingForm/fetchEventLocations", "");
     next();
+    await store.dispatch("eventTrackingForm/fetchEventLocations", "");
   },
 })
 export default class EventTrackingListView extends Vue {
