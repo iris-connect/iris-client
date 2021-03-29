@@ -5,7 +5,7 @@
     <v-card-text>
       <v-form ref="form" v-model="form.valid" lazy-validation>
         <v-row>
-          <v-col cols="12" md="4">
+          <v-col>
             <v-text-field
               v-model="form.model.externalId"
               :disabled="eventCreationOngoing"
@@ -14,7 +14,7 @@
               width="200px"
             ></v-text-field>
           </v-col>
-          <v-col cols="12" md="4">
+          <v-col>
             <v-text-field
               v-model="form.model.name"
               :disabled="eventCreationOngoing"
@@ -24,120 +24,146 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <v-text-field
-          v-model="searchTable.search"
-          :disabled="eventCreationOngoing"
-          :rules="form.rules.defined"
-          append-icon="mdi-magnify"
-          label="Suche nach Name/Adresse"
-          single-line
-          hide-details
-        ></v-text-field>
-        <v-data-table
-          :headers="searchTable.headers"
-          :items="locations"
-          :items-per-page="5"
-          class="elevation-1"
-          :search="searchTable.search"
-        >
-          <template v-slot:[itemActionSlotName]="{ item }">
-            <v-btn color="primary" @click="selectItem(item)"> Wählen </v-btn>
-          </template>
-        </v-data-table>
-        <v-container>
-          <v-row>
-            <v-col>
-              <v-menu
-                v-model="form.showDatePicker"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on }">
-                  <v-text-field
-                    label="Datum (Beginn)"
-                    readonly
-                    :value="form.model.date"
-                    v-on="on"
-                    :rules="form.rules.defined"
-                    required
-                    prepend-icon="mdi-calendar"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  locale="en-in"
-                  v-model="form.model.date"
-                  no-title
-                  @input="form.showDatePicker = false"
-                ></v-date-picker>
-              </v-menu>
-            </v-col>
-            <v-col>
-              <v-text-field
-                v-model="form.model.time.from"
-                :disabled="eventCreationOngoing"
-                :rules="form.rules.defined"
-                label="Uhrzeit (Beginn)"
-                prepend-icon="mdi-clock"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-menu
-                v-model="form.showDatePickerEnd"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on }">
-                  <v-text-field
-                    label="Datum (Ende)"
-                    readonly
-                    :value="form.model.dateEnd"
-                    v-on="on"
-                    :rules="form.rules.defined"
-                    required
-                    prepend-icon="mdi-calendar"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  locale="en-in"
-                  v-model="form.model.dateEnd"
-                  no-title
-                  @input="form.showDatePickerEnd = false"
-                ></v-date-picker>
-              </v-menu>
-            </v-col>
-            <v-col>
-              <v-text-field
-                v-model="form.model.time.till"
-                :disabled="eventCreationOngoing"
-                :rules="form.rules.defined"
-                label="Uhrzeit (Ende)"
-                required
-                prepend-icon="mdi-clock"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-textarea
-                name="requestComment"
-                label="Anfragendetails für den Betrieb"
-                auto-grow
-                rows="1"
-                value=""
-                hint="Datenschutz-Hinweis: Die Anfragendetails werden an den Betrieb übermittelt!"
-              ></v-textarea>
-            </v-col>
-          </v-row>
-        </v-container>
+        <v-row>
+          <v-col v-if="selectedLocation">
+            <span>
+              {{ selectedLocation }}
+            </span>
+          </v-col>
+          <v-col>
+            <v-dialog v-model="dialog">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
+                  <span v-if="!selectedLocation"> Addresse auswählen </span>
+                  <span v-else> Addresse ändern </span>
+                </v-btn>
+              </template>
+
+              <v-card>
+                <v-card-title class="headline grey lighten-2">
+                  Adresse auswählen
+                </v-card-title>
+
+                <v-card-text>
+                  <v-data-table
+                    :headers="searchTable.headers"
+                    :items="locations"
+                    :items-per-page="5"
+                    class="elevation-1"
+                    :search="searchTable.search"
+                  >
+                    <template v-slot:[itemActionSlotName]="{ item }">
+                      <v-btn color="primary" @click="selectItem(item)">
+                        Wählen
+                      </v-btn>
+                    </template>
+                  </v-data-table>
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="dialog = false">
+                    Abbrechen
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-menu
+              v-model="form.showDatePicker"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  label="Datum (Beginn)"
+                  readonly
+                  :value="form.model.date"
+                  v-on="on"
+                  :rules="form.rules.defined"
+                  required
+                  prepend-icon="mdi-calendar"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                locale="en-in"
+                v-model="form.model.date"
+                no-title
+                @input="form.showDatePicker = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col>
+            <v-text-field
+              v-model="form.model.time.from"
+              :disabled="eventCreationOngoing"
+              :rules="form.rules.defined"
+              label="Uhrzeit (Beginn)"
+              prepend-icon="mdi-clock"
+              required
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-menu
+              v-model="form.showDatePickerEnd"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  label="Datum (Ende)"
+                  readonly
+                  :value="form.model.dateEnd"
+                  v-on="on"
+                  :rules="form.rules.defined"
+                  required
+                  prepend-icon="mdi-calendar"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                locale="en-in"
+                v-model="form.model.dateEnd"
+                no-title
+                @input="form.showDatePickerEnd = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col>
+            <v-text-field
+              v-model="form.model.time.till"
+              :disabled="eventCreationOngoing"
+              :rules="form.rules.defined"
+              label="Uhrzeit (Ende)"
+              required
+              prepend-icon="mdi-clock"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-textarea
+              name="requestComment"
+              label="Anfragendetails für den Betrieb"
+              auto-grow
+              rows="1"
+              value=""
+              hint="Datenschutz-Hinweis: Die Anfragendetails werden an den Betrieb übermittelt!"
+            ></v-textarea>
+          </v-col>
+        </v-row>
         <v-btn class="mt-4" color="" plain> Abbrechen </v-btn>
         <v-btn
           :disabled="!form.valid || eventCreationOngoing"
@@ -155,8 +181,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store/index";
-import { LocationAddress } from "@/api";
-import { ROUTE_NAME_EVENT_TRACKING_LIST } from "@/router";
+import {
+  LocationAddress,
+  DataRequestClient,
+  LocationInformation,
+  DataRequestDetails,
+} from "@/api";
+import router, { ROUTE_NAME_EVENT_TRACKING_LIST } from "@/router";
 
 type LocationInformationTableRow = {
   address: string;
@@ -183,12 +214,22 @@ export default class EventTrackingFormView extends Vue {
     form: HTMLFormElement;
   };
 
+  dialog = false;
+
   get eventCreationOngoing(): boolean {
     return store.state.eventTrackingForm.eventCreationOngoing;
   }
 
   get locationsLoading(): boolean {
     return store.state.eventTrackingForm.locationsLoading;
+  }
+
+  get selectedLocation(): string | null {
+    const location = store.state.eventTrackingForm.selectedLocation;
+    if (location) {
+      return getFormattedAddress(location.contact.address);
+    }
+    return null;
   }
 
   get locations(): LocationInformationTableRow[] {
@@ -200,6 +241,7 @@ export default class EventTrackingFormView extends Vue {
         contactPerson: location.contact.representative || "-",
         mail: location.contact.email || location.contact.ownerEmail || "-",
         phone: location.contact.email || location.contact.ownerEmail || "-",
+        location,
       };
     });
   }
@@ -208,10 +250,12 @@ export default class EventTrackingFormView extends Vue {
 
   form = {
     model: {
-      externalId: Math.floor(Math.random() * 1e20),
+      externalId: `${Math.floor(Math.random() * 1e20)}`,
       date: new Date().toISOString().split("T")[0],
       dateEnd: new Date().toISOString().split("T")[0],
       name: "123",
+      locationId: "123",
+      providerId: "345",
       time: {
         from: "12:34",
         till: "23:45",
@@ -241,15 +285,33 @@ export default class EventTrackingFormView extends Vue {
       { text: "", value: "actions", sortable: false },
     ],
   };
-  selectItem(item: { name: string }): void {
-    alert(item.name);
-    //TODO: Nur das ausgewählte Item anzeigen, mit Button "neue Suche"; erst wenn auswahl getroffen formular senden
+  // TODO create type for item
+  selectItem(item: { location: LocationInformation }): void {
+    console.log(item);
+    store.commit("eventTrackingForm/setSelectedEventLocations", item.location);
+    this.dialog = false;
   }
   async submit(): Promise<void> {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
-      await store.dispatch("eventTrackingForm/createEventTracking", {
-        ...this.form.model,
+      const payload: DataRequestClient = {
+        start: this.form.model.date, // TODO add time and use ISO format
+        end: this.form.model.dateEnd, // TODO add time and use ISO format
+        name: this.form.model.name,
+        locationId: this.form.model.locationId,
+        providerId: this.form.model.providerId,
+        externalRequestId: this.form.model.externalId,
+      };
+      const created: DataRequestDetails = await store.dispatch(
+        "eventTrackingForm/createEventTracking",
+        payload
+      );
+      router.push({
+        // TODO this should not be hard coded - import from router/index.ts
+        name: `ereignisse-details`,
+        params: {
+          id: created.code || "",
+        },
       });
     }
   }

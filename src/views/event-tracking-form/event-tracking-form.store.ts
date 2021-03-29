@@ -1,14 +1,16 @@
 import {
-  Configuration,
   DataRequestClient,
+  DataRequestDetails,
   IrisClientFrontendApiFactory,
   LocationInformation,
 } from "@/api";
+import { clientConfig } from "@/main";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 
 export type EventTrackingFormState = {
+  selectedLocation: LocationInformation | null;
   locations: LocationInformation[] | null;
   locationsLoading: boolean;
   eventCreationOngoing: boolean;
@@ -17,6 +19,10 @@ export type EventTrackingFormState = {
 export interface EventTrackingFormModule
   extends Module<EventTrackingFormState, RootState> {
   mutations: {
+    setSelectedEventLocations(
+      state: EventTrackingFormState,
+      location: LocationInformation | null
+    ): void;
     setEventLocations(
       state: EventTrackingFormState,
       locations: LocationInformation[] | null
@@ -38,7 +44,7 @@ export interface EventTrackingFormModule
     createEventTracking(
       { commit }: { commit: Commit },
       formData: DataRequestClient
-    ): Promise<void>;
+    ): Promise<DataRequestDetails>;
   };
 }
 
@@ -46,12 +52,16 @@ const productDetail: EventTrackingFormModule = {
   namespaced: true,
   state() {
     return {
+      selectedLocation: null,
       locations: null,
       locationsLoading: false,
       eventCreationOngoing: false,
     };
   },
   mutations: {
+    setSelectedEventLocations(state, location) {
+      state.selectedLocation = location;
+    },
     setEventLocations(state, locations) {
       state.locations = locations;
     },
@@ -64,12 +74,7 @@ const productDetail: EventTrackingFormModule = {
   },
   actions: {
     async fetchEventLocations({ commit }, keyword) {
-      const client = IrisClientFrontendApiFactory(
-        new Configuration({
-          // TODO use basepath for iris-api-client (sidecar)
-          basePath: "/api",
-        })
-      );
+      const client = IrisClientFrontendApiFactory(clientConfig);
       let locations: LocationInformation[] | null = null;
       commit("setEventLocationsLoading", true);
       try {
@@ -80,16 +85,17 @@ const productDetail: EventTrackingFormModule = {
         commit("setEventLocationsLoading", false);
       }
     },
-    async createEventTracking({ commit }, dataRequestClient) {
+
+    async createEventTracking(
+      { commit },
+      dataRequestClient
+    ): Promise<DataRequestDetails> {
       commit("setEventCreationOngoing", true);
       try {
-        const client = IrisClientFrontendApiFactory(
-          new Configuration({
-            // TODO use basepath for iris-api-client (sidecar)
-            basePath: "/api",
-          })
-        );
-        await client.dataRequestsPost(dataRequestClient);
+        const client = IrisClientFrontendApiFactory(clientConfig);
+        return await (
+          await client.dataRequestsClientLocationsPost(dataRequestClient)
+        ).data;
       } finally {
         commit("setEventCreationOngoing", false);
       }

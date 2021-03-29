@@ -9,6 +9,7 @@ const ROUTE_NAME_EVENT_TRACKING = "ereignisse";
 const ROUTE_NAME_INDEX_TRACKING = "indexfaelle";
 export const ROUTE_NAME_EVENT_TRACKING_FORM = `/${ROUTE_NAME_EVENT_TRACKING}/starten`;
 export const ROUTE_NAME_EVENT_TRACKING_LIST = `/${ROUTE_NAME_EVENT_TRACKING}/liste`;
+export const ROUTE_NAME_EVENT_TRACKING_DETAILS = `/${ROUTE_NAME_EVENT_TRACKING}/:id`;
 export const ROUTE_NAME_INDEX_TRACKING_LIST = `/${ROUTE_NAME_INDEX_TRACKING}/liste`;
 
 export const ROUTE_NAME_HOME = "";
@@ -28,9 +29,6 @@ export const routes: Array<RouteConfig> = [
     meta: {
       menu: false,
     },
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
       import(
         /* webpackChunkName: "about" */ "../views/event-tracking-form/event-tracking-form.view.vue"
@@ -42,9 +40,6 @@ export const routes: Array<RouteConfig> = [
     meta: {
       menu: true,
     },
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
       import(
         /* webpackChunkName: "about" */ "../views/event-tracking-list/event-tracking-list.view.vue"
@@ -56,12 +51,20 @@ export const routes: Array<RouteConfig> = [
     meta: {
       menu: true,
     },
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
       import(
         /* webpackChunkName: "about" */ "../views/index-tracking-list/index-tracking-list.view.vue"
+      ),
+  },
+  {
+    path: `/${ROUTE_NAME_EVENT_TRACKING}/:id`,
+    name: `${ROUTE_NAME_EVENT_TRACKING}-details`,
+    meta: {
+      menu: true,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "../views/event-tracking-details/event-tracking-details.view.vue"
       ),
   },
 ];
