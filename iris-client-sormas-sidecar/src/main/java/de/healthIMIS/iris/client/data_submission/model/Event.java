@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -40,7 +41,8 @@ public class Event {
 	 * 
 	 * @return name
 	 **/
-	@Schema(description = "Name of the event")
+	@Schema(required = true, description = "Name of the event")
+	@NotNull
 
 	public String getName() {
 		return name;

@@ -29,7 +29,7 @@ CREATE TABLE data_submission (
 	request_id uuid NOT NULL,
 	department_id uuid NOT NULL,
 	salt varchar(50) NOT NULL,
-	key_referenz varchar(50) NOT NULL,
+	key_reference varchar(50) NOT NULL,
 	feature varchar(50) NOT NULL,
 	encrypted_data text NULL,
 	created timestamp NOT NULL,

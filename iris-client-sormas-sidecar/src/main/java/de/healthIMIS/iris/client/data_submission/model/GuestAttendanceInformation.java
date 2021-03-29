@@ -6,6 +6,7 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -60,7 +61,8 @@ public class GuestAttendanceInformation {
 	 * 
 	 * @return attendFrom
 	 **/
-	@Schema(description = "Start date/time of attendance of this guest.")
+	@Schema(required = true, description = "Start date/time of attendance of this guest.")
+	@NotNull
 
 	@Valid
 	public OffsetDateTime getAttendFrom() {
@@ -81,7 +83,8 @@ public class GuestAttendanceInformation {
 	 * 
 	 * @return attendTo
 	 **/
-	@Schema(description = "End date/time of attendance of this guest.")
+	@Schema(required = true, description = "End date/time of attendance of this guest.")
+	@NotNull
 
 	@Valid
 	public OffsetDateTime getAttendTo() {

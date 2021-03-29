@@ -27,9 +27,6 @@ public class EventList {
 	@JsonProperty("events") @Valid
 	private List<Event> events = new ArrayList<Event>();
 
-	@JsonProperty("dataProvider")
-	private ContactPersonListDataProvider dataProvider = null;
-
 	@JsonProperty("startDate")
 	private LocalDate startDate = null;
 
@@ -60,27 +57,6 @@ public class EventList {
 
 	public void setEvents(List<Event> events) {
 		this.events = events;
-	}
-
-	public EventList dataProvider(ContactPersonListDataProvider dataProvider) {
-		this.dataProvider = dataProvider;
-		return this;
-	}
-
-	/**
-	 * Get dataProvider
-	 * 
-	 * @return dataProvider
-	 **/
-	@Schema(description = "")
-
-	@Valid
-	public ContactPersonListDataProvider getDataProvider() {
-		return dataProvider;
-	}
-
-	public void setDataProvider(ContactPersonListDataProvider dataProvider) {
-		this.dataProvider = dataProvider;
 	}
 
 	public EventList startDate(LocalDate startDate) {
@@ -134,13 +110,13 @@ public class EventList {
 			return false;
 		}
 		EventList eventList = (EventList) o;
-		return Objects.equals(this.events, eventList.events) && Objects.equals(this.dataProvider, eventList.dataProvider)
-				&& Objects.equals(this.startDate, eventList.startDate) && Objects.equals(this.endDate, eventList.endDate);
+		return Objects.equals(this.events, eventList.events) && Objects.equals(this.startDate, eventList.startDate)
+				&& Objects.equals(this.endDate, eventList.endDate);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(events, dataProvider, startDate, endDate);
+		return Objects.hash(events, startDate, endDate);
 	}
 
 	@Override
@@ -149,7 +125,6 @@ public class EventList {
 		sb.append("class EventList {\n");
 
 		sb.append("    events: ").append(toIndentedString(events)).append("\n");
-		sb.append("    dataProvider: ").append(toIndentedString(dataProvider)).append("\n");
 		sb.append("    startDate: ").append(toIndentedString(startDate)).append("\n");
 		sb.append("    endDate: ").append(toIndentedString(endDate)).append("\n");
 		sb.append("}");

@@ -63,7 +63,7 @@ public class DataSubmissionHdController {
 
 		static DataSubmissionClientOutputDto of(DataSubmission submission) {
 			return new DataSubmissionClientOutputDto(submission.getId().toString(), submission.getRequestId().toString(),
-					submission.getDepartmentId().toString(), submission.getSalt(), submission.getKeyReferenz(),
+					submission.getDepartmentId().toString(), submission.getSalt(), submission.getKeyReference(),
 					submission.getEncryptedData(), submission.getFeature());
 		}
 
@@ -75,7 +75,7 @@ public class DataSubmissionHdController {
 
 		private final String salt;
 
-		private final String keyReferenz;
+		private final String keyReference;
 
 		private final String encryptedData;
 

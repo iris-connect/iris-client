@@ -78,18 +78,18 @@ class KeyGenJob {
 
 		var keyPair = generator.generateKeyPair();
 
-		UUID keyReferenz = UUID.randomUUID();
+		UUID keyReference = UUID.randomUUID();
 
-		putKeyToServer(keyPair.getPublic(), keyReferenz);
+		putKeyToServer(keyPair.getPublic(), keyReference);
 
 		var certChain = new Certificate[1];
 		certChain[0] = generateCertificate(keyPair);
-		keyStore.setKeyEntry(keyReferenz.toString(), keyPair.getPrivate(), null, certChain);
+		keyStore.setKeyEntry(keyReference.toString(), keyPair.getPrivate(), null, certChain);
 
 		deleteOldKeys();
 	}
 
-	private void putKeyToServer(PublicKey pub, UUID keyReferenz) {
+	private void putKeyToServer(PublicKey pub, UUID keyReference) {
 
 		var encoder = Base64.getEncoder();
 		var pub64 = new StringBuilder();
@@ -101,7 +101,7 @@ class KeyGenJob {
 
 		log.trace("Keygen job - PUT to server is sent: {}", departmentId);
 
-		var dto = DepartmentDto.of(properties.getDepartmentName(), keyReferenz.toString(), pub64.toString());
+		var dto = DepartmentDto.of(properties.getDepartmentName(), keyReference.toString(), pub64.toString());
 
 		var headers = new HttpHeaders();
 		headers.setContentType(new MediaType(APPLICATION_JSON, UTF_8));
@@ -149,7 +149,7 @@ class KeyGenJob {
 	static class DepartmentDto {
 
 		private final String name;
-		private final String keyReferenz;
+		private final String keyReference;
 		private final String key;
 	}
 }

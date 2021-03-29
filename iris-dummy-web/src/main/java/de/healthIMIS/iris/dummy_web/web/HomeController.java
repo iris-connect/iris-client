@@ -167,7 +167,7 @@ public class HomeController {
 
 		var content = mapper.writeValueAsString(createContacts(contacts));
 		content = encryptContent(content, secretKey);
-		postSubmission(link, content, encryptedSecretKey, dataRequest.getKeyReferenz());
+		postSubmission(link, content, encryptedSecretKey, dataRequest.getKeyReference());
 
 		return "redirect:/";
 	}
@@ -232,11 +232,11 @@ public class HomeController {
 	/**
 	 * Send a POST request for the given data submission to the given Link to the API.
 	 */
-	private void postSubmission(Link link, String content, String encryptedSecretKey, String keyReferenz) {
+	private void postSubmission(Link link, String content, String encryptedSecretKey, String keyReference) {
 
-		var submission = new DataSubmissionDto().keyReferenz(keyReferenz).secret(encryptedSecretKey).encryptedData(content);
+		var submission = new DataSubmissionDto().keyReference(keyReference).secret(encryptedSecretKey).encryptedData(content);
 
-		log.info("\nData submission is sent to healt department with key referenz '%s'", keyReferenz);
+		log.info("\nData submission is sent to healt department with key reference '%s'", keyReference);
 		log.debug("\nContent of the data submission unencrypted:\n %s", content);
 		log.info("\n\n");
 

@@ -7,20 +7,24 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
+import org.springframework.validation.annotation.Validated;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Additional informations about the last contact with the queried person.
+ * Additional informations about the contact(s) with the queried person.
  */
-@Schema(description = "Additional informations about the last contact with the queried person.")
-@Valid
+@Schema(description = "Additional informations about the contact(s) with the queried person.")
+@Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen",
-		date = "2021-02-18T08:11:24.698Z[GMT]")
+		date = "2021-03-26T10:26:53.535Z[GMT]")
 
 public class ContactPersonContactInformation {
+	@JsonProperty("firstContactDate")
+	private LocalDate firstContactDate = null;
 
-	@JsonProperty("date")
-	private LocalDate date = null;
+	@JsonProperty("lastContactDate")
+	private LocalDate lastContactDate = null;
 
 	@JsonProperty("contactCategory")
 	private ContactCategory contactCategory = null;
@@ -28,25 +32,46 @@ public class ContactPersonContactInformation {
 	@JsonProperty("basicConditions")
 	private String basicConditions = null;
 
-	public ContactPersonContactInformation date(LocalDate date) {
-		this.date = date;
+	public ContactPersonContactInformation firstContactDate(LocalDate firstContactDate) {
+		this.firstContactDate = firstContactDate;
 		return this;
 	}
 
 	/**
-	 * Get date
+	 * Get firstContactDate
 	 * 
-	 * @return date
+	 * @return firstContactDate
 	 **/
 	@Schema(description = "")
 
 	@Valid
-	public LocalDate getDate() {
-		return date;
+	public LocalDate getFirstContactDate() {
+		return firstContactDate;
 	}
 
-	public void setDate(LocalDate date) {
-		this.date = date;
+	public void setFirstContactDate(LocalDate firstContactDate) {
+		this.firstContactDate = firstContactDate;
+	}
+
+	public ContactPersonContactInformation lastContactDate(LocalDate lastContactDate) {
+		this.lastContactDate = lastContactDate;
+		return this;
+	}
+
+	/**
+	 * Get lastContactDate
+	 * 
+	 * @return lastContactDate
+	 **/
+	@Schema(description = "")
+
+	@Valid
+	public LocalDate getLastContactDate() {
+		return lastContactDate;
+	}
+
+	public void setLastContactDate(LocalDate lastContactDate) {
+		this.lastContactDate = lastContactDate;
 	}
 
 	public ContactPersonContactInformation contactCategory(ContactCategory contactCategory) {
@@ -101,14 +126,15 @@ public class ContactPersonContactInformation {
 			return false;
 		}
 		ContactPersonContactInformation contactPersonContactInformation = (ContactPersonContactInformation) o;
-		return Objects.equals(this.date, contactPersonContactInformation.date)
-				&& Objects.equals(this.contactCategory, contactPersonContactInformation.contactCategory)
-				&& Objects.equals(this.basicConditions, contactPersonContactInformation.basicConditions);
+		return Objects.equals(this.firstContactDate, contactPersonContactInformation.firstContactDate) &&
+				Objects.equals(this.lastContactDate, contactPersonContactInformation.lastContactDate) &&
+				Objects.equals(this.contactCategory, contactPersonContactInformation.contactCategory) &&
+				Objects.equals(this.basicConditions, contactPersonContactInformation.basicConditions);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(date, contactCategory, basicConditions);
+		return Objects.hash(firstContactDate, lastContactDate, contactCategory, basicConditions);
 	}
 
 	@Override
@@ -116,7 +142,8 @@ public class ContactPersonContactInformation {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class ContactPersonContactInformation {\n");
 
-		sb.append("    date: ").append(toIndentedString(date)).append("\n");
+		sb.append("    firstContactDate: ").append(toIndentedString(firstContactDate)).append("\n");
+		sb.append("    lastContactDate: ").append(toIndentedString(lastContactDate)).append("\n");
 		sb.append("    contactCategory: ").append(toIndentedString(contactCategory)).append("\n");
 		sb.append("    basicConditions: ").append(toIndentedString(basicConditions)).append("\n");
 		sb.append("}");

@@ -68,7 +68,7 @@ abstract class DataSubmissionProcessor<T> extends DataSubmissionSubProcessor<T> 
 	void process() {
 		try {
 
-			var content = decryptContent(submissionDto.getEncryptedData(), submissionDto.getKeyReferenz(),
+			var content = decryptContent(submissionDto.getEncryptedData(), submissionDto.getKeyReference(),
 					submissionDto.getSecret());
 			var dto = mapper.readValue(content, dtoType);
 
@@ -83,14 +83,14 @@ abstract class DataSubmissionProcessor<T> extends DataSubmissionSubProcessor<T> 
 		}
 	}
 
-	protected String decryptContent(String content, String keyReferenz, String encryptedSecretKeyString)
+	protected String decryptContent(String content, String keyReference, String encryptedSecretKeyString)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException,
 			IllegalBlockSizeException, BadPaddingException, UnrecoverableKeyException, KeyStoreException {
 
 		var encryptedArray = Base64.getDecoder().decode(content);
 		var encryptedSecretKey = Base64.getDecoder().decode(encryptedSecretKeyString);
 
-		var privateKey = keyStore.getKey(keyReferenz, null);
+		var privateKey = keyStore.getKey(keyReference, null);
 
 		var secretKey = decryptSecretKey(encryptedSecretKey, privateKey);
 

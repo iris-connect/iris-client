@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -35,7 +36,8 @@ public class Guest extends Person {
 	 * 
 	 * @return attendanceInformation
 	 **/
-	@Schema(description = "")
+	@Schema(required = true, description = "")
+	@NotNull
 
 	@Valid
 	public GuestAttendanceInformation getAttendanceInformation() {

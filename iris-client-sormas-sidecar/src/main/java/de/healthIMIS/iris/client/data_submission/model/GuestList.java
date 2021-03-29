@@ -75,7 +75,8 @@ public class GuestList {
 	 * 
 	 * @return dataProvider
 	 **/
-	@Schema(description = "")
+	@Schema(required = true, description = "")
+	@NotNull
 
 	@Valid
 	public GuestListDataProvider getDataProvider() {

@@ -6,17 +6,20 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * ContactPersonListDataProvider
+ * ContactsAndEventsDataProvider
  */
-@Valid
+@Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen",
-		date = "2021-02-18T08:11:24.698Z[GMT]")
+		date = "2021-03-26T10:26:53.535Z[GMT]")
 
-public class ContactPersonListDataProvider {
+public class ContactsAndEventsDataProvider {
 	@JsonProperty("firstName")
 	private String firstName = null;
 
@@ -26,7 +29,7 @@ public class ContactPersonListDataProvider {
 	@JsonProperty("dateOfBirth")
 	private LocalDate dateOfBirth = null;
 
-	public ContactPersonListDataProvider firstName(String firstName) {
+	public ContactsAndEventsDataProvider firstName(String firstName) {
 		this.firstName = firstName;
 		return this;
 	}
@@ -36,7 +39,8 @@ public class ContactPersonListDataProvider {
 	 * 
 	 * @return firstName
 	 **/
-	@Schema(description = "")
+	@Schema(required = true, description = "")
+	@NotNull
 
 	public String getFirstName() {
 		return firstName;
@@ -46,7 +50,7 @@ public class ContactPersonListDataProvider {
 		this.firstName = firstName;
 	}
 
-	public ContactPersonListDataProvider lastName(String lastName) {
+	public ContactsAndEventsDataProvider lastName(String lastName) {
 		this.lastName = lastName;
 		return this;
 	}
@@ -56,7 +60,8 @@ public class ContactPersonListDataProvider {
 	 * 
 	 * @return lastName
 	 **/
-	@Schema(description = "")
+	@Schema(required = true, description = "")
+	@NotNull
 
 	public String getLastName() {
 		return lastName;
@@ -66,7 +71,7 @@ public class ContactPersonListDataProvider {
 		this.lastName = lastName;
 	}
 
-	public ContactPersonListDataProvider dateOfBirth(LocalDate dateOfBirth) {
+	public ContactsAndEventsDataProvider dateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 		return this;
 	}
@@ -76,7 +81,8 @@ public class ContactPersonListDataProvider {
 	 * 
 	 * @return dateOfBirth
 	 **/
-	@Schema(description = "")
+	@Schema(required = true, description = "")
+	@NotNull
 
 	@Valid
 	public LocalDate getDateOfBirth() {
@@ -95,10 +101,10 @@ public class ContactPersonListDataProvider {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		ContactPersonListDataProvider contactPersonListDataProvider = (ContactPersonListDataProvider) o;
-		return Objects.equals(this.firstName, contactPersonListDataProvider.firstName)
-				&& Objects.equals(this.lastName, contactPersonListDataProvider.lastName)
-				&& Objects.equals(this.dateOfBirth, contactPersonListDataProvider.dateOfBirth);
+		ContactsAndEventsDataProvider contactsAndEventsDataProvider = (ContactsAndEventsDataProvider) o;
+		return Objects.equals(this.firstName, contactsAndEventsDataProvider.firstName) &&
+				Objects.equals(this.lastName, contactsAndEventsDataProvider.lastName) &&
+				Objects.equals(this.dateOfBirth, contactsAndEventsDataProvider.dateOfBirth);
 	}
 
 	@Override
@@ -109,7 +115,7 @@ public class ContactPersonListDataProvider {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("class ContactPersonListDataProvider {\n");
+		sb.append("class ContactsAndEventsDataProvider {\n");
 
 		sb.append("    firstName: ").append(toIndentedString(firstName)).append("\n");
 		sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");

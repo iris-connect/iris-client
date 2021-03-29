@@ -191,7 +191,7 @@ class DataSubmissionJob {
 
 		private final String secret;
 
-		private final String keyReferenz;
+		private final String keyReference;
 
 		private final String encryptedData;
 

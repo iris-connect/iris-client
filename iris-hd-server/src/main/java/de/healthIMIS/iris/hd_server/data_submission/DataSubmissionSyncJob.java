@@ -79,7 +79,7 @@ class DataSubmissionSyncJob {
 
 			var dataSubmissions = Arrays.stream(dtos)
 					.map(it -> new DataSubmission(DataSubmissionIdentifier.of(it.id), DataRequestIdentifier.of(it.requestId),
-							DepartmentIdentifier.of(it.departmentId), it.salt, it.keyReferenz, it.encryptedData, it.feature))
+							DepartmentIdentifier.of(it.departmentId), it.salt, it.keyReference, it.encryptedData, it.feature))
 					.collect(Collectors.toList());
 
 			submissions.deleteAll(dataSubmissions);
@@ -141,7 +141,7 @@ class DataSubmissionSyncJob {
 
 		private final String salt;
 
-		private final String keyReferenz;
+		private final String keyReference;
 
 		private final String encryptedData;
 

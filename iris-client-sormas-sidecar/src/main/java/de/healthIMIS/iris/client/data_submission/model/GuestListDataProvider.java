@@ -4,25 +4,25 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Objects;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * GuestListDataProvider
  */
-@Valid
+@Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen",
-		date = "2021-02-18T08:11:24.698Z[GMT]")
+		date = "2021-03-26T10:26:53.535Z[GMT]")
 
 public class GuestListDataProvider {
-
 	@JsonProperty("name")
 	private String name = null;
 
 	@JsonProperty("address")
-	private Address address = null;
+	private AllOfGuestListDataProviderAddress address = null;
 
 	public GuestListDataProvider name(String name) {
 		this.name = name;
@@ -45,7 +45,7 @@ public class GuestListDataProvider {
 		this.name = name;
 	}
 
-	public GuestListDataProvider address(Address address) {
+	public GuestListDataProvider address(AllOfGuestListDataProviderAddress address) {
 		this.address = address;
 		return this;
 	}
@@ -58,12 +58,11 @@ public class GuestListDataProvider {
 	@Schema(required = true, description = "")
 	@NotNull
 
-	@Valid
-	public Address getAddress() {
+	public AllOfGuestListDataProviderAddress getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(AllOfGuestListDataProviderAddress address) {
 		this.address = address;
 	}
 
@@ -76,8 +75,8 @@ public class GuestListDataProvider {
 			return false;
 		}
 		GuestListDataProvider guestListDataProvider = (GuestListDataProvider) o;
-		return Objects.equals(this.name, guestListDataProvider.name)
-				&& Objects.equals(this.address, guestListDataProvider.address);
+		return Objects.equals(this.name, guestListDataProvider.name) &&
+				Objects.equals(this.address, guestListDataProvider.address);
 	}
 
 	@Override

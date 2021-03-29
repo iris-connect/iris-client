@@ -5,25 +5,31 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * ContactsAndEvents
+ * This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be
+ * encoded with Base64!(&#x60;dataToTransport&#x60; in the general description of the API.)
  */
+@Schema(
+		description = "This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64!(`dataToTransport` in the general description of the API.)")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen",
-		date = "2021-03-15T08:55:58.116Z[GMT]")
+		date = "2021-03-26T10:26:53.535Z[GMT]")
 
 public class ContactsAndEvents {
-
 	@JsonProperty("contacts")
 	private ContactPersonList contacts = null;
 
 	@JsonProperty("events")
 	private EventList events = null;
+
+	@JsonProperty("dataProvider")
+	private ContactsAndEventsDataProvider dataProvider = null;
 
 	public ContactsAndEvents contacts(ContactPersonList contacts) {
 		this.contacts = contacts;
@@ -35,7 +41,8 @@ public class ContactsAndEvents {
 	 * 
 	 * @return contacts
 	 **/
-	@Schema(description = "")
+	@Schema(required = true, description = "")
+	@NotNull
 
 	@Valid
 	public ContactPersonList getContacts() {
@@ -56,7 +63,8 @@ public class ContactsAndEvents {
 	 * 
 	 * @return events
 	 **/
-	@Schema(description = "")
+	@Schema(required = true, description = "")
+	@NotNull
 
 	@Valid
 	public EventList getEvents() {
@@ -65,6 +73,28 @@ public class ContactsAndEvents {
 
 	public void setEvents(EventList events) {
 		this.events = events;
+	}
+
+	public ContactsAndEvents dataProvider(ContactsAndEventsDataProvider dataProvider) {
+		this.dataProvider = dataProvider;
+		return this;
+	}
+
+	/**
+	 * Get dataProvider
+	 * 
+	 * @return dataProvider
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
+
+	@Valid
+	public ContactsAndEventsDataProvider getDataProvider() {
+		return dataProvider;
+	}
+
+	public void setDataProvider(ContactsAndEventsDataProvider dataProvider) {
+		this.dataProvider = dataProvider;
 	}
 
 	@Override
@@ -76,13 +106,14 @@ public class ContactsAndEvents {
 			return false;
 		}
 		ContactsAndEvents contactsAndEvents = (ContactsAndEvents) o;
-		return Objects.equals(this.contacts, contactsAndEvents.contacts)
-				&& Objects.equals(this.events, contactsAndEvents.events);
+		return Objects.equals(this.contacts, contactsAndEvents.contacts) &&
+				Objects.equals(this.events, contactsAndEvents.events) &&
+				Objects.equals(this.dataProvider, contactsAndEvents.dataProvider);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(contacts, events);
+		return Objects.hash(contacts, events, dataProvider);
 	}
 
 	@Override
@@ -92,6 +123,7 @@ public class ContactsAndEvents {
 
 		sb.append("    contacts: ").append(toIndentedString(contacts)).append("\n");
 		sb.append("    events: ").append(toIndentedString(events)).append("\n");
+		sb.append("    dataProvider: ").append(toIndentedString(dataProvider)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

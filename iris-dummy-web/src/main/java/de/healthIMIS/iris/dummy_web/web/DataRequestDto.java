@@ -25,7 +25,7 @@ public class DataRequestDto {
 
 	private String keyOfHealthDepartment = null;
 
-	private String keyReferenz = null;
+	private String keyReference = null;
 
 	private String start = null;
 
