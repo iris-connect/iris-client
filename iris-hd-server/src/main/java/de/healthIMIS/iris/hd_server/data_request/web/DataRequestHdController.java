@@ -56,14 +56,12 @@ public class DataRequestHdController {
 	DataRequestClientInputDto putDataRequest(@PathVariable("id") DataRequestIdentifier id,
 			@Valid @RequestBody DataRequestClientInputDto payload, Errors errors) {
 
-		var dataRequest = new DataRequest(id, payload.departmentId, payload.refId, payload.checkCodeName,
-				payload.checkCodeDayOfBirth, payload.checkCodeRandom, payload.requestStart, payload.requestEnd,
+		var dataRequest = new DataRequest(id, payload.departmentId, payload.refId, payload.requestStart, payload.requestEnd,
 				payload.irisUserId, payload.sormasUserId, payload.features, payload.status);
 
 		requests.save(dataRequest);
 
-		log.debug("Request - PUT from hd client + saved: {} (Checkcodes: {}, {} and {})", dataRequest.getId().toString(),
-				dataRequest.getCheckCodeName(), dataRequest.getCheckCodeDayOfBirth(), dataRequest.getCheckCodeRandom());
+		log.debug("Request - PUT from hd client + saved: {}", dataRequest.getId().toString());
 
 		return payload;
 	}
@@ -76,10 +74,6 @@ public class DataRequestHdController {
 		private SormasRefId refId;
 		private String irisUserId;
 		private String sormasUserId;
-
-		private String checkCodeName;
-		private String checkCodeDayOfBirth;
-		private String checkCodeRandom;
 
 		private Instant requestStart;
 		private Instant requestEnd;

@@ -15,10 +15,8 @@
 package de.healthIMIS.iris.client.data_request;
 
 import static java.nio.charset.StandardCharsets.*;
-import static org.apache.commons.lang3.RandomStringUtils.*;
 import static org.springframework.http.MediaType.*;
 
-import de.healthIMIS.iris.client.core.IrisClientDevProperties;
 import de.healthIMIS.iris.client.core.IrisClientProperties;
 import de.healthIMIS.iris.client.core.IrisProperties;
 import de.healthIMIS.iris.client.core.SormasRefId;
@@ -41,7 +39,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -55,17 +52,15 @@ public class DataRequestManagement {
 	private final @NonNull DataRequestRepository requests;
 	private final @NonNull RestTemplate rest;
 	private final @NonNull IrisClientProperties clientProperties;
-	private final @NonNull IrisClientDevProperties devProperties;
 	private final @NonNull IrisProperties properties;
 
 	public DataRequestManagement(@NonNull DataRequestRepository requests,
 			@NonNull @Qualifier("iris-rest") RestTemplate rest, @NonNull IrisClientProperties clientProperties,
-			@Nullable IrisClientDevProperties devProperties, @NonNull IrisProperties properties) {
+			@NonNull IrisProperties properties) {
 
 		this.requests = requests;
 		this.rest = rest;
 		this.clientProperties = clientProperties;
-		this.devProperties = devProperties;
 		this.properties = properties;
 	}
 
@@ -77,28 +72,25 @@ public class DataRequestManagement {
 		return requests.findById(DataRequestIdentifier.of(uuid));
 	}
 
-	public DataRequest createContactEventRequest(SormasRefId refId, SormasRefId personId, String checkCodeName,
-			Option<String> checkCodeBirthday, Instant startDate, Option<Instant> endDate, String irisUserId,
-			String sormasUserId) {
+	public DataRequest createContactEventRequest(SormasRefId refId, SormasRefId personId, Instant startDate,
+			Option<Instant> endDate, String irisUserId, String sormasUserId) {
 
-		return createDataRequest(refId, Option.of(personId), Option.of(checkCodeName), checkCodeBirthday,
-				Option.of(startDate), endDate, Option.none(), irisUserId, sormasUserId, Set.of(Feature.Contacts_Events));
+		return createDataRequest(refId, Option.of(personId), Option.of(startDate), endDate, Option.none(), irisUserId,
+				sormasUserId, Set.of(Feature.Contacts_Events));
 	}
 
-	public DataRequest createGuestsRequest(SormasRefId refId, Option<String> checkCodeZip,
-			Option<String> checkCodeBirthday, Instant startDate, Option<Instant> endDate, String requestDetails,
-			String irisUserId, String sormasUserId) {
+	public DataRequest createGuestsRequest(SormasRefId refId, Instant startDate, Option<Instant> endDate,
+			String requestDetails, String irisUserId, String sormasUserId) {
 
-		return createDataRequest(refId, Option.none(), checkCodeZip, checkCodeBirthday, Option.of(startDate), endDate,
-				Option.of(requestDetails), irisUserId, sormasUserId, Set.of(Feature.Guests));
+		return createDataRequest(refId, Option.none(), Option.of(startDate), endDate, Option.of(requestDetails), irisUserId,
+				sormasUserId, Set.of(Feature.Guests));
 	}
 
-	DataRequest createDataRequest(SormasRefId refId, Option<SormasRefId> personId, Option<String> checkCode1,
-			Option<String> checkCode2, Option<Instant> startDate, Option<Instant> endDate, Option<String> requestDetails,
-			String irisUserId, String sormasUserId, Set<Feature> feature) {
+	DataRequest createDataRequest(SormasRefId refId, Option<SormasRefId> personId, Option<Instant> startDate,
+			Option<Instant> endDate, Option<String> requestDetails, String irisUserId, String sormasUserId,
+			Set<Feature> feature) {
 
-		var dataRequest = new DataRequest(refId, personId.getOrNull(), findValidTeleCode(), checkCode1.getOrNull(),
-				checkCode2.getOrNull(), determineRandomCheckCode(), startDate.getOrNull(), endDate.getOrNull(),
+		var dataRequest = new DataRequest(refId, personId.getOrNull(), startDate.getOrNull(), endDate.getOrNull(),
 				requestDetails.getOrNull(), irisUserId, sormasUserId, feature);
 
 		log.trace("Request job - PUT to server is sent: {}", dataRequest.getId().toString());
@@ -119,42 +111,30 @@ public class DataRequestManagement {
 		return dataRequest;
 	}
 
-	private String determineRandomCheckCode() {
-		return Optional.ofNullable(devProperties).map(IrisClientDevProperties::getRandomCheckcode)
-				.orElseGet(() -> randomAlphabetic(10));
+	private String findValidCode() {
+
+		var code = generateCode();
+
+		return requests.isCodeAvailable(UUID.fromString(code)) ? code : findValidCode();
 	}
 
-	private String findValidTeleCode() {
+	private String generateCode() {
 
-		var teleCode = generateTeleCode();
-
-		return requests.isTeleCodeAvailable(teleCode) ? teleCode : findValidTeleCode();
-	}
-
-	private String generateTeleCode() {
-
-		var checkCode = RandomStringUtils.random(9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'M', 'N', 'P', 'Q', 'R',
+		var code = RandomStringUtils.random(9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'M', 'N', 'P', 'Q', 'R',
 				'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '2', '3', '4', '5', '6', '7', '8', '9');
 
-		var bytes = checkCode.getBytes();
+		var bytes = code.getBytes();
 		var crc32 = new CRC32();
 		crc32.update(bytes, 0, bytes.length);
 		var sum = crc32.getValue() % 16;
 
-		return checkCode + Long.toHexString(sum).toUpperCase();
+		return code + Long.toHexString(sum).toUpperCase();
 	}
 
 	@Data
 	static class DataRequestDto {
 
 		private final String departmentId;
-		private final String rkiCode;
-
-		private final String teleCode;
-
-		private final String checkCodeName;
-		private final String checkCodeDayOfBirth;
-		private final String checkCodeRandom;
 
 		private final Instant requestStart;
 		private final Instant requestEnd;
@@ -166,8 +146,7 @@ public class DataRequestManagement {
 
 		static DataRequestDto of(DataRequest request, UUID departmentId, String rkiCode) {
 
-			return new DataRequestDto(departmentId.toString(), rkiCode, request.getTeleCode(), request.getCheckCodeOne(),
-					request.getCheckCodeTwo(), request.getCheckCodeRandom(), request.getRequestStart(), request.getRequestEnd(),
+			return new DataRequestDto(departmentId.toString(), request.getRequestStart(), request.getRequestEnd(),
 					request.getRequestDetails(), request.getFeatures(), request.getStatus());
 		}
 	}

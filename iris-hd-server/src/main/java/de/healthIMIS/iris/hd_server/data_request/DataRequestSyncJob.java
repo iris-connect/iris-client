@@ -102,10 +102,6 @@ class DataRequestSyncJob {
 
 		private final String departmentId;
 
-		private final String checkCodeName;
-		private final String checkCodeDayOfBirth;
-		private final String checkCodeRandom;
-
 		private final Instant requestStart;
 		private final Instant requestEnd;
 
@@ -114,8 +110,7 @@ class DataRequestSyncJob {
 
 		static DataRequestInternalOutputDto of(DataRequest request) {
 
-			return new DataRequestInternalOutputDto(request.getDepartmentId().toString(), request.getCheckCodeName(),
-					request.getCheckCodeDayOfBirth(), request.getCheckCodeRandom(), request.getRequestStart(),
+			return new DataRequestInternalOutputDto(request.getDepartmentId().toString(), request.getRequestStart(),
 					request.getRequestEnd(), request.getFeatures(), request.getStatus());
 		}
 	}

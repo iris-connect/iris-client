@@ -16,8 +16,6 @@ package de.healthIMIS.iris.client.sormas_integration;
 
 import static java.time.format.DateTimeFormatter.*;
 import static java.time.format.FormatStyle.*;
-import static org.apache.commons.codec.binary.Base64.*;
-import static org.apache.commons.codec.digest.DigestUtils.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import de.healthIMIS.iris.client.core.SormasRefId;
@@ -29,7 +27,14 @@ import de.healthIMIS.sormas.client.api.EventControllerApi;
 import de.healthIMIS.sormas.client.api.PersonControllerApi;
 import de.healthIMIS.sormas.client.api.SampleControllerApi;
 import de.healthIMIS.sormas.client.api.TaskControllerApi;
-import de.healthIMIS.sormas.client.model.*;
+import de.healthIMIS.sormas.client.model.CaseDataDto;
+import de.healthIMIS.sormas.client.model.PathogenTestResultType;
+import de.healthIMIS.sormas.client.model.SampleDto;
+import de.healthIMIS.sormas.client.model.TaskContext;
+import de.healthIMIS.sormas.client.model.TaskDto;
+import de.healthIMIS.sormas.client.model.TaskPriority;
+import de.healthIMIS.sormas.client.model.TaskStatus;
+import de.healthIMIS.sormas.client.model.TaskType;
 import io.vavr.control.Option;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -141,12 +146,10 @@ class DataRequestJob {
 				var personId = SormasRefId.of(person.getUuid());
 				var sormasUserId = task.getCreatorUser().getUuid();
 				var irisUserId = task.getAssigneeUser().getUuid();
-				var checkCodeName = calculateNameCheckCodes(person);
-				var checkCodeBirthday = calculateBirthdayCheckCodes(person);
 
 				var startDate = firstRelevantSymptomDate(caseDto).orElse(positivSampleDate(caseDto)).get();
 
-				var dataRequest = dataRequests.createContactEventRequest(caseId, personId, checkCodeName, checkCodeBirthday,
+				var dataRequest = dataRequests.createContactEventRequest(caseId, personId,
 						startDate, Option.none(), irisUserId, sormasUserId);
 
 				var now = Instant.now();
@@ -206,15 +209,13 @@ class DataRequestJob {
 			var eventId = SormasRefId.of(eventDto.getUuid());
 			var sormasUserId = task.getCreatorUser().getUuid();
 			var irisUserId = task.getAssigneeUser().getUuid();
-			var checkCodeZipCode = calculateZipCodeCheckCodes(eventDto.getEventLocation().getPostalCode());
-			var checkCodeFacilityType = calculateFacilityTypeCheckCodes(eventDto.getEventLocation().getFacilityType());
 
 			var startDate = eventDto.getStartDate();
 			var endDate = eventDto.getEndDate();
 
 			var requestDetails = task.getCreatorComment();
 
-			var dataRequest = dataRequests.createGuestsRequest(eventId, checkCodeZipCode, checkCodeFacilityType, startDate,
+			var dataRequest = dataRequests.createGuestsRequest(eventId, startDate,
 					Option.of(endDate), requestDetails, irisUserId, sormasUserId);
 
 			var now = Instant.now();
@@ -242,54 +243,8 @@ class DataRequestJob {
 	}
 
 	private String createNoteTextForIrisRequest(String title, DataRequest dataRequest, Instant now) {
-		return String.format("%s über IRIS gestartet am %s\nIRIS-Code: %s\nTele-Code: %s (für mündliche Übermittlung)", // \nPrüfcode:
-																																																										// %s",
-				title, now.atZone(ZoneId.systemDefault()).format(ofLocalizedDateTime(MEDIUM)), dataRequest.getId(),
-				dataRequest.getTeleCode()/*
-																	* ,
-																	* defaultString(dataRequest.getCheckCodeRandom())
-																	*/);
-	}
-
-	private Option<String> calculateBirthdayCheckCodes(PersonDto person) {
-
-		if (person.getBirthdateYYYY() != null && person.getBirthdateMM() != null && person.getBirthdateDD() != null) {
-
-			var date = person.getBirthdateYYYY() * 10000 + person.getBirthdateMM() * 100 + person.getBirthdateDD();
-			var dateHash = encodeBase64String(md5(Integer.toString(date)));
-
-			return Option.of(dateHash);
-		}
-
-		return Option.none();
-	}
-
-	private String calculateNameCheckCodes(PersonDto person) {
-
-		var firstName = defaultString(person.getFirstName());
-		var lastName = defaultString(person.getLastName());
-
-		var name = (firstName + lastName).toLowerCase().replaceAll("[^\\pL\\pN]", "");
-
-		return encodeBase64String(md5(name));
-	}
-
-	private Option<String> calculateZipCodeCheckCodes(String zipCode) {
-
-		if (zipCode == null) {
-			return Option.none();
-		}
-
-		return Option.of(encodeBase64String(md5(trim(zipCode))));
-	}
-
-	private Option<String> calculateFacilityTypeCheckCodes(FacilityType facilityType) {
-
-		if (facilityType == null) {
-			return Option.none();
-		}
-
-		return Option.of(encodeBase64String(md5(facilityType.toString())));
+		return String.format("%s über IRIS gestartet am %s\nIRIS-Code: %s",
+				title, now.atZone(ZoneId.systemDefault()).format(ofLocalizedDateTime(MEDIUM)), dataRequest.getId());
 	}
 
 	private Option<Instant> positivSampleDate(CaseDataDto caseDto) {

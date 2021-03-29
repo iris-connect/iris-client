@@ -50,10 +50,6 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	private String irisUserId;
 	private String sormasUserId;
 
-	private String checkCodeName;
-	private String checkCodeDayOfBirth;
-	private String checkCodeRandom;
-
 	private Instant requestStart;
 	private Instant requestEnd;
 
@@ -66,17 +62,14 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	private Status status = Status.Open;
 
 	public DataRequest(DataRequestIdentifier id, DepartmentIdentifier departmentId, SormasRefId refId,
-			String checkCodeName, String checkCodeDayOfBirth, String checkCodeRandom, Instant requestStart,
-			Instant requestEnd, String irisUserId, String sormasUserId, Set<Feature> features, Status status) {
+			Instant requestStart, Instant requestEnd, String irisUserId, String sormasUserId, Set<Feature> features,
+			Status status) {
 
 		super();
 
 		this.id = id;
 		this.departmentId = departmentId;
 		this.refId = refId;
-		this.checkCodeName = checkCodeName;
-		this.checkCodeDayOfBirth = checkCodeDayOfBirth;
-		this.checkCodeRandom = checkCodeRandom;
 		this.requestStart = requestStart;
 		this.requestEnd = requestEnd;
 		this.irisUserId = irisUserId;
