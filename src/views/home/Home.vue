@@ -9,23 +9,16 @@
       width="240"
     />
 
-    <v-btn :to="routeEventTrackingForm"> NEUE NACHVERFOLGUNG </v-btn>
-    <v-btn :to="routeEventTrackingList"> NACHVERFOLGUNGEN ANSEHEN </v-btn>
+    <v-btn :to="{ name: 'event-new' }"> NEUE NACHVERFOLGUNG </v-btn>
+    <v-btn :to="{ name: 'event-list' }"> NACHVERFOLGUNGEN ANSEHEN </v-btn>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import {
-  ROUTE_NAME_EVENT_TRACKING_FORM,
-  ROUTE_NAME_EVENT_TRACKING_LIST,
-} from "@/router";
 
 @Component
-export default class Home extends Vue {
-  routeEventTrackingForm = ROUTE_NAME_EVENT_TRACKING_FORM;
-  routeEventTrackingList = ROUTE_NAME_EVENT_TRACKING_LIST;
-}
+export default class Home extends Vue {}
 </script>
 
 <style lang="scss" scoped>

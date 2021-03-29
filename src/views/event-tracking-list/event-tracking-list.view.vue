@@ -15,7 +15,7 @@
             class="float-right"
             color="primary"
             v-bind="attrs"
-            :to="routeEventTrackingForm"
+            :to="{ name: 'event-new' }"
             >Neue Ereignisverfolgung starten
           </v-btn>
         </div>
@@ -49,7 +49,7 @@
             <!-- TODO use imported route name -->
             <v-btn
               color="primary"
-              :to="'/ereignisse/' + item.extID"
+              :to="{ name: 'event-details', params: { id: item.extID } }"
               @click="selectItem(item)"
             >
               Details
@@ -62,7 +62,6 @@
 </template>
 
 <script lang="ts">
-import { ROUTE_NAME_EVENT_TRACKING_FORM } from "@/router";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
 
@@ -72,7 +71,6 @@ import EventTrackingFormView from "../event-tracking-form/event-tracking-form.vi
   },
 })
 export default class EventTrackingListView extends Vue {
-  routeEventTrackingForm = ROUTE_NAME_EVENT_TRACKING_FORM;
   tableData = {
     search: "",
     headers: [

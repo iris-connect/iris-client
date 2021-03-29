@@ -211,7 +211,7 @@ import {
   LocationInformation,
   DataRequestDetails,
 } from "@/api";
-import router, { ROUTE_NAME_EVENT_TRACKING_LIST } from "@/router";
+import router from "@/router";
 
 type LocationInformationTableRow = {
   address: string;
@@ -237,8 +237,6 @@ function getDateWithTime(date: string, time: string): string {
 
 @Component
 export default class EventTrackingFormView extends Vue {
-  routeEventTrackingList = ROUTE_NAME_EVENT_TRACKING_LIST;
-
   $refs!: {
     form: HTMLFormElement;
   };
@@ -348,8 +346,7 @@ export default class EventTrackingFormView extends Vue {
         payload
       );
       router.push({
-        // TODO this should not be hard coded - import from router/index.ts
-        name: `ereignisse-details`,
+        name: `event-details`,
         params: {
           id: created.code || "",
         },
