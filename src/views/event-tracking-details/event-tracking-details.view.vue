@@ -67,14 +67,9 @@ export default class EventTrackingDetailsView extends Vue {
     search: "",
     headers: [
       {
-        text: "ID",
-        align: "start",
-        sortable: true,
-        value: "id",
-      },
-      {
         text: "Nachname",
         value: "lastname",
+        align: "start",
       },
       {
         text: "Vorname",
@@ -95,7 +90,6 @@ export default class EventTrackingDetailsView extends Vue {
     ],
     eventParticipants: [
       {
-        id: "74UJ89",
         lastname: "Auerbach",
         firstname: "Dan",
         checkInTime: "26.03.2021 12:11",
@@ -103,7 +97,6 @@ export default class EventTrackingDetailsView extends Vue {
         comment: "An der Bar mit 2 weiteren Personen",
       },
       {
-        id: "4TTS31",
         lastname: "Irvine",
         firstname: "Weldon",
         checkInTime: "26.03.2021 12:12",
