@@ -30,13 +30,15 @@
           :items-per-page="5"
           class="elevation-1 mt-5"
           :search="tableData.search"
+          show-select
         >
-
         </v-data-table>
         <v-row class="mt-2">
           <v-col cols="12">
             <v-btn class="ml-2 mr-2" color="white" @click="on">Zurück </v-btn>
-            <v-btn class="mr-2 float-right" color="primary" @click="on">Auswahl exportieren </v-btn>
+            <v-btn class="mr-2 float-right" color="primary" @click="on"
+              >Auswahl exportieren
+            </v-btn>
           </v-col>
         </v-row>
       </v-card-text>
@@ -89,7 +91,7 @@ export default class EventTrackingDetailsView extends Vue {
       {
         text: "Kommentar",
         value: "comment",
-      }
+      },
     ],
     eventParticipants: [
       {
@@ -107,7 +109,7 @@ export default class EventTrackingDetailsView extends Vue {
         checkInTime: "26.03.2021 12:12",
         checkOutTime: "26.03.2021 13:57",
         comment: "Tisch 7",
-      }
+      },
     ],
   };
 
