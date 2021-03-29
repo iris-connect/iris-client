@@ -30,6 +30,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
     
+      - name: build parent POM (only) for the following builds
+        run: mvn -BN install --file pom.xml
+    
       - name: build sormas API client
         run: mvn -B install --file iris-sormas-api-client/pom.xml
     
