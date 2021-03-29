@@ -29,8 +29,8 @@ public class Person {
 	@JsonProperty("phone")
 	private String phone = null;
 
-	@JsonProperty("mobilPhone")
-	private String mobilPhone = null;
+	@JsonProperty("mobilePhone")
+	private String mobilePhone = null;
 
 	@JsonProperty("address")
 	private Address address = null;
@@ -145,23 +145,23 @@ public class Person {
 		this.phone = phone;
 	}
 
-	public Person mobilPhone(String mobilPhone) {
-		this.mobilPhone = mobilPhone;
+	public Person mobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
 		return this;
 	}
 
 	/**
-	 * Get mobilPhone
+	 * Get mobilePhone
 	 * 
-	 * @return mobilPhone
+	 * @return mobilePhone
 	 **/
 
-	public String getMobilPhone() {
-		return mobilPhone;
+	public String getMobilePhone() {
+		return mobilePhone;
 	}
 
-	public void setMobilPhone(String mobilPhone) {
-		this.mobilPhone = mobilPhone;
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
 	}
 
 	public Person address(Address address) {
@@ -194,12 +194,12 @@ public class Person {
 		return Objects.equals(this.firstName, person.firstName) && Objects.equals(this.lastName, person.lastName)
 				&& Objects.equals(this.dateOfBirth, person.dateOfBirth) && Objects.equals(this.sex, person.sex)
 				&& Objects.equals(this.email, person.email) && Objects.equals(this.phone, person.phone)
-				&& Objects.equals(this.mobilPhone, person.mobilPhone) && Objects.equals(this.address, person.address);
+				&& Objects.equals(this.mobilePhone, person.mobilePhone) && Objects.equals(this.address, person.address);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(firstName, lastName, dateOfBirth, sex, email, phone, mobilPhone, address);
+		return Objects.hash(firstName, lastName, dateOfBirth, sex, email, phone, mobilePhone, address);
 	}
 
 	@Override
@@ -213,7 +213,7 @@ public class Person {
 		sb.append("    sex: ").append(toIndentedString(sex)).append("\n");
 		sb.append("    email: ").append(toIndentedString(email)).append("\n");
 		sb.append("    phone: ").append(toIndentedString(phone)).append("\n");
-		sb.append("    mobilPhone: ").append(toIndentedString(mobilPhone)).append("\n");
+		sb.append("    mobilePhone: ").append(toIndentedString(mobilePhone)).append("\n");
 		sb.append("    address: ").append(toIndentedString(address)).append("\n");
 		sb.append("}");
 		return sb.toString();

@@ -16,6 +16,8 @@ package de.healthIMIS.iris.client.data_request;
 
 import de.healthIMIS.iris.client.data_request.DataRequest.DataRequestIdentifier;
 
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -24,6 +26,6 @@ import org.springframework.data.repository.CrudRepository;
  */
 interface DataRequestRepository extends CrudRepository<DataRequest, DataRequestIdentifier> {
 
-	@Query("select count(1) = 0 from DataRequest r where r.teleCode = :teleCode")
-	boolean isTeleCodeAvailable(String teleCode);
+	@Query("select count(1) = 0 from DataRequest r where r.id = :code")
+	boolean isCodeAvailable(UUID code);
 }
