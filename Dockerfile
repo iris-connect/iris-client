@@ -18,5 +18,10 @@ COPY . .
 # build app for production with minification
 RUN npm run build
 
-EXPOSE 8080
-CMD [ "http-server", "dist" ]
+# 404.html will be served if a file is not found. 
+# This can be used for Single-Page App (SPA) hosting to serve the entry page.
+# https://www.npmjs.com/package/http-server
+RUN mv dist/index.html dist/404.html
+
+EXPOSE 28080
+CMD [ "http-server", "dist", "--port", "28080" ]
