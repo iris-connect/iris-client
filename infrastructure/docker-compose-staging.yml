@@ -114,6 +114,12 @@ services:
       - iris-sormas.env
     restart: unless-stopped
 
+# iris-frontend
+  # image: inoeg/iris-frontend
+  # depends_on:
+  #  - iris-client
+
+
   nginx:
     build:
       ./docker/nginx
