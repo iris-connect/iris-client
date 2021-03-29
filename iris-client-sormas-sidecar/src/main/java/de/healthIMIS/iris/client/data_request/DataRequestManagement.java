@@ -14,12 +14,12 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_request;
 
+import static io.vavr.control.Option.*;
 import static java.nio.charset.StandardCharsets.*;
 import static org.springframework.http.MediaType.*;
 
 import de.healthIMIS.iris.client.core.IrisClientProperties;
 import de.healthIMIS.iris.client.core.IrisProperties;
-import de.healthIMIS.iris.client.core.SormasRefId;
 import de.healthIMIS.iris.client.data_request.DataRequest.DataRequestIdentifier;
 import de.healthIMIS.iris.client.data_request.DataRequest.Feature;
 import de.healthIMIS.iris.client.data_request.DataRequest.Status;
@@ -72,26 +72,33 @@ public class DataRequestManagement {
 		return requests.findById(DataRequestIdentifier.of(uuid));
 	}
 
-	public DataRequest createContactEventRequest(SormasRefId refId, SormasRefId personId, Instant startDate,
-			Option<Instant> endDate, String irisUserId, String sormasUserId) {
+	public DataRequest createContactEventRequest(String refId, String name, Instant startDate,
+			Option<Instant> endDate, String hdUserId) {
 
-		return createDataRequest(refId, Option.of(personId), Option.of(startDate), endDate, Option.none(), irisUserId,
-				sormasUserId, Set.of(Feature.Contacts_Events));
+		return createDataRequest(refId, name, startDate, endDate, none(), Option.of(hdUserId), none(), none(),
+				Set.of(Feature.Contacts_Events));
 	}
 
-	public DataRequest createGuestsRequest(SormasRefId refId, Instant startDate, Option<Instant> endDate,
-			String requestDetails, String irisUserId, String sormasUserId) {
+	public DataRequest createLocationRequest(String refId, String name, Instant startDate, Instant endDate,
+			Option<String> requestDetails, String locationId, String providerId) {
 
-		return createDataRequest(refId, Option.none(), Option.of(startDate), endDate, Option.of(requestDetails), irisUserId,
-				sormasUserId, Set.of(Feature.Guests));
+		return createDataRequest(refId, name, startDate, Option.of(endDate), requestDetails, none(),
+				Option.of(locationId), Option.of(providerId), Set.of(Feature.Guests));
 	}
 
-	DataRequest createDataRequest(SormasRefId refId, Option<SormasRefId> personId, Option<Instant> startDate,
-			Option<Instant> endDate, Option<String> requestDetails, String irisUserId, String sormasUserId,
-			Set<Feature> feature) {
+	public DataRequest createLocationRequest(String refId, String name, Instant startDate, Option<Instant> endDate,
+			Option<String> requestDetails, Option<String> hdUserId) {
 
-		var dataRequest = new DataRequest(refId, personId.getOrNull(), startDate.getOrNull(), endDate.getOrNull(),
-				requestDetails.getOrNull(), irisUserId, sormasUserId, feature);
+		return createDataRequest(refId, name, startDate, endDate, requestDetails, hdUserId,
+				none(), none(), Set.of(Feature.Guests));
+	}
+
+	DataRequest createDataRequest(String refId, String name, Instant startDate, Option<Instant> endDate,
+			Option<String> requestDetails, Option<String> hdUserId, Option<String> locationId,
+			Option<String> providerId, Set<Feature> feature) {
+
+		var dataRequest = new DataRequest(refId, name, startDate, endDate.getOrNull(), requestDetails.getOrNull(),
+				hdUserId.getOrNull(), providerId.getOrNull(), providerId.getOrNull(), feature);
 
 		log.trace("Request job - PUT to server is sent: {}", dataRequest.getId().toString());
 
@@ -136,6 +143,9 @@ public class DataRequestManagement {
 
 		private final String departmentId;
 
+		private final String locationId;
+		private final String providerId;
+
 		private final Instant requestStart;
 		private final Instant requestEnd;
 
@@ -146,8 +156,9 @@ public class DataRequestManagement {
 
 		static DataRequestDto of(DataRequest request, UUID departmentId, String rkiCode) {
 
-			return new DataRequestDto(departmentId.toString(), request.getRequestStart(), request.getRequestEnd(),
-					request.getRequestDetails(), request.getFeatures(), request.getStatus());
+			return new DataRequestDto(departmentId.toString(), request.getLocationId(), request.getProviderId(),
+					request.getRequestStart(), request.getRequestEnd(), request.getRequestDetails(), request.getFeatures(),
+					request.getStatus());
 		}
 	}
 }

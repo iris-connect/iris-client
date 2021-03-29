@@ -144,15 +144,14 @@ class DataRequestJob {
 
 				var person = persons.get(0);
 
-				var caseId = SormasRefId.of(caseDto.getUuid());
-				var personId = SormasRefId.of(person.getUuid());
+				var caseId = caseDto.getUuid();
+				var name = caseDto.getPerson().getCaption();
 				var sormasUserId = task.getCreatorUser().getUuid();
-				var irisUserId = task.getAssigneeUser().getUuid();
 
 				var startDate = firstRelevantSymptomDate(caseDto).orElse(positivSampleDate(caseDto)).get();
 
-				var dataRequest = dataRequests.createContactEventRequest(caseId, personId,
-						startDate, Option.none(), irisUserId, sormasUserId);
+				var dataRequest = dataRequests.createContactEventRequest(caseId, name,
+						startDate, Option.none(), sormasUserId);
 
 				var now = Instant.now();
 				var irisMessage = createNoteTextForIrisRequest("Kontaktnachverfolgung", dataRequest, now);
@@ -208,17 +207,17 @@ class DataRequestJob {
 
 			var eventDto = events.get(0);
 
-			var eventId = SormasRefId.of(eventDto.getUuid());
+			var eventId = eventDto.getUuid();
+			var name = eventDto.getEventTitle();
 			var sormasUserId = task.getCreatorUser().getUuid();
-			var irisUserId = task.getAssigneeUser().getUuid();
 
 			var startDate = eventDto.getStartDate();
 			var endDate = eventDto.getEndDate();
 
 			var requestDetails = task.getCreatorComment();
 
-			var dataRequest = dataRequests.createGuestsRequest(eventId, startDate,
-					Option.of(endDate), requestDetails, irisUserId, sormasUserId);
+			var dataRequest = dataRequests.createLocationRequest(eventId, name, startDate,
+					Option.of(endDate), Option.of(requestDetails), Option.of(sormasUserId));
 
 			var now = Instant.now();
 			var irisMessage = createNoteTextForIrisRequest("Ereignisnachverfolgung", dataRequest, now);
@@ -271,8 +270,8 @@ class DataRequestJob {
 
 	private boolean isRelevant(TaskDto it) {
 
-		return ((it.getTaskContext() == TaskContext.CASE && it.getTaskType() == TaskType.CONTACT_TRACING)
-				|| (it.getTaskContext() == TaskContext.EVENT && it.getTaskType() == TaskType.EVENT_INVESTIGATION))
+		return ((it.getTaskContext() == TaskContext.CASE && it.getTaskType() == TaskType.CONTACT_TRACING))
+				// || (it.getTaskContext() == TaskContext.EVENT && it.getTaskType() == TaskType.EVENT_INVESTIGATION))
 				&& it.getTaskStatus() == TaskStatus.PENDING && it.getAssigneeUser().getCaption().contains("IRIS");
 	}
 }
