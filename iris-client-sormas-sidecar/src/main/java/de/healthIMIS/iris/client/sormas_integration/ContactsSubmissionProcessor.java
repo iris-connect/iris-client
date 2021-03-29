@@ -84,7 +84,7 @@ public class ContactsSubmissionProcessor extends DataSubmissionSubProcessor<Cont
 		contact.setCaze(caseRef);
 
 		var userRef = new UserReferenceDto();
-		userRef.setUuid(request.getIrisUserId());
+		// userRef.setUuid(request.getIrisUserId());
 		contact.setReportingUser(userRef);
 
 		var healtConditions = new HealthConditionsDto();

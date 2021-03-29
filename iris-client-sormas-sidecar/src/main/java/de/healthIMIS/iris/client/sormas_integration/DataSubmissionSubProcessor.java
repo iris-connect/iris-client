@@ -60,11 +60,11 @@ abstract class DataSubmissionSubProcessor<T> {
 		newTask.setTaskStatus(TaskStatus.PENDING);
 
 		var userRef = new UserReferenceDto();
-		userRef.setUuid(request.getSormasUserId());
+		// userRef.setUuid(request.getSormasUserId());
 		newTask.setAssigneeUser(userRef);
 
 		userRef = new UserReferenceDto();
-		userRef.setUuid(request.getIrisUserId());
+		// userRef.setUuid(request.getIrisUserId());
 		newTask.setCreatorUser(userRef);
 		return newTask;
 	}
