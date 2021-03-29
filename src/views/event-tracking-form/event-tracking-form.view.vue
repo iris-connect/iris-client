@@ -138,7 +138,9 @@
             </v-col>
           </v-row>
         </v-container>
-        <v-btn class="mt-4" color="" plain> Abbrechen </v-btn>
+        <v-btn class="mt-4" color="" plain :to="routeEventTrackingList">
+          Abbrechen
+        </v-btn>
         <v-btn
           :disabled="!form.valid || eventCreationOngoing"
           class="mt-4"
@@ -156,6 +158,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 import { LocationAddress } from "@/api";
+import { ROUTE_NAME_EVENT_TRACKING_LIST } from "@/router";
 
 type LocationInformationTableRow = {
   address: string;
@@ -176,6 +179,8 @@ function getFormattedAddress(address: LocationAddress) {
   },
 })
 export default class EventTrackingFormView extends Vue {
+  routeEventTrackingList = ROUTE_NAME_EVENT_TRACKING_LIST;
+
   $refs!: {
     form: HTMLFormElement;
   };

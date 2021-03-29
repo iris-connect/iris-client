@@ -16,17 +16,15 @@
             max-width="98%"
             width="1600px"
           >
-            <template v-slot:activator="{ on, attrs }">
+            <template v-slot:activator="{ attrs }">
               <v-btn
                 class="float-right"
                 color="primary"
                 v-bind="attrs"
-                v-on="on"
+                :to="routeEventTrackingForm"
                 >Neue Ereignisverfolgung starten
               </v-btn>
             </template>
-            <!-- TODO do not use view like component -->
-            <EventTrackingFormView></EventTrackingFormView>
           </v-dialog>
         </div>
       </v-col>
@@ -74,15 +72,10 @@
 import { ROUTE_NAME_EVENT_TRACKING_FORM } from "@/router";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
-import store from "@/store";
 
 @Component({
   components: {
     EventTrackingFormView: EventTrackingFormView,
-  },
-  beforeRouteEnter: async (_from, _to, next) => {
-    next();
-    await store.dispatch("eventTrackingForm/fetchEventLocations", "");
   },
 })
 export default class EventTrackingListView extends Vue {
