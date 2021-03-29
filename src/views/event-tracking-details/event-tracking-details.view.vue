@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Details für Ereignis {{ eventId }}</h1>
+    <p>TODO</p>
   </div>
 </template>
 

@@ -21,9 +21,15 @@ export function makeMockAPIServer() {
         };
       });
 
-      this.get("/search", () => {
+      this.get("/search/mio", () => {
         return {
-          locations: dummyLocations,
+          locations: [dummyLocations[0]],
+        };
+      });
+
+      this.get("/search/august", () => {
+        return {
+          locations: [dummyLocations[1]],
         };
       });
     },

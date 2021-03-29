@@ -45,12 +45,31 @@
                 </v-card-title>
 
                 <v-card-text>
+                  <v-row class="mt-6 mb-6">
+                    <v-col>
+                      <v-text-field
+                        v-model="locationSearchFormSearchText"
+                        :disabled="locationsLoading"
+                        append-icon="mdi-magnify"
+                        label="Suche nach Name/Adresse"
+                        single-line
+                        hide-details
+                      ></v-text-field>
+                    </v-col>
+                    <v-col>
+                      <v-btn
+                        :disabled="locationsLoading"
+                        @click="performSearch(locationSearchFormSearchText)"
+                      >
+                        Lokation Suchen
+                      </v-btn>
+                    </v-col>
+                  </v-row>
                   <v-data-table
                     :headers="searchTable.headers"
                     :items="locations"
                     :items-per-page="5"
                     class="elevation-1"
-                    :search="searchTable.search"
                   >
                     <template v-slot:[itemActionSlotName]="{ item }">
                       <v-btn color="primary" @click="selectItem(item)">
@@ -106,7 +125,7 @@
             <v-text-field
               v-model="form.model.time.from"
               :disabled="eventCreationOngoing"
-              :rules="form.rules.defined"
+              :rules="form.rules.time"
               label="Uhrzeit (Beginn)"
               prepend-icon="mdi-clock"
               required
@@ -145,7 +164,7 @@
             <v-text-field
               v-model="form.model.time.till"
               :disabled="eventCreationOngoing"
-              :rules="form.rules.defined"
+              :rules="form.rules.time"
               label="Uhrzeit (Ende)"
               required
               prepend-icon="mdi-clock"
@@ -201,12 +220,17 @@ function getFormattedAddress(address: LocationAddress) {
   return `${address.street}, ${address.zip} ${address.city}`;
 }
 
-@Component({
-  beforeRouteEnter: async (_from, _to, next) => {
-    next();
-    await store.dispatch("eventTrackingForm/fetchEventLocations", "");
-  },
-})
+function getDateWithTime(date: string, time: string): string {
+  // TODO check if we need to consider timezones
+  const hours = Number(time.split(":")[0]);
+  const minutes = Number(time.split(":")[1]);
+  const updated = new Date(date);
+  updated.setHours(hours);
+  updated.setMinutes(minutes);
+  return updated.toISOString();
+}
+
+@Component
 export default class EventTrackingFormView extends Vue {
   routeEventTrackingList = ROUTE_NAME_EVENT_TRACKING_LIST;
 
@@ -215,6 +239,8 @@ export default class EventTrackingFormView extends Vue {
   };
 
   dialog = false;
+
+  locationSearchFormSearchText = "";
 
   get eventCreationOngoing(): boolean {
     return store.state.eventTrackingForm.eventCreationOngoing;
@@ -227,7 +253,9 @@ export default class EventTrackingFormView extends Vue {
   get selectedLocation(): string | null {
     const location = store.state.eventTrackingForm.selectedLocation;
     if (location) {
-      return getFormattedAddress(location.contact.address);
+      return `${location.contact.officialName}, ${getFormattedAddress(
+        location.contact.address
+      )}`;
     }
     return null;
   }
@@ -264,6 +292,10 @@ export default class EventTrackingFormView extends Vue {
     showDatePicker: false,
     showDatePickerEnd: false,
     rules: {
+      time: [
+        (v: string): string | boolean => !!v || "Pflichtfeld",
+        (v: string): string | boolean => /\d\d:\d\d/.test(v) || "Format HH:mm",
+      ],
       defined: [(v: unknown): string | boolean => !!v || "Pflichtfeld"],
     },
     valid: false,
@@ -295,8 +327,12 @@ export default class EventTrackingFormView extends Vue {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
       const payload: DataRequestClient = {
-        start: this.form.model.date, // TODO add time and use ISO format
-        end: this.form.model.dateEnd, // TODO add time and use ISO format
+        // TODO validate start < end
+        start: getDateWithTime(this.form.model.date, this.form.model.time.from),
+        end: getDateWithTime(
+          this.form.model.dateEnd,
+          this.form.model.time.till
+        ),
         name: this.form.model.name,
         locationId: this.form.model.locationId,
         providerId: this.form.model.providerId,
@@ -314,6 +350,10 @@ export default class EventTrackingFormView extends Vue {
         },
       });
     }
+  }
+
+  async performSearch(searchText: string): Promise<void> {
+    await store.dispatch("eventTrackingForm/fetchEventLocations", searchText);
   }
 
   on(): void {

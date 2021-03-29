@@ -54,9 +54,10 @@
             </v-chip>
           </template>
           <template v-slot:[itemActionSlotName]="{ item }">
+            <!-- TODO use imported route name -->
             <v-btn
               color="primary"
-              :to="'details/' + item.extID"
+              :to="'/ereignisse/' + item.extID"
               @click="selectItem(item)"
             >
               Details
