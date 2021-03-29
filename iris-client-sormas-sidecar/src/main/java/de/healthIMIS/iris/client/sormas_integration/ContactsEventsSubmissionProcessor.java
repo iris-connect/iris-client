@@ -14,8 +14,8 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.sormas_integration;
 
+import de.healthIMIS.iris.api.sidecarclient.model.ContactsAndEvents;
 import de.healthIMIS.iris.client.data_request.DataRequest;
-import de.healthIMIS.iris.client.data_submission.model.ContactsAndEvents;
 import de.healthIMIS.iris.client.sormas_integration.DataSubmissionJob.DataSubmissionDto;
 import de.healthIMIS.sormas.client.api.ContactControllerApi;
 import de.healthIMIS.sormas.client.api.EventControllerApi;

@@ -54,6 +54,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.healthIMIS</groupId>
+			<artifactId>iris-api-sidecar-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>de.healthIMIS</groupId>
 			<artifactId>iris-sormas-api-client</artifactId>
 			<version>1.55.0-SNAPSHOT</version>
 		</dependency>
@@ -156,9 +161,8 @@
 						<publishRegistry>
 							<username>${env.DOCKER_HUB_USER}</username>
 							<password>${env.DOCKER_HUB_PW}</password>
-							<!-- <token>${env.DOCKER_HUB_TOKEN}</token>
-							<url>https://docker.example.com/v1/</url>
-							<email>user@example.com</email>-->
+							<!-- <token>${env.DOCKER_HUB_TOKEN}</token> <url>https://docker.example.com/v1/</url> 
+								<email>user@example.com</email> -->
 						</publishRegistry>
 					</docker>
 				</configuration>
