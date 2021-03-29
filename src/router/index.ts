@@ -60,7 +60,7 @@ export const routes: Array<RouteConfig> = [
     path: `/${ROUTE_NAME_EVENT_TRACKING}/:id`,
     name: `${ROUTE_NAME_EVENT_TRACKING}-details`,
     meta: {
-      menu: true,
+      menu: false,
     },
     component: () =>
       import(
