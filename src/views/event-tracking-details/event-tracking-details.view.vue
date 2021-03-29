@@ -90,6 +90,7 @@ export default class EventTrackingDetailsView extends Vue {
     ],
     eventParticipants: [
       {
+        id: "1",
         lastname: "Auerbach",
         firstname: "Dan",
         checkInTime: "26.03.2021 12:11",
@@ -97,6 +98,7 @@ export default class EventTrackingDetailsView extends Vue {
         comment: "An der Bar mit 2 weiteren Personen",
       },
       {
+        id: "2",
         lastname: "Irvine",
         firstname: "Weldon",
         checkInTime: "26.03.2021 12:12",
