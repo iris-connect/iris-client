@@ -35,4 +35,21 @@ export const dummyLocations: LocationInformation[] = [
       representative: "Hans Joachim Jakob",
     },
   },
+  {
+    id: "id-bowling-bahn",
+    name: "Bowling World Frankfurt",
+    providerId: "recover-app",
+    contact: {
+      address: {
+        city: "Frankfurt am Main",
+        street: "Berkersheimer Weg 104",
+        zip: "60433",
+      },
+      email: "bowling@example.com",
+      phone: "069830383",
+      officialName: "Bowling World Frankfurt",
+      ownerEmail: "bowling@exmaple.com",
+      representative: "Sina Bouldgut",
+    },
+  },
 ];

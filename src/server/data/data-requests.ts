@@ -32,5 +32,15 @@ export const dummyDataRequests: ExistingDataRequestClientWithLocationList = {
       requestDetails: "Bitte beachten Sie, dass...",
       status: ExistingDataRequestClientWithLocationStatusEnum.DataReceived,
     },
+    {
+      externalRequestId: "bowling-456",
+      start: hoursAgo(8),
+      end: hoursAgo(7),
+      code: "BOWL345",
+      locationInformation: dummyLocations[2],
+      name: "Fall 85938",
+      requestDetails: "Tisch 7",
+      status: ExistingDataRequestClientWithLocationStatusEnum.Closed,
+    },
   ],
 };

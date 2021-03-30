@@ -50,7 +50,7 @@
         >
           <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
-              {{ item.status }}
+              {{ getStatusName(item.status) }}
             </v-chip>
           </template>
           <template v-slot:[itemActionSlotName]="{ item }">
@@ -164,16 +164,31 @@ export default class EventTrackingListView extends Vue {
   getStatusColor(
     status: ExistingDataRequestClientWithLocationStatusEnum
   ): string {
-    // TODO use enum / string literals
-    if (status == ExistingDataRequestClientWithLocationStatusEnum.DataRequested)
-      return "blue";
-    else if (
-      status == ExistingDataRequestClientWithLocationStatusEnum.DataReceived
-    )
-      return "red";
-    else if (status == ExistingDataRequestClientWithLocationStatusEnum.Closed)
-      return "green";
-    else throw Error("TODO this should not happen");
+    switch (status) {
+      case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+        return "blue";
+      case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+        return "red";
+      case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+        return "green";
+      default:
+        return "gray"; // TODO
+    }
+  }
+
+  getStatusName(
+    status: ExistingDataRequestClientWithLocationStatusEnum
+  ): string {
+    switch (status) {
+      case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+        return "Angefragt";
+      case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+        return "Geliefert";
+      case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+        return "Abgeschlossen";
+      default:
+        return "Unbekannt"; // TODO find better name
+    }
   }
 }
 </script>
