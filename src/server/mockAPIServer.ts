@@ -1,5 +1,6 @@
 import { DataRequestDetails } from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
+import { dummyDataDetails } from "@/server/data/data-requests";
 import { createServer } from "miragejs";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -19,6 +20,10 @@ export function makeMockAPIServer() {
         return {
           locations: dummyLocations,
         };
+      });
+
+      this.get("/data-requests-client/locations/:id", () => {
+        return dummyDataDetails;
       });
 
       this.get("/search/mio", () => {
