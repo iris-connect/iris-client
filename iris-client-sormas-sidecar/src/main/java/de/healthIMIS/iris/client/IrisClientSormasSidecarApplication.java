@@ -43,6 +43,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -62,7 +63,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 
@@ -101,7 +101,7 @@ public class IrisClientSormasSidecarApplication {
 	}
 
 	@PostConstruct
-	public void initBouncyCastle(){
+	public void initBouncyCastle() {
 		Security.addProvider(new BouncyCastleProvider());
 	}
 
@@ -176,6 +176,14 @@ public class IrisClientSormasSidecarApplication {
 		};
 	}
 
+	@Bean
+	public ModelMapper modelMapper() {
+		var mapper = new ModelMapper();
+		// mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+		mapper.getConfiguration().setAmbiguityIgnored(true);
+
+		return mapper;
+	}
 
 	static final class UpdateRequestNeedCharacterEncodingFilter extends OrderedCharacterEncodingFilter {
 

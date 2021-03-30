@@ -1,3 +1,19 @@
+CREATE TABLE location (
+	provider_id varchar(100) NOT NULL,
+	location_id varchar(100) NOT NULL,
+	name varchar(500) NULL,
+	contact_official_name varchar(500) NULL,
+	contact_representative varchar(500) NULL,
+	contact_address_street varchar(500) NULL,
+	contact_address_city varchar(500) NULL,
+	contact_address_zip varchar(10) NULL,
+	contact_owner_email varchar(50) NULL,
+	contact_email varchar(50) NULL,
+	contact_phone varchar(50) NULL,
+	
+	CONSTRAINT location_pkey PRIMARY KEY (provider_id, location_id)
+);
+
 CREATE TABLE data_request (
 	request_id uuid NOT NULL,
 	ref_id varchar(100) NOT NULL,
@@ -11,7 +27,8 @@ CREATE TABLE data_request (
 	status varchar(50) NOT NULL,
 	created timestamp NOT NULL,
 	last_modified timestamp NOT NULL,
-	CONSTRAINT request_pkey PRIMARY KEY (request_id)
+	CONSTRAINT request_pkey PRIMARY KEY (request_id),
+	CONSTRAINT data_request_location_fk FOREIGN KEY (provider_id,location_id) REFERENCES location(provider_id,location_id)
 );
 
 CREATE TABLE data_request_feature (

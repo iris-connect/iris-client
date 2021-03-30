@@ -43,8 +43,9 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	private String refId;
 	private String hdUserId;
 
-	private String providerId;
-	private String locationId;
+	@OneToOne(orphanRemoval = true, cascade = { CascadeType.ALL }) //
+	@JoinColumns({ @JoinColumn(name = "provider_id"), @JoinColumn(name = "location_id") })
+	private Location location;
 
 	private String name;
 	private Instant requestStart;
@@ -61,7 +62,7 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	private Status status = Status.Open;
 
 	public DataRequest(String refId, String name, Instant requestStart, Instant requestEnd, String requestDetails,
-			String hdUserId, String providerId, String locationId, Set<Feature> features) {
+			String hdUserId, Location location, Set<Feature> features) {
 
 		super();
 
@@ -72,8 +73,7 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 		this.requestEnd = requestEnd;
 		this.requestDetails = requestDetails;
 		this.hdUserId = hdUserId;
-		this.providerId = providerId;
-		this.locationId = locationId;
+		this.location = location;
 		this.features = features;
 	}
 

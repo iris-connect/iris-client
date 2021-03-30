@@ -18,11 +18,13 @@ import static io.vavr.control.Option.*;
 import static java.nio.charset.StandardCharsets.*;
 import static org.springframework.http.MediaType.*;
 
+import de.healthIMIS.iris.api.sidecarclient.model.LocationInformation;
 import de.healthIMIS.iris.client.core.IrisClientProperties;
 import de.healthIMIS.iris.client.core.IrisProperties;
 import de.healthIMIS.iris.client.data_request.DataRequest.DataRequestIdentifier;
 import de.healthIMIS.iris.client.data_request.DataRequest.Feature;
 import de.healthIMIS.iris.client.data_request.DataRequest.Status;
+import de.healthIMIS.iris.client.data_request.Location.LocationIdentifier;
 import io.vavr.control.Option;
 import lombok.Data;
 import lombok.NonNull;
@@ -35,6 +37,7 @@ import java.util.UUID;
 import java.util.zip.CRC32;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -53,15 +56,17 @@ public class DataRequestManagement {
 	private final @NonNull RestTemplate rest;
 	private final @NonNull IrisClientProperties clientProperties;
 	private final @NonNull IrisProperties properties;
+	private final @NonNull ModelMapper mapper;
 
 	public DataRequestManagement(@NonNull DataRequestRepository requests,
 			@NonNull @Qualifier("iris-rest") RestTemplate rest, @NonNull IrisClientProperties clientProperties,
-			@NonNull IrisProperties properties) {
+			@NonNull IrisProperties properties, @NonNull ModelMapper mapper) {
 
 		this.requests = requests;
 		this.rest = rest;
 		this.clientProperties = clientProperties;
 		this.properties = properties;
+		this.mapper = mapper;
 	}
 
 	public Optional<DataRequest> findById(String id) {
@@ -97,8 +102,10 @@ public class DataRequestManagement {
 			Option<String> requestDetails, Option<String> hdUserId, Option<String> locationId,
 			Option<String> providerId, Set<Feature> feature) {
 
+		var location = fetchLocation(locationId, providerId);
+
 		var dataRequest = new DataRequest(refId, name, startDate, endDate.getOrNull(), requestDetails.getOrNull(),
-				hdUserId.getOrNull(), providerId.getOrNull(), providerId.getOrNull(), feature);
+				hdUserId.getOrNull(), location, feature);
 
 		log.trace("Request job - PUT to server is sent: {}", dataRequest.getId().toString());
 
@@ -116,6 +123,29 @@ public class DataRequestManagement {
 		dataRequest = requests.save(dataRequest);
 
 		return dataRequest;
+	}
+
+	/**
+	 * Fetches the full location informations for the given IDs from the location service.
+	 * 
+	 * @param locationId
+	 * @param providerId
+	 * @return The location entity fetched from location service
+	 */
+	private Location fetchLocation(Option<String> locationId, Option<String> providerId) {
+
+		if (locationId.isEmpty() || providerId.isEmpty()) {
+			return null;
+		}
+
+		var locationDto = rest.getForObject("https://{address}:{port}/search/{providerId}/{locationId}",
+				LocationInformation.class,
+				properties.getServerAddress().getHostName(), properties.getServerPort(), providerId.get(), locationId.get());
+
+		var location = mapper.map(locationDto, Location.class);
+		location.setId(LocationIdentifier.of(locationDto.getProviderId(), locationDto.getId()));
+
+		return location;
 	}
 
 	private String findValidCode() {
@@ -156,9 +186,9 @@ public class DataRequestManagement {
 
 		static DataRequestDto of(DataRequest request, UUID departmentId, String rkiCode) {
 
-			return new DataRequestDto(departmentId.toString(), request.getLocationId(), request.getProviderId(),
-					request.getRequestStart(), request.getRequestEnd(), request.getRequestDetails(), request.getFeatures(),
-					request.getStatus());
+			return new DataRequestDto(departmentId.toString(), request.getLocation().getId().getLocationId(),
+					request.getLocation().getId().getProviderId(), request.getRequestStart(), request.getRequestEnd(),
+					request.getRequestDetails(), request.getFeatures(), request.getStatus());
 		}
 	}
 }
