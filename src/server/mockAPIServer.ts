@@ -1,4 +1,5 @@
 import { DataRequestDetails } from "@/api";
+import { dummyDataRequests } from "@/server/data/data-requests";
 import { dummyLocations } from "@/server/data/dummy-locations";
 import { createServer } from "miragejs";
 
@@ -16,9 +17,7 @@ export function makeMockAPIServer() {
       });
 
       this.get("/data-requests-client/locations", () => {
-        return {
-          locations: dummyLocations,
-        };
+        return dummyDataRequests;
       });
 
       this.get("/search/mio", () => {

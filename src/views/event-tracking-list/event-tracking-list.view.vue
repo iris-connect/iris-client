@@ -43,7 +43,7 @@
         ></v-text-field>
         <v-data-table
           :headers="tableData.headers"
-          :items="tableData.eventList"
+          :items="eventList"
           :items-per-page="5"
           class="elevation-1 mt-5"
           :search="tableData.search"
@@ -70,13 +70,30 @@
 </template>
 
 <script lang="ts">
+import { ExistingDataRequestClientWithLocationStatusEnum } from "@/api";
 import { ROUTE_NAME_EVENT_TRACKING_FORM } from "@/router";
+import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
+
+type TableRow = {
+  address: string;
+  endTime: string;
+  extID: string;
+  // generatedTime: string;
+  // lastChange: string;
+  name: string;
+  startTime: string;
+  status: string;
+};
 
 @Component({
   components: {
     EventTrackingFormView: EventTrackingFormView,
+  },
+  async beforeRouteEnter(_from, _to, next) {
+    next();
+    await store.dispatch("eventTrackingList/fetchEventTrackingList");
   },
 })
 export default class EventTrackingListView extends Vue {
@@ -94,34 +111,38 @@ export default class EventTrackingListView extends Vue {
       { text: "Ort", value: "address" },
       { text: "Zeit (Start)", value: "startTime" },
       { text: "Zeit (Ende)", value: "endTime" },
-      { text: "Generiert", value: "generatedTime" },
+      // { text: "Generiert", value: "generatedTime" },
       { text: "Status", value: "status" },
-      { text: "Letzte Ändrung", value: "lastChange" },
+      // { text: "Letzte Ändrung", value: "lastChange" },
       { text: "", value: "actions" },
     ],
-    eventList: [
-      {
-        extID: "GTOAZEIC",
-        name: "Toms Bierbrunnen",
-        address: "Nobistor 14, 22767 Hamburg",
-        startTime: "30.03.2021 17:00",
-        endTime: "30.03.2021 22:00",
-        generatedTime: "31.03.2021 09:44",
-        status: "Angefragt",
-        lastChange: "31.03.2021 09:44",
-      },
-      {
-        extID: "IEZDTEDA",
-        name: "S&S Konzert 27.03",
-        address: "Schick & Schön. Kaiserstraße 15, 5516 Mainz",
-        startTime: "27.03.2021 19:00",
-        endTime: "28.03.2021 05:00",
-        generatedTime: "29.03.2021 10:21",
-        status: "UPDATE",
-        lastChange: "29.03.2021 14:15",
-      },
-    ],
   };
+
+  get eventList(): TableRow[] {
+    const dataRequests =
+      store.state.eventTrackingList.eventTrackingList?.dataRequests || [];
+    return dataRequests.map((dataRequest) => {
+      return {
+        // TODO formatted address
+        address: dataRequest.locationInformation?.contact.address.street || "-",
+        endTime: dataRequest.end
+          ? `${new Date(dataRequest.end).toDateString()}, ${new Date(
+              dataRequest.end
+            ).toLocaleTimeString()}`
+          : "-",
+        startTime: dataRequest.start
+          ? `${new Date(dataRequest.start).toDateString()}, ${new Date(
+              dataRequest.start
+            ).toLocaleTimeString()}`
+          : "-",
+        extID: dataRequest.externalRequestId || "-",
+        // generatedTime: new Date().toString() || "-",
+        // lastChange: new Date().toString() || "-",
+        name: dataRequest.name || "-",
+        status: dataRequest.status?.toString() || "-",
+      };
+    });
+  }
 
   // TODO improve this - we need it to circumvent v-slot eslint errors
   // https://stackoverflow.com/questions/61344980/v-slot-directive-doesnt-support-any-modifier
@@ -140,11 +161,18 @@ export default class EventTrackingListView extends Vue {
     console.log("NOT IMPLEMENTED", item);
   }
 
-  getStatusColor(status: string): string {
+  getStatusColor(
+    status: ExistingDataRequestClientWithLocationStatusEnum
+  ): string {
     // TODO use enum / string literals
-    if (status == "Angefragt") return "blue";
-    else if (status == "UPDATE") return "red";
-    else if (status == "Abgeschlossen") return "green";
+    if (status == ExistingDataRequestClientWithLocationStatusEnum.DataRequested)
+      return "blue";
+    else if (
+      status == ExistingDataRequestClientWithLocationStatusEnum.DataReceived
+    )
+      return "red";
+    else if (status == ExistingDataRequestClientWithLocationStatusEnum.Closed)
+      return "green";
     else throw Error("TODO this should not happen");
   }
 }
