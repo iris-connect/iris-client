@@ -110,6 +110,8 @@ services:
         condition: service_healthy
       iris-public:
         condition: service_started
+    expose:
+      - 8092
     env_file:
       - iris-sormas.env
     restart: unless-stopped
