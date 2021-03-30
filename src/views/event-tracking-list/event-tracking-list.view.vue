@@ -114,8 +114,8 @@ type TableRow = {
   address: string;
   endTime: string;
   extID: string;
-  // generatedTime: string;
-  // lastChange: string;
+  generatedTime: string;
+  lastChange: string;
   name: string;
   startTime: string;
   status: string;
@@ -154,9 +154,9 @@ export default class EventTrackingListView extends Vue {
       { text: "Ort", value: "address" },
       { text: "Zeit (Start)", value: "startTime" },
       { text: "Zeit (Ende)", value: "endTime" },
-      // { text: "Generiert", value: "generatedTime" },
+      { text: "Generiert", value: "generatedTime" },
       { text: "Status", value: "status" },
-      // { text: "Letzte Ändrung", value: "lastChange" },
+      { text: "Letzte Ändrung", value: "lastChange" },
       { text: "", value: "actions" },
     ],
   };
@@ -196,6 +196,20 @@ export default class EventTrackingListView extends Vue {
             // lastChange: new Date().toString() || "-",
             name: dataRequest.name || "-",
             status: dataRequest.status?.toString() || "-",
+            generatedTime: dataRequest.requestedAt
+              ? `${new Date(
+                  dataRequest.requestedAt
+                ).toDateString()}, ${new Date(
+                  dataRequest.requestedAt
+                ).toLocaleTimeString()}`
+              : "-",
+            lastChange: dataRequest.lastUpdatedAt
+              ? `${new Date(
+                  dataRequest.lastUpdatedAt
+                ).toDateString()}, ${new Date(
+                  dataRequest.lastUpdatedAt
+                ).toLocaleTimeString()}`
+              : "-",
           };
         })
     );

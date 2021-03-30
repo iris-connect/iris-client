@@ -461,6 +461,18 @@ export interface DataRequestDetails {
      */
     end?: string;
     /**
+     * Timestamp when the data request was created.
+     * @type {string}
+     * @memberof DataRequestDetails
+     */
+    requestedAt?: string;
+    /**
+     * Timestamp when the data request was last updated.
+     * @type {string}
+     * @memberof DataRequestDetails
+     */
+    lastUpdatedAt?: string;
+    /**
      * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
      * @type {string}
      * @memberof DataRequestDetails
@@ -631,6 +643,18 @@ export interface ExistingDataRequestClientWithLocation {
      * @memberof ExistingDataRequestClientWithLocation
      */
     end?: string;
+    /**
+     * Timestamp when the data request was created.
+     * @type {string}
+     * @memberof ExistingDataRequestClientWithLocation
+     */
+    requestedAt?: string;
+    /**
+     * Timestamp when the data request was last updated.
+     * @type {string}
+     * @memberof ExistingDataRequestClientWithLocation
+     */
+    lastUpdatedAt?: string;
     /**
      * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
      * @type {string}
