@@ -25,9 +25,12 @@ import de.healthIMIS.iris.client.data_request.DataRequest.DataRequestIdentifier;
 import de.healthIMIS.iris.client.data_request.DataRequest.Feature;
 import de.healthIMIS.iris.client.data_request.DataRequest.Status;
 import de.healthIMIS.iris.client.data_request.Location.LocationIdentifier;
+import de.healthIMIS.iris.client.search_client.SearchClient;
 import io.vavr.control.Option;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
@@ -38,6 +41,7 @@ import java.util.zip.CRC32;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -50,145 +54,133 @@ import org.springframework.web.client.RestTemplate;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DataRequestManagement {
 
-	private final @NonNull DataRequestRepository requests;
-	private final @NonNull RestTemplate rest;
-	private final @NonNull IrisClientProperties clientProperties;
-	private final @NonNull IrisProperties properties;
-	private final @NonNull ModelMapper mapper;
+    private final @NonNull DataRequestRepository requests;
 
-	public DataRequestManagement(@NonNull DataRequestRepository requests,
-			@NonNull @Qualifier("iris-rest") RestTemplate rest, @NonNull IrisClientProperties clientProperties,
-			@NonNull IrisProperties properties, @NonNull ModelMapper mapper) {
+    @NonNull
+    @Qualifier("iris-rest")
+    private final RestTemplate rest;
 
-		this.requests = requests;
-		this.rest = rest;
-		this.clientProperties = clientProperties;
-		this.properties = properties;
-		this.mapper = mapper;
-	}
+    private final @NonNull IrisClientProperties clientProperties;
+    private final @NonNull IrisProperties properties;
+    private final @NonNull ModelMapper mapper;
+    private final @NonNull SearchClient searchClient;
 
-	public Optional<DataRequest> findById(String id) {
-		return requests.findById(DataRequestIdentifier.of(UUID.fromString(id)));
-	}
+    public Optional<DataRequest> findById(String id) {
+        return requests.findById(DataRequestIdentifier.of(UUID.fromString(id)));
+    }
 
-	public Optional<DataRequest> findById(UUID uuid) {
-		return requests.findById(DataRequestIdentifier.of(uuid));
-	}
+    public Optional<DataRequest> findById(UUID uuid) {
+        return requests.findById(DataRequestIdentifier.of(uuid));
+    }
 
-	public DataRequest createContactEventRequest(String refId, String name, Instant startDate,
-			Option<Instant> endDate, String hdUserId) {
+    public DataRequest createContactEventRequest(String refId, String name, Instant startDate,
+                                                 Option<Instant> endDate, String hdUserId) {
 
-		return createDataRequest(refId, name, startDate, endDate, none(), Option.of(hdUserId), none(), none(),
-				Set.of(Feature.Contacts_Events));
-	}
+        return createDataRequest(refId, name, startDate, endDate, none(), Option.of(hdUserId), none(), none(),
+                Set.of(Feature.Contacts_Events));
+    }
 
-	public DataRequest createLocationRequest(String refId, String name, Instant startDate, Instant endDate,
-			Option<String> requestDetails, String locationId, String providerId) {
+    public DataRequest createLocationRequest(String refId, String name, Instant startDate, Instant endDate,
+                                             Option<String> requestDetails, String locationId, String providerId) {
 
-		return createDataRequest(refId, name, startDate, Option.of(endDate), requestDetails, none(),
-				Option.of(locationId), Option.of(providerId), Set.of(Feature.Guests));
-	}
+        return createDataRequest(refId, name, startDate, Option.of(endDate), requestDetails, none(),
+                Option.of(locationId), Option.of(providerId), Set.of(Feature.Guests));
+    }
 
-	public DataRequest createLocationRequest(String refId, String name, Instant startDate, Option<Instant> endDate,
-			Option<String> requestDetails, Option<String> hdUserId) {
+    public DataRequest createLocationRequest(String refId, String name, Instant startDate, Option<Instant> endDate,
+                                             Option<String> requestDetails, Option<String> hdUserId) {
 
-		return createDataRequest(refId, name, startDate, endDate, requestDetails, hdUserId,
-				none(), none(), Set.of(Feature.Guests));
-	}
+        return createDataRequest(refId, name, startDate, endDate, requestDetails, hdUserId,
+                none(), none(), Set.of(Feature.Guests));
+    }
 
-	DataRequest createDataRequest(String refId, String name, Instant startDate, Option<Instant> endDate,
-			Option<String> requestDetails, Option<String> hdUserId, Option<String> locationId,
-			Option<String> providerId, Set<Feature> feature) {
+    DataRequest createDataRequest(String refId, String name, Instant startDate, Option<Instant> endDate,
+                                  Option<String> requestDetails, Option<String> hdUserId, Option<String> locationId,
+                                  Option<String> providerId, Set<Feature> feature) {
 
-		var location = fetchLocation(locationId, providerId);
+        var location = fetchLocation(locationId, providerId);
 
-		var dataRequest = new DataRequest(refId, name, startDate, endDate.getOrNull(), requestDetails.getOrNull(),
-				hdUserId.getOrNull(), location, feature);
+        var dataRequest = new DataRequest(refId, name, startDate, endDate.getOrNull(), requestDetails.getOrNull(),
+                hdUserId.getOrNull(), location, feature);
 
-		log.trace("Request job - PUT to server is sent: {}", dataRequest.getId().toString());
+        log.trace("Request job - PUT to server is sent: {}", dataRequest.getId().toString());
 
-		var dto = DataRequestDto.of(dataRequest, clientProperties.getClientId(), clientProperties.getRkiCode());
+        var dto = DataRequestDto.of(dataRequest, clientProperties.getClientId(), clientProperties.getRkiCode());
 
-		var headers = new HttpHeaders();
-		headers.setContentType(new MediaType(APPLICATION_JSON, UTF_8));
+        var headers = new HttpHeaders();
+        headers.setContentType(new MediaType(APPLICATION_JSON, UTF_8));
 
-		rest.put("https://{address}:{port}/hd/data-requests/{id}", new HttpEntity<>(dto, headers),
-				properties.getServerAddress().getHostName(), properties.getServerPort(), dataRequest.getId());
+        rest.put("https://{address}:{port}/hd/data-requests/{id}", new HttpEntity<>(dto, headers),
+                properties.getServerAddress().getHostName(), properties.getServerPort(), dataRequest.getId());
 
-		log.debug("Request job - PUT to server sent: {}; Features = {}", dataRequest.getId().toString(),
-				dataRequest.getFeatures());
+        log.debug("Request job - PUT to server sent: {}; Features = {}", dataRequest.getId().toString(),
+                dataRequest.getFeatures());
 
-		dataRequest = requests.save(dataRequest);
+        dataRequest = requests.save(dataRequest);
 
-		return dataRequest;
-	}
+        return dataRequest;
+    }
 
-	/**
-	 * Fetches the full location informations for the given IDs from the location service.
-	 * 
-	 * @param locationId
-	 * @param providerId
-	 * @return The location entity fetched from location service
-	 */
-	private Location fetchLocation(Option<String> locationId, Option<String> providerId) {
+    /**
+     * Fetches the full location informations for the given IDs from the location service.
+     *
+     * @param locationId
+     * @param providerId
+     * @return The location entity fetched from location service
+     */
+    private Location fetchLocation(Option<String> locationId, Option<String> providerId) {
 
-		if (locationId.isEmpty() || providerId.isEmpty()) {
-			return null;
-		}
+        if (locationId.isEmpty() || providerId.isEmpty()) {
+            return null;
+        }
 
-		var locationDto = rest.getForObject("https://{address}:{port}/search/{providerId}/{locationId}",
-				LocationInformation.class,
-				properties.getServerAddress().getHostName(), properties.getServerPort(), providerId.get(), locationId.get());
+        return searchClient.findByProviderIdAndLocationId(providerId.get(), locationId.get());
+    }
 
-		var location = mapper.map(locationDto, Location.class);
-		location.setId(LocationIdentifier.of(locationDto.getProviderId(), locationDto.getId()));
+    private String findValidCode() {
 
-		return location;
-	}
+        var code = generateCode();
 
-	private String findValidCode() {
+        return requests.isCodeAvailable(UUID.fromString(code)) ? code : findValidCode();
+    }
 
-		var code = generateCode();
+    private String generateCode() {
 
-		return requests.isCodeAvailable(UUID.fromString(code)) ? code : findValidCode();
-	}
+        var code = RandomStringUtils.random(9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'M', 'N', 'P', 'Q', 'R',
+                'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '2', '3', '4', '5', '6', '7', '8', '9');
 
-	private String generateCode() {
+        var bytes = code.getBytes();
+        var crc32 = new CRC32();
+        crc32.update(bytes, 0, bytes.length);
+        var sum = crc32.getValue() % 16;
 
-		var code = RandomStringUtils.random(9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'M', 'N', 'P', 'Q', 'R',
-				'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '2', '3', '4', '5', '6', '7', '8', '9');
+        return code + Long.toHexString(sum).toUpperCase();
+    }
 
-		var bytes = code.getBytes();
-		var crc32 = new CRC32();
-		crc32.update(bytes, 0, bytes.length);
-		var sum = crc32.getValue() % 16;
+    @Data
+    static class DataRequestDto {
 
-		return code + Long.toHexString(sum).toUpperCase();
-	}
+        private final String departmentId;
 
-	@Data
-	static class DataRequestDto {
+        private final String locationId;
+        private final String providerId;
 
-		private final String departmentId;
+        private final Instant requestStart;
+        private final Instant requestEnd;
 
-		private final String locationId;
-		private final String providerId;
+        private final String requestDetails;
 
-		private final Instant requestStart;
-		private final Instant requestEnd;
+        private final Set<Feature> features;
+        private final Status status;
 
-		private final String requestDetails;
+        static DataRequestDto of(DataRequest request, UUID departmentId, String rkiCode) {
 
-		private final Set<Feature> features;
-		private final Status status;
-
-		static DataRequestDto of(DataRequest request, UUID departmentId, String rkiCode) {
-
-			return new DataRequestDto(departmentId.toString(), request.getLocation().getId().getLocationId(),
-					request.getLocation().getId().getProviderId(), request.getRequestStart(), request.getRequestEnd(),
-					request.getRequestDetails(), request.getFeatures(), request.getStatus());
-		}
-	}
+            return new DataRequestDto(departmentId.toString(), request.getLocation().getLocationId(),
+                    request.getLocation().getProviderId(), request.getRequestStart(), request.getRequestEnd(),
+                    request.getRequestDetails(), request.getFeatures(), request.getStatus());
+        }
+    }
 }

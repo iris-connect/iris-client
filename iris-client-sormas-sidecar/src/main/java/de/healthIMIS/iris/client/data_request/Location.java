@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
@@ -24,6 +25,10 @@ public class Location {
 
 	@EmbeddedId
 	private LocationIdentifier id;
+
+	private String providerId;
+
+	private String locationId;
 
 	private String name;
 
@@ -45,14 +50,18 @@ public class Location {
 
 	@Embeddable
 	@EqualsAndHashCode
-	@RequiredArgsConstructor(staticName = "of")
-	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 	@Getter
 	public static class LocationIdentifier implements Id, Serializable {
 
 		private static final long serialVersionUID = -6053473869126771751L;
 
-		private final String providerId;
-		private final String locationId;
+		private final UUID id;
+
+		public LocationIdentifier(){
+			id=UUID.randomUUID();
+		}
+
+
+
 	}
 }

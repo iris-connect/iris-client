@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 /**
@@ -21,17 +23,23 @@ import java.util.Objects;
 @Getter
 public class DataRequestClient   {
 
+  @NotBlank
   private String locationId;
 
+  @NotBlank
   private String providerId;
 
+  @NotBlank
   private String name;
 
+  @NotBlank
   private String externalRequestId;
 
-  private OffsetDateTime start;
+  @NotNull
+  private ZonedDateTime start;
 
-  private OffsetDateTime end;
+  @NotNull
+  private ZonedDateTime end;
 
   private String requestDetails;
 

@@ -43,8 +43,8 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	private String refId;
 	private String hdUserId;
 
-	@OneToOne(orphanRemoval = true, cascade = { CascadeType.ALL }) //
-	@JoinColumns({ @JoinColumn(name = "provider_id"), @JoinColumn(name = "location_id") })
+	@OneToOne(orphanRemoval = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "location_id")
 	private Location location;
 
 	private String name;

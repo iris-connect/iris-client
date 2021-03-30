@@ -148,6 +148,11 @@ public class IrisClientSormasSidecarApplication {
 		return restTemplate;
 	}
 
+	@Bean(name = "search-rest")
+	RestTemplate getSearchRestTemplate(RestTemplateBuilder builder) {
+		return builder.build();
+	}
+
 	@Bean
 	FlywayMigrationStrategy getFlywayMigrationStrategy(Environment env) {
 
