@@ -115,7 +115,7 @@ services:
     restart: unless-stopped
 
   iris-frontend:
-    image: inoeg/iris-frontend:0.0.1-SNAPSHOT
+    image: inoeg/iris-client-frontend:pr-12-merge
     expose:
       - 28080
     depends_on:
