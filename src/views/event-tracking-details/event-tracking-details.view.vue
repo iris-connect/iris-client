@@ -212,10 +212,20 @@ export default class EventTrackingDetailsView extends Vue {
   get guests(): TableRow[] {
     const dataRequests =
       store.state.eventTrackingDetails.eventTrackingDetails?.guests || [];
+    const eventDataRequest =
+      store.state.eventTrackingDetails.eventTrackingDetails;
     return dataRequests.map((dataRequest, index) => {
       const checkOut = new Date(dataRequest.attendanceInformation.attendTo);
       const checkIn = new Date(dataRequest.attendanceInformation.attendFrom);
-      const duration = checkOut.valueOf() - checkIn.valueOf();
+      const startTime = eventDataRequest?.start
+        ? new Date(eventDataRequest.start)
+        : checkIn;
+      const endTime = eventDataRequest?.end
+        ? new Date(eventDataRequest.end)
+        : checkOut;
+      const duration =
+        Math.min(checkOut.valueOf(), endTime.valueOf()) -
+        Math.max(checkIn.valueOf(), startTime.valueOf());
       return {
         id: index,
         lastName: dataRequest.lastName || "-",
@@ -230,9 +240,12 @@ export default class EventTrackingDetailsView extends Vue {
         ).toLocaleDateString("de-DE")}, ${new Date(
           dataRequest.attendanceInformation.attendTo
         ).toLocaleTimeString("de-DE")}`,
-        maxDuration: `${new Date(duration).getHours()}h, ${new Date(
-          duration
-        ).getMinutes()}min`, // TODO: consider startTime and endTime
+        maxDuration:
+          duration > 0
+            ? `${new Date(duration).getHours()}h, ${new Date(
+                duration
+              ).getMinutes()}min`
+            : "keine", // TODO: consider startTime and endTime
         comment: "-", // TODO: descriptionOfParticipation or additionalInformation?
         sex: dataRequest.sex ? this.getSexName(dataRequest.sex) : "-",
         email: dataRequest.email || "-",
