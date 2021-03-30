@@ -26,7 +26,7 @@
         ></v-text-field>
         <v-data-table
           :headers="tableData.headers"
-          :items="tableData.eventParticipants"
+          :items="guests"
           :items-per-page="5"
           class="elevation-1 mt-5"
           :search="tableData.search"
@@ -109,23 +109,50 @@
 </template>
 <style></style>
 <script lang="ts">
+import { Sex } from "@/api";
 import router from "@/router";
+import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import DataExport from "@/utils/DataExport";
 
-@Component
+type EventData = {
+  extID: string;
+  name: string;
+  address: string;
+  startTime: string;
+  endTime: string;
+  gereratedTime: string;
+  status: string;
+  lastChange: string;
+};
+
+type TableRow = {
+  lastName: string;
+  firstName: string;
+  checkInTime: string;
+  checkOutTime: string;
+  maxDuration: string;
+  comment: string;
+  sex: string;
+  email: string;
+  phone: string;
+  mobilPhone: string;
+  address: string;
+};
+
+@Component({
+  components: {
+    EventTrackingDetailsView: EventTrackingDetailsView,
+  },
+  async beforeRouteEnter(_from, _to, next) {
+    next();
+    await store.dispatch("eventTrackingDetails/fetchEventTrackingDetails", [
+      router.currentRoute.params.id,
+    ]);
+  },
+})
 export default class EventTrackingDetailsView extends Vue {
   eventId = router.currentRoute.params.id;
-  eventData = {
-    extID: "GTOAZEIC",
-    name: "Toms Bierbrunnen",
-    address: "Nobistor 14, 22767 Hamburg",
-    startTime: "30.03.2021 17:00",
-    endTime: "30.03.2021 22:00",
-    generatedTime: "31.03.2021 09:44",
-    status: "Angefragt",
-    lastChange: "31.03.2021 09:44",
-  };
   tableData = {
     search: "",
     expanded: [],
@@ -134,12 +161,12 @@ export default class EventTrackingDetailsView extends Vue {
       { text: "", value: "data-table-select" },
       {
         text: "Nachname",
-        value: "lastname",
+        value: "lastName",
         align: "start",
       },
       {
         text: "Vorname",
-        value: "firstname",
+        value: "firstName",
       },
       {
         text: "Check-In",
@@ -159,42 +186,92 @@ export default class EventTrackingDetailsView extends Vue {
       },
       { text: "", value: "data-table-expand" },
     ],
-    eventParticipants: [
-      {
-        id: "1",
-        lastname: "Auerbach",
-        firstname: "Dan",
-        checkInTime: "26.03.2021 12:11",
-        checkOutTime: "26.03.2021 12:57",
-        comment: "An der Bar",
-        maxDuration: "1h 15min",
-        dateOfBirth: "20.06.1978",
-        sex: "",
-        email: "dan.auerbach@mail.de",
-        phone: "",
-        mobilPhone: "",
-        address: "Fichtenweg 10, 58022 Meisterstadt",
-      },
-      {
-        id: "2",
-        lastname: "Irvine",
-        firstname: "Weldon",
-        checkInTime: "26.03.2021 12:12",
-        checkOutTime: "26.03.2021 13:57",
-        comment: "Tisch 7",
-        maxDuration: "3min 12s",
-        dateOfBirth: "03.11.1999",
-        sex: "",
-        email: "Irvine.Weldon@mail.de",
-        phone: "0121 1234567",
-        mobilPhone: "",
-        address: "Hausstraße 3a, 58022 Meisterstadt",
-      },
-    ],
   };
+
+  get eventData(): EventData {
+    const dataRequest = store.state.eventTrackingDetails.eventTrackingDetails;
+    return {
+      extID: dataRequest?.externalRequestId || "-",
+      name: dataRequest?.name || "-",
+      address: dataRequest?.locationInformation?.contact.address.street || "-",
+      startTime: dataRequest?.start
+        ? `${new Date(dataRequest.start).toLocaleDateString(
+            "de-DE"
+          )}, ${new Date(dataRequest.start).toLocaleTimeString("de-DE")}`
+        : "-",
+      endTime: dataRequest?.end
+        ? `${new Date(dataRequest.end).toLocaleDateString("de-DE")}, ${new Date(
+            dataRequest.end
+          ).toLocaleTimeString("de-DE")}`
+        : "-",
+      gereratedTime: "-", // TODO: what property to show here?
+      status: dataRequest?.status?.toString() || "-",
+      lastChange: "-", // TODO: what property to show here?
+    };
+  }
+
+  get guests(): TableRow[] {
+    const dataRequests =
+      store.state.eventTrackingDetails.eventTrackingDetails?.guests || [];
+    const eventDataRequest =
+      store.state.eventTrackingDetails.eventTrackingDetails;
+    return dataRequests.map((dataRequest, index) => {
+      const checkOut = new Date(dataRequest.attendanceInformation.attendTo);
+      const checkIn = new Date(dataRequest.attendanceInformation.attendFrom);
+      const startTime = eventDataRequest?.start
+        ? new Date(eventDataRequest.start)
+        : checkIn;
+      const endTime = eventDataRequest?.end
+        ? new Date(eventDataRequest.end)
+        : checkOut;
+      const duration =
+        Math.min(checkOut.valueOf(), endTime.valueOf()) -
+        Math.max(checkIn.valueOf(), startTime.valueOf());
+      return {
+        id: index,
+        lastName: dataRequest.lastName || "-",
+        firstName: dataRequest.firstName || "-",
+        checkInTime: `${new Date(
+          dataRequest.attendanceInformation.attendFrom
+        ).toLocaleDateString("de-DE")}, ${new Date(
+          dataRequest.attendanceInformation.attendFrom
+        ).toLocaleTimeString("de-DE")}`,
+        checkOutTime: `${new Date(
+          dataRequest.attendanceInformation.attendTo
+        ).toLocaleDateString("de-DE")}, ${new Date(
+          dataRequest.attendanceInformation.attendTo
+        ).toLocaleTimeString("de-DE")}`,
+        maxDuration:
+          duration > 0
+            ? `${new Date(duration).getHours()}h, ${new Date(
+                duration
+              ).getMinutes()}min`
+            : "keine", // TODO: consider startTime and endTime
+        comment: "-", // TODO: descriptionOfParticipation or additionalInformation?
+        sex: dataRequest.sex ? this.getSexName(dataRequest.sex) : "-",
+        email: dataRequest.email || "-",
+        phone: dataRequest.phone || "-",
+        mobilPhone: dataRequest.mobilePhone || "-",
+        address: dataRequest.address?.street || "-",
+      };
+    });
+  }
 
   on(): void {
     console.log("NOT IMPLEMENTED");
+  }
+
+  getSexName(sex: Sex): string {
+    switch (sex) {
+      case Sex.Male:
+        return "m";
+      case Sex.Female:
+        return "w";
+      case Sex.Other:
+        return "d";
+      default:
+        return "Unbekannt";
+    }
   }
 
   handleExport(): void {
