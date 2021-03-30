@@ -115,7 +115,7 @@ services:
     restart: unless-stopped
 
   iris-frontend:
-    image: docker.pkg.github.com/iris-gateway/iris-client-frontend/iris-client-frontend:pr-12-merge
+    image: inoeg/iris-frontend:0.0.1-SNAPSHOT
     expose:
       - 28080
     depends_on:
