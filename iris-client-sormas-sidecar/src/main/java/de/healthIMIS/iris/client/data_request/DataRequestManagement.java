@@ -34,9 +34,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import java.util.zip.CRC32;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -67,6 +70,12 @@ public class DataRequestManagement {
     private final @NonNull IrisProperties properties;
     private final @NonNull ModelMapper mapper;
     private final @NonNull SearchClient searchClient;
+
+    public List<DataRequest> getAll() {
+        // ToDo: Pagination
+        return StreamSupport.stream(requests.findAll().spliterator(), false).collect(Collectors.toList());
+    }
+
 
     public Optional<DataRequest> findById(String id) {
         return requests.findById(DataRequestIdentifier.of(UUID.fromString(id)));

@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 /**
@@ -65,11 +66,11 @@ public class ExistingDataRequestClientWithLocation   {
 
   @JsonProperty("start")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime start;
+  private ZonedDateTime start;
 
   @JsonProperty("end")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime end;
+  private ZonedDateTime end;
 
   @JsonProperty("requestDetails")
   private String requestDetails;
@@ -157,7 +158,7 @@ public class ExistingDataRequestClientWithLocation   {
     this.externalRequestId = externalRequestId;
   }
 
-  public ExistingDataRequestClientWithLocation start(OffsetDateTime start) {
+  public ExistingDataRequestClientWithLocation start(ZonedDateTime start) {
     this.start = start;
     return this;
   }
@@ -170,15 +171,15 @@ public class ExistingDataRequestClientWithLocation   {
 
   @Valid
 
-  public OffsetDateTime getStart() {
+  public ZonedDateTime getStart() {
     return start;
   }
 
-  public void setStart(OffsetDateTime start) {
+  public void setStart(ZonedDateTime start) {
     this.start = start;
   }
 
-  public ExistingDataRequestClientWithLocation end(OffsetDateTime end) {
+  public ExistingDataRequestClientWithLocation end(ZonedDateTime end) {
     this.end = end;
     return this;
   }
@@ -191,11 +192,11 @@ public class ExistingDataRequestClientWithLocation   {
 
   @Valid
 
-  public OffsetDateTime getEnd() {
+  public ZonedDateTime getEnd() {
     return end;
   }
 
-  public void setEnd(OffsetDateTime end) {
+  public void setEnd(ZonedDateTime end) {
     this.end = end;
   }
 
