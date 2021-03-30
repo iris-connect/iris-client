@@ -1,16 +1,8 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="8">
-        <div class="mb-6">
-          Status:
-          <v-btn class="ml-2 mr-2" color="white" @click="on">Angefragt </v-btn>
-          <v-btn class="mr-2" color="white" @click="on">Update </v-btn>
-          <v-btn class="mr-2" color="white" @click="on">Geschlossen </v-btn>
-        </div>
-      </v-col>
-      <v-col cols="4">
-        <div class="mb-6">
+      <v-col cols="12">
+        <div>
           <v-dialog
             transition="dialog-bottom-transition"
             max-width="98%"
@@ -29,6 +21,37 @@
         </div>
       </v-col>
     </v-row>
+    <v-row class="mb-6">
+      <v-col cols="8">
+        <div>
+          Status:
+          <v-btn
+            class="ml-2 mr-2"
+            color="white"
+            @click="filterStatus(statusEnum.DataRequested)"
+          >
+            {{ getStatusName(statusEnum.DataRequested) }}
+          </v-btn>
+          <v-btn
+            class="ml-2 mr-2"
+            color="white"
+            @click="filterStatus(statusEnum.DataReceived)"
+          >
+            {{ getStatusName(statusEnum.DataReceived) }}
+          </v-btn>
+          <v-btn
+            class="ml-2 mr-2"
+            color="white"
+            @click="filterStatus(statusEnum.Closed)"
+          >
+            {{ getStatusName(statusEnum.Closed) }}
+          </v-btn>
+          <v-btn class="ml-2 mr-2" color="white" @click="filterStatus(null)">
+            Alle
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
 
     <v-card>
       <v-card-title>Ereignisnachverfolgungen</v-card-title>
@@ -42,6 +65,7 @@
           hide-details
         ></v-text-field>
         <v-data-table
+          :loading="eventListLoading"
           :headers="tableData.headers"
           :items="eventList"
           :items-per-page="5"
@@ -70,11 +94,21 @@
 </template>
 
 <script lang="ts">
-import { ExistingDataRequestClientWithLocationStatusEnum } from "@/api";
+import {
+  ExistingDataRequestClientWithLocationStatusEnum,
+  LocationContact,
+} from "@/api";
 import { ROUTE_NAME_EVENT_TRACKING_FORM } from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
+
+function getFormattedAddress(contact?: LocationContact) {
+  if (contact) {
+    return `${contact.officialName}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+  }
+  return "-";
+}
 
 type TableRow = {
   address: string;
@@ -98,6 +132,15 @@ type TableRow = {
 })
 export default class EventTrackingListView extends Vue {
   routeEventTrackingForm = ROUTE_NAME_EVENT_TRACKING_FORM;
+
+  statusFilter: ExistingDataRequestClientWithLocationStatusEnum | null = null;
+  statusEnum = ExistingDataRequestClientWithLocationStatusEnum;
+  filterStatus(
+    target: ExistingDataRequestClientWithLocationStatusEnum | null
+  ): void {
+    this.statusFilter = target;
+  }
+
   tableData = {
     search: "",
     headers: [
@@ -118,30 +161,44 @@ export default class EventTrackingListView extends Vue {
     ],
   };
 
+  get eventListLoading(): boolean {
+    return store.state.eventTrackingList.eventTrackingListLoading;
+  }
+
   get eventList(): TableRow[] {
     const dataRequests =
       store.state.eventTrackingList.eventTrackingList?.dataRequests || [];
-    return dataRequests.map((dataRequest) => {
-      return {
-        // TODO formatted address
-        address: dataRequest.locationInformation?.contact.address.street || "-",
-        endTime: dataRequest.end
-          ? `${new Date(dataRequest.end).toDateString()}, ${new Date(
-              dataRequest.end
-            ).toLocaleTimeString()}`
-          : "-",
-        startTime: dataRequest.start
-          ? `${new Date(dataRequest.start).toDateString()}, ${new Date(
-              dataRequest.start
-            ).toLocaleTimeString()}`
-          : "-",
-        extID: dataRequest.externalRequestId || "-",
-        // generatedTime: new Date().toString() || "-",
-        // lastChange: new Date().toString() || "-",
-        name: dataRequest.name || "-",
-        status: dataRequest.status?.toString() || "-",
-      };
-    });
+    return (
+      dataRequests
+        // TODO this filtering could probably also be done in vuetify data-table
+        .filter(
+          (dataRequests) =>
+            !this.statusFilter || this.statusFilter === dataRequests.status
+        )
+        .map((dataRequest) => {
+          return {
+            // TODO formatted address
+            address: getFormattedAddress(
+              dataRequest.locationInformation?.contact
+            ),
+            endTime: dataRequest.end
+              ? `${new Date(dataRequest.end).toDateString()}, ${new Date(
+                  dataRequest.end
+                ).toLocaleTimeString()}`
+              : "-",
+            startTime: dataRequest.start
+              ? `${new Date(dataRequest.start).toDateString()}, ${new Date(
+                  dataRequest.start
+                ).toLocaleTimeString()}`
+              : "-",
+            extID: dataRequest.externalRequestId || "-",
+            // generatedTime: new Date().toString() || "-",
+            // lastChange: new Date().toString() || "-",
+            name: dataRequest.name || "-",
+            status: dataRequest.status?.toString() || "-",
+          };
+        })
+    );
   }
 
   // TODO improve this - we need it to circumvent v-slot eslint errors

@@ -8,7 +8,7 @@ import { makeMockAPIServer } from "@/server/mockAPIServer";
 import { Configuration } from "@/api";
 
 // TODO this should be in a config.ts file
-let apiBaseURL = "https://api.staging.iris-gateway.de/";
+let apiBaseURL = "https://api.staging.iris-gateway.de";
 if (process.env.NODE_ENV === "development") {
   apiBaseURL = "http://localhost:8080";
   makeMockAPIServer();
