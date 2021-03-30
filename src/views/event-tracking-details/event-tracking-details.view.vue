@@ -31,7 +31,7 @@
           class="elevation-1 mt-5"
           :search="tableData.search"
           show-select
-          :select.sync="tableData.select"
+          v-model="tableData.select"
           show-expand
           single-expand
           :expanded.sync="tableData.expanded"
@@ -98,7 +98,7 @@
         <v-row class="mt-2">
           <v-col cols="12">
             <v-btn class="ml-2 mr-2" color="white" @click="on">Zurück </v-btn>
-            <v-btn class="mr-2 float-right" color="primary" @click="on"
+            <v-btn class="mr-2 float-right" color="primary" @click="handleExport" :disabled="tableData.select.length <= 0"
               >Auswahl exportieren
             </v-btn>
           </v-col>
@@ -111,6 +111,7 @@
 <script lang="ts">
 import router from "@/router";
 import { Component, Vue } from "vue-property-decorator";
+import DataExport from "@/utils/DataExport";
 
 @Component
 export default class EventTrackingDetailsView extends Vue {
@@ -194,6 +195,14 @@ export default class EventTrackingDetailsView extends Vue {
 
   on(): void {
     console.log("NOT IMPLEMENTED");
+  }
+
+  handleExport(): void {
+    DataExport.exportCsv(
+      this.tableData.headers,
+      this.tableData.select,
+      [this.eventId, Date.now()].join("_")
+    );
   }
 }
 </script>
