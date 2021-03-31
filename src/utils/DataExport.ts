@@ -24,7 +24,7 @@ const exportCsv = function (
     try {
       const parser = new Parser({
         fields,
-        withBOM: true
+        withBOM: true,
       });
       const csv = parser.parse(rows);
       downloadCsvFile(fileName || "Export", csv);
