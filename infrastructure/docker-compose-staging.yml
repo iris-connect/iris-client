@@ -124,6 +124,12 @@ services:
       - iris-client
     restart: unless-stopped
 
+  iris-app-api-demo:
+    image: inoeg/iris-app-api-demo:0.0.1-SNAPSHOT
+    expose:
+      - 8091
+    restart: unless-stopped
+
   nginx:
     build:
       ./docker/nginx
