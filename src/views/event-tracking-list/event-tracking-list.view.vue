@@ -110,6 +110,12 @@ function getFormattedAddress(contact?: LocationContact) {
   return "-";
 }
 
+function getFormattedDate(date?: string): string {
+  return date
+    ? `${new Date(date).toDateString()}, ${new Date(date).toLocaleTimeString()}`
+    : "-";
+}
+
 type TableRow = {
   address: string;
   endTime: string;
@@ -192,39 +198,16 @@ export default class EventTrackingListView extends Vue {
         )
         .map((dataRequest) => {
           return {
-            // TODO formatted address
             address: getFormattedAddress(
               dataRequest.locationInformation?.contact
             ),
-            endTime: dataRequest.end
-              ? `${new Date(dataRequest.end).toDateString()}, ${new Date(
-                  dataRequest.end
-                ).toLocaleTimeString()}`
-              : "-",
-            startTime: dataRequest.start
-              ? `${new Date(dataRequest.start).toDateString()}, ${new Date(
-                  dataRequest.start
-                ).toLocaleTimeString()}`
-              : "-",
+            endTime: getFormattedDate(dataRequest.end),
+            startTime: getFormattedDate(dataRequest.start),
+            generatedTime: getFormattedDate(dataRequest.requestedAt),
+            lastChange: getFormattedDate(dataRequest.lastUpdatedAt),
             extID: dataRequest.externalRequestId || "-",
-            // generatedTime: new Date().toString() || "-",
-            // lastChange: new Date().toString() || "-",
             name: dataRequest.name || "-",
             status: dataRequest.status?.toString() || "-",
-            generatedTime: dataRequest.requestedAt
-              ? `${new Date(
-                  dataRequest.requestedAt
-                ).toDateString()}, ${new Date(
-                  dataRequest.requestedAt
-                ).toLocaleTimeString()}`
-              : "-",
-            lastChange: dataRequest.lastUpdatedAt
-              ? `${new Date(
-                  dataRequest.lastUpdatedAt
-                ).toDateString()}, ${new Date(
-                  dataRequest.lastUpdatedAt
-                ).toLocaleTimeString()}`
-              : "-",
           };
         })
     );
