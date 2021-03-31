@@ -45,7 +45,7 @@
           :headers="tableData.headers"
           :items="tableData.eventList"
           :items-per-page="5"
-          class="elevation-1 mt-5"
+          class="elevation-1 mt-5 twolineTable"
           :search="tableData.search"
         >
           <template v-slot:item.status="{ item }">
@@ -69,7 +69,6 @@
 </template>
 
 <script lang="ts">
-import { ROUTE_NAME_EVENT_TRACKING_FORM } from "@/router";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
 
@@ -79,7 +78,6 @@ import EventTrackingFormView from "../event-tracking-form/event-tracking-form.vi
   },
 })
 export default class EventTrackingListView extends Vue {
-  routeEventTrackingForm = ROUTE_NAME_EVENT_TRACKING_FORM;
   tableData = {
     search: "",
     headers: [

@@ -5,27 +5,21 @@ import Home from "../views/home/Home.vue";
 Vue.use(VueRouter);
 
 // TODO create router config which exports these constants
-const ROUTE_NAME_EVENT_TRACKING = "ereignisse";
-const ROUTE_NAME_INDEX_TRACKING = "indexfaelle";
-export const ROUTE_NAME_EVENT_TRACKING_FORM = `/${ROUTE_NAME_EVENT_TRACKING}/starten`;
-export const ROUTE_NAME_EVENT_TRACKING_LIST = `/${ROUTE_NAME_EVENT_TRACKING}/liste`;
-export const ROUTE_NAME_EVENT_TRACKING_DETAILS = `/${ROUTE_NAME_EVENT_TRACKING}/:id`;
-export const ROUTE_NAME_INDEX_TRACKING_LIST = `/${ROUTE_NAME_INDEX_TRACKING}/liste`;
-
-export const ROUTE_NAME_HOME = "";
 
 export const routes: Array<RouteConfig> = [
   {
-    path: `/${ROUTE_NAME_HOME}`,
-    name: "Dashboard",
+    path: "/",
+    name: "dashboard" /* Caution: This acts as an identifier! */,
     meta: {
       menu: true,
+      menuName: "Dashboard",
+      menuExact: true,
     },
     component: Home,
   },
   {
-    path: ROUTE_NAME_EVENT_TRACKING_FORM,
-    name: `${ROUTE_NAME_EVENT_TRACKING}-start`,
+    path: "/ereignisse/neu",
+    name: "event-new",
     meta: {
       menu: false,
     },
@@ -35,10 +29,11 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: ROUTE_NAME_EVENT_TRACKING_LIST,
-    name: `${ROUTE_NAME_EVENT_TRACKING}`,
+    path: "/ereignisse",
+    name: "event-list" /* Caution: This acts as an identifier! */,
     meta: {
       menu: true,
+      menuName: "Ereignisse",
     },
     component: () =>
       import(
@@ -46,10 +41,11 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: ROUTE_NAME_INDEX_TRACKING_LIST,
-    name: "Indexfälle",
+    path: "/indexfaelle",
+    name: "index-list" /* Caution: This acts as an identifier! */,
     meta: {
       menu: true,
+      menuName: "Indexfälle",
     },
     component: () =>
       import(
@@ -57,8 +53,8 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: `/${ROUTE_NAME_EVENT_TRACKING}/:id`,
-    name: `${ROUTE_NAME_EVENT_TRACKING}-details`,
+    path: "/ereignisse/details/:id",
+    name: "event-details" /* Caution: This acts as an identifier! */,
     meta: {
       menu: false,
     },

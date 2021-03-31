@@ -12,8 +12,14 @@
         />
 
         <template v-for="link in links">
-          <v-btn v-if="link.meta.menu" :key="link.name" :to="link.path" text>
-            {{ link.name }}
+          <v-btn
+            v-if="link.meta.menu"
+            :key="link.name"
+            :to="link.path"
+            :exact="link.meta.menuExact"
+            text
+          >
+            {{ link.meta.menuName }}
           </v-btn>
         </template>
 
