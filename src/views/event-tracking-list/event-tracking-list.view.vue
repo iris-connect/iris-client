@@ -3,11 +3,7 @@
     <v-row>
       <v-col cols="12">
         <div class="mb-6">
-          <v-btn
-            class="float-right"
-            color="primary"
-            v-bind="attrs"
-            :to="{ name: 'event-new' }"
+          <v-btn class="float-right" color="primary" :to="{ name: 'event-new' }"
             >Neue Ereignisverfolgung starten
           </v-btn>
         </div>

@@ -1,7 +1,6 @@
 import {
   ExistingDataRequestClientWithLocationList,
   ExistingDataRequestClientWithLocationStatusEnum,
-  ExistingDataRequestClientWithLocation,
   DataRequestDetails,
   DataRequestDetailsStatusEnum,
   Sex,
@@ -61,13 +60,6 @@ export const dummyDataRequests: ExistingDataRequestClientWithLocationList = {
     },
   ],
 };
-
-// copied from another branch, remove to avoid merge conflict
-function hoursAgo(hours = 0) {
-  const d = new Date();
-  d.setHours(d.getHours() - hours);
-  return d.toISOString();
-}
 
 export const dummyDataDetails: DataRequestDetails = {
   status: DataRequestDetailsStatusEnum.DataRequested,
