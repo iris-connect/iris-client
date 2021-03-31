@@ -1,6 +1,6 @@
 # https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#build-image
 
-name: Build and package image for iris-public-server and deploy it to docker.io
+name: Build and package image for iris-app-api-demo and deploy it to docker.io
 
 on:
   push:
