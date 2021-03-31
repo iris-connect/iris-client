@@ -7,7 +7,7 @@
           count="233"
           actionlabel="Zur Fallübersicht"
           image="sketch_file_analysis.svg"
-          actionlink="ereignisse/liste"
+          actionlink="events/list"
         ></counter-widget>
       </v-col>
       <v-col>
@@ -16,7 +16,7 @@
           count="23"
           actionlabel="Zur Indexübersicht"
           image="sketch_medicine.svg"
-          actionlink="ereignisse/liste"
+          actionlink="events/list"
         ></counter-widget>
       </v-col>
       <v-col>
@@ -25,7 +25,7 @@
           count="12"
           actionlabel="Anzeigen"
           image="sketch_reviewed_docs.svg"
-          actionlink="ereignisse/liste"
+          actionlink="events/list"
         ></counter-widget>
       </v-col>
     </v-row>
@@ -50,7 +50,7 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn color="primary" to="routeEventTrackingForm" class="mb-5"
+                <v-btn color="primary" :to="{ name: 'event-list' }" class="mb-5"
                   >Neu Fall indexieren
                 </v-btn>
               </v-col>
@@ -70,7 +70,7 @@
     <v-row>
       <v-col>
         <v-card>
-          <event-list></event-list>
+          <event-list :tableRowData="openEventListData"></event-list>
         </v-card>
       </v-col>
     </v-row>
@@ -90,6 +90,79 @@ import CounterWidget from "@/components/dashboard/counter-widget.vue";
 import CasesBarChart from "@/components/dashboard/cases-bar-chart.vue";
 import CasesPieChart from "@/components/dashboard/cases-pie-chart.vue";
 import EventList from "@/components/event-list.vue";
+import store from "@/store";
+import {
+  ExistingDataRequestClientWithLocationStatusEnum,
+  ExistingDataRequestClientWithLocation,
+} from "@/api";
+import { TableRow } from "@/components/event-list.vue";
+
+function getStatusColor(
+  status?: ExistingDataRequestClientWithLocationStatusEnum
+): string {
+  switch (status) {
+    case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+      return "blue";
+    case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+      return "red";
+    case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+      return "green";
+    default:
+      return "gray"; // TODO
+  }
+}
+
+function getStatusName(
+  status?: ExistingDataRequestClientWithLocationStatusEnum
+): string {
+  switch (status) {
+    case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+      return "Angefragt";
+    case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+      return "Geliefert";
+    case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+      return "Abgeschlossen";
+    default:
+      return "Unbekannt"; // TODO find better name
+  }
+}
+
+const tableRowMapper = (
+  dataRequest: ExistingDataRequestClientWithLocation
+): TableRow => {
+  return {
+    address: getFormattedAddress(dataRequest),
+    endTime: getFormattedDate(dataRequest.end),
+    startTime: getFormattedDate(dataRequest.start),
+    generatedTime: getFormattedDate(dataRequest.requestedAt),
+    lastChange: getFormattedDate(dataRequest.lastUpdatedAt),
+    extID: dataRequest.externalRequestId || "-",
+    code: dataRequest.code || "-",
+    name: dataRequest.name || "-",
+    status: dataRequest.status?.toString() || "-",
+    statusColor: getStatusColor(dataRequest.status),
+    statusName: getStatusName(dataRequest.status),
+  };
+};
+
+function getFormattedAddress(
+  data?: ExistingDataRequestClientWithLocation
+): string {
+  if (data) {
+    const contact = data.locationInformation?.contact;
+    if (contact) {
+      return `${data.name}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+    }
+    return data.name || "-"; // TODO repeating - improve
+  }
+  return "-";
+}
+
+function getFormattedDate(date?: string): string {
+  return date
+    ? `${new Date(date).toDateString()}, ${new Date(date).toLocaleTimeString()}`
+    : "-";
+}
 
 @Component({
   components: {
@@ -98,8 +171,23 @@ import EventList from "@/components/event-list.vue";
     CasesBarChart,
     CounterWidget,
   },
+  async beforeRouteEnter(_from, _to, next) {
+    next();
+    await store.dispatch("home/fetchEventTrackingList");
+  },
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  get openEventListData(): TableRow[] {
+    const dataRequests = store.state.home.eventTrackingList?.dataRequests || [];
+    return dataRequests
+      .filter(
+        (request) =>
+          request.status ===
+          ExistingDataRequestClientWithLocationStatusEnum.DataRequested
+      )
+      .map(tableRowMapper);
+  }
+}
 </script>
 
 <style lang="scss" scoped>
