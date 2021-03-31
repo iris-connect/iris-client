@@ -43,7 +43,7 @@ jobs:
         run: mvn -B install --file iris-sormas-api-client/pom.xml
         
       - name: build, package and publish the image
-        run: mvn -B spring-boot:build-image --file iris-client-sormas-sidecar/pom.xml -Dspring-boot.build-image.publish=true
+        run: mvn -B spring-boot:build-image --file iris-client-sormas-sidecar/pom.xml -Dspring-boot.build-image.publish=true -DskipTests
         env:
           DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
           DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
