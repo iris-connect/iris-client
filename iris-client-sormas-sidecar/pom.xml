@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>de.healthIMIS</groupId>
 	<artifactId>iris-client-sormas-sidecar</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>IRIS Client SORMAS Sidecar</name>
 	<description>Communicates as SORMAS sidecar directly with SORMAS within the health department&apos;s infrastructure</description>
 	<licenses>
