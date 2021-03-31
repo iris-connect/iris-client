@@ -138,10 +138,14 @@ services:
     volumes:
       - "/etc/letsencrypt:/etc/letsencrypt"
     depends_on:
-      - iris-location
-      - iris-public
-      - sormas
-      - iris-client
+      iris-location:
+        condition: service_started
+      iris-public:
+        condition: service_started
+      sormas:
+        condition: service_healthy
+      iris-client:
+        condition: service_started
 
 
 volumes:
