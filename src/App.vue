@@ -38,7 +38,7 @@
     </v-app-bar>
 
     <v-main class="grey lighten-3">
-      <v-container class="mt-4">
+      <v-container>
         <router-view />
       </v-container>
     </v-main>
@@ -57,6 +57,5 @@ export default Vue.extend({
 });
 </script>
 <style lang="scss">
-@import "./assets/scss/_variables.scss";
-@import "./assets/scss/_mixins.scss";
+@import "./assets/scss/theme.scss";
 </style>
