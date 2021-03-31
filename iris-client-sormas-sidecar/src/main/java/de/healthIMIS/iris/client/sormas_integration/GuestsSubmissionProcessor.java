@@ -85,7 +85,7 @@ public class GuestsSubmissionProcessor extends DataSubmissionProcessor<GuestList
 		participant.setPerson(person);
 
 		var userRef = new UserReferenceDto();
-		userRef.setUuid(request.getSormasUserId());
+		// userRef.setUuid(request.getSormasUserId());
 		participant.setReportingUser(userRef);
 
 		var eventRef = new EventReferenceDto();
@@ -94,7 +94,7 @@ public class GuestsSubmissionProcessor extends DataSubmissionProcessor<GuestList
 		return participant;
 	}
 
-	private TaskDto customizeTask(TaskDto task, SormasRefId eventId) {
+	private TaskDto customizeTask(TaskDto task, String eventId) {
 
 		task.setCreatorComment("Teilnehmer zu Ereignis hinzugefügt, bitte weiter bearbeiten");
 		task.setTaskType(TaskType.EVENT_CONTINUE_INVESTIGATION);

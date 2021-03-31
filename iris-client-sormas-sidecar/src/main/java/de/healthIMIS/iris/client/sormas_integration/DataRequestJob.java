@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -60,6 +61,7 @@ import org.springframework.web.client.RestClientException;
 @Slf4j
 @RequiredArgsConstructor
 @Profile("!inttest")
+@ConditionalOnProperty("iris.sormas.user")
 class DataRequestJob {
 
 	public static final String MAIL_PATTERN = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
@@ -142,15 +144,14 @@ class DataRequestJob {
 
 				var person = persons.get(0);
 
-				var caseId = SormasRefId.of(caseDto.getUuid());
-				var personId = SormasRefId.of(person.getUuid());
+				var caseId = caseDto.getUuid();
+				var name = caseDto.getPerson().getCaption();
 				var sormasUserId = task.getCreatorUser().getUuid();
-				var irisUserId = task.getAssigneeUser().getUuid();
 
 				var startDate = firstRelevantSymptomDate(caseDto).orElse(positivSampleDate(caseDto)).get();
 
-				var dataRequest = dataRequests.createContactEventRequest(caseId, personId,
-						startDate, Option.none(), irisUserId, sormasUserId);
+				var dataRequest = dataRequests.createContactEventRequest(caseId, name,
+						startDate, Option.none(), sormasUserId);
 
 				var now = Instant.now();
 				var irisMessage = createNoteTextForIrisRequest("Kontaktnachverfolgung", dataRequest, now);
@@ -206,17 +207,17 @@ class DataRequestJob {
 
 			var eventDto = events.get(0);
 
-			var eventId = SormasRefId.of(eventDto.getUuid());
+			var eventId = eventDto.getUuid();
+			var name = eventDto.getEventTitle();
 			var sormasUserId = task.getCreatorUser().getUuid();
-			var irisUserId = task.getAssigneeUser().getUuid();
 
 			var startDate = eventDto.getStartDate();
 			var endDate = eventDto.getEndDate();
 
 			var requestDetails = task.getCreatorComment();
 
-			var dataRequest = dataRequests.createGuestsRequest(eventId, startDate,
-					Option.of(endDate), requestDetails, irisUserId, sormasUserId);
+			var dataRequest = dataRequests.createLocationRequest(eventId, name, startDate,
+					Option.of(endDate), Option.of(requestDetails), Option.of(sormasUserId));
 
 			var now = Instant.now();
 			var irisMessage = createNoteTextForIrisRequest("Ereignisnachverfolgung", dataRequest, now);
@@ -269,8 +270,9 @@ class DataRequestJob {
 
 	private boolean isRelevant(TaskDto it) {
 
-		return ((it.getTaskContext() == TaskContext.CASE && it.getTaskType() == TaskType.CONTACT_TRACING)
-				|| (it.getTaskContext() == TaskContext.EVENT && it.getTaskType() == TaskType.EVENT_INVESTIGATION))
+		return ((it.getTaskContext() == TaskContext.CASE && it.getTaskType() == TaskType.CONTACT_TRACING))
+				// ToDo: I need to have a chat with Jens about it.
+				// || (it.getTaskContext() == TaskContext.EVENT && it.getTaskType() == TaskType.EVENT_INVESTIGATION))
 				&& it.getTaskStatus() == TaskStatus.PENDING && it.getAssigneeUser().getCaption().contains("IRIS");
 	}
 }

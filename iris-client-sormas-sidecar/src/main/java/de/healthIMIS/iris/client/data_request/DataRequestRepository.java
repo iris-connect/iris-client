@@ -28,4 +28,5 @@ interface DataRequestRepository extends CrudRepository<DataRequest, DataRequestI
 
 	@Query("select count(1) = 0 from DataRequest r where r.id = :code")
 	boolean isCodeAvailable(UUID code);
+
 }

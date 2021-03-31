@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +43,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -61,7 +63,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 
@@ -72,9 +73,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 public class IrisClientSormasSidecarApplication {
 
 	public static void main(String[] args) {
-
-		Security.addProvider(new BouncyCastleProvider());
-
 		SpringApplication.run(IrisClientSormasSidecarApplication.class, args);
 	}
 
@@ -100,6 +98,11 @@ public class IrisClientSormasSidecarApplication {
 		ks.load(null, password);
 
 		return ks;
+	}
+
+	@PostConstruct
+	public void initBouncyCastle() {
+		Security.addProvider(new BouncyCastleProvider());
 	}
 
 	@Bean
@@ -145,6 +148,11 @@ public class IrisClientSormasSidecarApplication {
 		return restTemplate;
 	}
 
+	@Bean(name = "search-rest")
+	RestTemplate getSearchRestTemplate(RestTemplateBuilder builder) {
+		return builder.build();
+	}
+
 	@Bean
 	FlywayMigrationStrategy getFlywayMigrationStrategy(Environment env) {
 
@@ -174,14 +182,10 @@ public class IrisClientSormasSidecarApplication {
 	}
 
 	@Bean
-	CharacterEncodingFilter characterEncodingFilter() {
-
-		var filter = new UpdateRequestNeedCharacterEncodingFilter();
-
-		filter.setEncoding("UTF-8");
-		filter.setForceResponseEncoding(true);
-
-		return filter;
+	public ModelMapper modelMapper() {
+		var modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setAmbiguityIgnored(true);
+		return modelMapper;
 	}
 
 	static final class UpdateRequestNeedCharacterEncodingFilter extends OrderedCharacterEncodingFilter {

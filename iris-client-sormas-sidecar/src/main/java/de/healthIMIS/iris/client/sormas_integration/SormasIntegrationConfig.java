@@ -21,17 +21,23 @@ import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
 import de.healthIMIS.sormas.client.api.PersonControllerApi;
 import de.healthIMIS.sormas.client.api.SampleControllerApi;
 import de.healthIMIS.sormas.client.api.TaskControllerApi;
+import de.healthIMIS.sormas.client.api.UserControllerApi;
 import de.healthIMIS.sormas.client.invoker.ApiClient;
+import de.healthIMIS.sormas.client.model.UserDto;
 
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
@@ -42,6 +48,7 @@ import org.springframework.web.client.RestTemplate;
  * @author Jens Kutzsche
  */
 @Configuration
+@ConditionalOnProperty("iris.sormas.user")
 public class SormasIntegrationConfig {
 
 	private final RestTemplate restTemplate;
@@ -96,6 +103,12 @@ public class SormasIntegrationConfig {
 	}
 
 	@Bean
+	public UserControllerApi userControllerApi() {
+
+		return new UserControllerApi(apiClient());
+	}
+
+	@Bean
 	public ApiClient apiClient() {
 
 		ApiClient apiClient = new IrisApiClient();
@@ -106,6 +119,22 @@ public class SormasIntegrationConfig {
 		apiClient.setPassword(properties.getPassword().trim());
 
 		return apiClient;
+	}
+
+	@PostConstruct
+	public void fetchIrisUserId() {
+
+		var users = userControllerApi().getAll8(0l);
+
+		// ToDo: What does it imply if the IRIS user is not unqiue?
+		var irisUserId = users.stream()
+				.filter(UserDto::isActive)
+				.filter(it -> StringUtils.equals(it.getUserName(), properties.getUser()))
+				.map(UserDto::getUuid)
+				.findFirst()
+				.get();
+
+		properties.setIrisUserId(irisUserId);
 	}
 
 	class IrisApiClient extends ApiClient {

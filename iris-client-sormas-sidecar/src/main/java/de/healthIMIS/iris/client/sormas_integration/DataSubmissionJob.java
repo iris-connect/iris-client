@@ -37,6 +37,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -52,6 +53,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 @Slf4j
 @Profile("!inttest")
+@ConditionalOnProperty("iris.sormas.user")
 class DataSubmissionJob {
 
 	private final @NonNull SyncTimesRepository syncTimes;
@@ -95,7 +97,7 @@ class DataSubmissionJob {
 		this.keyStore = keyStore;
 	}
 
-	@Scheduled(fixedDelay = 15000)
+
 	void run() {
 
 		log.trace("Submission job - start");

@@ -52,7 +52,7 @@ public class EventsSubmissionProcessor extends DataSubmissionSubProcessor<EventL
 		for (var event : eventList.getEvents()) {
 
 			var userRef = new UserReferenceDto();
-			userRef.setUuid(request.getSormasUserId());
+			// userRef.setUuid(request.getSormasUserId());
 
 			var eventDto = createEventDto(event, userRef);
 			var participant = createParticipantDto(eventDto, userRef);
@@ -94,11 +94,11 @@ public class EventsSubmissionProcessor extends DataSubmissionSubProcessor<EventL
 		caseRef.setUuid(request.getRefId().toString());
 		participant.setResultingCase(caseRef);
 
-		var persons = sormasPersonApi.getByUuids18(List.of(request.getPersonId().toString()));
-
-		if (persons.size() > 0) {
-			participant.setPerson(persons.get(0));
-		}
+		// var persons = sormasPersonApi.getByUuids18(List.of(request.getPersonId().toString()));
+		//
+		// if (persons.size() > 0) {
+		// participant.setPerson(persons.get(0));
+		// }
 		return participant;
 	}
 

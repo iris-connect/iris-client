@@ -15,11 +15,12 @@
 package de.healthIMIS.iris.client.sormas_integration;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.net.InetAddress;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
@@ -29,11 +30,14 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ConstructorBinding
 @RequiredArgsConstructor
 @ConfigurationProperties("iris.sormas")
+@ConditionalOnProperty("iris.sormas.user")
 @Getter
 public class IrisSormasProperties {
 
-	private final @NonNull InetAddress serverAddress;
-	private final @NonNull Integer serverPort;
-	private final @NonNull String user;
-	private final @NonNull String password;
+	private final InetAddress serverAddress;
+	private final Integer serverPort;
+	private final String user;
+	private final String password;
+
+	private @Setter String irisUserId;
 }

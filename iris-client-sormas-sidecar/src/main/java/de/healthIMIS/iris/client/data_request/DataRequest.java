@@ -16,7 +16,6 @@ package de.healthIMIS.iris.client.data_request;
 
 import de.healthIMIS.iris.client.core.Aggregate;
 import de.healthIMIS.iris.client.core.Id;
-import de.healthIMIS.iris.client.core.SormasRefId;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -41,12 +40,14 @@ import javax.persistence.*;
 @Setter(AccessLevel.PACKAGE)
 public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestIdentifier> {
 
-	private SormasRefId refId;
-	@AttributeOverride(name = "refId", column = @Column(name = "personId"))
-	private SormasRefId personId;
-	private String irisUserId;
-	private String sormasUserId;
+	private String refId;
+	private String hdUserId;
 
+	@OneToOne(orphanRemoval = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "location_id")
+	private Location location;
+
+	private String name;
 	private Instant requestStart;
 	private Instant requestEnd;
 
@@ -60,19 +61,19 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	@Column(nullable = false) @Enumerated(EnumType.STRING)
 	private Status status = Status.Open;
 
-	public DataRequest(SormasRefId refId, SormasRefId personId, Instant requestStart, Instant requestEnd,
-			String requestDetails, String irisUserId, String sormasUserId, Set<Feature> features) {
+	public DataRequest(String refId, String name, Instant requestStart, Instant requestEnd, String requestDetails,
+			String hdUserId, Location location, Set<Feature> features) {
 
 		super();
 
 		this.id = DataRequestIdentifier.of(UUID.randomUUID());
 		this.refId = refId;
-		this.personId = personId;
+		this.name = name;
 		this.requestStart = requestStart;
 		this.requestEnd = requestEnd;
 		this.requestDetails = requestDetails;
-		this.irisUserId = irisUserId;
-		this.sormasUserId = sormasUserId;
+		this.hdUserId = hdUserId;
+		this.location = location;
 		this.features = features;
 	}
 
