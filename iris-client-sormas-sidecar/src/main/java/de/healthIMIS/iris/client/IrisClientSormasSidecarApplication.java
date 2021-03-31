@@ -183,11 +183,9 @@ public class IrisClientSormasSidecarApplication {
 
 	@Bean
 	public ModelMapper modelMapper() {
-		var mapper = new ModelMapper();
-		// mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-		mapper.getConfiguration().setAmbiguityIgnored(true);
-
-		return mapper;
+		var modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setAmbiguityIgnored(true);
+		return modelMapper;
 	}
 
 	static final class UpdateRequestNeedCharacterEncodingFilter extends OrderedCharacterEncodingFilter {

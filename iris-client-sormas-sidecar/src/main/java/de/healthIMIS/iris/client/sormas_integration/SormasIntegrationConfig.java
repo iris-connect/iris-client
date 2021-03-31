@@ -126,6 +126,7 @@ public class SormasIntegrationConfig {
 
 		var users = userControllerApi().getAll8(0l);
 
+		// ToDo: What does it imply if the IRIS user is not unqiue?
 		var irisUserId = users.stream()
 				.filter(UserDto::isActive)
 				.filter(it -> StringUtils.equals(it.getUserName(), properties.getUser()))

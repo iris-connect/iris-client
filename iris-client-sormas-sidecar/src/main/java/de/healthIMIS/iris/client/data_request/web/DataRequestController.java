@@ -11,9 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.http.HttpResponse;
 import java.time.ZoneId;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,7 +21,7 @@ public class DataRequestController {
 
     private DataRequestManagement dataRequestManagement;
 
-    private ModelMapper mm;
+    private ModelMapper modelMapper;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/data-requests-client/locations", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -46,12 +44,12 @@ public class DataRequestController {
     @GetMapping("/data-requests-client/locations")
     public ResponseEntity<ExistingDataRequestClientWithLocationList> getDataRequests() {
         var response = dataRequestManagement.getAll().stream().map(request -> {
-            var mapped = mm.map(request, ExistingDataRequestClientWithLocation.class);
+            var mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
             mapped.setCode(request.getId().toString());
             mapped.setStatus(ExistingDataRequestClientWithLocation.StatusEnum.DATA_REQUESTED);
             mapped.setStart(request.getRequestStart().atZone(ZoneId.of("UTC")));
             mapped.setEnd(request.getRequestEnd().atZone(ZoneId.of("UTC")));
-            mapped.setLocationInformation(mm.map(request.getLocation(), LocationInformation.class));
+            mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
             return mapped;
         })
                 .collect(Collectors.toList());
@@ -72,12 +70,12 @@ public class DataRequestController {
     }
 
     private DataRequestDetails map(de.healthIMIS.iris.client.data_request.DataRequest request) {
-        var mapped = mm.map(request, DataRequestDetails.class);
+        var mapped = modelMapper.map(request, DataRequestDetails.class);
         mapped.setCode(request.getId().toString());
         mapped.setStatus(DataRequestDetails.StatusEnum.DATA_REQUESTED);
         mapped.setStart(request.getRequestStart().atZone(ZoneId.of("UTC")));
         mapped.setEnd(request.getRequestEnd().atZone(ZoneId.of("UTC")));
-        mapped.setLocationInformation(mm.map(request.getLocation(), LocationInformation.class));
+        mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
         return mapped;
     }
 

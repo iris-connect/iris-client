@@ -5,10 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Objects;
 
-/**
- * Address
- */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-29T21:00:09.691126+01:00[Europe/London]")
 public class Address   {
   @JsonProperty("street")
   private String street;

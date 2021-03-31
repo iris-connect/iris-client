@@ -271,6 +271,7 @@ class DataRequestJob {
 	private boolean isRelevant(TaskDto it) {
 
 		return ((it.getTaskContext() == TaskContext.CASE && it.getTaskType() == TaskType.CONTACT_TRACING))
+				// ToDo: I need to have a chat with Jens about it.
 				// || (it.getTaskContext() == TaskContext.EVENT && it.getTaskType() == TaskType.EVENT_INVESTIGATION))
 				&& it.getTaskStatus() == TaskStatus.PENDING && it.getAssigneeUser().getCaption().contains("IRIS");
 	}

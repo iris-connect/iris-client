@@ -60,6 +60,7 @@ abstract class DataSubmissionSubProcessor<T> {
 		newTask.setTaskStatus(TaskStatus.PENDING);
 
 		var userRef = new UserReferenceDto();
+		// ToDo: TBD with Jens
 		// userRef.setUuid(request.getSormasUserId());
 		newTask.setAssigneeUser(userRef);
 
