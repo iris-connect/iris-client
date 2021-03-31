@@ -307,7 +307,7 @@ export default class EventTrackingDetailsView extends Vue {
     DataExport.exportCsv(
       [...this.tableData.headers, ...this.tableData.expandedHeaders],
       this.tableData.select,
-      [this.eventId, Date.now()].join("_")
+      [this.eventData.extID, Date.now()].join("_")
     );
   }
 }
