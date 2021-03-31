@@ -22,7 +22,10 @@ const exportCsv = function (
       })
       .filter((v) => v);
     try {
-      const parser = new Parser({ fields });
+      const parser = new Parser({
+        fields,
+        withBOM: true
+      });
       const csv = parser.parse(rows);
       downloadCsvFile(fileName || "Export", csv);
       resolve(csv);
@@ -33,11 +36,23 @@ const exportCsv = function (
 };
 
 const downloadCsvFile = function (fileName: string, csv: string): void {
-  const link = document.createElement("a");
-  link.setAttribute("href", encodeURI("data:text/csv;charset=utf-8," + csv));
-  link.setAttribute("download", `${fileName}.csv`);
-  document.body.appendChild(link);
-  link.click();
+  if (navigator.msSaveBlob) {
+    // IE10
+    navigator.msSaveBlob(
+      new Blob([csv], {
+        type: "application/octet-stream",
+      }),
+      `${fileName}.csv`
+    );
+  } else {
+    // HTML5
+    const link = document.createElement("a");
+    link.setAttribute("href", encodeURI("data:text/csv;charset=utf-8," + csv));
+    link.setAttribute("download", `${fileName}.csv`);
+    document.body.appendChild(link); // required for FF
+    link.click();
+    document.body.removeChild(link);
+  }
 };
 
 const DataExport = {
