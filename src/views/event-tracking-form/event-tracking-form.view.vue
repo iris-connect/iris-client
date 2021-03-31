@@ -217,7 +217,7 @@ import router from "@/router";
 
 type LocationInformationTableRow = {
   address: string;
-  category: string;
+  // category: string;
   contactPerson: string;
   mail: string;
   phone: string;
@@ -268,12 +268,12 @@ export default class EventTrackingFormView extends Vue {
   get locations(): LocationInformationTableRow[] {
     return (store.state.eventTrackingForm.locations || []).map((location) => {
       return {
-        name: location.contact.officialName,
+        name: location.name || "-",
         address: getFormattedAddress(location.contact.address) || "-",
-        category: location.contact.officialName || "-",
+        // category: location.contact.representative || "-",
         contactPerson: location.contact.representative || "-",
-        mail: location.contact.email || location.contact.ownerEmail || "-",
-        phone: location.contact.email || location.contact.ownerEmail || "-",
+        mail: location.contact.email || "-",
+        phone: location.contact.phone || "-",
         location,
       };
     });
@@ -283,15 +283,13 @@ export default class EventTrackingFormView extends Vue {
 
   form = {
     model: {
-      externalId: `${Math.floor(Math.random() * 1e20)}`,
-      date: new Date().toISOString().split("T")[0],
-      dateEnd: new Date().toISOString().split("T")[0],
-      name: "123",
-      locationId: "123",
-      providerId: "345",
+      externalId: "",
+      date: "",
+      dateEnd: "",
+      name: "",
       time: {
-        from: "12:34",
-        till: "23:45",
+        from: "",
+        till: "",
       },
     },
     showDatePicker: false,
@@ -315,7 +313,7 @@ export default class EventTrackingFormView extends Vue {
         value: "name",
       },
       { text: "Adresse", value: "address" },
-      { text: "Kategorie", value: "category" },
+      // { text: "Kategorie", value: "category" },
       { text: "Ansprechpartner", value: "contactPerson" },
       { text: "Mail", value: "mail" },
       { text: "Telefon", value: "phone" },

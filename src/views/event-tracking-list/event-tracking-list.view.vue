@@ -93,11 +93,14 @@ function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
 ): string {
   if (data) {
-    const contact = data.locationInformation?.contact;
-    if (contact) {
-      return `${data.name}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+    if (data.locationInformation) {
+      const contact = data.locationInformation.contact;
+      if (contact) {
+        return `${data.locationInformation.name}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+      }
+      return data.locationInformation.name;
     }
-    return data.name || "-"; // TODO repeating - improve
+    return "-";
   }
   return "-";
 }
