@@ -19,6 +19,12 @@ a:active, .v-btn--active, a:hover{
     }
   }
   tr{
+    height: initial;
+    /*height: 100px; TODO: Fix this shit. It applies to all data-tables globally.*/
+  }
+}
+.twolineTable{
+  tr{
     height: 100px;
   }
 }

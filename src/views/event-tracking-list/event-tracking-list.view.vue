@@ -2,22 +2,10 @@
   <div>
     <v-row>
       <v-col cols="12">
-        <div>
-          <v-dialog
-            transition="dialog-bottom-transition"
-            max-width="98%"
-            width="1600px"
-          >
-            <template v-slot:activator="{ attrs }">
-              <v-btn
-                class="float-right"
-                color="primary"
-                v-bind="attrs"
-                :to="routeEventTrackingForm"
-                >Neue Ereignisverfolgung starten
-              </v-btn>
-            </template>
-          </v-dialog>
+        <div class="mb-6">
+          <v-btn class="float-right" color="primary" :to="{ name: 'event-new' }"
+            >Neue Ereignisverfolgung starten
+          </v-btn>
         </div>
       </v-col>
     </v-row>
@@ -69,7 +57,7 @@
           :headers="tableData.headers"
           :items="eventList"
           :items-per-page="5"
-          class="elevation-1 mt-5"
+          class="elevation-1 mt-5 twolineTable"
           :search="tableData.search"
         >
           <template v-slot:[itemStatusSlotName]="{ item }">
@@ -81,7 +69,7 @@
             <!-- TODO use imported route name -->
             <v-btn
               color="primary"
-              :to="'/ereignisse/' + item.extID"
+              :to="{ name: 'event-details', params: { id: item.extID } }"
               @click="selectItem(item)"
             >
               Details
@@ -98,7 +86,6 @@ import {
   ExistingDataRequestClientWithLocationStatusEnum,
   LocationContact,
 } from "@/api";
-import { ROUTE_NAME_EVENT_TRACKING_FORM } from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
@@ -137,8 +124,6 @@ type TableRow = {
   },
 })
 export default class EventTrackingListView extends Vue {
-  routeEventTrackingForm = ROUTE_NAME_EVENT_TRACKING_FORM;
-
   statusFilter: ExistingDataRequestClientWithLocationStatusEnum | null = null;
   statusEnum = ExistingDataRequestClientWithLocationStatusEnum;
   statusButtonSelected = 3;
