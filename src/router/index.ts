@@ -18,7 +18,7 @@ export const routes: Array<RouteConfig> = [
     component: Home,
   },
   {
-    path: "/events/neu",
+    path: "/events/new",
     name: "event-new",
     meta: {
       menu: false,
