@@ -114,6 +114,7 @@ export const getDummyDetailsWithStatus = (id: string): DataRequestDetails => {
     )) as DataRequestDetailsStatusEnum;
     return {
       ...dummyDataDetails,
+      ...dataRequest,
       status,
       guests:
         status === DataRequestDetailsStatusEnum.DataRequested

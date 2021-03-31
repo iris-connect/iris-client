@@ -93,7 +93,7 @@
 </template>
 <style></style>
 <script lang="ts">
-import { DataRequestDetailsStatusEnum, Sex } from "@/api";
+import { DataRequestDetailsStatusEnum, LocationContact, Sex } from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
@@ -123,6 +123,13 @@ type TableRow = {
   mobilPhone: string;
   address: string;
 };
+
+function getFormattedAddress(contact?: LocationContact) {
+  if (contact) {
+    return `${contact.officialName}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+  }
+  return "-";
+}
 
 @Component({
   components: {
@@ -199,7 +206,7 @@ export default class EventTrackingDetailsView extends Vue {
     return {
       extID: dataRequest?.externalRequestId || "-",
       name: dataRequest?.name || "-",
-      address: dataRequest?.locationInformation?.contact.address.street || "-",
+      address: getFormattedAddress(dataRequest?.locationInformation?.contact),
       startTime: dataRequest?.start
         ? `${new Date(dataRequest.start).toLocaleDateString(
             "de-DE"
