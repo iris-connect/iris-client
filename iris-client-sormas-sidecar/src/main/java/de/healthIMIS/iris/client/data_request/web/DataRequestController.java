@@ -46,10 +46,12 @@ public class DataRequestController {
         var response = dataRequestManagement.getAll().stream().map(request -> {
             var mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
             mapped.setCode(request.getId().toString());
-            mapped.setStatus(ExistingDataRequestClientWithLocation.StatusEnum.DATA_REQUESTED);
             mapped.setStart(request.getRequestStart().atZone(ZoneId.of("UTC")));
             mapped.setEnd(request.getRequestEnd().atZone(ZoneId.of("UTC")));
             mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
+            mapped.setLastUpdatedAt(request.getLastModifiedAt().atZone(ZoneId.of("UTC")));
+            mapped.setRequestedAt(request.getCreatedAt().atZone(ZoneId.of("UTC")));
+            mapped.setExternalRequestId(request.getRefId());
             return mapped;
         })
                 .collect(Collectors.toList());
@@ -72,12 +74,13 @@ public class DataRequestController {
     private DataRequestDetails map(de.healthIMIS.iris.client.data_request.DataRequest request) {
         var mapped = modelMapper.map(request, DataRequestDetails.class);
         mapped.setCode(request.getId().toString());
-        mapped.setStatus(DataRequestDetails.StatusEnum.DATA_REQUESTED);
+        // TODO this is not returning UTC check whats happening
         mapped.setStart(request.getRequestStart().atZone(ZoneId.of("UTC")));
         mapped.setEnd(request.getRequestEnd().atZone(ZoneId.of("UTC")));
         mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
+        mapped.setLastModifiedAt(request.getLastModifiedAt().atZone(ZoneId.of("UTC")));
+        mapped.setRequestedAt(request.getCreatedAt().atZone(ZoneId.of("UTC")));
+        mapped.setExternalRequestId(request.getRefId());
         return mapped;
     }
-
-
 }

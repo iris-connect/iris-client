@@ -23,9 +23,9 @@ public class DataRequestDetails   {
 
   public enum StatusEnum {
     DATA_REQUESTED("DATA_REQUESTED"),
-    
+
     DATA_RECEIVED("DATA_RECEIVED"),
-    
+
     CLOSED("CLOSED");
 
     private String value;
@@ -66,6 +66,10 @@ public class DataRequestDetails   {
   private ZonedDateTime start;
 
   private ZonedDateTime end;
+
+  private ZonedDateTime requestedAt;
+
+  private ZonedDateTime lastModifiedAt;
 
   private String requestDetails;
 

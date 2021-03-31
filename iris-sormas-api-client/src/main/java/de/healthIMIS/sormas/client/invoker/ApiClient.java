@@ -320,8 +320,12 @@ public class ApiClient {
 		return this;
 	}
 
+
+
 	/**
-	 * Parse the given string into Date object.
+	 *
+	 * @param str date string
+	 * @return date object for given string
 	 */
 	public Date parseDate(String str) {
 		try {
@@ -333,6 +337,9 @@ public class ApiClient {
 
 	/**
 	 * Format the given Date object into string.
+	 *
+	 * @param date date to format
+	 * @return formatted date string for given date
 	 */
 	public String formatDate(Date date) {
 		return dateFormat.format(date);

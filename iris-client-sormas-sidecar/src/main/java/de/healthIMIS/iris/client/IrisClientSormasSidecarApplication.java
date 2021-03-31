@@ -188,6 +188,7 @@ public class IrisClientSormasSidecarApplication {
 		return modelMapper;
 	}
 
+	// ToDo: Let us check if a) remove it or b) perform a real UTF-8 check against the payload
 	static final class UpdateRequestNeedCharacterEncodingFilter extends OrderedCharacterEncodingFilter {
 
 		static final EnumSet<HttpMethod> updateMethods = EnumSet.of(PUT, POST, PATCH);

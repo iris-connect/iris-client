@@ -72,6 +72,14 @@ public class ExistingDataRequestClientWithLocation   {
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
   private ZonedDateTime end;
 
+  @JsonProperty("requestedAt")
+  @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
+  private ZonedDateTime requestedAt;
+
+  @JsonProperty("lastUpdatedAt")
+  @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
+  private ZonedDateTime lastUpdatedAt;
+
   @JsonProperty("requestDetails")
   private String requestDetails;
 
@@ -239,6 +247,43 @@ public class ExistingDataRequestClientWithLocation   {
 
   public void setLocationInformation(LocationInformation locationInformation) {
     this.locationInformation = locationInformation;
+  }
+
+  /**
+   * Timestamp when the data request was created.
+   * @return requestedAt
+   */
+  @ApiModelProperty(value = "Timestamp when the data request was created.")
+
+  @Valid
+
+  public ZonedDateTime getRequestedAt() {
+    return requestedAt;
+  }
+
+  public void setRequestedAt(ZonedDateTime requestedAt) {
+    this.requestedAt = requestedAt;
+  }
+
+  public ExistingDataRequestClientWithLocation lastUpdatedAt(ZonedDateTime lastUpdatedAt) {
+    this.lastUpdatedAt = lastUpdatedAt;
+    return this;
+  }
+
+  /**
+   * Timestamp when the data request was last updated.
+   * @return lastUpdatedAt
+   */
+  @ApiModelProperty(value = "Timestamp when the data request was last updated.")
+
+  @Valid
+
+  public ZonedDateTime getLastUpdatedAt() {
+    return lastUpdatedAt;
+  }
+
+  public void setLastUpdatedAt(ZonedDateTime lastUpdatedAt) {
+    this.lastUpdatedAt = lastUpdatedAt;
   }
 
 

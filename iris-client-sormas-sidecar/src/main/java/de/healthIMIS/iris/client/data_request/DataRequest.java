@@ -14,8 +14,11 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import de.healthIMIS.iris.client.core.Aggregate;
 import de.healthIMIS.iris.client.core.Id;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -59,7 +62,7 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	private Set<Feature> features;
 
 	@Column(nullable = false) @Enumerated(EnumType.STRING)
-	private Status status = Status.Open;
+	private Status status = Status.DATA_REQUESTED;
 
 	public DataRequest(String refId, String name, Instant requestStart, Instant requestEnd, String requestDetails,
 			String hdUserId, Location location, Set<Feature> features) {
@@ -75,6 +78,14 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 		this.hdUserId = hdUserId;
 		this.location = location;
 		this.features = features;
+	}
+
+	public LocalDateTime getLastModifiedAt() {
+		return this.getMetadata().getLastModified();
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return this.getMetadata().getCreated();
 	}
 
 	@Embeddable
@@ -105,6 +116,36 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	}
 
 	public enum Status {
-		Open
+		DATA_REQUESTED("DATA_REQUESTED"),
+
+		DATA_RECEIVED("DATA_RECEIVED"),
+
+		CLOSED("CLOSED");
+
+		private String value;
+
+		Status(String value) {
+			this.value = value;
+		}
+
+		@JsonValue
+		public String getValue() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			return String.valueOf(value);
+		}
+
+		@JsonCreator
+		public static DataRequest.Status fromValue(String value) {
+			for (DataRequest.Status b : DataRequest.Status.values()) {
+				if (b.value.equals(value)) {
+					return b;
+				}
+			}
+			throw new IllegalArgumentException("Unexpected value '" + value + "'");
+		}
 	}
 }

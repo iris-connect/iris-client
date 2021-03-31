@@ -128,6 +128,9 @@ public class DataRequestManagement {
         log.debug("Request job - PUT to server sent: {}; Features = {}", dataRequest.getId().toString(),
                 dataRequest.getFeatures());
 
+        // TODO: verify that DATA_REQUESTED can be used as default
+        dataRequest.setStatus(Status.DATA_REQUESTED);
+
         dataRequest = requests.save(dataRequest);
 
         return dataRequest;

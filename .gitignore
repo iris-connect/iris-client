@@ -72,3 +72,6 @@ hs_err_pid*
 
 # build files
 .gradle
+
+# MACOS
+.DS_Store

@@ -1,6 +1,7 @@
 package de.healthIMIS.iris.client.search_client;
 
 import de.healthIMIS.iris.api.sidecarclient.model.LocationInformation;
+import de.healthIMIS.iris.api.sidecarclient.model.LocationList;
 import de.healthIMIS.iris.client.data_request.Location;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -30,6 +31,12 @@ public class SearchClient {
         // Todo: Why is it null
         location.setProviderId(providerId);
         return location;
+    }
+
+    public LocationList search(String keyword) {
+        var locationListDto = rest.getForObject(config.getEndpoint()+ "/{keyword}",
+            LocationList.class, keyword);
+        return locationListDto;
     }
 
 }
