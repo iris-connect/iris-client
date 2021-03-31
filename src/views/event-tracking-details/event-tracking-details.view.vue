@@ -38,6 +38,12 @@
           :expanded.sync="tableData.expanded"
           @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
         >
+          <template v-if="statusDataRequested" #no-data>
+            <span class="black--text">
+              Die Kontaktdaten zu diesem Ereignis werden derzeit angefragt. Zum
+              jetzigen Zeitpunkt liegen noch keine Daten vor.
+            </span>
+          </template>
           <template v-slot:expanded-item="{ headers, item }">
             <td></td>
             <td :colspan="headers.length - 1">
@@ -87,7 +93,7 @@
 </template>
 <style></style>
 <script lang="ts">
-import { Sex } from "@/api";
+import { ExistingDataRequestClientWithLocationStatusEnum, Sex } from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
@@ -214,6 +220,14 @@ export default class EventTrackingDetailsView extends Vue {
     return store.state.eventTrackingDetails.eventTrackingDetailsLoading;
   }
 
+  get statusDataRequested(): boolean {
+    if (!store.state.eventTrackingDetails.eventTrackingDetails) return false;
+    return (
+      (store.state.eventTrackingDetails.eventTrackingDetails?.status || "") ===
+      ExistingDataRequestClientWithLocationStatusEnum.DataRequested
+    );
+  }
+
   get guests(): TableRow[] {
     const dataRequests =
       store.state.eventTrackingDetails.eventTrackingDetails?.guests || [];
@@ -261,6 +275,9 @@ export default class EventTrackingDetailsView extends Vue {
     });
   }
 
+  /**
+   * @deprecated
+   */
   on(): void {
     console.log("NOT IMPLEMENTED");
   }

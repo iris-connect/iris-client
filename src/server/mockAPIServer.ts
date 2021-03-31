@@ -1,8 +1,11 @@
 import { DataRequestDetails } from "@/api";
-import { dummyDataRequests } from "@/server/data/data-requests";
 import { dummyLocations } from "@/server/data/dummy-locations";
-import { dummyDataDetails } from "@/server/data/data-requests";
+import {
+  dummyDataRequests,
+  getDummyDetailsWithStatus,
+} from "@/server/data/data-requests";
 import { createServer } from "miragejs";
+import router from "@/router";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function makeMockAPIServer() {
@@ -22,7 +25,7 @@ export function makeMockAPIServer() {
       });
 
       this.get("/data-requests-client/locations/:id", () => {
-        return dummyDataDetails;
+        return getDummyDetailsWithStatus(router.currentRoute.params.id);
       });
 
       this.get("/search/mio", () => {

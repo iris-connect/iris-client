@@ -188,7 +188,9 @@
         </v-row>
       </v-card-text>
       <v-card-actions>
-        <v-btn class="mt-4" color="secondary" plain> Abbrechen </v-btn>
+        <v-btn class="mt-4" color="secondary" plain @click="$router.back()">
+          Abbrechen
+        </v-btn>
         <v-spacer></v-spacer>
         <v-btn
           :disabled="!form.valid || eventCreationOngoing"
