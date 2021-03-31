@@ -49,6 +49,7 @@ const eventTrackingDetails: EventTrackingDetailsModule = {
     async fetchEventTrackingDetails({ commit }, eventId) {
       const client = IrisClientFrontendApiFactory(clientConfig);
       let eventTrackingDetails: DataRequestDetails | null = null;
+      commit("setEventTrackingDetails", eventTrackingDetails);
       commit("setEventTrackingDetailsLoading", true);
       try {
         eventTrackingDetails = (await client.getLocationDetails(eventId)).data;

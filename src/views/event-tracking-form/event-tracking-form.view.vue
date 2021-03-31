@@ -2,7 +2,6 @@
   <v-card>
     <v-form ref="form" v-model="form.valid" lazy-validation>
       <v-card-title>Ereignis-Nachverfolgung starten</v-card-title>
-      <v-card-subtitle>DISCLAIMER: DEMO FORMULAR - NICHT FINAL</v-card-subtitle>
       <v-card-text style="padding-bottom: 0px">
         <v-row>
           <v-col>
@@ -188,7 +187,9 @@
         </v-row>
       </v-card-text>
       <v-card-actions>
-        <v-btn class="mt-4" color="secondary" plain> Abbrechen </v-btn>
+        <v-btn class="mt-4" color="secondary" plain @click="$router.back()">
+          Abbrechen
+        </v-btn>
         <v-spacer></v-spacer>
         <v-btn
           :disabled="!form.valid || eventCreationOngoing"

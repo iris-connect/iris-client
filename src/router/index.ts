@@ -18,7 +18,7 @@ export const routes: Array<RouteConfig> = [
     component: Home,
   },
   {
-    path: "/ereignisse/neu",
+    path: "/events/new",
     name: "event-new",
     meta: {
       menu: false,
@@ -29,7 +29,7 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: "/ereignisse",
+    path: "/events/list",
     name: "event-list" /* Caution: This acts as an identifier! */,
     meta: {
       menu: true,
@@ -41,7 +41,7 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: "/indexfaelle",
+    path: "/cases/list",
     name: "index-list" /* Caution: This acts as an identifier! */,
     meta: {
       menu: true,
@@ -53,7 +53,7 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: "/ereignisse/details/:id",
+    path: "/events/details/:id",
     name: "event-details" /* Caution: This acts as an identifier! */,
     meta: {
       menu: false,

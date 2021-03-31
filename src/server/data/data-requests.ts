@@ -103,3 +103,23 @@ export const dummyDataDetails: DataRequestDetails = {
   startDate: hoursAgo(4),
   endDate: hoursAgo(3),
 };
+
+export const getDummyDetailsWithStatus = (id: string): DataRequestDetails => {
+  const dataRequest = dummyDataRequests.dataRequests?.find(
+    (request) => request.externalRequestId === id
+  );
+  if (dataRequest) {
+    const status = (<unknown>(
+      dataRequest.status
+    )) as DataRequestDetailsStatusEnum;
+    return {
+      ...dummyDataDetails,
+      status,
+      guests:
+        status === DataRequestDetailsStatusEnum.DataRequested
+          ? []
+          : dummyDataDetails.guests,
+    };
+  }
+  return dummyDataDetails;
+};

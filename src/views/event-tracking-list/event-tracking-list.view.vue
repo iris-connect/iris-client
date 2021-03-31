@@ -43,7 +43,6 @@
 
     <v-card>
       <v-card-title>Ereignisnachverfolgungen</v-card-title>
-      <v-card-subtitle>DISCLAIMER: DEMO TABELLE</v-card-subtitle>
       <v-card-text>
         <v-text-field
           v-model="tableData.search"

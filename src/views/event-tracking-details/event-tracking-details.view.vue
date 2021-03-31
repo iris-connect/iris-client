@@ -25,6 +25,7 @@
           hide-details
         ></v-text-field>
         <v-data-table
+          :loading="listLoading"
           :headers="tableData.headers"
           :items="guests"
           :items-per-page="5"
@@ -37,73 +38,52 @@
           :expanded.sync="tableData.expanded"
           @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
         >
+          <template v-if="statusDataRequested" #no-data>
+            <span class="black--text">
+              Die Kontaktdaten zu diesem Ereignis werden derzeit angefragt. Zum
+              jetzigen Zeitpunkt liegen noch keine Daten vor.
+            </span>
+          </template>
           <template v-slot:expanded-item="{ headers, item }">
             <td></td>
             <td :colspan="headers.length - 1">
               <v-row>
-                <v-col cols="12" md="2">
-                  <v-list-item two-line dense>
-                    <v-list-item-content>
-                      <v-list-item-title>Geschlecht</v-list-item-title>
-                      <v-list-item-subtitle>{{
-                        item.sex ? item.sex : "-"
-                      }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-col>
-                <v-col>
-                  <v-list-item two-line dense>
-                    <v-list-item-content>
-                      <v-list-item-title>E-Mail</v-list-item-title>
-                      <v-list-item-subtitle>{{
-                        item.email ? item.email : "-"
-                      }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-col>
-                <v-col>
-                  <v-list-item two-line dense>
-                    <v-list-item-content>
-                      <v-list-item-title>Telefon</v-list-item-title>
-                      <v-list-item-subtitle>{{
-                        item.phone ? item.phone : "-"
-                      }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-col>
-                <v-col>
-                  <v-list-item two-line dense>
-                    <v-list-item-content>
-                      <v-list-item-title>Mobil</v-list-item-title>
-                      <v-list-item-subtitle>{{
-                        item.mobilPhone ? item.mobilPhone : "-"
-                      }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-col>
-                <v-col>
-                  <v-list-item two-line dense>
-                    <v-list-item-content>
-                      <v-list-item-title>Adresse</v-list-item-title>
-                      <v-list-item-subtitle>{{
-                        item.address ? item.address : "-"
-                      }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-col>
+                <template
+                  v-for="(expandedHeader, ehIndex) in tableData.expandedHeaders"
+                >
+                  <v-col :key="ehIndex" cols="12" sm="4" md="2">
+                    <v-list-item two-line dense>
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          {{ expandedHeader.text }}
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                          {{
+                            item[expandedHeader.value]
+                              ? item[expandedHeader.value]
+                              : "-"
+                          }}
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-col>
+                </template>
               </v-row>
             </td>
           </template>
         </v-data-table>
         <v-row class="mt-2">
           <v-col cols="12">
-            <v-btn class="ml-2 mr-2" color="white" @click="on">Zurück </v-btn>
+            <v-btn class="ml-2 mr-2" color="white" @click="$router.back()">
+              Zurück
+            </v-btn>
             <v-btn
               class="mr-2 float-right"
               color="primary"
               @click="handleExport"
               :disabled="tableData.select.length <= 0"
-              >Auswahl exportieren
+            >
+              Auswahl exportieren
             </v-btn>
           </v-col>
         </v-row>
@@ -113,7 +93,7 @@
 </template>
 <style></style>
 <script lang="ts">
-import { Sex } from "@/api";
+import { DataRequestDetailsStatusEnum, Sex } from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
@@ -190,6 +170,28 @@ export default class EventTrackingDetailsView extends Vue {
       },
       { text: "", value: "data-table-expand" },
     ],
+    expandedHeaders: [
+      {
+        text: "Geschlecht",
+        value: "sex",
+      },
+      {
+        text: "E-Mail",
+        value: "email",
+      },
+      {
+        text: "Telefon",
+        value: "phone",
+      },
+      {
+        text: "Mobil",
+        value: "mobilePhone",
+      },
+      {
+        text: "Adresse",
+        value: "address",
+      },
+    ],
   };
 
   get eventData(): EventData {
@@ -212,6 +214,18 @@ export default class EventTrackingDetailsView extends Vue {
       status: dataRequest?.status?.toString() || "-",
       lastChange: "-", // TODO: what property to show here?
     };
+  }
+
+  get listLoading(): boolean {
+    return store.state.eventTrackingDetails.eventTrackingDetailsLoading;
+  }
+
+  get statusDataRequested(): boolean {
+    if (!store.state.eventTrackingDetails.eventTrackingDetails) return false;
+    return (
+      store.state.eventTrackingDetails.eventTrackingDetails.status ===
+      DataRequestDetailsStatusEnum.DataRequested
+    );
   }
 
   get guests(): TableRow[] {
@@ -261,6 +275,9 @@ export default class EventTrackingDetailsView extends Vue {
     });
   }
 
+  /**
+   * @deprecated
+   */
   on(): void {
     console.log("NOT IMPLEMENTED");
   }
@@ -280,7 +297,7 @@ export default class EventTrackingDetailsView extends Vue {
 
   handleExport(): void {
     DataExport.exportCsv(
-      this.tableData.headers,
+      [...this.tableData.headers, ...this.tableData.expandedHeaders],
       this.tableData.select,
       [this.eventId, Date.now()].join("_")
     );
