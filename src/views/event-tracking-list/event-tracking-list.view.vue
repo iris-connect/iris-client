@@ -23,33 +23,33 @@
     </v-row>
     <v-row class="mb-6">
       <v-col cols="8">
-        <div>
-          Status:
+        Status:
+        <v-btn-toggle dense mandatory v-model="statusButtonSelected">
           <v-btn
-            class="ml-2 mr-2"
-            color="white"
             @click="filterStatus(statusEnum.DataRequested)"
+            style="opacity: 100%; background-color: white"
           >
             {{ getStatusName(statusEnum.DataRequested) }}
           </v-btn>
           <v-btn
-            class="ml-2 mr-2"
-            color="white"
             @click="filterStatus(statusEnum.DataReceived)"
+            style="opacity: 100%; background-color: white"
           >
             {{ getStatusName(statusEnum.DataReceived) }}
           </v-btn>
           <v-btn
-            class="ml-2 mr-2"
-            color="white"
             @click="filterStatus(statusEnum.Closed)"
+            style="opacity: 100%; background-color: white"
           >
             {{ getStatusName(statusEnum.Closed) }}
           </v-btn>
-          <v-btn class="ml-2 mr-2" color="white" @click="filterStatus(null)">
+          <v-btn
+            @click="filterStatus(null)"
+            style="opacity: 100%; background-color: white"
+          >
             Alle
           </v-btn>
-        </div>
+        </v-btn-toggle>
       </v-col>
     </v-row>
 
@@ -135,10 +135,25 @@ export default class EventTrackingListView extends Vue {
 
   statusFilter: ExistingDataRequestClientWithLocationStatusEnum | null = null;
   statusEnum = ExistingDataRequestClientWithLocationStatusEnum;
+  statusButtonSelected = 3;
   filterStatus(
     target: ExistingDataRequestClientWithLocationStatusEnum | null
   ): void {
     this.statusFilter = target;
+    switch (target) {
+      case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+        this.statusButtonSelected = 0;
+        break;
+      case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+        this.statusButtonSelected = 1;
+        break;
+      case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+        this.statusButtonSelected = 2;
+        break;
+      default:
+        this.statusButtonSelected = 3;
+        break;
+    }
   }
 
   tableData = {
