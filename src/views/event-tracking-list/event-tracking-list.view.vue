@@ -146,20 +146,6 @@ export default class EventTrackingListView extends Vue {
     target: ExistingDataRequestClientWithLocationStatusEnum | null
   ): void {
     this.statusFilter = target;
-    switch (target) {
-      case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
-        this.statusButtonSelected = 0;
-        break;
-      case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
-        this.statusButtonSelected = 1;
-        break;
-      case ExistingDataRequestClientWithLocationStatusEnum.Closed:
-        this.statusButtonSelected = 2;
-        break;
-      default:
-        this.statusButtonSelected = 3;
-        break;
-    }
   }
 
   tableData = {
