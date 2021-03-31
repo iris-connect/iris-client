@@ -68,7 +68,7 @@
             <!-- TODO use imported route name -->
             <v-btn
               color="primary"
-              :to="{ name: 'event-details', params: { id: item.extID } }"
+              :to="{ name: 'event-details', params: { id: item.code } }"
               @click="selectItem(item)"
             >
               Details
@@ -83,15 +83,21 @@
 <script lang="ts">
 import {
   ExistingDataRequestClientWithLocationStatusEnum,
-  LocationContact,
+  ExistingDataRequestClientWithLocation,
 } from "@/api";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
 
-function getFormattedAddress(contact?: LocationContact) {
-  if (contact) {
-    return `${contact.officialName}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+function getFormattedAddress(
+  data?: ExistingDataRequestClientWithLocation
+): string {
+  if (data) {
+    const contact = data.locationInformation?.contact;
+    if (contact) {
+      return `${data.name}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+    }
+    return data.name || "-"; // TODO repeating - improve
   }
   return "-";
 }
@@ -168,14 +174,13 @@ export default class EventTrackingListView extends Vue {
         )
         .map((dataRequest) => {
           return {
-            address: getFormattedAddress(
-              dataRequest.locationInformation?.contact
-            ),
+            address: getFormattedAddress(dataRequest),
             endTime: getFormattedDate(dataRequest.end),
             startTime: getFormattedDate(dataRequest.start),
             generatedTime: getFormattedDate(dataRequest.requestedAt),
             lastChange: getFormattedDate(dataRequest.lastUpdatedAt),
             extID: dataRequest.externalRequestId || "-",
+            code: dataRequest.code,
             name: dataRequest.name || "-",
             status: dataRequest.status?.toString() || "-",
           };

@@ -1,7 +1,9 @@
 <template>
   <div>
     <v-card>
-      <v-card-title>Details für Ereignis ID: {{ eventId }}</v-card-title>
+      <v-card-title
+        >Details für Ereignis ID: {{ eventData.extID }}</v-card-title
+      >
       <v-card-text>
         <v-col cols="8">
           <v-row>
@@ -143,7 +145,6 @@ function getFormattedAddress(contact?: LocationContact) {
   },
 })
 export default class EventTrackingDetailsView extends Vue {
-  eventId = router.currentRoute.params.id;
   tableData = {
     search: "",
     expanded: [],

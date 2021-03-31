@@ -330,7 +330,9 @@ export default class EventTrackingFormView extends Vue {
   }
   async submit(): Promise<void> {
     const valid = this.$refs.form.validate() as boolean;
-    if (valid) {
+    const location = store.state.eventTrackingForm.selectedLocation;
+
+    if (valid && location) {
       const payload: DataRequestClient = {
         // TODO validate start < end
         start: getDateWithTime(this.form.model.date, this.form.model.time.from),
@@ -339,8 +341,8 @@ export default class EventTrackingFormView extends Vue {
           this.form.model.time.till
         ),
         name: this.form.model.name,
-        locationId: this.form.model.locationId,
-        providerId: this.form.model.providerId,
+        locationId: location?.id,
+        providerId: location?.providerId,
         externalRequestId: this.form.model.externalId,
       };
       const created: DataRequestDetails = await store.dispatch(
