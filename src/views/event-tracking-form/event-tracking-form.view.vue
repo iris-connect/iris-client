@@ -69,6 +69,7 @@
                     </v-col>
                   </v-row>
                   <v-data-table
+                    :loading="locationsLoading"
                     :headers="searchTable.headers"
                     :items="locations"
                     :items-per-page="5"

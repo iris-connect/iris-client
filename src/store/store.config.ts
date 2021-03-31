@@ -1,4 +1,5 @@
 import eventTrackingForm from "../views/event-tracking-form/event-tracking-form.store";
+import eventTrackingList from "../views/event-tracking-list/event-tracking-list.store";
 
 import { StoreOptions } from "vuex";
 import { RootState } from "@/store/types";
@@ -9,5 +10,6 @@ export const storeOptions: StoreOptions<RootState> = {
   actions: {},
   modules: {
     eventTrackingForm,
+    eventTrackingList,
   },
 };

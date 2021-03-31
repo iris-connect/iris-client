@@ -1,16 +1,8 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="8">
-        <div class="mb-6">
-          Status:
-          <v-btn class="ml-2 mr-2" color="white" @click="on">Angefragt </v-btn>
-          <v-btn class="mr-2" color="white" @click="on">Update </v-btn>
-          <v-btn class="mr-2" color="white" @click="on">Geschlossen </v-btn>
-        </div>
-      </v-col>
-      <v-col cols="4">
-        <div class="mb-6">
+      <v-col cols="12">
+        <div>
           <v-dialog
             transition="dialog-bottom-transition"
             max-width="98%"
@@ -29,6 +21,37 @@
         </div>
       </v-col>
     </v-row>
+    <v-row class="mb-6">
+      <v-col cols="8">
+        Status:
+        <v-btn-toggle dense mandatory v-model="statusButtonSelected">
+          <v-btn
+            @click="filterStatus(statusEnum.DataRequested)"
+            style="opacity: 100%; background-color: white"
+          >
+            {{ getStatusName(statusEnum.DataRequested) }}
+          </v-btn>
+          <v-btn
+            @click="filterStatus(statusEnum.DataReceived)"
+            style="opacity: 100%; background-color: white"
+          >
+            {{ getStatusName(statusEnum.DataReceived) }}
+          </v-btn>
+          <v-btn
+            @click="filterStatus(statusEnum.Closed)"
+            style="opacity: 100%; background-color: white"
+          >
+            {{ getStatusName(statusEnum.Closed) }}
+          </v-btn>
+          <v-btn
+            @click="filterStatus(null)"
+            style="opacity: 100%; background-color: white"
+          >
+            Alle
+          </v-btn>
+        </v-btn-toggle>
+      </v-col>
+    </v-row>
 
     <v-card>
       <v-card-title>Ereignisnachverfolgungen</v-card-title>
@@ -42,15 +65,16 @@
           hide-details
         ></v-text-field>
         <v-data-table
+          :loading="eventListLoading"
           :headers="tableData.headers"
-          :items="tableData.eventList"
+          :items="eventList"
           :items-per-page="5"
           class="elevation-1 mt-5"
           :search="tableData.search"
         >
           <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
-              {{ item.status }}
+              {{ getStatusName(item.status) }}
             </v-chip>
           </template>
           <template v-slot:[itemActionSlotName]="{ item }">
@@ -70,17 +94,60 @@
 </template>
 
 <script lang="ts">
+import {
+  ExistingDataRequestClientWithLocationStatusEnum,
+  LocationContact,
+} from "@/api";
 import { ROUTE_NAME_EVENT_TRACKING_FORM } from "@/router";
+import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
+
+function getFormattedAddress(contact?: LocationContact) {
+  if (contact) {
+    return `${contact.officialName}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+  }
+  return "-";
+}
+
+function getFormattedDate(date?: string): string {
+  return date
+    ? `${new Date(date).toDateString()}, ${new Date(date).toLocaleTimeString()}`
+    : "-";
+}
+
+type TableRow = {
+  address: string;
+  endTime: string;
+  extID: string;
+  generatedTime: string;
+  lastChange: string;
+  name: string;
+  startTime: string;
+  status: string;
+};
 
 @Component({
   components: {
     EventTrackingFormView: EventTrackingFormView,
   },
+  async beforeRouteEnter(_from, _to, next) {
+    next();
+    await store.dispatch("eventTrackingList/fetchEventTrackingList");
+  },
 })
 export default class EventTrackingListView extends Vue {
   routeEventTrackingForm = ROUTE_NAME_EVENT_TRACKING_FORM;
+
+  statusFilter: ExistingDataRequestClientWithLocationStatusEnum | null = null;
+  statusEnum = ExistingDataRequestClientWithLocationStatusEnum;
+  statusButtonSelected = 3;
+  filterStatus(
+    target: ExistingDataRequestClientWithLocationStatusEnum | null
+  ): void {
+    this.statusFilter = target;
+  }
+
   tableData = {
     search: "",
     headers: [
@@ -99,29 +166,38 @@ export default class EventTrackingListView extends Vue {
       { text: "Letzte Ändrung", value: "lastChange" },
       { text: "", value: "actions" },
     ],
-    eventList: [
-      {
-        extID: "GTOAZEIC",
-        name: "Toms Bierbrunnen",
-        address: "Nobistor 14, 22767 Hamburg",
-        startTime: "30.03.2021 17:00",
-        endTime: "30.03.2021 22:00",
-        generatedTime: "31.03.2021 09:44",
-        status: "Angefragt",
-        lastChange: "31.03.2021 09:44",
-      },
-      {
-        extID: "IEZDTEDA",
-        name: "S&S Konzert 27.03",
-        address: "Schick & Schön. Kaiserstraße 15, 5516 Mainz",
-        startTime: "27.03.2021 19:00",
-        endTime: "28.03.2021 05:00",
-        generatedTime: "29.03.2021 10:21",
-        status: "UPDATE",
-        lastChange: "29.03.2021 14:15",
-      },
-    ],
   };
+
+  get eventListLoading(): boolean {
+    return store.state.eventTrackingList.eventTrackingListLoading;
+  }
+
+  get eventList(): TableRow[] {
+    const dataRequests =
+      store.state.eventTrackingList.eventTrackingList?.dataRequests || [];
+    return (
+      dataRequests
+        // TODO this filtering could probably also be done in vuetify data-table
+        .filter(
+          (dataRequests) =>
+            !this.statusFilter || this.statusFilter === dataRequests.status
+        )
+        .map((dataRequest) => {
+          return {
+            address: getFormattedAddress(
+              dataRequest.locationInformation?.contact
+            ),
+            endTime: getFormattedDate(dataRequest.end),
+            startTime: getFormattedDate(dataRequest.start),
+            generatedTime: getFormattedDate(dataRequest.requestedAt),
+            lastChange: getFormattedDate(dataRequest.lastUpdatedAt),
+            extID: dataRequest.externalRequestId || "-",
+            name: dataRequest.name || "-",
+            status: dataRequest.status?.toString() || "-",
+          };
+        })
+    );
+  }
 
   // TODO improve this - we need it to circumvent v-slot eslint errors
   // https://stackoverflow.com/questions/61344980/v-slot-directive-doesnt-support-any-modifier
@@ -140,12 +216,34 @@ export default class EventTrackingListView extends Vue {
     console.log("NOT IMPLEMENTED", item);
   }
 
-  getStatusColor(status: string): string {
-    // TODO use enum / string literals
-    if (status == "Angefragt") return "blue";
-    else if (status == "UPDATE") return "red";
-    else if (status == "Abgeschlossen") return "green";
-    else throw Error("TODO this should not happen");
+  getStatusColor(
+    status: ExistingDataRequestClientWithLocationStatusEnum
+  ): string {
+    switch (status) {
+      case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+        return "blue";
+      case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+        return "red";
+      case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+        return "green";
+      default:
+        return "gray"; // TODO
+    }
+  }
+
+  getStatusName(
+    status: ExistingDataRequestClientWithLocationStatusEnum
+  ): string {
+    switch (status) {
+      case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+        return "Angefragt";
+      case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+        return "Geliefert";
+      case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+        return "Abgeschlossen";
+      default:
+        return "Unbekannt"; // TODO find better name
+    }
   }
 }
 </script>
