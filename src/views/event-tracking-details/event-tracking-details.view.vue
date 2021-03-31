@@ -98,7 +98,11 @@
         <v-row class="mt-2">
           <v-col cols="12">
             <v-btn class="ml-2 mr-2" color="white" @click="on">Zurück </v-btn>
-            <v-btn class="mr-2 float-right" color="primary" @click="handleExport" :disabled="tableData.select.length <= 0"
+            <v-btn
+              class="mr-2 float-right"
+              color="primary"
+              @click="handleExport"
+              :disabled="tableData.select.length <= 0"
               >Auswahl exportieren
             </v-btn>
           </v-col>
