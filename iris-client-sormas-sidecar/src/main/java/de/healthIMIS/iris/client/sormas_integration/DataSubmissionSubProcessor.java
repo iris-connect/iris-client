@@ -32,7 +32,7 @@ import java.util.function.UnaryOperator;
  */
 @RequiredArgsConstructor
 @Getter
-abstract class DataSubmissionSubProcessor<T> {
+public abstract class DataSubmissionSubProcessor<T> {
 
 	protected final DataRequest request;
 	protected final TaskControllerApi taskApi;

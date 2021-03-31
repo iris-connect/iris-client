@@ -12,9 +12,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  *******************************************************************************/
-package de.healthIMIS.iris.client.sormas_integration;
+package de.healthIMIS.iris.client.core.sync;
 
-import de.healthIMIS.iris.client.sormas_integration.SyncTimes.DataTypes;
+import de.healthIMIS.iris.client.core.sync.SyncTimes.DataTypes;
 
 import org.springframework.data.repository.CrudRepository;
 

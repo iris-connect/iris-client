@@ -102,7 +102,9 @@ public class IrisClientSormasSidecarApplication {
 
 	@PostConstruct
 	public void initBouncyCastle() {
+		
 		Security.addProvider(new BouncyCastleProvider());
+		Security.setProperty("crypto.policy", "unlimited");
 	}
 
 	@Bean

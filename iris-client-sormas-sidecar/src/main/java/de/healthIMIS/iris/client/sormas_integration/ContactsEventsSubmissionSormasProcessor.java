@@ -16,7 +16,7 @@ package de.healthIMIS.iris.client.sormas_integration;
 
 import de.healthIMIS.iris.api.sidecarclient.model.ContactsAndEvents;
 import de.healthIMIS.iris.client.data_request.DataRequest;
-import de.healthIMIS.iris.client.sormas_integration.DataSubmissionJob.DataSubmissionDto;
+import de.healthIMIS.iris.client.data_submission.DataSubmissionDto;
 import de.healthIMIS.sormas.client.api.ContactControllerApi;
 import de.healthIMIS.sormas.client.api.EventControllerApi;
 import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
@@ -30,12 +30,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * @author Jens Kutzsche
  */
-public class ContactsEventsSubmissionProcessor extends DataSubmissionProcessor<ContactsAndEvents> {
+// @Service
+// @ConditionalOnBean(TaskControllerApi.class)
+public class ContactsEventsSubmissionSormasProcessor extends DataSubmissionSormasProcessor<ContactsAndEvents> {
 
 	private ContactsSubmissionProcessor contactsProcessor;
 	private EventsSubmissionProcessor eventsProcessor;
 
-	public ContactsEventsSubmissionProcessor(DataSubmissionDto submissionDto, DataRequest request, KeyStore keyStore,
+	public ContactsEventsSubmissionSormasProcessor(DataSubmissionDto submissionDto, DataRequest request,
+			KeyStore keyStore,
 			ObjectMapper mapper, TaskControllerApi sormasTaskApi, PersonControllerApi sormasPersonApi,
 			ContactControllerApi sormasContactApi, EventControllerApi sormasEventApi,
 			EventParticipantControllerApi sormasParticipantApi) {

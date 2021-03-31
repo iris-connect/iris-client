@@ -12,19 +12,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  *******************************************************************************/
-package de.healthIMIS.iris.client.sormas_integration;
+package de.healthIMIS.iris.client.data_submission;
 
 import de.healthIMIS.iris.client.core.IrisClientProperties;
 import de.healthIMIS.iris.client.core.IrisProperties;
+import de.healthIMIS.iris.client.core.sync.SyncTimes;
+import de.healthIMIS.iris.client.core.sync.SyncTimesRepository;
 import de.healthIMIS.iris.client.data_request.DataRequestManagement;
-import de.healthIMIS.sormas.client.api.CaseControllerApi;
-import de.healthIMIS.sormas.client.api.ContactControllerApi;
-import de.healthIMIS.sormas.client.api.EventControllerApi;
-import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
-import de.healthIMIS.sormas.client.api.PersonControllerApi;
-import de.healthIMIS.sormas.client.api.SampleControllerApi;
-import de.healthIMIS.sormas.client.api.TaskControllerApi;
-import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,11 +27,10 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -53,51 +46,37 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 @Slf4j
 @Profile("!inttest")
-@ConditionalOnProperty("iris.sormas.user")
 class DataSubmissionJob {
 
 	private final @NonNull SyncTimesRepository syncTimes;
-	private final @NonNull CaseControllerApi sormasCaseApi;
-	private final @NonNull PersonControllerApi sormasPersonApi;
-	private final @NonNull TaskControllerApi sormasTaskApi;
-	private final @NonNull SampleControllerApi sormasSampleApi;
-	private final @NonNull ContactControllerApi sormasContactApi;
-	private final @NonNull EventControllerApi sormasEventApi;
-	private final @NonNull EventParticipantControllerApi sormasParticipantApi;
 	private final @NonNull DataRequestManagement dataRequests;
 	private final @NonNull RestTemplate rest;
 	private final @NonNull IrisClientProperties clientProperties;
 	private final @NonNull IrisProperties properties;
 	private final @NonNull ObjectMapper mapper;
 	private final @NonNull KeyStore keyStore;
+	private final @NonNull ModelMapper modelMapper;
+	private final @NonNull DataSubmissionRepository submissions;
 
 	private long errorCounter = 0;
 
-	public DataSubmissionJob(@NonNull SyncTimesRepository syncTimes, @NonNull CaseControllerApi sormasCaseApi,
-			@NonNull PersonControllerApi sormasPersonApi, @NonNull TaskControllerApi sormasTaskApi,
-			@NonNull SampleControllerApi sormasSampleApi, @NonNull ContactControllerApi sormasContactApi,
-			@NonNull DataRequestManagement dataRequests, @NonNull EventControllerApi sormasEventApi,
-			@NonNull EventParticipantControllerApi participantControllerApi,
+	public DataSubmissionJob(@NonNull SyncTimesRepository syncTimes, @NonNull DataRequestManagement dataRequests,
 			@NonNull @Qualifier("iris-rest") RestTemplate rest, @NonNull IrisClientProperties clientProperties,
-			@NonNull IrisProperties properties, @NonNull ObjectMapper mapper, @NonNull KeyStore keyStore) {
+			@NonNull IrisProperties properties, @NonNull ObjectMapper mapper, @NonNull KeyStore keyStore,
+			@NonNull ModelMapper modelMapper, @NonNull DataSubmissionRepository submissions) {
 
 		this.syncTimes = syncTimes;
-		this.sormasCaseApi = sormasCaseApi;
-		this.sormasPersonApi = sormasPersonApi;
-		this.sormasTaskApi = sormasTaskApi;
-		this.sormasSampleApi = sormasSampleApi;
-		this.sormasContactApi = sormasContactApi;
-		this.sormasEventApi = sormasEventApi;
-		this.sormasParticipantApi = participantControllerApi;
 		this.dataRequests = dataRequests;
 		this.rest = rest;
 		this.clientProperties = clientProperties;
 		this.properties = properties;
 		this.mapper = mapper;
 		this.keyStore = keyStore;
+		this.modelMapper = modelMapper;
+		this.submissions = submissions;
 	}
 
-
+	@Scheduled(fixedDelay = 15000)
 	void run() {
 
 		log.trace("Submission job - start");
@@ -146,17 +125,19 @@ class DataSubmissionJob {
 		Arrays.stream(dtos).map(this::mapToStrategie).forEach(DataSubmissionProcessor::process);
 	}
 
-	private DataSubmissionProcessor mapToStrategie(DataSubmissionDto it) {
+	private DataSubmissionProcessor<?> mapToStrategie(DataSubmissionDto it) {
 
 		var request = dataRequests.findById(it.getRequestId()).get();
 
-		switch (it.feature) {
+		switch (it.getFeature()) {
 			case Contacts_Events:
-				return new ContactsEventsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasPersonApi,
-						sormasContactApi, sormasEventApi, sormasParticipantApi);
+				return new ContactsEventsSubmissionProcessor(it, request, keyStore, mapper);
+			// return new ContactsEventsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasPersonApi,
+			// sormasContactApi, sormasEventApi, sormasParticipantApi);
 			case Guests:
-				return new GuestsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasParticipantApi,
-						sormasPersonApi);
+				return new GuestsSubmissionProcessor(it, request, keyStore, mapper, modelMapper, submissions);
+			// return new GuestsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasParticipantApi,
+			// sormasPersonApi);
 			default:
 				return null;
 		}
@@ -180,27 +161,5 @@ class DataSubmissionJob {
 				lastSync);
 
 		log.trace("Submission job - DELETE to public server sent");
-	}
-
-	@Data
-	static class DataSubmissionDto {
-
-		private final UUID id;
-
-		private final UUID requestId;
-
-		private final UUID departmentId;
-
-		private final String secret;
-
-		private final String keyReference;
-
-		private final String encryptedData;
-
-		private final Feature feature;
-	}
-
-	public enum Feature {
-		Contacts_Events, Guests
 	}
 }

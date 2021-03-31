@@ -19,9 +19,11 @@ import static java.time.format.FormatStyle.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import de.healthIMIS.iris.client.core.SormasRefId;
+import de.healthIMIS.iris.client.core.sync.SyncTimes;
+import de.healthIMIS.iris.client.core.sync.SyncTimes.DataTypes;
+import de.healthIMIS.iris.client.core.sync.SyncTimesRepository;
 import de.healthIMIS.iris.client.data_request.DataRequest;
 import de.healthIMIS.iris.client.data_request.DataRequestManagement;
-import de.healthIMIS.iris.client.sormas_integration.SyncTimes.DataTypes;
 import de.healthIMIS.sormas.client.api.CaseControllerApi;
 import de.healthIMIS.sormas.client.api.EventControllerApi;
 import de.healthIMIS.sormas.client.api.PersonControllerApi;
