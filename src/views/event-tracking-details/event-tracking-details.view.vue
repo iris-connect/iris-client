@@ -250,7 +250,7 @@ export default class EventTrackingDetailsView extends Vue {
             ? `${new Date(duration).getHours()}h, ${new Date(
                 duration
               ).getMinutes()}min`
-            : "keine", // TODO: consider startTime and endTime
+            : "keine",
         comment: "-", // TODO: descriptionOfParticipation or additionalInformation?
         sex: dataRequest.sex ? this.getSexName(dataRequest.sex) : "-",
         email: dataRequest.email || "-",
