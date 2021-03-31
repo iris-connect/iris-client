@@ -93,7 +93,7 @@
 </template>
 <style></style>
 <script lang="ts">
-import { ExistingDataRequestClientWithLocationStatusEnum, Sex } from "@/api";
+import { DataRequestDetailsStatusEnum, Sex } from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
@@ -223,8 +223,8 @@ export default class EventTrackingDetailsView extends Vue {
   get statusDataRequested(): boolean {
     if (!store.state.eventTrackingDetails.eventTrackingDetails) return false;
     return (
-      (store.state.eventTrackingDetails.eventTrackingDetails?.status || "") ===
-      ExistingDataRequestClientWithLocationStatusEnum.DataRequested
+      store.state.eventTrackingDetails.eventTrackingDetails.status ===
+      DataRequestDetailsStatusEnum.DataRequested
     );
   }
 

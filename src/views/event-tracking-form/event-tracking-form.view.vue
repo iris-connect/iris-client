@@ -2,7 +2,6 @@
   <v-card>
     <v-form ref="form" v-model="form.valid" lazy-validation>
       <v-card-title>Ereignis-Nachverfolgung starten</v-card-title>
-      <v-card-subtitle>DISCLAIMER: DEMO FORMULAR - NICHT FINAL</v-card-subtitle>
       <v-card-text style="padding-bottom: 0px">
         <v-row>
           <v-col>
