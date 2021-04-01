@@ -95,7 +95,12 @@
 </template>
 <style></style>
 <script lang="ts">
-import { DataRequestDetailsStatusEnum, LocationContact, Sex } from "@/api";
+import {
+  Address,
+  DataRequestDetails,
+  DataRequestDetailsStatusEnum,
+  Sex,
+} from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
@@ -122,13 +127,29 @@ type TableRow = {
   sex: string;
   email: string;
   phone: string;
-  mobilPhone: string;
+  mobilePhone: string;
   address: string;
 };
 
-function getFormattedAddress(contact?: LocationContact) {
-  if (contact) {
-    return `${contact.officialName}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+function getFormattedAddressWithContact(
+  data: DataRequestDetails | null
+): string {
+  if (data) {
+    if (data.locationInformation) {
+      const contact = data.locationInformation.contact;
+      if (contact) {
+        return `${data.locationInformation.name}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+      }
+      return data.locationInformation.name;
+    }
+    return "-";
+  }
+  return "-";
+}
+
+function getFormattedAddress(address?: Address | null): string {
+  if (address) {
+    return `${address.street} ${address.houseNumber}, ${address.zipCode} ${address.city}`;
   }
   return "-";
 }
@@ -207,7 +228,7 @@ export default class EventTrackingDetailsView extends Vue {
     return {
       extID: dataRequest?.externalRequestId || "-",
       name: dataRequest?.name || "-",
-      address: getFormattedAddress(dataRequest?.locationInformation?.contact),
+      address: getFormattedAddressWithContact(dataRequest),
       startTime: dataRequest?.start
         ? `${new Date(dataRequest.start).toLocaleDateString(
             "de-DE"
@@ -237,36 +258,56 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   get guests(): TableRow[] {
-    const dataRequests =
+    // TODO attendanceInformation is optional
+    const guests =
       store.state.eventTrackingDetails.eventTrackingDetails?.guests || [];
     const eventDataRequest =
       store.state.eventTrackingDetails.eventTrackingDetails;
-    return dataRequests.map((dataRequest, index) => {
-      const checkOut = new Date(dataRequest.attendanceInformation.attendTo);
-      const checkIn = new Date(dataRequest.attendanceInformation.attendFrom);
+    return guests.map((guest, index) => {
+      const attendTo = guest.attendanceInformation?.attendTo;
+      const checkOut = attendTo ? new Date(attendTo) : null;
+
+      const attendFrom = guest.attendanceInformation?.attendFrom;
+      const checkIn = attendFrom ? new Date(attendFrom) : null;
+
       const startTime = eventDataRequest?.start
         ? new Date(eventDataRequest.start)
         : checkIn;
       const endTime = eventDataRequest?.end
         ? new Date(eventDataRequest.end)
         : checkOut;
-      const duration =
-        Math.min(checkOut.valueOf(), endTime.valueOf()) -
-        Math.max(checkIn.valueOf(), startTime.valueOf());
+
+      let checkInTime = "-";
+      if (checkIn && startTime) {
+        checkInTime = `${checkIn.toLocaleDateString(
+          "de-DE"
+        )}, ${checkIn.toLocaleTimeString("de-DE")}`;
+      }
+
+      let checkOutTime = "-";
+      if (checkOut) {
+        checkOutTime = `${checkOut.toLocaleDateString(
+          "de-DE"
+        )}, ${checkOut.toLocaleTimeString("de-DE")}`;
+      }
+
+      // min(iE, cE)-max(iS, cS)
+      // |--------------| TIME INFECTED PERSON _i Started and Ended_ AT LOCATION
+      //       |----------------| TIME CONTACT PERSON _c Started and Ended_ AT LOCATION
+      //       |--------| RELEVANT
+
+      let duration = 0;
+      if (checkOut && checkIn && startTime && endTime) {
+        duration =
+          Math.min(checkOut.valueOf(), endTime.valueOf()) -
+          Math.max(checkIn.valueOf(), startTime.valueOf());
+      }
       return {
         id: index,
-        lastName: dataRequest.lastName || "-",
-        firstName: dataRequest.firstName || "-",
-        checkInTime: `${new Date(
-          dataRequest.attendanceInformation.attendFrom
-        ).toLocaleDateString("de-DE")}, ${new Date(
-          dataRequest.attendanceInformation.attendFrom
-        ).toLocaleTimeString("de-DE")}`,
-        checkOutTime: `${new Date(
-          dataRequest.attendanceInformation.attendTo
-        ).toLocaleDateString("de-DE")}, ${new Date(
-          dataRequest.attendanceInformation.attendTo
-        ).toLocaleTimeString("de-DE")}`,
+        lastName: guest.lastName || "-",
+        firstName: guest.firstName || "-",
+        checkInTime,
+        checkOutTime,
         maxDuration:
           duration > 0
             ? `${new Date(duration).getHours()}h, ${new Date(
@@ -274,11 +315,11 @@ export default class EventTrackingDetailsView extends Vue {
               ).getMinutes()}min`
             : "keine",
         comment: "-", // TODO: descriptionOfParticipation or additionalInformation?
-        sex: dataRequest.sex ? this.getSexName(dataRequest.sex) : "-",
-        email: dataRequest.email || "-",
-        phone: dataRequest.phone || "-",
-        mobilPhone: dataRequest.mobilePhone || "-",
-        address: dataRequest.address?.street || "-",
+        sex: guest.sex ? this.getSexName(guest.sex) : "-",
+        email: guest.email || "-",
+        phone: guest.phone || "-",
+        mobilePhone: guest.mobilePhone || "-",
+        address: getFormattedAddress(guest.address),
       };
     });
   }
