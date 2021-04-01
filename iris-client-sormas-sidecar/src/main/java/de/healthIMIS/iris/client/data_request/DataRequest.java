@@ -14,11 +14,8 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_request;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import de.healthIMIS.iris.client.core.Aggregate;
 import de.healthIMIS.iris.client.core.Id;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,10 +25,14 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * @author Jens Kutzsche
@@ -62,7 +63,7 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	private Set<Feature> features;
 
 	@Column(nullable = false) @Enumerated(EnumType.STRING)
-	private Status status = Status.DATA_REQUESTED;
+	private @Setter Status status = Status.DATA_REQUESTED;
 
 	public DataRequest(String refId, String name, Instant requestStart, Instant requestEnd, String requestDetails,
 			String hdUserId, Location location, Set<Feature> features) {

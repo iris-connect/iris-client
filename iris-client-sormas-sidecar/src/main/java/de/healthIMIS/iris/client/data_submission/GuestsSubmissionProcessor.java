@@ -16,6 +16,8 @@ package de.healthIMIS.iris.client.data_submission;
 
 import de.healthIMIS.iris.api.sidecarclient.model.GuestList;
 import de.healthIMIS.iris.client.data_request.DataRequest;
+import de.healthIMIS.iris.client.data_request.DataRequest.Status;
+import de.healthIMIS.iris.client.data_request.DataRequestManagement;
 import de.healthIMIS.iris.client.data_submission.entities.DataSubmission;
 import de.healthIMIS.iris.client.data_submission.entities.Guest;
 import de.healthIMIS.iris.client.data_submission.entities.GuestListDataProvider;
@@ -38,14 +40,17 @@ public class GuestsSubmissionProcessor extends DataSubmissionProcessor<GuestList
 
 	private @NonNull ModelMapper mapper;
 	private @NonNull DataSubmissionRepository submissions;
+	private @NonNull DataRequestManagement dataRequests;
 
 	public GuestsSubmissionProcessor(DataSubmissionDto submissionDto, DataRequest request, KeyStore keyStore,
-			ObjectMapper mapper, @NonNull ModelMapper modelMapper, @NonNull DataSubmissionRepository submissions) {
+			ObjectMapper mapper, @NonNull ModelMapper modelMapper, @NonNull DataSubmissionRepository submissions,
+			@NonNull DataRequestManagement dataRequests) {
 
 		super(submissionDto, GuestList.class, request, keyStore, mapper);
 
 		this.mapper = modelMapper;
 		this.submissions = submissions;
+		this.dataRequests = dataRequests;
 		// this.sormasParticipantApi = sormasParticipantApi;
 		// this.sormasPersonApi = sormasPersonApi;
 	}
@@ -59,12 +64,17 @@ public class GuestsSubmissionProcessor extends DataSubmissionProcessor<GuestList
 
 		var dataProvider = mapper.map(guestList.getDataProvider(), GuestListDataProvider.class);
 
-		var submission = new DataSubmission(getRequest(), guests, dataProvider, guestList.getAdditionalInformation(),
+		DataRequest request = getRequest();
+
+		var submission = new DataSubmission(request, guests, dataProvider, guestList.getAdditionalInformation(),
 				guestList.getStartDate(), guestList.getEndDate());
 
 		guests.forEach(it -> it.setSubmission(submission));
 
 		submissions.save(submission);
+
+		request.setStatus(Status.DATA_RECEIVED);
+		dataRequests.save(request);
 
 		// for (var guestDto : guestList.getGuests()) {
 

@@ -135,7 +135,7 @@ class DataSubmissionJob {
 			// return new ContactsEventsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasPersonApi,
 			// sormasContactApi, sormasEventApi, sormasParticipantApi);
 			case Guests:
-				return new GuestsSubmissionProcessor(it, request, keyStore, mapper, modelMapper, submissions);
+				return new GuestsSubmissionProcessor(it, request, keyStore, mapper, modelMapper, submissions, dataRequests);
 			// return new GuestsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasParticipantApi,
 			// sormasPersonApi);
 			default:

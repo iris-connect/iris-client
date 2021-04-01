@@ -79,6 +79,10 @@ public class DataRequestManagement {
 		return requests.findById(DataRequestIdentifier.of(uuid));
 	}
 
+	public DataRequest save(DataRequest request) {
+		return requests.save(request);
+	}
+
 	public DataRequest createContactEventRequest(String refId, String name, Instant startDate,
 			Option<Instant> endDate, String hdUserId) {
 
