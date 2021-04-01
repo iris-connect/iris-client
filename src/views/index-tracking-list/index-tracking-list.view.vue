@@ -35,7 +35,7 @@
                 color="primary"
                 v-bind="attrs"
                 @click="on"
-                >Neue Infexfallverfolgung starten
+                >Neue Indexfallverfolgung starten
               </v-btn>
             </template>
           </v-dialog>
