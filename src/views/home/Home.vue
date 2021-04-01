@@ -16,7 +16,7 @@
           count="23"
           actionlabel="Zur Indexübersicht"
           image="sketch_medicine.svg"
-          actionlink="events/list"
+          actionlink="cases/list"
         ></counter-widget>
       </v-col>
       <v-col>
@@ -50,8 +50,8 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn color="primary" :to="{ name: 'event-list' }" class="mb-5"
-                  >Neu Fall indexieren
+                <v-btn color="primary" :to="{ name: 'index-list' }" class="mb-5"
+                  >Neuen Fall indexieren
                 </v-btn>
               </v-col>
             </v-row>
@@ -193,7 +193,10 @@ export default class Home extends Vue {
 <style lang="scss" scoped>
 .home {
   > * {
-    margin: 1em;
+    margin-top: 1em;
+    &:last-child {
+      margin-bottom: 1em;
+    }
   }
 }
 </style>

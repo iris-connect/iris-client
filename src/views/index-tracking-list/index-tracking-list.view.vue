@@ -1,5 +1,18 @@
 <template>
-  <div>
+  <div v-if="workInProgress" class="work-in-progress">
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-card-title>Indexfallverfolgung</v-card-title>
+          <v-card-text>
+            Hier erhalten Sie in Kürze eine Übersicht der Indexfälle sowie die
+            Möglichkeit, eine neue Indexfallverfolgung zu starten.
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
+  <div v-else>
     <v-row>
       <v-col cols="8">
         <div class="mb-6">
@@ -77,6 +90,7 @@ import EventTrackingFormView from "../event-tracking-form/event-tracking-form.vi
   },
 })
 export default class EventTrackingListView extends Vue {
+  workInProgress = true;
   tableData = {
     search: "",
     headers: [
@@ -131,3 +145,12 @@ export default class EventTrackingListView extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.work-in-progress {
+  & > * {
+    margin-bottom: 1em;
+    margin-top: 1em;
+  }
+}
+</style>
