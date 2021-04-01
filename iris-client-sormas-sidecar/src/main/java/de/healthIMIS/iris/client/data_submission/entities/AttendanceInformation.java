@@ -14,8 +14,8 @@ package de.healthIMIS.iris.client.data_submission.entities;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
@@ -23,7 +23,7 @@ import java.time.OffsetDateTime;
 import javax.persistence.Embeddable;
 
 @Embeddable
-@Getter
+@Data
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
