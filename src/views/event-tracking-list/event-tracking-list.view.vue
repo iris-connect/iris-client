@@ -69,7 +69,6 @@
             <v-btn
               color="primary"
               :to="{ name: 'event-details', params: { id: item.code } }"
-              @click="selectItem(item)"
             >
               Details
             </v-btn>
