@@ -126,9 +126,6 @@ services:
 
   iris-location:
     image: inoeg/iris-location-service:0.0.1-SNAPSHOT
-    depends_on:
-      postgres:
-        condition: service_healthy
     ports:
       - 8080:8080
     restart: unless-stopped
@@ -151,8 +148,6 @@ services:
         condition: service_healthy
       iris-public: 
         condition: service_started
-    ports:
-      - 8092
     env_file:
       # you must use this file set the access parameters for SORMAS 
       - iris-sormas.env
