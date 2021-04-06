@@ -19,7 +19,7 @@ export type EventTrackingFormState = {
 export interface EventTrackingFormModule
   extends Module<EventTrackingFormState, RootState> {
   mutations: {
-    setSelectedEventLocations(
+    setSelectedEventLocation(
       state: EventTrackingFormState,
       location: LocationInformation | null
     ): void;
@@ -35,6 +35,7 @@ export interface EventTrackingFormModule
       state: EventTrackingFormState,
       payload: boolean
     ): void;
+    reset(state: EventTrackingFormState, payload: null): void;
   };
   actions: {
     fetchEventLocations(
@@ -48,18 +49,20 @@ export interface EventTrackingFormModule
   };
 }
 
-const productDetail: EventTrackingFormModule = {
+const defaultState: EventTrackingFormState = {
+  selectedLocation: null,
+  locations: null,
+  locationsLoading: false,
+  eventCreationOngoing: false,
+};
+
+const eventTrackingForm: EventTrackingFormModule = {
   namespaced: true,
   state() {
-    return {
-      selectedLocation: null,
-      locations: null,
-      locationsLoading: false,
-      eventCreationOngoing: false,
-    };
+    return { ...defaultState };
   },
   mutations: {
-    setSelectedEventLocations(state, location) {
+    setSelectedEventLocation(state, location) {
       state.selectedLocation = location;
     },
     setEventLocations(state, locations) {
@@ -70,6 +73,9 @@ const productDetail: EventTrackingFormModule = {
     },
     setEventCreationOngoing(state, loading: boolean) {
       state.eventCreationOngoing = loading;
+    },
+    reset(state) {
+      Object.assign(state, { ...defaultState });
     },
   },
   actions: {
@@ -103,4 +109,4 @@ const productDetail: EventTrackingFormModule = {
   },
 };
 
-export default productDetail;
+export default eventTrackingForm;

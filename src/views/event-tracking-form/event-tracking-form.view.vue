@@ -1,25 +1,26 @@
 <template>
   <v-card>
-    <v-form ref="form" v-model="form.valid" lazy-validation>
+    <v-form
+      ref="form"
+      v-model="form.valid"
+      lazy-validation
+      :disabled="eventCreationOngoing"
+    >
       <v-card-title>Ereignis-Nachverfolgung starten</v-card-title>
       <v-card-text style="padding-bottom: 0px">
         <v-row>
           <v-col>
             <v-text-field
               v-model="form.model.externalId"
-              :disabled="eventCreationOngoing"
               :rules="form.rules.defined"
               label="Externe ID"
-              width="200px"
             ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field
               v-model="form.model.name"
-              :disabled="eventCreationOngoing"
               :rules="form.rules.defined"
               label="Name"
-              width="200px"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -94,83 +95,37 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col>
-            <v-menu
-              v-model="form.showDatePicker"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              max-width="290px"
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  label="Datum (Beginn)"
-                  readonly
-                  :value="form.model.date"
-                  v-on="on"
-                  :rules="form.rules.defined"
-                  required
-                  prepend-icon="mdi-calendar"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                locale="en-in"
-                v-model="form.model.date"
-                no-title
-                @input="form.showDatePicker = false"
-              ></v-date-picker>
-            </v-menu>
+          <v-col cols="12" sm="6" md="3">
+            <date-input-field
+              v-model="form.model.date"
+              label="Datum (Beginn)"
+              :rules="form.rules.defined"
+              required
+            />
           </v-col>
-          <v-col>
-            <v-text-field
+          <v-col cols="12" sm="6" md="3">
+            <time-input-field
               v-model="form.model.time.from"
-              :disabled="eventCreationOngoing"
-              :rules="form.rules.time"
               label="Uhrzeit (Beginn)"
-              prepend-icon="mdi-clock"
-              required
-            ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-menu
-              v-model="form.showDatePickerEnd"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              max-width="290px"
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  label="Datum (Ende)"
-                  readonly
-                  :value="form.model.dateEnd"
-                  v-on="on"
-                  :rules="form.rules.defined"
-                  required
-                  prepend-icon="mdi-calendar"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                locale="en-in"
-                v-model="form.model.dateEnd"
-                no-title
-                @input="form.showDatePickerEnd = false"
-              ></v-date-picker>
-            </v-menu>
-          </v-col>
-          <v-col>
-            <v-text-field
-              v-model="form.model.time.till"
-              :disabled="eventCreationOngoing"
               :rules="form.rules.time"
-              label="Uhrzeit (Ende)"
               required
-              prepend-icon="mdi-clock"
-            ></v-text-field>
+            />
+          </v-col>
+          <v-col cols="12" sm="6" md="3">
+            <date-input-field
+              v-model="form.model.dateEnd"
+              label="Datum (Ende)"
+              :rules="form.rules.defined"
+              required
+            />
+          </v-col>
+          <v-col cols="12" sm="6" md="3">
+            <time-input-field
+              v-model="form.model.time.till"
+              label="Uhrzeit (Ende)"
+              :rules="form.rules.time"
+              required
+            />
           </v-col>
         </v-row>
         <v-row>
@@ -214,6 +169,8 @@ import {
   DataRequestDetails,
 } from "@/api";
 import router from "@/router";
+import TimeInputField from "@/components/form/time-input-field.vue";
+import DateInputField from "@/components/form/date-input-field.vue";
 
 type LocationInformationTableRow = {
   address: string;
@@ -237,7 +194,17 @@ function getDateWithTime(date: string, time: string): string {
   return updated.toISOString();
 }
 
-@Component
+@Component({
+  components: {
+    DateInputField,
+    TimeInputField,
+    EventTrackingFormView: EventTrackingFormView,
+  },
+  beforeRouteLeave(to, from, next) {
+    store.commit("eventTrackingForm/reset");
+    next();
+  },
+})
 export default class EventTrackingFormView extends Vue {
   $refs!: {
     form: HTMLFormElement;
@@ -292,8 +259,6 @@ export default class EventTrackingFormView extends Vue {
         till: "",
       },
     },
-    showDatePicker: false,
-    showDatePickerEnd: false,
     rules: {
       time: [
         (v: string): string | boolean => !!v || "Pflichtfeld",
@@ -323,7 +288,7 @@ export default class EventTrackingFormView extends Vue {
   // TODO create type for item
   selectItem(item: { location: LocationInformation }): void {
     console.log(item);
-    store.commit("eventTrackingForm/setSelectedEventLocations", item.location);
+    store.commit("eventTrackingForm/setSelectedEventLocation", item.location);
     this.dialog = false;
   }
   async submit(): Promise<void> {

@@ -20,6 +20,7 @@ export interface EventTrackingDetailsModule
       state: EventTrackingDetailsState,
       payload: boolean
     ): void;
+    reset(state: EventTrackingDetailsState, payload: null): void;
   };
   actions: {
     fetchEventTrackingDetails(
@@ -29,13 +30,15 @@ export interface EventTrackingDetailsModule
   };
 }
 
+const defaultState: EventTrackingDetailsState = {
+  eventTrackingDetails: null,
+  eventTrackingDetailsLoading: false,
+};
+
 const eventTrackingDetails: EventTrackingDetailsModule = {
   namespaced: true,
   state() {
-    return {
-      eventTrackingDetails: null,
-      eventTrackingDetailsLoading: false,
-    };
+    return { ...defaultState };
   },
   mutations: {
     setEventTrackingDetails(state, eventTrackingDetails) {
@@ -43,6 +46,9 @@ const eventTrackingDetails: EventTrackingDetailsModule = {
     },
     setEventTrackingDetailsLoading(state, loading) {
       state.eventTrackingDetailsLoading = loading;
+    },
+    reset(state) {
+      Object.assign(state, { ...defaultState });
     },
   },
   actions: {
