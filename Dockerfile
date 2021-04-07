@@ -1,7 +1,8 @@
-FROM node:lts-alpine
+FROM caddy/caddy:2.3.0-alpine
 
-# install simple http server for serving static content
-RUN npm install -g http-server
+# TODO: update to node 14 as soon as caddy uses newer alpine version
+# install node + npm
+RUN apk add --no-cache nodejs=12.21.0-r0 npm=12.21.0-r0
 
 # make the 'app' folder the current working directory
 WORKDIR /app
@@ -10,7 +11,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # install project dependencies
-RUN npm install
+RUN npm ci
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
@@ -18,10 +19,11 @@ COPY . .
 # build app for production with minification
 RUN npm run build
 
-# 404.html will be served if a file is not found. 
-# This can be used for Single-Page App (SPA) hosting to serve the entry page.
-# https://www.npmjs.com/package/http-server
-RUN mv dist/index.html dist/404.html
+# copy build artifacts to webserver root
+COPY dist /usr/share/caddy
 
+# copy webserver configuration
+COPY ./Caddyfile /etc/caddy/Caddyfile
+
+# note: exposed port needs to match port in Caddyfile
 EXPOSE 28080
-CMD [ "http-server", "dist", "--port", "28080" ]
