@@ -24,77 +24,42 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <v-row>
-          <event-tracking-location-select />
-          <v-col v-if="selectedLocation">
-            <span>
-              {{ selectedLocation }}
-            </span>
-          </v-col>
-          <v-col>
-            <v-dialog v-model="dialog">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
-                  <span v-if="!selectedLocation"> Addresse auswählen </span>
-                  <span v-else> Addresse ändern </span>
-                </v-btn>
-              </template>
-
-              <v-card>
-                <v-card-title class="headline grey lighten-2">
-                  Adresse auswählen
-                </v-card-title>
-
-                <v-card-text>
-                  <v-row class="mt-6 mb-6">
-                    <v-col>
-                      <v-text-field
-                        v-model="locationSearchFormSearchText"
-                        :disabled="locationsLoading"
-                        append-icon="mdi-magnify"
-                        label="Suche nach Name/Adresse"
-                        single-line
-                        hide-details
-                        @keydown.enter="
-                          performSearch(locationSearchFormSearchText)
-                        "
-                      ></v-text-field>
-                    </v-col>
-                    <v-col>
-                      <v-btn
-                        :disabled="locationsLoading"
-                        @click="performSearch(locationSearchFormSearchText)"
-                      >
-                        Lokation Suchen
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                  <v-data-table
-                    :loading="locationsLoading"
-                    :headers="searchTable.headers"
-                    :items="locations"
-                    :items-per-page="5"
-                    class="elevation-1 twolineTable"
+        <location-select-dialog
+          v-model="form.model.location"
+          :locations="locations"
+          :disabled="locationsLoading"
+          @search="handleLocationSearch"
+        >
+          <template v-slot:activator="{ on, attrs, selectedFormattedLocation }">
+            <v-row>
+              <v-col v-if="selectedFormattedLocation">
+                <span>
+                  {{ selectedFormattedLocation }}
+                </span>
+              </v-col>
+              <v-col>
+                <v-input
+                  v-model="form.model.location"
+                  :rules="form.rules.location"
+                >
+                  <v-btn
+                    color="red lighten-2"
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                    :disabled="eventCreationOngoing"
                   >
-                    <template v-slot:[itemActionSlotName]="{ item }">
-                      <v-btn color="primary" @click="selectItem(item)">
-                        Wählen
-                      </v-btn>
-                    </template>
-                  </v-data-table>
-                </v-card-text>
-
-                <v-divider></v-divider>
-
-                <v-card-actions>
-                  <v-btn color="secondary" text @click="dialog = false">
-                    Abbrechen
+                    {{
+                      selectedFormattedLocation
+                        ? "Lokation ändern"
+                        : "Lokation auswählen"
+                    }}
                   </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-col>
-        </v-row>
+                </v-input>
+              </v-col>
+            </v-row>
+          </template>
+        </location-select-dialog>
         <v-row>
           <v-col cols="12" sm="6" md="3">
             <date-input-field
@@ -164,27 +129,14 @@
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 import {
-  LocationAddress,
   DataRequestClient,
   LocationInformation,
   DataRequestDetails,
 } from "@/api";
 import router from "@/router";
-import TimeInputField from "@/components/form/time-input-field.vue";
-import DateInputField from "@/components/form/date-input-field.vue";
-import EventTrackingLocationSelect from "@/components/event-tracking-location-select/event-tracking-location-select.vue";
-
-type LocationInformationTableRow = {
-  address: string;
-  // category: string;
-  contactPerson: string;
-  mail: string;
-  phone: string;
-};
-
-function getFormattedAddress(address: LocationAddress) {
-  return `${address.street}, ${address.zip} ${address.city}`;
-}
+import TimeInputField from "@/views/event-tracking-form/components/form/time-input-field.vue";
+import DateInputField from "@/views/event-tracking-form/components/form/date-input-field.vue";
+import LocationSelectDialog from "@/views/event-tracking-form/components/location-select-dialog.vue";
 
 function getDateWithTime(date: string, time: string): string {
   // TODO check if we need to consider timezones
@@ -198,7 +150,7 @@ function getDateWithTime(date: string, time: string): string {
 
 @Component({
   components: {
-    EventTrackingLocationSelect,
+    LocationSelectDialog,
     DateInputField,
     TimeInputField,
     EventTrackingFormView: EventTrackingFormView,
@@ -213,10 +165,6 @@ export default class EventTrackingFormView extends Vue {
     form: HTMLFormElement;
   };
 
-  dialog = false;
-
-  locationSearchFormSearchText = "";
-
   get eventCreationOngoing(): boolean {
     return store.state.eventTrackingForm.eventCreationOngoing;
   }
@@ -225,28 +173,12 @@ export default class EventTrackingFormView extends Vue {
     return store.state.eventTrackingForm.locationsLoading;
   }
 
-  get selectedLocation(): string | null {
-    const location = store.state.eventTrackingForm.selectedLocation;
-    if (location) {
-      return `${location.contact.officialName}, ${getFormattedAddress(
-        location.contact.address
-      )}`;
-    }
-    return null;
+  get locations(): LocationInformation[] {
+    return store.state.eventTrackingForm.locations;
   }
 
-  get locations(): LocationInformationTableRow[] {
-    return (store.state.eventTrackingForm.locations || []).map((location) => {
-      return {
-        name: location.name || "-",
-        address: getFormattedAddress(location.contact.address) || "-",
-        // category: location.contact.representative || "-",
-        contactPerson: location.contact.representative || "-",
-        mail: location.contact.email || "-",
-        phone: location.contact.phone || "-",
-        location,
-      };
-    });
+  async handleLocationSearch(searchText: string): Promise<void> {
+    await store.dispatch("eventTrackingForm/fetchEventLocations", searchText);
   }
 
   homeRoute = "/";
@@ -261,6 +193,7 @@ export default class EventTrackingFormView extends Vue {
         from: "",
         till: "",
       },
+      location: null,
     },
     rules: {
       time: [
@@ -268,37 +201,18 @@ export default class EventTrackingFormView extends Vue {
         (v: string): string | boolean => /\d\d:\d\d/.test(v) || "Format HH:mm",
       ],
       defined: [(v: unknown): string | boolean => !!v || "Pflichtfeld"],
+      location: [
+        (v: LocationInformation): string | boolean => {
+          return !!v || "Bitte wählen Sie eine Lokation aus";
+        },
+      ],
     },
     valid: false,
   };
-  searchTable = {
-    search: "rep",
-    headers: [
-      {
-        text: "Name",
-        align: "start",
-        sortable: true,
-        value: "name",
-      },
-      { text: "Adresse", value: "address" },
-      // { text: "Kategorie", value: "category" },
-      { text: "Ansprechpartner", value: "contactPerson" },
-      { text: "Mail", value: "mail" },
-      { text: "Telefon", value: "phone" },
-      { text: "", value: "actions", sortable: false },
-    ],
-  };
-  // TODO create type for item
-  selectItem(item: { location: LocationInformation }): void {
-    console.log(item);
-    store.commit("eventTrackingForm/setSelectedEventLocation", item.location);
-    this.dialog = false;
-  }
+
   async submit(): Promise<void> {
     const valid = this.$refs.form.validate() as boolean;
-    const location = store.state.eventTrackingForm.selectedLocation;
-
-    if (valid && location) {
+    if (valid) {
       const payload: DataRequestClient = {
         // TODO validate start < end
         start: getDateWithTime(this.form.model.date, this.form.model.time.from),
@@ -307,8 +221,8 @@ export default class EventTrackingFormView extends Vue {
           this.form.model.time.till
         ),
         name: this.form.model.name,
-        locationId: location?.id,
-        providerId: location?.providerId,
+        locationId: this.form.model.location?.id,
+        providerId: this.form.model.location?.providerId,
         externalRequestId: this.form.model.externalId,
       };
       const created: DataRequestDetails = await store.dispatch(
@@ -322,20 +236,6 @@ export default class EventTrackingFormView extends Vue {
         },
       });
     }
-  }
-
-  async performSearch(searchText: string): Promise<void> {
-    await store.dispatch("eventTrackingForm/fetchEventLocations", searchText);
-  }
-
-  on(): void {
-    console.log("NOT IMPLEMENTED");
-  }
-
-  // TODO improve this - we need it to circumvent v-slot eslint errors
-  // https://stackoverflow.com/questions/61344980/v-slot-directive-doesnt-support-any-modifier
-  get itemActionSlotName(): string {
-    return "item.actions";
   }
 }
 </script>

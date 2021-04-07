@@ -10,7 +10,6 @@ import { RootState } from "@/store/types";
 import { Commit, Module } from "vuex";
 
 export type EventTrackingFormState = {
-  selectedLocation: LocationInformation | null;
   locations: LocationInformation[] | null;
   locationsLoading: boolean;
   eventCreationOngoing: boolean;
@@ -19,10 +18,6 @@ export type EventTrackingFormState = {
 export interface EventTrackingFormModule
   extends Module<EventTrackingFormState, RootState> {
   mutations: {
-    setSelectedEventLocation(
-      state: EventTrackingFormState,
-      location: LocationInformation | null
-    ): void;
     setEventLocations(
       state: EventTrackingFormState,
       locations: LocationInformation[] | null
@@ -50,7 +45,6 @@ export interface EventTrackingFormModule
 }
 
 const defaultState: EventTrackingFormState = {
-  selectedLocation: null,
   locations: null,
   locationsLoading: false,
   eventCreationOngoing: false,
@@ -62,9 +56,6 @@ const eventTrackingForm: EventTrackingFormModule = {
     return { ...defaultState };
   },
   mutations: {
-    setSelectedEventLocation(state, location) {
-      state.selectedLocation = location;
-    },
     setEventLocations(state, locations) {
       state.locations = locations;
     },

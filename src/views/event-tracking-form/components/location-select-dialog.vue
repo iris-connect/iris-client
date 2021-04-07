@@ -1,15 +1,10 @@
 <template>
   <v-dialog v-model="dialog">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        color="red lighten-2"
-        dark
-        v-bind="attrs"
-        v-on="on"
-        :disabled="isDisabled"
-      >
-        {{ model ? "Lokation ändern" : "Lokation auswählen" }}
-      </v-btn>
+      <slot
+        name="activator"
+        v-bind="{ on, attrs, selectedFormattedLocation }"
+      ></slot>
     </template>
     <v-card>
       <v-card-title class="headline grey lighten-2">
@@ -20,7 +15,7 @@
           <v-col>
             <v-text-field
               v-model="search"
-              :disabled="isDisabled"
+              :disabled="disabled"
               append-icon="mdi-magnify"
               label="Suche nach Name/Adresse"
               single-line
@@ -29,13 +24,13 @@
             />
           </v-col>
           <v-col>
-            <v-btn :disabled="isDisabled" @click="handleSearch(search)">
+            <v-btn :disabled="disabled" @click="handleSearch(search)">
               Lokation Suchen
             </v-btn>
           </v-col>
         </v-row>
         <v-data-table
-          :loading="isDisabled"
+          :loading="disabled"
           :headers="tableProps.headers"
           :items="locationRows"
           :items-per-page="5"
@@ -58,28 +53,40 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import {
-  IrisClientFrontendApiFactory,
-  LocationAddress,
-  LocationInformation,
-} from "@/api";
-import { clientConfig } from "@/main";
+import { LocationAddress, LocationInformation } from "@/api";
 import { join } from "@/utils/misc";
+
+const getFormattedLocation = (location: LocationInformation): string | null => {
+  if (location) {
+    return `${location.contact.officialName}, ${getFormattedAddress(
+      location.contact.address
+    )}`;
+  }
+  return null;
+};
+
+const getFormattedAddress = (address: LocationAddress): string => {
+  const { street, zip, city } = address;
+  return join([street, zip, city], ", ");
+};
 
 type LocationInformationTableRow = {
   address: string;
-  // category: string;
   representative: string;
   mail: string;
   phone: string;
   location: LocationInformation;
 };
 
-const EventTrackingLocationSelectProps = Vue.extend({
+const EventTrackingFormLocationSelectProps = Vue.extend({
   props: {
     value: {
       type: Object as () => LocationInformation,
       default: null,
+    },
+    locations: {
+      type: Array as () => LocationInformation[],
+      default: () => [],
     },
     disabled: {
       type: Boolean,
@@ -89,26 +96,27 @@ const EventTrackingLocationSelectProps = Vue.extend({
 });
 
 @Component
-export default class EventTrackingLocationSelect extends EventTrackingLocationSelectProps {
-  client = IrisClientFrontendApiFactory(clientConfig);
+export default class EventTrackingFormLocationSelect extends EventTrackingFormLocationSelectProps {
   dialog = false;
-  locations: LocationInformation[] = [];
-  loading = false;
   search = "";
-  get isDisabled(): boolean {
-    return this.loading || this.disabled;
+
+  get model(): LocationInformation {
+    return this.value;
   }
+  set model(value: LocationInformation) {
+    this.$emit("input", value);
+  }
+
+  get selectedFormattedLocation(): string {
+    return getFormattedLocation(this.model);
+  }
+
   get locationRows(): LocationInformationTableRow[] {
-    const getFormattedAddress = (address: LocationAddress) => {
-      const { street, zip, city } = address;
-      return join([street, zip, city], ", ");
-    };
-    return this.locations.map((location) => {
+    return (this.locations || []).map((location) => {
       const { name, contact } = location;
       return {
         name: name || "-",
         address: getFormattedAddress(contact.address) || "-",
-        // category: location.contact.representative || "-",
         representative: contact.representative || "-",
         email: contact.email || "-",
         phone: contact.phone || "-",
@@ -116,6 +124,7 @@ export default class EventTrackingLocationSelect extends EventTrackingLocationSe
       };
     });
   }
+
   tableProps = {
     search: "rep",
     headers: [
@@ -126,34 +135,20 @@ export default class EventTrackingLocationSelect extends EventTrackingLocationSe
         value: "name",
       },
       { text: "Adresse", value: "address" },
-      // { text: "Kategorie", value: "category" },
       { text: "Ansprechpartner", value: "representative" },
       { text: "Mail", value: "email" },
       { text: "Telefon", value: "phone" },
       { text: "", value: "actions", sortable: false },
     ],
   };
+
   handleSelect(item: { location: LocationInformation }): void {
     this.model = item.location;
     this.dialog = false;
   }
-  async handleSearch(searchText: string): Promise<void> {
-    this.loading = true;
-    try {
-      this.locations = (
-        await this.client.searchSearchKeywordGet(searchText)
-      ).data.locations;
-    } catch (error) {
-      console.log(error, error);
-    }
-    this.loading = false;
-  }
 
-  get model(): LocationInformation {
-    return this.value;
-  }
-  set model(value: LocationInformation) {
-    this.$emit("input", value);
+  handleSearch(searchText: string): void {
+    this.$emit("search", searchText);
   }
 }
 </script>
