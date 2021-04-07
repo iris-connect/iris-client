@@ -52,7 +52,25 @@ We are using caddy as webserver for production.
 
 It provides http basic auth and rewrites URLs to enable client side routing.
 
-You can start it locally using the Caddyfile found in this directoy.
+The webserver is configured using the Caddyfile which can be found in this directoy.
+
+#### Run locally using docker
+
+1. Build image
+
+   ```bash
+   docker build . -t fe:1.0
+   ```
+
+2. Run container
+
+   ```bash
+   docker container run --name web12 -p 8080:28080 fe:1.0
+   ```
+
+3. Open [http://localhost:8080](http://localhost:8080)
+
+#### Run locally using caddy
 
 Steps:
 
@@ -77,3 +95,5 @@ Steps:
    ```bash
    caddy run
    ```
+
+5. Open [http://localhost:28080](http://localhost:28080)
