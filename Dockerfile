@@ -20,7 +20,8 @@ COPY . .
 RUN npm run build
 
 # copy build artifacts to webserver root
-COPY dist /usr/share/caddy
+RUN rm -rf /usr/share/caddy
+RUN mv dist /usr/share/caddy
 
 # copy webserver configuration
 COPY ./Caddyfile /etc/caddy/Caddyfile
