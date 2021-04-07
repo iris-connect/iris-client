@@ -25,6 +25,7 @@
           </v-col>
         </v-row>
         <v-row>
+          <event-tracking-location-select />
           <v-col v-if="selectedLocation">
             <span>
               {{ selectedLocation }}
@@ -171,6 +172,7 @@ import {
 import router from "@/router";
 import TimeInputField from "@/components/form/time-input-field.vue";
 import DateInputField from "@/components/form/date-input-field.vue";
+import EventTrackingLocationSelect from "@/components/event-tracking-location-select/event-tracking-location-select.vue";
 
 type LocationInformationTableRow = {
   address: string;
@@ -196,6 +198,7 @@ function getDateWithTime(date: string, time: string): string {
 
 @Component({
   components: {
+    EventTrackingLocationSelect,
     DateInputField,
     TimeInputField,
     EventTrackingFormView: EventTrackingFormView,
