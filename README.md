@@ -44,3 +44,36 @@ The api client was generated using a swagger code generator.
 
 The api spec and instructions for code generation can be found here:  
 <https://github.com/iris-gateway/IRIS>
+
+### Start production server locally
+
+We are using caddy as webserver for production.  
+[https://caddyserver.com](https://caddyserver.com/)
+
+It provides http basic auth and rewrites URLs to enable client side routing.
+
+You can start it locally using the Caddyfile found in this directoy.
+
+Steps:
+
+1. Build application
+
+   ```bash
+   npm run build
+   ```
+
+2. Open and edit Caddyfile to use local `dist` directory as web root
+
+   ```bash
+   # define web root
+   root * dist
+   ```
+
+3. Install caddy  
+   [https://caddyserver.com/docs/install](https://caddyserver.com/docs/install)
+
+4. Start caddy
+
+   ```bash
+   caddy run
+   ```
