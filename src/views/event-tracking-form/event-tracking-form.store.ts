@@ -8,11 +8,14 @@ import { clientConfig } from "@/main";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
+import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 
 export type EventTrackingFormState = {
   locations: LocationInformation[] | null;
   locationsLoading: boolean;
+  locationsError: ErrorMessage;
   eventCreationOngoing: boolean;
+  eventCreationError: ErrorMessage;
 };
 
 export interface EventTrackingFormModule
@@ -26,9 +29,17 @@ export interface EventTrackingFormModule
       state: EventTrackingFormState,
       payload: boolean
     ): void;
+    setEventLocationsError(
+      state: EventTrackingFormState,
+      payload: ErrorMessage
+    ): void;
     setEventCreationOngoing(
       state: EventTrackingFormState,
       payload: boolean
+    ): void;
+    setEventCreationError(
+      state: EventTrackingFormState,
+      payload: ErrorMessage
     ): void;
     reset(state: EventTrackingFormState, payload: null): void;
   };
@@ -47,7 +58,9 @@ export interface EventTrackingFormModule
 const defaultState: EventTrackingFormState = {
   locations: null,
   locationsLoading: false,
+  locationsError: null,
   eventCreationOngoing: false,
+  eventCreationError: null,
 };
 
 const eventTrackingForm: EventTrackingFormModule = {
@@ -62,8 +75,14 @@ const eventTrackingForm: EventTrackingFormModule = {
     setEventLocationsLoading(state, loading: boolean) {
       state.locationsLoading = loading;
     },
+    setEventLocationsError(state, error: ErrorMessage) {
+      state.locationsError = error;
+    },
     setEventCreationOngoing(state, loading: boolean) {
       state.eventCreationOngoing = loading;
+    },
+    setEventCreationError(state, error: ErrorMessage) {
+      state.eventCreationError = error;
     },
     reset(state) {
       Object.assign(state, { ...defaultState });
@@ -73,10 +92,13 @@ const eventTrackingForm: EventTrackingFormModule = {
     async fetchEventLocations({ commit }, keyword) {
       const client = IrisClientFrontendApiFactory(clientConfig);
       let locations: LocationInformation[] | null = null;
+      commit("setEventLocationsError", null);
       commit("setEventLocationsLoading", true);
       try {
         locations = (await client.searchSearchKeywordGet(keyword)).data
           .locations;
+      } catch (e) {
+        commit("setEventLocationsError", getErrorMessage(e));
       } finally {
         commit("setEventLocations", locations);
         commit("setEventLocationsLoading", false);
@@ -87,12 +109,16 @@ const eventTrackingForm: EventTrackingFormModule = {
       { commit },
       dataRequestClient
     ): Promise<DataRequestDetails> {
+      commit("setEventCreationError", null);
       commit("setEventCreationOngoing", true);
       try {
         const client = IrisClientFrontendApiFactory(clientConfig);
         return await (
           await client.dataRequestsClientLocationsPost(dataRequestClient)
         ).data;
+      } catch (e) {
+        commit("setEventCreationError", getErrorMessage(e));
+        return Promise.reject(e);
       } finally {
         commit("setEventCreationOngoing", false);
       }

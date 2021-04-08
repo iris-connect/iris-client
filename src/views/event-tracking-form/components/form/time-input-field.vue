@@ -10,7 +10,6 @@
     offset-y
   >
     <template v-slot:activator="{ on, attrs }">
-      {{ picker }}
       <v-text-field
         v-model="model"
         prepend-icon="mdi-clock"

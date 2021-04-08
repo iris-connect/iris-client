@@ -7,12 +7,10 @@
       ></slot>
     </template>
     <v-card>
-      <v-card-title class="headline grey lighten-2">
-        Lokation auswählen
-      </v-card-title>
+      <v-card-title> Lokation auswählen </v-card-title>
       <v-card-text>
-        <v-row class="mt-6 mb-6">
-          <v-col>
+        <v-row class="my-6">
+          <v-col cols="12" sm="6">
             <v-text-field
               v-model="search"
               :disabled="disabled"
@@ -23,7 +21,7 @@
               @keydown.enter="handleSearch(search)"
             />
           </v-col>
-          <v-col>
+          <v-col cols="12" sm="6" class="d-flex align-end">
             <v-btn :disabled="disabled" @click="handleSearch(search)">
               Lokation Suchen
             </v-btn>
@@ -34,12 +32,13 @@
           :headers="tableProps.headers"
           :items="locationRows"
           :items-per-page="5"
-          class="elevation-1 twolineTable"
+          class="twolineTable"
         >
           <template v-slot:item.actions="{ item }">
             <v-btn color="primary" @click="handleSelect(item)"> Wählen </v-btn>
           </template>
         </v-data-table>
+        <v-alert v-if="error" text type="error">{{ error }}</v-alert>
       </v-card-text>
       <v-divider />
       <v-card-actions>
@@ -55,6 +54,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { LocationAddress, LocationInformation } from "@/api";
 import { join } from "@/utils/misc";
+import { ErrorMessage } from "@/utils/axios";
 
 const getFormattedLocation = (location: LocationInformation): string | null => {
   if (location) {
@@ -91,6 +91,10 @@ const EventTrackingFormLocationSelectProps = Vue.extend({
     disabled: {
       type: Boolean,
       default: false,
+    },
+    error: {
+      type: ErrorMessage,
+      default: null,
     },
   },
 });
