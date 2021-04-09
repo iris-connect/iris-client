@@ -8,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @ActiveProfiles({ "dev", "inttest" })
 @Disabled
-class IrisClientSormasSidecarApplicationTests {
+class IrisClientSormasSidecarApplicationSystemTest {
 
 	@Test
 	void contextLoads() {}

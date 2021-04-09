@@ -29,7 +29,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 @ActiveProfiles("dev")
 @SpringBootTest
 @AutoConfigureMockMvc
-class DataRequestControllerTest {
+class DataRequestControllerSystemTest {
 
     @Autowired
     private MockMvc mockMvc;
