@@ -92,7 +92,7 @@ public class DataRequestController {
 		}
 	}
 
-	private DataRequestDetails map(de.healthIMIS.iris.client.data_request.DataRequest request) {
+	private DataRequestDetails map(DataRequest request) {
 		var mapped = modelMapper.map(request, DataRequestDetails.class);
 		mapped.setCode(request.getId().toString());
 		// TODO this is not returning UTC check whats happening

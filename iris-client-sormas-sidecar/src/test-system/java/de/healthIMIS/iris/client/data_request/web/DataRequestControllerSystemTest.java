@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 @ActiveProfiles("dev")
 @SpringBootTest
 @AutoConfigureMockMvc
-class DataRequestControllerTest {
+class DataRequestControllerSystemTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -65,8 +66,12 @@ class DataRequestControllerTest {
     }
 
     private void postNewDataRequest() throws Exception {
-        var dataRequest = new DataRequest("refId", "name", ZonedDateTime.now().toInstant(), ZonedDateTime.now().toInstant(), "requestDetails",
-                "", new Location(), Sets.newSet(DataRequest.Feature.Guests));
+        var dataRequest = Mockito.spy(new DataRequest("refId", "name", ZonedDateTime.now().toInstant(), ZonedDateTime.now().toInstant(), "requestDetails",
+                "", new Location(), Sets.newSet(DataRequest.Feature.Guests)));
+
+        // set by JPA on live calls, needs to be mocked here
+        Mockito.doReturn(LocalDateTime.now()).when(dataRequest).getCreatedAt();
+        Mockito.doReturn(LocalDateTime.now()).when(dataRequest).getLastModifiedAt();
 
         Mockito.when(
                 dataRequestManagement.createLocationRequest(any(), any(), any(), any(), any(), any(), any())
