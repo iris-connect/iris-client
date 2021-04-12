@@ -164,6 +164,10 @@ function getFormattedAddress(address?: Address | null): string {
       router.currentRoute.params.id,
     ]);
   },
+  beforeRouteLeave(to, from, next) {
+    store.commit("eventTrackingDetails/reset");
+    next();
+  },
 })
 export default class EventTrackingDetailsView extends Vue {
   tableData = {

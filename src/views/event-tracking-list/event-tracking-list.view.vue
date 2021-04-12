@@ -129,6 +129,10 @@ type TableRow = {
     next();
     await store.dispatch("eventTrackingList/fetchEventTrackingList");
   },
+  beforeRouteLeave(to, from, next) {
+    store.commit("eventTrackingList/reset");
+    next();
+  },
 })
 export default class EventTrackingListView extends Vue {
   statusFilter: ExistingDataRequestClientWithLocationStatusEnum | null = null;

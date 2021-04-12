@@ -23,19 +23,22 @@ export interface EventTrackingListModule
       state: EventTrackingListState,
       payload: boolean
     ): void;
+    reset(state: EventTrackingListState, payload: null): void;
   };
   actions: {
     fetchEventTrackingList({ commit }: { commit: Commit }): Promise<void>;
   };
 }
 
+const defaultState: EventTrackingListState = {
+  eventTrackingList: null,
+  eventTrackingListLoading: false,
+};
+
 const eventTrackingList: EventTrackingListModule = {
   namespaced: true,
   state() {
-    return {
-      eventTrackingList: null,
-      eventTrackingListLoading: false,
-    };
+    return { ...defaultState };
   },
   mutations: {
     setEventTrackingList(state, eventTrackingList) {
@@ -43,6 +46,11 @@ const eventTrackingList: EventTrackingListModule = {
     },
     setEventTrackingListLoading(state, loading) {
       state.eventTrackingListLoading = loading;
+    },
+    reset(state) {
+      // we can keep the data, no need to reset it
+      // Object.assign(state, { ...defaultState });
+      state.eventTrackingListLoading = false;
     },
   },
   actions: {
