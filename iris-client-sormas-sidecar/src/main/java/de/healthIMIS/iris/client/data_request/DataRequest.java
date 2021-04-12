@@ -31,9 +31,6 @@ import java.util.UUID;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 /**
  * @author Jens Kutzsche
  */
@@ -47,8 +44,7 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	private String refId;
 	private String hdUserId;
 
-	@OneToOne(orphanRemoval = true, cascade = { CascadeType.ALL })
-	@JoinColumn(name = "location_id")
+	@OneToOne(orphanRemoval = true, cascade = { CascadeType.ALL }) @JoinColumn(name = "location_id")
 	private Location location;
 
 	private String name;
@@ -117,36 +113,6 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	}
 
 	public enum Status {
-		DATA_REQUESTED("DATA_REQUESTED"),
-
-		DATA_RECEIVED("DATA_RECEIVED"),
-
-		CLOSED("CLOSED");
-
-		private String value;
-
-		Status(String value) {
-			this.value = value;
-		}
-
-		@JsonValue
-		public String getValue() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		@JsonCreator
-		public static DataRequest.Status fromValue(String value) {
-			for (DataRequest.Status b : DataRequest.Status.values()) {
-				if (b.value.equals(value)) {
-					return b;
-				}
-			}
-			throw new IllegalArgumentException("Unexpected value '" + value + "'");
-		}
+		DATA_REQUESTED, DATA_RECEIVED, CLOSED
 	}
 }
