@@ -69,7 +69,8 @@ services:
 
   nginx:
     build:
-      ./docker/nginx
+      context: ./docker/nginx
+      dockerfile: with-sormas.Dockerfile
     ports:
       - 443:443
     volumes:
