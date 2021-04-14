@@ -38,6 +38,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            **/target/*.jar
+            **/target/*${{ steps.get_version.outputs.VERSION }}.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
