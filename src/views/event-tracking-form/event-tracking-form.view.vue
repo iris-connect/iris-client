@@ -138,6 +138,11 @@ import { ErrorMessage } from "@/utils/axios";
 import DateTimeInputField from "@/views/event-tracking-form/components/form/date-time-input-field.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
 
+type EventTrackingForm = {
+  model: EventTrackingFormModel;
+  valid: boolean;
+};
+
 type EventTrackingFormModel = {
   externalId: string;
   start: string;
@@ -209,14 +214,14 @@ export default class EventTrackingFormView extends Vue {
     };
   }
 
-  form = {
+  form: EventTrackingForm = {
     model: {
       externalId: "",
       start: "",
       end: "",
       name: "",
       location: null,
-    } as EventTrackingFormModel,
+    },
     valid: false,
   };
 
@@ -241,14 +246,14 @@ export default class EventTrackingFormView extends Vue {
 
   async submit(): Promise<void> {
     const valid = this.$refs.form.validate() as boolean;
-    if (valid) {
-      const location = this.form.model.location;
+    const location = this.form.model.location;
+    if (valid && location) {
       const payload: DataRequestClient = {
         start: this.form.model.start,
         end: this.form.model.end,
         name: this.form.model.name,
-        locationId: location?.id ?? "",
-        providerId: location?.providerId ?? "",
+        locationId: location.id,
+        providerId: location.providerId,
         externalRequestId: this.form.model.externalId,
       };
       const created: DataRequestDetails = await store.dispatch(
