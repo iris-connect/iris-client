@@ -2,7 +2,7 @@ FROM caddy/caddy:2.3.0-alpine
 
 # TODO: update to node 14 as soon as caddy uses newer alpine version
 # install node + npm
-RUN apk add --no-cache nodejs=12.21.0-r0 npm=12.21.0-r0
+RUN apk add --no-cache nodejs=12.22.1-r0 npm=12.22.1-r0	
 
 # make the 'app' folder the current working directory
 WORKDIR /app
