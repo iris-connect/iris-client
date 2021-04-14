@@ -14,9 +14,6 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client;
 
-import static org.apache.commons.lang3.StringUtils.*;
-import static org.springframework.http.HttpMethod.*;
-
 import de.healthIMIS.iris.client.core.IrisClientProperties;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,14 +26,9 @@ import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -52,14 +44,11 @@ import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.boot.web.servlet.filter.OrderedCharacterEncodingFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
@@ -102,7 +91,7 @@ public class IrisClientSormasSidecarApplication {
 
 	@PostConstruct
 	public void initBouncyCastle() {
-		
+
 		Security.addProvider(new BouncyCastleProvider());
 		Security.setProperty("crypto.policy", "unlimited");
 	}
@@ -188,34 +177,6 @@ public class IrisClientSormasSidecarApplication {
 		var modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setAmbiguityIgnored(true);
 		return modelMapper;
-	}
-
-	// ToDo: Let us check if a) remove it or b) perform a real UTF-8 check against the payload
-	static final class UpdateRequestNeedCharacterEncodingFilter extends OrderedCharacterEncodingFilter {
-
-		static final EnumSet<HttpMethod> updateMethods = EnumSet.of(PUT, POST, PATCH);
-
-		@Override
-		protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-				throws ServletException, IOException {
-
-			if (isUpdateMethod(request) && isUtf8Missing(request)) {
-
-				response.sendError(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(), "Character encoding must be UTF-8!");
-
-				return;
-			}
-
-			super.doFilterInternal(request, response, filterChain);
-		}
-
-		private boolean isUpdateMethod(HttpServletRequest request) {
-			return updateMethods.contains(resolve(request.getMethod()));
-		}
-
-		private boolean isUtf8Missing(HttpServletRequest request) {
-			return !equalsIgnoreCase(request.getCharacterEncoding(), "UTF-8");
-		}
 	}
 
 	@Configuration
