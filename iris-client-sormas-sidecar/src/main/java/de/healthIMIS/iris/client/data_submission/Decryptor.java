@@ -2,6 +2,7 @@ package de.healthIMIS.iris.client.data_submission;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Base64;
@@ -49,7 +50,7 @@ public class Decryptor {
 
 			IvParameterSpec ivSpec = new IvParameterSpec(iv);
 			cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
-			clearText = new String(cipher.doFinal(cipherBytes));
+			clearText = new String(cipher.doFinal(cipherBytes), StandardCharsets.UTF_8);
 
 			return clearText;
 
