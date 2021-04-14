@@ -28,4 +28,4 @@ jobs:
           SOURCE: "infrastructure/"
           REMOTE_HOST: iris-gateway.de
           REMOTE_USER: ${{ secrets.STAGING_USER }}
-#          TARGET: /home/REMOTE_USER/
+          TARGET: /home/iris/
