@@ -32,8 +32,8 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import DateInputField from "@/views/event-tracking-form/components/form/date-input-field";
-import TimeInputField from "@/views/event-tracking-form/components/form/time-input-field";
+import DateInputField from "@/views/event-tracking-form/components/form/date-input-field.vue";
+import TimeInputField from "@/views/event-tracking-form/components/form/time-input-field.vue";
 import dayjs from "@/utils/date";
 
 const DateTimeInputFieldProps = Vue.extend({
@@ -90,7 +90,7 @@ export default class DateTimeInputField extends DateTimeInputFieldProps {
     }
   }
 
-  setDateTime(): dayjs {
+  setDateTime(): void {
     const value = dayjs(this.date + " " + this.time, "YYYY-MM-DD HH:mm");
     const dateString = value.isValid() ? value.toISOString() : "";
     this.$emit("input", dateString);

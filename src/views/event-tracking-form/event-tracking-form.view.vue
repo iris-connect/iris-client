@@ -136,6 +136,15 @@ import LocationSelectDialog from "@/views/event-tracking-form/components/locatio
 import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
 import DateTimeInputField from "@/views/event-tracking-form/components/form/date-time-input-field.vue";
+import { get as _get, set as _set, has as _has } from "lodash";
+
+type EventTrackingFormModel = {
+  externalId: string;
+  start: string;
+  end: string;
+  name: string;
+  location: LocationInformation | null;
+};
 
 @Component({
   components: {
@@ -186,7 +195,7 @@ export default class EventTrackingFormView extends Vue {
         (v: string): string | boolean => {
           if (!this.form.model.start) return true;
           return (
-            dayjs(v).isSameOrAfter(this.form.model.start, "minute") ||
+            dayjs(v).isSameOrAfter(dayjs(this.form.model.start), "minute") ||
             "Bitte geben Sie einen Zeitpunkt an, der nach dem Beginn liegt"
           );
         },
@@ -207,7 +216,7 @@ export default class EventTrackingFormView extends Vue {
       end: "",
       name: "",
       location: null,
-    },
+    } as EventTrackingFormModel,
     valid: false,
   };
 
@@ -217,11 +226,13 @@ export default class EventTrackingFormView extends Vue {
    * @param field
    */
   validateField(field: string): void {
-    const val = this.form.model[field];
-    this.form.model[field] = "";
-    this.$nextTick(() => {
-      this.form.model[field] = val;
-    });
+    if (_has(this.form.model, field)) {
+      const val = _get(this.form.model, field);
+      _set(this.form.model, field, "");
+      this.$nextTick(() => {
+        _set(this.form.model, field, val);
+      });
+    }
   }
   @Watch("form.model.start")
   onDateChanged(): void {
@@ -231,13 +242,13 @@ export default class EventTrackingFormView extends Vue {
   async submit(): Promise<void> {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
-      const location: LocationInformation = this.form.model.location;
+      const location = this.form.model.location;
       const payload: DataRequestClient = {
         start: this.form.model.start,
         end: this.form.model.end,
         name: this.form.model.name,
-        locationId: location?.id,
-        providerId: location?.providerId,
+        locationId: location?.id ?? "",
+        providerId: location?.providerId ?? "",
         externalRequestId: this.form.model.externalId,
       };
       const created: DataRequestDetails = await store.dispatch(
