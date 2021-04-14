@@ -1,6 +1,7 @@
 ########################################################
-# provides full IRIS environment together with a Postgresql database without SORMAS
+# provides full IRIS environment together with a Postgresql database and SORMAS
 # DB: look at docker-compose-postgres.yml
+# SORMAS: look at docker-compose-sormas.base.yml; port = 6080
 # IRIS public: port = 8443
 # IRIS location: port = 8080
 # IRIS client: port = 8092
@@ -13,6 +14,18 @@ services:
       file: docker-compose-postgres.yml
       service: postgres
 
+  sormas:
+    extends:
+      file: docker-compose-sormas.base.yml
+      service: sormas
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - 6080:6080
+      - 6081:6081
+      - 6048:6048
+  
   iris-public:
     image: inoeg/iris-public-server:${IRIS_VERSION}
     depends_on:
@@ -36,10 +49,15 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+#      sormas:
+#        condition: service_healthy
       iris-public: 
         condition: service_started
     ports:
       - 8092:8092
+    env_file:
+      # you must use this file set the access parameters for SORMAS 
+      - iris-sormas.env
 #    mem_limit: ${IRIS_CLIENT_MEM}
 #    mem_reservation: ${IRIS_CLIENT_MEM_RESERVED}
     restart: unless-stopped

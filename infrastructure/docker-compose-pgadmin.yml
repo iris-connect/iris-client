@@ -1,0 +1,16 @@
+########################################################
+# provides a Pgadmin for Postgres in other Docker-Compose files
+# Pgadmin: login = postgres@iris-gateway.de:postgres; port = 8080
+########################################################
+version: '3'
+services:
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - 8080:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@iris-gateway.de
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    restart: unless-stopped

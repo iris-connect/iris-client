@@ -1,0 +1,27 @@
+########################################################
+# provides SORMAS server together with a Postgresql database
+# DB: look at docker-compose-postgres.yml
+# SORMAS: ports= 6080, (6081, 6048)
+#         look at docker-compose-sormas.base.yml
+########################################################
+version: '3'
+services:
+  postgres:
+    extends:
+      file: docker-compose-postgres.yml
+      service: postgres
+
+  sormas:
+    extends:
+      file: docker-compose-sormas.base.yml
+      service: sormas
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - 6080:6080
+      - 6081:6081
+      - 6048:6048
+        
+volumes:
+  psqldata_iris: 
