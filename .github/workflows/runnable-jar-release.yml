@@ -1,0 +1,39 @@
+name: Build and releace runnable Jars for IRIS apps
+
+on:
+  push:
+    tags:
+      - '*'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+    
+      - name: build Jars
+        run: mvn -B clean package spring-boot:repackage
+        env:
+          GIT_TAG: ${{ github.ref }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            **/target/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

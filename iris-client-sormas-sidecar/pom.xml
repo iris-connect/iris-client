@@ -138,6 +138,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>${project.artifactId}-${project.version}_${env.GIT_TAG}</finalName>
 		<plugins>
 			<plugin>
 				<!-- https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#build-image -->
