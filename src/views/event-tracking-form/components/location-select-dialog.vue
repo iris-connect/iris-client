@@ -1,13 +1,10 @@
 <template>
   <v-dialog v-model="dialog">
     <template v-slot:activator="{ on, attrs }">
-      <slot
-        name="activator"
-        v-bind="{ on, attrs, selectedFormattedLocation }"
-      ></slot>
+      <slot name="activator" v-bind="{ on, attrs }"></slot>
     </template>
     <v-card>
-      <v-card-title> Lokation auswählen </v-card-title>
+      <v-card-title> Ereignisort auswählen </v-card-title>
       <v-card-text>
         <v-row class="my-6">
           <v-col cols="12" sm="6">
@@ -23,7 +20,7 @@
           </v-col>
           <v-col cols="12" sm="6" class="d-flex align-end">
             <v-btn :disabled="disabled" @click="handleSearch(search)">
-              Lokation Suchen
+              Ereignisort suchen
             </v-btn>
           </v-col>
         </v-row>
@@ -54,15 +51,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { LocationAddress, LocationInformation } from "@/api";
 import { join } from "@/utils/misc";
-
-const getFormattedLocation = (location: LocationInformation): string | null => {
-  if (location) {
-    return `${location.contact.officialName}, ${getFormattedAddress(
-      location.contact.address
-    )}`;
-  }
-  return null;
-};
 
 const getFormattedAddress = (address: LocationAddress): string => {
   const { street, zip, city } = address;
@@ -109,10 +97,6 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
   }
   set model(value: LocationInformation) {
     this.$emit("input", value);
-  }
-
-  get selectedFormattedLocation(): string | null {
-    return getFormattedLocation(this.model);
   }
 
   get locationRows(): LocationInformationTableRow[] {
