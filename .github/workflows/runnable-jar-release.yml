@@ -25,10 +25,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
     
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    
       - name: build Jars
-        run: mvn -B clean package spring-boot:repackage
+        run: mvn -B clean package spring-boot:repackage -DskipTests
         env:
-          GIT_TAG: ${{ github.ref }}
+          GIT_TAG: ${{ steps.get_version.outputs.VERSION }}
 
       - name: Release
         uses: softprops/action-gh-release@v1
