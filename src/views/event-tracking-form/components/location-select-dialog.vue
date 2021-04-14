@@ -54,7 +54,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { LocationAddress, LocationInformation } from "@/api";
 import { join } from "@/utils/misc";
-import { ErrorMessage } from "@/utils/axios";
 
 const getFormattedLocation = (location: LocationInformation): string | null => {
   if (location) {
@@ -71,9 +70,10 @@ const getFormattedAddress = (address: LocationAddress): string => {
 };
 
 type LocationInformationTableRow = {
+  name: string;
   address: string;
   representative: string;
-  mail: string;
+  email: string;
   phone: string;
   location: LocationInformation;
 };
@@ -93,7 +93,7 @@ const EventTrackingFormLocationSelectProps = Vue.extend({
       default: false,
     },
     error: {
-      type: ErrorMessage,
+      type: String,
       default: null,
     },
   },
@@ -111,7 +111,7 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
     this.$emit("input", value);
   }
 
-  get selectedFormattedLocation(): string {
+  get selectedFormattedLocation(): string | null {
     return getFormattedLocation(this.model);
   }
 
