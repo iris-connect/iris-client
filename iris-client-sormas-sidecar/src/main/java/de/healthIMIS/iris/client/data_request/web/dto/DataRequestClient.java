@@ -29,7 +29,6 @@ public class DataRequestClient   {
   @NotBlank
   private String providerId;
 
-  @NotBlank
   private String name;
 
   @NotBlank

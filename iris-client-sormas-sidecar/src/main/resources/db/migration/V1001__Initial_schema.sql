@@ -18,7 +18,7 @@ CREATE TABLE location (
 CREATE TABLE data_request (
 	request_id uuid NOT NULL,
 	ref_id varchar(100) NOT NULL,
-	name varchar(500) NOT NULL,
+	name varchar(500) NULL,
 	hd_user_id varchar(100) NULL,
 	location_id uuid NULL,
 	request_start timestamp NOT NULL,
