@@ -38,6 +38,42 @@ npm run lint
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+### Routes/views and params
+
+In this section you find all deeplinks for our SPA.
+
+We are currently not supporting any URL query parameters to e.g. prefill text fields for event creation.
+
+#### Dashboard
+
+```text
+/
+```
+
+#### Event creation
+
+```text
+/events/new
+```
+
+#### Event details
+
+```text
+/events/details/:id
+```
+
+#### Event list
+
+```text
+/events/list
+```
+
+#### Case list
+
+```text
+/cases/list
+```
+
 ### API Client
 
 The api client was generated using a swagger code generator.
