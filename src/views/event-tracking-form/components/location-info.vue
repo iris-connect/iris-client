@@ -33,11 +33,11 @@ const EventTrackingFormLocationInfoProps = Vue.extend({
 
 @Component
 export default class EventTrackingFormLocationInfo extends EventTrackingFormLocationInfoProps {
-  get locationContact(): LocationContact {
-    return this.location?.contact;
+  get locationContact(): LocationContact | Record<string, unknown> {
+    return this.location?.contact ?? {};
   }
-  get locationAddress(): LocationAddress {
-    return this.locationContact?.address;
+  get locationAddress(): LocationAddress | Record<string, unknown> {
+    return this.location?.contact?.address ?? {};
   }
 }
 </script>
