@@ -151,9 +151,8 @@ type EventTrackingFormModel = {
   location: LocationInformation | null;
 };
 
-type EventTrackingFormQueryParameters = Omit<
-  EventTrackingFormModel,
-  "location"
+type EventTrackingFormQueryParameters = Partial<
+  Omit<EventTrackingFormModel, "location">
 >;
 
 @Component({
@@ -250,10 +249,10 @@ export default class EventTrackingFormView extends Vue {
   }
 
   mounted(): void {
-    const query: Partial<EventTrackingFormQueryParameters> = this.$route.query;
+    const query: EventTrackingFormQueryParameters = this.$route.query;
     Object.keys(this.form.model).forEach((key: string) => {
       const k = key as keyof EventTrackingFormQueryParameters;
-      this.form.model[k] = query?.[k] ?? this.form.model[k];
+      this.form.model[k] = query[k] || this.form.model[k];
     });
   }
 
