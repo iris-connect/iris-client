@@ -151,6 +151,10 @@ type EventTrackingFormModel = {
   location: LocationInformation | null;
 };
 
+type EventTrackingFormQueryParameters = Partial<
+  Omit<EventTrackingFormModel, "location">
+>;
+
 @Component({
   components: {
     DateTimeInputField,
@@ -242,6 +246,14 @@ export default class EventTrackingFormView extends Vue {
   @Watch("form.model.start")
   onDateChanged(): void {
     this.validateField("end");
+  }
+
+  mounted(): void {
+    const query: EventTrackingFormQueryParameters = this.$route.query;
+    Object.keys(this.form.model).forEach((key: string) => {
+      const k = key as keyof EventTrackingFormQueryParameters;
+      this.form.model[k] = query[k] || this.form.model[k];
+    });
   }
 
   async submit(): Promise<void> {
