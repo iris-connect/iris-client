@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "iris-gateway.location" . }}
+  labels:
+    {{- include "iris-gateway.location-labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - nodePort: {{ add .Values.location.nodePort .Values.nodePortOffsets }}
+      port: {{ add .Values.location.nodePort .Values.nodePortOffsets }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "iris-gateway.location-labels" . | nindent 4 }}

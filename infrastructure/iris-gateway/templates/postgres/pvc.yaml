@@ -1,0 +1,15 @@
+{{- if eq .Values.environment "staging" }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "iris-gateway.postgres" . }}
+  labels:
+    {{- include "iris-gateway.postgres-labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: managed-nfs-storage
+  resources:
+    requests:
+      storage: 10Gi
+{{- end }}

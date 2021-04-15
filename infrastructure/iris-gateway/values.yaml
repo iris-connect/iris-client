@@ -1,0 +1,19 @@
+# required, set via CLI
+#   staging: --set environment=staging
+#   production: --set environment=production
+environment: undefined
+
+public:
+  image: inoeg/iris-public-server:0.0.1-SNAPSHOT
+  nodePort: 30001
+
+location:
+  image: inoeg/iris-location-service:0.0.1-SNAPSHOT
+  nodePort: 30002
+
+postgres:
+  storageDir: /var/lib/postgresql/data/pgdata
+
+# needed only if multiple deployments are needed in the same environment.
+# nodePorts need to be unique globally, for all deployments in the same environment.
+nodePortOffsets: 0
