@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Home from "../views/home/Home.vue";
+import store from "@/store";
 
 Vue.use(VueRouter);
 
@@ -16,6 +17,18 @@ export const routes: Array<RouteConfig> = [
       menuExact: true,
     },
     component: Home,
+  },
+  {
+    path: "/user/login",
+    name: "user-login",
+    meta: {
+      menu: false,
+      menuEnabled: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "user-login" */ "../views/user-login/user-login.view.vue"
+      ),
   },
   {
     path: "/events/new",
@@ -69,6 +82,17 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+const isAuthenticated = (): boolean => {
+  return !!store.state.userLogin.session?.token;
+};
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== "user-login" && !isAuthenticated()) {
+    return next("/user/login");
+  }
+  next();
 });
 
 export default router;

@@ -11,29 +11,30 @@
           width="100"
         />
 
-        <template v-for="link in links">
-          <v-btn
-            v-if="link.meta.menu"
-            :key="link.name"
-            :to="link.path"
-            :exact="link.meta.menuExact"
-            text
-          >
-            {{ link.meta.menuName }}
-          </v-btn>
+        <template v-if="menuEnabled">
+          <template v-for="link in links">
+            <v-btn
+              v-if="link.meta.menu"
+              :key="link.name"
+              :to="link.path"
+              :exact="link.meta.menuExact"
+              text
+            >
+              {{ link.meta.menuName }}
+            </v-btn>
+          </template>
+          <v-spacer></v-spacer>
+
+          <v-responsive max-width="260">
+            <v-text-field
+              dense
+              flat
+              hide-details
+              rounded
+              solo-inverted
+            ></v-text-field>
+          </v-responsive>
         </template>
-
-        <v-spacer></v-spacer>
-
-        <v-responsive max-width="260">
-          <v-text-field
-            dense
-            flat
-            hide-details
-            rounded
-            solo-inverted
-          ></v-text-field>
-        </v-responsive>
       </v-container>
     </v-app-bar>
 
@@ -54,6 +55,11 @@ export default Vue.extend({
   data: () => ({
     links: routes,
   }),
+  computed: {
+    menuEnabled(): boolean {
+      return this.$route.meta.menuEnabled !== false;
+    },
+  },
 });
 </script>
 <style lang="scss">

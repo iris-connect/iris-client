@@ -13,6 +13,13 @@ export function makeMockAPIServer() {
     routes() {
       this.namespace = "";
 
+      this.post("/login", () => {
+        return {
+          token: "TOKEN123",
+          expires: 1,
+        };
+      });
+
       this.post("/data-requests-client/locations", () => {
         const created: Partial<DataRequestDetails> = {
           code: "NEWREQUEST123",

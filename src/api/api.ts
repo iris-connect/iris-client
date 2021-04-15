@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * IRIS-Gateway API
- * ### Encryption of the data to be transmitted (contact data) In order to be not limited in the amount of data, a hybrid encryption with symmetric encryption of the data and asymmetric encryption of the symmetric key is used for the encryption of the contact data.    1. The apps and applications get the public key of the health department as a 4096-bit RSA key from the IRIS+ server. This key is base64-encoded in the Private Enhanced Mail (PEM) format.   2. The app generates a 256-bit AES key.   3. With this key the data is encrypted (algorithm: AES).   4. The AES key must be encrypted with the public RSA key of the health department. (algorithm: RSA with Optimal Asymmetric Encryption Padding (OAEP))   5. The encrypted AES key and the encrypted content must be transmitted base64 encoded.    #### Schematic sequence    ```   pubKeyEncryption = publicKeyFromPem(givenPublicKey);   contentKey = generateAESKey();    encrypted = contentKey.encrypt(content);   keyEncrypted = pubKeyEncryption.encrypt(contentKey, \"RSA/NONE/OAEPWithSHA3-256AndMGF1Padding\");    dataToTransport = base64Encode(encrypted);   keyToTransport = base64Encode(keyEncrypted);   ``` 
+ * ### Encryption of the data to be transmitted (contact data) In order to be not limited in the amount of data, a hybrid encryption with symmetric encryption of the data and asymmetric encryption of the symmetric key is used for the encryption of the contact data.    1. The apps and applications get the public key of the health department as a 4096-bit RSA key from the IRIS+ server. This key is base64-encoded similar to the Private Enhanced Mail (PEM) format but without key markers (-----BEGIN PUBLIC KEY----- / -----END PUBLIC KEY-----).   2. The app generates a 256-bit AES key.   3. The data is encrypted with this key (algorithm: AES/CBC/PKCS5Padding and 16 byte IV)   4. IV bytes are prepended to the cipher text. Those merged bytes represent the encrypted content.   5. The AES key must be encrypted with the public RSA key of the health department. (algorithm: RSA with Optimal Asymmetric Encryption Padding (OAEP) \"RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING\")   6. The encrypted AES key and the encrypted content must be transmitted base64 encoded.    #### Schematic sequence    ```   pubKeyEncryption = publicKeyFromBase64(givenPublicKey);   contentKey = generateAESKey();   iv = generateRandomBytes(16);    encrypted = contentKey.encrypt(content, \"AES/CBC/PKCS5Padding\", iv);   keyEncrypted = pubKeyEncryption.encrypt(contentKey, \"RSA/NONE/OAEPWithSHA3-256AndMGF1Padding\");    submissionDto.encryptedData = base64Encode(concat(iv,encrypted));   submissionDto.secret = base64Encode(keyEncrypted);   ``` 
  *
  * The version of the OpenAPI document: 0.2.0
  * Contact: jens.kutzsche@gebea.de
@@ -327,6 +327,25 @@ export interface ContactsEventsSubmissionAllOf {
     encryptedData: ContactsAndEvents;
 }
 /**
+ * 
+ * @export
+ * @interface Credentials
+ */
+export interface Credentials {
+    /**
+     * 
+     * @type {string}
+     * @memberof Credentials
+     */
+    userName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Credentials
+     */
+    password?: string;
+}
+/**
  * A data request with all parameters relevant for the data submission.
  * @export
  * @interface DataRequest
@@ -392,7 +411,7 @@ export interface DataRequestClient {
      * @type {string}
      * @memberof DataRequestClient
      */
-    name: string;
+    name?: string;
     /**
      * External ID outside of IRIS
      * @type {string}
@@ -1235,7 +1254,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json; charset=UTF-8';
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1278,6 +1297,45 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Authenticates a user against IRIS client
+         * @param {Credentials} credentials 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        login: async (credentials: Credentials, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'credentials' is not null or undefined
+            assertParamExists('login', 'credentials', credentials)
+            const localVarPath = `/login`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(credentials, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1364,6 +1422,17 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Authenticates a user against IRIS client
+         * @param {Credentials} credentials 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async login(credentials: Credentials, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.login(credentials, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} searchKeyword The search keyword
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1410,6 +1479,16 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
          */
         getLocationDetails(code: string, options?: any): AxiosPromise<DataRequestDetails> {
             return localVarFp.getLocationDetails(code, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Authenticates a user against IRIS client
+         * @param {Credentials} credentials 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        login(credentials: Credentials, options?: any): AxiosPromise<void> {
+            return localVarFp.login(credentials, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1463,6 +1542,18 @@ export class IrisClientFrontendApi extends BaseAPI {
      */
     public getLocationDetails(code: string, options?: any) {
         return IrisClientFrontendApiFp(this.configuration).getLocationDetails(code, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Authenticates a user against IRIS client
+     * @param {Credentials} credentials 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IrisClientFrontendApi
+     */
+    public login(credentials: Credentials, options?: any) {
+        return IrisClientFrontendApiFp(this.configuration).login(credentials, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
