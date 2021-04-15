@@ -45,13 +45,9 @@
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
+import { Credentials } from "@/api";
 
-type UserLoginFormModel = {
-  username: string;
-  password: string;
-};
-
-@Component()
+@Component
 export default class UserLoginView extends Vue {
   $refs!: {
     form: HTMLFormElement;
@@ -59,7 +55,7 @@ export default class UserLoginView extends Vue {
 
   formIsValid = true;
 
-  formModel: UserLoginFormModel = {
+  formModel: Credentials = {
     userName: "",
     password: "",
   };
@@ -78,7 +74,7 @@ export default class UserLoginView extends Vue {
     return false;
   }
 
-  async submit(): Promise<void> | void {
+  async submit(): Promise<void> {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
       await store
