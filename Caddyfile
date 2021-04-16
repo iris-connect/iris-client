@@ -4,6 +4,9 @@
     # define web root
     root * /usr/share/caddy
 
+    # enable caddy template engine for index.html
+    templates index.html
+
     # enable file server for all paths under web root
     file_server /*
 

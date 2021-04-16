@@ -46,6 +46,11 @@
         continue.</strong
       >
     </noscript>
+    <script type="text/javascript">
+      window.irisAppContext = {
+        apiBaseURL: "<%= htmlWebpackPlugin.options.irisAppContext.apiBaseURL %>"
+      };
+    </script>
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
