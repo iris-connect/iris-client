@@ -17,11 +17,7 @@
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6">
-            <v-text-field
-              v-model="form.model.name"
-              :rules="validationRules.defined"
-              label="Name"
-            ></v-text-field>
+            <v-text-field v-model="form.model.name" label="Name"></v-text-field>
           </v-col>
         </v-row>
         <location-select-dialog
@@ -31,12 +27,10 @@
           :error="locationsError"
           @search="handleLocationSearch"
         >
-          <template v-slot:activator="{ on, attrs, selectedFormattedLocation }">
+          <template v-slot:activator="{ on, attrs }">
             <v-row>
-              <v-col v-if="selectedFormattedLocation">
-                <span>
-                  {{ selectedFormattedLocation }}
-                </span>
+              <v-col v-if="form.model.location">
+                <location-info :location="form.model.location" />
               </v-col>
               <v-col>
                 <v-input
@@ -51,9 +45,9 @@
                     :disabled="eventCreationOngoing"
                   >
                     {{
-                      selectedFormattedLocation
-                        ? "Lokation ändern"
-                        : "Lokation auswählen"
+                      form.model.location
+                        ? "Ereignisort ändern"
+                        : "Ereignisort auswählen"
                     }}
                   </v-btn>
                 </v-input>
@@ -137,6 +131,7 @@ import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
 import DateTimeInputField from "@/views/event-tracking-form/components/form/date-time-input-field.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
+import LocationInfo from "@/views/event-tracking-form/components/location-info.vue";
 
 type EventTrackingForm = {
   model: EventTrackingFormModel;
@@ -157,6 +152,7 @@ type EventTrackingFormQueryParameters = Partial<
 
 @Component({
   components: {
+    LocationInfo,
     DateTimeInputField,
     LocationSelectDialog,
     EventTrackingFormView: EventTrackingFormView,
@@ -212,7 +208,7 @@ export default class EventTrackingFormView extends Vue {
       defined: [(v: unknown): string | boolean => !!v || "Pflichtfeld"],
       location: [
         (v: LocationInformation): string | boolean => {
-          return !!v || "Bitte wählen Sie eine Lokation aus";
+          return !!v || "Bitte wählen Sie einen Ereignisort aus";
         },
       ],
     };

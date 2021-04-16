@@ -5,7 +5,7 @@
         <counter-widget
           subtitle="Ereignisse/Woche"
           count="233"
-          actionlabel="Zur Fallübersicht"
+          actionlabel="Zur Ereignisübersicht"
           image="sketch_file_analysis.svg"
           actionlink="events/list"
         ></counter-widget>
@@ -58,14 +58,14 @@
           </v-container>
         </v-card>
       </v-col>
-      <v-col>
-        <v-card class="pb-8 pl-2">
-          <v-container>
-            <h2 class="light-font mb-6">Ticket Tracker</h2>
-            <cases-pie-chart></cases-pie-chart>
-          </v-container>
-        </v-card>
-      </v-col>
+      <!--      <v-col>-->
+      <!--        <v-card class="pb-8 pl-2">-->
+      <!--          <v-container>-->
+      <!--            <h2 class="light-font mb-6">Ticket Tracker</h2>-->
+      <!--            <cases-pie-chart></cases-pie-chart>-->
+      <!--          </v-container>-->
+      <!--        </v-card>-->
+      <!--      </v-col>-->
     </v-row>
     <v-row>
       <v-col>
@@ -74,21 +74,26 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="eventTrackingListError">
       <v-col>
-        <v-card class="pb-3 pl-3 pt-3 pt-3">
-          <cases-bar-chart></cases-bar-chart>
-        </v-card>
+        <v-alert text type="error">{{ eventTrackingListError }}</v-alert>
       </v-col>
     </v-row>
+    <!--    <v-row>-->
+    <!--      <v-col>-->
+    <!--        <v-card class="pb-3 pl-3 pt-3 pt-3">-->
+    <!--          <cases-bar-chart></cases-bar-chart>-->
+    <!--        </v-card>-->
+    <!--      </v-col>-->
+    <!--    </v-row>-->
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import CounterWidget from "@/components/dashboard/counter-widget.vue";
-import CasesBarChart from "@/components/dashboard/cases-bar-chart.vue";
-import CasesPieChart from "@/components/dashboard/cases-pie-chart.vue";
+// import CasesBarChart from "@/components/dashboard/cases-bar-chart.vue";
+// import CasesPieChart from "@/components/dashboard/cases-pie-chart.vue";
 import EventList from "@/components/event-list.vue";
 import store from "@/store";
 import {
@@ -96,6 +101,7 @@ import {
   ExistingDataRequestClientWithLocation,
 } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
+import { ErrorMessage } from "@/utils/axios";
 
 function getStatusColor(
   status?: ExistingDataRequestClientWithLocationStatusEnum
@@ -167,16 +173,23 @@ function getFormattedDate(date?: string): string {
 @Component({
   components: {
     EventList,
-    CasesPieChart,
-    CasesBarChart,
+    // CasesPieChart,
+    // CasesBarChart,
     CounterWidget,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
     await store.dispatch("home/fetchEventTrackingList");
   },
+  beforeRouteLeave(to, from, next) {
+    store.commit("home/reset");
+    next();
+  },
 })
 export default class Home extends Vue {
+  get eventTrackingListError(): ErrorMessage {
+    return store.state.home.eventTrackingListError;
+  }
   get openEventListData(): TableRow[] {
     const dataRequests = store.state.home.eventTrackingList?.dataRequests || [];
     return dataRequests
