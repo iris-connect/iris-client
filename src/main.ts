@@ -6,13 +6,15 @@ import vuetify from "./plugins/vuetify";
 
 import { makeMockAPIServer } from "@/server/mockAPIServer";
 import { Configuration } from "@/api";
+import config from "@/config";
 
-// TODO this should be in a config.ts file
-let apiBaseURL = "https://api.staging.iris-gateway.de";
-if (process.env.NODE_ENV === "development") {
-  apiBaseURL = "http://localhost:8080";
+if (process.env.VUE_APP_ENABLE_MOCK_SERVER === "true") {
+  // TODO its not so nice that this is done here
+  // Not sure whether imported mockAPIServer ends up in bundle for deployment.
   makeMockAPIServer();
 }
+
+const { apiBaseURL } = config;
 export const clientConfig = new Configuration({
   basePath: apiBaseURL,
 });
