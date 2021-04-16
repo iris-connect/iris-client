@@ -392,7 +392,7 @@ export interface DataRequestClient {
      * @type {string}
      * @memberof DataRequestClient
      */
-    name: string;
+    name?: string;
     /**
      * External ID outside of IRIS
      * @type {string}
