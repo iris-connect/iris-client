@@ -7,7 +7,7 @@ interface ParsedError {
 
 export type ErrorMessage = string | null;
 
-const parseError = (error: AxiosError): ParsedError => {
+export const parseError = (error: AxiosError): ParsedError => {
   if (error.isAxiosError) {
     if (error.response) {
       const response = error.response as AxiosResponse;

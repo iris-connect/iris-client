@@ -2,8 +2,8 @@ import { Commit, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import { RootState } from "@/store/types";
 import { Credentials, IrisClientFrontendApiFactory } from "@/api";
-import { clientConfig } from "@/main";
 import store from "@/store";
+import { clientConfig, sessionFromResponse } from "@/api-client";
 
 export type UserLoginState = {
   authenticating: boolean;
@@ -13,7 +13,6 @@ export type UserLoginState = {
 
 export type UserSession = {
   token: string;
-  expires: number;
 };
 
 export interface UserLoginModule extends Module<UserLoginState, RootState> {
@@ -63,12 +62,11 @@ const userLogin: UserLoginModule = {
     async authenticate({ commit }, credentials): Promise<void> {
       commit("setAuthenticationError", null);
       commit("setAuthenticating", true);
-      // @todo: remove unknown type as soon as response type is defined
       let session: UserSession | null | unknown = null;
       try {
         const client = IrisClientFrontendApiFactory(clientConfig);
-        // @todo: remove unknown type as soon as response type is defined
-        session = (await client.login(credentials)).data as unknown;
+        const response = await client.login(credentials);
+        session = sessionFromResponse(response);
       } catch (e) {
         commit("setAuthenticationError", getErrorMessage(e));
         return Promise.reject(e);

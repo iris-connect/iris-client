@@ -8,9 +8,6 @@ import { RootState } from "@/store/types";
 import home from "@/views/home/home.store";
 
 import createPersistedState from "vuex-persistedstate";
-import SecureLS from "secure-ls";
-
-const ls = new SecureLS({ isCompression: false });
 
 export const storeOptions: StoreOptions<RootState> = {
   state: {} as RootState,
@@ -27,10 +24,20 @@ export const storeOptions: StoreOptions<RootState> = {
     createPersistedState({
       key: "iris-client-frontend",
       paths: ["userLogin.session"],
-      storage: {
-        getItem: (key) => ls.get(key),
-        setItem: (key, value) => ls.set(key, value),
-        removeItem: (key) => ls.remove(key),
+      getState(key: string, storage) {
+        try {
+          const item: string | null = storage.getItem(key);
+          return item ? JSON.parse(window.atob(item)) : null;
+        } catch (error) {
+          return null;
+        }
+      },
+      setState(key: string, state, storage): void {
+        try {
+          storage.setItem(key, window.btoa(JSON.stringify(state)));
+        } catch (error) {
+          // ignored
+        }
       },
     }),
   ],

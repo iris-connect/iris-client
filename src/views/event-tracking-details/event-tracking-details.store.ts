@@ -1,8 +1,8 @@
-import { DataRequestDetails, IrisClientFrontendApiFactory } from "@/api";
-import { clientConfig } from "@/main";
+import { DataRequestDetails } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
+import authClient from "@/api-client";
 
 export type EventTrackingDetailsState = {
   eventTrackingDetails: DataRequestDetails | null;
@@ -53,12 +53,12 @@ const eventTrackingDetails: EventTrackingDetailsModule = {
   },
   actions: {
     async fetchEventTrackingDetails({ commit }, eventId) {
-      const client = IrisClientFrontendApiFactory(clientConfig);
       let eventTrackingDetails: DataRequestDetails | null = null;
       commit("setEventTrackingDetails", eventTrackingDetails);
       commit("setEventTrackingDetailsLoading", true);
       try {
-        eventTrackingDetails = (await client.getLocationDetails(eventId)).data;
+        eventTrackingDetails = (await authClient.getLocationDetails(eventId))
+          .data;
       } finally {
         commit("setEventTrackingDetails", eventTrackingDetails);
         commit("setEventTrackingDetailsLoading", false);

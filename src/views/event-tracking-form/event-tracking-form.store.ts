@@ -1,14 +1,13 @@
 import {
   DataRequestClient,
   DataRequestDetails,
-  IrisClientFrontendApiFactory,
   LocationInformation,
 } from "@/api";
-import { clientConfig } from "@/main";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
+import authClient from "@/api-client";
 
 export type EventTrackingFormState = {
   locations: LocationInformation[] | null;
@@ -90,12 +89,11 @@ const eventTrackingForm: EventTrackingFormModule = {
   },
   actions: {
     async fetchEventLocations({ commit }, keyword) {
-      const client = IrisClientFrontendApiFactory(clientConfig);
       let locations: LocationInformation[] | null = null;
       commit("setEventLocationsError", null);
       commit("setEventLocationsLoading", true);
       try {
-        locations = (await client.searchSearchKeywordGet(keyword)).data
+        locations = (await authClient.searchSearchKeywordGet(keyword)).data
           .locations;
       } catch (e) {
         commit("setEventLocationsError", getErrorMessage(e));
@@ -112,9 +110,8 @@ const eventTrackingForm: EventTrackingFormModule = {
       commit("setEventCreationError", null);
       commit("setEventCreationOngoing", true);
       try {
-        const client = IrisClientFrontendApiFactory(clientConfig);
         return await (
-          await client.dataRequestsClientLocationsPost(dataRequestClient)
+          await authClient.dataRequestsClientLocationsPost(dataRequestClient)
         ).data;
       } catch (e) {
         commit("setEventCreationError", getErrorMessage(e));

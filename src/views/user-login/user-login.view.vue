@@ -82,7 +82,9 @@ export default class UserLoginView extends Vue {
         .catch(() => {
           // ignored
         });
-      this.$router.push("/");
+      this.$router.push("/").catch(() => {
+        // ignored
+      });
     }
   }
 }

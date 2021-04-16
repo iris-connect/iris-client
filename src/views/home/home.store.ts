@@ -1,11 +1,8 @@
-import {
-  ExistingDataRequestClientWithLocationList,
-  IrisClientFrontendApiFactory,
-} from "@/api";
-import { clientConfig } from "@/main";
+import { ExistingDataRequestClientWithLocationList } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
+import authClient from "@/api-client";
 
 export type HomeState = {
   eventTrackingList: ExistingDataRequestClientWithLocationList | null;
@@ -43,11 +40,10 @@ const home: HomeModule = {
   },
   actions: {
     async fetchEventTrackingList({ commit }) {
-      const client = IrisClientFrontendApiFactory(clientConfig);
       let eventTrackingList: ExistingDataRequestClientWithLocationList | null = null;
       commit("setEventTrackingListLoading", true);
       try {
-        eventTrackingList = (await client.dataRequestsClientLocationsGet())
+        eventTrackingList = (await authClient.dataRequestsClientLocationsGet())
           .data;
       } finally {
         commit("setEventTrackingList", eventTrackingList);
