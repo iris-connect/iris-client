@@ -3,6 +3,7 @@ import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import { RootState } from "@/store/types";
 import { Credentials, IrisClientFrontendApiFactory } from "@/api";
 import { clientConfig } from "@/main";
+import store from "@/store";
 
 export type UserLoginState = {
   authenticating: boolean;
@@ -27,6 +28,9 @@ export interface UserLoginModule extends Module<UserLoginState, RootState> {
       { commit }: { commit: Commit },
       formData: Credentials
     ): Promise<void>;
+  };
+  getters: {
+    isAuthenticated(): boolean;
   };
 }
 
@@ -72,6 +76,11 @@ const userLogin: UserLoginModule = {
         commit("setSession", session);
         commit("setAuthenticating", false);
       }
+    },
+  },
+  getters: {
+    isAuthenticated(): boolean {
+      return !!store.state.userLogin.session?.token;
     },
   },
 };

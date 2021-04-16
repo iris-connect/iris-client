@@ -23,7 +23,7 @@ export const routes: Array<RouteConfig> = [
     name: "user-login",
     meta: {
       menu: false,
-      menuEnabled: false,
+      auth: false,
     },
     component: () =>
       import(
@@ -84,13 +84,12 @@ const router = new VueRouter({
   routes,
 });
 
-const isAuthenticated = (): boolean => {
-  return !!store.state.userLogin.session?.token;
-};
-
 router.beforeEach((to, from, next) => {
-  if (to.name !== "user-login" && !isAuthenticated()) {
+  if (to.meta.auth !== false && !store.getters["userLogin/isAuthenticated"]) {
     return next("/user/login");
+  }
+  if (to.name === "user-login" && store.getters["userLogin/isAuthenticated"]) {
+    return next("/");
   }
   next();
 });
