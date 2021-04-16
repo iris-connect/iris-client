@@ -30,20 +30,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
     
-      - name: build parent POM (only) for the following builds
-        run: mvn -B -N install --file pom.xml
-    
-      - name: build and run IRIS API generator
-        run: mvn -B install --file iris-api-generator/pom.xml
-    
-      - name: build IRIS API sidecar client
-        run: mvn -B install --file iris-api-sidecar-client/pom.xml
-    
-      - name: build sormas API client
-        run: mvn -B install --file iris-sormas-api-client/pom.xml
-        
       - name: build, package and publish the image
-        run: mvn -B spring-boot:build-image --file iris-client-sormas-sidecar/pom.xml -Dspring-boot.build-image.publish=true -DskipTests
+        run: mvn -B spring-boot:build-image -am -pl iris-client-sormas-sidecar -Dspring-boot.build-image.publish=true -DskipTests
         env:
           DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
           DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
