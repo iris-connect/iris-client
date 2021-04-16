@@ -69,6 +69,8 @@ services:
     depends_on:
       - iris-client
     restart: unless-stopped
+    env_file:
+      - iris-client-frontend.env
 
   iris-app-api-demo:
     image: inoeg/iris-app-api-demo:${IRIS_VERSION}
