@@ -24,6 +24,8 @@ services:
         condition: service_healthy
     expose:
       - 8443
+    env_file:
+      - iris-gateway.env
 # do not work on Strato machine
 #    mem_limit: ${IRIS_PUBLIC_MEM}
 #    mem_reservation: ${IRIS_PUBLIC_MEM_RESERVED}
