@@ -1,11 +1,13 @@
 ########################################################
+# Intended for local execution by developers and testers 
+# 
 # provides full IRIS environment together with a Postgresql database and SORMAS
 # DB: look at docker-compose-postgres.yml
-# SORMAS: look at docker-compose-sormas.base.yml; port = 6080
+# SORMAS: port = 6080; look at docker-compose-sormas.base.yml
 # IRIS public: port = 8443
 # IRIS location: port = 8080
-# IRIS client: port = 8092
-# IRIS frontend: port = 28080
+# IRIS client: port = 8092; look at docker-compose-hd-client.base.yml
+# IRIS frontend: port = 28080; look at docker-compose-hd-client.base.yml
 ########################################################
 version: '3'
 services:
@@ -45,32 +47,27 @@ services:
     restart: unless-stopped
 
   iris-client:
-    image: inoeg/iris-client-sormas-sidecar:${IRIS_VERSION}
+    extends:
+      file: docker-compose-hd-client.base.yml
+      service: iris-client
     depends_on:
       postgres:
         condition: service_healthy
-#      sormas:
-#        condition: service_healthy
       iris-public: 
+        condition: service_started
+      iris-location: 
         condition: service_started
     ports:
       - 8092:8092
-    env_file:
-      # you must use this file set the access parameters for SORMAS 
-      - iris-sormas.env
-#    mem_limit: ${IRIS_CLIENT_MEM}
-#    mem_reservation: ${IRIS_CLIENT_MEM_RESERVED}
-    restart: unless-stopped
-
+  
   iris-frontend:
-    image: inoeg/iris-client-frontend:${IRIS_FRONTEND_VERSION}
+    extends:
+      file: docker-compose-hd-client.base.yml
+      service: iris-frontend
     ports:
       - 28080:28080
     depends_on:
       - iris-client
-    restart: unless-stopped
-    env_file:
-      - iris-client-frontend.env
 
   iris-app-api-demo:
     image: inoeg/iris-app-api-demo:${IRIS_VERSION}

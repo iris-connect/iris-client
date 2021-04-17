@@ -1,0 +1,33 @@
+########################################################
+# Intended for local execution by developers and testers 
+# 
+# provides full IRIS environment together with a Postgresql database without SORMAS
+# DB: look at docker-compose-postgres.yml
+# IRIS frontend: port = 28080
+########################################################
+version: '3'
+services:
+  postgres:
+    extends:
+      file: docker-compose-postgres.yml
+      service: postgres
+
+  iris-client:
+    extends:
+      file: docker-compose-hd-client.base.yml
+      service: iris-client
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  iris-frontend:
+    extends:
+      file: docker-compose-hd-client.base.yml
+      service: iris-frontend
+    ports:
+      - 28080:28080
+    depends_on:
+      - iris-client
+
+volumes:
+  psqldata_iris: 

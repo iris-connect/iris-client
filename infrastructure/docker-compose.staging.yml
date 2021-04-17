@@ -1,11 +1,13 @@
 ########################################################
+# Intended for the all in one staging environment on the VM 
+# 
 # provides a NGINX server with certificates and configuration for staging.iris-gateway.de
-# togehter with the IRIS applications and with a Postgresql database and SORMAS
+# togehter with the IRIS applications and with a Postgresql database without SORMAS
 # DB: look at docker-compose-postgres.yml
-# SORMAS: look at docker-compose-sormas.base.yml
-# IRIS public: port = 8443
-# IRIS location: port = 8080
-# IRIS client: port = 8092
+# IRIS public: port = /
+# IRIS location: port = /
+# IRIS client: port = /; look at docker-compose-hd-client.base.yml
+# IRIS frontend: port = /; look at docker-compose-hd-client.base.yml
 # NGINX: port = 443
 ########################################################
 version: '3'
@@ -34,25 +36,23 @@ services:
     restart: unless-stopped
 
   iris-client:
-    image: inoeg/iris-client-sormas-sidecar:${IRIS_VERSION}
+    extends:
+      file: docker-compose-hd-client.base.yml
+      service: iris-client
     depends_on:
       postgres:
         condition: service_healthy
       iris-public: 
         condition: service_started
-    expose:
-      - 8092
-#    mem_limit: ${IRIS_CLIENT_MEM}
-#    mem_reservation: ${IRIS_CLIENT_MEM_RESERVED}
-    restart: unless-stopped
-
+      iris-location: 
+        condition: service_started
+  
   iris-frontend:
-    image: inoeg/iris-client-frontend:${IRIS_FRONTEND_VERSION}
-    expose:
-      - 28080
+    extends:
+      file: docker-compose-hd-client.base.yml
+      service: iris-frontend
     depends_on:
       - iris-client
-    restart: unless-stopped
 
   nginx:
     build:

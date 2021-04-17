@@ -1,0 +1,23 @@
+########################################################
+# provides basic configurations for IRIS client backend and frontend
+# this is necessary because extends can't reference to a service with depends_on
+########################################################
+version: '3'
+services:
+  iris-client:
+    image: inoeg/iris-client-sormas-sidecar:${IRIS_VERSION}
+    expose:
+      - 8092
+    env_file:
+      - iris-client-frontend.env
+#    mem_limit: ${IRIS_CLIENT_MEM}
+#    mem_reservation: ${IRIS_CLIENT_MEM_RESERVED}
+    restart: unless-stopped
+
+  iris-frontend:
+    image: inoeg/iris-client-frontend:${IRIS_FRONTEND_VERSION}
+    expose:
+      - 28080
+    env_file:
+      - iris-client-frontend.env
+    restart: unless-stopped
