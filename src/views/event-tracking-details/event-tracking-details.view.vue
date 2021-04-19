@@ -300,11 +300,19 @@ export default class EventTrackingDetailsView extends Vue {
       //       |----------------| TIME CONTACT PERSON _c Started and Ended_ AT LOCATION
       //       |--------| RELEVANT
 
-      let duration = 0;
+      let maxDuration = "keine";
       if (checkOut && checkIn && startTime && endTime) {
-        duration =
-          Math.min(checkOut.valueOf(), endTime.valueOf()) -
-          Math.max(checkIn.valueOf(), startTime.valueOf());
+        let durationSeconds =
+          (Math.min(checkOut.valueOf(), endTime.valueOf()) -
+            Math.max(checkIn.valueOf(), startTime.valueOf())) /
+          1000;
+        let hours = Math.floor(durationSeconds / 3600);
+        let minutes = Math.round((durationSeconds - hours * 3600) / 60);
+        if (durationSeconds > 0) {
+          if (hours > 0)
+            maxDuration = hours.toString() + "h " + minutes.toString() + "min";
+          else if (minutes > 0) maxDuration = minutes.toString() + "min";
+        }
       }
       return {
         id: index,
@@ -312,13 +320,8 @@ export default class EventTrackingDetailsView extends Vue {
         firstName: guest.firstName || "-",
         checkInTime,
         checkOutTime,
-        maxDuration:
-          duration > 0
-            ? `${new Date(duration).getHours()}h, ${new Date(
-                duration
-              ).getMinutes()}min`
-            : "keine",
-        comment: "-", // TODO: descriptionOfParticipation or additionalInformation?
+        maxDuration: maxDuration,
+        comment: guest.attendanceInformation.additionalInformation || "-", // TODO: Line Breaks
         sex: guest.sex ? this.getSexName(guest.sex) : "-",
         email: guest.email || "-",
         phone: guest.phone || "-",
