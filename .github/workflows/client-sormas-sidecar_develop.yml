@@ -31,7 +31,7 @@ jobs:
             ${{ runner.os }}-maven-
     
       - name: build, package and publish the image
-        run: mvn -B spring-boot:build-image -am -pl iris-client-sormas-sidecar -Dspring-boot.build-image.publish=true -DskipTests
+        run: mvn -B spring-boot:build-image -am -pl iris-api-generator,iris-client-sormas-sidecar -Dspring-boot.build-image.publish=true -DskipTests
         env:
           DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
           DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
