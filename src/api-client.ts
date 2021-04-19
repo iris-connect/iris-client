@@ -6,14 +6,14 @@ import { makeMockAPIServer } from "@/server/mockAPIServer";
 import { UserSession } from "@/views/user-login/user-login.store";
 import { get as _get } from "lodash";
 import { parseError } from "@/utils/axios";
+import config from "@/config";
 
-// TODO this should be in a config.ts file
-let apiBaseURL = "https://api.staging.iris-gateway.de";
-if (process.env.NODE_ENV === "development") {
-  apiBaseURL = "http://localhost:8080";
+if (process.env.VUE_APP_ENABLE_MOCK_SERVER === "true") {
+  // Not sure whether imported mockAPIServer ends up in bundle for deployment.
   makeMockAPIServer();
 }
-// the clientConfig ist api related and should be placed here.
+
+const { apiBaseURL } = config;
 export const clientConfig = new Configuration({
   basePath: apiBaseURL,
 });
