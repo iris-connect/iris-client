@@ -16,6 +16,15 @@ npm install
 npm run serve
 ```
 
+### Run integration mode with real backend
+
+```bash
+npm run serve:int
+```
+
+The api base url which points to the sormas sidecar can be configured in:
+`.env.integration`
+
 ### Compiles and minifies for production
 
 ```bash
@@ -38,6 +47,18 @@ npm run lint
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+## App configuration
+
+### Runtime config
+
+The application is configured at runtime via environment variables.
+
+This is achieved by first injecting the config using server side rendering into the global window scope.
+See `public/index.html`.
+
+Later on these values are picked up at runtime in the Vue app.
+See `src/config.ts`.
+
 ### Routes/views and params
 
 In this section you find all deeplinks for our SPA.
@@ -56,7 +77,7 @@ We are currently not supporting any URL query parameters to e.g. prefill text fi
 /events/new
 ```
 
-#### Event details
+### Event details
 
 ```text
 /events/details/:id
@@ -101,7 +122,7 @@ The webserver is configured using the Caddyfile which can be found in this direc
 2. Run container
 
    ```bash
-   docker container run --name web12 -p 8080:28080 fe:1.0
+   docker container run --name web -p 8080:28080 -e SORMAS_SIDECAR_BASE_URL="https://api.staging.iris-gateway.de" fe:1.0
    ```
 
 3. Open [http://localhost:8080](http://localhost:8080)
@@ -126,10 +147,16 @@ Steps:
 3. Install caddy  
    [https://caddyserver.com/docs/install](https://caddyserver.com/docs/install)
 
-4. Start caddy
+4. Configure runtime
+
+   ```bash
+   export SORMAS_SIDECAR_BASE_URL="https://api.staging.iris-gateway.de"
+   ```
+
+5. Start caddy
 
    ```bash
    caddy run
    ```
 
-5. Open [http://localhost:28080](http://localhost:28080)
+6. Open [http://localhost:28080](http://localhost:28080)
