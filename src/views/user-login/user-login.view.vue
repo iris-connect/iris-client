@@ -71,20 +71,20 @@ export default class UserLoginView extends Vue {
   }
 
   get isDisabled(): boolean {
-    return false;
+    return this.$store.state.userLogin.authenticating;
   }
 
-  async submit(): Promise<void> {
+  submit(): void {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
-      await store
+      store
         .dispatch("userLogin/authenticate", this.formModel)
+        .then(() => {
+          return this.$router.push("/");
+        })
         .catch(() => {
-          // ignored
+          // ignored: auth error message is provided by vuex store
         });
-      this.$router.push("/").catch(() => {
-        // ignored
-      });
     }
   }
 }
