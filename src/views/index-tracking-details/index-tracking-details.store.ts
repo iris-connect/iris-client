@@ -1,0 +1,70 @@
+import { DataRequestDetails, IrisClientFrontendApiFactory } from "@/api";
+import { clientConfig } from "@/main";
+import { RootState } from "@/store/types";
+
+import { Commit, Module } from "vuex";
+
+export type IndexTrackingDetailsState = {
+  indexTrackingDetails: DataRequestDetails | null;
+  indexTrackingDetailsLoading: boolean;
+};
+
+export interface IndexTrackingDetailsModule
+  extends Module<IndexTrackingDetailsState, RootState> {
+  mutations: {
+    setIndexTrackingDetails(
+      state: IndexTrackingDetailsState,
+      indexTrackingDetails: DataRequestDetails | null
+    ): void;
+    setIndexTrackingDetailsLoading(
+      state: IndexTrackingDetailsState,
+      payload: boolean
+    ): void;
+    reset(state: IndexTrackingDetailsState, payload: null): void;
+  };
+  actions: {
+    fetchIndexTrackingDetails(
+      { commit }: { commit: Commit },
+      indexId: string
+    ): Promise<void>;
+  };
+}
+
+const defaultState: IndexTrackingDetailsState = {
+  indexTrackingDetails: null,
+  indexTrackingDetailsLoading: false,
+};
+
+const indexTrackingDetails: IndexTrackingDetailsModule = {
+  namespaced: true,
+  state() {
+    return { ...defaultState };
+  },
+  mutations: {
+    setIndexTrackingDetails(state, indexTrackingDetails) {
+      state.indexTrackingDetails = indexTrackingDetails;
+    },
+    setIndexTrackingDetailsLoading(state, loading) {
+      state.indexTrackingDetailsLoading = loading;
+    },
+    reset(state) {
+      Object.assign(state, { ...defaultState });
+    },
+  },
+  actions: {
+    async fetchIndexTrackingDetails({ commit }, indexId) {
+      const client = IrisClientFrontendApiFactory(clientConfig);
+      //let indexTrackingDetails: DataRequestDetails | null = null;
+      commit("setIndexTrackingDetails", indexTrackingDetails);
+      commit("setIndexTrackingDetailsLoading", true);
+      try {
+        //eventTrackingDetails = (await client.getLocationDetails(eventId)).data;
+      } finally {
+        commit("setIndexTrackingDetails", indexTrackingDetails);
+        commit("setIndexTrackingDetailsLoading", false);
+      }
+    },
+  },
+};
+
+export default indexTrackingDetails;
