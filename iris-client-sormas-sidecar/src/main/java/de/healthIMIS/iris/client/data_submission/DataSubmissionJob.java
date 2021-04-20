@@ -19,6 +19,7 @@ import de.healthIMIS.iris.client.core.IrisProperties;
 import de.healthIMIS.iris.client.core.sync.SyncTimes;
 import de.healthIMIS.iris.client.core.sync.SyncTimesRepository;
 import de.healthIMIS.iris.client.data_request.DataRequestManagement;
+import de.healthIMIS.iris.client.data_submission.service.DataSubmissionService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +49,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Slf4j
 @Profile("!inttest")
 class DataSubmissionJob {
+
+	@Autowired
+	private DataSubmissionService dataSubmissionService;
 
 	private final @NonNull SyncTimesRepository syncTimes;
 	private final @NonNull DataRequestManagement dataRequests;
@@ -87,10 +92,9 @@ class DataSubmissionJob {
 		try {
 
 			log.trace("Submission job - GET to server is sent");
-
 			var response = rest.getForEntity("https://{address}:{port}/hd/data-submissions?departmentId={depId}&from={from}",
 					DataSubmissionDto[].class, properties.getServerAddress().getHostName(), properties.getServerPort(),
-					clientProperties.getClientId(), lastSync);
+					clientProperties.getClientId(), lastSync.atZone(ZoneId.of("Europe/Berlin")).toInstant());
 
 			handleDtos(response.getBody());
 
@@ -99,7 +103,7 @@ class DataSubmissionJob {
 			log.debug("Submission job - GET to public server sent: {}",
 					Arrays.stream(response.getBody()).map(it -> it.getRequestId().toString()).collect(Collectors.joining(", ")));
 
-			callDeleteEndpoint(lastSync);
+			dataSubmissionService.deleteDataSubmissionFromServer(Arrays.asList(response.getBody().clone()));
 
 			errorCounter = 0;
 
@@ -150,16 +154,5 @@ class DataSubmissionJob {
 		var lastSync = Instant.ofEpochMilli(lastModified);
 
 		syncTimes.save(SyncTimes.of(SyncTimes.DataTypes.Submissions, lastSync));
-	}
-
-	private void callDeleteEndpoint(LocalDateTime lastSync) {
-
-		log.trace("Submission job - DELETE to public server is sent");
-
-		rest.delete("https://{address}:{port}/hd/data-submissions?departmentId={depId}&from={from}",
-				properties.getServerAddress().getHostName(), properties.getServerPort(), clientProperties.getClientId(),
-				lastSync);
-
-		log.trace("Submission job - DELETE to public server sent");
 	}
 }
