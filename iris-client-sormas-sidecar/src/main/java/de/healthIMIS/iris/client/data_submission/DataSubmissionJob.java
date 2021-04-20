@@ -31,7 +31,6 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
@@ -50,9 +49,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Profile("!inttest")
 class DataSubmissionJob {
 
-	@Autowired
-	private DataSubmissionService dataSubmissionService;
-
 	private final @NonNull SyncTimesRepository syncTimes;
 	private final @NonNull DataRequestManagement dataRequests;
 	private final @NonNull RestTemplate rest;
@@ -62,13 +58,15 @@ class DataSubmissionJob {
 	private final @NonNull KeyStore keyStore;
 	private final @NonNull ModelMapper modelMapper;
 	private final @NonNull DataSubmissionRepository submissions;
+	private final @NonNull DataSubmissionService dataSubmissionService;
 
 	private long errorCounter = 0;
 
 	public DataSubmissionJob(@NonNull SyncTimesRepository syncTimes, @NonNull DataRequestManagement dataRequests,
 			@NonNull @Qualifier("iris-rest") RestTemplate rest, @NonNull IrisClientProperties clientProperties,
 			@NonNull IrisProperties properties, @NonNull ObjectMapper mapper, @NonNull KeyStore keyStore,
-			@NonNull ModelMapper modelMapper, @NonNull DataSubmissionRepository submissions) {
+			@NonNull ModelMapper modelMapper, @NonNull DataSubmissionRepository submissions,
+			@NonNull DataSubmissionService dataSubmissionService) {
 
 		this.syncTimes = syncTimes;
 		this.dataRequests = dataRequests;
@@ -79,6 +77,7 @@ class DataSubmissionJob {
 		this.keyStore = keyStore;
 		this.modelMapper = modelMapper;
 		this.submissions = submissions;
+		this.dataSubmissionService = dataSubmissionService;
 	}
 
 	@Scheduled(fixedDelay = 15000)
