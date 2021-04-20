@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -42,8 +43,17 @@ class DataRequestControllerSystemTest {
     private DataRequestManagement dataRequestManagement;
 
     @Test
+    public void endpointShouldBeProtected() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/data-requests-client/locations")
+        ).andExpect(MockMvcResultMatchers.status().isForbidden()).andReturn();
+    }
+
+    @Test
+    @WithMockUser()
     public void getDataRequests() throws Exception {
-        var res = mockMvc.perform(MockMvcRequestBuilders.get("/data-requests-client/locations")
+        var res = mockMvc.perform(
+                MockMvcRequestBuilders
+                        .get("/data-requests-client/locations")
         ).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
         var dataRequests = om.readValue(res.getResponse().getContentAsString(), ExistingDataRequestClientWithLocationList.class);
@@ -53,14 +63,18 @@ class DataRequestControllerSystemTest {
     }
 
     @Test
+    @WithMockUser()
     public void getDataRequestByCode() throws Exception {
         postNewDataRequest();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/data-requests-client/locations/123")
+        mockMvc.perform(
+                MockMvcRequestBuilders
+                        .get("/data-requests-client/locations/123")
         ).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
     }
 
     @Test
+    @WithMockUser()
     public void createDataRequest() throws Exception {
         postNewDataRequest();
     }
@@ -87,5 +101,4 @@ class DataRequestControllerSystemTest {
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
     }
-
 }

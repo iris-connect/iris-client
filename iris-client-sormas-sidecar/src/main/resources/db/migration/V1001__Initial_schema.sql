@@ -11,7 +11,7 @@ CREATE TABLE location (
 	contact_owner_email varchar(50) NULL,
 	contact_email varchar(50) NULL,
 	contact_phone varchar(50) NULL,
-	
+
 	CONSTRAINT location_pkey PRIMARY KEY (id)
 );
 
@@ -83,7 +83,17 @@ CREATE TABLE guest (
 );
 
 CREATE TABLE sync_times (
-    data_type varchar(50) NOT NULL,    
+    data_type varchar(50) NOT NULL,
     last_sync timestamp NOT NULL,
     CONSTRAINT sync_times_pkey PRIMARY KEY (data_type)
 );
+
+CREATE TABLE user_accounts (
+    user_id uuid NOT NULL,
+    user_name varchar(50) NOT NULL,
+    password varchar(200) NOT NULL,
+    PRIMARY KEY (user_id),
+    CONSTRAINT user_name_unique UNIQUE(user_name)
+);
+
+CREATE INDEX user_accounts_user_name ON user_accounts (user_name);
