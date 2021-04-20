@@ -7,12 +7,16 @@
       <v-card-text>
         <v-col cols="8">
           <v-row>
-            Name:
+            Index-Bezeichner:
             {{ indexData.name }}
           </v-row>
           <v-row>
-            Ort:
-            {{ indexData.address }}
+            Kommentar:
+            {{ indexData.comment }}
+          </v-row>
+          <v-row>
+            TAN:
+            {{ indexData.tan }}
           </v-row>
           <v-row>
             Zeitraum:
