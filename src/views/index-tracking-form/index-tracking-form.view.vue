@@ -6,7 +6,7 @@
       lazy-validation
       :disabled="indexCreationOngoing"
     >
-      <v-card-title>Index-Nachverfolgung ???</v-card-title>
+      <v-card-title>Indexfall Erfassung</v-card-title>
       <v-card-text>
         <v-row>
           <v-col cols="12" sm="6">
@@ -21,14 +21,24 @@
           </v-col>
         </v-row>
         <v-row>
+          <v-col cols="12" sm="6">
+            <v-textarea
+              v-model="form.model.comment"
+              label="Kommentar"
+            ></v-textarea>
+          </v-col>
+        </v-row>
+        <v-row>
           <v-col cols="12" md="6">
             <date-time-input-field
               v-model="form.model.start"
               :date-props="{
                 label: 'Datum (Beginn)',
+                required: 'required',
               }"
               :time-props="{
                 label: 'Uhrzeit (Beginn)',
+                required: 'required',
               }"
               :rules="validationRules.start"
               required
@@ -43,8 +53,6 @@
               :time-props="{
                 label: 'Uhrzeit (Ende)',
               }"
-              :rules="validationRules.end"
-              required
             />
           </v-col>
         </v-row>
@@ -63,7 +71,7 @@
           color="primary"
           @click="submit"
         >
-          Anfrage senden
+          Daten senden
         </v-btn>
       </v-card-actions>
     </v-form>
@@ -90,6 +98,7 @@ type IndexTrackingFormModel = {
   start: string;
   end: string;
   name: string;
+  comment: string;
 };
 
 type IndexTrackingFormQueryParameters = Partial<
@@ -143,6 +152,7 @@ export default class IndexTrackingFormView extends Vue {
       start: "",
       end: "",
       name: "",
+      comment: "",
     },
     valid: false,
   };

@@ -8,7 +8,7 @@
             color="primary"
             :to="{ name: 'index-new' }"
           >
-            Neue Indexfallverfolgung starten
+            Neuen Indexfall erstellen
           </v-btn>
         </div>
       </v-col>

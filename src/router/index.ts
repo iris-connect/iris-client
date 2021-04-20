@@ -30,7 +30,7 @@ export const routes: Array<RouteConfig> = [
   },
   {
     path: "/cases/new",
-    name: "case-new",
+    name: "index-new",
     meta: {
       menu: false,
     },
@@ -76,7 +76,7 @@ export const routes: Array<RouteConfig> = [
   },
   {
     path: "/cases/details/:id",
-    name: "case-details" /* Caution: This acts as an identifier! */,
+    name: "index-details" /* Caution: This acts as an identifier! */,
     meta: {
       menu: false,
     },

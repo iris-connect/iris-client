@@ -61,9 +61,11 @@
               v-model="form.model.start"
               :date-props="{
                 label: 'Datum (Beginn)',
+                required: 'required',
               }"
               :time-props="{
                 label: 'Uhrzeit (Beginn)',
+                required: 'required',
               }"
               :rules="validationRules.start"
               required
@@ -74,9 +76,11 @@
               v-model="form.model.end"
               :date-props="{
                 label: 'Datum (Ende)',
+                required: 'required',
               }"
               :time-props="{
                 label: 'Uhrzeit (Ende)',
+                required: 'required',
               }"
               :rules="validationRules.end"
               required
