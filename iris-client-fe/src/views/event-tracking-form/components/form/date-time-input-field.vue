@@ -10,18 +10,18 @@
         <date-input-field
           v-model="date"
           @input="setDateTime"
+          v-bind="dateProps"
           :rules="required ? dateTimeRules.date : ''"
           :error="error"
-          v-bind="dateProps"
         />
       </v-col>
       <v-col cols="12" sm="6">
         <time-input-field
           v-model="time"
           @blur="setDateTime"
+          v-bind="timeProps"
           :rules="required ? dateTimeRules.time : ''"
           :error="error"
-          v-bind="timeProps"
         />
       </v-col>
     </v-row>

@@ -16,7 +16,7 @@
     <v-row class="mb-6">
       <v-col cols="8">
         Status:
-        <v-btn-toggle dense mandatory>
+        <v-btn-toggle dense mandatory v-model="statusButtonSelected">
           <v-btn
             @click="filterStatus(statusEnum.DataRequested)"
             style="opacity: 100%; background-color: white"
@@ -72,7 +72,7 @@
             <!-- TODO use imported route name -->
             <v-btn
               color="primary"
-              :to="{ name: 'event-details', params: { id: item.code } }"
+              :to="{ name: 'index-details', params: { id: item.code } }"
             >
               Details
             </v-btn>
@@ -85,8 +85,9 @@
 
 <script lang="ts">
 import {
-  ExistingDataRequestClientWithLocationStatusEnum,
-  ExistingDataRequestClientWithLocation,
+  DataRequestCaseDetailsList,
+  DataRequestCaseDetails,
+  DataRequestCaseDetailsStatusEnum,
 } from "@/api";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
@@ -101,8 +102,6 @@ function getFormattedDate(date?: string): string {
 type TableRow = {
   endTime: string;
   extID: string;
-  generatedTime: string;
-  lastChange: string;
   name: string;
   startTime: string;
   status: string;
@@ -122,12 +121,10 @@ type TableRow = {
   },
 })
 export default class IndexTrackingListView extends Vue {
-  statusFilter: ExistingDataRequestClientWithLocationStatusEnum | null = null;
-  statusEnum = ExistingDataRequestClientWithLocationStatusEnum;
+  statusFilter: DataRequestCaseDetailsStatusEnum | null = null;
+  statusEnum = DataRequestCaseDetailsStatusEnum;
   statusButtonSelected = 3;
-  filterStatus(
-    target: ExistingDataRequestClientWithLocationStatusEnum | null
-  ): void {
+  filterStatus(target: DataRequestCaseDetailsStatusEnum | null): void {
     this.statusFilter = target;
   }
 
@@ -143,9 +140,7 @@ export default class IndexTrackingListView extends Vue {
       { text: "Index-Bezeichner", value: "name" },
       { text: "Zeit (Start)", value: "startTime" },
       { text: "Zeit (Ende)", value: "endTime" },
-      { text: "Generiert", value: "generatedTime" },
       { text: "Status", value: "status" },
-      { text: "Letzte Ändrung", value: "lastChange" },
       { text: "", value: "actions" },
     ],
   };
@@ -155,8 +150,8 @@ export default class IndexTrackingListView extends Vue {
   }
 
   get indexList(): TableRow[] {
-    const dataRequests =
-      store.state.indexTrackingList.indexTrackingList?.dataRequests || [];
+    const dataRequests = store.state.indexTrackingList.indexTrackingList || [];
+    console.log(dataRequests);
     return (
       dataRequests
         // TODO this filtering could probably also be done in vuetify data-table
@@ -168,10 +163,7 @@ export default class IndexTrackingListView extends Vue {
           return {
             endTime: getFormattedDate(dataRequest.end),
             startTime: getFormattedDate(dataRequest.start),
-            generatedTime: getFormattedDate(dataRequest.requestedAt),
-            lastChange: getFormattedDate(dataRequest.lastUpdatedAt),
-            extID: dataRequest.externalRequestId || "-",
-            code: dataRequest.code,
+            extID: dataRequest.externalCaseId || "-",
             name: dataRequest.name || "-",
             status: dataRequest.status?.toString() || "-",
           };
@@ -196,30 +188,26 @@ export default class IndexTrackingListView extends Vue {
     console.log("NOT IMPLEMENTED", item);
   }
 
-  getStatusColor(
-    status: ExistingDataRequestClientWithLocationStatusEnum
-  ): string {
+  getStatusColor(status: DataRequestCaseDetailsStatusEnum): string {
     switch (status) {
-      case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+      case DataRequestCaseDetailsStatusEnum.DataRequested:
         return "blue";
-      case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+      case DataRequestCaseDetailsStatusEnum.DataReceived:
         return "red";
-      case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+      case DataRequestCaseDetailsStatusEnum.Closed:
         return "green";
       default:
         return "gray"; // TODO
     }
   }
 
-  getStatusName(
-    status: ExistingDataRequestClientWithLocationStatusEnum
-  ): string {
+  getStatusName(status: DataRequestCaseDetailsStatusEnum): string {
     switch (status) {
-      case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+      case DataRequestCaseDetailsStatusEnum.DataRequested:
         return "Angefragt";
-      case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+      case DataRequestCaseDetailsStatusEnum.DataReceived:
         return "Geliefert";
-      case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+      case DataRequestCaseDetailsStatusEnum.Closed:
         return "Abgeschlossen";
       default:
         return "Unbekannt"; // TODO find better name

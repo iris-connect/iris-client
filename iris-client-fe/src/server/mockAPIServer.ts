@@ -5,6 +5,7 @@ import {
   getDummyDetailsWithStatus,
 } from "@/server/data/data-requests";
 import { createServer, Request, Response } from "miragejs";
+import { dummyDataRequestsCases } from "@/server/data/data-requests-cases";
 import router from "@/router";
 import {
   dummyUserList,
@@ -101,23 +102,27 @@ export function makeMockAPIServer() {
         return created;
       });
 
-      this.get("/data-requests-client/locations", (schema, request) => {
+      this.get("/data-requests-client/locations", (__schema, request) => {
         return authResponse(request, dummyDataRequests);
       });
 
-      this.get("/data-requests-client/locations/:id", (schema, request) => {
+      this.get("/data-requests-client/locations/:id", (__schema, request) => {
         const data = getDummyDetailsWithStatus(router.currentRoute.params.id);
         return authResponse(request, data);
       });
 
-      this.get("/search/mio", (schema, request) => {
+      this.get("/data-request-client/cases", () => {
+        return dummyDataRequestsCases;
+      });
+
+      this.get("/search/mio", (_schema, request) => {
         const data = {
           locations: [dummyLocations[0]],
         };
         return authResponse(request, data);
       });
 
-      this.get("/search/august", (schema, request) => {
+      this.get("/search/august", (_schema, request) => {
         const data = {
           locations: [dummyLocations[1]],
         };
