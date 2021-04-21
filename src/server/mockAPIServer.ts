@@ -1,9 +1,14 @@
 import { DataRequestDetails } from "@/api";
+import { DataRequestCaseDetails } from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
 import {
   dummyDataRequests,
   getDummyDetailsWithStatus,
 } from "@/server/data/data-requests";
+import {
+  dummyDataRequestsCases,
+  getDummyDetailsCasesWithStatus,
+} from "@/server/data/data-requests-cases";
 import { createServer } from "miragejs";
 import router from "@/router";
 
@@ -22,6 +27,10 @@ export function makeMockAPIServer() {
 
       this.get("/data-requests-client/locations", () => {
         return dummyDataRequests;
+      });
+
+      this.get("/data-request-client/cases", () => {
+        return dummyDataRequestsCases;
       });
 
       this.get("/data-requests-client/locations/:id", () => {

@@ -1,14 +1,11 @@
-import {
-  ExistingDataRequestClientWithLocationList,
-  IrisClientFrontendApiFactory,
-} from "@/api";
+import { DataRequestCaseDetails, IrisClientFrontendApiFactory } from "@/api";
 import { clientConfig } from "@/main";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 
 export type IndexTrackingListState = {
-  indexTrackingList: ExistingDataRequestClientWithLocationList | null;
+  indexTrackingList: Array<DataRequestCaseDetails> | null;
   indexTrackingListLoading: boolean;
 };
 
@@ -17,7 +14,7 @@ export interface IndexTrackingListModule
   mutations: {
     setIndexTrackingList(
       state: IndexTrackingListState,
-      indexTrackingList: ExistingDataRequestClientWithLocationList | null
+      indexTrackingList: Array<DataRequestCaseDetails> | null
     ): void;
     setIndexTrackingListLoading(
       state: IndexTrackingListState,
@@ -56,11 +53,10 @@ const indexTrackingList: IndexTrackingListModule = {
   actions: {
     async fetchIndexTrackingList({ commit }) {
       const client = IrisClientFrontendApiFactory(clientConfig);
-      let indexTrackingList: ExistingDataRequestClientWithLocationList | null = null;
+      let indexTrackingList: Array<DataRequestCaseDetails> | null = null;
       commit("setIndexTrackingListLoading", true);
       try {
-        indexTrackingList = (await client.dataRequestsClientLocationsGet())
-          .data;
+        indexTrackingList = (await client.dataRequestClientCasesGet()).data;
       } finally {
         commit("setIndexTrackingList", indexTrackingList);
         commit("setIndexTrackingListLoading", false);

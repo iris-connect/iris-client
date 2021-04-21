@@ -264,7 +264,8 @@ export default class EventTrackingDetailsView extends Vue {
   get guests(): TableRow[] {
     // TODO attendanceInformation is optional
     const guests =
-      store.state.eventTrackingDetails.eventTrackingDetails?.guests || [];
+      store.state.eventTrackingDetails.eventTrackingDetails?.submissionData
+        ?.guests || [];
     const eventDataRequest =
       store.state.eventTrackingDetails.eventTrackingDetails;
     return guests.map((guest, index) => {
