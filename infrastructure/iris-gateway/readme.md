@@ -12,6 +12,17 @@ and build the images there:
 1. `eval $(minikube docker-env)`
 1. `./mvnw spring-boot:build-image -DskipTests`
 
+You can also use the python scripts:
+
+| script | purpose |
+--- | ---
+| `minikube-check-dependencies.py` | test if you have the required packages installed |
+| `minikube-start.py` | start the minikube instance, if it's not running yet |
+| `minikube-build-docker.py` | build the docker image for the minikube deployment - uses a remote docker connection |
+| `minikube-deploy.py` | run the deployment |
+| `minikube-undeploy.py` | remove the deployment |
+| `minikube-stop.py` | stop the minikube instance |
+
 #### local database
 Postgres is created as a container. Secrets are created automatically; see [secret.yaml](templates/postgres/secret.yaml).
 
