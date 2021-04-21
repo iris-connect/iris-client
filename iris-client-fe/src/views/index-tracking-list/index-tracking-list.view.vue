@@ -72,7 +72,7 @@
             <!-- TODO use imported route name -->
             <v-btn
               color="primary"
-              :to="{ name: 'index-details', params: { id: item.code } }"
+              :to="{ name: 'index-details', params: { caseId: item.caseId } }"
             >
               Details
             </v-btn>
@@ -85,7 +85,6 @@
 
 <script lang="ts">
 import {
-  DataRequestCaseDetailsList,
   DataRequestCaseDetails,
   DataRequestCaseDetailsStatusEnum,
 } from "@/api";
@@ -151,7 +150,7 @@ export default class IndexTrackingListView extends Vue {
 
   get indexList(): TableRow[] {
     const dataRequests = store.state.indexTrackingList.indexTrackingList || [];
-    console.log(dataRequests);
+    //console.log(dataRequests);
     return (
       dataRequests
         // TODO this filtering could probably also be done in vuetify data-table
@@ -166,6 +165,7 @@ export default class IndexTrackingListView extends Vue {
             extID: dataRequest.externalCaseId || "-",
             name: dataRequest.name || "-",
             status: dataRequest.status?.toString() || "-",
+            caseId: dataRequest.caseId,
           };
         })
     );

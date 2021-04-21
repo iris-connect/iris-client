@@ -1,6 +1,6 @@
 import {
-  DataRequestClient,
-  DataRequestDetails,
+  DataRequestCaseClient,
+  DataRequestCaseDetails,
   IrisClientFrontendApiFactory,
 } from "@/api";
 import { clientConfig } from "@/main";
@@ -30,8 +30,8 @@ export interface IndexTrackingFormModule
   actions: {
     createIndexTracking(
       { commit }: { commit: Commit },
-      formData: DataRequestClient
-    ): Promise<DataRequestDetails>;
+      formData: DataRequestCaseClient
+    ): Promise<DataRequestCaseDetails>;
   };
 }
 
@@ -59,14 +59,14 @@ const indexTrackingForm: IndexTrackingFormModule = {
   actions: {
     async createIndexTracking(
       { commit },
-      dataRequestClient
-    ): Promise<DataRequestDetails> {
+      dataRequestCaseClient
+    ): Promise<DataRequestCaseDetails> {
       commit("setIndexCreationError", null);
       commit("setIndexCreationOngoing", true);
       try {
         const client = IrisClientFrontendApiFactory(clientConfig);
         return await (
-          await client.dataRequestsClientLocationsPost(dataRequestClient)
+          await client.dataRequestClientCasesPost(dataRequestCaseClient)
         ).data;
       } catch (e) {
         commit("setIndexCreationError", getErrorMessage(e));

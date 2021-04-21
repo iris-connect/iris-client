@@ -1,11 +1,11 @@
-import { DataRequestDetails, IrisClientFrontendApiFactory } from "@/api";
+import { DataRequestCaseDetails, IrisClientFrontendApiFactory } from "@/api";
 import { clientConfig } from "@/main";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 
 export type IndexTrackingDetailsState = {
-  indexTrackingDetails: DataRequestDetails | null;
+  indexTrackingDetails: DataRequestCaseDetails | null;
   indexTrackingDetailsLoading: boolean;
 };
 
@@ -14,7 +14,7 @@ export interface IndexTrackingDetailsModule
   mutations: {
     setIndexTrackingDetails(
       state: IndexTrackingDetailsState,
-      indexTrackingDetails: DataRequestDetails | null
+      indexTrackingDetails: DataRequestCaseDetails | null
     ): void;
     setIndexTrackingDetailsLoading(
       state: IndexTrackingDetailsState,
