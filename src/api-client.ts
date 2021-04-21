@@ -27,14 +27,10 @@ authAxiosInstance.interceptors.request.use((config) => {
 });
 
 authAxiosInstance.interceptors.response.use(
-  (response) => {
-    const session = sessionFromResponse(response);
-    store.commit("userLogin/setSession", session);
-    return response;
-  },
+  (response) => response,
   (error) => {
     const status = parseError(error)?.status;
-    if (status === 401) {
+    if (status === 401 || status === 403) {
       // @todo: handle redirect to user login view with info message: token expired, etc.
       store.commit("userLogin/setSession");
     }
@@ -44,11 +40,11 @@ authAxiosInstance.interceptors.response.use(
 
 export const sessionFromResponse = (response: AxiosResponse): UserSession => {
   const headers = response.headers;
-  // upper-/lowercase fallback is necessary because the Authorization header in the miragejs response is lowercase.
+  // upper-/lowercase fallback is necessary because the Authentication-Info header is lowercase.
   const authHeader = _get(
     headers,
-    "Authorization",
-    _get(headers, "authorization")
+    "authentication-info",
+    _get(headers, "Authentication-Info")
   );
   const token = authHeader?.split(" ")[1];
   return {
