@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * IRIS-Gateway API
- * ### Encryption of the data to be transmitted (contact data) In order to be not limited in the amount of data, a hybrid encryption with symmetric encryption of the data and asymmetric encryption of the symmetric key is used for the encryption of the contact data.    1. The apps and applications get the public key of the health department as a 4096-bit RSA key from the IRIS+ server. This key is base64-encoded in the Private Enhanced Mail (PEM) format.   2. The app generates a 256-bit AES key.   3. With this key the data is encrypted (algorithm: AES).   4. The AES key must be encrypted with the public RSA key of the health department. (algorithm: RSA with Optimal Asymmetric Encryption Padding (OAEP))   5. The encrypted AES key and the encrypted content must be transmitted base64 encoded.    #### Schematic sequence    ```   pubKeyEncryption = publicKeyFromPem(givenPublicKey);   contentKey = generateAESKey();    encrypted = contentKey.encrypt(content);   keyEncrypted = pubKeyEncryption.encrypt(contentKey, \"RSA/NONE/OAEPWithSHA3-256AndMGF1Padding\");    dataToTransport = base64Encode(encrypted);   keyToTransport = base64Encode(keyEncrypted);   ``` 
+ * ### Encryption of the data to be transmitted (contact data) In order to be not limited in the amount of data, a hybrid encryption with symmetric encryption of the data and asymmetric encryption of the symmetric key is used for the encryption of the contact data.    1. The apps and applications get the public key of the health department as a 4096-bit RSA key from the IRIS+ server. This key is base64-encoded similar to the Private Enhanced Mail (PEM) format but without key markers (-----BEGIN PUBLIC KEY----- / -----END PUBLIC KEY-----).   2. The app generates a 256-bit AES key.   3. The data is encrypted with this key (algorithm: AES/CBC/PKCS5Padding and 16 byte IV)   4. IV bytes are prepended to the cipher text. Those merged bytes represent the encrypted content.   5. The AES key must be encrypted with the public RSA key of the health department. (algorithm: RSA with Optimal Asymmetric Encryption Padding (OAEP) \"RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING\")   6. The encrypted AES key and the encrypted content must be transmitted base64 encoded.    #### Schematic sequence    ```   pubKeyEncryption = publicKeyFromBase64(givenPublicKey);   contentKey = generateAESKey();   iv = generateRandomBytes(16);    encrypted = contentKey.encrypt(content, \"AES/CBC/PKCS5Padding\", iv);   keyEncrypted = pubKeyEncryption.encrypt(contentKey, \"RSA/NONE/OAEPWithSHA3-256AndMGF1Padding\");    submissionDto.encryptedData = base64Encode(concat(iv,encrypted));   submissionDto.secret = base64Encode(keyEncrypted);   ``` 
  *
  * The version of the OpenAPI document: 0.2.0
  * Contact: jens.kutzsche@gebea.de
@@ -327,6 +327,25 @@ export interface ContactsEventsSubmissionAllOf {
     encryptedData: ContactsAndEvents;
 }
 /**
+ * 
+ * @export
+ * @interface Credentials
+ */
+export interface Credentials {
+    /**
+     * 
+     * @type {string}
+     * @memberof Credentials
+     */
+    userName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Credentials
+     */
+    password?: string;
+}
+/**
  * A data request with all parameters relevant for the data submission.
  * @export
  * @interface DataRequest
@@ -368,6 +387,178 @@ export interface DataRequest {
      * @memberof DataRequest
      */
     requestDetails?: string;
+}
+/**
+ * Creates a new index case data request from FE - persistent data has to be refined. Starting with contact persons name.
+ * @export
+ * @interface DataRequestCaseClient
+ */
+export interface DataRequestCaseClient {
+    /**
+     * External case identifier. E.g. CaseID in Sormas.
+     * @type {string}
+     * @memberof DataRequestCaseClient
+     */
+    externalCaseId: string;
+    /**
+     * Friendly name for given case
+     * @type {string}
+     * @memberof DataRequestCaseClient
+     */
+    name?: string;
+    /**
+     * Comments on given case
+     * @type {string}
+     * @memberof DataRequestCaseClient
+     */
+    comment?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseClient
+     */
+    start: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseClient
+     */
+    end?: string;
+}
+/**
+ * 
+ * @export
+ * @interface DataRequestCaseData
+ */
+export interface DataRequestCaseData {
+    /**
+     * 
+     * @type {ContactsAndEvents}
+     * @memberof DataRequestCaseData
+     */
+    submissionData?: ContactsAndEvents;
+    /**
+     * External case identifier. E.g. CaseID in Sormas.
+     * @type {string}
+     * @memberof DataRequestCaseData
+     */
+    externalCaseId: string;
+    /**
+     * Friendly name for given case
+     * @type {string}
+     * @memberof DataRequestCaseData
+     */
+    name?: string;
+    /**
+     * Comments on given case
+     * @type {string}
+     * @memberof DataRequestCaseData
+     */
+    comment?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseData
+     */
+    start: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseData
+     */
+    end?: string;
+}
+/**
+ * Details for index case
+ * @export
+ * @interface DataRequestCaseDetails
+ */
+export interface DataRequestCaseDetails {
+    /**
+     * Internal case identifier. Used in listings etc.
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    caseId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    status?: DataRequestCaseDetailsStatusEnum;
+    /**
+     * External case identifier. E.g. CaseID in Sormas.
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    externalCaseId: string;
+    /**
+     * Friendly name for given case
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    name?: string;
+    /**
+     * Comments on given case
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    comment?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    start: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    end?: string;
+}
+/**
+ * Details for index case
+ * @export
+ * @interface DataRequestCaseExtendedDetails
+ */
+export interface DataRequestCaseExtendedDetails {
+    /**
+     * Nonce used in provider app to authorize data upload
+     * @type {string}
+     * @memberof DataRequestCaseExtendedDetails
+     */
+    nonce?: string;
+    /**
+     * External case identifier. E.g. CaseID in Sormas.
+     * @type {string}
+     * @memberof DataRequestCaseExtendedDetails
+     */
+    externalCaseId: string;
+    /**
+     * Friendly name for given case
+     * @type {string}
+     * @memberof DataRequestCaseExtendedDetails
+     */
+    name?: string;
+    /**
+     * Comments on given case
+     * @type {string}
+     * @memberof DataRequestCaseExtendedDetails
+     */
+    comment?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseExtendedDetails
+     */
+    start: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseExtendedDetails
+     */
+    end?: string;
 }
 /**
  * The data request that will be sent by the FE.
@@ -424,6 +615,12 @@ export interface DataRequestClient {
  * @interface DataRequestDetails
  */
 export interface DataRequestDetails {
+    /**
+     * 
+     * @type {GuestList}
+     * @memberof DataRequestDetails
+     */
+    submissionData?: GuestList;
     /**
      * 
      * @type {string}
@@ -484,36 +681,6 @@ export interface DataRequestDetails {
      * @memberof DataRequestDetails
      */
     locationInformation?: LocationInformation;
-    /**
-     * 
-     * @type {Array<Guest>}
-     * @memberof DataRequestDetails
-     */
-    guests: Array<Guest>;
-    /**
-     * 
-     * @type {GuestListDataProvider}
-     * @memberof DataRequestDetails
-     */
-    dataProvider: GuestListDataProvider;
-    /**
-     * Additional informations about the guest list and the event or location.
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    additionalInformation?: string;
-    /**
-     * Start date/time of attendance for this guest list.
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    startDate?: string;
-    /**
-     * End date/time of attendance for this guest list.
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    endDate?: string;
 }
 
 /**
@@ -1177,6 +1344,127 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
     return {
         /**
          * 
+         * @summary Detail view for index data request with the data submissions already received
+         * @param {string} caseId The internal unique CaseId of a index case in format.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        dataRequestClientCasesCaseIdGet: async (caseId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'caseId' is not null or undefined
+            assertParamExists('dataRequestClientCasesCaseIdGet', 'caseId', caseId)
+            const localVarPath = `/data-request-client/cases/{caseId}`
+                .replace(`{${"caseId"}}`, encodeURIComponent(String(caseId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Fetches index cases
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        dataRequestClientCasesGet: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/data-request-client/cases`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Creates a new tracing case for index case data
+         * @param {DataRequestCaseClient} dataRequestCaseClient 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        dataRequestClientCasesPost: async (dataRequestCaseClient: DataRequestCaseClient, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'dataRequestCaseClient' is not null or undefined
+            assertParamExists('dataRequestClientCasesPost', 'dataRequestCaseClient', dataRequestCaseClient)
+            const localVarPath = `/data-request-client/cases`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json; charset=UTF-8';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(dataRequestCaseClient, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Fetches data requests
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1196,6 +1484,10 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -1233,9 +1525,13 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
 
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json; charset=UTF-8';
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1273,11 +1569,58 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
 
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Authenticates a user against IRIS client
+         * @param {Credentials} credentials 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        login: async (credentials: Credentials, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'credentials' is not null or undefined
+            assertParamExists('login', 'credentials', credentials)
+            const localVarPath = `/login`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(credentials, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1309,6 +1652,10 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
 
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -1330,6 +1677,38 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
 export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = IrisClientFrontendApiAxiosParamCreator(configuration)
     return {
+        /**
+         * 
+         * @summary Detail view for index data request with the data submissions already received
+         * @param {string} caseId The internal unique CaseId of a index case in format.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async dataRequestClientCasesCaseIdGet(caseId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DataRequestCaseData>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestClientCasesCaseIdGet(caseId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Fetches index cases
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async dataRequestClientCasesGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<DataRequestCaseDetails>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestClientCasesGet(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Creates a new tracing case for index case data
+         * @param {DataRequestCaseClient} dataRequestCaseClient 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async dataRequestClientCasesPost(dataRequestCaseClient: DataRequestCaseClient, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DataRequestCaseExtendedDetails>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestClientCasesPost(dataRequestCaseClient, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
         /**
          * 
          * @summary Fetches data requests
@@ -1364,6 +1743,17 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Authenticates a user against IRIS client
+         * @param {Credentials} credentials 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async login(credentials: Credentials, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.login(credentials, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} searchKeyword The search keyword
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1382,6 +1772,35 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
 export const IrisClientFrontendApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = IrisClientFrontendApiFp(configuration)
     return {
+        /**
+         * 
+         * @summary Detail view for index data request with the data submissions already received
+         * @param {string} caseId The internal unique CaseId of a index case in format.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        dataRequestClientCasesCaseIdGet(caseId: string, options?: any): AxiosPromise<DataRequestCaseData> {
+            return localVarFp.dataRequestClientCasesCaseIdGet(caseId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Fetches index cases
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        dataRequestClientCasesGet(options?: any): AxiosPromise<Array<DataRequestCaseDetails>> {
+            return localVarFp.dataRequestClientCasesGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Creates a new tracing case for index case data
+         * @param {DataRequestCaseClient} dataRequestCaseClient 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        dataRequestClientCasesPost(dataRequestCaseClient: DataRequestCaseClient, options?: any): AxiosPromise<DataRequestCaseExtendedDetails> {
+            return localVarFp.dataRequestClientCasesPost(dataRequestCaseClient, options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @summary Fetches data requests
@@ -1413,6 +1832,16 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
         },
         /**
          * 
+         * @summary Authenticates a user against IRIS client
+         * @param {Credentials} credentials 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        login(credentials: Credentials, options?: any): AxiosPromise<void> {
+            return localVarFp.login(credentials, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} searchKeyword The search keyword
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1430,6 +1859,41 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
  * @extends {BaseAPI}
  */
 export class IrisClientFrontendApi extends BaseAPI {
+    /**
+     * 
+     * @summary Detail view for index data request with the data submissions already received
+     * @param {string} caseId The internal unique CaseId of a index case in format.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IrisClientFrontendApi
+     */
+    public dataRequestClientCasesCaseIdGet(caseId: string, options?: any) {
+        return IrisClientFrontendApiFp(this.configuration).dataRequestClientCasesCaseIdGet(caseId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Fetches index cases
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IrisClientFrontendApi
+     */
+    public dataRequestClientCasesGet(options?: any) {
+        return IrisClientFrontendApiFp(this.configuration).dataRequestClientCasesGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Creates a new tracing case for index case data
+     * @param {DataRequestCaseClient} dataRequestCaseClient 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IrisClientFrontendApi
+     */
+    public dataRequestClientCasesPost(dataRequestCaseClient: DataRequestCaseClient, options?: any) {
+        return IrisClientFrontendApiFp(this.configuration).dataRequestClientCasesPost(dataRequestCaseClient, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @summary Fetches data requests
@@ -1463,6 +1927,18 @@ export class IrisClientFrontendApi extends BaseAPI {
      */
     public getLocationDetails(code: string, options?: any) {
         return IrisClientFrontendApiFp(this.configuration).getLocationDetails(code, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Authenticates a user against IRIS client
+     * @param {Credentials} credentials 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IrisClientFrontendApi
+     */
+    public login(credentials: Credentials, options?: any) {
+        return IrisClientFrontendApiFp(this.configuration).login(credentials, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
