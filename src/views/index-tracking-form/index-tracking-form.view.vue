@@ -81,7 +81,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store/index";
-import { DataRequestClient, DataRequestDetails } from "@/api";
+import { DataRequestCaseClient, DataRequestCaseDetails } from "@/api";
 import router from "@/router";
 import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
@@ -189,22 +189,20 @@ export default class IndexTrackingFormView extends Vue {
 
     if (valid) {
       //api.ts muss angepasst werden um index-bezogene api abfragen nutzen zu können
-      const payload: DataRequestClient = {
+      const payload: DataRequestCaseClient = {
         start: this.form.model.start,
         end: this.form.model.end,
         name: this.form.model.name,
-        externalRequestId: this.form.model.externalId,
-        locationId: "",
-        providerId: "",
+        externalCaseId: this.form.model.externalId,
       };
-      const created: DataRequestDetails = await store.dispatch(
+      const created: DataRequestCaseDetails = await store.dispatch(
         "indexTrackingForm/createIndexTracking",
         payload
       );
       router.push({
         name: `index-details`,
         params: {
-          caseId: created.code || "",
+          caseId: created.caseId || "",
         },
       });
     }
