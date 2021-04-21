@@ -23,61 +23,6 @@
             {{ indexData.startTime }} - {{ indexData.endTime }}
           </v-row>
         </v-col>
-        <v-text-field
-          v-model="tableData.search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-        <v-data-table
-          :loading="listLoading"
-          :headers="tableData.headers"
-          :items="guests"
-          :items-per-page="5"
-          class="elevation-1 mt-5"
-          :search="tableData.search"
-          show-select
-          v-model="tableData.select"
-          show-expand
-          single-expand
-          :expanded.sync="tableData.expanded"
-          @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
-        >
-          <template v-if="statusDataRequested" #no-data>
-            <span class="black--text">
-              Die Kontaktdaten zu diesem Ereignis werden derzeit angefragt. Zum
-              jetzigen Zeitpunkt liegen noch keine Daten vor.
-            </span>
-          </template>
-          <template v-slot:expanded-item="{ headers, item }">
-            <td></td>
-            <td :colspan="headers.length - 1">
-              <v-row>
-                <template
-                  v-for="(expandedHeader, ehIndex) in tableData.expandedHeaders"
-                >
-                  <v-col :key="ehIndex" cols="12" sm="4" md="2">
-                    <v-list-item two-line dense>
-                      <v-list-item-content>
-                        <v-list-item-title>
-                          {{ expandedHeader.text }}
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                          {{
-                            item[expandedHeader.value]
-                              ? item[expandedHeader.value]
-                              : "-"
-                          }}
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-col>
-                </template>
-              </v-row>
-            </td>
-          </template>
-        </v-data-table>
         <v-row class="mt-2">
           <v-col cols="12">
             <v-btn class="ml-2 mr-2" color="white" @click="$router.back()">
@@ -101,8 +46,8 @@
 <script lang="ts">
 import {
   Address,
-  DataRequestDetails,
-  DataRequestDetailsStatusEnum,
+  DataRequestCaseDetails,
+  DataRequestCaseDetailsStatusEnum,
   Sex,
 } from "@/api";
 import router from "@/router";
@@ -113,7 +58,6 @@ import DataExport from "@/utils/DataExport";
 type IndexData = {
   extID: string;
   name: string;
-  address: string;
   startTime: string;
   endTime: string;
   gereratedTime: string;
@@ -132,11 +76,11 @@ type TableRow = {
   email: string;
   phone: string;
   mobilePhone: string;
-  address: string;
+  tan: string;
 };
 
 function getFormattedAddressWithContact(
-  data: DataRequestDetails | null
+  data: DataRequestCaseDetails | null
 ): string {
   if (data) {
     return "-";
@@ -227,9 +171,8 @@ export default class IndexTrackingDetailsView extends Vue {
   get indexData(): IndexData {
     const dataRequest = store.state.indexTrackingDetails.indexTrackingDetails;
     return {
-      extID: dataRequest?.externalRequestId || "-",
+      extID: dataRequest?.externalCaseId || "-",
       name: dataRequest?.name || "-",
-      address: getFormattedAddressWithContact(dataRequest),
       startTime: dataRequest?.start
         ? `${new Date(dataRequest.start).toLocaleDateString(
             "de-DE"
@@ -254,7 +197,7 @@ export default class IndexTrackingDetailsView extends Vue {
     if (!store.state.indexTrackingDetails.indexTrackingDetails) return false;
     return (
       store.state.indexTrackingDetails.indexTrackingDetails.status ===
-      DataRequestDetailsStatusEnum.DataRequested
+      DataRequestCaseDetailsStatusEnum.DataRequested
     );
   }
 

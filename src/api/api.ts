@@ -529,20 +529,6 @@ export enum DataRequestCaseDetailsStatusEnum {
 }
 
 /**
- *
- * @export
- * @interface DataRequestCaseDetailsList
- */
-export interface DataRequestCaseDetailsList {
-    /**
-     *
-     * @type {Array<DataRequestCaseDetails>}
-     * @memberof DataRequestCaseDetailsList
-     */
-    dataRequests?: Array<DataRequestCaseDetails>;
-}
-
-/**
  * Details for index case
  * @export
  * @interface DataRequestCaseExtendedDetails

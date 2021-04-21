@@ -11,7 +11,7 @@
           v-model="date"
           @input="setDateTime"
           v-bind="dateProps"
-          :rules="required ? dateTimeRules.date : ''"
+          :rules="required ? dateTimeRules.date : []"
           :error="error"
         />
       </v-col>
@@ -20,7 +20,7 @@
           v-model="time"
           @blur="setDateTime"
           v-bind="timeProps"
-          :rules="required ? dateTimeRules.time : ''"
+          :rules="required ? dateTimeRules.time : []"
           :error="error"
         />
       </v-col>

@@ -1,5 +1,4 @@
 import {
-  DataRequestCaseDetailsList,
   DataRequestCaseDetails,
   DataRequestCaseDetailsStatusEnum,
 } from "@/api";
@@ -72,5 +71,6 @@ export const getDummyDetailsCasesWithStatus = (
       status,
     };
   }
+  console.log(dummyDataCaseDetails);
   return dummyDataCaseDetails;
 };

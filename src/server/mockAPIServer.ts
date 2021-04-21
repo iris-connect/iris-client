@@ -25,6 +25,13 @@ export function makeMockAPIServer() {
         return created;
       });
 
+      this.post("/data-request-client/cases", () => {
+        const created: Partial<DataRequestCaseDetails> = {
+          code: "NEWCASE123",
+        };
+        return created;
+      });
+
       this.get("/data-requests-client/locations", () => {
         return dummyDataRequests;
       });
@@ -35,6 +42,10 @@ export function makeMockAPIServer() {
 
       this.get("/data-requests-client/locations/:id", () => {
         return getDummyDetailsWithStatus(router.currentRoute.params.id);
+      });
+
+      this.get("/data-request-client/cases/:caseId", () => {
+        return getDummyDetailsCasesWithStatus(router.currentRoute.params.id);
       });
 
       this.get("/search/mio", () => {
