@@ -1,16 +1,16 @@
 <template>
   <v-app>
     <v-app-bar app color="white" flat>
-      <v-container class="py-0 fill-height">
-        <v-img
-          alt="IRIS Logo"
-          class="shrink mr-4"
-          contain
-          src="@/assets/logo.png"
-          transition="scale-transition"
-          width="100"
-        />
-
+      <v-img
+        alt="IRIS Logo"
+        class="shrink mt-3 mr-4"
+        contain
+        src="@/assets/logo.png"
+        transition="scale-transition"
+        height="100"
+        max-width="100"
+      />
+      <template v-if="authenticated">
         <template v-for="link in links">
           <v-btn
             v-if="link.meta.menu"
@@ -22,19 +22,9 @@
             {{ link.meta.menuName }}
           </v-btn>
         </template>
-
         <v-spacer></v-spacer>
-
-        <v-responsive max-width="260">
-          <v-text-field
-            dense
-            flat
-            hide-details
-            rounded
-            solo-inverted
-          ></v-text-field>
-        </v-responsive>
-      </v-container>
+        <user-menu @logout="logoutUser" />
+      </template>
     </v-app-bar>
 
     <v-main class="grey lighten-3">
@@ -48,12 +38,27 @@
 <script lang="ts">
 import Vue from "vue";
 import { routes } from "@/router";
+import UserMenu from "@/views/user-login/components/user-menu.vue";
 
 export default Vue.extend({
   name: "App",
+  components: {
+    UserMenu,
+  },
   data: () => ({
     links: routes,
   }),
+  computed: {
+    authenticated(): boolean {
+      return this.$store.getters["userLogin/isAuthenticated"];
+    },
+  },
+  methods: {
+    logoutUser() {
+      this.$store.commit("userLogin/setSession");
+      this.$router.push("/user/login");
+    },
+  },
 });
 </script>
 <style lang="scss">

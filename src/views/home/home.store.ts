@@ -1,11 +1,8 @@
-import {
-  ExistingDataRequestClientWithLocationList,
-  IrisClientFrontendApiFactory,
-} from "@/api";
-import { clientConfig } from "@/main";
+import { ExistingDataRequestClientWithLocationList } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
+import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 
 export type HomeState = {
@@ -57,12 +54,11 @@ const home: HomeModule = {
   },
   actions: {
     async fetchEventTrackingList({ commit }) {
-      const client = IrisClientFrontendApiFactory(clientConfig);
       let eventTrackingList: ExistingDataRequestClientWithLocationList | null = null;
       commit("setEventTrackingListError", null);
       commit("setEventTrackingListLoading", true);
       try {
-        eventTrackingList = (await client.dataRequestsClientLocationsGet())
+        eventTrackingList = (await authClient.dataRequestsClientLocationsGet())
           .data;
       } catch (e) {
         commit("setEventTrackingListError", getErrorMessage(e));
