@@ -6,6 +6,7 @@ import {
 } from "@/server/data/data-requests";
 import { createServer, Request, Response } from "miragejs";
 import router from "@/router";
+import { dummyUserList } from "@/server/data/dummy-userlist";
 
 // @todo: find better solution for data type
 const authResponse = (
@@ -36,6 +37,10 @@ export function makeMockAPIServer() {
 
       this.post("/login", () => {
         return authResponse();
+      });
+
+      this.get("/users", (schema, request) => {
+        return authResponse(request, dummyUserList);
       });
 
       this.post("/data-requests-client/locations", () => {

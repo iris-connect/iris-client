@@ -31,6 +31,17 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
+    path: "/user/management/list",
+    name: "user-management-list",
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "user-management-list" */ "../views/user-management-list/user-management-list.view.vue"
+      ),
+  },
+  {
     path: "/events/new",
     name: "event-new",
     meta: {
