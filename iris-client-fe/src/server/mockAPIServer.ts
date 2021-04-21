@@ -43,6 +43,7 @@ const validateAuthHeader = (request: Request): boolean => {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function makeMockAPIServer() {
+  console.log(router);
   const server = createServer({
     routes() {
       this.namespace = "";
@@ -111,7 +112,7 @@ export function makeMockAPIServer() {
 
       this.post("/data-request-client/cases", () => {
         const created: Partial<DataRequestCaseDetails> = {
-          externalCaseId: "NEWCASE123",
+          caseId: "NEWCASE123",
         };
         return created;
       });
