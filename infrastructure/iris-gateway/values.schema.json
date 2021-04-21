@@ -6,7 +6,7 @@
   "properties": {
     "environment": {
       "type": "string",
-      "enum": ["local", "staging", "production"]
+      "enum": ["local", "test", "production"]
     }
   }
 }

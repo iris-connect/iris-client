@@ -1,4 +1,4 @@
-{{- if eq .Values.environment "staging" }}
+{{- if eq .Values.environment "test" }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

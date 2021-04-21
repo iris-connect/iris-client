@@ -1,5 +1,5 @@
 # required, set via CLI
-#   staging: --set environment=staging
+#   test: --set environment=test
 #   production: --set environment=production
 environment: undefined
 

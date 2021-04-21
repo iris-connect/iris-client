@@ -28,8 +28,4 @@ spec:
               protocol: TCP
           envFrom:
             - secretRef:
-                {{- if eq .Values.environment "local" }}
                 name: {{ include "iris-gateway.postgres" . }}
-                {{- else }}
-                name: postgres-{{ .Values.environment }}
-                {{- end }}

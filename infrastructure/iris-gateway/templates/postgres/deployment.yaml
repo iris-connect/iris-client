@@ -31,7 +31,7 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ include "iris-gateway.postgres" . }}
-      {{- if eq .Values.environment "staging" }}
+      {{- if eq .Values.environment "test" }}
           volumeMounts:
             - mountPath: {{ .Values.postgres.storageDir }}
               name: persistent-storage
