@@ -22,7 +22,7 @@ const authResponse = (
   return new Response(
     200,
     {
-      Authorization: "Bearer TOKEN123",
+      "Authentication-Info": "Bearer TOKEN123",
     },
     data
   );
