@@ -485,7 +485,7 @@ export interface DataRequestCaseDetails {
      * @type {string}
      * @memberof DataRequestCaseDetails
      */
-    status?: DataRequestCaseDetailsStatusEnum;
+    // status?: DataRequestCaseDetailsStatusEnum;
     /**
      * External case identifier. E.g. CaseID in Sormas.
      * @type {string}
@@ -617,12 +617,6 @@ export interface DataRequestClient {
 export interface DataRequestDetails {
     /**
      * 
-     * @type {GuestList}
-     * @memberof DataRequestDetails
-     */
-    submissionData?: GuestList;
-    /**
-     * 
      * @type {string}
      * @memberof DataRequestDetails
      */
@@ -681,6 +675,36 @@ export interface DataRequestDetails {
      * @memberof DataRequestDetails
      */
     locationInformation?: LocationInformation;
+    /**
+     * 
+     * @type {Array<Guest>}
+     * @memberof DataRequestDetails
+     */
+    guests: Array<Guest>;
+    /**
+     * 
+     * @type {GuestListDataProvider}
+     * @memberof DataRequestDetails
+     */
+    dataProvider: GuestListDataProvider;
+    /**
+     * Additional informations about the guest list and the event or location.
+     * @type {string}
+     * @memberof DataRequestDetails
+     */
+    additionalInformation?: string;
+    /**
+     * Start date/time of attendance for this guest list.
+     * @type {string}
+     * @memberof DataRequestDetails
+     */
+    startDate?: string;
+    /**
+     * End date/time of attendance for this guest list.
+     * @type {string}
+     * @memberof DataRequestDetails
+     */
+    endDate?: string;
 }
 
 /**
@@ -1657,7 +1681,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
