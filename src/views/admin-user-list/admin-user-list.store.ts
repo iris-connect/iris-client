@@ -9,6 +9,8 @@ export type AdminUserListState = {
   userList: UserList | null;
   userListLoading: boolean;
   userListLoadingError: ErrorMessage;
+  userDeleteOngoing: boolean;
+  userDeleteError: ErrorMessage;
 };
 
 export interface AdminUserListModule
@@ -23,10 +25,13 @@ export interface AdminUserListModule
       state: AdminUserListState,
       payload: ErrorMessage
     ): void;
+    setUserDeleteOngoing(state: AdminUserListState, payload: boolean): void;
+    setUserDeleteError(state: AdminUserListState, payload: ErrorMessage): void;
     reset(state: AdminUserListState, payload: null): void;
   };
   actions: {
     fetchUserList({ commit }: { commit: Commit }): Promise<void>;
+    deleteUser({ commit }: { commit: Commit }, id: string): Promise<void>;
   };
 }
 
@@ -34,6 +39,8 @@ const defaultState: AdminUserListState = {
   userList: null,
   userListLoading: false,
   userListLoadingError: null,
+  userDeleteOngoing: false,
+  userDeleteError: null,
 };
 
 const adminUserList: AdminUserListModule = {
@@ -51,15 +58,24 @@ const adminUserList: AdminUserListModule = {
     setUserListLoadingError(state, error) {
       state.userListLoadingError = error;
     },
+    setUserDeleteOngoing(state, loading) {
+      state.userDeleteOngoing = loading;
+    },
+    setUserDeleteError(state, error) {
+      state.userDeleteError = error;
+    },
     reset(state) {
       state.userListLoading = false;
       state.userListLoadingError = null;
+      state.userDeleteOngoing = false;
+      state.userDeleteError = null;
     },
   },
   actions: {
     async fetchUserList({ commit }) {
       let userList: UserList | null = null;
       commit("reset");
+      commit("setUserListLoading", true);
       try {
         userList = (await authClient.usersGet()).data;
       } catch (e) {
@@ -67,6 +83,17 @@ const adminUserList: AdminUserListModule = {
       } finally {
         commit("setUserList", userList);
         commit("setUserListLoading", false);
+      }
+    },
+    async deleteUser({ commit }, id) {
+      commit("reset");
+      commit("setUserDeleteOngoing", true);
+      try {
+        await authClient.usersIdDelete(id);
+      } catch (e) {
+        commit("setUserDeleteError", getErrorMessage(e));
+      } finally {
+        commit("setUserDeleteOngoing", false);
       }
     },
   },

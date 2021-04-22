@@ -62,7 +62,11 @@
           Abbrechen
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn :disabled="userCreationOngoing" color="primary" @click="submit">
+        <v-btn
+          :disabled="userCreationOngoing"
+          color="primary"
+          @click="createUser"
+        >
           Benutzer anlegen
         </v-btn>
       </v-card-actions>
@@ -137,7 +141,7 @@ export default class AdminUserCreateView extends Vue {
     valid: false,
   };
 
-  async submit(): Promise<void> {
+  async createUser(): Promise<void> {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
       const payload: UserUpsert = this.form.model;

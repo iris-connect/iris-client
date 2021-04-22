@@ -30,7 +30,8 @@ authAxiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = parseError(error)?.status;
-    if (status === 401 || status === 403) {
+    // we do not log out if a 401 error is thrown because the admin user action triggers a 401 when the user is not allowed to manage other users.
+    if (status === 403) {
       // @todo: handle redirect to user login view with info message: token expired, etc.
       store.commit("userLogin/setSession");
     }

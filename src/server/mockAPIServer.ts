@@ -1,4 +1,4 @@
-import { DataRequestDetails } from "@/api";
+import { DataRequestDetails, User } from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
 import {
   dummyDataRequests,
@@ -7,6 +7,7 @@ import {
 import { createServer, Request, Response } from "miragejs";
 import router from "@/router";
 import { dummyUserList } from "@/server/data/dummy-userlist";
+import { remove } from "lodash";
 
 // @todo: find better solution for data type
 const authResponse = (
@@ -44,6 +45,14 @@ export function makeMockAPIServer() {
       });
 
       this.post("/users", (schema, request) => {
+        return authResponse(request);
+      });
+
+      this.delete("/users/:id", (schema, request) => {
+        const id = request.params.id;
+        // let's mutate the user array to simulate deletion for the next user loading request
+        const users: Array<User> = dummyUserList.users || [];
+        remove(users, (item: User) => item.id === id);
         return authResponse(request);
       });
 
