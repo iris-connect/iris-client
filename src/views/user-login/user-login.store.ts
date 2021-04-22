@@ -4,11 +4,14 @@ import { RootState } from "@/store/types";
 import { Credentials, IrisClientFrontendApiFactory } from "@/api";
 import store from "@/store";
 import { clientConfig, sessionFromResponse } from "@/api-client";
+import { RawLocation } from "vue-router";
+import { omit } from "lodash";
 
 export type UserLoginState = {
   authenticating: boolean;
   authenticationError: ErrorMessage;
   session: UserSession | null;
+  interceptedRoute: RawLocation;
 };
 
 export type UserSession = {
@@ -17,6 +20,7 @@ export type UserSession = {
 
 export interface UserLoginModule extends Module<UserLoginState, RootState> {
   mutations: {
+    setInterceptedRoute(state: UserLoginState, payload: RawLocation): void;
     setAuthenticating(state: UserLoginState, payload: boolean): void;
     setAuthenticationError(state: UserLoginState, payload: ErrorMessage): void;
     setSession(state: UserLoginState, payload: UserSession | null): void;
@@ -37,6 +41,7 @@ const defaultState: UserLoginState = {
   authenticating: false,
   authenticationError: null,
   session: null,
+  interceptedRoute: "/",
 };
 
 const userLogin: UserLoginModule = {
@@ -45,6 +50,9 @@ const userLogin: UserLoginModule = {
     return { ...defaultState };
   },
   mutations: {
+    setInterceptedRoute(state, payload) {
+      state.interceptedRoute = payload;
+    },
     setAuthenticating(state, submitting: boolean) {
       state.authenticating = submitting;
     },
@@ -55,7 +63,7 @@ const userLogin: UserLoginModule = {
       state.session = session;
     },
     reset(state) {
-      Object.assign(state, { ...defaultState });
+      Object.assign(state, { ...omit(defaultState, "session") });
     },
   },
   actions: {

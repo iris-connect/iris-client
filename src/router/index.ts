@@ -1,5 +1,5 @@
 import Vue from "vue";
-import VueRouter, { RouteConfig } from "vue-router";
+import VueRouter, { Location, RouteConfig } from "vue-router";
 import Home from "../views/home/Home.vue";
 import store from "@/store";
 
@@ -119,6 +119,15 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.auth !== false && !store.getters["userLogin/isAuthenticated"]) {
+    const { name, path, hash, query, params } = to;
+    const toLocation: Location = {
+      ...(name ? { name } : {}),
+      path,
+      hash,
+      query,
+      params,
+    };
+    store.commit("userLogin/setInterceptedRoute", toLocation);
     return next("/user/login");
   }
   if (to.name === "user-login" && store.getters["userLogin/isAuthenticated"]) {

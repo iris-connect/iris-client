@@ -47,7 +47,12 @@ import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
 import { Credentials } from "@/api";
 
-@Component
+@Component({
+  beforeRouteLeave(to, from, next) {
+    store.commit("userLogin/reset");
+    next();
+  },
+})
 export default class UserLoginView extends Vue {
   $refs!: {
     form: HTMLFormElement;
@@ -80,7 +85,7 @@ export default class UserLoginView extends Vue {
       store
         .dispatch("userLogin/authenticate", this.formModel)
         .then(() => {
-          return this.$router.push("/");
+          return this.$router.push(store.state.userLogin.interceptedRoute);
         })
         .catch(() => {
           // ignored: auth error message is provided by vuex store
