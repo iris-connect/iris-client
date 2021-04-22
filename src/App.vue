@@ -53,10 +53,16 @@ export default Vue.extend({
       return this.$store.getters["userLogin/isAuthenticated"];
     },
   },
+  watch: {
+    authenticated(newValue) {
+      if (!newValue) {
+        this.$router.push("/user/login");
+      }
+    },
+  },
   methods: {
     logoutUser() {
       this.$store.commit("userLogin/setSession");
-      this.$router.push("/user/login");
     },
   },
 });
