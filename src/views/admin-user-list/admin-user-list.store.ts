@@ -5,38 +5,38 @@ import { Commit, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import authClient from "@/api-client";
 
-export type UserManagementListState = {
+export type AdminUserListState = {
   userList: UserList | null;
   userListLoading: boolean;
   userListLoadingError: ErrorMessage;
 };
 
-export interface UserManagementListModule
-  extends Module<UserManagementListState, RootState> {
+export interface AdminUserListModule
+  extends Module<AdminUserListState, RootState> {
   mutations: {
     setUserList(
-      state: UserManagementListState,
+      state: AdminUserListState,
       eventTrackingList: UserList | null
     ): void;
-    setUserListLoading(state: UserManagementListState, payload: boolean): void;
+    setUserListLoading(state: AdminUserListState, payload: boolean): void;
     setUserListLoadingError(
-      state: UserManagementListState,
+      state: AdminUserListState,
       payload: ErrorMessage
     ): void;
-    reset(state: UserManagementListState, payload: null): void;
+    reset(state: AdminUserListState, payload: null): void;
   };
   actions: {
     fetchUserList({ commit }: { commit: Commit }): Promise<void>;
   };
 }
 
-const defaultState: UserManagementListState = {
+const defaultState: AdminUserListState = {
   userList: null,
   userListLoading: false,
   userListLoadingError: null,
 };
 
-const userManagementList: UserManagementListModule = {
+const adminUserList: AdminUserListModule = {
   namespaced: true,
   state() {
     return { ...defaultState };
@@ -52,8 +52,6 @@ const userManagementList: UserManagementListModule = {
       state.userListLoadingError = error;
     },
     reset(state) {
-      // we can keep the data, no need to reset it
-      // Object.assign(state, { ...defaultState });
       state.userListLoading = false;
       state.userListLoadingError = null;
     },
@@ -61,8 +59,7 @@ const userManagementList: UserManagementListModule = {
   actions: {
     async fetchUserList({ commit }) {
       let userList: UserList | null = null;
-      commit("setUserListLoadingError", null);
-      commit("setUserListLoading", true);
+      commit("reset");
       try {
         userList = (await authClient.usersGet()).data;
       } catch (e) {
@@ -75,4 +72,4 @@ const userManagementList: UserManagementListModule = {
   },
 };
 
-export default userManagementList;
+export default adminUserList;

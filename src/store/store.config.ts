@@ -2,7 +2,8 @@ import eventTrackingForm from "../views/event-tracking-form/event-tracking-form.
 import eventTrackingList from "../views/event-tracking-list/event-tracking-list.store";
 import eventTrackingDetails from "@/views/event-tracking-details/event-tracking-details.store";
 import userLogin from "@/views/user-login/user-login.store";
-import userManagementList from "../views/user-management-list/user-management-list.store";
+import adminUserList from "@/views/admin-user-list/admin-user-list.store";
+import adminUserCreate from "@/views/admin-user-create/admin-user-create.store";
 
 import { StoreOptions } from "vuex";
 import { RootState } from "@/store/types";
@@ -20,7 +21,8 @@ export const storeOptions: StoreOptions<RootState> = {
     eventTrackingList,
     eventTrackingDetails,
     userLogin,
-    userManagementList,
+    adminUserList,
+    adminUserCreate,
   },
   plugins: [
     createPersistedState({

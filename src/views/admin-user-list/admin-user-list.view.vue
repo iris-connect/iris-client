@@ -3,7 +3,10 @@
     <v-row>
       <v-col cols="12">
         <div class="mb-6">
-          <v-btn class="float-right" color="primary" :to="{ name: 'user-new' }"
+          <v-btn
+            class="float-right"
+            color="primary"
+            :to="{ name: 'admin-user-create' }"
             >Neuen Nutzer anlegen
           </v-btn>
         </div>
@@ -67,14 +70,14 @@ const UserRoleName = new Map<UserRole | undefined, string>([
 @Component({
   async beforeRouteEnter(_from, _to, next) {
     next();
-    await store.dispatch("userManagementList/fetchUserList");
+    await store.dispatch("adminUserList/fetchUserList");
   },
   beforeRouteLeave(to, from, next) {
-    store.commit("userManagementList/reset");
+    store.commit("adminUserList/reset");
     next();
   },
 })
-export default class UserManagementListView extends Vue {
+export default class AdminUserListView extends Vue {
   tableData = {
     search: "",
     expanded: [],
@@ -101,16 +104,15 @@ export default class UserManagementListView extends Vue {
   };
 
   get listLoading(): boolean {
-    return store.state.userManagementList.userListLoading;
+    return store.state.adminUserList.userListLoading;
   }
 
   get listLoadingError(): ErrorMessage {
-    return store.state.userManagementList.userListLoadingError;
+    return store.state.adminUserList.userListLoadingError;
   }
 
   get userList(): TableRow[] {
-    const users: Array<User> =
-      store.state.userManagementList.userList?.users || [];
+    const users: Array<User> = store.state.adminUserList.userList?.users || [];
     return users.map((user) => {
       const { lastName, firstName, userName, role } = user;
       return {

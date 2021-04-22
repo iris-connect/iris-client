@@ -43,6 +43,10 @@ export function makeMockAPIServer() {
         return authResponse(request, dummyUserList);
       });
 
+      this.post("/users", (schema, request) => {
+        return authResponse(request);
+      });
+
       this.post("/data-requests-client/locations", () => {
         const created: Partial<DataRequestDetails> = {
           code: "NEWREQUEST123",

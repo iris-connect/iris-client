@@ -31,14 +31,25 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: "/user/management/list",
-    name: "user-management-list",
+    path: "/admin/user/list",
+    name: "admin-user-list",
     meta: {
       menu: false,
     },
     component: () =>
       import(
-        /* webpackChunkName: "user-management-list" */ "../views/user-management-list/user-management-list.view.vue"
+        /* webpackChunkName: "admin-user-list" */ "../views/admin-user-list/admin-user-list.view.vue"
+      ),
+  },
+  {
+    path: "/admin/user/create",
+    name: "admin-user-create",
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "admin-user-create" */ "../views/admin-user-create/admin-user-create.view.vue"
       ),
   },
   {

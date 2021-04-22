@@ -3,7 +3,8 @@ import { EventTrackingFormState } from "../views/event-tracking-form/event-track
 import { EventTrackingDetailsState } from "@/views/event-tracking-details/event-tracking-details.store";
 import { HomeState } from "@/views/home/home.store";
 import { UserLoginState } from "@/views/user-login/user-login.store";
-import { UserManagementListState } from "@/views/user-management-list/user-management-list.store";
+import { AdminUserListState } from "@/views/admin-user-list/admin-user-list.store";
+import { AdminUserCreateState } from "@/views/admin-user-create/admin-user-create.store";
 
 export type RootState = {
   home: HomeState;
@@ -11,5 +12,6 @@ export type RootState = {
   eventTrackingList: EventTrackingListState;
   eventTrackingDetails: EventTrackingDetailsState;
   userLogin: UserLoginState;
-  userManagementList: UserManagementListState;
+  adminUserList: AdminUserListState;
+  adminUserCreate: AdminUserCreateState;
 };

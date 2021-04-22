@@ -5,8 +5,8 @@
         <v-icon large v-bind="attrs" v-on="on"> mdi-account-circle </v-icon>
       </template>
       <v-list>
-        <!-- @todo: show user-management link only if user has role ADMIN -->
-        <v-list-item :to="{ name: 'user-management-list' }">
+        <!-- @todo: show user-admin link only if user has role ADMIN -->
+        <v-list-item :to="{ name: 'admin-user-list' }">
           <v-list-item-title> Benutzerverwaltung </v-list-item-title>
         </v-list-item>
         <v-list-item @click="() => logout(false)">
