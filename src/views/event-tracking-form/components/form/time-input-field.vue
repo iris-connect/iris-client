@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 
 const TimeInputFieldProps = Vue.extend({
   props: {
@@ -54,6 +54,7 @@ const TimeInputFieldProps = Vue.extend({
   },
 });
 
+@Component
 export default class TimeInputField extends TimeInputFieldProps {
   active = false;
 

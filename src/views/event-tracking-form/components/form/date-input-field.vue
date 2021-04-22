@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 
 const DateInputFieldProps = Vue.extend({
   props: {
@@ -50,6 +50,7 @@ const DateInputFieldProps = Vue.extend({
   },
 });
 
+@Component
 export default class DateInputField extends DateInputFieldProps {
   active = false;
 
