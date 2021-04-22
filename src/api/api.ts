@@ -485,7 +485,7 @@ export interface DataRequestCaseDetails {
      * @type {string}
      * @memberof DataRequestCaseDetails
      */
-    status?: DataRequestCaseDetailsStatusEnum;
+    // status?: DataRequestCaseDetailsStatusEnum;
     /**
      * External case identifier. E.g. CaseID in Sormas.
      * @type {string}
