@@ -39,7 +39,7 @@
                       icon
                       large
                       class="ml-3 text-decoration-none"
-                      :to="{ name: 'event-details', params: { id: item.code } }"
+                      :to="{ name: 'admin-user-edit', params: { id: item.id } }"
                       :disabled="isBusy"
                     >
                       <v-icon> mdi-pencil </v-icon>
@@ -98,7 +98,7 @@ const UserRoleName = new Map<UserRole | undefined, string>([
 
 @Component({
   components: { UserDeleteButton },
-  async beforeRouteEnter(_from, _to, next) {
+  async beforeRouteEnter(to, from, next) {
     next();
     await store.dispatch("adminUserList/fetchUserList");
   },

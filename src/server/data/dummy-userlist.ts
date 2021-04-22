@@ -1,4 +1,5 @@
-import { UserList, UserRole } from "@/api";
+import { User, UserList, UserRole } from "@/api";
+import { Request } from "miragejs";
 
 export const dummyUserList: UserList = {
   users: [
@@ -24,4 +25,20 @@ export const dummyUserList: UserList = {
       role: UserRole.User,
     },
   ],
+};
+
+export const getDummyUserFromRequest = (
+  request: Request,
+  id?: string
+): User => {
+  const { firstName, lastName, userName, role } = JSON.parse(
+    request.requestBody
+  );
+  return {
+    id: id || new Date().getTime() + "",
+    firstName,
+    lastName,
+    userName,
+    role,
+  };
 };

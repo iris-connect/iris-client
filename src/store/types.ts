@@ -5,6 +5,7 @@ import { HomeState } from "@/views/home/home.store";
 import { UserLoginState } from "@/views/user-login/user-login.store";
 import { AdminUserListState } from "@/views/admin-user-list/admin-user-list.store";
 import { AdminUserCreateState } from "@/views/admin-user-create/admin-user-create.store";
+import { AdminUserEditState } from "@/views/admin-user-edit/admin-user-edit.store";
 
 export type RootState = {
   home: HomeState;
@@ -14,4 +15,5 @@ export type RootState = {
   userLogin: UserLoginState;
   adminUserList: AdminUserListState;
   adminUserCreate: AdminUserCreateState;
+  adminUserEdit: AdminUserEditState;
 };

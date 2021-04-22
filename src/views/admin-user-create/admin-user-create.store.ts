@@ -51,7 +51,8 @@ const adminUserCreate: AdminUserCreateModule = {
   },
   actions: {
     async createUser({ commit }, formData) {
-      commit("reset");
+      commit("setUserCreationError", null);
+      commit("setUserCreationOngoing", true);
       try {
         await authClient.usersPost(formData);
       } catch (e) {

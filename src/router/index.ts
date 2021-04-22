@@ -53,6 +53,17 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
+    path: "/admin/user/edit/:id",
+    name: "admin-user-edit",
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "admin-user-edit" */ "../views/admin-user-edit/admin-user-edit.view.vue"
+      ),
+  },
+  {
     path: "/events/new",
     name: "event-new",
     meta: {

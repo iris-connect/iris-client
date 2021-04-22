@@ -74,7 +74,7 @@ const adminUserList: AdminUserListModule = {
   actions: {
     async fetchUserList({ commit }) {
       let userList: UserList | null = null;
-      commit("reset");
+      commit("setUserListLoadingError", null);
       commit("setUserListLoading", true);
       try {
         userList = (await authClient.usersGet()).data;
@@ -86,7 +86,7 @@ const adminUserList: AdminUserListModule = {
       }
     },
     async deleteUser({ commit }, id) {
-      commit("reset");
+      commit("setUserDeleteError", null);
       commit("setUserDeleteOngoing", true);
       try {
         await authClient.usersIdDelete(id);

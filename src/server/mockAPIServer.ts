@@ -6,8 +6,11 @@ import {
 } from "@/server/data/data-requests";
 import { createServer, Request, Response } from "miragejs";
 import router from "@/router";
-import { dummyUserList } from "@/server/data/dummy-userlist";
-import { remove } from "lodash";
+import {
+  dummyUserList,
+  getDummyUserFromRequest,
+} from "@/server/data/dummy-userlist";
+import { remove, findIndex } from "lodash";
 
 // @todo: find better solution for data type
 const authResponse = (
@@ -16,8 +19,7 @@ const authResponse = (
   data?: string | {} | undefined
 ): Response => {
   if (request) {
-    const authHeader = request?.requestHeaders?.Authorization;
-    if (!authHeader) {
+    if (!validateAuthHeader(request)) {
       return new Response(401, { error: "not authorized" });
     }
   }
@@ -28,6 +30,11 @@ const authResponse = (
     },
     data
   );
+};
+
+const validateAuthHeader = (request: Request): boolean => {
+  const authHeader = request?.requestHeaders?.Authorization;
+  return !!authHeader;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -45,14 +52,40 @@ export function makeMockAPIServer() {
       });
 
       this.post("/users", (schema, request) => {
+        try {
+          if (validateAuthHeader(request)) {
+            dummyUserList.users?.push(getDummyUserFromRequest(request));
+          }
+        } catch (e) {
+          // ignored
+        }
+        return authResponse(request);
+      });
+
+      this.put("/users/:id", (schema, request) => {
+        try {
+          if (validateAuthHeader(request)) {
+            const id = request.params.id;
+            const users: Array<User> = dummyUserList.users || [];
+            const index = findIndex(users, (user) => user.id === id);
+            users[index] = getDummyUserFromRequest(request, id);
+          }
+        } catch (e) {
+          // ignored
+        }
         return authResponse(request);
       });
 
       this.delete("/users/:id", (schema, request) => {
-        const id = request.params.id;
-        // let's mutate the user array to simulate deletion for the next user loading request
-        const users: Array<User> = dummyUserList.users || [];
-        remove(users, (item: User) => item.id === id);
+        if (validateAuthHeader(request)) {
+          try {
+            const id = request.params.id;
+            const users: Array<User> = dummyUserList.users || [];
+            remove(users, (item: User) => item.id === id);
+          } catch (e) {
+            // ignored
+          }
+        }
         return authResponse(request);
       });
 
