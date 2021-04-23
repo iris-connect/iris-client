@@ -1,7 +1,7 @@
 import { UserList } from "@/api";
 import { RootState } from "@/store/types";
 
-import { Commit, Module } from "vuex";
+import { Commit, Dispatch, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import authClient from "@/api-client";
 
@@ -31,7 +31,10 @@ export interface AdminUserListModule
   };
   actions: {
     fetchUserList({ commit }: { commit: Commit }): Promise<void>;
-    deleteUser({ commit }: { commit: Commit }, id: string): Promise<void>;
+    deleteUser(
+      { commit, dispatch }: { commit: Commit; dispatch: Dispatch },
+      id: string
+    ): Promise<void>;
   };
 }
 
@@ -85,16 +88,18 @@ const adminUserList: AdminUserListModule = {
         commit("setUserListLoading", false);
       }
     },
-    async deleteUser({ commit }, id) {
+    async deleteUser({ commit, dispatch }, id) {
       commit("setUserDeleteError", null);
       commit("setUserDeleteOngoing", true);
       try {
         await authClient.usersIdDelete(id);
       } catch (e) {
         commit("setUserDeleteError", getErrorMessage(e));
+        throw e;
       } finally {
         commit("setUserDeleteOngoing", false);
       }
+      await dispatch("fetchUserList");
     },
   },
 };

@@ -62,6 +62,7 @@ export function makeMockAPIServer() {
         return authResponse(request);
       });
 
+      // @todo: replace with patch
       this.put("/users/:id", (schema, request) => {
         try {
           if (validateAuthHeader(request)) {

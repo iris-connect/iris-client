@@ -57,7 +57,7 @@ const adminUserCreate: AdminUserCreateModule = {
         await authClient.usersPost(formData);
       } catch (e) {
         commit("setUserCreationError", getErrorMessage(e));
-        return Promise.reject(e);
+        throw e;
       } finally {
         commit("setUserCreationOngoing", false);
       }

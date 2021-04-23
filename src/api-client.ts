@@ -7,6 +7,7 @@ import { UserSession } from "@/views/user-login/user-login.store";
 import { get as _get } from "lodash";
 import { parseError } from "@/utils/axios";
 import config from "@/config";
+import messages from "@/common/messages";
 
 if (process.env.VUE_APP_ENABLE_MOCK_SERVER === "true") {
   // Not sure whether imported mockAPIServer ends up in bundle for deployment.
@@ -30,11 +31,10 @@ authAxiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = parseError(error)?.status;
-    // we do not log out if a 401 error is thrown because the admin user action triggers a 401 when the user is not allowed to manage other users.
-    if (status === 403) {
+    if (status === 401 || status === 403) {
       store.commit(
         "userLogin/setAuthenticationError",
-        "Ihre Sitzung ist abgelaufen."
+        messages.error.sessionExpired
       );
       store.commit("userLogin/setSession");
     }

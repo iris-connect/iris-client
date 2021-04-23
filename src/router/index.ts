@@ -118,6 +118,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  // @todo: add route guard for admins
   if (to.meta.auth !== false && !store.getters["userLogin/isAuthenticated"]) {
     const { name, path, hash, query, params } = to;
     const toLocation: Location = {

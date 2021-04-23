@@ -7,16 +7,15 @@
     offset-y
   >
     <template v-slot:activator="{ on, attrs }">
-      <v-text-field
-        v-model="model"
-        prepend-icon="mdi-calendar"
-        readonly
-        v-bind="{
-          ...attrs,
-          ...$attrs,
-        }"
-        v-on="on"
-      ></v-text-field>
+      <div v-on="on" v-bind="attrs">
+        <v-text-field
+          class="picker-input-field"
+          v-model="model"
+          prepend-icon="mdi-calendar"
+          readonly
+          v-bind="$attrs"
+        ></v-text-field>
+      </div>
     </template>
     <v-date-picker
       locale="de-de"
@@ -35,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 
 const DateInputFieldProps = Vue.extend({
   props: {
@@ -50,6 +49,7 @@ const DateInputFieldProps = Vue.extend({
   },
 });
 
+@Component
 export default class DateInputField extends DateInputFieldProps {
   active = false;
 
@@ -62,3 +62,9 @@ export default class DateInputField extends DateInputFieldProps {
   }
 }
 </script>
+
+<style scoped>
+.picker-input-field {
+  pointer-events: none;
+}
+</style>

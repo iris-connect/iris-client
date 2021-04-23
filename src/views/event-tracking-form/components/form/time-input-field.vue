@@ -2,7 +2,6 @@
   <v-menu
     v-if="picker"
     ref="menu"
-    :return-value.sync="model"
     v-model="active"
     :nudge-right="40"
     :close-on-content-click="false"
@@ -10,22 +9,22 @@
     offset-y
   >
     <template v-slot:activator="{ on, attrs }">
-      <v-text-field
-        v-model="model"
-        prepend-icon="mdi-clock"
-        readonly
-        v-bind="{
-          ...attrs,
-          ...$attrs,
-        }"
-        v-on="on"
-      ></v-text-field>
+      <div v-on="on" v-bind="attrs">
+        <v-text-field
+          class="picker-input-field"
+          v-model="model"
+          prepend-icon="mdi-clock"
+          readonly
+          v-bind="$attrs"
+        ></v-text-field>
+      </div>
     </template>
     <v-time-picker
       locale="de-de"
       v-model="model"
       ampm-in-title
-      @input="active = false"
+      format="24hr"
+      @change="active = false"
       @click:minute="$refs.menu.save(model)"
     ></v-time-picker>
   </v-menu>
@@ -39,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 
 const TimeInputFieldProps = Vue.extend({
   props: {
@@ -49,11 +48,12 @@ const TimeInputFieldProps = Vue.extend({
     },
     picker: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
 });
 
+@Component
 export default class TimeInputField extends TimeInputFieldProps {
   active = false;
 
@@ -66,3 +66,9 @@ export default class TimeInputField extends TimeInputFieldProps {
   }
 }
 </script>
+
+<style scoped>
+.picker-input-field {
+  pointer-events: none;
+}
+</style>

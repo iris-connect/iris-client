@@ -22,7 +22,6 @@
             <v-text-field
               v-model="form.model.userName"
               label="Benutzername"
-              :rules="validationRules.defined"
             ></v-text-field>
           </v-col>
           <v-col cols="12" md="6">
@@ -30,7 +29,6 @@
               v-model="form.model.role"
               label="Rolle"
               :items="roleSelectOptions"
-              :rules="validationRules.defined"
             ></v-select>
           </v-col>
         </v-row>
@@ -39,7 +37,6 @@
             <password-input-field
               v-model="form.model.password"
               label="Passwort"
-              :rules="validationRules.defined"
             />
           </v-col>
         </v-row>
@@ -48,8 +45,8 @@
             <v-alert v-if="userLoadingError" text type="error">{{
               userLoadingError
             }}</v-alert>
-            <v-alert v-if="userEditError" text type="error">{{
-              userEditError
+            <v-alert v-if="userSavingError" text type="error">{{
+              userSavingError
             }}</v-alert>
           </v-col>
         </v-row>
@@ -78,6 +75,8 @@ import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
 import { User, UserRole, UserUpsert } from "@/api";
 import PasswordInputField from "@/components/form/password-input-field.vue";
+import rules from "@/common/validation-rules";
+import { omitBy } from "lodash";
 
 type AdminUserEditForm = {
   model: UserUpsert;
@@ -110,20 +109,20 @@ export default class AdminUserEditView extends Vue {
     return store.state.adminUserEdit.userLoadingError;
   }
 
-  get userEditOngoing(): boolean {
-    return store.state.adminUserEdit.userEditOngoing;
+  get userSavingOngoing(): boolean {
+    return store.state.adminUserEdit.userSavingOngoing;
   }
 
-  get userEditError(): ErrorMessage {
-    return store.state.adminUserEdit.userEditError;
+  get userSavingError(): ErrorMessage {
+    return store.state.adminUserEdit.userSavingError;
   }
 
   get isBusy(): boolean {
-    return this.userLoading || this.userEditOngoing;
+    return this.userLoading || this.userSavingOngoing;
   }
 
   get hasError(): boolean {
-    return !!this.userLoadingError || !!this.userEditError;
+    return !!this.userLoadingError || !!this.userSavingError;
   }
 
   get roleSelectOptions(): Array<Record<string, unknown>> {
@@ -144,11 +143,11 @@ export default class AdminUserEditView extends Vue {
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      defined: [(v: unknown): string | boolean => !!v || "Pflichtfeld"],
+      defined: rules.defined,
     };
   }
 
-  userId: string | undefined = "";
+  userId = "";
 
   form: AdminUserEditForm = {
     model: {
@@ -162,9 +161,9 @@ export default class AdminUserEditView extends Vue {
   };
 
   @Watch("user")
-  onUserChanged(newValue: User | undefined): void {
+  onUserChanged(newValue: User | null): void {
     const { id, ...restProps } = newValue || {};
-    this.userId = id;
+    this.userId = id || "";
     this.form.model = {
       ...restProps,
     };
@@ -174,24 +173,28 @@ export default class AdminUserEditView extends Vue {
     return store.state.adminUserEdit.user;
   }
 
-  editUser(): void {
+  async editUser(): Promise<void> {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
       const payload = {
         id: this.userId,
-        data: this.form.model,
+        data: ensureIntegrityOfUserUpsert(this.form.model),
       };
-      store
-        .dispatch("adminUserEdit/editUser", payload)
-        .then(() => {
-          this.$router.back();
-        })
-        .catch(() => {
-          // ignored
-        });
+      await store.dispatch("adminUserEdit/editUser", payload);
+      this.$router.back();
     }
   }
 }
+
+const ensureIntegrityOfUserUpsert = (data: UserUpsert): UserUpsert => {
+  const mandatoryFields = ["userName", "password", "role"];
+  return omitBy(data, (value, key) => {
+    if (!value) {
+      return mandatoryFields.indexOf(key) !== -1;
+    }
+    return false;
+  });
+};
 </script>
 
 <style scoped></style>

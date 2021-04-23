@@ -87,6 +87,7 @@ import {
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
+import { orderBy } from "lodash";
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
@@ -159,7 +160,7 @@ export default class EventTrackingListView extends Vue {
       { text: "Zeit (Ende)", value: "endTime" },
       { text: "Generiert", value: "generatedTime" },
       { text: "Status", value: "status" },
-      { text: "Letzte Ändrung", value: "lastChange" },
+      { text: "Letzte Änderung", value: "lastChange" },
       { text: "", value: "actions" },
     ],
   };
@@ -171,27 +172,27 @@ export default class EventTrackingListView extends Vue {
   get eventList(): TableRow[] {
     const dataRequests =
       store.state.eventTrackingList.eventTrackingList?.dataRequests || [];
-    return (
-      dataRequests
-        // TODO this filtering could probably also be done in vuetify data-table
-        .filter(
-          (dataRequests) =>
-            !this.statusFilter || this.statusFilter === dataRequests.status
-        )
-        .map((dataRequest) => {
-          return {
-            address: getFormattedAddress(dataRequest),
-            endTime: getFormattedDate(dataRequest.end),
-            startTime: getFormattedDate(dataRequest.start),
-            generatedTime: getFormattedDate(dataRequest.requestedAt),
-            lastChange: getFormattedDate(dataRequest.lastUpdatedAt),
-            extID: dataRequest.externalRequestId || "-",
-            code: dataRequest.code,
-            name: dataRequest.name || "-",
-            status: dataRequest.status?.toString() || "-",
-          };
-        })
-    );
+    const list = dataRequests
+      // TODO this filtering could probably also be done in vuetify data-table
+      .filter(
+        (dataRequests) =>
+          !this.statusFilter || this.statusFilter === dataRequests.status
+      )
+      .map((dataRequest) => {
+        return {
+          address: getFormattedAddress(dataRequest),
+          endTime: getFormattedDate(dataRequest.end),
+          startTime: getFormattedDate(dataRequest.start),
+          generatedTime: getFormattedDate(dataRequest.requestedAt),
+          lastChange: getFormattedDate(dataRequest.lastUpdatedAt),
+          extID: dataRequest.externalRequestId || "-",
+          code: dataRequest.code,
+          name: dataRequest.name || "-",
+          status: dataRequest.status?.toString() || "-",
+        };
+      });
+    // default sorting. Could be done in data-table but then there would be a sort icon in the header.
+    return orderBy(list, "lastChange", "desc");
   }
 
   // TODO improve this - we need it to circumvent v-slot eslint errors

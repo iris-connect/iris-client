@@ -180,7 +180,6 @@ export default class AdminUserListView extends Vue {
 
   async deleteUser(id: string): Promise<void> {
     await store.dispatch("adminUserList/deleteUser", id);
-    await store.dispatch("adminUserList/fetchUserList");
   }
 }
 </script>

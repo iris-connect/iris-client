@@ -4,13 +4,14 @@ import { RootState } from "@/store/types";
 import { Commit, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import authClient from "@/api-client";
+import messages from "@/common/messages";
 
 export type AdminUserEditState = {
   user: User | null;
   userLoading: boolean;
   userLoadingError: ErrorMessage;
-  userEditOngoing: boolean;
-  userEditError: ErrorMessage;
+  userSavingOngoing: boolean;
+  userSavingError: ErrorMessage;
 };
 
 export interface AdminUserEditModule
@@ -19,8 +20,8 @@ export interface AdminUserEditModule
     setUser(state: AdminUserEditState, payload: User | null): void;
     setUserLoading(state: AdminUserEditState, payload: boolean): void;
     setUserLoadingError(state: AdminUserEditState, payload: ErrorMessage): void;
-    setUserEditOngoing(state: AdminUserEditState, payload: boolean): void;
-    setUserEditError(state: AdminUserEditState, payload: ErrorMessage): void;
+    setUserSavingOngoing(state: AdminUserEditState, payload: boolean): void;
+    setUserSavingError(state: AdminUserEditState, payload: ErrorMessage): void;
     reset(state: AdminUserEditState, payload: null): void;
   };
   actions: {
@@ -39,8 +40,8 @@ const defaultState: AdminUserEditState = {
   user: null,
   userLoading: false,
   userLoadingError: null,
-  userEditOngoing: false,
-  userEditError: null,
+  userSavingOngoing: false,
+  userSavingError: null,
 };
 
 const adminUserEdit: AdminUserEditModule = {
@@ -58,11 +59,11 @@ const adminUserEdit: AdminUserEditModule = {
     setUserLoadingError(state, payload) {
       state.userLoadingError = payload;
     },
-    setUserEditOngoing(state, loading) {
-      state.userEditOngoing = loading;
+    setUserSavingOngoing(state, loading) {
+      state.userSavingOngoing = loading;
     },
-    setUserEditError(state, error) {
-      state.userEditError = error;
+    setUserSavingError(state, error) {
+      state.userSavingError = error;
     },
     reset(state) {
       Object.assign(state, { ...defaultState });
@@ -84,15 +85,15 @@ const adminUserEdit: AdminUserEditModule = {
       }
     },
     async editUser({ commit }, payload) {
-      commit("setUserEditError", null);
-      commit("setUserEditOngoing", true);
+      commit("setUserSavingError", null);
+      commit("setUserSavingOngoing", true);
       try {
         await authClient.usersIdPut(payload.id, payload.data);
       } catch (e) {
-        commit("setUserEditError", getErrorMessage(e));
-        return Promise.reject(e);
+        commit("setUserSavingError", getErrorMessage(e));
+        throw e;
       } finally {
-        commit("setUserEditOngoing", false);
+        commit("setUserSavingOngoing", false);
       }
     },
   },
@@ -100,12 +101,10 @@ const adminUserEdit: AdminUserEditModule = {
 
 // @todo: clarify: do we need a dedicated api endpoint for fetching user details?
 const fetchUserById = async (id: string): Promise<User> => {
-  const userList: UserList | null = (await authClient.usersGet()).data;
-  const user: User | undefined = (userList?.users ?? []).find((user) => {
-    return user.id === id;
-  });
+  const userList: UserList | undefined = (await authClient.usersGet()).data;
+  const user = userList?.users?.find((user) => user.id === id);
   if (!user) {
-    throw new Error(`No User found for id: "${id}"`);
+    throw new Error(messages.error.userNotFound(id));
   }
   return user;
 };

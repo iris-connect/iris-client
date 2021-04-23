@@ -80,6 +80,7 @@ import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
 import { UserRole, UserUpsert } from "@/api";
 import PasswordInputField from "@/components/form/password-input-field.vue";
+import rules from "@/common/validation-rules";
 
 type AdminUserCreateForm = {
   model: UserUpsert;
@@ -126,7 +127,7 @@ export default class AdminUserCreateView extends Vue {
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      defined: [(v: unknown): string | boolean => !!v || "Pflichtfeld"],
+      defined: rules.defined,
     };
   }
 

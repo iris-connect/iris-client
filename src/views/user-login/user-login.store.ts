@@ -77,7 +77,7 @@ const userLogin: UserLoginModule = {
         session = sessionFromResponse(response);
       } catch (e) {
         commit("setAuthenticationError", getErrorMessage(e));
-        return Promise.reject(e);
+        throw e;
       } finally {
         commit("setSession", session);
         commit("setAuthenticating", false);
