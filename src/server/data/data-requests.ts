@@ -4,6 +4,8 @@ import {
   DataRequestDetails,
   DataRequestDetailsStatusEnum,
   Sex,
+  Guest,
+  GuestList,
 } from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
 
@@ -69,39 +71,41 @@ export const dummyDataDetails: DataRequestDetails = {
   start: hoursAgo(5),
   end: hoursAgo(1),
   requestDetails: "leer",
-  guests: [
-    {
-      firstName: "Max",
-      lastName: "Mustermann",
-      email: "max@example.de",
-      phone: "01234 000000",
-      mobilePhone: "0123 0815",
-      sex: Sex.Male,
-      attendanceInformation: {
-        attendFrom: hoursAgo(9),
-        attendTo: hoursAgo(3),
+  submissionData: {
+    guests: [
+      {
+        firstName: "Max",
+        lastName: "Mustermann",
+        email: "max@example.de",
+        phone: "01234 000000",
+        mobilePhone: "0123 0815",
+        sex: Sex.Male,
+        attendanceInformation: {
+          attendFrom: hoursAgo(9),
+          attendTo: hoursAgo(3),
+        },
       },
-    },
-    {
-      firstName: "Martina",
-      lastName: "Mustermann",
-      email: "a@b.de",
-      phone: "01234 567890",
-      mobilePhone: "0123 456789",
-      sex: Sex.Female,
-      attendanceInformation: {
-        attendFrom: hoursAgo(10),
-        attendTo: hoursAgo(8),
+      {
+        firstName: "Martina",
+        lastName: "Mustermann",
+        email: "a@b.de",
+        phone: "01234 567890",
+        mobilePhone: "0123 456789",
+        sex: Sex.Female,
+        attendanceInformation: {
+          attendFrom: hoursAgo(10),
+          attendTo: hoursAgo(8),
+        },
       },
+    ],
+    dataProvider: {
+      name: "GanzTolleApp",
+      address: {},
     },
-  ],
-  dataProvider: {
-    name: "GanzTolleApp",
-    address: {},
+    additionalInformation: "keine",
+    startDate: hoursAgo(4),
+    endDate: hoursAgo(3),
   },
-  additionalInformation: "keine",
-  startDate: hoursAgo(4),
-  endDate: hoursAgo(3),
 };
 
 export const getDummyDetailsWithStatus = (id: string): DataRequestDetails => {
@@ -112,14 +116,18 @@ export const getDummyDetailsWithStatus = (id: string): DataRequestDetails => {
     const status = (<unknown>(
       dataRequest.status
     )) as DataRequestDetailsStatusEnum;
+    const guests: Guest[] =
+      status === DataRequestDetailsStatusEnum.DataRequested
+        ? dummyDataDetails?.submissionData?.guests ?? []
+        : [];
     return {
       ...dummyDataDetails,
       ...dataRequest,
       status,
-      guests:
-        status === DataRequestDetailsStatusEnum.DataRequested
-          ? []
-          : dummyDataDetails.guests,
+      submissionData: <GuestList | undefined>{
+        ...dummyDataDetails.submissionData,
+        guests,
+      },
     };
   }
   return dummyDataDetails;

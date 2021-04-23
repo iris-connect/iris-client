@@ -432,12 +432,6 @@ export interface DataRequestCaseClient {
  */
 export interface DataRequestCaseData {
     /**
-     * 
-     * @type {ContactsAndEvents}
-     * @memberof DataRequestCaseData
-     */
-    submissionData?: ContactsAndEvents;
-    /**
      * External case identifier. E.g. CaseID in Sormas.
      * @type {string}
      * @memberof DataRequestCaseData
@@ -467,6 +461,54 @@ export interface DataRequestCaseData {
      * @memberof DataRequestCaseData
      */
     end?: string;
+    /**
+     * Internal case identifier. Used in listings etc.
+     * @type {string}
+     * @memberof DataRequestCaseData
+     */
+    caseId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseData
+     */
+    status?: DataRequestCaseDataStatusEnum;
+    /**
+     * Nonce used in provider app to authorize data upload
+     * @type {string}
+     * @memberof DataRequestCaseData
+     */
+    nonce?: string;
+    /**
+     * 
+     * @type {ContactsAndEvents}
+     * @memberof DataRequestCaseData
+     */
+    submissionData?: ContactsAndEvents;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum DataRequestCaseDataStatusEnum {
+    DataRequested = 'DATA_REQUESTED',
+    DataReceived = 'DATA_RECEIVED',
+    Closed = 'CLOSED'
+}
+
+/**
+ * 
+ * @export
+ * @interface DataRequestCaseDataAllOf
+ */
+export interface DataRequestCaseDataAllOf {
+    /**
+     * 
+     * @type {ContactsAndEvents}
+     * @memberof DataRequestCaseDataAllOf
+     */
+    submissionData?: ContactsAndEvents;
 }
 /**
  * Details for index case
@@ -474,6 +516,36 @@ export interface DataRequestCaseData {
  * @interface DataRequestCaseDetails
  */
 export interface DataRequestCaseDetails {
+    /**
+     * External case identifier. E.g. CaseID in Sormas.
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    externalCaseId: string;
+    /**
+     * Friendly name for given case
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    name?: string;
+    /**
+     * Comments on given case
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    comment?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    start: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    end?: string;
     /**
      * Internal case identifier. Used in listings etc.
      * @type {string}
@@ -485,38 +557,49 @@ export interface DataRequestCaseDetails {
      * @type {string}
      * @memberof DataRequestCaseDetails
      */
-    // status?: DataRequestCaseDetailsStatusEnum;
-    /**
-     * External case identifier. E.g. CaseID in Sormas.
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    externalCaseId: string;
-    /**
-     * Friendly name for given case
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    name?: string;
-    /**
-     * Comments on given case
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    comment?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    start: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    end?: string;
+    status?: DataRequestCaseDetailsStatusEnum;
 }
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum DataRequestCaseDetailsStatusEnum {
+    DataRequested = 'DATA_REQUESTED',
+    DataReceived = 'DATA_RECEIVED',
+    Closed = 'CLOSED'
+}
+
+/**
+ * 
+ * @export
+ * @interface DataRequestCaseDetailsAllOf
+ */
+export interface DataRequestCaseDetailsAllOf {
+    /**
+     * Internal case identifier. Used in listings etc.
+     * @type {string}
+     * @memberof DataRequestCaseDetailsAllOf
+     */
+    caseId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseDetailsAllOf
+     */
+    status?: DataRequestCaseDetailsAllOfStatusEnum;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum DataRequestCaseDetailsAllOfStatusEnum {
+    DataRequested = 'DATA_REQUESTED',
+    DataReceived = 'DATA_RECEIVED',
+    Closed = 'CLOSED'
+}
+
 /**
  * Details for index case
  * @export
@@ -524,12 +607,6 @@ export interface DataRequestCaseDetails {
  */
 export interface DataRequestCaseExtendedDetails {
     /**
-     * Nonce used in provider app to authorize data upload
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetails
-     */
-    nonce?: string;
-    /**
      * External case identifier. E.g. CaseID in Sormas.
      * @type {string}
      * @memberof DataRequestCaseExtendedDetails
@@ -559,6 +636,48 @@ export interface DataRequestCaseExtendedDetails {
      * @memberof DataRequestCaseExtendedDetails
      */
     end?: string;
+    /**
+     * Internal case identifier. Used in listings etc.
+     * @type {string}
+     * @memberof DataRequestCaseExtendedDetails
+     */
+    caseId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseExtendedDetails
+     */
+    status?: DataRequestCaseExtendedDetailsStatusEnum;
+    /**
+     * Nonce used in provider app to authorize data upload
+     * @type {string}
+     * @memberof DataRequestCaseExtendedDetails
+     */
+    nonce?: string;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum DataRequestCaseExtendedDetailsStatusEnum {
+    DataRequested = 'DATA_REQUESTED',
+    DataReceived = 'DATA_RECEIVED',
+    Closed = 'CLOSED'
+}
+
+/**
+ * 
+ * @export
+ * @interface DataRequestCaseExtendedDetailsAllOf
+ */
+export interface DataRequestCaseExtendedDetailsAllOf {
+    /**
+     * Nonce used in provider app to authorize data upload
+     * @type {string}
+     * @memberof DataRequestCaseExtendedDetailsAllOf
+     */
+    nonce?: string;
 }
 /**
  * The data request that will be sent by the FE.
@@ -615,6 +734,12 @@ export interface DataRequestClient {
  * @interface DataRequestDetails
  */
 export interface DataRequestDetails {
+    /**
+     * 
+     * @type {GuestList}
+     * @memberof DataRequestDetails
+     */
+    submissionData?: GuestList;
     /**
      * 
      * @type {string}
@@ -675,36 +800,6 @@ export interface DataRequestDetails {
      * @memberof DataRequestDetails
      */
     locationInformation?: LocationInformation;
-    /**
-     * 
-     * @type {Array<Guest>}
-     * @memberof DataRequestDetails
-     */
-    guests: Array<Guest>;
-    /**
-     * 
-     * @type {GuestListDataProvider}
-     * @memberof DataRequestDetails
-     */
-    dataProvider: GuestListDataProvider;
-    /**
-     * Additional informations about the guest list and the event or location.
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    additionalInformation?: string;
-    /**
-     * Start date/time of attendance for this guest list.
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    startDate?: string;
-    /**
-     * End date/time of attendance for this guest list.
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    endDate?: string;
 }
 
 /**
@@ -1188,18 +1283,6 @@ export interface LocationContext {
  */
 export interface LocationDataRequest {
     /**
-     * The URI that can be used to submit contact data for this tracing code.
-     * @type {string}
-     * @memberof LocationDataRequest
-     */
-    submissionUri: string;
-    /**
-     * The id of the location.
-     * @type {string}
-     * @memberof LocationDataRequest
-     */
-    locationId: string;
-    /**
      * Name of the requesting health department.
      * @type {string}
      * @memberof LocationDataRequest
@@ -1235,6 +1318,37 @@ export interface LocationDataRequest {
      * @memberof LocationDataRequest
      */
     requestDetails?: string;
+    /**
+     * The URI that can be used to submit contact data for this tracing code.
+     * @type {string}
+     * @memberof LocationDataRequest
+     */
+    submissionUri: string;
+    /**
+     * The id of the location.
+     * @type {string}
+     * @memberof LocationDataRequest
+     */
+    locationId: string;
+}
+/**
+ * 
+ * @export
+ * @interface LocationDataRequestAllOf
+ */
+export interface LocationDataRequestAllOf {
+    /**
+     * The URI that can be used to submit contact data for this tracing code.
+     * @type {string}
+     * @memberof LocationDataRequestAllOf
+     */
+    submissionUri: string;
+    /**
+     * The id of the location.
+     * @type {string}
+     * @memberof LocationDataRequestAllOf
+     */
+    locationId: string;
 }
 /**
  * 
@@ -1681,7 +1795,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
-
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
