@@ -432,6 +432,12 @@ export interface DataRequestCaseClient {
  */
 export interface DataRequestCaseData {
     /**
+     * 
+     * @type {ContactsAndEvents}
+     * @memberof DataRequestCaseData
+     */
+    submissionData?: ContactsAndEvents;
+    /**
      * External case identifier. E.g. CaseID in Sormas.
      * @type {string}
      * @memberof DataRequestCaseData
@@ -461,54 +467,6 @@ export interface DataRequestCaseData {
      * @memberof DataRequestCaseData
      */
     end?: string;
-    /**
-     * Internal case identifier. Used in listings etc.
-     * @type {string}
-     * @memberof DataRequestCaseData
-     */
-    caseId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseData
-     */
-    status?: DataRequestCaseDataStatusEnum;
-    /**
-     * Nonce used in provider app to authorize data upload
-     * @type {string}
-     * @memberof DataRequestCaseData
-     */
-    nonce?: string;
-    /**
-     * 
-     * @type {ContactsAndEvents}
-     * @memberof DataRequestCaseData
-     */
-    submissionData?: ContactsAndEvents;
-}
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum DataRequestCaseDataStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
-}
-
-/**
- * 
- * @export
- * @interface DataRequestCaseDataAllOf
- */
-export interface DataRequestCaseDataAllOf {
-    /**
-     * 
-     * @type {ContactsAndEvents}
-     * @memberof DataRequestCaseDataAllOf
-     */
-    submissionData?: ContactsAndEvents;
 }
 /**
  * Details for index case
@@ -517,6 +475,18 @@ export interface DataRequestCaseDataAllOf {
  */
 export interface DataRequestCaseDetails {
     /**
+     * Internal case identifier. Used in listings etc.
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    caseId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataRequestCaseDetails
+     */
+    // status?: DataRequestCaseDetailsStatusEnum;
+    /**
      * External case identifier. E.g. CaseID in Sormas.
      * @type {string}
      * @memberof DataRequestCaseDetails
@@ -546,60 +516,7 @@ export interface DataRequestCaseDetails {
      * @memberof DataRequestCaseDetails
      */
     end?: string;
-    /**
-     * Internal case identifier. Used in listings etc.
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    caseId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    status?: DataRequestCaseDetailsStatusEnum;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum DataRequestCaseDetailsStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
-}
-
-/**
- * 
- * @export
- * @interface DataRequestCaseDetailsAllOf
- */
-export interface DataRequestCaseDetailsAllOf {
-    /**
-     * Internal case identifier. Used in listings etc.
-     * @type {string}
-     * @memberof DataRequestCaseDetailsAllOf
-     */
-    caseId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseDetailsAllOf
-     */
-    status?: DataRequestCaseDetailsAllOfStatusEnum;
-}
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum DataRequestCaseDetailsAllOfStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
-}
-
 /**
  * Details for index case
  * @export
@@ -607,6 +524,12 @@ export enum DataRequestCaseDetailsAllOfStatusEnum {
  */
 export interface DataRequestCaseExtendedDetails {
     /**
+     * Nonce used in provider app to authorize data upload
+     * @type {string}
+     * @memberof DataRequestCaseExtendedDetails
+     */
+    nonce?: string;
+    /**
      * External case identifier. E.g. CaseID in Sormas.
      * @type {string}
      * @memberof DataRequestCaseExtendedDetails
@@ -636,48 +559,6 @@ export interface DataRequestCaseExtendedDetails {
      * @memberof DataRequestCaseExtendedDetails
      */
     end?: string;
-    /**
-     * Internal case identifier. Used in listings etc.
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetails
-     */
-    caseId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetails
-     */
-    status?: DataRequestCaseExtendedDetailsStatusEnum;
-    /**
-     * Nonce used in provider app to authorize data upload
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetails
-     */
-    nonce?: string;
-}
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum DataRequestCaseExtendedDetailsStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
-}
-
-/**
- * 
- * @export
- * @interface DataRequestCaseExtendedDetailsAllOf
- */
-export interface DataRequestCaseExtendedDetailsAllOf {
-    /**
-     * Nonce used in provider app to authorize data upload
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetailsAllOf
-     */
-    nonce?: string;
 }
 /**
  * The data request that will be sent by the FE.
@@ -734,12 +615,6 @@ export interface DataRequestClient {
  * @interface DataRequestDetails
  */
 export interface DataRequestDetails {
-    /**
-     * 
-     * @type {GuestList}
-     * @memberof DataRequestDetails
-     */
-    submissionData?: GuestList;
     /**
      * 
      * @type {string}
@@ -800,6 +675,36 @@ export interface DataRequestDetails {
      * @memberof DataRequestDetails
      */
     locationInformation?: LocationInformation;
+    /**
+     * 
+     * @type {Array<Guest>}
+     * @memberof DataRequestDetails
+     */
+    guests: Array<Guest>;
+    /**
+     * 
+     * @type {GuestListDataProvider}
+     * @memberof DataRequestDetails
+     */
+    dataProvider: GuestListDataProvider;
+    /**
+     * Additional informations about the guest list and the event or location.
+     * @type {string}
+     * @memberof DataRequestDetails
+     */
+    additionalInformation?: string;
+    /**
+     * Start date/time of attendance for this guest list.
+     * @type {string}
+     * @memberof DataRequestDetails
+     */
+    startDate?: string;
+    /**
+     * End date/time of attendance for this guest list.
+     * @type {string}
+     * @memberof DataRequestDetails
+     */
+    endDate?: string;
 }
 
 /**
@@ -1283,6 +1188,18 @@ export interface LocationContext {
  */
 export interface LocationDataRequest {
     /**
+     * The URI that can be used to submit contact data for this tracing code.
+     * @type {string}
+     * @memberof LocationDataRequest
+     */
+    submissionUri: string;
+    /**
+     * The id of the location.
+     * @type {string}
+     * @memberof LocationDataRequest
+     */
+    locationId: string;
+    /**
      * Name of the requesting health department.
      * @type {string}
      * @memberof LocationDataRequest
@@ -1318,37 +1235,6 @@ export interface LocationDataRequest {
      * @memberof LocationDataRequest
      */
     requestDetails?: string;
-    /**
-     * The URI that can be used to submit contact data for this tracing code.
-     * @type {string}
-     * @memberof LocationDataRequest
-     */
-    submissionUri: string;
-    /**
-     * The id of the location.
-     * @type {string}
-     * @memberof LocationDataRequest
-     */
-    locationId: string;
-}
-/**
- * 
- * @export
- * @interface LocationDataRequestAllOf
- */
-export interface LocationDataRequestAllOf {
-    /**
-     * The URI that can be used to submit contact data for this tracing code.
-     * @type {string}
-     * @memberof LocationDataRequestAllOf
-     */
-    submissionUri: string;
-    /**
-     * The id of the location.
-     * @type {string}
-     * @memberof LocationDataRequestAllOf
-     */
-    locationId: string;
 }
 /**
  * 
@@ -1737,6 +1623,210 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
         },
         /**
          * 
+         * @summary Submits a new data request
+         * @param {DataRequestClient} dataRequestClient 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        dataRequestsClientLocationsPost: async (dataRequestClient: DataRequestClient, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'dataRequestClient' is not null or undefined
+            assertParamExists('dataRequestsClientLocationsPost', 'dataRequestClient', dataRequestClient)
+            const localVarPath = `/data-requests-client/locations`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(dataRequestClient, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Detail view for Data Request with the data submissions already received
+         * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getLocationDetails: async (code: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'code' is not null or undefined
+            assertParamExists('getLocationDetails', 'code', code)
+            const localVarPath = `/data-requests-client/locations/{code}`
+                .replace(`{${"code"}}`, encodeURIComponent(String(code)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Authenticates a user against IRIS client
+         * @param {Credentials} credentials 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        login: async (credentials: Credentials, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'credentials' is not null or undefined
+            assertParamExists('login', 'credentials', credentials)
+            const localVarPath = `/login`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(credentials, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} searchKeyword The search keyword
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchSearchKeywordGet: async (searchKeyword: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'searchKeyword' is not null or undefined
+            assertParamExists('searchSearchKeywordGet', 'searchKeyword', searchKeyword)
+            const localVarPath = `/search/{search_keyword}`
+                .replace(`{${"search_keyword"}}`, encodeURIComponent(String(searchKeyword)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get authenticated IRIS user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        userProfileGet: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/user-profile`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get all IRIS users
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1903,173 +1993,6 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * 
-         * @summary Submits a new data request
-         * @param {DataRequestClient} dataRequestClient 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dataRequestsClientLocationsPost: async (dataRequestClient: DataRequestClient, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'dataRequestClient' is not null or undefined
-            assertParamExists('dataRequestsClientLocationsPost', 'dataRequestClient', dataRequestClient)
-            const localVarPath = `/data-requests-client/locations`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(dataRequestClient, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Detail view for Data Request with the data submissions already received
-         * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLocationDetails: async (code: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'code' is not null or undefined
-            assertParamExists('getLocationDetails', 'code', code)
-            const localVarPath = `/data-requests-client/locations/{code}`
-                .replace(`{${"code"}}`, encodeURIComponent(String(code)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Authenticates a user against IRIS client
-         * @param {Credentials} credentials 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        login: async (credentials: Credentials, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'credentials' is not null or undefined
-            assertParamExists('login', 'credentials', credentials)
-            const localVarPath = `/login`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(credentials, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} searchKeyword The search keyword
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        searchSearchKeywordGet: async (searchKeyword: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'searchKeyword' is not null or undefined
-            assertParamExists('searchSearchKeywordGet', 'searchKeyword', searchKeyword)
-            const localVarPath = `/search/{search_keyword}`
-                .replace(`{${"search_keyword"}}`, encodeURIComponent(String(searchKeyword)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -2163,6 +2086,16 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
          */
         async searchSearchKeywordGet(searchKeyword: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LocationList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.searchSearchKeywordGet(searchKeyword, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get authenticated IRIS user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async userProfileGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.userProfileGet(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -2295,6 +2228,15 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
          */
         searchSearchKeywordGet(searchKeyword: string, options?: any): AxiosPromise<LocationList> {
             return localVarFp.searchSearchKeywordGet(searchKeyword, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get authenticated IRIS user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        userProfileGet(options?: any): AxiosPromise<User> {
+            return localVarFp.userProfileGet(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2437,6 +2379,17 @@ export class IrisClientFrontendApi extends BaseAPI {
      */
     public searchSearchKeywordGet(searchKeyword: string, options?: any) {
         return IrisClientFrontendApiFp(this.configuration).searchSearchKeywordGet(searchKeyword, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get authenticated IRIS user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IrisClientFrontendApi
+     */
+    public userProfileGet(options?: any) {
+        return IrisClientFrontendApiFp(this.configuration).userProfileGet(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

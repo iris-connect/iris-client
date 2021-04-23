@@ -35,6 +35,7 @@ export const routes: Array<RouteConfig> = [
     name: "admin-user-list",
     meta: {
       menu: false,
+      admin: true,
     },
     component: () =>
       import(
@@ -46,6 +47,7 @@ export const routes: Array<RouteConfig> = [
     name: "admin-user-create",
     meta: {
       menu: false,
+      admin: true,
     },
     component: () =>
       import(
@@ -57,6 +59,7 @@ export const routes: Array<RouteConfig> = [
     name: "admin-user-edit",
     meta: {
       menu: false,
+      admin: true,
     },
     component: () =>
       import(
@@ -118,7 +121,6 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  // @todo: add route guard for admins
   if (to.meta.auth !== false && !store.getters["userLogin/isAuthenticated"]) {
     const { name, path, hash, query, params } = to;
     const toLocation: Location = {
@@ -130,6 +132,9 @@ router.beforeEach((to, from, next) => {
     };
     store.commit("userLogin/setInterceptedRoute", toLocation);
     return next("/user/login");
+  }
+  if (to.meta.admin === true && !store.getters["userLogin/isAdmin"]) {
+    return next("/");
   }
   if (to.name === "user-login" && store.getters["userLogin/isAuthenticated"]) {
     return next("/");
