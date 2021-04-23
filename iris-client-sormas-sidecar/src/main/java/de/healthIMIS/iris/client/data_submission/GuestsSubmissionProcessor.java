@@ -14,10 +14,10 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_submission;
 
-import de.healthIMIS.iris.api.sidecarclient.model.GuestList;
 import de.healthIMIS.iris.client.data_request.DataRequest;
 import de.healthIMIS.iris.client.data_request.DataRequest.Status;
 import de.healthIMIS.iris.client.data_request.DataRequestManagement;
+import de.healthIMIS.iris.client.data_request.web.dto.GuestList;
 import de.healthIMIS.iris.client.data_submission.entities.DataSubmission;
 import de.healthIMIS.iris.client.data_submission.entities.Guest;
 import de.healthIMIS.iris.client.data_submission.entities.GuestListDataProvider;

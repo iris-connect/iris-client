@@ -7,6 +7,7 @@ import de.healthIMIS.iris.client.data_request.web.dto.DataRequestDetails;
 import de.healthIMIS.iris.client.data_request.web.dto.ExistingDataRequestClientWithLocation;
 import de.healthIMIS.iris.client.data_request.web.dto.ExistingDataRequestClientWithLocationList;
 import de.healthIMIS.iris.client.data_request.web.dto.Guest;
+import de.healthIMIS.iris.client.data_request.web.dto.GuestList;
 import de.healthIMIS.iris.client.data_request.web.dto.GuestListDataProvider;
 import de.healthIMIS.iris.client.data_request.web.dto.LocationInformation;
 import de.healthIMIS.iris.client.data_submission.DataSubmissionRepository;
@@ -124,15 +125,19 @@ public class DataRequestController {
 	 */
 	private void addSubmissionToRequest(DataRequestDetails requestDetails, DataSubmission submission) {
 
-		requestDetails.setAdditionalInformation(submission.getAdditionalInformation());
-		requestDetails.setStartDate(submission.getStartDate().toZonedDateTime());
-		requestDetails.setEndDate(submission.getEndDate().toZonedDateTime());
-		requestDetails.setDataProvider(modelMapper.map(submission.getDataProvider(), GuestListDataProvider.class));
+		var dataProvider = modelMapper.map(submission.getDataProvider(), GuestListDataProvider.class);
 
-		var guests = submission.getGuests()
-				.stream()
+		var guests = submission.getGuests().stream()
 				.map(it -> modelMapper.map(it, Guest.class))
 				.collect(Collectors.toList());
-		requestDetails.setGuests(guests);
+
+		var guestList = new GuestList()
+				.additionalInformation(submission.getAdditionalInformation())
+				.startDate(submission.getStartDate())
+				.endDate(submission.getEndDate())
+				.dataProvider(dataProvider)
+				.guests(guests);
+
+		requestDetails.setSubmissionData(guestList);
 	}
 }

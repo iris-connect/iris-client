@@ -75,16 +75,7 @@ public class DataRequestDetails   {
 
   private LocationInformation locationInformation;
 
-  @Valid
-  private List<Guest> guests = new ArrayList<>();
-
-  private GuestListDataProvider dataProvider;
-
-  private String additionalInformation;
-
-  private ZonedDateTime startDate;
-
-  private ZonedDateTime endDate;
+  private GuestList submissionData;
 
 }
 
