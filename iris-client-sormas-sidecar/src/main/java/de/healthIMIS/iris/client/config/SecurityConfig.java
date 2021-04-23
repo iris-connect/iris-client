@@ -1,7 +1,6 @@
 package de.healthIMIS.iris.client.config;
 
 import de.healthIMIS.iris.client.core.IrisClientProperties;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.security.KeyStore;
@@ -16,10 +15,10 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
-@Slf4j
-public class EncryptionConfig {
+public class SecurityConfig {
 
 	@Bean
 	@ConditionalOnProperty(name = "iris.client.key-store", matchIfMissing = true)
@@ -39,5 +38,10 @@ public class EncryptionConfig {
 
 		Security.addProvider(new BouncyCastleProvider());
 		Security.setProperty("crypto.policy", "unlimited");
+	}
+
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 }

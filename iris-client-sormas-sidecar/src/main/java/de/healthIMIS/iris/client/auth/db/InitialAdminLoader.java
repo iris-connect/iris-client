@@ -19,7 +19,7 @@ import javax.annotation.PostConstruct;
 )
 public class InitialAdminLoader {
 
-    private DbAuthConfiguration conf;
+    private DbAuthProperties conf;
 
     private UserAccountsRepository repo;
 
