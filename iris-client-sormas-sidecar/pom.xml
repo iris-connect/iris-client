@@ -152,6 +152,13 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+	
+		<!--Spring Docs -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.5.7</version>
+		</dependency>
 	</dependencies>
 
 	<build>

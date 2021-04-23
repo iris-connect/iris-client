@@ -14,28 +14,35 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @AllArgsConstructor
-@Data
 @EnableWebSecurity
 @Configuration
 @ConditionalOnProperty(
-        value="security.auth",
-        havingValue = "db"
-)
+		value = "security.auth",
+		havingValue = "db")
 public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 
-    private PasswordEncoder passwordEncoder;
+	private static final String[] SWAGGER_WHITELIST = {
 
-    private JWTVerifier jwtVerifier;
+			"/swagger-ui.html",
+			"/swagger-ui/**",
+			"/v3/api-docs/**"
+	};
 
-    private JWTSigner jwtSigner;
+	private PasswordEncoder passwordEncoder;
 
-    private UserDetailsServiceImpl userDetailsService;
+	private JWTVerifier jwtVerifier;
 
-    @Override
+	private JWTSigner jwtSigner;
+
+	private UserDetailsServiceImpl userDetailsService;
+
+	@Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http.cors().and().csrf().disable()
                 .authorizeRequests()
+                .antMatchers(SWAGGER_WHITELIST)
+                .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(
@@ -46,10 +53,9 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-    }
-
+	@Override
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+	}
 
 }
