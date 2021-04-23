@@ -14,7 +14,7 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_submission;
 
-import de.healthIMIS.iris.client.core.DataInitializer;
+import de.healthIMIS.iris.client.DataInitializer;
 import de.healthIMIS.iris.client.data_request.DataRequestDataInitializer;
 import de.healthIMIS.iris.client.data_submission.entities.Address;
 import de.healthIMIS.iris.client.data_submission.entities.AttendanceInformation;

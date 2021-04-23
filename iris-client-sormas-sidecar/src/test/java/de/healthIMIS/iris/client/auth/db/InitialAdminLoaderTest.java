@@ -29,7 +29,7 @@ class InitialAdminLoaderTest {
     private UserAccountsRepository repo;
 
     @Mock
-    private DbAuthProperties properties;
+    private DbAuthProperties conf;
 
     @Mock
     private PasswordEncoder encoder;
@@ -38,14 +38,14 @@ class InitialAdminLoaderTest {
 
     @BeforeEach
     public void init() {
-        loader = new InitialAdminLoader(properties, repo, encoder);
+        loader = new InitialAdminLoader(conf, repo, encoder);
     }
 
     @Test
     public void shouldCreateAnAdminUserIfItDoesNotExist() {
         // when
-        Mockito.when(properties.getAdminUserName()).thenReturn("admin");
-        Mockito.when(properties.getAdminUserPassword()).thenReturn("admin");
+        Mockito.when(conf.getAdminUserName()).thenReturn("admin");
+        Mockito.when(conf.getAdminUserPassword()).thenReturn("admin");
         Mockito.when(repo.findByUserName(eq("admin"))).thenReturn(Optional.empty());
 
         // then
@@ -59,8 +59,8 @@ class InitialAdminLoaderTest {
     @Test
     public void shouldNotCreateAnAdminUserIfItDoesExist() {
         // when
-        Mockito.when(properties.getAdminUserName()).thenReturn("admin");
-        Mockito.when(properties.getAdminUserPassword()).thenReturn("admin");
+        Mockito.when(conf.getAdminUserName()).thenReturn("admin");
+        Mockito.when(conf.getAdminUserPassword()).thenReturn("admin");
 
         var existingUser = new UserAccount();
         existingUser.setUserName("admin");

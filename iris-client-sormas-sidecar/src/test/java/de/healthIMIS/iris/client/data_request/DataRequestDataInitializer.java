@@ -16,7 +16,7 @@ package de.healthIMIS.iris.client.data_request;
 
 import static java.time.temporal.ChronoUnit.*;
 
-import de.healthIMIS.iris.client.core.DataInitializer;
+import de.healthIMIS.iris.client.DataInitializer;
 import de.healthIMIS.iris.client.data_request.DataRequest.DataRequestIdentifier;
 import de.healthIMIS.iris.client.data_request.DataRequest.Feature;
 import lombok.RequiredArgsConstructor;
