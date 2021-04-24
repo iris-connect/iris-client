@@ -9,8 +9,7 @@ import de.healthIMIS.iris.client.data_request.DataRequestManagement;
 import de.healthIMIS.iris.client.data_request.Location;
 import de.healthIMIS.iris.client.data_request.web.dto.ExistingDataRequestClientWithLocationList;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -77,13 +76,13 @@ class DataRequestControllerSystemTest {
 	}
 
 	private void postNewDataRequest() throws Exception {
-		var dataRequest = Mockito.spy(new DataRequest("refId", "name", ZonedDateTime.now().toInstant(),
-				ZonedDateTime.now().toInstant(), "requestDetails",
+		var dataRequest = Mockito.spy(new DataRequest("refId", "name", Instant.now(),
+				Instant.now(), "requestDetails",
 				"", new Location(), Sets.newSet(DataRequest.Feature.Guests)));
 
 		// set by JPA on live calls, needs to be mocked here
-		Mockito.doReturn(LocalDateTime.now()).when(dataRequest).getCreatedAt();
-		Mockito.doReturn(LocalDateTime.now()).when(dataRequest).getLastModifiedAt();
+		Mockito.doReturn(Instant.now()).when(dataRequest).getCreatedAt();
+		Mockito.doReturn(Instant.now()).when(dataRequest).getLastModifiedAt();
 
 		Mockito.when(
 				dataRequestManagement.createLocationRequest(any(), any(), any(), any(), any(), any(), any()))

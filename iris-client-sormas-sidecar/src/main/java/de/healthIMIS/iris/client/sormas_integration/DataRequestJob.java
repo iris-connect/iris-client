@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -177,9 +177,9 @@ class DataRequestJob {
 					newTask.setChangeDate(now);
 					newTask.setStatusChangeDate(now);
 
-					var nowDate = ZonedDateTime.now().withSecond(0);
-					newTask.setDueDate(nowDate.toInstant());
-					newTask.setPerceivedStart(nowDate.plusDays(1).toInstant());
+					var nowDate = Instant.now().truncatedTo(ChronoUnit.MINUTES);
+					newTask.setDueDate(nowDate);
+					newTask.setPerceivedStart(nowDate.plus(1, ChronoUnit.DAYS));
 
 					newTask.setTaskStatus(TaskStatus.PENDING);
 					newTask.setAssigneeUser(task.getCreatorUser());

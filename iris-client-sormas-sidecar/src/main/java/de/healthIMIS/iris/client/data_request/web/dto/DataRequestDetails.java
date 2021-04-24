@@ -1,20 +1,13 @@
 package de.healthIMIS.iris.client.data_request.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.time.Instant;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 @NoArgsConstructor
 @Getter
@@ -63,13 +56,13 @@ public class DataRequestDetails   {
 
   private String externalRequestId;
 
-  private ZonedDateTime start;
+  private Instant start;
 
-  private ZonedDateTime end;
+  private Instant end;
 
-  private ZonedDateTime requestedAt;
+  private Instant requestedAt;
 
-  private ZonedDateTime lastModifiedAt;
+  private Instant lastModifiedAt;
 
   private String requestDetails;
 

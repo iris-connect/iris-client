@@ -23,7 +23,8 @@ import de.healthIMIS.sormas.client.model.UserReferenceDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
@@ -53,9 +54,9 @@ public abstract class DataSubmissionSubProcessor<T> {
 
 		newTask.setUuid(SormasRefId.random().toString());
 
-		var nowDate = ZonedDateTime.now().withSecond(0);
-		newTask.setDueDate(nowDate.toInstant());
-		newTask.setPerceivedStart(nowDate.plusDays(1).toInstant());
+		var nowDate = Instant.now().truncatedTo(ChronoUnit.MINUTES);
+		newTask.setDueDate(nowDate);
+		newTask.setPerceivedStart(nowDate.plus(1, ChronoUnit.DAYS));
 
 		newTask.setTaskStatus(TaskStatus.PENDING);
 

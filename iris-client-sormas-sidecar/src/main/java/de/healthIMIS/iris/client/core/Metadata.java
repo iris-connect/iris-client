@@ -16,7 +16,7 @@ package de.healthIMIS.iris.client.core;
 
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import javax.persistence.Embeddable;
 
@@ -31,7 +31,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 public class Metadata {
 
 	@CreatedDate
-	LocalDateTime created;
+	Instant created;
 	@LastModifiedDate
-	LocalDateTime lastModified;
+	Instant lastModified;
 }

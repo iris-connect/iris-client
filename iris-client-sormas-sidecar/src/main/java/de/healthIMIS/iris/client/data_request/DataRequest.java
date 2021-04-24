@@ -25,7 +25,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -77,11 +76,11 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 		this.features = features;
 	}
 
-	public LocalDateTime getLastModifiedAt() {
+	public Instant getLastModifiedAt() {
 		return this.getMetadata().getLastModified();
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public Instant getCreatedAt() {
 		return this.getMetadata().getCreated();
 	}
 

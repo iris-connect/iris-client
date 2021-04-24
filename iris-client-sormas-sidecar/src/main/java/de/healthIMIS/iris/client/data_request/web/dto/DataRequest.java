@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -26,11 +26,11 @@ public class DataRequest   {
 
   @JsonProperty("start")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime start;
+  private Instant start;
 
   @JsonProperty("end")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime end;
+  private Instant end;
 
   @JsonProperty("requestDetails")
   private String requestDetails;
@@ -98,7 +98,7 @@ public class DataRequest   {
     this.keyReference = keyReference;
   }
 
-  public DataRequest start(OffsetDateTime start) {
+  public DataRequest start(Instant start) {
     this.start = start;
     return this;
   }
@@ -112,15 +112,15 @@ public class DataRequest   {
 
   @Valid
 
-  public OffsetDateTime getStart() {
+  public Instant getStart() {
     return start;
   }
 
-  public void setStart(OffsetDateTime start) {
+  public void setStart(Instant start) {
     this.start = start;
   }
 
-  public DataRequest end(OffsetDateTime end) {
+  public DataRequest end(Instant end) {
     this.end = end;
     return this;
   }
@@ -133,11 +133,11 @@ public class DataRequest   {
 
   @Valid
 
-  public OffsetDateTime getEnd() {
+  public Instant getEnd() {
     return end;
   }
 
-  public void setEnd(OffsetDateTime end) {
+  public void setEnd(Instant end) {
     this.end = end;
   }
 

@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -32,11 +32,11 @@ public class LocationDataRequest   {
 
   @JsonProperty("start")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime start;
+  private Instant start;
 
   @JsonProperty("end")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime end;
+  private Instant end;
 
   @JsonProperty("requestDetails")
   private String requestDetails;
@@ -146,7 +146,7 @@ public class LocationDataRequest   {
     this.keyReference = keyReference;
   }
 
-  public LocationDataRequest start(OffsetDateTime start) {
+  public LocationDataRequest start(Instant start) {
     this.start = start;
     return this;
   }
@@ -160,15 +160,15 @@ public class LocationDataRequest   {
 
   @Valid
 
-  public OffsetDateTime getStart() {
+  public Instant getStart() {
     return start;
   }
 
-  public void setStart(OffsetDateTime start) {
+  public void setStart(Instant start) {
     this.start = start;
   }
 
-  public LocationDataRequest end(OffsetDateTime end) {
+  public LocationDataRequest end(Instant end) {
     this.end = end;
     return this;
   }
@@ -182,11 +182,11 @@ public class LocationDataRequest   {
 
   @Valid
 
-  public OffsetDateTime getEnd() {
+  public Instant getEnd() {
     return end;
   }
 
-  public void setEnd(OffsetDateTime end) {
+  public void setEnd(Instant end) {
     this.end = end;
   }
 

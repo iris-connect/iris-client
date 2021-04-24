@@ -1,14 +1,15 @@
 package de.healthIMIS.iris.client.data_request.web.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
+import java.time.Instant;
+import java.util.Objects;
+
+import javax.validation.Valid;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModelProperty;
-
-import javax.validation.Valid;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
-import java.util.Objects;
 
 /**
  * ExistingDataRequestClientWithLocation
@@ -66,19 +67,19 @@ public class ExistingDataRequestClientWithLocation   {
 
   @JsonProperty("start")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private ZonedDateTime start;
+  private Instant start;
 
   @JsonProperty("end")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private ZonedDateTime end;
+  private Instant end;
 
   @JsonProperty("requestedAt")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private ZonedDateTime requestedAt;
+  private Instant requestedAt;
 
   @JsonProperty("lastUpdatedAt")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private ZonedDateTime lastUpdatedAt;
+  private Instant lastUpdatedAt;
 
   @JsonProperty("requestDetails")
   private String requestDetails;
@@ -166,7 +167,7 @@ public class ExistingDataRequestClientWithLocation   {
     this.externalRequestId = externalRequestId;
   }
 
-  public ExistingDataRequestClientWithLocation start(ZonedDateTime start) {
+  public ExistingDataRequestClientWithLocation start(Instant start) {
     this.start = start;
     return this;
   }
@@ -179,15 +180,15 @@ public class ExistingDataRequestClientWithLocation   {
 
   @Valid
 
-  public ZonedDateTime getStart() {
+  public Instant getStart() {
     return start;
   }
 
-  public void setStart(ZonedDateTime start) {
+  public void setStart(Instant start) {
     this.start = start;
   }
 
-  public ExistingDataRequestClientWithLocation end(ZonedDateTime end) {
+  public ExistingDataRequestClientWithLocation end(Instant end) {
     this.end = end;
     return this;
   }
@@ -200,11 +201,11 @@ public class ExistingDataRequestClientWithLocation   {
 
   @Valid
 
-  public ZonedDateTime getEnd() {
+  public Instant getEnd() {
     return end;
   }
 
-  public void setEnd(ZonedDateTime end) {
+  public void setEnd(Instant end) {
     this.end = end;
   }
 
@@ -257,15 +258,15 @@ public class ExistingDataRequestClientWithLocation   {
 
   @Valid
 
-  public ZonedDateTime getRequestedAt() {
+  public Instant getRequestedAt() {
     return requestedAt;
   }
 
-  public void setRequestedAt(ZonedDateTime requestedAt) {
+  public void setRequestedAt(Instant requestedAt) {
     this.requestedAt = requestedAt;
   }
 
-  public ExistingDataRequestClientWithLocation lastUpdatedAt(ZonedDateTime lastUpdatedAt) {
+  public ExistingDataRequestClientWithLocation lastUpdatedAt(Instant lastUpdatedAt) {
     this.lastUpdatedAt = lastUpdatedAt;
     return this;
   }
@@ -278,11 +279,11 @@ public class ExistingDataRequestClientWithLocation   {
 
   @Valid
 
-  public ZonedDateTime getLastUpdatedAt() {
+  public Instant getLastUpdatedAt() {
     return lastUpdatedAt;
   }
 
-  public void setLastUpdatedAt(ZonedDateTime lastUpdatedAt) {
+  public void setLastUpdatedAt(Instant lastUpdatedAt) {
     this.lastUpdatedAt = lastUpdatedAt;
   }
 

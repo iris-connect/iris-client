@@ -1,12 +1,14 @@
 package de.healthIMIS.iris.client.data_request.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.time.Instant;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.time.OffsetDateTime;
-import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * GuestAllOfAttendanceInformation
@@ -18,11 +20,11 @@ public class GuestAllOfAttendanceInformation   {
 
   @JsonProperty("attendFrom")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime attendFrom;
+  private Instant attendFrom;
 
   @JsonProperty("attendTo")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime attendTo;
+  private Instant attendTo;
 
   @JsonProperty("additionalInformation")
   private String additionalInformation;
@@ -47,7 +49,7 @@ public class GuestAllOfAttendanceInformation   {
     this.descriptionOfParticipation = descriptionOfParticipation;
   }
 
-  public GuestAllOfAttendanceInformation attendFrom(OffsetDateTime attendFrom) {
+  public GuestAllOfAttendanceInformation attendFrom(Instant attendFrom) {
     this.attendFrom = attendFrom;
     return this;
   }
@@ -61,15 +63,15 @@ public class GuestAllOfAttendanceInformation   {
 
   @Valid
 
-  public OffsetDateTime getAttendFrom() {
+  public Instant getAttendFrom() {
     return attendFrom;
   }
 
-  public void setAttendFrom(OffsetDateTime attendFrom) {
+  public void setAttendFrom(Instant attendFrom) {
     this.attendFrom = attendFrom;
   }
 
-  public GuestAllOfAttendanceInformation attendTo(OffsetDateTime attendTo) {
+  public GuestAllOfAttendanceInformation attendTo(Instant attendTo) {
     this.attendTo = attendTo;
     return this;
   }
@@ -83,11 +85,11 @@ public class GuestAllOfAttendanceInformation   {
 
   @Valid
 
-  public OffsetDateTime getAttendTo() {
+  public Instant getAttendTo() {
     return attendTo;
   }
 
-  public void setAttendTo(OffsetDateTime attendTo) {
+  public void setAttendTo(Instant attendTo) {
     this.attendTo = attendTo;
   }
 

@@ -25,8 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.security.KeyStore;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -86,14 +84,14 @@ class DataSubmissionJob {
 		log.trace("Submission job - start");
 
 		var lastSync = syncTimes.findById(SyncTimes.DataTypes.Submissions).map(SyncTimes::getLastSync)
-				.map(it -> it.atZone(ZoneId.systemDefault()).toLocalDateTime()).orElse(LocalDateTime.of(2000, 01, 01, 00, 00));
+				.orElse(Instant.ofEpochSecond(0));
 
 		try {
 
 			log.trace("Submission job - GET to server is sent");
 			var response = rest.getForEntity("https://{address}:{port}/hd/data-submissions?departmentId={depId}&from={from}",
 					DataSubmissionDto[].class, properties.getServerAddress().getHostName(), properties.getServerPort(),
-					clientProperties.getClientId(), lastSync.atZone(ZoneId.of("Europe/Berlin")).toInstant());
+					clientProperties.getClientId(), lastSync);
 
 			handleDtos(response.getBody());
 

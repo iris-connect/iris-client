@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +31,11 @@ public class GuestList   {
 
   @JsonProperty("startDate")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime startDate;
+  private Instant startDate;
 
   @JsonProperty("endDate")
   @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime endDate;
+  private Instant endDate;
 
   public GuestList guests(List<Guest> guests) {
     this.guests = guests;
@@ -104,7 +106,7 @@ public class GuestList   {
     this.additionalInformation = additionalInformation;
   }
 
-  public GuestList startDate(OffsetDateTime startDate) {
+  public GuestList startDate(Instant startDate) {
     this.startDate = startDate;
     return this;
   }
@@ -117,15 +119,15 @@ public class GuestList   {
 
   @Valid
 
-  public OffsetDateTime getStartDate() {
+  public Instant getStartDate() {
     return startDate;
   }
 
-  public void setStartDate(OffsetDateTime startDate) {
+  public void setStartDate(Instant startDate) {
     this.startDate = startDate;
   }
 
-  public GuestList endDate(OffsetDateTime endDate) {
+  public GuestList endDate(Instant endDate) {
     this.endDate = endDate;
     return this;
   }
@@ -138,11 +140,11 @@ public class GuestList   {
 
   @Valid
 
-  public OffsetDateTime getEndDate() {
+  public Instant getEndDate() {
     return endDate;
   }
 
-  public void setEndDate(OffsetDateTime endDate) {
+  public void setEndDate(Instant endDate) {
     this.endDate = endDate;
   }
 

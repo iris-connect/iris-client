@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -39,11 +39,12 @@ public class DataSubmission extends Aggregate<DataSubmission, DataSubmission.Dat
 	@Embedded
 	private GuestListDataProvider dataProvider;
 	private String additionalInformation;
-	private OffsetDateTime startDate;
-	private OffsetDateTime endDate;
+	private Instant startDate;
+	private Instant endDate;
 
-	public DataSubmission(DataRequest request, Set<Guest> guests, GuestListDataProvider dataProvider, String additionalInformation,
-			OffsetDateTime startDate, OffsetDateTime endDate) {
+	public DataSubmission(DataRequest request, Set<Guest> guests, GuestListDataProvider dataProvider,
+			String additionalInformation,
+			Instant startDate, Instant endDate) {
 
 		super();
 

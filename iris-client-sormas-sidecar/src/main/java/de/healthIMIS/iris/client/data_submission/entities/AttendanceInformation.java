@@ -18,7 +18,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 import javax.persistence.Embeddable;
 
@@ -30,7 +30,7 @@ import javax.persistence.Embeddable;
 public class AttendanceInformation {
 
 	private String descriptionOfParticipation;
-	private OffsetDateTime attendFrom;
-	private OffsetDateTime attendTo;
+	private Instant attendFrom;
+	private Instant attendTo;
 	private String additionalInformation;
 }

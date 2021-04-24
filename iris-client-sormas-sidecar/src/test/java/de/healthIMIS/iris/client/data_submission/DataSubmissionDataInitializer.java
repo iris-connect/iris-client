@@ -14,19 +14,21 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_submission;
 
+import static java.time.temporal.ChronoUnit.*;
+
 import de.healthIMIS.iris.client.DataInitializer;
 import de.healthIMIS.iris.client.data_request.DataRequestDataInitializer;
 import de.healthIMIS.iris.client.data_submission.entities.Address;
 import de.healthIMIS.iris.client.data_submission.entities.AttendanceInformation;
-import de.healthIMIS.iris.client.data_submission.entities.GuestListDataProvider;
 import de.healthIMIS.iris.client.data_submission.entities.DataSubmission;
 import de.healthIMIS.iris.client.data_submission.entities.Guest;
 import de.healthIMIS.iris.client.data_submission.entities.Guest.Sex;
+import de.healthIMIS.iris.client.data_submission.entities.GuestListDataProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -57,16 +59,16 @@ class DataSubmissionDataInitializer implements DataInitializer {
 				null);
 
 		address = new Address("Straße A", "1", "Stadt A", "12345");
-		var addInfos = new AttendanceInformation("kurzzeitiger Gast", OffsetDateTime.now().minusDays(1).minusHours(1),
-				OffsetDateTime.now().minusDays(1).plusHours(1), "nichts zu sagen");
+		var addInfos = new AttendanceInformation("kurzzeitiger Gast", Instant.now().minus(1, DAYS).minus(1, HOURS),
+				Instant.now().minus(1, DAYS).plus(1, HOURS), "nichts zu sagen");
 		var guest = new Guest(UUID.randomUUID(), submission, "Erster", "Gast",
 				LocalDate.of(1990, 1, 1), Sex.UNKNOWN, "e@mail.de",
 				"0815", "4711", Boolean.TRUE, address, addInfos);
 		guests.add(guest);
 
 		address = new Address("Straße B", "1", "Stadt B", "12345");
-		addInfos = new AttendanceInformation("langer Gast", OffsetDateTime.now().minusDays(1).minusHours(1),
-				OffsetDateTime.now().minusDays(1).plusHours(1), "nichts zu sagen");
+		addInfos = new AttendanceInformation("langer Gast", Instant.now().minus(1, DAYS).minus(1, HOURS),
+				Instant.now().minus(1, DAYS).plus(1, HOURS), "nichts zu sagen");
 		guest = new Guest(UUID.randomUUID(), submission, "Zweiter", "Gast",
 				LocalDate.of(1980, 1, 1), Sex.UNKNOWN, "email@mail.de",
 				"0815", "4711", Boolean.FALSE, address, addInfos);

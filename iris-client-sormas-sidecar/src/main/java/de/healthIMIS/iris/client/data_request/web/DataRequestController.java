@@ -15,7 +15,6 @@ import de.healthIMIS.iris.client.data_submission.entities.DataSubmission;
 import io.vavr.control.Option;
 import lombok.AllArgsConstructor;
 
-import java.time.ZoneId;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -48,8 +47,8 @@ public class DataRequestController {
 		var result = dataRequestManagement.createLocationRequest(
 				request.getExternalRequestId(),
 				request.getName(),
-				request.getStart().toInstant(),
-				request.getEnd().toInstant(),
+				request.getStart(),
+				request.getEnd(),
 				Option.of(request.getRequestDetails()),
 				request.getLocationId(),
 				request.getProviderId());
@@ -63,11 +62,11 @@ public class DataRequestController {
 		var response = dataRequestManagement.getAll().stream().map(request -> {
 			var mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
 			mapped.setCode(request.getId().toString());
-			mapped.setStart(request.getRequestStart().atZone(ZoneId.of("UTC")));
-			mapped.setEnd(request.getRequestEnd().atZone(ZoneId.of("UTC")));
+			mapped.setStart(request.getRequestStart());
+			mapped.setEnd(request.getRequestEnd());
 			mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
-			mapped.setLastUpdatedAt(request.getLastModifiedAt().atZone(ZoneId.of("UTC")));
-			mapped.setRequestedAt(request.getCreatedAt().atZone(ZoneId.of("UTC")));
+			mapped.setLastUpdatedAt(request.getLastModifiedAt());
+			mapped.setRequestedAt(request.getCreatedAt());
 			mapped.setExternalRequestId(request.getRefId());
 			return mapped;
 		})
@@ -96,12 +95,11 @@ public class DataRequestController {
 	private DataRequestDetails map(DataRequest request) {
 		var mapped = modelMapper.map(request, DataRequestDetails.class);
 		mapped.setCode(request.getId().toString());
-		// TODO this is not returning UTC check whats happening
-		mapped.setStart(request.getRequestStart().atZone(ZoneId.of("UTC")));
-		mapped.setEnd(request.getRequestEnd().atZone(ZoneId.of("UTC")));
+		mapped.setStart(request.getRequestStart());
+		mapped.setEnd(request.getRequestEnd());
 		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
-		mapped.setLastModifiedAt(request.getLastModifiedAt().atZone(ZoneId.of("UTC")));
-		mapped.setRequestedAt(request.getCreatedAt().atZone(ZoneId.of("UTC")));
+		mapped.setLastModifiedAt(request.getLastModifiedAt());
+		mapped.setRequestedAt(request.getCreatedAt());
 		mapped.setExternalRequestId(request.getRefId());
 		return mapped;
 	}
