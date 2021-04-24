@@ -121,11 +121,11 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-            <groupId>org.modelmapper</groupId>
-            <artifactId>modelmapper</artifactId>
-            <version>2.3.9</version>
-        </dependency>
-        <dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>2.3.9</version>
+		</dependency>
+		<dependency>
 			<groupId>io.vavr</groupId>
 			<artifactId>vavr</artifactId>
 			<version>${vavr-version}</version>
@@ -135,7 +135,7 @@
 			<artifactId>bcpkix-jdk15on</artifactId>
 			<version>1.68</version>
 		</dependency>
-		
+
 		<!-- Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -152,7 +152,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	
+
 		<!--Spring Docs -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -197,7 +197,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- Integration tests-->
+			<!-- Integration tests -->
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.0</version>
@@ -245,6 +245,14 @@
 						<include>**/*SystemTest.java</include>
 						<include>**/*SystemTests.java</include>
 					</includes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<configuration>
+					<offline>true</offline>
 				</configuration>
 			</plugin>
 		</plugins>
