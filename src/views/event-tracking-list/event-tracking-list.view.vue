@@ -87,10 +87,11 @@
       :color="black"
       :max-height="48"
       :max-width="48"
-      @click="goToFeedbackPage"
+      @click="showFeedbackDialog = true"
     >
       <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
     </v-btn>
+    <FeedbackDialog v-model="showFeedbackDialog" />
   </div>
 </template>
 
@@ -102,6 +103,7 @@ import {
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
+import FeedbackDialog from "@/components/feedback.view.vue";
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
@@ -139,6 +141,7 @@ type TableRow = {
 @Component({
   components: {
     EventTrackingFormView: EventTrackingFormView,
+    FeedbackDialog,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
@@ -255,8 +258,10 @@ export default class EventTrackingListView extends Vue {
         return "Unbekannt"; // TODO find better name
     }
   }
-  goToFeedbackPage() {
-    return "";
+  data() {
+    return {
+      showFeedbackDialog: false,
+    };
   }
 }
 </script>

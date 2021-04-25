@@ -22,10 +22,11 @@
       :color="black"
       :max-height="48"
       :max-width="48"
-      @click="goToFeedbackPage"
+      @click="showFeedbackDialog = true"
     >
       <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
     </v-btn>
+    <FeedbackDialog v-model="showFeedbackDialog" />
   </div>
   <div v-else>
     <v-row>
@@ -103,20 +104,23 @@
       :color="black"
       :max-height="48"
       :max-width="48"
-      @click="goToFeedbackPage"
+      @click="showFeedbackDialog = true"
     >
       <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
     </v-btn>
+    <FeedbackDialog v-model="showFeedbackDialog" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
+import FeedbackDialog from "@/components/feedback.view.vue";
 
 @Component({
   components: {
     EventTrackingFormView: EventTrackingFormView,
+    FeedbackDialog,
   },
 })
 export default class EventTrackingListView extends Vue {
@@ -175,6 +179,11 @@ export default class EventTrackingListView extends Vue {
   }
   goToFeedbackPage() {
     return "";
+  }
+  data() {
+    return {
+      showFeedbackDialog: false,
+    };
   }
 }
 </script>
