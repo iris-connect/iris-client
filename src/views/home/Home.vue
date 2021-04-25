@@ -81,6 +81,22 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <v-btn
+      class="mr-0 mb-0"
+      large
+      fab
+      dark
+      fixed
+      bottom
+      right
+      :color="black"
+      :max-height="48"
+      :max-width="48"
+      @click="goToFeedbackPage"
+    >
+      <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
+    </v-btn>
   </div>
 </template>
 
@@ -186,6 +202,9 @@ export default class Home extends Vue {
           ExistingDataRequestClientWithLocationStatusEnum.DataRequested
       )
       .map(tableRowMapper);
+  }
+  goToFeedbackPage() {
+    return "";
   }
 }
 </script>
