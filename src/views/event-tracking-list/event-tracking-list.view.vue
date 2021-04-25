@@ -76,6 +76,21 @@
         </v-data-table>
       </v-card-text>
     </v-card>
+    <v-btn
+      class="mr-0 mb-0"
+      large
+      fab
+      dark
+      fixed
+      bottom
+      right
+      :color="black"
+      :max-height="48"
+      :max-width="48"
+      @click="goToFeedbackPage"
+    >
+      <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
+    </v-btn>
   </div>
 </template>
 
@@ -239,6 +254,9 @@ export default class EventTrackingListView extends Vue {
       default:
         return "Unbekannt"; // TODO find better name
     }
+  }
+  goToFeedbackPage() {
+    return "";
   }
 }
 </script>
