@@ -11,6 +11,21 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-btn
+      class="mr-0 mb-0"
+      large
+      fab
+      dark
+      fixed
+      bottom
+      right
+      :color="black"
+      :max-height="48"
+      :max-width="48"
+      @click="goToFeedbackPage"
+    >
+      <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
+    </v-btn>
   </div>
   <div v-else>
     <v-row>
@@ -77,6 +92,21 @@
         </v-data-table>
       </v-card-text>
     </v-card>
+    <v-btn
+      class="mr-0 mb-0"
+      large
+      fab
+      dark
+      fixed
+      bottom
+      right
+      :color="black"
+      :max-height="48"
+      :max-width="48"
+      @click="goToFeedbackPage"
+    >
+      <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
+    </v-btn>
   </div>
 </template>
 
@@ -142,6 +172,9 @@ export default class EventTrackingListView extends Vue {
     else if (status == "UPDATE") return "red";
     else if (status == "Abgeschlossen") return "green";
     else return "";
+  }
+  goToFeedbackPage() {
+    return "";
   }
 }
 </script>
