@@ -24,6 +24,8 @@ import de.healthIMIS.sormas.client.api.TaskControllerApi;
 import de.healthIMIS.sormas.client.api.UserControllerApi;
 import de.healthIMIS.sormas.client.invoker.ApiClient;
 import de.healthIMIS.sormas.client.model.UserDto;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -49,16 +51,11 @@ import org.springframework.web.client.RestTemplate;
  */
 @Configuration
 @ConditionalOnProperty("iris.sormas.user")
+@RequiredArgsConstructor
 public class SormasIntegrationConfig {
 
-	private final RestTemplate restTemplate;
-	private final IrisSormasProperties properties;
-
-	public SormasIntegrationConfig(@Qualifier("sormas-rest") RestTemplate restTemplate, IrisSormasProperties properties) {
-
-		this.restTemplate = restTemplate;
-		this.properties = properties;
-	}
+	private final @Qualifier("sormas-rest") @NonNull RestTemplate restTemplate;
+	private final @NonNull IrisSormasProperties properties;
 
 	@Bean
 	public CaseControllerApi caseControllerApi() {

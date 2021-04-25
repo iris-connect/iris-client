@@ -2,6 +2,7 @@ package de.healthIMIS.iris.client.search_client.web;
 
 import de.healthIMIS.iris.api.sidecarclient.model.LocationList;
 import de.healthIMIS.iris.client.search_client.SearchClient;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.Size;
 
@@ -15,19 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Validated
+@RequiredArgsConstructor
 public class LocationSearchController {
 
-	private SearchClient searchClient;
-
-	public LocationSearchController(SearchClient searchClient) {
-		this.searchClient = searchClient;
-	}
+	private final SearchClient searchClient;
 
 	@GetMapping("/search/{search_keyword}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<LocationList> searchSearchKeywordGet(
 			@Size(min = 4) @PathVariable("search_keyword") String searchKeyword) {
 
-		return new ResponseEntity<LocationList>(searchClient.search(searchKeyword), HttpStatus.OK);
+		return new ResponseEntity<>(searchClient.search(searchKeyword), HttpStatus.OK);
 	}
 }

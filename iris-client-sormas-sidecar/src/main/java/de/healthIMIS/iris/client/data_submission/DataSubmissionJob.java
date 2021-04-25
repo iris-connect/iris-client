@@ -21,6 +21,7 @@ import de.healthIMIS.iris.client.core.sync.SyncTimesRepository;
 import de.healthIMIS.iris.client.data_request.DataRequestManagement;
 import de.healthIMIS.iris.client.data_submission.service.DataSubmissionService;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.security.KeyStore;
@@ -45,11 +46,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 @Slf4j
 @Profile("!inttest")
+@RequiredArgsConstructor
 class DataSubmissionJob {
 
 	private final @NonNull SyncTimesRepository syncTimes;
 	private final @NonNull DataRequestManagement dataRequests;
-	private final @NonNull RestTemplate rest;
+	private final @Qualifier("iris-rest") @NonNull RestTemplate rest;
 	private final @NonNull IrisClientProperties clientProperties;
 	private final @NonNull IrisProperties properties;
 	private final @NonNull ObjectMapper mapper;
@@ -59,24 +61,6 @@ class DataSubmissionJob {
 	private final @NonNull DataSubmissionService dataSubmissionService;
 
 	private long errorCounter = 0;
-
-	public DataSubmissionJob(@NonNull SyncTimesRepository syncTimes, @NonNull DataRequestManagement dataRequests,
-			@NonNull @Qualifier("iris-rest") RestTemplate rest, @NonNull IrisClientProperties clientProperties,
-			@NonNull IrisProperties properties, @NonNull ObjectMapper mapper, @NonNull KeyStore keyStore,
-			@NonNull ModelMapper modelMapper, @NonNull DataSubmissionRepository submissions,
-			@NonNull DataSubmissionService dataSubmissionService) {
-
-		this.syncTimes = syncTimes;
-		this.dataRequests = dataRequests;
-		this.rest = rest;
-		this.clientProperties = clientProperties;
-		this.properties = properties;
-		this.mapper = mapper;
-		this.keyStore = keyStore;
-		this.modelMapper = modelMapper;
-		this.submissions = submissions;
-		this.dataSubmissionService = dataSubmissionService;
-	}
 
 	@Scheduled(fixedDelay = 15000)
 	void run() {

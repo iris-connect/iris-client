@@ -19,6 +19,7 @@ import static org.springframework.http.MediaType.*;
 
 import lombok.Data;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigInteger;
@@ -51,6 +52,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @Slf4j
 @Profile("!inttest")
+@RequiredArgsConstructor
 class KeyGenJob {
 
 	private static final int DELETE_DELAY = 7;
@@ -58,15 +60,7 @@ class KeyGenJob {
 	private final @NonNull IrisClientProperties properties;
 	private final @NonNull IrisProperties connectProperties;
 	private final @NonNull KeyStore keyStore;
-	private final @NonNull RestTemplate rest;
-
-	public KeyGenJob(@NonNull IrisClientProperties properties, IrisProperties connectProperties,
-			@NonNull KeyStore keyStore, @Qualifier("iris-rest") @NonNull RestTemplate rest) {
-		this.properties = properties;
-		this.connectProperties = connectProperties;
-		this.keyStore = keyStore;
-		this.rest = rest;
-	}
+	private final @Qualifier("iris-rest") @NonNull RestTemplate rest;
 
 	@Scheduled(cron = "0 0 3 * * ?")
 	@PostConstruct
