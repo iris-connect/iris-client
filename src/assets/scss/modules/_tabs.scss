@@ -1,0 +1,39 @@
+.tabs {
+  
+}
+
+ul.tabs__header {
+  display: block;
+  list-style: none;
+  margin-left: 10px;
+  padding: 0;
+}
+
+ul.tabs__header > li {
+  width: 175px;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+  border-top: 2px solid lightgray;
+  border-left: 2px solid lightgray;
+  border-right: 2px solid lightgray;
+  background-color: #fff;
+  color: #000;
+  padding: 10px;
+}
+
+ul.tabs__header > li.tab__selected {
+  font-weight: bold;
+  border-top: 3px solid gray;
+  border-left: 3px solid gray;
+  border-right: 3px solid gray;
+  padding-top: 15px;
+}
+
+.tab {
+  color: black;
+  padding: 20px;
+  min-width: 800px;
+  border-radius: 10px;
+  min-height: 400px;
+}

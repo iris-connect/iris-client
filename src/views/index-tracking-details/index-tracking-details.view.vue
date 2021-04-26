@@ -23,16 +23,138 @@
             {{ indexData.startTime }} - {{ indexData.endTime }}
           </v-row>
         </v-col>
+        <br />
+        <tabs>
+          <tab title="Kontakte" :counter="indexData.contactCount">
+            <v-text-field
+              v-model="tableDataContacts.search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+            <v-data-table
+              :loading="listLoading"
+              :headers="tableDataContacts.headers"
+              :items="contacts"
+              :items-per-page="5"
+              class="elevation-1 mt-5"
+              :search="tableDataContacts.search"
+              show-select
+              v-model="tableDataContacts.select"
+              show-expand
+              single-expand
+              :expanded.sync="tableDataContacts.expanded"
+              @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
+            >
+              <template v-if="statusDataRequested" #no-data>
+                <span class="black--text">
+                  Die Kontaktdaten zu diesem Ereignis werden derzeit angefragt. Zum
+                  jetzigen Zeitpunkt liegen noch keine Daten vor.
+                </span>
+              </template>
+              <template v-slot:expanded-item="{ headers, item }">
+                <td></td>
+                <td :colspan="headers.length - 1">
+                  <v-row>
+                    <template
+                      v-for="(expandedHeader, ehIndex) in tableDataContacts.expandedHeaders"
+                    >
+                      <v-col :key="ehIndex" cols="12" sm="4" md="2">
+                        <v-list-item two-line dense>
+                          <v-list-item-content>
+                            <v-list-item-title>
+                              {{ expandedHeader.text }}
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                              {{
+                                item[expandedHeader.value]
+                                  ? item[expandedHeader.value]
+                                  : "-"
+                              }}
+                            </v-list-item-subtitle>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </v-col>
+                    </template>
+                  </v-row>
+                </td>
+              </template>
+            </v-data-table>
+          </tab>
+          <tab title="Events" :counter="indexData.eventsCount">
+            <v-text-field
+              v-model="tableDataEvents.search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+            <v-data-table
+              :loading="listLoading"
+              :headers="tableDataEvents.headers"
+              :items="events"
+              :items-per-page="5"
+              class="elevation-1 mt-5"
+              :search="tableDataEvents.search"
+              show-select
+              v-model="tableDataEvents.select"
+              show-expand
+              single-expand
+              :expanded.sync="tableDataEvents.expanded"
+              @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
+            >
+              <template v-if="statusDataRequested" #no-data>
+                <span class="black--text">
+                  Die Daten zu diesem Ereignis werden derzeit angefragt. Zum
+                  jetzigen Zeitpunkt liegen noch keine Daten vor.
+                </span>
+              </template>
+              <template v-slot:expanded-item="{ headers, item }">
+                <td></td>
+                <td :colspan="headers.length - 1">
+                  <v-row>
+                    <template
+                      v-for="(expandedHeader, ehIndex) in tableDataEvents.expandedHeaders"
+                    >
+                      <v-col :key="ehIndex" cols="12" sm="4" md="2">
+                        <v-list-item two-line dense>
+                          <v-list-item-content>
+                            <v-list-item-title>
+                              {{ expandedHeader.text }}
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                              {{
+                                item[expandedHeader.value]
+                                  ? item[expandedHeader.value]
+                                  : "-"
+                              }}
+                            </v-list-item-subtitle>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </v-col>
+                    </template>
+                  </v-row>
+                </td>
+              </template>
+            </v-data-table>
+          </tab>
+        </tabs>
         <v-row class="mt-2">
-          <v-col cols="12">
+          <v-col cols="8">
             <v-btn class="ml-2 mr-2" color="white" @click="$router.back()">
               Zurück
             </v-btn>
+          </v-col>
+          <v-col cols="2">
+            <span style="font-size: 1.25rem;">{{indexData.contactCount}} Kontakte / {{indexData.eventCount}} Events</span>
+          </v-col>
+          <v-col cols="2">
             <v-btn
               class="mr-2 float-right"
               color="primary"
               @click="handleExport"
-              :disabled="tableData.select.length <= 0"
+              :disabled="tableDataEvents.select.length <= 0"
             >
               Auswahl exportieren
             </v-btn>
@@ -53,6 +175,8 @@ import {
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
+import Tab from "@/views/index-tracking-details/components/tab.vue";
+import Tabs from "@/views/index-tracking-details/components/tabs.vue";
 import DataExport from "@/utils/DataExport";
 
 type IndexData = {
@@ -98,6 +222,8 @@ function getFormattedAddress(address?: Address | null): string {
 @Component({
   components: {
     IndexTrackingDetailsView: IndexTrackingDetailsView,
+    Tab,
+    Tabs
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
@@ -111,7 +237,7 @@ function getFormattedAddress(address?: Address | null): string {
   },
 })
 export default class IndexTrackingDetailsView extends Vue {
-  tableData = {
+  tableDataContacts = {
     search: "",
     expanded: [],
     select: [],
@@ -143,6 +269,66 @@ export default class IndexTrackingDetailsView extends Vue {
         value: "comment",
       },
       { text: "", value: "data-table-expand" },
+    ],
+    expandedHeaders: [
+      {
+        text: "Geschlecht",
+        value: "sex",
+      },
+      {
+        text: "E-Mail",
+        value: "email",
+      },
+      {
+        text: "Telefon",
+        value: "phone",
+      },
+      {
+        text: "Mobil",
+        value: "mobilePhone",
+      },
+      {
+        text: "Adresse",
+        value: "address",
+      },
+    ],
+  };
+
+  tableDataEvents = {
+    search: "",
+    expanded: [],
+    select: [],
+    headers: [
+      { text: "", value: "data-table-select" },
+      {
+        text: "Event",
+        value: "name",
+        align: "start",
+      },
+      {
+        text: "Ort",
+        value: "address",
+      },
+      {
+        text: "Check-In",
+        value: "checkInTime",
+      },
+      {
+        text: "Check-Out",
+        value: "checkOutTime",
+      },
+      {
+        text: "max. Kontaktdauer",
+        value: "maxDuration",
+      },
+      {
+        text: "Kommentar",
+        value: "comment",
+      },
+      {
+        text: "",
+        value: "data-table-expand"
+      },
     ],
     expandedHeaders: [
       {
@@ -223,8 +409,8 @@ export default class IndexTrackingDetailsView extends Vue {
 
   handleExport(): void {
     DataExport.exportCsv(
-      [...this.tableData.headers, ...this.tableData.expandedHeaders],
-      this.tableData.select,
+      [...this.tableDataContacts.headers, ...this.tableDataContacts.expandedHeaders],
+      this.tableDataContacts.select,
       [this.indexData.extID, Date.now()].join("_")
     );
   }
