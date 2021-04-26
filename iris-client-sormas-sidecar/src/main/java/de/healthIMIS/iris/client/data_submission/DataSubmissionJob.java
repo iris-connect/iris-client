@@ -62,7 +62,7 @@ class DataSubmissionJob {
 
 	private long errorCounter = 0;
 
-	@Scheduled(fixedDelay = 15000)
+	@Scheduled(fixedDelayString = "${iris.data-submission.fetch-interval}")
 	void run() {
 
 		log.trace("Submission job - start");

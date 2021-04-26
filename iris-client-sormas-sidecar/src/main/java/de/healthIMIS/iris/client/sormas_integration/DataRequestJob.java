@@ -79,7 +79,7 @@ class DataRequestJob {
 
 	private long errorCounter = 0;
 
-	@Scheduled(fixedDelay = 15000)
+	@Scheduled(fixedDelayString = "${iris.sormas.fetch-tasks-interval}")
 	void run() {
 
 		log.trace("Request job - start");
