@@ -1,6 +1,8 @@
 import {
   DataRequestCaseDetails,
+  DataRequestCaseData,
   DataRequestCaseDetailsStatusEnum,
+  Sex,
 } from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
 
@@ -17,18 +19,14 @@ function hoursAgo(hours = 0, date = new Date().toISOString()) {
   return d.toISOString();
 }
 
-export const dummyDataRequestsCases: Array<DataRequestCaseDetails> = [
+export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
   {
-    status: DataRequestCaseDetailsStatusEnum.DataRequested,
-    caseId: "12345",
     name: "IndexFallCode123",
     externalCaseId: "12345",
     start: hoursAgo(10),
     comment: "leerer Kommentar",
   },
   {
-    status: DataRequestCaseDetailsStatusEnum.DataReceived,
-    caseId: "1111111",
     name: "IndexWasWeisich",
     externalCaseId: "1111",
     start: hoursAgo(3),
@@ -36,41 +34,63 @@ export const dummyDataRequestsCases: Array<DataRequestCaseDetails> = [
     comment: "das könnte ihr Kommentar sein",
   },
   {
-    status: DataRequestCaseDetailsStatusEnum.Closed,
-    caseId: "2233",
     name: "IndexBezeichner1",
-    externalCaseId: "22",
+    externalCaseId: "2233",
     start: hoursAgo(2),
     comment: "leer",
   },
 ];
 
-export const dummyDataCaseDetails: DataRequestCaseDetails = {
-  status: DataRequestCaseDetailsStatusEnum.DataRequested,
-  caseId: "12345",
-  name: "IndexFallCode123",
+export const dummyDataCaseDetails: DataRequestCaseData = {
   externalCaseId: "12345",
+  name: "IndexFallCode123",
   start: hoursAgo(5),
   end: hoursAgo(1),
   comment: "leerer Kommentar",
+  submissionData: {
+    contacts: {
+      contactPersons: [
+        {
+          firstName: "Vorname 1",
+          lastName: "Nachname 1",
+        },
+        {
+          firstName: "Vorname 2",
+          lastName: "Nachname 2",
+        },
+        {
+          firstName: "Vorname 3",
+          lastName: "Nachname 3",
+        },
+      ],
+    },
+    events: {
+      events: [
+        {
+          name: "Event 1",
+        },
+        {
+          name: "Event 2",
+        },
+      ],
+    },
+    dataProvider: {
+      firstName: "firstName",
+      lastName: "lastName",
+      dateOfBirth: "test",
+    },
+  },
 };
 
-export const getDummyDetailsCasesWithStatus = (
-  id: string
-): DataRequestCaseDetails => {
+export const getDummyDetailsCases = (id: string): DataRequestCaseData => {
   const dataRequest = dummyDataRequestsCases?.find(
     (request) => request.externalCaseId === id
   );
   if (dataRequest) {
-    const status = (<unknown>(
-      dataRequest.status
-    )) as DataRequestCaseDetailsStatusEnum;
     return {
       ...dummyDataCaseDetails,
       ...dataRequest,
-      status,
     };
   }
-  console.log(dummyDataCaseDetails);
   return dummyDataCaseDetails;
 };

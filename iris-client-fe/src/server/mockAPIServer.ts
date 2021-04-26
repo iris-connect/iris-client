@@ -7,7 +7,7 @@ import {
 import { createServer, Request, Response } from "miragejs";
 import {
   dummyDataRequestsCases,
-  getDummyDetailsCasesWithStatus,
+  getDummyDetailsCases,
 } from "@/server/data/data-requests-cases";
 import router from "@/router";
 import {
@@ -43,7 +43,7 @@ const validateAuthHeader = (request: Request): boolean => {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function makeMockAPIServer() {
-  console.log(router);
+  //console.log(router);
   const server = createServer({
     routes() {
       this.namespace = "";
@@ -127,7 +127,8 @@ export function makeMockAPIServer() {
       });
 
       this.get("/data-request-client/cases/:caseId", () => {
-        return getDummyDetailsCasesWithStatus(router.currentRoute.params.id);
+        console.log(router.currentRoute.params.caseId);
+        return getDummyDetailsCases(router.currentRoute.params.caseId);
       });
 
       this.get("/search/mio", (_schema, request) => {
