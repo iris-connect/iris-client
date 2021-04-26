@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-dialog style="overflow-y: hidden" v-model="show" max-width="800px">
+    <v-dialog style="overflow-y: hidden" v-model="show" max-width="40%">
       <v-card>
         <v-card-title class="justify-center">
           <span class="headline">FEEDBACK BOGEN</span>
@@ -26,10 +26,12 @@
               ]"
               label="Katergorie auswählen"
               multiple
+              outlined
             ></v-autocomplete>
 
             <v-text-field
               label="Titel*"
+              outlined
               required
               counter
               maxlength="100"
