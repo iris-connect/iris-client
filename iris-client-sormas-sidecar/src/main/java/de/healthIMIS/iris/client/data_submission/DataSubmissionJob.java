@@ -14,8 +14,8 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_submission;
 
-import de.healthIMIS.iris.client.core.IrisClientProperties;
-import de.healthIMIS.iris.client.core.IrisProperties;
+import de.healthIMIS.iris.client.config.IrisClientProperties;
+import de.healthIMIS.iris.client.config.IrisProperties;
 import de.healthIMIS.iris.client.core.sync.SyncTimes;
 import de.healthIMIS.iris.client.core.sync.SyncTimesRepository;
 import de.healthIMIS.iris.client.data_request.DataRequestManagement;

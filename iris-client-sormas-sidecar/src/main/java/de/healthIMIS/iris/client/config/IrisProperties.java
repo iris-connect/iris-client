@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  *******************************************************************************/
-package de.healthIMIS.iris.client.core;
+package de.healthIMIS.iris.client.config;
 
 import lombok.Getter;
 import lombok.NonNull;

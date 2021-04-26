@@ -17,6 +17,8 @@ package de.healthIMIS.iris.client.core;
 import static java.nio.charset.StandardCharsets.*;
 import static org.springframework.http.MediaType.*;
 
+import de.healthIMIS.iris.client.config.IrisClientProperties;
+import de.healthIMIS.iris.client.config.IrisProperties;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

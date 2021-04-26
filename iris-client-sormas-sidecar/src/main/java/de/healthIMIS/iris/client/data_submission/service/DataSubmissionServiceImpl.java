@@ -1,6 +1,6 @@
 package de.healthIMIS.iris.client.data_submission.service;
 
-import de.healthIMIS.iris.client.core.IrisProperties;
+import de.healthIMIS.iris.client.config.IrisProperties;
 import de.healthIMIS.iris.client.data_submission.DataSubmissionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

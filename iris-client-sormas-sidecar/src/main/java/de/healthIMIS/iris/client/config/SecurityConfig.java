@@ -1,7 +1,5 @@
 package de.healthIMIS.iris.client.config;
 
-import de.healthIMIS.iris.client.core.IrisClientProperties;
-
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;

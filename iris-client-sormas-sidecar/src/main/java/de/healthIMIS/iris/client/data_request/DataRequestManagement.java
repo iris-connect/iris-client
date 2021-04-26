@@ -18,8 +18,8 @@ import static io.vavr.control.Option.*;
 import static java.nio.charset.StandardCharsets.*;
 import static org.springframework.http.MediaType.*;
 
-import de.healthIMIS.iris.client.core.IrisClientProperties;
-import de.healthIMIS.iris.client.core.IrisProperties;
+import de.healthIMIS.iris.client.config.IrisClientProperties;
+import de.healthIMIS.iris.client.config.IrisProperties;
 import de.healthIMIS.iris.client.data_request.DataRequest.DataRequestIdentifier;
 import de.healthIMIS.iris.client.data_request.DataRequest.Feature;
 import de.healthIMIS.iris.client.data_request.DataRequest.Status;
