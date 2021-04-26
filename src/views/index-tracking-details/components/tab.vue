@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class='tab' v-show='isActive'>
+  <div class="tab" v-show="isActive">
     <slot></slot>
   </div>
 </template>
@@ -9,17 +9,15 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'Tab'
-    }
+      default: "Tab",
+    },
   },
-  data () {
+  data() {
     return {
-      isActive: true
-    }
-  }
-}
+      isActive: true,
+    };
+  },
+};
 </script>
 
-<style lang="css">
-
-</style>
+<style lang="css"></style>

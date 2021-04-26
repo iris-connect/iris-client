@@ -25,7 +25,7 @@
         </v-col>
         <br />
         <tabs>
-          <tab title="Kontakte" :counter="indexData.contactCount">
+          <tab :title="'Kontakte (' + indexData.contactCount + ')'">
             <v-text-field
               v-model="tableDataContacts.search"
               append-icon="mdi-magnify"
@@ -49,8 +49,8 @@
             >
               <template v-if="statusDataRequested" #no-data>
                 <span class="black--text">
-                  Die Kontaktdaten zu diesem Ereignis werden derzeit angefragt. Zum
-                  jetzigen Zeitpunkt liegen noch keine Daten vor.
+                  Die Kontaktdaten zu diesem Ereignis werden derzeit angefragt.
+                  Zum jetzigen Zeitpunkt liegen noch keine Daten vor.
                 </span>
               </template>
               <template v-slot:expanded-item="{ headers, item }">
@@ -58,7 +58,9 @@
                 <td :colspan="headers.length - 1">
                   <v-row>
                     <template
-                      v-for="(expandedHeader, ehIndex) in tableDataContacts.expandedHeaders"
+                      v-for="(
+                        expandedHeader, ehIndex
+                      ) in tableDataContacts.expandedHeaders"
                     >
                       <v-col :key="ehIndex" cols="12" sm="4" md="2">
                         <v-list-item two-line dense>
@@ -82,7 +84,7 @@
               </template>
             </v-data-table>
           </tab>
-          <tab title="Events" :counter="indexData.eventsCount">
+          <tab :title="'Events (' + indexData.eventCount + ')'">
             <v-text-field
               v-model="tableDataEvents.search"
               append-icon="mdi-magnify"
@@ -115,7 +117,9 @@
                 <td :colspan="headers.length - 1">
                   <v-row>
                     <template
-                      v-for="(expandedHeader, ehIndex) in tableDataEvents.expandedHeaders"
+                      v-for="(
+                        expandedHeader, ehIndex
+                      ) in tableDataEvents.expandedHeaders"
                     >
                       <v-col :key="ehIndex" cols="12" sm="4" md="2">
                         <v-list-item two-line dense>
@@ -147,7 +151,10 @@
             </v-btn>
           </v-col>
           <v-col cols="2">
-            <span style="font-size: 1.25rem;">{{indexData.contactCount}} Kontakte / {{indexData.eventCount}} Events</span>
+            <span style="font-size: 1.25rem"
+              >{{ indexData.contactCount }} Kontakte /
+              {{ indexData.eventCount }} Events</span
+            >
           </v-col>
           <v-col cols="2">
             <v-btn
@@ -169,6 +176,7 @@
 import {
   Address,
   DataRequestCaseDetails,
+  DataRequestCaseData,
   DataRequestCaseDetailsStatusEnum,
   Sex,
 } from "@/api";
@@ -185,22 +193,20 @@ type IndexData = {
   startTime: string;
   endTime: string;
   gereratedTime: string;
-  status: string;
   lastChange: string;
+  comment: string;
+  eventCount: number;
+  contactCount: number;
+  tan: string;
 };
 
-type TableRow = {
+type TableRowContact = {
   lastName: string;
   firstName: string;
-  checkInTime: string;
-  checkOutTime: string;
-  maxDuration: string;
-  comment: string;
-  sex: string;
-  email: string;
-  phone: string;
-  mobilePhone: string;
-  tan: string;
+};
+
+type TableRowEvent = {
+  name: string;
 };
 
 function getFormattedAddressWithContact(
@@ -223,13 +229,14 @@ function getFormattedAddress(address?: Address | null): string {
   components: {
     IndexTrackingDetailsView: IndexTrackingDetailsView,
     Tab,
-    Tabs
+    Tabs,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
-    await store.dispatch("indexTrackingDetails/fetchIndexTrackingDetails", [
-      router.currentRoute.params.id,
-    ]);
+    await store.dispatch(
+      "indexTrackingDetails/fetchIndexTrackingDetails",
+      router.currentRoute.params.caseId
+    );
   },
   beforeRouteLeave(to, from, next) {
     store.commit("indexTrackingDetails/reset");
@@ -327,7 +334,7 @@ export default class IndexTrackingDetailsView extends Vue {
       },
       {
         text: "",
-        value: "data-table-expand"
+        value: "data-table-expand",
       },
     ],
     expandedHeaders: [
@@ -356,6 +363,10 @@ export default class IndexTrackingDetailsView extends Vue {
 
   get indexData(): IndexData {
     const dataRequest = store.state.indexTrackingDetails.indexTrackingDetails;
+    const contacts =
+      dataRequest?.submissionData?.contacts?.contactPersons || [];
+    const events = dataRequest?.submissionData?.events?.events || [];
+
     return {
       extID: dataRequest?.externalCaseId || "-",
       name: dataRequest?.name || "-",
@@ -370,8 +381,11 @@ export default class IndexTrackingDetailsView extends Vue {
           ).toLocaleTimeString("de-DE")}`
         : "-",
       gereratedTime: "-", // TODO: what property to show here?
-      status: dataRequest?.status?.toString() || "-",
       lastChange: "-", // TODO: what property to show here?
+      contactCount: contacts.length,
+      eventCount: events.length,
+      comment: dataRequest?.comment || "-",
+      tan: "-", // TODO: TAN needed
     };
   }
 
@@ -380,11 +394,43 @@ export default class IndexTrackingDetailsView extends Vue {
   }
 
   get statusDataRequested(): boolean {
-    if (!store.state.indexTrackingDetails.indexTrackingDetails) return false;
-    return (
-      store.state.indexTrackingDetails.indexTrackingDetails.status ===
-      DataRequestCaseDetailsStatusEnum.DataRequested
-    );
+    //if (!store.state.indexTrackingDetails.indexTrackingDetails) return false;
+    //return (
+    //store.state.indexTrackingDetails.indexTrackingDetails.status ===
+    //DataRequestCaseDetailsStatusEnum.DataRequested
+    //);
+    return false;
+  }
+
+  get contacts(): TableRowContact[] {
+    const contacts =
+      store.state.indexTrackingDetails.indexTrackingDetails?.submissionData
+        ?.contacts?.contactPersons || [];
+    const indexDataRequest =
+      store.state.indexTrackingDetails.indexTrackingDetails;
+    return contacts.map((contact, index) => {
+      return {
+        id: index,
+        lastName: contact.lastName || "-",
+        firstName: contact.firstName || "-",
+        //    comment: "-", // TODO: descriptionOfParticipation or additionalInformation?
+      };
+    });
+  }
+
+  get events(): TableRowEvent[] {
+    const events =
+      store.state.indexTrackingDetails.indexTrackingDetails?.submissionData
+        ?.events?.events || [];
+    const indexDataRequest =
+      store.state.indexTrackingDetails.indexTrackingDetails;
+    return events.map((event, index) => {
+      console.log(event);
+      return {
+        id: index,
+        name: event.name || "-",
+      };
+    });
   }
 
   /**
@@ -409,7 +455,10 @@ export default class IndexTrackingDetailsView extends Vue {
 
   handleExport(): void {
     DataExport.exportCsv(
-      [...this.tableDataContacts.headers, ...this.tableDataContacts.expandedHeaders],
+      [
+        ...this.tableDataContacts.headers,
+        ...this.tableDataContacts.expandedHeaders,
+      ],
       this.tableDataContacts.select,
       [this.indexData.extID, Date.now()].join("_")
     );
