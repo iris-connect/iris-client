@@ -94,7 +94,7 @@
       :max-width="48"
       @click="showFeedbackDialog = true"
     >
-      <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
+      <v-icon :size="32"> mdi-chat-alert-outline</v-icon>
     </v-btn>
     <FeedbackDialog v-model="showFeedbackDialog" />
   </div>
@@ -205,6 +205,7 @@ export default class Home extends Vue {
       )
       .map(tableRowMapper);
   }
+
   data() {
     return {
       showFeedbackDialog: false,
@@ -217,6 +218,7 @@ export default class Home extends Vue {
 .home {
   > * {
     margin-top: 1em;
+
     &:last-child {
       margin-bottom: 1em;
     }
