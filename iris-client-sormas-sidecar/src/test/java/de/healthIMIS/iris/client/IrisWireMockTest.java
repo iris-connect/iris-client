@@ -10,12 +10,16 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
+import org.springframework.test.context.TestPropertySource;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@AutoConfigureWireMock(port = 0)
+@TestPropertySource(properties = { "iris.serverAddress=localhost", "iris.serverPort=${wiremock.server.port}",
+		"iris.location-service.endpoint=http://localhost:${wiremock.server.port}/search" })
+@SpringBootTest
 @AutoConfigureMockMvc
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -23,6 +27,6 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface IrisWebIntegrationTest {
+public @interface IrisWireMockTest {
 
 }
