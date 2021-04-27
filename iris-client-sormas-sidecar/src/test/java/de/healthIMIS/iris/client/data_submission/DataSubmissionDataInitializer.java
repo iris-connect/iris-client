@@ -18,12 +18,12 @@ import static java.time.temporal.ChronoUnit.*;
 
 import de.healthIMIS.iris.client.DataInitializer;
 import de.healthIMIS.iris.client.data_request.DataRequestDataInitializer;
-import de.healthIMIS.iris.client.data_submission.entities.Address;
-import de.healthIMIS.iris.client.data_submission.entities.AttendanceInformation;
-import de.healthIMIS.iris.client.data_submission.entities.DataSubmission;
-import de.healthIMIS.iris.client.data_submission.entities.Guest;
-import de.healthIMIS.iris.client.data_submission.entities.Guest.Sex;
-import de.healthIMIS.iris.client.data_submission.entities.GuestListDataProvider;
+import de.healthIMIS.iris.client.data_submission.model.Address;
+import de.healthIMIS.iris.client.data_submission.model.AttendanceInformation;
+import de.healthIMIS.iris.client.data_submission.model.DataSubmission;
+import de.healthIMIS.iris.client.data_submission.model.Guest;
+import de.healthIMIS.iris.client.data_submission.model.GuestListDataProvider;
+import de.healthIMIS.iris.client.data_submission.model.Guest.Sex;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

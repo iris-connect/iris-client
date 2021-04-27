@@ -1,4 +1,4 @@
-package de.healthIMIS.iris.client.data_submission.entities;
+package de.healthIMIS.iris.client.data_submission.model;
 
 import de.healthIMIS.iris.client.core.Aggregate;
 import de.healthIMIS.iris.client.core.Id;

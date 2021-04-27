@@ -10,13 +10,15 @@
  * Do not edit the class manually.
  */
 
-package de.healthIMIS.iris.client.data_submission.entities;
+package de.healthIMIS.iris.client.data_submission.model;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 
 import javax.persistence.Embeddable;
 
@@ -25,10 +27,10 @@ import javax.persistence.Embeddable;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-public class Address {
+public class AttendanceInformation {
 
-	private String street;
-	private String houseNumber;
-	private String zipCode;
-	private String city;
+	private String descriptionOfParticipation;
+	private Instant attendFrom;
+	private Instant attendTo;
+	private String additionalInformation;
 }

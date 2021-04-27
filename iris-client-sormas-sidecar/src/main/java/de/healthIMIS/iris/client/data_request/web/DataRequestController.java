@@ -11,7 +11,7 @@ import de.healthIMIS.iris.client.data_request.web.dto.GuestList;
 import de.healthIMIS.iris.client.data_request.web.dto.GuestListDataProvider;
 import de.healthIMIS.iris.client.data_request.web.dto.LocationInformation;
 import de.healthIMIS.iris.client.data_submission.DataSubmissionRepository;
-import de.healthIMIS.iris.client.data_submission.entities.DataSubmission;
+import de.healthIMIS.iris.client.data_submission.model.DataSubmission;
 import io.vavr.control.Option;
 import lombok.AllArgsConstructor;
 

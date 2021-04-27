@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package de.healthIMIS.iris.client.data_submission.entities;
+package de.healthIMIS.iris.client.data_submission.model;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
