@@ -46,7 +46,6 @@ export function makeMockAPIServer() {
       });
 
       this.get("/data-request-client/cases/:caseId", () => {
-        console.log(router.currentRoute.params.caseId);
         return getDummyDetailsCases(router.currentRoute.params.caseId);
       });
 

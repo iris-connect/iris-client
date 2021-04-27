@@ -19,65 +19,102 @@ function hoursAgo(hours = 0, date = new Date().toISOString()) {
   return d.toISOString();
 }
 
-export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
+export const dummyDataRequestsCases: Array<DataRequestCaseDetails> = [
   {
-    name: "IndexFallCode123",
+    caseId: "12345",
+    name: "IndexNummer12345",
     externalCaseId: "12345",
     start: hoursAgo(10),
     comment: "leerer Kommentar",
+    status: DataRequestCaseDetailsStatusEnum.DataReceived,
   },
   {
-    name: "IndexWasWeisich",
+    caseId: "1111",
+    name: "ReisenderImZug1234",
     externalCaseId: "1111",
     start: hoursAgo(3),
     end: hoursAgo(1),
     comment: "das könnte ihr Kommentar sein",
+    status: DataRequestCaseDetailsStatusEnum.DataRequested,
   },
   {
+    caseId: "2233",
     name: "IndexBezeichner1",
     externalCaseId: "2233",
     start: hoursAgo(2),
     comment: "leer",
+    status: DataRequestCaseDetailsStatusEnum.Closed,
   },
 ];
 
 export const dummyDataCaseDetails: DataRequestCaseData = {
   externalCaseId: "12345",
   name: "IndexFallCode123",
-  start: hoursAgo(5),
-  end: hoursAgo(1),
   comment: "leerer Kommentar",
+  start: hoursAgo(15),
+  end: hoursAgo(1),
   submissionData: {
     contacts: {
       contactPersons: [
         {
-          firstName: "Vorname 1",
-          lastName: "Nachname 1",
+          firstName: "Florian",
+          lastName: "Bürger",
+          dateOfBirth: "7.10.1970",
+          sex: Sex.Male,
+          email: "flori.an@buer.ger",
+          phone: "012345 112233",
+          mobilePhone: "0114477 774411",
         },
         {
-          firstName: "Vorname 2",
-          lastName: "Nachname 2",
+          firstName: "Sara",
+          lastName: "Mustermann",
+          dateOfBirth: "1.1.2000",
+          sex: Sex.Female,
+          email: "sara.muster@ma.nn",
+          mobilePhone: "01133 55669988",
+          address: {
+            street: "Hasenstrasse",
+            houseNumber: "12",
+            zipCode: "12345",
+            city: "Hasenstadt",
+          },
         },
         {
-          firstName: "Vorname 3",
-          lastName: "Nachname 3",
+          firstName: "Niklas",
+          lastName: "Mustermann",
+          dateOfBirth: "20.10.1999",
+          sex: Sex.Male,
+          phone: "01122 2226555",
         },
       ],
+      startDate: hoursAgo(10),
+      endDate: hoursAgo(3),
     },
     events: {
       events: [
         {
-          name: "Event 1",
+          name: "Geburtstagsfeier",
+          phone: "0123 321456",
+          address: {
+            street: "Hasenstrasse",
+            houseNumber: "12",
+            zipCode: "12345",
+            city: "Hasenstadt",
+          },
+          additionalInformation: "Familienfeier im Garten",
         },
         {
-          name: "Event 2",
+          name: "Fussballspiel",
+          additionalInformation: "Regionalliga Spiel",
         },
       ],
+      startDate: hoursAgo(5),
+      endDate: hoursAgo(1),
     },
     dataProvider: {
-      firstName: "firstName",
-      lastName: "lastName",
-      dateOfBirth: "test",
+      firstName: "Max",
+      lastName: "Mustermann",
+      dateOfBirth: "01.01.1970",
     },
   },
 };
