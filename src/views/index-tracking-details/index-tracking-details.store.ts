@@ -1,8 +1,4 @@
-import {
-  DataRequestCaseDetails,
-  DataRequestCaseData,
-  IrisClientFrontendApiFactory,
-} from "@/api";
+import { DataRequestCaseData, IrisClientFrontendApiFactory } from "@/api";
 import { clientConfig } from "@/main";
 import { RootState } from "@/store/types";
 
@@ -18,7 +14,7 @@ export interface IndexTrackingDetailsModule
   mutations: {
     setIndexTrackingDetails(
       state: IndexTrackingDetailsState,
-      indexTrackingDetails: DataRequestCaseDetails | null
+      indexTrackingDetails: DataRequestCaseData | null
     ): void;
     setIndexTrackingDetailsLoading(
       state: IndexTrackingDetailsState,

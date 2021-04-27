@@ -1,10 +1,4 @@
-import {
-  DataRequestCaseDetails,
-  DataRequestCaseData,
-  DataRequestCaseDetailsStatusEnum,
-  Sex,
-} from "@/api";
-import { dummyLocations } from "@/server/data/dummy-locations";
+import { DataRequestCaseData, DataRequestCaseDataStatusEnum, Sex } from "@/api";
 
 function daysAgo(days = 0, date = new Date().toISOString()) {
   // could be that
@@ -19,14 +13,14 @@ function hoursAgo(hours = 0, date = new Date().toISOString()) {
   return d.toISOString();
 }
 
-export const dummyDataRequestsCases: Array<DataRequestCaseDetails> = [
+export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
   {
     caseId: "12345",
     name: "IndexNummer12345",
     externalCaseId: "12345",
-    start: hoursAgo(10),
+    start: daysAgo(3),
     comment: "leerer Kommentar",
-    status: DataRequestCaseDetailsStatusEnum.DataReceived,
+    status: DataRequestCaseDataStatusEnum.DataReceived,
   },
   {
     caseId: "1111",
@@ -35,7 +29,7 @@ export const dummyDataRequestsCases: Array<DataRequestCaseDetails> = [
     start: hoursAgo(3),
     end: hoursAgo(1),
     comment: "das könnte ihr Kommentar sein",
-    status: DataRequestCaseDetailsStatusEnum.DataRequested,
+    status: DataRequestCaseDataStatusEnum.DataRequested,
   },
   {
     caseId: "2233",
@@ -43,7 +37,7 @@ export const dummyDataRequestsCases: Array<DataRequestCaseDetails> = [
     externalCaseId: "2233",
     start: hoursAgo(2),
     comment: "leer",
-    status: DataRequestCaseDetailsStatusEnum.Closed,
+    status: DataRequestCaseDataStatusEnum.Closed,
   },
 ];
 
