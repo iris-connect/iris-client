@@ -15,8 +15,8 @@
 package de.healthIMIS.iris.client.data_submission;
 
 import de.healthIMIS.iris.client.data_request.DataRequest;
-import de.healthIMIS.iris.client.data_submission.entities.DataSubmission;
-import de.healthIMIS.iris.client.data_submission.entities.DataSubmission.DataSubmissionIdentifier;
+import de.healthIMIS.iris.client.data_submission.model.DataSubmission;
+import de.healthIMIS.iris.client.data_submission.model.DataSubmission.DataSubmissionIdentifier;
 
 import javax.transaction.Transactional;
 

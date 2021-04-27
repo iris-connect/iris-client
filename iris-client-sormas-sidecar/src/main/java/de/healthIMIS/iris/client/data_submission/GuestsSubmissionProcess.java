@@ -18,9 +18,9 @@ import de.healthIMIS.iris.client.data_request.DataRequest;
 import de.healthIMIS.iris.client.data_request.DataRequest.Status;
 import de.healthIMIS.iris.client.data_request.DataRequestManagement;
 import de.healthIMIS.iris.client.data_request.web.dto.GuestList;
-import de.healthIMIS.iris.client.data_submission.entities.DataSubmission;
-import de.healthIMIS.iris.client.data_submission.entities.Guest;
-import de.healthIMIS.iris.client.data_submission.entities.GuestListDataProvider;
+import de.healthIMIS.iris.client.data_submission.model.DataSubmission;
+import de.healthIMIS.iris.client.data_submission.model.Guest;
+import de.healthIMIS.iris.client.data_submission.model.GuestListDataProvider;
 import lombok.NonNull;
 
 import java.security.KeyStore;
@@ -33,7 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * @author Jens Kutzsche
  */
-public class GuestsSubmissionProcessor extends DataSubmissionProcessor<GuestList> {
+public class GuestsSubmissionProcess extends DataSubmissionProcess<GuestList> {
 
 	// private EventParticipantControllerApi sormasParticipantApi;
 	// private PersonControllerApi sormasPersonApi;
@@ -42,7 +42,7 @@ public class GuestsSubmissionProcessor extends DataSubmissionProcessor<GuestList
 	private @NonNull DataSubmissionRepository submissions;
 	private @NonNull DataRequestManagement dataRequests;
 
-	public GuestsSubmissionProcessor(DataSubmissionDto submissionDto, DataRequest request, KeyStore keyStore,
+	public GuestsSubmissionProcess(DataSubmissionDto submissionDto, DataRequest request, KeyStore keyStore,
 			ObjectMapper mapper, @NonNull ModelMapper modelMapper, @NonNull DataSubmissionRepository submissions,
 			@NonNull DataRequestManagement dataRequests) {
 

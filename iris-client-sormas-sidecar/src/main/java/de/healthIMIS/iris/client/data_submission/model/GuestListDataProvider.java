@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package de.healthIMIS.iris.client.data_submission.entities;
+package de.healthIMIS.iris.client.data_submission.model;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,19 +18,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-
 import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 
 @Embeddable
 @Data
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-public class AttendanceInformation {
+public class GuestListDataProvider {
 
-	private String descriptionOfParticipation;
-	private Instant attendFrom;
-	private Instant attendTo;
-	private String additionalInformation;
+	private String name;
+	@Embedded
+	private Address address;
 }

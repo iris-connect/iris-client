@@ -26,9 +26,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * @author Jens Kutzsche
  */
-public class ContactsEventsSubmissionProcessor extends DataSubmissionProcessor<ContactsAndEvents> {
+public class ContactsEventsSubmissionProcess extends DataSubmissionProcess<ContactsAndEvents> {
 
-	public ContactsEventsSubmissionProcessor(DataSubmissionDto submissionDto, DataRequest request, KeyStore keyStore,
+	public ContactsEventsSubmissionProcess(DataSubmissionDto submissionDto, DataRequest request, KeyStore keyStore,
 			ObjectMapper mapper) {
 
 		super(submissionDto, ContactsAndEvents.class, request, keyStore, mapper);

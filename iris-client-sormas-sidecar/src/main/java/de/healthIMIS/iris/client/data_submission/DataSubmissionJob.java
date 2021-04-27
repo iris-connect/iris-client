@@ -14,31 +14,21 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_submission;
 
-import de.healthIMIS.iris.client.config.IrisClientProperties;
-import de.healthIMIS.iris.client.config.IrisProperties;
 import de.healthIMIS.iris.client.core.sync.SyncTimes;
 import de.healthIMIS.iris.client.core.sync.SyncTimesRepository;
-import de.healthIMIS.iris.client.data_request.DataRequestManagement;
-import de.healthIMIS.iris.client.data_submission.service.DataSubmissionService;
+import de.healthIMIS.iris.client.data_submission.supplier_connection.DataSubmissionEndpointConnector;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.security.KeyStore;
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Jens Kutzsche
@@ -50,15 +40,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 class DataSubmissionJob {
 
 	private final @NonNull SyncTimesRepository syncTimes;
-	private final @NonNull DataRequestManagement dataRequests;
-	private final @Qualifier("iris-rest") @NonNull RestTemplate rest;
-	private final @NonNull IrisClientProperties clientProperties;
-	private final @NonNull IrisProperties properties;
-	private final @NonNull ObjectMapper mapper;
-	private final @NonNull KeyStore keyStore;
-	private final @NonNull ModelMapper modelMapper;
-	private final @NonNull DataSubmissionRepository submissions;
-	private final @NonNull DataSubmissionService dataSubmissionService;
+	private final @NonNull DataSubmissionEndpointConnector connector;
+	private final @NonNull DataSubmissionProcessor processor;
 
 	private long errorCounter = 0;
 
@@ -73,18 +56,19 @@ class DataSubmissionJob {
 		try {
 
 			log.trace("Submission job - GET to server is sent");
-			var response = rest.getForEntity("https://{address}:{port}/hd/data-submissions?departmentId={depId}&from={from}",
-					DataSubmissionDto[].class, properties.getServerAddress().getHostName(), properties.getServerPort(),
-					clientProperties.getClientId(), lastSync);
+			var fetchedSubmissions = connector.fetchDataSubmissions(lastSync);
 
-			handleDtos(response.getBody());
+			processor.processSubmissions(fetchedSubmissions);
 
-			saveLastSync(response);
+			saveLastSync(fetchedSubmissions.getLastModified());
 
 			log.debug("Submission job - GET to public server sent: {}",
-					Arrays.stream(response.getBody()).map(it -> it.getRequestId().toString()).collect(Collectors.joining(", ")));
+					fetchedSubmissions.stream()
+							.map(DataSubmissionDto::getRequestId)
+							.map(UUID::toString)
+							.collect(Collectors.joining(", ")));
 
-			dataSubmissionService.deleteDataSubmissionFromServer(Arrays.asList(response.getBody().clone()));
+			connector.deleteDataSubmissionFromServer(fetchedSubmissions.toList());
 
 			errorCounter = 0;
 
@@ -106,34 +90,7 @@ class DataSubmissionJob {
 		}
 	}
 
-	private void handleDtos(DataSubmissionDto[] dtos) {
-		Arrays.stream(dtos).map(this::mapToStrategie).forEach(DataSubmissionProcessor::process);
-	}
-
-	private DataSubmissionProcessor<?> mapToStrategie(DataSubmissionDto it) {
-
-		var request = dataRequests.findById(it.getRequestId()).get();
-
-		switch (it.getFeature()) {
-			case Contacts_Events:
-				return new ContactsEventsSubmissionProcessor(it, request, keyStore, mapper);
-			// return new ContactsEventsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasPersonApi,
-			// sormasContactApi, sormasEventApi, sormasParticipantApi);
-			case Guests:
-				return new GuestsSubmissionProcessor(it, request, keyStore, mapper, modelMapper, submissions, dataRequests);
-			// return new GuestsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasParticipantApi,
-			// sormasPersonApi);
-			default:
-				return null;
-		}
-	}
-
-	private void saveLastSync(ResponseEntity<DataSubmissionDto[]> response) {
-
-		var lastModified = response.getHeaders().getLastModified();
-
-		var lastSync = Instant.ofEpochMilli(lastModified);
-
+	private void saveLastSync(Instant lastSync) {
 		syncTimes.save(SyncTimes.of(SyncTimes.DataTypes.Submissions, lastSync));
 	}
 }

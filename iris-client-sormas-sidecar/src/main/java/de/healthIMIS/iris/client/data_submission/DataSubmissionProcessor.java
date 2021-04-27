@@ -14,79 +14,50 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_submission;
 
-import de.healthIMIS.iris.client.data_request.DataRequest;
-import lombok.Getter;
+import de.healthIMIS.iris.client.data_request.DataRequestManagement;
+import de.healthIMIS.iris.client.data_submission.supplier_connection.FetchedDataSubmissions;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
-import java.security.InvalidKeyException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.spec.InvalidKeySpecException;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Jens Kutzsche
  */
-@Getter
-public abstract class DataSubmissionProcessor<T> {
+@Service
+@RequiredArgsConstructor
+class DataSubmissionProcessor {
 
-	static final String ENCRYPTION_ALGORITHM = "AES/CBC/PKCS5Padding";
-	static final String KEY_ENCRYPTION_ALGORITHM = "RSA";
-	static final String TRANSFORMATION = "RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING";
+	private final @NonNull DataRequestManagement dataRequests;
+	private final @NonNull ObjectMapper mapper;
+	private final @NonNull KeyStore keyStore;
+	private final @NonNull ModelMapper modelMapper;
+	private final @NonNull DataSubmissionRepository submissions;
 
-	private final DataSubmissionDto submissionDto;
-	private final Class<T> dtoType;
-	private final KeyStore keyStore;
-	private final ObjectMapper mapper;
-	private final DataRequest request;
-
-	public DataSubmissionProcessor(DataSubmissionDto submissionDto, Class<T> dtoType, DataRequest request,
-			KeyStore keyStore, ObjectMapper mapper) {
-
-		// super(request, taskApi);
-
-		this.submissionDto = submissionDto;
-		this.dtoType = dtoType;
-		this.request = request;
-		this.keyStore = keyStore;
-		this.mapper = mapper;
+	void processSubmissions(FetchedDataSubmissions fetchedSubmissions) {
+		fetchedSubmissions.map(this::mapToStrategie).forEach(DataSubmissionProcess::process);
 	}
 
-	public abstract void process(T dto);
+	private DataSubmissionProcess<?> mapToStrategie(DataSubmissionDto it) {
 
-	void process() {
-		try {
+		var request = dataRequests.findById(it.getRequestId()).get();
 
-			var content = decryptContent(submissionDto.getEncryptedData(), submissionDto.getKeyReference(),
-					submissionDto.getSecret());
-			var dto = mapper.readValue(content, dtoType);
-
-			process(dto);
-
-		} catch (JsonProcessingException | InvalidKeyException | UnrecoverableKeyException | NoSuchAlgorithmException
-				| NoSuchPaddingException | InvalidKeySpecException | IllegalBlockSizeException | BadPaddingException
-				| KeyStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
+		switch (it.getFeature()) {
+			case Contacts_Events:
+				return new ContactsEventsSubmissionProcess(it, request, keyStore, mapper);
+			// return new ContactsEventsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasPersonApi,
+			// sormasContactApi, sormasEventApi, sormasParticipantApi);
+			case Guests:
+				return new GuestsSubmissionProcess(it, request, keyStore, mapper, modelMapper, submissions, dataRequests);
+			// return new GuestsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasParticipantApi,
+			// sormasPersonApi);
+			default:
+				return null;
 		}
-	}
-
-	protected String decryptContent(String content, String keyReference, String encryptedSecretKeyString)
-			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException,
-			IllegalBlockSizeException, BadPaddingException, UnrecoverableKeyException, KeyStoreException {
-
-		var privateKey = keyStore.getKey(keyReference, null);
-
-		var decryptor = new Decryptor(encryptedSecretKeyString, privateKey, content);
-
-		return decryptor.decrypt();
 	}
 }
