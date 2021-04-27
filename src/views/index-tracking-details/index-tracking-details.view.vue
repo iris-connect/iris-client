@@ -101,10 +101,6 @@
               :search="tableDataEvents.search"
               show-select
               v-model="tableDataEvents.select"
-              show-expand
-              single-expand
-              :expanded.sync="tableDataEvents.expanded"
-              @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
             >
               <template v-if="statusDataRequested" #no-data>
                 <span class="black--text">
@@ -203,10 +199,18 @@ type IndexData = {
 type TableRowContact = {
   lastName: string;
   firstName: string;
+  dateOfBirth: string;
+  sex: string;
+  email: string;
+  phone: string;
+  mobilePhone: string;
 };
 
 type TableRowEvent = {
   name: string;
+  phone: string;
+  address: string;
+  additionalInformation: string;
 };
 
 function getFormattedAddressWithContact(
@@ -260,20 +264,8 @@ export default class IndexTrackingDetailsView extends Vue {
         value: "firstName",
       },
       {
-        text: "Check-In",
-        value: "checkInTime",
-      },
-      {
-        text: "Check-Out",
-        value: "checkOutTime",
-      },
-      {
-        text: "max. Kontaktdauer",
-        value: "maxDuration",
-      },
-      {
-        text: "Kommentar",
-        value: "comment",
+        text: "Geburtsdatum",
+        value: "dateOfBirth",
       },
       { text: "", value: "data-table-expand" },
     ],
@@ -313,50 +305,16 @@ export default class IndexTrackingDetailsView extends Vue {
         align: "start",
       },
       {
-        text: "Ort",
-        value: "address",
-      },
-      {
-        text: "Check-In",
-        value: "checkInTime",
-      },
-      {
-        text: "Check-Out",
-        value: "checkOutTime",
-      },
-      {
-        text: "max. Kontaktdauer",
-        value: "maxDuration",
-      },
-      {
-        text: "Kommentar",
-        value: "comment",
-      },
-      {
-        text: "",
-        value: "data-table-expand",
-      },
-    ],
-    expandedHeaders: [
-      {
-        text: "Geschlecht",
-        value: "sex",
-      },
-      {
-        text: "E-Mail",
-        value: "email",
-      },
-      {
-        text: "Telefon",
+        text: "Telefonnummer",
         value: "phone",
-      },
-      {
-        text: "Mobil",
-        value: "mobilePhone",
       },
       {
         text: "Adresse",
         value: "address",
+      },
+      {
+        text: "zus. Informationen",
+        value: "additionalInformation",
       },
     ],
   };
@@ -413,7 +371,12 @@ export default class IndexTrackingDetailsView extends Vue {
         id: index,
         lastName: contact.lastName || "-",
         firstName: contact.firstName || "-",
-        //    comment: "-", // TODO: descriptionOfParticipation or additionalInformation?
+        dateOfBirth: contact.dateOfBirth || "-",
+        sex: contact.sex ? this.getSexName(contact.sex) : "-",
+        email: contact.email || "-",
+        phone: contact.phone || "-",
+        mobilePhone: contact.mobilePhone || "-",
+        address: getFormattedAddress(contact.address) || "-",
       };
     });
   }
@@ -429,6 +392,9 @@ export default class IndexTrackingDetailsView extends Vue {
       return {
         id: index,
         name: event.name || "-",
+        phone: event.phone || "-",
+        address: getFormattedAddress(event.address) || "-",
+        additionalInformation: event.additionalInformation || "-",
       };
     });
   }
