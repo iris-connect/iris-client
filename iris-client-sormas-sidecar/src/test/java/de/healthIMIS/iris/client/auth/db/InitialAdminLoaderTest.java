@@ -1,24 +1,17 @@
 package de.healthIMIS.iris.client.auth.db;
 
-import de.healthIMIS.iris.client.auth.db.model.UserAccount;
-import de.healthIMIS.iris.client.auth.db.model.UserAccountsRepository;
-import lombok.AllArgsConstructor;
+import de.healthIMIS.iris.client.users.entities.UserAccount;
+import de.healthIMIS.iris.client.users.UserAccountsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.Extensions;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
-import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 

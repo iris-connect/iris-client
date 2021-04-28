@@ -1,7 +1,8 @@
 package de.healthIMIS.iris.client.auth.db;
 
-import de.healthIMIS.iris.client.auth.db.model.UserAccount;
-import de.healthIMIS.iris.client.auth.db.model.UserAccountsRepository;
+import de.healthIMIS.iris.client.users.entities.UserAccount;
+import de.healthIMIS.iris.client.users.UserAccountsRepository;
+import de.healthIMIS.iris.client.users.entities.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -40,6 +41,10 @@ public class InitialAdminLoader {
             var userAccount = new UserAccount();
             userAccount.setUserName(conf.getAdminUserName());
             userAccount.setPassword(passwordEncoder.encode(conf.getAdminUserPassword()));
+            userAccount.setFirstName("admin");
+            userAccount.setLastName("admin");
+            userAccount.setRole(UserRole.ADMIN);
+
             repo.save(userAccount);
         } else {
             log.info("Admin user [{}] already exists. Skip creating admin user.", conf.getAdminUserName());

@@ -2,11 +2,12 @@ package de.healthIMIS.iris.client.auth.db;
 
 import de.healthIMIS.iris.client.auth.db.jwt.JWTSigner;
 import de.healthIMIS.iris.client.auth.db.jwt.JWTVerifier;
+import de.healthIMIS.iris.client.users.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @AllArgsConstructor
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
 @ConditionalOnProperty(
 		value = "security.auth",
