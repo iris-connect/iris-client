@@ -164,6 +164,7 @@ export default class AdminUserEditView extends Vue {
     const { id, ...restProps } = newValue || {};
     this.userId = id || "";
     this.form.model = {
+      ...this.form.model,
       ...restProps,
     };
     this.$refs.form.resetValidation();
