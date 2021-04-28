@@ -188,7 +188,6 @@ export default class IndexTrackingFormView extends Vue {
     const valid = this.$refs.form.validate() as boolean;
 
     if (valid) {
-      //api.ts muss angepasst werden um index-bezogene api abfragen nutzen zu können
       const payload: DataRequestCaseClient = {
         start: this.form.model.start,
         end: this.form.model.end,

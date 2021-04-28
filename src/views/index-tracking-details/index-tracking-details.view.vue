@@ -47,12 +47,6 @@
               :expanded.sync="tableDataContacts.expanded"
               @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
             >
-              <template v-if="statusDataRequested" #no-data>
-                <span class="black--text">
-                  Die Kontaktdaten zu diesem Ereignis werden derzeit angefragt.
-                  Zum jetzigen Zeitpunkt liegen noch keine Daten vor.
-                </span>
-              </template>
               <template v-slot:expanded-item="{ headers, item }">
                 <td></td>
                 <td :colspan="headers.length - 1">
@@ -102,12 +96,6 @@
               show-select
               v-model="tableDataEvents.select"
             >
-              <template v-if="statusDataRequested" #no-data>
-                <span class="black--text">
-                  Die Daten zu diesem Ereignis werden derzeit angefragt. Zum
-                  jetzigen Zeitpunkt liegen noch keine Daten vor.
-                </span>
-              </template>
               <template v-slot:expanded-item="{ headers, item }">
                 <td></td>
                 <td :colspan="headers.length - 1">
@@ -169,13 +157,7 @@
 </template>
 <style></style>
 <script lang="ts">
-import {
-  Address,
-  DataRequestCaseDetails,
-  DataRequestCaseData,
-  DataRequestCaseDetailsStatusEnum,
-  Sex,
-} from "@/api";
+import { Address, Sex } from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
@@ -212,15 +194,6 @@ type TableRowEvent = {
   address: string;
   additionalInformation: string;
 };
-
-function getFormattedAddressWithContact(
-  data: DataRequestCaseDetails | null
-): string {
-  if (data) {
-    return "-";
-  }
-  return "-";
-}
 
 function getFormattedAddress(address?: Address | null): string {
   if (address) {
@@ -351,21 +324,10 @@ export default class IndexTrackingDetailsView extends Vue {
     return store.state.indexTrackingDetails.indexTrackingDetailsLoading;
   }
 
-  get statusDataRequested(): boolean {
-    //if (!store.state.indexTrackingDetails.indexTrackingDetails) return false;
-    //return (
-    //store.state.indexTrackingDetails.indexTrackingDetails.status ===
-    //DataRequestCaseDetailsStatusEnum.DataRequested
-    //);
-    return false;
-  }
-
   get contacts(): TableRowContact[] {
     const contacts =
       store.state.indexTrackingDetails.indexTrackingDetails?.submissionData
         ?.contacts?.contactPersons || [];
-    const indexDataRequest =
-      store.state.indexTrackingDetails.indexTrackingDetails;
     return contacts.map((contact, index) => {
       return {
         id: index,
@@ -385,10 +347,7 @@ export default class IndexTrackingDetailsView extends Vue {
     const events =
       store.state.indexTrackingDetails.indexTrackingDetails?.submissionData
         ?.events?.events || [];
-    const indexDataRequest =
-      store.state.indexTrackingDetails.indexTrackingDetails;
     return events.map((event, index) => {
-      console.log(event);
       return {
         id: index,
         name: event.name || "-",
@@ -397,13 +356,6 @@ export default class IndexTrackingDetailsView extends Vue {
         additionalInformation: event.additionalInformation || "-",
       };
     });
-  }
-
-  /**
-   * @deprecated
-   */
-  on(): void {
-    console.log("NOT IMPLEMENTED");
   }
 
   getSexName(sex: Sex): string {

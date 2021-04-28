@@ -84,10 +84,7 @@
 </template>
 
 <script lang="ts">
-import {
-  DataRequestCaseDetails,
-  DataRequestCaseDetailsStatusEnum,
-} from "@/api";
+import { DataRequestCaseDetailsStatusEnum } from "@/api";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import IndexTrackingFormView from "../index-tracking-form/index-tracking-form.view.vue";
@@ -178,14 +175,6 @@ export default class IndexTrackingListView extends Vue {
   }
   get itemActionSlotName(): string {
     return "item.actions";
-  }
-
-  on(): void {
-    console.log("NOT IMPLEMENTED");
-  }
-
-  selectItem(item: unknown): void {
-    console.log("NOT IMPLEMENTED", item);
   }
 
   getStatusColor(status: DataRequestCaseDetailsStatusEnum): string {
