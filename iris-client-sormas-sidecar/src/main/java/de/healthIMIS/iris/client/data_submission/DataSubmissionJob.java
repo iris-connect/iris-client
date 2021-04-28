@@ -14,8 +14,6 @@
  *******************************************************************************/
 package de.healthIMIS.iris.client.data_submission;
 
-import de.healthIMIS.iris.client.core.sync.SyncTimes;
-import de.healthIMIS.iris.client.core.sync.SyncTimesRepository;
 import de.healthIMIS.iris.client.data_submission.supplier_connection.DataSubmissionEndpointConnector;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +37,6 @@ import org.springframework.web.client.RestClientException;
 @RequiredArgsConstructor
 class DataSubmissionJob {
 
-	private final @NonNull SyncTimesRepository syncTimes;
 	private final @NonNull DataSubmissionEndpointConnector connector;
 	private final @NonNull DataSubmissionProcessor processor;
 
@@ -50,17 +47,12 @@ class DataSubmissionJob {
 
 		log.trace("Submission job - start");
 
-		var lastSync = syncTimes.findById(SyncTimes.DataTypes.Submissions).map(SyncTimes::getLastSync)
-				.orElse(Instant.ofEpochSecond(0));
-
 		try {
 
 			log.trace("Submission job - GET to server is sent");
-			var fetchedSubmissions = connector.fetchDataSubmissions(lastSync);
+			var fetchedSubmissions = connector.fetchDataSubmissions();
 
 			processor.processSubmissions(fetchedSubmissions);
-
-			saveLastSync(fetchedSubmissions.getLastModified());
 
 			log.debug("Submission job - GET to public server sent: {}",
 					fetchedSubmissions.stream()
@@ -90,7 +82,4 @@ class DataSubmissionJob {
 		}
 	}
 
-	private void saveLastSync(Instant lastSync) {
-		syncTimes.save(SyncTimes.of(SyncTimes.DataTypes.Submissions, lastSync));
-	}
 }

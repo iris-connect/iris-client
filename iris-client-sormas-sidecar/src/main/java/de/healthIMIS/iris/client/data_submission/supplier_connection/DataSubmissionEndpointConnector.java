@@ -27,17 +27,17 @@ public class DataSubmissionEndpointConnector {
 	private final @NotNull IrisProperties properties;
 	private final @NotNull IrisClientProperties clientProperties;
 
-	public FetchedDataSubmissions fetchDataSubmissions(Instant lastSync) {
+	public FetchedDataSubmissions fetchDataSubmissions() {
 
+		System.out.println(properties.getServerAddress().getHostName()+":"+properties.getServerPort());
 		var response = rest.getForEntity(
-				"http://{address}:{port}/hd/data-submissions?departmentId={depId}&from={from}",
+				"https://{address}:{port}/hd/data-submissions?departmentId={depId}",
 				DataSubmissionDto[].class, properties.getServerAddress().getHostName(), properties.getServerPort(),
-				clientProperties.getClientId(), lastSync);
+				clientProperties.getClientId());
 
 		var dataSubmissions = getDataSubmissionsFrom(response);
-		var lastModified = Instant.ofEpochMilli(response.getHeaders().getLastModified());
 
-		return FetchedDataSubmissions.of(dataSubmissions, lastModified);
+		return FetchedDataSubmissions.of(dataSubmissions);
 	}
 
 	public void deleteDataSubmissionFromServer(List<DataSubmissionDto> dataSubmissions) {

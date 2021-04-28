@@ -14,7 +14,6 @@ import org.springframework.data.util.Streamable;
 public class FetchedDataSubmissions implements Streamable<DataSubmissionDto> {
 
 	private final List<DataSubmissionDto> dataSubmissions;
-	private final @Getter Instant lastModified;
 
 	@Override
 	public Iterator<DataSubmissionDto> iterator() {
