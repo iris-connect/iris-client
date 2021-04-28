@@ -132,6 +132,7 @@ import { ErrorMessage } from "@/utils/axios";
 import DateTimeInputField from "@/views/event-tracking-form/components/form/date-time-input-field.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
 import LocationInfo from "@/views/event-tracking-form/components/location-info.vue";
+import rules from "@/common/validation-rules";
 
 type EventTrackingForm = {
   model: EventTrackingFormModel;
@@ -205,7 +206,7 @@ export default class EventTrackingFormView extends Vue {
           );
         },
       ],
-      defined: [(v: unknown): string | boolean => !!v || "Pflichtfeld"],
+      defined: [rules.defined],
       location: [
         (v: LocationInformation): string | boolean => {
           return !!v || "Bitte wählen Sie einen Ereignisort aus";

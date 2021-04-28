@@ -1,5 +1,5 @@
 import Vue from "vue";
-import VueRouter, { RouteConfig } from "vue-router";
+import VueRouter, { Location, RouteConfig } from "vue-router";
 import Home from "../views/home/Home.vue";
 import store from "@/store";
 
@@ -28,6 +28,42 @@ export const routes: Array<RouteConfig> = [
     component: () =>
       import(
         /* webpackChunkName: "user-login" */ "../views/user-login/user-login.view.vue"
+      ),
+  },
+  {
+    path: "/admin/user/list",
+    name: "admin-user-list",
+    meta: {
+      menu: false,
+      admin: true,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "admin-user-list" */ "../views/admin-user-list/admin-user-list.view.vue"
+      ),
+  },
+  {
+    path: "/admin/user/create",
+    name: "admin-user-create",
+    meta: {
+      menu: false,
+      admin: true,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "admin-user-create" */ "../views/admin-user-create/admin-user-create.view.vue"
+      ),
+  },
+  {
+    path: "/admin/user/edit/:id",
+    name: "admin-user-edit",
+    meta: {
+      menu: false,
+      admin: true,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "admin-user-edit" */ "../views/admin-user-edit/admin-user-edit.view.vue"
       ),
   },
   {
@@ -86,7 +122,19 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.auth !== false && !store.getters["userLogin/isAuthenticated"]) {
+    const { name, path, hash, query, params } = to;
+    const toLocation: Location = {
+      ...(name ? { name } : {}),
+      path,
+      hash,
+      query,
+      params,
+    };
+    store.commit("userLogin/setInterceptedRoute", toLocation);
     return next("/user/login");
+  }
+  if (to.meta.admin === true && !store.getters["userLogin/isAdmin"]) {
+    return next("/");
   }
   if (to.name === "user-login" && store.getters["userLogin/isAuthenticated"]) {
     return next("/");

@@ -115,7 +115,7 @@ const eventTrackingForm: EventTrackingFormModule = {
         ).data;
       } catch (e) {
         commit("setEventCreationError", getErrorMessage(e));
-        return Promise.reject(e);
+        throw e;
       } finally {
         commit("setEventCreationOngoing", false);
       }

@@ -19,7 +19,7 @@
       <v-col cols="12" sm="6">
         <time-input-field
           v-model="time"
-          @blur="setDateTime"
+          @input="setDateTime"
           :rules="dateTimeRules.time"
           :error="error"
           v-bind="timeProps"

@@ -7,6 +7,7 @@ import { UserSession } from "@/views/user-login/user-login.store";
 import { get as _get } from "lodash";
 import { parseError } from "@/utils/axios";
 import config from "@/config";
+import messages from "@/common/messages";
 
 if (process.env.VUE_APP_ENABLE_MOCK_SERVER === "true") {
   // Not sure whether imported mockAPIServer ends up in bundle for deployment.
@@ -31,7 +32,10 @@ authAxiosInstance.interceptors.response.use(
   (error) => {
     const status = parseError(error)?.status;
     if (status === 401 || status === 403) {
-      // @todo: handle redirect to user login view with info message: token expired, etc.
+      store.commit(
+        "userLogin/setAuthenticationError",
+        messages.error.sessionExpired
+      );
       store.commit("userLogin/setSession");
     }
     return Promise.reject(error);

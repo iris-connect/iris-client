@@ -23,7 +23,11 @@
           </v-btn>
         </template>
         <v-spacer></v-spacer>
-        <user-menu @logout="logoutUser" />
+        <user-menu
+          :display-name="userDisplayName"
+          :is-admin="isAdmin"
+          @logout="logoutUser"
+        />
       </template>
     </v-app-bar>
 
@@ -40,6 +44,7 @@ import Vue from "vue";
 import { routes } from "@/router";
 import UserMenu from "@/views/user-login/components/user-menu.vue";
 
+// @todo: move user functionality to a dedicated user-module?
 export default Vue.extend({
   name: "App",
   components: {
@@ -52,11 +57,28 @@ export default Vue.extend({
     authenticated(): boolean {
       return this.$store.getters["userLogin/isAuthenticated"];
     },
+    userDisplayName(): string {
+      return this.$store.getters["userLogin/userDisplayName"];
+    },
+    isAdmin(): boolean {
+      return this.$store.getters["userLogin/isAdmin"];
+    },
+  },
+  watch: {
+    authenticated: {
+      immediate: true,
+      handler(newValue) {
+        if (newValue) {
+          this.$store.dispatch("userLogin/fetchAuthenticatedUser");
+        } else {
+          this.$router.push("/user/login");
+        }
+      },
+    },
   },
   methods: {
     logoutUser() {
       this.$store.commit("userLogin/setSession");
-      this.$router.push("/user/login");
     },
   },
 });
