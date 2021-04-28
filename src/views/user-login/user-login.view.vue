@@ -20,7 +20,7 @@
             <v-col cols="12">
               <v-text-field
                 v-model="formModel.password"
-                :rules="validationRules.defined"
+                :rules="validationRules.password"
                 label="Passwort"
                 type="password"
               ></v-text-field>
@@ -46,6 +46,7 @@ import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
 import { Credentials } from "@/api";
+import rules from "@/common/validation-rules";
 
 @Component({
   beforeRouteLeave(to, from, next) {
@@ -71,7 +72,8 @@ export default class UserLoginView extends Vue {
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      defined: [(v: unknown): string | boolean => !!v || "Pflichtfeld"],
+      defined: [rules.defined],
+      password: [rules.defined, rules.minLength(8)],
     };
   }
 

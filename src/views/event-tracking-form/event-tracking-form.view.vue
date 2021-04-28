@@ -206,7 +206,7 @@ export default class EventTrackingFormView extends Vue {
           );
         },
       ],
-      defined: rules.defined,
+      defined: [rules.defined],
       location: [
         (v: LocationInformation): string | boolean => {
           return !!v || "Bitte wählen Sie einen Ereignisort aus";
