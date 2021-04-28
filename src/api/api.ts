@@ -1502,13 +1502,50 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    userName?: string;
+    userName: string;
     /**
      * 
      * @type {UserRole}
      * @memberof User
      */
-    role?: UserRole;
+    role: UserRole;
+}
+/**
+ * 
+ * @export
+ * @interface UserInsert
+ */
+export interface UserInsert {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserInsert
+     */
+    firstName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserInsert
+     */
+    lastName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserInsert
+     */
+    userName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserInsert
+     */
+    password: string;
+    /**
+     * 
+     * @type {UserRole}
+     * @memberof UserInsert
+     */
+    role: UserRole;
 }
 /**
  * 
@@ -1536,37 +1573,37 @@ export enum UserRole {
 /**
  * 
  * @export
- * @interface UserUpsert
+ * @interface UserUpdate
  */
-export interface UserUpsert {
+export interface UserUpdate {
     /**
      * 
      * @type {string}
-     * @memberof UserUpsert
+     * @memberof UserUpdate
      */
     firstName?: string;
     /**
      * 
      * @type {string}
-     * @memberof UserUpsert
+     * @memberof UserUpdate
      */
     lastName?: string;
     /**
      * 
      * @type {string}
-     * @memberof UserUpsert
+     * @memberof UserUpdate
      */
     userName?: string;
     /**
      * 
      * @type {string}
-     * @memberof UserUpsert
+     * @memberof UserUpdate
      */
     password?: string;
     /**
      * 
      * @type {UserRole}
-     * @memberof UserUpsert
+     * @memberof UserUpdate
      */
     role?: UserRole;
 }
@@ -2021,15 +2058,15 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
          * 
          * @summary Update IRIS user
          * @param {string} id The ID of an IRIS Client user.
-         * @param {UserUpsert} userUpsert 
+         * @param {UserUpdate} userUpdate 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        usersIdPut: async (id: string, userUpsert: UserUpsert, options: any = {}): Promise<RequestArgs> => {
+        usersIdPatch: async (id: string, userUpdate: UserUpdate, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('usersIdPut', 'id', id)
-            // verify required parameter 'userUpsert' is not null or undefined
-            assertParamExists('usersIdPut', 'userUpsert', userUpsert)
+            assertParamExists('usersIdPatch', 'id', id)
+            // verify required parameter 'userUpdate' is not null or undefined
+            assertParamExists('usersIdPatch', 'userUpdate', userUpdate)
             const localVarPath = `/users/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -2039,7 +2076,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -2057,7 +2094,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userUpsert, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(userUpdate, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2067,13 +2104,13 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
         /**
          * 
          * @summary Create IRIS user
-         * @param {UserUpsert} userUpsert 
+         * @param {UserInsert} userInsert 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        usersPost: async (userUpsert: UserUpsert, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userUpsert' is not null or undefined
-            assertParamExists('usersPost', 'userUpsert', userUpsert)
+        usersPost: async (userInsert: UserInsert, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userInsert' is not null or undefined
+            assertParamExists('usersPost', 'userInsert', userInsert)
             const localVarPath = `/users`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2100,7 +2137,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userUpsert, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(userInsert, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2237,23 +2274,23 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
          * 
          * @summary Update IRIS user
          * @param {string} id The ID of an IRIS Client user.
-         * @param {UserUpsert} userUpsert 
+         * @param {UserUpdate} userUpdate 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async usersIdPut(id: string, userUpsert: UserUpsert, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.usersIdPut(id, userUpsert, options);
+        async usersIdPatch(id: string, userUpdate: UserUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usersIdPatch(id, userUpdate, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @summary Create IRIS user
-         * @param {UserUpsert} userUpsert 
+         * @param {UserInsert} userInsert 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async usersPost(userUpsert: UserUpsert, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.usersPost(userUpsert, options);
+        async usersPost(userInsert: UserInsert, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usersPost(userInsert, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -2375,22 +2412,22 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
          * 
          * @summary Update IRIS user
          * @param {string} id The ID of an IRIS Client user.
-         * @param {UserUpsert} userUpsert 
+         * @param {UserUpdate} userUpdate 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        usersIdPut(id: string, userUpsert: UserUpsert, options?: any): AxiosPromise<User> {
-            return localVarFp.usersIdPut(id, userUpsert, options).then((request) => request(axios, basePath));
+        usersIdPatch(id: string, userUpdate: UserUpdate, options?: any): AxiosPromise<User> {
+            return localVarFp.usersIdPatch(id, userUpdate, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Create IRIS user
-         * @param {UserUpsert} userUpsert 
+         * @param {UserInsert} userInsert 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        usersPost(userUpsert: UserUpsert, options?: any): AxiosPromise<User> {
-            return localVarFp.usersPost(userUpsert, options).then((request) => request(axios, basePath));
+        usersPost(userInsert: UserInsert, options?: any): AxiosPromise<User> {
+            return localVarFp.usersPost(userInsert, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2533,25 +2570,25 @@ export class IrisClientFrontendApi extends BaseAPI {
      * 
      * @summary Update IRIS user
      * @param {string} id The ID of an IRIS Client user.
-     * @param {UserUpsert} userUpsert 
+     * @param {UserUpdate} userUpdate 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof IrisClientFrontendApi
      */
-    public usersIdPut(id: string, userUpsert: UserUpsert, options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).usersIdPut(id, userUpsert, options).then((request) => request(this.axios, this.basePath));
+    public usersIdPatch(id: string, userUpdate: UserUpdate, options?: any) {
+        return IrisClientFrontendApiFp(this.configuration).usersIdPatch(id, userUpdate, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Create IRIS user
-     * @param {UserUpsert} userUpsert 
+     * @param {UserInsert} userInsert 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof IrisClientFrontendApi
      */
-    public usersPost(userUpsert: UserUpsert, options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).usersPost(userUpsert, options).then((request) => request(this.axios, this.basePath));
+    public usersPost(userInsert: UserInsert, options?: any) {
+        return IrisClientFrontendApiFp(this.configuration).usersPost(userInsert, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

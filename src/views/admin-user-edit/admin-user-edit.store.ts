@@ -1,4 +1,4 @@
-import { User, UserList, UserUpsert } from "@/api";
+import { User, UserList, UserUpdate } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
@@ -30,7 +30,7 @@ export interface AdminUserEditModule
       { commit }: { commit: Commit },
       payload: {
         id: string;
-        data: UserUpsert;
+        data: UserUpdate;
       }
     ): Promise<void>;
   };
@@ -88,7 +88,7 @@ const adminUserEdit: AdminUserEditModule = {
       commit("setUserSavingError", null);
       commit("setUserSavingOngoing", true);
       try {
-        await authClient.usersIdPut(payload.id, payload.data);
+        await authClient.usersIdPatch(payload.id, payload.data);
       } catch (e) {
         commit("setUserSavingError", getErrorMessage(e));
         throw e;

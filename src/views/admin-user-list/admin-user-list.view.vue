@@ -83,15 +83,16 @@ import { ErrorMessage } from "@/utils/axios";
 import { User, UserRole } from "@/api";
 import UserDeleteButton from "@/views/admin-user-list/components/user-delete-button.vue";
 
+// @todo: check if id is really optional! Handle, edit & delete actions + vue :key accordingly
 type TableRow = {
   id?: string;
   lastName?: string;
   firstName?: string;
-  userName?: string;
-  role?: string;
+  userName: string;
+  role: string;
 };
 
-const UserRoleName = new Map<UserRole | undefined, string>([
+const UserRoleName = new Map<UserRole, string>([
   [UserRole.Admin, "Administrator"],
   [UserRole.User, "Nutzer"],
 ]);
@@ -173,7 +174,7 @@ export default class AdminUserListView extends Vue {
         lastName,
         firstName,
         userName,
-        role: UserRoleName.get(role),
+        role: UserRoleName.get(role) ?? "-",
       };
     });
   }

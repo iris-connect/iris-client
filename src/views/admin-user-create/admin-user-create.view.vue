@@ -78,12 +78,12 @@
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
-import { UserRole, UserUpsert } from "@/api";
+import { UserRole, UserInsert } from "@/api";
 import PasswordInputField from "@/components/form/password-input-field.vue";
 import rules from "@/common/validation-rules";
 
 type AdminUserCreateForm = {
-  model: UserUpsert;
+  model: UserInsert;
   valid: boolean;
 };
 
@@ -111,16 +111,13 @@ export default class AdminUserCreateView extends Vue {
 
   get roleSelectOptions(): Array<Record<string, unknown>> {
     return [
-      // {
-      //   text: "Bitte wählen",
-      // },
-      {
-        text: "Administrator",
-        value: UserRole.Admin,
-      },
       {
         text: "Nutzer",
         value: UserRole.User,
+      },
+      {
+        text: "Administrator",
+        value: UserRole.Admin,
       },
     ];
   }
@@ -137,7 +134,7 @@ export default class AdminUserCreateView extends Vue {
       lastName: "",
       userName: "",
       password: "",
-      role: undefined,
+      role: UserRole.User,
     },
     valid: false,
   };
@@ -145,7 +142,7 @@ export default class AdminUserCreateView extends Vue {
   async createUser(): Promise<void> {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
-      const payload: UserUpsert = this.form.model;
+      const payload: UserInsert = this.form.model;
       await store.dispatch("adminUserCreate/createUser", payload);
       this.$router.back();
     }

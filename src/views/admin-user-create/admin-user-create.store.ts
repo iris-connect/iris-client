@@ -1,4 +1,4 @@
-import { UserUpsert } from "@/api";
+import { UserInsert } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
@@ -23,7 +23,7 @@ export interface AdminUserCreateModule
   actions: {
     createUser(
       { commit }: { commit: Commit },
-      formData: UserUpsert
+      formData: UserInsert
     ): Promise<void>;
   };
 }

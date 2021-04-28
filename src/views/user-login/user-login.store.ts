@@ -109,11 +109,7 @@ const userLogin: UserLoginModule = {
         commit("setAuthenticating", false);
       }
     },
-    async fetchAuthenticatedUser({
-      commit,
-    }: {
-      commit: Commit;
-    }): Promise<void> {
+    async fetchAuthenticatedUser({ commit }): Promise<void> {
       commit("setUserLoadingError", null);
       commit("setUserLoading", true);
       let user = null;

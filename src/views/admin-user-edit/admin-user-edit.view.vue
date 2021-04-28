@@ -73,13 +73,13 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
-import { User, UserRole, UserUpsert } from "@/api";
+import { User, UserRole, UserUpdate } from "@/api";
 import PasswordInputField from "@/components/form/password-input-field.vue";
 import rules from "@/common/validation-rules";
 import { omitBy } from "lodash";
 
 type AdminUserEditForm = {
-  model: UserUpsert;
+  model: UserUpdate;
   valid: boolean;
 };
 
@@ -127,16 +127,13 @@ export default class AdminUserEditView extends Vue {
 
   get roleSelectOptions(): Array<Record<string, unknown>> {
     return [
-      // {
-      //   text: "Bitte wählen",
-      // },
-      {
-        text: "Administrator",
-        value: UserRole.Admin,
-      },
       {
         text: "Nutzer",
         value: UserRole.User,
+      },
+      {
+        text: "Administrator",
+        value: UserRole.Admin,
       },
     ];
   }
@@ -186,7 +183,7 @@ export default class AdminUserEditView extends Vue {
   }
 }
 
-const ensureIntegrityOfUserUpsert = (data: UserUpsert): UserUpsert => {
+const ensureIntegrityOfUserUpsert = (data: UserUpdate): UserUpdate => {
   const mandatoryFields = ["userName", "password", "role"];
   return omitBy(data, (value, key) => {
     if (!value) {
