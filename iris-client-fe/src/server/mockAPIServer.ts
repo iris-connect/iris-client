@@ -43,7 +43,6 @@ const validateAuthHeader = (request: Request): boolean => {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function makeMockAPIServer() {
-  //console.log(router);
   const server = createServer({
     routes() {
       this.namespace = "";
@@ -106,8 +105,13 @@ export function makeMockAPIServer() {
         return created;
       });
 
-      this.get("/data-requests-client/locations", (__schema, request) => {
+      this.get("/data-requests-client/locations", (schema, request) => {
         return authResponse(request, dummyDataRequests);
+      });
+
+      this.get("/data-requests-client/locations/:id", (schema, request) => {
+        const data = getDummyDetailsWithStatus(router.currentRoute.params.id);
+        return authResponse(request, data);
       });
 
       this.post("/data-request-client/cases", () => {
@@ -115,11 +119,6 @@ export function makeMockAPIServer() {
           caseId: "NEWCASE123",
         };
         return created;
-      });
-
-      this.get("/data-requests-client/locations/:id", (__schema, request) => {
-        const data = getDummyDetailsWithStatus(router.currentRoute.params.id);
-        return authResponse(request, data);
       });
 
       this.get("/data-request-client/cases", () => {
@@ -130,14 +129,14 @@ export function makeMockAPIServer() {
         return getDummyDetailsCases(router.currentRoute.params.caseId);
       });
 
-      this.get("/search/mio", (_schema, request) => {
+      this.get("/search/mio", (schema, request) => {
         const data = {
           locations: [dummyLocations[0]],
         };
         return authResponse(request, data);
       });
 
-      this.get("/search/august", (_schema, request) => {
+      this.get("/search/august", (schema, request) => {
         const data = {
           locations: [dummyLocations[1]],
         };

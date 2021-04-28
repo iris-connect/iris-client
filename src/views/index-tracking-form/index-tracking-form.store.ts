@@ -1,9 +1,5 @@
-import {
-  DataRequestCaseClient,
-  DataRequestCaseExtendedDetails,
-  IrisClientFrontendApiFactory,
-} from "@/api";
-import { clientConfig } from "@/main";
+import { DataRequestCaseClient, DataRequestCaseExtendedDetails } from "@/api";
+import client from "@/api-client";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
@@ -64,7 +60,6 @@ const indexTrackingForm: IndexTrackingFormModule = {
       commit("setIndexCreationError", null);
       commit("setIndexCreationOngoing", true);
       try {
-        const client = IrisClientFrontendApiFactory(clientConfig);
         return await (
           await client.dataRequestClientCasesPost(dataRequestCaseClient)
         ).data;

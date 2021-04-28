@@ -1,5 +1,5 @@
-import { DataRequestCaseData, IrisClientFrontendApiFactory } from "@/api";
-import { clientConfig } from "@/main";
+import { DataRequestCaseData } from "@/api";
+import client from "@/api-client";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
@@ -53,7 +53,6 @@ const indexTrackingDetails: IndexTrackingDetailsModule = {
   },
   actions: {
     async fetchIndexTrackingDetails({ commit }, indexId) {
-      const client = IrisClientFrontendApiFactory(clientConfig);
       let indexTrackingDetails: DataRequestCaseData | null = null;
       commit("setIndexTrackingDetails", indexTrackingDetails);
       commit("setIndexTrackingDetailsLoading", true);
@@ -61,8 +60,6 @@ const indexTrackingDetails: IndexTrackingDetailsModule = {
         indexTrackingDetails = (
           await client.dataRequestClientCasesCaseIdGet(indexId)
         ).data;
-        //console.log("fetchId "+indexId);
-        //console.log(indexTrackingDetails);
       } finally {
         commit("setIndexTrackingDetails", indexTrackingDetails);
         commit("setIndexTrackingDetailsLoading", false);

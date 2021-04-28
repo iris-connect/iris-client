@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * IRIS-Gateway API
- * ### Encryption of the data to be transmitted (contact data) In order to be not limited in the amount of data, a hybrid encryption with symmetric encryption of the data and asymmetric encryption of the symmetric key is used for the encryption of the contact data.    1. The apps and applications get the public key of the health department as a 4096-bit RSA key from the IRIS+ server. This key is base64-encoded similar to the Private Enhanced Mail (PEM) format but without key markers (-----BEGIN PUBLIC KEY----- / -----END PUBLIC KEY-----).   2. The app generates a 256-bit AES key.   3. The data is encrypted with this key (algorithm: AES/CBC/PKCS5Padding and 16 byte IV)   4. IV bytes are prepended to the cipher text. Those merged bytes represent the encrypted content.   5. The AES key must be encrypted with the public RSA key of the health department. (algorithm: RSA with Optimal Asymmetric Encryption Padding (OAEP) \"RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING\")   6. The encrypted AES key and the encrypted content must be transmitted base64 encoded.    #### Schematic sequence    ```   pubKeyEncryption = publicKeyFromBase64(givenPublicKey);   contentKey = generateAESKey();   iv = generateRandomBytes(16);    encrypted = contentKey.encrypt(content, \"AES/CBC/PKCS5Padding\", iv);   keyEncrypted = pubKeyEncryption.encrypt(contentKey, \"RSA/NONE/OAEPWithSHA3-256AndMGF1Padding\");    submissionDto.encryptedData = base64Encode(concat(iv,encrypted));   submissionDto.secret = base64Encode(keyEncrypted);   ```
+ * ### Encryption of the data to be transmitted (contact data) In order to be not limited in the amount of data, a hybrid encryption with symmetric encryption of the data and asymmetric encryption of the symmetric key is used for the encryption of the contact data.    1. The apps and applications get the public key of the health department as a 4096-bit RSA key from the IRIS+ server. This key is base64-encoded similar to the Private Enhanced Mail (PEM) format but without key markers (-----BEGIN PUBLIC KEY----- / -----END PUBLIC KEY-----).   2. The app generates a 256-bit AES key.   3. The data is encrypted with this key (algorithm: AES/CBC/PKCS5Padding and 16 byte IV)   4. IV bytes are prepended to the cipher text. Those merged bytes represent the encrypted content.   5. The AES key must be encrypted with the public RSA key of the health department. (algorithm: RSA with Optimal Asymmetric Encryption Padding (OAEP) \"RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING\")   6. The encrypted AES key and the encrypted content must be transmitted base64 encoded.    #### Schematic sequence    ```   pubKeyEncryption = publicKeyFromBase64(givenPublicKey);   contentKey = generateAESKey();   iv = generateRandomBytes(16);    encrypted = contentKey.encrypt(content, \"AES/CBC/PKCS5Padding\", iv);   keyEncrypted = pubKeyEncryption.encrypt(contentKey, \"RSA/NONE/OAEPWithSHA3-256AndMGF1Padding\");    submissionDto.encryptedData = base64Encode(concat(iv,encrypted));   submissionDto.secret = base64Encode(keyEncrypted);   ``` 
  *
  * The version of the OpenAPI document: 0.2.0
  * Contact: jens.kutzsche@gebea.de
@@ -22,31 +22,31 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
- *
+ * 
  * @export
  * @interface Address
  */
 export interface Address {
     /**
-     *
+     * 
      * @type {string}
      * @memberof Address
      */
     street?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Address
      */
     houseNumber?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Address
      */
     zipCode?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Address
      */
@@ -72,80 +72,80 @@ export enum ContactCategory {
  */
 export interface ContactPerson {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactPerson
      */
     firstName: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactPerson
      */
     lastName: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactPerson
      */
     dateOfBirth?: string;
     /**
-     *
+     * 
      * @type {Sex}
      * @memberof ContactPerson
      */
     sex?: Sex;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactPerson
      */
     email?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactPerson
      */
     phone?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactPerson
      */
     mobilePhone?: string;
     /**
-     *
+     * 
      * @type {Address}
      * @memberof ContactPerson
      */
     address?: Address | null;
     /**
-     *
+     * 
      * @type {ContactPersonAllOfWorkPlace}
      * @memberof ContactPerson
      */
     workPlace?: ContactPersonAllOfWorkPlace;
     /**
-     *
+     * 
      * @type {ContactPersonAllOfContactInformation}
      * @memberof ContactPerson
      */
     contactInformation?: ContactPersonAllOfContactInformation;
 }
 /**
- *
+ * 
  * @export
  * @interface ContactPersonAllOf
  */
 export interface ContactPersonAllOf {
     /**
-     *
+     * 
      * @type {ContactPersonAllOfWorkPlace}
      * @memberof ContactPersonAllOf
      */
     workPlace?: ContactPersonAllOfWorkPlace;
     /**
-     *
+     * 
      * @type {ContactPersonAllOfContactInformation}
      * @memberof ContactPersonAllOf
      */
@@ -158,19 +158,19 @@ export interface ContactPersonAllOf {
  */
 export interface ContactPersonAllOfContactInformation {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactPersonAllOfContactInformation
      */
     firstContactDate?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactPersonAllOfContactInformation
      */
     lastContactDate?: string;
     /**
-     *
+     * 
      * @type {ContactCategory}
      * @memberof ContactPersonAllOfContactInformation
      */
@@ -195,19 +195,19 @@ export interface ContactPersonAllOfWorkPlace {
      */
     name?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactPersonAllOfWorkPlace
      */
     pointOfContact?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactPersonAllOfWorkPlace
      */
     phone?: string;
     /**
-     *
+     * 
      * @type {Address}
      * @memberof ContactPersonAllOfWorkPlace
      */
@@ -220,7 +220,7 @@ export interface ContactPersonAllOfWorkPlace {
  */
 export interface ContactPersonList {
     /**
-     *
+     * 
      * @type {Array<ContactPerson>}
      * @memberof ContactPersonList
      */
@@ -245,51 +245,51 @@ export interface ContactPersonList {
  */
 export interface ContactsAndEvents {
     /**
-     *
+     * 
      * @type {ContactPersonList}
      * @memberof ContactsAndEvents
      */
     contacts: ContactPersonList;
     /**
-     *
+     * 
      * @type {EventList}
      * @memberof ContactsAndEvents
      */
     events: EventList;
     /**
-     *
+     * 
      * @type {ContactsAndEventsDataProvider}
      * @memberof ContactsAndEvents
      */
     dataProvider: ContactsAndEventsDataProvider;
 }
 /**
- *
+ * 
  * @export
  * @interface ContactsAndEventsDataProvider
  */
 export interface ContactsAndEventsDataProvider {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactsAndEventsDataProvider
      */
     firstName: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactsAndEventsDataProvider
      */
     lastName: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ContactsAndEventsDataProvider
      */
     dateOfBirth: string;
 }
 /**
- *
+ * 
  * @export
  * @interface ContactsEventsSubmission
  */
@@ -307,39 +307,39 @@ export interface ContactsEventsSubmission {
      */
     keyReference: string;
     /**
-     *
+     * 
      * @type {ContactsAndEvents}
      * @memberof ContactsEventsSubmission
      */
     encryptedData: ContactsAndEvents;
 }
 /**
- *
+ * 
  * @export
  * @interface ContactsEventsSubmissionAllOf
  */
 export interface ContactsEventsSubmissionAllOf {
     /**
-     *
+     * 
      * @type {ContactsAndEvents}
      * @memberof ContactsEventsSubmissionAllOf
      */
     encryptedData: ContactsAndEvents;
 }
 /**
- *
+ * 
  * @export
  * @interface Credentials
  */
 export interface Credentials {
     /**
-     *
+     * 
      * @type {string}
      * @memberof Credentials
      */
     userName?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Credentials
      */
@@ -413,20 +413,20 @@ export interface DataRequestCaseClient {
      */
     comment?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof DataRequestCaseClient
      */
     start: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof DataRequestCaseClient
      */
     end?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface DataRequestCaseData
  */
@@ -450,13 +450,13 @@ export interface DataRequestCaseData {
      */
     comment?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof DataRequestCaseData
      */
     start: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof DataRequestCaseData
      */
@@ -468,7 +468,7 @@ export interface DataRequestCaseData {
      */
     caseId?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof DataRequestCaseData
      */
@@ -535,13 +535,13 @@ export interface DataRequestCaseDetails {
      */
     comment?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof DataRequestCaseDetails
      */
     start: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof DataRequestCaseDetails
      */
@@ -625,13 +625,13 @@ export interface DataRequestCaseExtendedDetails {
      */
     comment?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof DataRequestCaseExtendedDetails
      */
     start: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof DataRequestCaseExtendedDetails
      */
@@ -729,19 +729,19 @@ export interface DataRequestClient {
     requestDetails?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface DataRequestDetails
  */
 export interface DataRequestDetails {
     /**
-     *
+     * 
      * @type {GuestList}
      * @memberof DataRequestDetails
      */
     submissionData?: GuestList;
     /**
-     *
+     * 
      * @type {string}
      * @memberof DataRequestDetails
      */
@@ -795,7 +795,7 @@ export interface DataRequestDetails {
      */
     requestDetails?: string;
     /**
-     *
+     * 
      * @type {LocationInformation}
      * @memberof DataRequestDetails
      */
@@ -844,13 +844,13 @@ export interface Event {
      */
     name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Event
      */
     phone?: string;
     /**
-     *
+     * 
      * @type {Address}
      * @memberof Event
      */
@@ -869,7 +869,7 @@ export interface Event {
  */
 export interface EventList {
     /**
-     *
+     * 
      * @type {Array<Event>}
      * @memberof EventList
      */
@@ -888,13 +888,13 @@ export interface EventList {
     endDate?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface ExistingDataRequestClientWithLocation
  */
 export interface ExistingDataRequestClientWithLocation {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ExistingDataRequestClientWithLocation
      */
@@ -948,7 +948,7 @@ export interface ExistingDataRequestClientWithLocation {
      */
     requestDetails?: string;
     /**
-     *
+     * 
      * @type {LocationInformation}
      * @memberof ExistingDataRequestClientWithLocation
      */
@@ -966,13 +966,13 @@ export enum ExistingDataRequestClientWithLocationStatusEnum {
 }
 
 /**
- *
+ * 
  * @export
  * @interface ExistingDataRequestClientWithLocationList
  */
 export interface ExistingDataRequestClientWithLocationList {
     /**
-     *
+     * 
      * @type {Array<ExistingDataRequestClientWithLocation>}
      * @memberof ExistingDataRequestClientWithLocationList
      */
@@ -985,55 +985,55 @@ export interface ExistingDataRequestClientWithLocationList {
  */
 export interface Guest {
     /**
-     *
+     * 
      * @type {string}
      * @memberof Guest
      */
     firstName: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Guest
      */
     lastName: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Guest
      */
     dateOfBirth?: string;
     /**
-     *
+     * 
      * @type {Sex}
      * @memberof Guest
      */
     sex?: Sex;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Guest
      */
     email?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Guest
      */
     phone?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Guest
      */
     mobilePhone?: string;
     /**
-     *
+     * 
      * @type {Address}
      * @memberof Guest
      */
     address?: Address | null;
     /**
-     *
+     * 
      * @type {GuestAllOfAttendanceInformation}
      * @memberof Guest
      */
@@ -1046,13 +1046,13 @@ export interface Guest {
     identityChecked?: boolean;
 }
 /**
- *
+ * 
  * @export
  * @interface GuestAllOf
  */
 export interface GuestAllOf {
     /**
-     *
+     * 
      * @type {GuestAllOfAttendanceInformation}
      * @memberof GuestAllOf
      */
@@ -1065,7 +1065,7 @@ export interface GuestAllOf {
     identityChecked?: boolean;
 }
 /**
- *
+ * 
  * @export
  * @interface GuestAllOfAttendanceInformation
  */
@@ -1102,13 +1102,13 @@ export interface GuestAllOfAttendanceInformation {
  */
 export interface GuestList {
     /**
-     *
+     * 
      * @type {Array<Guest>}
      * @memberof GuestList
      */
     guests: Array<Guest>;
     /**
-     *
+     * 
      * @type {GuestListDataProvider}
      * @memberof GuestList
      */
@@ -1133,7 +1133,7 @@ export interface GuestList {
     endDate?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface GuestListDataProvider
  */
@@ -1145,14 +1145,14 @@ export interface GuestListDataProvider {
      */
     name: string;
     /**
-     *
+     * 
      * @type {Address}
      * @memberof GuestListDataProvider
      */
     address: Address;
 }
 /**
- *
+ * 
  * @export
  * @interface GuestsSubmission
  */
@@ -1170,20 +1170,20 @@ export interface GuestsSubmission {
      */
     keyReference: string;
     /**
-     *
+     * 
      * @type {GuestList}
      * @memberof GuestsSubmission
      */
     encryptedData: GuestList;
 }
 /**
- *
+ * 
  * @export
  * @interface GuestsSubmissionAllOf
  */
 export interface GuestsSubmissionAllOf {
     /**
-     *
+     * 
      * @type {GuestList}
      * @memberof GuestsSubmissionAllOf
      */
@@ -1233,7 +1233,7 @@ export interface LocationContact {
      */
     representative?: string;
     /**
-     *
+     * 
      * @type {LocationAddress}
      * @memberof LocationContact
      */
@@ -1351,7 +1351,7 @@ export interface LocationDataRequestAllOf {
     locationId: string;
 }
 /**
- *
+ * 
  * @export
  * @interface LocationInformation
  */
@@ -1381,26 +1381,26 @@ export interface LocationInformation {
      */
     publicKey?: string;
     /**
-     *
+     * 
      * @type {LocationContact}
      * @memberof LocationInformation
      */
     contact: LocationContact;
     /**
-     *
+     * 
      * @type {Array<LocationContext>}
      * @memberof LocationInformation
      */
     contexts?: Array<LocationContext>;
 }
 /**
- *
+ * 
  * @export
  * @interface LocationList
  */
 export interface LocationList {
     /**
-     *
+     * 
      * @type {Array<LocationInformation>}
      * @memberof LocationList
      */
@@ -1413,56 +1413,56 @@ export interface LocationList {
  */
 export interface Person {
     /**
-     *
+     * 
      * @type {string}
      * @memberof Person
      */
     firstName: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Person
      */
     lastName: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Person
      */
     dateOfBirth?: string;
     /**
-     *
+     * 
      * @type {Sex}
      * @memberof Person
      */
     sex?: Sex;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Person
      */
     email?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Person
      */
     phone?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Person
      */
     mobilePhone?: string;
     /**
-     *
+     * 
      * @type {Address}
      * @memberof Person
      */
     address?: Address | null;
 }
 /**
- *
+ * 
  * @export
  * @enum {string}
  */
@@ -1615,7 +1615,7 @@ export interface UserUpdate {
 export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         *
+         * 
          * @summary Detail view for index data request with the data submissions already received
          * @param {string} caseId The internal unique CaseId of a index case in format.
          * @param {*} [options] Override http request option.
@@ -1645,7 +1645,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
-
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1656,7 +1656,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             };
         },
         /**
-         *
+         * 
          * @summary Fetches index cases
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1682,7 +1682,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
-
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1693,9 +1693,9 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             };
         },
         /**
-         *
+         * 
          * @summary Creates a new tracing case for index case data
-         * @param {DataRequestCaseClient} dataRequestCaseClient
+         * @param {DataRequestCaseClient} dataRequestCaseClient 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1722,7 +1722,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
-
+    
             localVarHeaderParameter['Content-Type'] = 'application/json; charset=UTF-8';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -1736,7 +1736,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             };
         },
         /**
-         *
+         * 
          * @summary Fetches data requests
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1762,7 +1762,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
-
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1773,9 +1773,9 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             };
         },
         /**
-         *
+         * 
          * @summary Submits a new data request
-         * @param {DataRequestClient} dataRequestClient
+         * @param {DataRequestClient} dataRequestClient 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1802,7 +1802,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
-
+    
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -1816,7 +1816,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             };
         },
         /**
-         *
+         * 
          * @summary Detail view for Data Request with the data submissions already received
          * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
          * @param {*} [options] Override http request option.
@@ -1846,7 +1846,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
-
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1857,9 +1857,9 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             };
         },
         /**
-         *
+         * 
          * @summary Authenticates a user against IRIS client
-         * @param {Credentials} credentials
+         * @param {Credentials} credentials 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1886,7 +1886,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
-
+    
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -1900,7 +1900,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             };
         },
         /**
-         *
+         * 
          * @param {string} searchKeyword The search keyword
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1929,7 +1929,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
-
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2155,7 +2155,7 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = IrisClientFrontendApiAxiosParamCreator(configuration)
     return {
         /**
-         *
+         * 
          * @summary Detail view for index data request with the data submissions already received
          * @param {string} caseId The internal unique CaseId of a index case in format.
          * @param {*} [options] Override http request option.
@@ -2166,7 +2166,7 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         *
+         * 
          * @summary Fetches index cases
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2176,9 +2176,9 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         *
+         * 
          * @summary Creates a new tracing case for index case data
-         * @param {DataRequestCaseClient} dataRequestCaseClient
+         * @param {DataRequestCaseClient} dataRequestCaseClient 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2187,7 +2187,7 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         *
+         * 
          * @summary Fetches data requests
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2197,9 +2197,9 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         *
+         * 
          * @summary Submits a new data request
-         * @param {DataRequestClient} dataRequestClient
+         * @param {DataRequestClient} dataRequestClient 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2208,7 +2208,7 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         *
+         * 
          * @summary Detail view for Data Request with the data submissions already received
          * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
          * @param {*} [options] Override http request option.
@@ -2219,9 +2219,9 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         *
+         * 
          * @summary Authenticates a user against IRIS client
-         * @param {Credentials} credentials
+         * @param {Credentials} credentials 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2230,7 +2230,7 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         *
+         * 
          * @param {string} searchKeyword The search keyword
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2304,7 +2304,7 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
     const localVarFp = IrisClientFrontendApiFp(configuration)
     return {
         /**
-         *
+         * 
          * @summary Detail view for index data request with the data submissions already received
          * @param {string} caseId The internal unique CaseId of a index case in format.
          * @param {*} [options] Override http request option.
@@ -2314,7 +2314,7 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
             return localVarFp.dataRequestClientCasesCaseIdGet(caseId, options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @summary Fetches index cases
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2323,9 +2323,9 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
             return localVarFp.dataRequestClientCasesGet(options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @summary Creates a new tracing case for index case data
-         * @param {DataRequestCaseClient} dataRequestCaseClient
+         * @param {DataRequestCaseClient} dataRequestCaseClient 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2333,7 +2333,7 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
             return localVarFp.dataRequestClientCasesPost(dataRequestCaseClient, options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @summary Fetches data requests
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2342,9 +2342,9 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
             return localVarFp.dataRequestsClientLocationsGet(options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @summary Submits a new data request
-         * @param {DataRequestClient} dataRequestClient
+         * @param {DataRequestClient} dataRequestClient 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2352,7 +2352,7 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
             return localVarFp.dataRequestsClientLocationsPost(dataRequestClient, options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @summary Detail view for Data Request with the data submissions already received
          * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
          * @param {*} [options] Override http request option.
@@ -2362,9 +2362,9 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
             return localVarFp.getLocationDetails(code, options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @summary Authenticates a user against IRIS client
-         * @param {Credentials} credentials
+         * @param {Credentials} credentials 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2372,7 +2372,7 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
             return localVarFp.login(credentials, options).then((request) => request(axios, basePath));
         },
         /**
-         *
+         * 
          * @param {string} searchKeyword The search keyword
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2440,7 +2440,7 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
  */
 export class IrisClientFrontendApi extends BaseAPI {
     /**
-     *
+     * 
      * @summary Detail view for index data request with the data submissions already received
      * @param {string} caseId The internal unique CaseId of a index case in format.
      * @param {*} [options] Override http request option.
@@ -2452,7 +2452,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @summary Fetches index cases
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2463,9 +2463,9 @@ export class IrisClientFrontendApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @summary Creates a new tracing case for index case data
-     * @param {DataRequestCaseClient} dataRequestCaseClient
+     * @param {DataRequestCaseClient} dataRequestCaseClient 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof IrisClientFrontendApi
@@ -2475,7 +2475,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @summary Fetches data requests
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2486,9 +2486,9 @@ export class IrisClientFrontendApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @summary Submits a new data request
-     * @param {DataRequestClient} dataRequestClient
+     * @param {DataRequestClient} dataRequestClient 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof IrisClientFrontendApi
@@ -2498,7 +2498,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @summary Detail view for Data Request with the data submissions already received
      * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
      * @param {*} [options] Override http request option.
@@ -2510,9 +2510,9 @@ export class IrisClientFrontendApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @summary Authenticates a user against IRIS client
-     * @param {Credentials} credentials
+     * @param {Credentials} credentials 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof IrisClientFrontendApi
@@ -2522,7 +2522,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @param {string} searchKeyword The search keyword
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2591,3 +2591,5 @@ export class IrisClientFrontendApi extends BaseAPI {
         return IrisClientFrontendApiFp(this.configuration).usersPost(userInsert, options).then((request) => request(this.axios, this.basePath));
     }
 }
+
+

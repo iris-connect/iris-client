@@ -1,5 +1,5 @@
-import { DataRequestCaseDetails, IrisClientFrontendApiFactory } from "@/api";
-import { clientConfig } from "@/main";
+import { DataRequestCaseDetails } from "@/api";
+import client from "@/api-client";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
@@ -52,7 +52,6 @@ const indexTrackingList: IndexTrackingListModule = {
   },
   actions: {
     async fetchIndexTrackingList({ commit }) {
-      const client = IrisClientFrontendApiFactory(clientConfig);
       let indexTrackingList: Array<DataRequestCaseDetails> | null = null;
       commit("setIndexTrackingListLoading", true);
       try {
