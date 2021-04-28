@@ -142,7 +142,7 @@ export default class AdminUserEditView extends Vue {
   get validationRules(): Record<string, Array<unknown>> {
     return {
       defined: [rules.defined],
-      password: [rules.minLength(8)],
+      password: [rules.password],
     };
   }
 
