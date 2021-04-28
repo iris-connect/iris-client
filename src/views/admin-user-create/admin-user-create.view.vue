@@ -44,7 +44,7 @@
             <password-input-field
               v-model="form.model.password"
               label="Passwort"
-              :rules="validationRules.defined"
+              :rules="validationRules.password"
             />
           </v-col>
         </v-row>
@@ -125,6 +125,7 @@ export default class AdminUserCreateView extends Vue {
   get validationRules(): Record<string, Array<unknown>> {
     return {
       defined: [rules.defined],
+      password: [rules.defined, rules.minLength(8)],
     };
   }
 

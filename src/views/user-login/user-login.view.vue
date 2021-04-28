@@ -20,7 +20,7 @@
             <v-col cols="12">
               <v-text-field
                 v-model="formModel.password"
-                :rules="validationRules.password"
+                :rules="validationRules.defined"
                 label="Passwort"
                 type="password"
               ></v-text-field>
@@ -73,7 +73,6 @@ export default class UserLoginView extends Vue {
   get validationRules(): Record<string, Array<unknown>> {
     return {
       defined: [rules.defined],
-      password: [rules.defined, rules.minLength(8)],
     };
   }
 
