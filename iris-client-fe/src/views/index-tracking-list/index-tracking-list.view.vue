@@ -88,6 +88,8 @@ import { DataRequestCaseDetailsStatusEnum } from "@/api";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import IndexTrackingFormView from "../index-tracking-form/index-tracking-form.view.vue";
+import StatusColors from "@/constants/StatusColors";
+import StatusMessages from "@/constants/StatusMessages";
 
 function getFormattedDate(date?: string): string {
   return date
@@ -178,29 +180,11 @@ export default class IndexTrackingListView extends Vue {
   }
 
   getStatusColor(status: DataRequestCaseDetailsStatusEnum): string {
-    switch (status) {
-      case DataRequestCaseDetailsStatusEnum.DataRequested:
-        return "blue";
-      case DataRequestCaseDetailsStatusEnum.DataReceived:
-        return "red";
-      case DataRequestCaseDetailsStatusEnum.Closed:
-        return "green";
-      default:
-        return "gray"; // TODO
-    }
+    return StatusColors.getColor(status);
   }
 
   getStatusName(status: DataRequestCaseDetailsStatusEnum): string {
-    switch (status) {
-      case DataRequestCaseDetailsStatusEnum.DataRequested:
-        return "Angefragt";
-      case DataRequestCaseDetailsStatusEnum.DataReceived:
-        return "Geliefert";
-      case DataRequestCaseDetailsStatusEnum.Closed:
-        return "Abgeschlossen";
-      default:
-        return "Unbekannt"; // TODO find better name
-    }
+    return StatusMessages.getMessage(status);
   }
 }
 </script>

@@ -24,8 +24,10 @@
           </v-row>
         </v-col>
         <br />
-        <tabs>
-          <tab :title="'Kontakte (' + indexData.contactCount + ')'">
+        <v-tabs>
+          <v-tab>Kontakte ({{ indexData.contactCount }})</v-tab>
+          <v-tab>Events ({{ indexData.eventCount }})</v-tab>
+          <v-tab-item>
             <v-text-field
               v-model="tableDataContacts.search"
               append-icon="mdi-magnify"
@@ -77,8 +79,8 @@
                 </td>
               </template>
             </v-data-table>
-          </tab>
-          <tab :title="'Events (' + indexData.eventCount + ')'">
+          </v-tab-item>
+          <v-tab-item>
             <v-text-field
               v-model="tableDataEvents.search"
               append-icon="mdi-magnify"
@@ -126,8 +128,8 @@
                 </td>
               </template>
             </v-data-table>
-          </tab>
-        </tabs>
+          </v-tab-item>
+        </v-tabs>
         <v-row class="mt-2">
           <v-col cols="8">
             <v-btn class="ml-2 mr-2" color="white" @click="$router.back()">
@@ -136,8 +138,8 @@
           </v-col>
           <v-col cols="2">
             <span style="font-size: 1.25rem"
-              >{{ indexData.contactCount }} Kontakte /
-              {{ indexData.eventCount }} Events</span
+              >{{ tableDataContacts.select.length }} Kontakte /
+              {{ tableDataEvents.select.length }} Events</span
             >
           </v-col>
           <v-col cols="2">
@@ -161,9 +163,8 @@ import { Address, Sex } from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import Tab from "@/views/index-tracking-details/components/tab.vue";
-import Tabs from "@/views/index-tracking-details/components/tabs.vue";
 import DataExport from "@/utils/DataExport";
+import Genders from "@/constants/Genders";
 
 type IndexData = {
   extID: string;
@@ -205,8 +206,6 @@ function getFormattedAddress(address?: Address | null): string {
 @Component({
   components: {
     IndexTrackingDetailsView: IndexTrackingDetailsView,
-    Tab,
-    Tabs,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
@@ -359,16 +358,7 @@ export default class IndexTrackingDetailsView extends Vue {
   }
 
   getSexName(sex: Sex): string {
-    switch (sex) {
-      case Sex.Male:
-        return "m";
-      case Sex.Female:
-        return "w";
-      case Sex.Other:
-        return "d";
-      default:
-        return "Unbekannt";
-    }
+    return Genders.getName(sex);
   }
 
   handleExport(): void {
