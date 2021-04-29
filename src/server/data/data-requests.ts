@@ -71,6 +71,8 @@ export const dummyDataDetails: DataRequestDetails = {
   start: hoursAgo(5),
   end: hoursAgo(1),
   requestDetails: "leer",
+  lastUpdatedAt: hoursAgo(4),
+  requestedAt: hoursAgo(6),
   submissionData: {
     guests: [
       {
@@ -106,6 +108,7 @@ export const dummyDataDetails: DataRequestDetails = {
     startDate: hoursAgo(4),
     endDate: hoursAgo(3),
   },
+  locationInformation: dummyLocations[1],
 };
 
 export const getDummyDetailsWithStatus = (id: string): DataRequestDetails => {

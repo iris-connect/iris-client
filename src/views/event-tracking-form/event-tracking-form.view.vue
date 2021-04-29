@@ -30,7 +30,9 @@
           <template v-slot:activator="{ on, attrs }">
             <v-row>
               <v-col v-if="form.model.location">
-                <location-info :location="form.model.location" />
+                <event-tracking-form-location-info
+                  :location="form.model.location"
+                />
               </v-col>
               <v-col>
                 <v-input
@@ -131,7 +133,7 @@ import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
 import DateTimeInputField from "@/views/event-tracking-form/components/form/date-time-input-field.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
-import LocationInfo from "@/views/event-tracking-form/components/location-info.vue";
+import EventTrackingFormLocationInfo from "@/views/event-tracking-form/components/event-tracking-form-location-info.vue";
 import rules from "@/common/validation-rules";
 
 type EventTrackingForm = {
@@ -153,7 +155,7 @@ type EventTrackingFormQueryParameters = Partial<
 
 @Component({
   components: {
-    LocationInfo,
+    EventTrackingFormLocationInfo,
     DateTimeInputField,
     LocationSelectDialog,
     EventTrackingFormView: EventTrackingFormView,

@@ -5,20 +5,43 @@
         >Details für Ereignis ID: {{ eventData.extID }}</v-card-title
       >
       <v-card-text>
-        <v-col cols="8">
-          <v-row>
-            Name:
+        <v-row class="align-center">
+          <v-col cols="12" md="6">
+            <strong> Name: </strong>
             {{ eventData.name }}
-          </v-row>
-          <v-row>
-            Ort:
-            {{ eventData.address }}
-          </v-row>
-          <v-row>
-            Zeitraum:
+          </v-col>
+          <v-col cols="12" md="6">
+            <span class="d-inline-block mr-3">
+              <strong> Status: </strong>
+            </span>
+            <v-chip :color="getStatusColor(eventData.status)" dark>
+              {{ getStatusName(eventData.status) }}
+            </v-chip>
+          </v-col>
+        </v-row>
+        <v-row class="align-center">
+          <v-col>
+            <strong> Zeitraum: </strong>
             {{ eventData.startTime }} - {{ eventData.endTime }}
-          </v-row>
-        </v-col>
+          </v-col>
+        </v-row>
+        <event-tracking-details-location-info :location="eventData.location" />
+        <v-row>
+          <v-col cols="12" md="6">
+            <strong> Generiert: </strong>
+            {{ eventData.generatedTime }}
+          </v-col>
+          <v-col cols="12" md="6">
+            <strong> Letzte Änderung: </strong>
+            {{ eventData.lastChange }}
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <strong> Anfragedetails: </strong>
+            {{ eventData.additionalInformation }}
+          </v-col>
+        </v-row>
         <v-text-field
           v-model="tableData.search"
           append-icon="mdi-magnify"
@@ -97,7 +120,7 @@
 <script lang="ts">
 import {
   Address,
-  DataRequestDetails,
+  LocationInformation,
   DataRequestDetailsStatusEnum,
   Sex,
 } from "@/api";
@@ -105,16 +128,19 @@ import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import DataExport from "@/utils/DataExport";
+import EventTrackingDetailsLocationInfo from "@/views/event-tracking-details/components/event-tracking-details-location-info.vue";
+import dayjs from "@/utils/date";
 
 type EventData = {
   extID: string;
   name: string;
-  address: string;
   startTime: string;
   endTime: string;
-  gereratedTime: string;
-  status: string;
+  generatedTime: string;
+  status?: DataRequestDetailsStatusEnum;
   lastChange: string;
+  location?: LocationInformation;
+  additionalInformation: string;
 };
 
 type TableRow = {
@@ -131,18 +157,9 @@ type TableRow = {
   address: string;
 };
 
-function getFormattedAddressWithContact(
-  data: DataRequestDetails | null
-): string {
-  if (data) {
-    if (data.locationInformation) {
-      const contact = data.locationInformation.contact;
-      if (contact) {
-        return `${data.locationInformation.name}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
-      }
-      return data.locationInformation.name;
-    }
-    return "-";
+function getFormattedDate(date?: string): string {
+  if (date && dayjs(date).isValid()) {
+    return dayjs(date).format("LLL");
   }
   return "-";
 }
@@ -156,6 +173,7 @@ function getFormattedAddress(address?: Address | null): string {
 
 @Component({
   components: {
+    EventTrackingDetailsLocationInfo,
     EventTrackingDetailsView: EventTrackingDetailsView,
   },
   async beforeRouteEnter(_from, _to, next) {
@@ -232,7 +250,6 @@ export default class EventTrackingDetailsView extends Vue {
     return {
       extID: dataRequest?.externalRequestId || "-",
       name: dataRequest?.name || "-",
-      address: getFormattedAddressWithContact(dataRequest),
       startTime: dataRequest?.start
         ? `${new Date(dataRequest.start).toLocaleDateString(
             "de-DE"
@@ -243,9 +260,12 @@ export default class EventTrackingDetailsView extends Vue {
             dataRequest.end
           ).toLocaleTimeString("de-DE")}`
         : "-",
-      gereratedTime: "-", // TODO: what property to show here?
-      status: dataRequest?.status?.toString() || "-",
-      lastChange: "-", // TODO: what property to show here?
+      generatedTime: getFormattedDate(dataRequest?.requestedAt),
+      status: dataRequest?.status,
+      lastChange: getFormattedDate(dataRequest?.lastUpdatedAt),
+      location: dataRequest?.locationInformation,
+      additionalInformation:
+        dataRequest?.submissionData?.additionalInformation || "-",
     };
   }
 
@@ -259,6 +279,32 @@ export default class EventTrackingDetailsView extends Vue {
       store.state.eventTrackingDetails.eventTrackingDetails.status ===
       DataRequestDetailsStatusEnum.DataRequested
     );
+  }
+
+  getStatusName(status: DataRequestDetailsStatusEnum): string {
+    switch (status) {
+      case DataRequestDetailsStatusEnum.DataRequested:
+        return "Angefragt";
+      case DataRequestDetailsStatusEnum.DataReceived:
+        return "Geliefert";
+      case DataRequestDetailsStatusEnum.Closed:
+        return "Abgeschlossen";
+      default:
+        return "-";
+    }
+  }
+
+  getStatusColor(status: DataRequestDetailsStatusEnum): string {
+    switch (status) {
+      case DataRequestDetailsStatusEnum.DataRequested:
+        return "blue";
+      case DataRequestDetailsStatusEnum.DataReceived:
+        return "red";
+      case DataRequestDetailsStatusEnum.Closed:
+        return "green";
+      default:
+        return "gray"; // TODO
+    }
   }
 
   get guests(): TableRow[] {
