@@ -136,7 +136,7 @@ type EventData = {
   name: string;
   startTime: string;
   endTime: string;
-  gereratedTime: string;
+  generatedTime: string;
   status?: DataRequestDetailsStatusEnum;
   lastChange: string;
   location?: LocationInformation;
