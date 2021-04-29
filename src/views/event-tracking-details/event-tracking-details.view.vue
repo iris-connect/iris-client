@@ -27,6 +27,16 @@
         </v-row>
         <event-tracking-details-location-info :location="eventData.location" />
         <v-row>
+          <v-col cols="12" md="6">
+            <strong> Generiert: </strong>
+            {{ eventData.generatedTime }}
+          </v-col>
+          <v-col cols="12" md="6">
+            <strong> Letzte Änderung: </strong>
+            {{ eventData.lastChange }}
+          </v-col>
+        </v-row>
+        <v-row>
           <v-col>
             <strong> Anfragedetails: </strong>
             {{ eventData.additionalInformation }}
@@ -119,13 +129,16 @@ import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import DataExport from "@/utils/DataExport";
 import EventTrackingDetailsLocationInfo from "@/views/event-tracking-details/components/event-tracking-details-location-info.vue";
+import dayjs from "@/utils/date";
 
 type EventData = {
   extID: string;
   name: string;
   startTime: string;
   endTime: string;
+  gereratedTime: string;
   status?: DataRequestDetailsStatusEnum;
+  lastChange: string;
   location?: LocationInformation;
   additionalInformation: string;
 };
@@ -143,6 +156,13 @@ type TableRow = {
   mobilePhone: string;
   address: string;
 };
+
+function getFormattedDate(date?: string): string {
+  if (date && dayjs(date).isValid()) {
+    return dayjs(date).format("LLL");
+  }
+  return "-";
+}
 
 function getFormattedAddress(address?: Address | null): string {
   if (address) {
@@ -240,7 +260,9 @@ export default class EventTrackingDetailsView extends Vue {
             dataRequest.end
           ).toLocaleTimeString("de-DE")}`
         : "-",
+      generatedTime: getFormattedDate(dataRequest?.requestedAt),
       status: dataRequest?.status,
+      lastChange: getFormattedDate(dataRequest?.lastUpdatedAt),
       location: dataRequest?.locationInformation,
       additionalInformation:
         dataRequest?.submissionData?.additionalInformation || "-",

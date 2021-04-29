@@ -88,6 +88,7 @@ import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
 import { orderBy } from "lodash";
+import dayjs from "@/utils/date";
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
@@ -106,9 +107,10 @@ function getFormattedAddress(
 }
 
 function getFormattedDate(date?: string): string {
-  return date
-    ? `${new Date(date).toDateString()}, ${new Date(date).toLocaleTimeString()}`
-    : "-";
+  if (date && dayjs(date).isValid()) {
+    return dayjs(date).format("LLL");
+  }
+  return "-";
 }
 
 type TableRow = {
