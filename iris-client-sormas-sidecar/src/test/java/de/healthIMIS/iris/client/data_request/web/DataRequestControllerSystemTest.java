@@ -78,7 +78,7 @@ class DataRequestControllerSystemTest {
 	private void postNewDataRequest() throws Exception {
 		var dataRequest = Mockito.spy(new DataRequest("refId", "name", Instant.now(),
 				Instant.now(), "requestDetails",
-				"", new Location(), Sets.newSet(DataRequest.Feature.Guests)));
+				"", getTestLocation(), Sets.newSet(DataRequest.Feature.Guests)));
 
 		// set by JPA on live calls, needs to be mocked here
 		Mockito.doReturn(Instant.now()).when(dataRequest).getCreatedAt();
@@ -96,5 +96,22 @@ class DataRequestControllerSystemTest {
 						.content(TestData.DATA_REQUEST)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+	}
+	
+	private Location getTestLocation() {
+		Location location = new Location();
+		location.setId(new Location.LocationIdentifier());
+		location.setName("FC Darmstadt");
+		location.setContactAddressCity("Hintertupfingen");
+		location.setContactAddressStreet("Testallee 42");
+		location.setContactAddressZip("12345");
+		location.setContactEmail("tim@smartmeeting.online");
+		location.setContactOfficialName("Fussballclub Darmstadt");
+		location.setContactOwnerEmail("tim@smartmeeting.online");
+		location.setContactPhone("0151 47110815");
+		location.setContactRepresentative("Hans Mueller");
+		location.setLocationId("702830d0-7665-400e-821e-1cef4df4c792");
+		location.setProviderId("b220f816-d850-4260-b988-ef0ae171a498");		
+		return location;
 	}
 }
