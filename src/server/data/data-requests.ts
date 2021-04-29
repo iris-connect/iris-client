@@ -106,6 +106,7 @@ export const dummyDataDetails: DataRequestDetails = {
     startDate: hoursAgo(4),
     endDate: hoursAgo(3),
   },
+  locationInformation: dummyLocations[1],
 };
 
 export const getDummyDetailsWithStatus = (id: string): DataRequestDetails => {

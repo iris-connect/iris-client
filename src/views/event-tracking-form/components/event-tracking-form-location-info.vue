@@ -5,14 +5,14 @@
     </p>
     <v-row>
       <v-col>
-        {{ locationAddress.street }}<br />
-        {{ locationAddress.zip }}<br />
-        {{ locationAddress.city }}
+        <span class="d-block" v-for="key in addressKeys" :key="key">
+          {{ locationAddress[key] }}
+        </span>
       </v-col>
       <v-col>
-        {{ locationContact.representative }}<br />
-        {{ locationContact.email }}<br />
-        {{ locationContact.phone }}
+        <span class="d-block" v-for="key in contactKeys" :key="key">
+          {{ locationContact[key] }}
+        </span>
       </v-col>
     </v-row>
   </div>
@@ -39,5 +39,7 @@ export default class EventTrackingFormLocationInfo extends EventTrackingFormLoca
   get locationAddress(): LocationAddress | Record<string, unknown> {
     return this.location?.contact?.address ?? {};
   }
+  addressKeys = ["street", "zip", "city"];
+  contactKeys = ["representative", "email", "phone"];
 }
 </script>
