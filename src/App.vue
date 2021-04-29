@@ -68,6 +68,23 @@ export default Vue.extend({
     authenticated: {
       immediate: true,
       handler(newValue, oldValue) {
+        /**
+         * watch "authenticated" is triggered
+             if newValue === true
+                we fetch the user information and do nothing else
+             if newValue === false
+                this can be caused by one of the following cases:
+                   the token is invalid (401 or 403) -> session expires
+                     newValue === false, oldValue === true & authenticationError
+                       we store the intercepted route
+                       we redirect the user to the login screen
+                   the user clicks the logout button
+                     newValue === false, oldValue === true & no authenticationError
+                       we redirect the user to the login screen
+                   watch: immediate is triggered on page load even if there isn't any change
+                     newValue === false, oldValue !== true
+                       we do nothing
+         */
         if (newValue) {
           this.$store.dispatch("userLogin/fetchAuthenticatedUser");
         } else {
