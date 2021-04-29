@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
-class DataRequestControllerSystemTest {
+class DataRequestControllerIntegrationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -97,7 +97,7 @@ class DataRequestControllerSystemTest {
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 	}
-	
+
 	private Location getTestLocation() {
 		Location location = new Location();
 		location.setId(new Location.LocationIdentifier());
@@ -111,7 +111,7 @@ class DataRequestControllerSystemTest {
 		location.setContactPhone("0151 47110815");
 		location.setContactRepresentative("Hans Mueller");
 		location.setLocationId("702830d0-7665-400e-821e-1cef4df4c792");
-		location.setProviderId("b220f816-d850-4260-b988-ef0ae171a498");		
+		location.setProviderId("b220f816-d850-4260-b988-ef0ae171a498");
 		return location;
 	}
 }

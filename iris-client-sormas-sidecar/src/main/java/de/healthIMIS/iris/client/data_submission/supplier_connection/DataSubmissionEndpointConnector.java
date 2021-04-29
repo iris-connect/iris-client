@@ -6,7 +6,6 @@ import de.healthIMIS.iris.client.data_submission.DataSubmissionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,7 +28,6 @@ public class DataSubmissionEndpointConnector {
 
 	public FetchedDataSubmissions fetchDataSubmissions() {
 
-		System.out.println(properties.getServerAddress().getHostName()+":"+properties.getServerPort());
 		var response = rest.getForEntity(
 				"https://{address}:{port}/hd/data-submissions?departmentId={depId}",
 				DataSubmissionDto[].class, properties.getServerAddress().getHostName(), properties.getServerPort(),
