@@ -1,17 +1,25 @@
 <template>
   <div>
     <p>
-      <strong>{{ locationContact.officialName }}</strong>
+      <strong>{{ locationName }}</strong>
     </p>
     <v-row>
       <v-col>
-        <span class="d-block" v-for="key in addressKeys" :key="key">
-          {{ locationAddress[key] }}
+        <span
+          class="d-block"
+          v-for="(item, index) in locationAddress"
+          :key="index"
+        >
+          {{ item }}
         </span>
       </v-col>
       <v-col>
-        <span class="d-block" v-for="key in contactKeys" :key="key">
-          {{ locationContact[key] }}
+        <span
+          class="d-block"
+          v-for="(item, index) in locationContact"
+          :key="index"
+        >
+          {{ item }}
         </span>
       </v-col>
     </v-row>
@@ -33,13 +41,24 @@ const EventTrackingFormLocationInfoProps = Vue.extend({
 
 @Component
 export default class EventTrackingFormLocationInfo extends EventTrackingFormLocationInfoProps {
-  get locationContact(): LocationContact | Record<string, unknown> {
-    return this.location?.contact ?? {};
+  get locationName(): string {
+    return this.location?.contact?.officialName ?? "";
   }
-  get locationAddress(): LocationAddress | Record<string, unknown> {
-    return this.location?.contact?.address ?? {};
+  get locationContact(): Array<string> {
+    const contact: LocationContact = this.location?.contact;
+    return [
+      contact?.representative ?? "",
+      contact?.email ?? "",
+      contact?.phone ?? "",
+    ].filter((v) => !!v);
   }
-  addressKeys = ["street", "zip", "city"];
-  contactKeys = ["representative", "email", "phone"];
+  get locationAddress(): Array<string> {
+    const address: LocationAddress = this.location?.contact?.address;
+    return [
+      address?.street ?? "",
+      address?.zip ?? "",
+      address?.city ?? "",
+    ].filter((v) => v);
+  }
 }
 </script>

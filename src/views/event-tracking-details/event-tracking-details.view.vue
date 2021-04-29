@@ -125,9 +125,7 @@ type EventData = {
   name: string;
   startTime: string;
   endTime: string;
-  gereratedTime: string;
   status?: DataRequestDetailsStatusEnum;
-  lastChange: string;
   location?: LocationInformation;
   additionalInformation: string;
 };
@@ -242,9 +240,7 @@ export default class EventTrackingDetailsView extends Vue {
             dataRequest.end
           ).toLocaleTimeString("de-DE")}`
         : "-",
-      gereratedTime: "-", // TODO: what property to show here?
       status: dataRequest?.status,
-      lastChange: "-", // TODO: what property to show here?,
       location: dataRequest?.locationInformation,
       additionalInformation:
         dataRequest?.submissionData?.additionalInformation || "-",
