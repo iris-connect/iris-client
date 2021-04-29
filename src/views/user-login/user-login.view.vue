@@ -23,6 +23,7 @@
                 :rules="validationRules.defined"
                 label="Passwort"
                 type="password"
+                @keyup.native.enter="submit"
               ></v-text-field>
             </v-col>
           </v-row>

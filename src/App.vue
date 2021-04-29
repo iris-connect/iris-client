@@ -72,8 +72,10 @@ export default Vue.extend({
           this.$store.dispatch("userLogin/fetchAuthenticatedUser");
         } else {
           if (oldValue === true) {
-            // this is triggered if an existing session expires (caused by API response status codes 401 and 403).
-            setInterceptRoute(this.$router.currentRoute);
+            if (this.$store.state.userLogin.authenticationError) {
+              // this is triggered if an existing session expires (caused by API response status codes 401 and 403).
+              setInterceptRoute(this.$router.currentRoute);
+            }
             this.$router.push("/user/login");
           }
         }
