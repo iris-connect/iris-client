@@ -1,5 +1,5 @@
 import Vue from "vue";
-import VueRouter, { Location, RouteConfig } from "vue-router";
+import VueRouter, { Location, Route, RouteConfig } from "vue-router";
 import Home from "../views/home/Home.vue";
 import store from "@/store";
 
@@ -120,17 +120,22 @@ const router = new VueRouter({
   routes,
 });
 
+export const setInterceptRoute = (route: Route): void => {
+  const { name, path, hash, query, params } = route;
+  const location: Location = {
+    ...(name ? { name } : {}),
+    path,
+    hash,
+    query,
+    params,
+  };
+  store.commit("userLogin/setInterceptedRoute", location);
+};
+
 router.beforeEach((to, from, next) => {
   if (to.meta.auth !== false && !store.getters["userLogin/isAuthenticated"]) {
-    const { name, path, hash, query, params } = to;
-    const toLocation: Location = {
-      ...(name ? { name } : {}),
-      path,
-      hash,
-      query,
-      params,
-    };
-    store.commit("userLogin/setInterceptedRoute", toLocation);
+    // this is triggered if a user is not logged in and tries to deep link into the application
+    setInterceptRoute(to);
     return next("/user/login");
   }
   if (to.meta.admin === true && !store.getters["userLogin/isAdmin"]) {
