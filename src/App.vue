@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { routes } from "@/router";
+import { routes, setInterceptRoute } from "@/router";
 import UserMenu from "@/views/user-login/components/user-menu.vue";
 
 // @todo: move user functionality to a dedicated user-module?
@@ -67,11 +67,15 @@ export default Vue.extend({
   watch: {
     authenticated: {
       immediate: true,
-      handler(newValue) {
+      handler(newValue, oldValue) {
         if (newValue) {
           this.$store.dispatch("userLogin/fetchAuthenticatedUser");
         } else {
-          this.$router.push("/user/login");
+          if (oldValue === true) {
+            // this is triggered if an existing session expires (caused by API response status codes 401 and 403).
+            setInterceptRoute(this.$router.currentRoute);
+            this.$router.push("/user/login");
+          }
         }
       },
     },
