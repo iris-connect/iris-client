@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Deploy to Server
-        uses: easingthemes/ssh-deploy@v2.1.5
+        uses: easingthemes/ssh-deploy@v2.1.7
         env:
           SSH_PRIVATE_KEY: ${{ secrets.STAGING_PW }}
           ARGS: "-rltzO --delete"
