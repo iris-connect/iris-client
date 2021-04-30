@@ -147,7 +147,11 @@
               class="mr-2 float-right"
               color="primary"
               @click="handleExport"
-              :disabled="tableDataEvents.select.length <= 0"
+              :disabled="
+                tableDataEvents.select.length +
+                  tableDataContacts.select.length <=
+                0
+              "
             >
               Auswahl exportieren
             </v-btn>
