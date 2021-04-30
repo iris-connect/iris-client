@@ -131,7 +131,7 @@
           </v-tab-item>
         </v-tabs>
         <v-row class="mt-2">
-          <v-col cols="8">
+          <v-col cols="6">
             <v-btn class="ml-2 mr-2" color="white" @click="$router.back()">
               Zurück
             </v-btn>
@@ -142,19 +142,65 @@
               {{ tableDataEvents.select.length }} Events</span
             >
           </v-col>
-          <v-col cols="2">
-            <v-btn
-              class="mr-2 float-right"
-              color="primary"
-              @click="handleExport"
-              :disabled="
-                tableDataEvents.select.length +
-                  tableDataContacts.select.length <=
-                0
-              "
-            >
-              Auswahl exportieren
-            </v-btn>
+          <v-col cols="4">
+            <v-dialog max-width="600">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="mr-2 float-right"
+                  color="primary"
+                  v-bind="attrs"
+                  v-on="on"
+                  :disabled="
+                    tableDataEvents.select.length +
+                      tableDataContacts.select.length <=
+                    0
+                  "
+                  >Daten exportieren</v-btn
+                >
+              </template>
+              <template v-slot:default="dialog">
+                <v-card>
+                  <v-card-title> Daten exportieren </v-card-title>
+                  <v-divider></v-divider>
+                  <v-card-text>
+                    <v-row class="mt-2">
+                      <v-col cols="6">
+                        Kontakte ({{ tableDataContacts.select.length }})
+                      </v-col>
+                      <v-col cols="6">
+                        <v-btn
+                          class="mr-2 float-right"
+                          color="primary"
+                          @click="handleContactsExport"
+                          :disabled="tableDataContacts.select.length <= 0"
+                        >
+                          Download
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                    <v-row class="mt-2">
+                      <v-col cols="6">
+                        Events ({{ tableDataEvents.select.length }})
+                      </v-col>
+                      <v-col cols="6">
+                        <v-btn
+                          class="mr-2 float-right"
+                          color="primary"
+                          @click="handleEventsExport"
+                          :disabled="tableDataEvents.select.length <= 0"
+                        >
+                          Download
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                  <v-divider></v-divider>
+                  <v-card-actions class="justify-end">
+                    <v-btn text @click="dialog.value = false">Schliessen</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </template>
+            </v-dialog>
           </v-col>
         </v-row>
       </v-card-text>
@@ -365,13 +411,21 @@ export default class IndexTrackingDetailsView extends Vue {
     return Genders.getName(sex);
   }
 
-  handleExport(): void {
+  handleContactsExport(): void {
     DataExport.exportCsv(
       [
         ...this.tableDataContacts.headers,
         ...this.tableDataContacts.expandedHeaders,
       ],
       this.tableDataContacts.select,
+      [this.indexData.extID, Date.now()].join("_")
+    );
+  }
+
+  handleEventsExport(): void {
+    DataExport.exportCsv(
+      [...this.tableDataEvents.headers],
+      this.tableDataEvents.select,
       [this.indexData.extID, Date.now()].join("_")
     );
   }
