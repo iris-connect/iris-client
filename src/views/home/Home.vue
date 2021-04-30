@@ -90,13 +90,13 @@
       fixed
       bottom
       right
-      :color="black"
       :max-height="48"
       :max-width="48"
-      @click="goToFeedbackPage"
+      @click="showFeedbackDialog = true"
     >
-      <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
+      <v-icon :size="32"> mdi-chat-alert-outline</v-icon>
     </v-btn>
+    <FeedbackDialog v-model="showFeedbackDialog" />
   </div>
 </template>
 
@@ -112,6 +112,7 @@ import {
   ExistingDataRequestClientWithLocation,
 } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
+import FeedbackDialog from "@/components/feedback.view.vue";
 
 function getStatusColor(
   status?: ExistingDataRequestClientWithLocationStatusEnum
@@ -186,6 +187,7 @@ function getFormattedDate(date?: string): string {
     CasesPieChart,
     CasesBarChart,
     CounterWidget,
+    FeedbackDialog,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
@@ -203,8 +205,11 @@ export default class Home extends Vue {
       )
       .map(tableRowMapper);
   }
-  goToFeedbackPage() {
-    return "";
+
+  data() {
+    return {
+      showFeedbackDialog: false,
+    };
   }
 }
 </script>
@@ -213,6 +218,7 @@ export default class Home extends Vue {
 .home {
   > * {
     margin-top: 1em;
+
     &:last-child {
       margin-bottom: 1em;
     }
