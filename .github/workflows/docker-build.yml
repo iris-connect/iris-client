@@ -23,8 +23,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: iris-gateway/iris-client-frontend/iris-client-frontend
+          repository: iris-gateway/iris-client/iris-client-frontend
           tag_with_ref: true
+          path: ./iris-client-fe/
       - name: Push to docker.io
         uses: docker/build-push-action@v1
         with:
@@ -32,3 +33,4 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PW }}
           repository: inoeg/iris-client-frontend
           tag_with_ref: true
+          path: ./iris-client-fe/
