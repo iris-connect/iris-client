@@ -33,13 +33,12 @@ public class RestTemplateConfig {
 	private Resource trustStore;
 	@Value("${http.client.ssl.trust-store-password}")
 	private String trustStorePassword;
-	@Value("${http.client.proxy.host}")
+	@Value("${http.client.proxy.host:#{null}}")
 	private String httpProxyHost;
-	@Value("${http.client.proxy.port}")
+	@Value("${http.client.proxy.port:#{null}}")
 	private Integer httpProxyPort;
-	@Value("${http.client.proxy.scheme}")
-	private String httpProxyScheme = "http";
-
+	@Value("${http.client.proxy.scheme:http}")
+	private String httpProxyScheme;
 
 	@Bean(name = "iris-rest")
 	RestTemplate getIrisRestTemplate(RestTemplateBuilder builder) throws KeyManagementException,
