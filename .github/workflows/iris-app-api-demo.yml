@@ -17,11 +17,11 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-20.04
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-    
+
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
@@ -29,9 +29,9 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-    
+
       - name: build, package and publish the image
-        run: mvn -B spring-boot:build-image -am -pl iris-app-api-demo -Dspring-boot.build-image.publish=true -DskipTests
+        run: mvn -B spring-boot:build-image -am -pl iris-app-api-demo -Dspring-boot.build-image.publish=true
         env:
           DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
           DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}

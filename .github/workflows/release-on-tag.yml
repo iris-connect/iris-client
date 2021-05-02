@@ -30,7 +30,7 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
     
       - name: build Jars and Images
-        run: mvn -B clean package spring-boot:repackage spring-boot:build-image -DskipTests -Dspring-boot.build-image.publish=true -Dversion.tag=${{ steps.get_version.outputs.VERSION }}
+        run: mvn -B clean package spring-boot:repackage spring-boot:build-image -Dspring-boot.build-image.publish=true -Dversion.tag=${{ steps.get_version.outputs.VERSION }}
         env:
           GIT_TAG: ${{ steps.get_version.outputs.VERSION }}
           DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
