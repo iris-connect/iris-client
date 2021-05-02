@@ -25,6 +25,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>11</java.version>
 		<docker.image.prefix>inoeg</docker.image.prefix>
+		<version.tag>${project.version}</version.tag>
 		<vavr-version>0.10.3</vavr-version>
 	</properties>
 
@@ -173,7 +174,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>${project.artifactId}-${project.version}_${env.GIT_TAG}</finalName>
+		<finalName>${project.artifactId}-${version.tag}</finalName>
 		<plugins>
 			<plugin>
 				<!-- https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#build-image -->
@@ -190,10 +191,9 @@
 						</exclude>
 					</excludes>
 					<image>
-						<name>${docker.image.prefix}/${project.artifactId}:${project.version}</name>
+						<name>${docker.image.prefix}/${project.artifactId}:${version.tag}</name>
 						<env>
 							<!-- embeds environment variables into an image: https://github.com/paketo-buildpacks/environment-variables -->
-							<BPE_SPRING_PROFILES_ACTIVE>docker</BPE_SPRING_PROFILES_ACTIVE>
 							<!-- with GraalVM <BP_BOOT_NATIVE_IMAGE>true</BP_BOOT_NATIVE_IMAGE> -->
 						</env>
 					</image>
@@ -205,6 +205,14 @@
 								<email>user@example.com</email> -->
 						</publishRegistry>
 					</docker>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<configuration>
+					<offline>true</offline>
 				</configuration>
 			</plugin>
 
@@ -256,14 +264,6 @@
 						<include>**/*SystemTest.java</include>
 						<include>**/*SystemTests.java</include>
 					</includes>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>pl.project13.maven</groupId>
-				<artifactId>git-commit-id-plugin</artifactId>
-				<configuration>
-					<offline>true</offline>
 				</configuration>
 			</plugin>
 		</plugins>

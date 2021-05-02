@@ -1,0 +1,28 @@
+name: Build and Publish Docker Image for NGINX
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+      - develop
+    paths:
+      - infrastructure/iris-client/docker/nginx/**
+      - .github/workflows/nginx.yml
+
+jobs:
+  push_to_registry:
+    name: Push Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to docker.io
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PW }}
+          repository: inoeg/iris-client-nginx
+          tag_with_ref: true
+          path: ./infrastructure/iris-client/docker/nginx/

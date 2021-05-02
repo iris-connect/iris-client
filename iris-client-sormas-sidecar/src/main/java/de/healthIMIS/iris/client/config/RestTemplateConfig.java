@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
+import org.apache.http.HttpHost;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -32,6 +33,13 @@ public class RestTemplateConfig {
 	private Resource trustStore;
 	@Value("${http.client.ssl.trust-store-password}")
 	private String trustStorePassword;
+	@Value("${http.client.proxy.host}")
+	private String httpProxyHost;
+	@Value("${http.client.proxy.port}")
+	private Integer httpProxyPort;
+	@Value("${http.client.proxy.scheme}")
+	private String httpProxyScheme = "http";
+
 
 	@Bean(name = "iris-rest")
 	RestTemplate getIrisRestTemplate(RestTemplateBuilder builder) throws KeyManagementException,
@@ -42,21 +50,20 @@ public class RestTemplateConfig {
 				.loadKeyMaterial(keyStore.getURL(), keyStorePassword.toCharArray(), keyPassword.toCharArray()).build();
 
 		var socketFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
-		var httpClient = HttpClientBuilder.create().setSSLSocketFactory(socketFactory).build();
+		var httpClientBuilder = HttpClientBuilder.create().setSSLSocketFactory(socketFactory);
+
+		if (httpProxyHost != null && httpProxyPort != null) {
+			httpClientBuilder.setProxy(new HttpHost(httpProxyHost, httpProxyPort, httpProxyScheme));
+		}
 
 		var restTemplate = builder.build();
-		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClientBuilder.build()));
 
 		// if (log.isDebugEnabled()) {
 		// restTemplate.setInterceptors(List.of(new RequestResponseLoggingInterceptor()));
 		// }
 
 		return restTemplate;
-	}
-
-	@Bean(name = "search-rest")
-	RestTemplate getSearchRestTemplate(RestTemplateBuilder builder) {
-		return builder.build();
 	}
 
 	@Bean(name = "sormas-rest")

@@ -12,6 +12,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @AllArgsConstructor
 public class SearchClientProperties {
 
+		// ToDo: Change to server, port as in IRIS Public Server configuration
 	private String endpoint;
 
 }

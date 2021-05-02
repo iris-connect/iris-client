@@ -1,7 +1,7 @@
 ########################################################
 # Intended for local execution by developers and testers 
 # 
-# provides full IRIS environment together with a Postgresql database without SORMAS
+# provides IRIS client backend and frontend together with a Postgresql database without SORMAS
 # DB: look at docker-compose-postgres.yml
 # IRIS frontend: port = 28080
 ########################################################

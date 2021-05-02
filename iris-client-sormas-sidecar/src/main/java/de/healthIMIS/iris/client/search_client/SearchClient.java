@@ -17,7 +17,7 @@ public class SearchClient {
 
 	private SearchClientProperties config;
 
-	@Qualifier("search-rest")
+	@Qualifier("iris-rest")
 	private RestTemplate rest;
 
 	private final @NonNull ModelMapper mapper;
