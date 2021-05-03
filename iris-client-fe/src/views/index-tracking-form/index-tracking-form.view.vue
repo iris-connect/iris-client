@@ -34,11 +34,9 @@
               v-model="form.model.start"
               :date-props="{
                 label: 'Datum (Beginn)',
-                required: 'required',
               }"
               :time-props="{
                 label: 'Uhrzeit (Beginn)',
-                required: 'required',
               }"
               :rules="validationRules.start"
               required
@@ -53,6 +51,7 @@
               :time-props="{
                 label: 'Uhrzeit (Ende)',
               }"
+              :rules="validationRules.end"
             />
           </v-col>
         </v-row>
@@ -61,16 +60,11 @@
         }}</v-alert>
       </v-card-text>
       <v-card-actions>
-        <v-btn class="mt-4" color="secondary" plain @click="$router.back()">
+        <v-btn color="secondary" plain @click="$router.back()">
           Abbrechen
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn
-          :disabled="indexCreationOngoing"
-          class="mt-4"
-          color="primary"
-          @click="submit"
-        >
+        <v-btn :disabled="indexCreationOngoing" color="primary" @click="submit">
           Daten senden
         </v-btn>
       </v-card-actions>
@@ -85,7 +79,7 @@ import { DataRequestCaseClient, DataRequestCaseDetails } from "@/api";
 import router from "@/router";
 import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
-import DateTimeInputField from "@/views/event-tracking-form/components/form/date-time-input-field.vue";
+import DateTimeInputField from "@/components/form/date-time-input-field.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
 
 type IndexTrackingForm = {
@@ -136,6 +130,7 @@ export default class IndexTrackingFormView extends Vue {
       end: [
         (v: string): string | boolean => {
           if (!this.form.model.start) return true;
+          if (!this.form.model.end) return true;
           return (
             dayjs(v).isSameOrAfter(dayjs(this.form.model.start), "minute") ||
             "Bitte geben Sie einen Zeitpunkt an, der nach dem Beginn liegt"

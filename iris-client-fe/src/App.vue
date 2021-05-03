@@ -23,7 +23,11 @@
           </v-btn>
         </template>
         <v-spacer></v-spacer>
-        <user-menu @logout="logoutUser" />
+        <user-menu
+          :display-name="userDisplayName"
+          :is-admin="isAdmin"
+          @logout="logoutUser"
+        />
       </template>
     </v-app-bar>
 
@@ -37,9 +41,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { routes } from "@/router";
+import { routes, setInterceptRoute } from "@/router";
 import UserMenu from "@/views/user-login/components/user-menu.vue";
 
+// @todo: move user functionality to a dedicated user-module?
 export default Vue.extend({
   name: "App",
   components: {
@@ -52,11 +57,51 @@ export default Vue.extend({
     authenticated(): boolean {
       return this.$store.getters["userLogin/isAuthenticated"];
     },
+    userDisplayName(): string {
+      return this.$store.getters["userLogin/userDisplayName"];
+    },
+    isAdmin(): boolean {
+      return this.$store.getters["userLogin/isAdmin"];
+    },
+  },
+  watch: {
+    authenticated: {
+      immediate: true,
+      handler(newValue, oldValue) {
+        /**
+         * watch "authenticated" is triggered
+             if newValue === true
+                we fetch the user information and do nothing else
+             if newValue === false
+                this can be caused by one of the following cases:
+                   the token is invalid (401 or 403) -> session expires
+                     newValue === false, oldValue === true & authenticationError
+                       we store the intercepted route
+                       we redirect the user to the login screen
+                   the user clicks the logout button
+                     newValue === false, oldValue === true & no authenticationError
+                       we redirect the user to the login screen
+                   watch: immediate is triggered on page load even if there isn't any change
+                     newValue === false, oldValue !== true
+                       we do nothing
+         */
+        if (newValue) {
+          this.$store.dispatch("userLogin/fetchAuthenticatedUser");
+        } else {
+          if (oldValue === true) {
+            if (this.$store.state.userLogin.authenticationError) {
+              // this is triggered if an existing session expires (caused by API response status codes 401 and 403).
+              setInterceptRoute(this.$router.currentRoute);
+            }
+            this.$router.push("/user/login");
+          }
+        }
+      },
+    },
   },
   methods: {
     logoutUser() {
       this.$store.commit("userLogin/setSession");
-      this.$router.push("/user/login");
     },
   },
 });

@@ -3,13 +3,13 @@ import { Sex } from "@/api";
 const getName = function (sex: string): string {
   switch (sex) {
     case Sex.Male:
-      return "m";
+      return "männlich";
     case Sex.Female:
-      return "w";
+      return "weiblich";
     case Sex.Other:
-      return "d";
+      return "divers";
     default:
-      return "Unbekannt";
+      return "unbekannt";
   }
 };
 

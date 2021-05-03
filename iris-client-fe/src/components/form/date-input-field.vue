@@ -1,37 +1,36 @@
 <template>
   <v-menu
     v-if="picker"
-    ref="menu"
     v-model="active"
     :nudge-right="40"
-    :close-on-content-click="false"
     transition="scale-transition"
     offset-y
   >
     <template v-slot:activator="{ on, attrs }">
-      <div v-on="on" v-bind="attrs">
-        <v-text-field
-          class="picker-input-field"
-          v-model="model"
-          prepend-icon="mdi-clock"
-          readonly
-          v-bind="$attrs"
-        ></v-text-field>
+      <div class="d-flex align-center">
+        <div class="w-100" v-on="on" v-bind="attrs">
+          <v-text-field
+            class="picker-input-field"
+            v-model="model"
+            prepend-icon="mdi-calendar"
+            readonly
+            v-bind="$attrs"
+          ></v-text-field>
+        </div>
+        <v-icon v-if="model" @click="model = ''"> mdi-close </v-icon>
       </div>
     </template>
-    <v-time-picker
+    <v-date-picker
       locale="de-de"
       v-model="model"
-      ampm-in-title
-      format="24hr"
-      @change="active = false"
-      @click:minute="$refs.menu.save(model)"
-    ></v-time-picker>
+      no-title
+      @input="active = false"
+    ></v-date-picker>
   </v-menu>
   <v-text-field
     v-else
     v-model="model"
-    prepend-icon="mdi-clock"
+    prepend-icon="mdi-calendar"
     v-bind="$attrs"
     v-on="$listeners"
   ></v-text-field>
@@ -40,7 +39,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
-const TimeInputFieldProps = Vue.extend({
+const DateInputFieldProps = Vue.extend({
   props: {
     value: {
       type: String,
@@ -54,7 +53,7 @@ const TimeInputFieldProps = Vue.extend({
 });
 
 @Component
-export default class TimeInputField extends TimeInputFieldProps {
+export default class DateInputField extends DateInputFieldProps {
   active = false;
 
   get model(): string {
@@ -70,5 +69,8 @@ export default class TimeInputField extends TimeInputFieldProps {
 <style scoped>
 .picker-input-field {
   pointer-events: none;
+}
+.w-100 {
+  width: 100%;
 }
 </style>

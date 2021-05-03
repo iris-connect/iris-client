@@ -2,31 +2,42 @@
   <div>
     <v-card>
       <v-card-title
-        >Details für Ereignis ID: {{ indexData.extID }}</v-card-title
+        >Details für Indexfall ID: {{ indexData.extID }}</v-card-title
       >
       <v-card-text>
-        <v-col cols="8">
-          <v-row>
-            Index-Bezeichner:
+        <v-row class="align-center">
+          <v-col cols="12" md="6">
+            <strong> Index-Bezeichner: </strong>
             {{ indexData.name }}
-          </v-row>
-          <v-row>
-            Kommentar:
-            {{ indexData.comment }}
-          </v-row>
-          <v-row>
-            TAN:
-            {{ indexData.tan }}
-          </v-row>
-          <v-row>
-            Zeitraum:
-            {{ indexData.startTime }} - {{ indexData.endTime }}
-          </v-row>
-        </v-col>
-        <br />
-        <v-tabs>
+          </v-col>
+          <v-col cols="12" md="6">
+            <span class="d-inline-block mr-3">
+              <strong> Status: </strong>
+            </span>
+            <v-chip :color="getStatusColor(indexData.status)" dark>
+              {{ getStatusName(indexData.status) }}
+            </v-chip>
+          </v-col>
+        </v-row>
+        <v-row class="align-center mb-3">
+          <v-col>
+            <div>
+              <strong> Zeitraum: </strong>
+              {{ indexData.startTime }} - {{ indexData.endTime }}
+            </div>
+            <div>
+              <strong> Kommentar: </strong>
+              {{ indexData.comment }}
+            </div>
+            <div>
+              <strong> TAN: </strong>
+              {{ indexData.tan }}
+            </div>
+          </v-col>
+        </v-row>
+        <v-tabs @change="handleTabsChange">
           <v-tab>Kontakte ({{ indexData.contactCount }})</v-tab>
-          <v-tab>Events ({{ indexData.eventCount }})</v-tab>
+          <v-tab>Ereignisse ({{ indexData.eventCount }})</v-tab>
           <v-tab-item>
             <v-text-field
               v-model="tableDataContacts.search"
@@ -130,103 +141,51 @@
             </v-data-table>
           </v-tab-item>
         </v-tabs>
-        <v-row class="mt-2">
-          <v-col cols="6">
-            <v-btn class="ml-2 mr-2" color="white" @click="$router.back()">
-              Zurück
-            </v-btn>
-          </v-col>
-          <v-col cols="2">
-            <span style="font-size: 1.25rem"
-              >{{ tableDataContacts.select.length }} Kontakte /
-              {{ tableDataEvents.select.length }} Events</span
-            >
-          </v-col>
-          <v-col cols="4">
-            <v-dialog max-width="600">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  class="mr-2 float-right"
-                  color="primary"
-                  v-bind="attrs"
-                  v-on="on"
-                  :disabled="
-                    tableDataEvents.select.length +
-                      tableDataContacts.select.length <=
-                    0
-                  "
-                  >Daten exportieren</v-btn
-                >
-              </template>
-              <template v-slot:default="dialog">
-                <v-card>
-                  <v-card-title> Daten exportieren </v-card-title>
-                  <v-divider></v-divider>
-                  <v-card-text>
-                    <v-row class="mt-2">
-                      <v-col cols="6">
-                        Kontakte ({{ tableDataContacts.select.length }})
-                      </v-col>
-                      <v-col cols="6">
-                        <v-btn
-                          class="mr-2 float-right"
-                          color="primary"
-                          @click="handleContactsExport"
-                          :disabled="tableDataContacts.select.length <= 0"
-                        >
-                          Download
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                    <v-row class="mt-2">
-                      <v-col cols="6">
-                        Events ({{ tableDataEvents.select.length }})
-                      </v-col>
-                      <v-col cols="6">
-                        <v-btn
-                          class="mr-2 float-right"
-                          color="primary"
-                          @click="handleEventsExport"
-                          :disabled="tableDataEvents.select.length <= 0"
-                        >
-                          Download
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-                  <v-divider></v-divider>
-                  <v-card-actions class="justify-end">
-                    <v-btn text @click="dialog.value = false">Schliessen</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </template>
-            </v-dialog>
-          </v-col>
-        </v-row>
       </v-card-text>
+      <v-card-actions>
+        <v-btn color="white" @click="$router.back()"> Zurück </v-btn>
+        <v-spacer />
+        <v-btn
+          v-if="currentTab === 0"
+          color="primary"
+          :disabled="tableDataContacts.select.length <= 0"
+          @click="handleContactsExport"
+        >
+          Kontaktdaten exportieren
+        </v-btn>
+        <v-btn
+          v-if="currentTab === 1"
+          color="primary"
+          :disabled="tableDataEvents.select.length <= 0"
+          @click="handleEventsExport"
+        >
+          Ereignisdaten exportieren
+        </v-btn>
+      </v-card-actions>
     </v-card>
   </div>
 </template>
 <style></style>
 <script lang="ts">
-import { Address, Sex } from "@/api";
+import { Address, DataRequestCaseDetailsStatusEnum, Sex } from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import DataExport from "@/utils/DataExport";
 import Genders from "@/constants/Genders";
+import StatusMessages from "@/constants/StatusMessages";
+import StatusColors from "@/constants/StatusColors";
 
 type IndexData = {
   extID: string;
   name: string;
   startTime: string;
   endTime: string;
-  gereratedTime: string;
-  lastChange: string;
   comment: string;
   eventCount: number;
   contactCount: number;
   tan: string;
+  status: string;
 };
 
 type TableRowContact = {
@@ -360,12 +319,11 @@ export default class IndexTrackingDetailsView extends Vue {
             dataRequest.end
           ).toLocaleTimeString("de-DE")}`
         : "-",
-      gereratedTime: "-", // TODO: what property to show here?
-      lastChange: "-", // TODO: what property to show here?
       contactCount: contacts.length,
       eventCount: events.length,
       comment: dataRequest?.comment || "-",
       tan: "-", // TODO: TAN needed
+      status: dataRequest?.status || "",
     };
   }
 
@@ -405,6 +363,19 @@ export default class IndexTrackingDetailsView extends Vue {
         additionalInformation: event.additionalInformation || "-",
       };
     });
+  }
+
+  currentTab = 0;
+  handleTabsChange(index: number): void {
+    this.currentTab = index;
+  }
+
+  getStatusName(status: DataRequestCaseDetailsStatusEnum): string {
+    return StatusMessages.getMessage(status);
+  }
+
+  getStatusColor(status: DataRequestCaseDetailsStatusEnum): string {
+    return StatusColors.getColor(status);
   }
 
   getSexName(sex: Sex): string {

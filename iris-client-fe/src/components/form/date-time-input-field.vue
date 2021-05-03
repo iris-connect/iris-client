@@ -10,18 +10,18 @@
         <date-input-field
           v-model="date"
           @input="setDateTime"
-          v-bind="dateProps"
-          :rules="required ? dateTimeRules.date : []"
+          :rules="dateTimeRules.date"
           :error="error"
+          v-bind="dateProps"
         />
       </v-col>
       <v-col cols="12" sm="6">
         <time-input-field
           v-model="time"
-          @blur="setDateTime"
-          v-bind="timeProps"
-          :rules="required ? dateTimeRules.time : []"
+          @input="setDateTime"
+          :rules="dateTimeRules.time"
           :error="error"
+          v-bind="timeProps"
         />
       </v-col>
     </v-row>
@@ -30,8 +30,8 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import DateInputField from "@/views/event-tracking-form/components/form/date-input-field.vue";
-import TimeInputField from "@/views/event-tracking-form/components/form/time-input-field.vue";
+import DateInputField from "@/components/form/date-input-field.vue";
+import TimeInputField from "@/components/form/time-input-field.vue";
 import dayjs from "@/utils/date";
 
 const DateTimeInputFieldProps = Vue.extend({
@@ -64,15 +64,25 @@ const DateTimeInputFieldProps = Vue.extend({
 export default class DateTimeInputField extends DateTimeInputFieldProps {
   dateTimeRules = {
     date: [
-      (v: unknown): string | boolean => !!v || "Bitte geben Sie ein Datum an.",
-    ],
+      this.required
+        ? (v: unknown): string | boolean =>
+            !!v || "Bitte geben Sie ein Datum an"
+        : "",
+      (v: unknown): string | boolean =>
+        !v ||
+        (typeof v === "string" && /\d{4}-\d{2}-\d{2}/.test(v)) ||
+        "Bitte geben Sie ein Datum im Format YYYY-MM-DD an",
+    ].filter((v) => v),
     time: [
-      (v: string): string | boolean =>
-        !!v || "Bitte geben Sie eine Uhrzeit an.",
-      (v: string): string | boolean =>
-        /\d\d:\d\d/.test(v) ||
-        "Bitte geben Sie eine Uhrzeit im Format HH:mm an.",
-    ],
+      this.required
+        ? (v: unknown): string | boolean =>
+            !!v || "Bitte geben Sie eine Uhrzeit an"
+        : "",
+      (v: unknown): string | boolean =>
+        !v ||
+        (typeof v === "string" && /\d\d:\d\d/.test(v)) ||
+        "Bitte geben Sie eine Uhrzeit im Format HH:mm an",
+    ].filter((v) => v),
   };
 
   date = "";
