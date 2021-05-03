@@ -1,0 +1,37 @@
+########################################################
+# provides a Postgresql database
+# DB: login = postgres:postgres; hostname = postgres; port = 5432; volume = psqldata_iris
+########################################################
+version: '3'
+services:
+  postgres:
+    image: hzibraunschweig/sormas-postgres:${SORMAS_DOCKER_VERSION:-latest}
+    command: -c 'config_file=/etc/postgresql/postgresql.conf'
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      POSTGRES_MULTIPLE_DATABASES:
+
+      SORMAS_POSTGRES_PASSWORD:
+      SORMAS_POSTGRES_USER:
+      DB_NAME:
+      DB_NAME_AUDIT:
+      TZ:
+    volumes:
+      - psqldata_iris:/var/lib/postgresql/data
+      - ./docker/pg-init-scripts:/docker-entrypoint-initdb.d
+# do not work on Strato machine
+#    mem_limit: ${DB_MEM} 
+#    mem_reservation: ${DB_MEM_RESERVED}
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "psql", "-U", "${SORMAS_POSTGRES_USER}", "-c", "SELECT 1;", "${DB_NAME}" ]
+      interval: 15s
+      timeout: 3s
+      retries: 4
+      start_period: 30s
+
+volumes:
+  psqldata_iris: 

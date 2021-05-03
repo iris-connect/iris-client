@@ -1,0 +1,51 @@
+name: Build and releace runnable Jars for IRIS apps
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+    
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    
+      - name: build Jars and Images
+        run: mvn -B clean package spring-boot:repackage spring-boot:build-image -Dspring-boot.build-image.publish=true -Dversion.tag=${{ steps.get_version.outputs.VERSION }}
+        env:
+          GIT_TAG: ${{ steps.get_version.outputs.VERSION }}
+          DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+          DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
+
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r deployment-${{ steps.get_version.outputs.VERSION }}.zip infrastructure
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          files: |
+            **/target/*${{ steps.get_version.outputs.VERSION }}.jar
+            **/deployment-${{ steps.get_version.outputs.VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,80 @@
+########################################################
+# Intended for deployments at the health departments
+# 
+# Provides IRIS client BFF and frontend together with a Postgresql database and NGINX
+# IRIS frontend over NGINX: port = 443
+########################################################
+version: '3.4'
+services:
+
+  # Postgres Database
+  postgres:
+    image: postgres:9.6-alpine
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+    volumes:
+      - psqldata_iris:/var/lib/postgresql/data
+
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "psql", "-U", "${POSTGRES_USER}", "-c", "SELECT 1;", "${POSTGRES_USER}" ]
+      interval: 15s
+      timeout: 3s
+      retries: 4
+      start_period: 30s
+
+  # IRIS Client backend for frontend
+  iris-client:
+    image: inoeg/iris-client-sormas-sidecar:v0.0.2
+    expose:
+      - 8092
+    ports: 
+      - 8092:8092
+    environment: 
+      IRIS_SERVER_ADDRESS:
+      IRIS_SERVER_PORT:
+      SECURITY_JWT_JWT_SHARED_SECRET:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_USER}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: prod
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # IRIS Client Frontend
+  iris-frontend:
+    image: inoeg/iris-client-frontend:v0.1.0
+    expose:
+      - 28080
+    environment: 
+      SORMAS_SIDECAR_BASE_URL: /api
+    ports: 
+      - 28080:28080
+    env_file:
+      - .env
+    restart: unless-stopped
+    depends_on:
+      - iris-client
+
+  # Reverse Proxy
+  nginx:
+    image: inoeg/iris-client-nginx:v0.0.2
+    ports:
+      - 443:443
+    environment: 
+      IRIS_CLIENT_DOMAIN:
+      IRIS_CLIENT_DOMAIN_CERT:
+      IRIS_CLIENT_DOMAIN_CERT_KEY:
+    volumes:
+      - ./conf:/etc/iris
+    depends_on:
+      - iris-client
+      - iris-frontend
+  
+volumes:
+  psqldata_iris: 

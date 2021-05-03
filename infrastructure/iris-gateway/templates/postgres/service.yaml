@@ -1,0 +1,16 @@
+{{- if not (eq .Values.environment "production") }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "iris-gateway.postgres" . }}
+  labels:
+    {{- include "iris-gateway.postgres-labels" . | nindent 4 }}
+spec:
+  ports:
+    - port: 5432
+      targetPort: tcp
+      protocol: TCP
+      name: tcp
+  selector:
+    {{- include "iris-gateway.postgres-labels" . | nindent 4 }}
+  {{- end }}

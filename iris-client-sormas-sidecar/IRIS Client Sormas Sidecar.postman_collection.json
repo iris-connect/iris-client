@@ -1,0 +1,223 @@
+{
+	"info": {
+		"_postman_id": "5b2340b4-5387-48c3-9b6e-511ffa5a52fc",
+		"name": "IRIS Client Sormas Sidecar",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"bearer\", pm.response.headers.get('Authorization'));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"admin\",\n    \"password\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8092/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8092",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get data request list",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{bearer}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8092/data-requests-client/locations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8092",
+					"path": [
+						"data-requests-client",
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create data request",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{bearer}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"locationId\": \"7dd80f34-f9cd-456a-9b60-357d0a3485c7\",\n    \"providerId\": \"00000-00000-00000-00000\",\n    \"name\": \"string\",\n    \"externalRequestId\": \"string\",\n    \"start\": \"2021-03-29T23:00:10.113Z\",\n    \"end\": \"2021-03-29T23:00:34.113Z\",\n    \"requestDetails\": \"string\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8092/data-requests-client/locations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8092",
+					"path": [
+						"data-requests-client",
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get data request by code",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{bearer}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8092/data-requests-client/locations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8092",
+					"path": [
+						"data-requests-client",
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search by keyword",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{bearer}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"locations\": [\n        {\n            \"id\": \"0d4b783a-59fa-4687-9bf8-d1f7e15d040d\",\n            \"name\": \"FC Darmstadt\",\n            \"publicKey\": \"FC Darmstadt\",\n            \"contact\": {\n                \"officialName\": \"Fussballclub Darmstadt\",\n                \"representative\": \"Hans Mueller\",\n                \"address\": {\n                    \"street\": \"Testallee 42\",\n                    \"city\": \"Hintertupfingen\",\n                    \"zip\": \"12345\"\n                },\n                \"ownerEmail\": \"tim@smartmeeting.online\",\n                \"email\": \"tim@smartmeeting.online\",\n                \"phone\": \"0151 47110815\"\n            },\n            \"contexts\": [\n                {\n                    \"id\": \"702830d0-7665-400e-821e-1cef4df4c792\",\n                    \"name\": \"Ausssenbereich\"\n                },\n                {\n                    \"id\": \"b220f816-d850-4260-b988-ef0ae171a498\",\n                    \"name\": \"Innenbereich\"\n                }\n            ]\n        },\n        {\n            \"id\": \"7dd80f34-f9cd-456a-9b60-357d0a3485c7\",\n            \"name\": \"Da Michele\",\n            \"publicKey\": \"Da Michele\",\n            \"contact\": {\n                \"officialName\": \"SmartMeeting GmbH\",\n                \"representative\": \"Tim Lusa\",\n                \"address\": {\n                    \"street\": \"Europaplatz 5\",\n                    \"city\": \"Darmstadt\",\n                    \"zip\": \"64293\"\n                },\n                \"ownerEmail\": \"tim@smartmeeting.online\",\n                \"email\": \"tim@smartmeeting.online\",\n                \"phone\": \"0151 47110815\"\n            },\n            \"contexts\": [\n                {\n                    \"id\": \"862b483c-35b8-4de7-a6af-61a30f355b9b\",\n                    \"name\": \"Tisch 1\"\n                }\n            ]\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8092/search/Darmstadt",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8092",
+					"path": [
+						"search",
+						"Darmstadt"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "bearer",
+			"value": ""
+		}
+	]
+}
