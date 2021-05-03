@@ -1,4 +1,9 @@
-import { DataRequestCaseData, DataRequestCaseDataStatusEnum, Sex } from "@/api";
+import {
+  ContactCategory,
+  DataRequestCaseData,
+  DataRequestCaseDataStatusEnum,
+  Sex,
+} from "@/api";
 
 function daysAgo(days = 0, date = new Date().toISOString()) {
   // could be that
@@ -58,6 +63,23 @@ export const dummyDataCaseDetails: DataRequestCaseData = {
           email: "flori.an@buer.ger",
           phone: "012345 112233",
           mobilePhone: "0114477 774411",
+          contactInformation: {
+            firstContactDate: hoursAgo(15),
+            lastContactDate: hoursAgo(4),
+            contactCategory: ContactCategory.HighRisk,
+            basicConditions: "Enger Kontakt, ohne Maske",
+          },
+          workPlace: {
+            name: "Musterfirma",
+            phone: "012345 112233",
+            pointOfContact: "Arbeitsplatz",
+            address: {
+              city: "Musterstadt",
+              street: "Teststraße",
+              houseNumber: "23",
+              zipCode: "12345",
+            },
+          },
         },
         {
           firstName: "Sara",

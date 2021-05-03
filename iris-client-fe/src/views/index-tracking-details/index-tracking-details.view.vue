@@ -39,6 +39,12 @@
           <v-tab>Kontakte ({{ indexData.contactCount }})</v-tab>
           <v-tab>Ereignisse ({{ indexData.eventCount }})</v-tab>
           <v-tab-item>
+            <v-row class="mt-3">
+              <v-col>
+                <strong> Zeitraum: </strong>
+                {{ contactsDate }}
+              </v-col>
+            </v-row>
             <v-text-field
               v-model="tableDataContacts.search"
               append-icon="mdi-magnify"
@@ -69,7 +75,7 @@
                         expandedHeader, ehIndex
                       ) in tableDataContacts.expandedHeaders"
                     >
-                      <v-col :key="ehIndex" cols="12" sm="4" md="2">
+                      <v-col :key="ehIndex" cols="12" sm="6">
                         <v-list-item two-line dense>
                           <v-list-item-content>
                             <v-list-item-title>
@@ -92,6 +98,12 @@
             </v-data-table>
           </v-tab-item>
           <v-tab-item>
+            <v-row class="mt-3">
+              <v-col>
+                <strong> Zeitraum: </strong>
+                {{ eventsDate }}
+              </v-col>
+            </v-row>
             <v-text-field
               v-model="tableDataEvents.search"
               append-icon="mdi-magnify"
@@ -118,7 +130,7 @@
                         expandedHeader, ehIndex
                       ) in tableDataEvents.expandedHeaders"
                     >
-                      <v-col :key="ehIndex" cols="12" sm="4" md="2">
+                      <v-col :key="ehIndex" cols="12" sm="6">
                         <v-list-item two-line dense>
                           <v-list-item-content>
                             <v-list-item-title>
@@ -167,7 +179,12 @@
 </template>
 <style></style>
 <script lang="ts">
-import { Address, DataRequestCaseDetailsStatusEnum, Sex } from "@/api";
+import {
+  Address,
+  ContactPersonAllOfWorkPlace,
+  DataRequestCaseDetailsStatusEnum,
+  Sex,
+} from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
@@ -175,6 +192,8 @@ import DataExport from "@/utils/DataExport";
 import Genders from "@/constants/Genders";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
+import dayjs from "@/utils/date";
+import ContactCategories from "@/constants/ContactCategories";
 
 type IndexData = {
   extID: string;
@@ -192,10 +211,15 @@ type TableRowContact = {
   lastName: string;
   firstName: string;
   dateOfBirth: string;
+  firstContactDate: string;
+  lastContactDate: string;
+  contactCategory: string;
   sex: string;
   email: string;
   phone: string;
   mobilePhone: string;
+  workPlace: string;
+  basicConditions: string;
 };
 
 type TableRowEvent = {
@@ -204,6 +228,26 @@ type TableRowEvent = {
   address: string;
   additionalInformation: string;
 };
+
+function getFormattedDate(date?: string): string {
+  if (date && dayjs(date).isValid()) {
+    return dayjs(date).format("LLL");
+  }
+  return "-";
+}
+
+function getFormattedWorkPlace(
+  workPlace?: ContactPersonAllOfWorkPlace
+): string {
+  return [
+    [workPlace?.name, workPlace?.phone, workPlace?.pointOfContact]
+      .filter((v) => v)
+      .join(", "),
+    getFormattedAddress(workPlace?.address),
+  ]
+    .filter((v) => v)
+    .join(", ");
+}
 
 function getFormattedAddress(address?: Address | null): string {
   if (address) {
@@ -248,6 +292,18 @@ export default class IndexTrackingDetailsView extends Vue {
         text: "Geburtsdatum",
         value: "dateOfBirth",
       },
+      {
+        text: "Erster Kontakt am",
+        value: "firstContactDate",
+      },
+      {
+        text: "Letzter Kontakt am",
+        value: "lastContactDate",
+      },
+      {
+        text: "Kontaktkathegorie",
+        value: "contactCategory",
+      },
       { text: "", value: "data-table-expand" },
     ],
     expandedHeaders: [
@@ -270,6 +326,14 @@ export default class IndexTrackingDetailsView extends Vue {
       {
         text: "Adresse",
         value: "address",
+      },
+      {
+        text: "Arbeitsplatz",
+        value: "workPlace",
+      },
+      {
+        text: "Kontaktsituation",
+        value: "basicConditions",
       },
     ],
   };
@@ -309,16 +373,8 @@ export default class IndexTrackingDetailsView extends Vue {
     return {
       extID: dataRequest?.externalCaseId || "-",
       name: dataRequest?.name || "-",
-      startTime: dataRequest?.start
-        ? `${new Date(dataRequest.start).toLocaleDateString(
-            "de-DE"
-          )}, ${new Date(dataRequest.start).toLocaleTimeString("de-DE")}`
-        : "-",
-      endTime: dataRequest?.end
-        ? `${new Date(dataRequest.end).toLocaleDateString("de-DE")}, ${new Date(
-            dataRequest.end
-          ).toLocaleTimeString("de-DE")}`
-        : "-",
+      startTime: getFormattedDate(dataRequest?.start),
+      endTime: getFormattedDate(dataRequest?.end),
       contactCount: contacts.length,
       eventCount: events.length,
       comment: dataRequest?.comment || "-",
@@ -331,6 +387,16 @@ export default class IndexTrackingDetailsView extends Vue {
     return store.state.indexTrackingDetails.indexTrackingDetailsLoading;
   }
 
+  get contactsDate(): string {
+    const contacts =
+      store.state.indexTrackingDetails.indexTrackingDetails?.submissionData
+        ?.contacts;
+    return [
+      getFormattedDate(contacts?.startDate),
+      getFormattedDate(contacts?.endDate),
+    ].join(" - ");
+  }
+
   get contacts(): TableRowContact[] {
     const contacts =
       store.state.indexTrackingDetails.indexTrackingDetails?.submissionData
@@ -341,13 +407,34 @@ export default class IndexTrackingDetailsView extends Vue {
         lastName: contact.lastName || "-",
         firstName: contact.firstName || "-",
         dateOfBirth: contact.dateOfBirth || "-",
+        firstContactDate: getFormattedDate(
+          contact.contactInformation?.firstContactDate
+        ),
+        lastContactDate: getFormattedDate(
+          contact.contactInformation?.lastContactDate
+        ),
+        contactCategory: ContactCategories.getCategory(
+          contact.contactInformation?.contactCategory
+        ),
         sex: contact.sex ? this.getSexName(contact.sex) : "-",
         email: contact.email || "-",
         phone: contact.phone || "-",
         mobilePhone: contact.mobilePhone || "-",
         address: getFormattedAddress(contact.address) || "-",
+        workPlace: getFormattedWorkPlace(contact.workPlace) || "-",
+        basicConditions: contact.contactInformation?.basicConditions || "-",
       };
     });
+  }
+
+  get eventsDate(): string {
+    const events =
+      store.state.indexTrackingDetails.indexTrackingDetails?.submissionData
+        ?.events;
+    return [
+      getFormattedDate(events?.startDate),
+      getFormattedDate(events?.endDate),
+    ].join(" - ");
   }
 
   get events(): TableRowEvent[] {
