@@ -10,7 +10,7 @@
           <v-card-subtitle style="text-align: center">
             <span class="subtitle-1">Wir freuen uns über ihr Feedback.</span>
           </v-card-subtitle>
-          <hr color="primary" />
+          <v-divider class="theme--light primary" />
         </div>
         <v-container class="mt-1 px-sm-10">
           <v-autocomplete
@@ -44,7 +44,7 @@
             maxlength="80"
           ></v-text-field>
         </v-container>
-        <hr color="primary" />
+        <v-divider class="theme--light primary" />
         <v-container>
           <v-row>
             <v-col class="d-flex justify-center">
