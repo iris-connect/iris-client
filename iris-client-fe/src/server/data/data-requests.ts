@@ -60,6 +60,18 @@ export const dummyDataRequests: ExistingDataRequestClientWithLocationList = {
       lastUpdatedAt: hoursAgo(7),
       requestedAt: hoursAgo(9),
     },
+    {
+      externalRequestId: "bowling-457",
+      start: hoursAgo(3),
+      end: hoursAgo(1),
+      code: "BOWL457",
+      locationInformation: dummyLocations[2],
+      name: "Fall 91247",
+      requestDetails: "Tisch 9",
+      status: ExistingDataRequestClientWithLocationStatusEnum.Aborted,
+      lastUpdatedAt: hoursAgo(1),
+      requestedAt: hoursAgo(4),
+    },
   ],
 };
 

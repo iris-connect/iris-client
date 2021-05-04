@@ -32,6 +32,12 @@
             {{ getStatusName(statusEnum.Closed) }}
           </v-btn>
           <v-btn
+            @click="filterStatus(statusEnum.Aborted)"
+            style="opacity: 100%; background-color: white"
+          >
+            {{ getStatusName(statusEnum.Aborted) }}
+          </v-btn>
+          <v-btn
             @click="filterStatus(null)"
             style="opacity: 100%; background-color: white"
           >
@@ -142,7 +148,7 @@ type TableRow = {
 export default class EventTrackingListView extends Vue {
   statusFilter: ExistingDataRequestClientWithLocationStatusEnum | null = null;
   statusEnum = ExistingDataRequestClientWithLocationStatusEnum;
-  statusButtonSelected = 3;
+  statusButtonSelected = 4;
   filterStatus(
     target: ExistingDataRequestClientWithLocationStatusEnum | null
   ): void {

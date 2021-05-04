@@ -962,7 +962,8 @@ export interface ExistingDataRequestClientWithLocation {
 export enum ExistingDataRequestClientWithLocationStatusEnum {
     DataRequested = 'DATA_REQUESTED',
     DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
+    Closed = 'CLOSED',
+    Aborted = 'ABORTED'
 }
 
 /**
