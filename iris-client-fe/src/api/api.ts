@@ -809,7 +809,8 @@ export interface DataRequestDetails {
 export enum DataRequestDetailsStatusEnum {
     DataRequested = 'DATA_REQUESTED',
     DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
+    Closed = 'CLOSED',
+    Aborted = 'ABORTED'
 }
 
 /**

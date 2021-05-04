@@ -76,7 +76,7 @@ export const dummyDataRequests: ExistingDataRequestClientWithLocationList = {
 };
 
 export const dummyDataDetails: DataRequestDetails = {
-  status: DataRequestDetailsStatusEnum.DataRequested,
+  status: DataRequestDetailsStatusEnum.Aborted,
   code: "ABCDE",
   name: "TestLokalität",
   externalRequestId: "12345",
