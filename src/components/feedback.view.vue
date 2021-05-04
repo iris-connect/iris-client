@@ -1,116 +1,73 @@
 <template>
-  <v-row>
-    <v-dialog style="overflow-y: hidden" v-model="show" max-width="40%">
-      <v-card>
-        <v-card-title class="justify-center">
-          <span class="headline">FEEDBACK BOGEN</span>
-        </v-card-title>
+  <div>
+    <v-dialog v-model="show" max-width="40%">
+      <v-card style="height: fit-content">
+        <div>
+          <v-card-title class="justify-center">
+            <span class="headline">FEEDBACK BOGEN</span>
+          </v-card-title>
 
-        <v-card-subtitle style="text-align: center">
-          <span class="headline">Wir freuen uns über ihr Feedback.</span>
-        </v-card-subtitle>
+          <v-card-subtitle style="text-align: center">
+            <span class="subtitle-1">Wir freuen uns über ihr Feedback.</span>
+          </v-card-subtitle>
+          <hr color="primary" />
+        </div>
+        <v-container class="mt-1 px-sm-10">
+          <v-autocomplete
+            :items="['Verbesserungsvorschlag', 'Probleme']"
+            label="Katergorie auswählen"
+            multiple
+          ></v-autocomplete>
 
-        <v-container>
-          <v-col class="justify-content:center" cols="auto">
-            <v-autocomplete
-              :items="[
-                'Skiing',
-                'Ice hockey',
-                'Soccer',
-                'Basketball',
-                'Hockey',
-                'Reading',
-                'Writing',
-                'Coding',
-                'Basejump',
-              ]"
-              label="Katergorie auswählen"
-              multiple
-              outlined
-            ></v-autocomplete>
+          <v-text-field label="Titel*" required maxlength="100"></v-text-field>
 
-            <v-text-field
-              label="Titel*"
-              outlined
-              required
-              counter
-              maxlength="100"
-            ></v-text-field>
+          <v-textarea
+            class="justify-center"
+            label="Ihr Platz für Feedback"
+            no-resize
+            outlined
+            counter
+            maxlength="1000"
+          ></v-textarea>
 
-            <v-textarea
-              class="justify-center"
-              label="Ihr Platz für Feedback"
-              outlined
-              max-height="200px"
-              no-resize
-              counter
-              maxlength="1000"
-            ></v-textarea>
+          <v-text-field
+            class="justify-center"
+            label="Organisation*"
+            required
+            maxlength="50"
+          ></v-text-field>
 
-            <v-text-field
-              class="justify-center"
-              label="Organisation*"
-              required
-              outlined
-              maxlength="50"
-            ></v-text-field>
-
-            <v-row>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  class="justify-center"
-                  label="First name*"
-                  required
-                  outlined
-                  maxlength="25"
-                ></v-text-field>
-              </v-col>
-
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  class="justify-center"
-                  label="Last name*"
-                  outlined
-                  maxlength="25"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-
-            <v-text-field
-              class="justify-center"
-              label="E-Mail*"
-              required
-              outlined
-              maxlength="80"
-            ></v-text-field>
-
-            <v-file-input outlined accept="image/*" label="File input">
-            </v-file-input>
-          </v-col>
+          <v-text-field
+            class="justify-center"
+            label="E-Mail*"
+            required
+            maxlength="80"
+          ></v-text-field>
         </v-container>
-
-        <v-row>
-          <v-col class="d-flex justify-center">
-            <v-btn
-              color="blue darken-1"
-              text
-              outlined
-              @click="showCancelDialog = true"
-            >
-              Abbrechen
-            </v-btn>
-          </v-col>
-          <v-col class="d-flex justify-center">
-            <v-btn
-              color="green accent-2"
-              outlined
-              text
-              @click="showConfirmDialog = true"
-            >
-              Absenden
-            </v-btn>
-          </v-col>
-        </v-row>
+        <hr color="primary" />
+        <v-container>
+          <v-row>
+            <v-col class="d-flex justify-center">
+              <v-btn
+                class="my-2"
+                color="secondary"
+                plain
+                @click="showCancelDialog = true"
+              >
+                Abbrechen
+              </v-btn>
+            </v-col>
+            <v-col class="d-flex justify-center">
+              <v-btn
+                class="my-2"
+                color="primary"
+                @click="showConfirmDialog = true"
+              >
+                Absenden
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-card>
     </v-dialog>
 
@@ -131,7 +88,7 @@
           <v-btn color="primary" text @click="showCancelDialog = false">
             Abbrechen
           </v-btn>
-          <v-btn color="primary" text @click="cancel()"> Schliesen </v-btn>
+          <v-btn color="primary" text @click="cancel()"> Schliesen</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -153,11 +110,11 @@
           <v-btn color="primary" text @click="showConfirmDialog = false">
             Abbrechen
           </v-btn>
-          <v-btn color="primary" text @click="confirm()"> Abschicken </v-btn>
+          <v-btn color="primary" text @click="confirm()"> Abschicken</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-row>
+  </div>
 </template>
 
 <script>
