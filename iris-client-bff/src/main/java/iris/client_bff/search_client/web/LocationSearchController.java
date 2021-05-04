@@ -1,7 +1,7 @@
 package iris.client_bff.search_client.web;
 
-import de.healthIMIS.iris.api.sidecarclient.model.LocationList;
 import iris.client_bff.search_client.SearchClient;
+import iris.client_bff.search_client.web.dto.LocationList;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.Size;

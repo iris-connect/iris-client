@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package iris.client_bff.data_request.web.dto;
+package iris.client_bff.search_client.web.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,43 +23,58 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * An event, location or occasion visited by the queried person during the queried time.
+ * Ein Standort hat ggf. weitere Informationen wie Tische/Räume, etc.
  */
-@ApiModel(description = "An event, location or occasion visited by the queried person during the queried time.")
+@ApiModel(description = "Ein Standort hat ggf. weitere Informationen wie Tische/Räume, etc.")
 @JsonPropertyOrder({
-		Event.JSON_PROPERTY_NAME,
-		Event.JSON_PROPERTY_PHONE,
-		Event.JSON_PROPERTY_ADDRESS,
-		Event.JSON_PROPERTY_ADDITIONAL_INFORMATION
+		LocationContext.JSON_PROPERTY_ID,
+		LocationContext.JSON_PROPERTY_NAME
 })
-@JsonTypeName("Event")
+@JsonTypeName("LocationContext")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen",
 		date = "2021-05-03T15:54:40.838481+02:00[Europe/Berlin]")
-public class Event {
+public class LocationContext {
+	public static final String JSON_PROPERTY_ID = "id";
+	private String id;
+
 	public static final String JSON_PROPERTY_NAME = "name";
 	private String name;
 
-	public static final String JSON_PROPERTY_PHONE = "phone";
-	private String phone;
+	public LocationContext id(String id) {
 
-	public static final String JSON_PROPERTY_ADDRESS = "address";
-	private Address address;
+		this.id = id;
+		return this;
+	}
 
-	public static final String JSON_PROPERTY_ADDITIONAL_INFORMATION = "additionalInformation";
-	private String additionalInformation;
+	/**
+	 * Interne ID des Kontext
+	 * 
+	 * @return id
+	 **/
+	@ApiModelProperty(example = "5f4bfff742c1bf5f72918851", required = true, value = "Interne ID des Kontext")
+	@JsonProperty(JSON_PROPERTY_ID)
+	@JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-	public Event name(String name) {
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public LocationContext name(String name) {
 
 		this.name = name;
 		return this;
 	}
 
 	/**
-	 * Name of the event
+	 * Bezeichnung
 	 * 
 	 * @return name
 	 **/
-	@ApiModelProperty(required = true, value = "Name of the event")
+	@ApiModelProperty(example = "Raum 0815", required = true, value = "Bezeichnung")
 	@JsonProperty(JSON_PROPERTY_NAME)
 	@JsonInclude(value = JsonInclude.Include.ALWAYS)
 
@@ -71,77 +86,6 @@ public class Event {
 		this.name = name;
 	}
 
-	public Event phone(String phone) {
-
-		this.phone = phone;
-		return this;
-	}
-
-	/**
-	 * Get phone
-	 * 
-	 * @return phone
-	 **/
-	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
-	@JsonProperty(JSON_PROPERTY_PHONE)
-	@JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public Event address(Address address) {
-		this.address = address;
-
-		return this;
-	}
-
-	/**
-	 * Get address
-	 * 
-	 * @return address
-	 **/
-	@javax.annotation.Nullable
-	@ApiModelProperty(value = "")
-	@JsonProperty(JSON_PROPERTY_ADDRESS)
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
-	public Event additionalInformation(String additionalInformation) {
-
-		this.additionalInformation = additionalInformation;
-		return this;
-	}
-
-	/**
-	 * Additional informations about the event.
-	 * 
-	 * @return additionalInformation
-	 **/
-	@javax.annotation.Nullable
-	@ApiModelProperty(value = "Additional informations about the event.")
-	@JsonProperty(JSON_PROPERTY_ADDITIONAL_INFORMATION)
-	@JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
-	public String getAdditionalInformation() {
-		return additionalInformation;
-	}
-
-	public void setAdditionalInformation(String additionalInformation) {
-		this.additionalInformation = additionalInformation;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -150,26 +94,22 @@ public class Event {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		Event event = (Event) o;
-		return Objects.equals(this.name, event.name) &&
-				Objects.equals(this.phone, event.phone) &&
-				Objects.equals(this.address, event.address) &&
-				Objects.equals(this.additionalInformation, event.additionalInformation);
+		LocationContext locationContext = (LocationContext) o;
+		return Objects.equals(this.id, locationContext.id) &&
+				Objects.equals(this.name, locationContext.name);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, phone, address, additionalInformation);
+		return Objects.hash(id, name);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("class Event {\n");
+		sb.append("class LocationContext {\n");
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
-		sb.append("    phone: ").append(toIndentedString(phone)).append("\n");
-		sb.append("    address: ").append(toIndentedString(address)).append("\n");
-		sb.append("    additionalInformation: ").append(toIndentedString(additionalInformation)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

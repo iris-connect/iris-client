@@ -54,11 +54,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>de.healthIMIS</groupId>
-			<artifactId>iris-api-sidecar-client</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>iris-gateway</groupId>
 			<artifactId>iris-sormas-api-client</artifactId>
 			<version>1.55.0-SNAPSHOT</version>
@@ -147,6 +142,16 @@
 			<artifactId>bcpkix-jdk15on</artifactId>
 			<version>1.68</version>
 		</dependency>
+		<dependency> <!-- because of code generated once before -->
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+        </dependency>
 
 		<!-- Security -->
 		<dependency>

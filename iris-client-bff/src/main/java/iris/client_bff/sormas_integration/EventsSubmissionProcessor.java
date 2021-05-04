@@ -14,10 +14,10 @@
  *******************************************************************************/
 package iris.client_bff.sormas_integration;
 
-import de.healthIMIS.iris.api.sidecarclient.model.Event;
-import de.healthIMIS.iris.api.sidecarclient.model.EventList;
 import iris.client_bff.core.SormasRefId;
 import iris.client_bff.data_request.DataRequest;
+import iris.client_bff.data_request.web.dto.Event;
+import iris.client_bff.data_request.web.dto.EventList;
 import iris.sormas.client.api.EventControllerApi;
 import iris.sormas.client.api.EventParticipantControllerApi;
 import iris.sormas.client.api.PersonControllerApi;

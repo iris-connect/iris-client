@@ -14,10 +14,10 @@
  *******************************************************************************/
 package iris.client_bff.data_submission;
 
-import de.healthIMIS.iris.api.sidecarclient.model.ContactPersonList;
-import de.healthIMIS.iris.api.sidecarclient.model.ContactsAndEvents;
-import de.healthIMIS.iris.api.sidecarclient.model.EventList;
 import iris.client_bff.data_request.DataRequest;
+import iris.client_bff.data_request.web.dto.ContactPersonList;
+import iris.client_bff.data_request.web.dto.ContactsAndEvents;
+import iris.client_bff.data_request.web.dto.EventList;
 
 import java.security.KeyStore;
 

@@ -16,35 +16,38 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * UserInsert
  */
+@JsonPropertyOrder({
+		UserInsertDTO.JSON_PROPERTY_FIRST_NAME,
+		UserInsertDTO.JSON_PROPERTY_LAST_NAME,
+		UserInsertDTO.JSON_PROPERTY_USER_NAME,
+		UserInsertDTO.JSON_PROPERTY_PASSWORD,
+		UserInsertDTO.JSON_PROPERTY_ROLE
+})
+@JsonTypeName("UserInsert")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen",
-		date = "2021-04-27T12:38:06.881282+02:00[Europe/Berlin]")
+		date = "2021-05-03T15:54:40.838481+02:00[Europe/Berlin]")
 public class UserInsertDTO {
-	public static final String SERIALIZED_NAME_FIRST_NAME = "firstName";
-	@SerializedName(SERIALIZED_NAME_FIRST_NAME)
-	private String firstName = "";
+	public static final String JSON_PROPERTY_FIRST_NAME = "firstName";
+	private String firstName;
 
-	public static final String SERIALIZED_NAME_LAST_NAME = "lastName";
-	@SerializedName(SERIALIZED_NAME_LAST_NAME)
-	private String lastName = "";
+	public static final String JSON_PROPERTY_LAST_NAME = "lastName";
+	private String lastName;
 
-	public static final String SERIALIZED_NAME_USER_NAME = "userName";
-	@SerializedName(SERIALIZED_NAME_USER_NAME)
+	public static final String JSON_PROPERTY_USER_NAME = "userName";
 	private String userName;
 
-	public static final String SERIALIZED_NAME_PASSWORD = "password";
-	@SerializedName(SERIALIZED_NAME_PASSWORD)
+	public static final String JSON_PROPERTY_PASSWORD = "password";
 	private String password;
 
-	public static final String SERIALIZED_NAME_ROLE = "role";
-	@SerializedName(SERIALIZED_NAME_ROLE)
+	public static final String JSON_PROPERTY_ROLE = "role";
 	private UserRoleDTO role;
 
 	public UserInsertDTO firstName(String firstName) {
@@ -60,6 +63,8 @@ public class UserInsertDTO {
 	 **/
 	@javax.annotation.Nullable
 	@ApiModelProperty(value = "")
+	@JsonProperty(JSON_PROPERTY_FIRST_NAME)
+	@JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
 	public String getFirstName() {
 		return firstName;
@@ -77,11 +82,13 @@ public class UserInsertDTO {
 
 	/**
 	 * Get lastName
-	 *
+	 * 
 	 * @return lastName
 	 **/
 	@javax.annotation.Nullable
 	@ApiModelProperty(value = "")
+	@JsonProperty(JSON_PROPERTY_LAST_NAME)
+	@JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
 	public String getLastName() {
 		return lastName;
@@ -99,11 +106,13 @@ public class UserInsertDTO {
 
 	/**
 	 * Get userName
-	 *
+	 * 
 	 * @return userName
 	 **/
-	@NotNull
 	@ApiModelProperty(required = true, value = "")
+	@JsonProperty(JSON_PROPERTY_USER_NAME)
+	@JsonInclude(value = JsonInclude.Include.ALWAYS)
+
 	public String getUserName() {
 		return userName;
 	}
@@ -123,9 +132,10 @@ public class UserInsertDTO {
 	 * 
 	 * @return password
 	 **/
-	@NotNull
-	@Length(min = 8)
 	@ApiModelProperty(required = true, value = "")
+	@JsonProperty(JSON_PROPERTY_PASSWORD)
+	@JsonInclude(value = JsonInclude.Include.ALWAYS)
+
 	public String getPassword() {
 		return password;
 	}
@@ -145,8 +155,10 @@ public class UserInsertDTO {
 	 * 
 	 * @return role
 	 **/
-	@NotNull
 	@ApiModelProperty(required = true, value = "")
+	@JsonProperty(JSON_PROPERTY_ROLE)
+	@JsonInclude(value = JsonInclude.Include.ALWAYS)
+
 	public UserRoleDTO getRole() {
 		return role;
 	}
