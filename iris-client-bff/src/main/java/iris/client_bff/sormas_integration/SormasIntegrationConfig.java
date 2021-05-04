@@ -14,16 +14,16 @@
  *******************************************************************************/
 package iris.client_bff.sormas_integration;
 
-import de.healthIMIS.sormas.client.api.CaseControllerApi;
-import de.healthIMIS.sormas.client.api.ContactControllerApi;
-import de.healthIMIS.sormas.client.api.EventControllerApi;
-import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
-import de.healthIMIS.sormas.client.api.PersonControllerApi;
-import de.healthIMIS.sormas.client.api.SampleControllerApi;
-import de.healthIMIS.sormas.client.api.TaskControllerApi;
-import de.healthIMIS.sormas.client.api.UserControllerApi;
-import de.healthIMIS.sormas.client.invoker.ApiClient;
-import de.healthIMIS.sormas.client.model.UserDto;
+import iris.sormas.client.api.CaseControllerApi;
+import iris.sormas.client.api.ContactControllerApi;
+import iris.sormas.client.api.EventControllerApi;
+import iris.sormas.client.api.EventParticipantControllerApi;
+import iris.sormas.client.api.PersonControllerApi;
+import iris.sormas.client.api.SampleControllerApi;
+import iris.sormas.client.api.TaskControllerApi;
+import iris.sormas.client.api.UserControllerApi;
+import iris.sormas.client.invoker.ApiClient;
+import iris.sormas.client.model.UserDto;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

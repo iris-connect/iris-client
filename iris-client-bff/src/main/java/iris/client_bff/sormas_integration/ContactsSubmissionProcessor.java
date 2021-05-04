@@ -16,12 +16,12 @@ package iris.client_bff.sormas_integration;
 
 import de.healthIMIS.iris.api.sidecarclient.model.ContactPerson;
 import de.healthIMIS.iris.api.sidecarclient.model.ContactPersonList;
-import de.healthIMIS.sormas.client.api.ContactControllerApi;
-import de.healthIMIS.sormas.client.api.PersonControllerApi;
-import de.healthIMIS.sormas.client.api.TaskControllerApi;
-import de.healthIMIS.sormas.client.model.*;
 import iris.client_bff.core.SormasRefId;
 import iris.client_bff.data_request.DataRequest;
+import iris.sormas.client.api.ContactControllerApi;
+import iris.sormas.client.api.PersonControllerApi;
+import iris.sormas.client.api.TaskControllerApi;
+import iris.sormas.client.model.*;
 
 import java.time.Instant;
 import java.util.List;

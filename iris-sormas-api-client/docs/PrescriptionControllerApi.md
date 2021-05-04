@@ -18,11 +18,11 @@ Method | HTTP request | Description
 ### Example
 ```java
 // Import classes:
-//import de.healthIMIS.sormas.client.invoker.ApiClient;
-//import de.healthIMIS.sormas.client.invoker.ApiException;
-//import de.healthIMIS.sormas.client.invoker.Configuration;
-//import de.healthIMIS.sormas.client.invoker.auth.*;
-//import de.healthIMIS.sormas.client.api.PrescriptionControllerApi;
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.PrescriptionControllerApi;
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 // Configure HTTP basic authorization: basicAuth
@@ -65,11 +65,11 @@ This endpoint does not need any parameter.
 ### Example
 ```java
 // Import classes:
-//import de.healthIMIS.sormas.client.invoker.ApiClient;
-//import de.healthIMIS.sormas.client.invoker.ApiException;
-//import de.healthIMIS.sormas.client.invoker.Configuration;
-//import de.healthIMIS.sormas.client.invoker.auth.*;
-//import de.healthIMIS.sormas.client.api.PrescriptionControllerApi;
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.PrescriptionControllerApi;
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 // Configure HTTP basic authorization: basicAuth
@@ -116,11 +116,11 @@ Name | Type | Description  | Notes
 ### Example
 ```java
 // Import classes:
-//import de.healthIMIS.sormas.client.invoker.ApiClient;
-//import de.healthIMIS.sormas.client.invoker.ApiException;
-//import de.healthIMIS.sormas.client.invoker.Configuration;
-//import de.healthIMIS.sormas.client.invoker.auth.*;
-//import de.healthIMIS.sormas.client.api.PrescriptionControllerApi;
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.PrescriptionControllerApi;
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 // Configure HTTP basic authorization: basicAuth
@@ -167,11 +167,11 @@ Name | Type | Description  | Notes
 ### Example
 ```java
 // Import classes:
-//import de.healthIMIS.sormas.client.invoker.ApiClient;
-//import de.healthIMIS.sormas.client.invoker.ApiException;
-//import de.healthIMIS.sormas.client.invoker.Configuration;
-//import de.healthIMIS.sormas.client.invoker.auth.*;
-//import de.healthIMIS.sormas.client.api.PrescriptionControllerApi;
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.PrescriptionControllerApi;
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 // Configure HTTP basic authorization: basicAuth
