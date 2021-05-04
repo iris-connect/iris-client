@@ -12,8 +12,8 @@
 	<groupId>iris-gateway</groupId>
 	<artifactId>iris-client-bff</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>IRIS Client SORMAS Sidecar</name>
-	<description>Communicates as SORMAS sidecar directly with SORMAS within the health department&apos;s infrastructure</description>
+	<name>IRIS Client Backend for Frontend</name>
+	<description>Backend for frontend (BFF) of the client for the health departments. Communicates directly with the SORMAS of this department.</description>
 	<licenses>
 		<license>
 			<name>GNU Affero General Public License (AGPL) v3</name>
