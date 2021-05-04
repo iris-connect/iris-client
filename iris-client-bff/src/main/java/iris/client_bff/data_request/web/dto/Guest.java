@@ -13,28 +13,28 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-@ApiModel(description = "Extended person data type for a guest who attended a queried event or location in the queried time.")
-public class Guest   {
+@ApiModel(
+		description = "Extended person data type for a guest who attended a queried event or location in the queried time.")
+public class Guest {
 
-  private String firstName;
+	private String firstName;
 
-  private String lastName;
+	private String lastName;
 
-  private LocalDate dateOfBirth;
+	private LocalDate dateOfBirth;
 
-  private Sex sex = Sex.UNKNOWN;
+	private Sex sex = Sex.UNKNOWN;
 
-  private String email;
+	private String email;
 
-  private String phone;
+	private String phone;
 
-  private String mobilePhone;
+	private String mobilePhone;
 
-  private Address address;
+	private Address address;
 
-  private GuestAllOfAttendanceInformation attendanceInformation;
+	private GuestAllOfAttendanceInformation attendanceInformation;
 
-  private Boolean identityChecked;
+	private Boolean identityChecked;
 
 }
-

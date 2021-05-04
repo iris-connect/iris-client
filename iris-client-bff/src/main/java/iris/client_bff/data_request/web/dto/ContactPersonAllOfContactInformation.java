@@ -14,15 +14,14 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ContactPersonAllOfContactInformation   {
+public class ContactPersonAllOfContactInformation {
 
-  private LocalDate firstContactDate;
+	private LocalDate firstContactDate;
 
-  private LocalDate lastContactDate;
+	private LocalDate lastContactDate;
 
-  private ContactCategory contactCategory;
+	private ContactCategory contactCategory;
 
-  private String basicConditions;
+	private String basicConditions;
 
 }
-

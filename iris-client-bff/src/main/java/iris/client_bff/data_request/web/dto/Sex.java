@@ -5,15 +5,13 @@ package iris.client_bff.data_request.web.dto;
  */
 
 public enum Sex {
-  
-  MALE,
-  
-  FEMALE,
-  
-  OTHER,
-  
-  UNKNOWN;
 
+	MALE,
+
+	FEMALE,
+
+	OTHER,
+
+	UNKNOWN;
 
 }
-

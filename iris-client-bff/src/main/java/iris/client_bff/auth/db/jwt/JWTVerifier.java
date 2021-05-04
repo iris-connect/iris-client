@@ -4,6 +4,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 public interface JWTVerifier {
 
-  DecodedJWT verify(String jwt);
+	DecodedJWT verify(String jwt);
 
 }

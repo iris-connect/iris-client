@@ -4,6 +4,6 @@ import com.auth0.jwt.JWTCreator.Builder;
 
 public interface JWTSigner {
 
-  String sign(Builder builder);
+	String sign(Builder builder);
 
 }
