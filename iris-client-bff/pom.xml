@@ -9,8 +9,8 @@
 		<version>2.4.2</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>de.healthIMIS</groupId>
-	<artifactId>iris-client-sormas-sidecar</artifactId>
+	<groupId>iris-gateway</groupId>
+	<artifactId>iris-client-bff</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>IRIS Client SORMAS Sidecar</name>
 	<description>Communicates as SORMAS sidecar directly with SORMAS within the health department&apos;s infrastructure</description>
@@ -59,7 +59,7 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>de.healthIMIS</groupId>
+			<groupId>iris-gateway</groupId>
 			<artifactId>iris-sormas-api-client</artifactId>
 			<version>1.55.0-SNAPSHOT</version>
 		</dependency>
