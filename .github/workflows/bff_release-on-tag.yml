@@ -1,4 +1,4 @@
-name: Build and releace runnable Jars for IRIS apps
+name: Build and release runnable Jars for IRIS apps
 
 on:
   push:

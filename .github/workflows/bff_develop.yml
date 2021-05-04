@@ -3,9 +3,12 @@
 name: Build and package image for iris-client-bff and publish it to docker.io
 
 on:
-  push:
+  pull_request:
     branches:
       - main
+  push:
+    branches:
+      - develop
     paths:
       - iris-client-bff/**
       - .github/workflows/bff_develop.yml
