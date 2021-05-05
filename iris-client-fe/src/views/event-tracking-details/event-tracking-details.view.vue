@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div>    
     <v-card>
       <v-card-title
         >Details für Ereignis ID: {{ eventData.extID }}</v-card-title
@@ -20,9 +20,53 @@
           </v-col>
         </v-row>
         <v-row class="align-center">
-          <v-col>
+          <v-col cols="12" md="6">
             <strong> Zeitraum: </strong>
             {{ eventData.startTime }} - {{ eventData.endTime }}
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-dialog
+              v-model="dialog"
+              width="500"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  text   
+                  color="error"      
+                  x-small         
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  Anfrage abbrechen
+                </v-btn>
+              </template>
+
+              <v-card>
+                <v-card-title class="headline grey lighten-2">
+                  Anfrage abbrechen?
+                </v-card-title>
+                <v-card-text>
+                  Sind sie sich sicher, dass sie die Anfrage abbrechen wollen? Dieser Schritt kann nicht rückgängig gemacht werden.
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>    
+                  <v-btn
+                    text
+                    @click="dialog = false"
+                  >
+                    Zurück
+                  </v-btn>              
+                  <v-spacer></v-spacer>                  
+                  <v-btn
+                    color="error"
+                    text
+                    @click="dialog = false"
+                  >
+                    Bestätigen
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-col>
         </v-row>
         <event-tracking-details-location-info :location="eventData.location" />
@@ -243,6 +287,12 @@ export default class EventTrackingDetailsView extends Vue {
       },
     ],
   };
+
+  data () {
+    return {
+      dialog: false,
+    }
+  }
 
   get eventData(): EventData {
     const dataRequest = store.state.eventTrackingDetails.eventTrackingDetails;
