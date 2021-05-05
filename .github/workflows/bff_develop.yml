@@ -1,0 +1,40 @@
+# https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#build-image
+
+name: Build and package image for iris-client-bff and publish it to docker.io
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - develop
+    paths:
+      - iris-client-bff/**
+      - .github/workflows/bff_develop.yml
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+    
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+    
+      - name: build, package and publish the image
+        run: mvn -B clean package spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true
+        env:
+          DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+          DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}

@@ -17,26 +17,25 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Setter
 @Getter
-public class DataRequestClient   {
+public class DataRequestClient {
 
-  @NotBlank
-  private String locationId;
+	@NotBlank
+	private String locationId;
 
-  @NotBlank
-  private String providerId;
+	@NotBlank
+	private String providerId;
 
-  private String name;
+	private String name;
 
-  @NotBlank
-  private String externalRequestId;
+	@NotBlank
+	private String externalRequestId;
 
-  @NotNull
-  private Instant start;
+	@NotNull
+	private Instant start;
 
-  @NotNull
-  private Instant end;
+	@NotNull
+	private Instant end;
 
-  private String requestDetails;
+	private String requestDetails;
 
 }
-

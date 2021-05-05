@@ -6,10 +6,10 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
-import de.healthIMIS.iris.api.sidecarclient.model.LocationInformation;
-import de.healthIMIS.iris.api.sidecarclient.model.LocationList;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.search_client.SearchClient;
+import iris.client_bff.search_client.web.dto.LocationInformation;
+import iris.client_bff.search_client.web.dto.LocationList;
 import lombok.RequiredArgsConstructor;
 
 import org.junit.jupiter.api.Test;

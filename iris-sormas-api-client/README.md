@@ -38,7 +38,7 @@ Add this dependency to your project's POM:
 
 ```xml
 <dependency>
-  <groupId>de.healthIMIS</groupId>
+  <groupId>iris-gateway</groupId>
   <artifactId>sormas-api-client</artifactId>
   <version>1.55.0-SNAPSHOT</version>
   <scope>compile</scope>
@@ -50,7 +50,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "de.healthIMIS:sormas-api-client:1.55.0-SNAPSHOT"
+compile "iris-gateway:sormas-api-client:1.55.0-SNAPSHOT"
 ```
 
 ### Others
@@ -71,10 +71,10 @@ Then manually install the following JARs:
 Please follow the [installation](#installation) instruction and execute the following Java code:
 
 ```java
-import de.healthIMIS.sormas.client.invoker.*;
-import de.healthIMIS.sormas.client.invoker.auth.*;
-import de.healthIMIS.sormas.client.model.*;
-import de.healthIMIS.sormas.client.api.ActionControllerApi;
+import iris.sormas.client.invoker.*;
+import iris.sormas.client.invoker.auth.*;
+import iris.sormas.client.model.*;
+import iris.sormas.client.api.ActionControllerApi;
 
 import java.io.File;
 import java.util.*;
@@ -99,10 +99,10 @@ public class ActionControllerApiExample {
         }
     }
 }
-import de.healthIMIS.sormas.client.invoker.*;
-import de.healthIMIS.sormas.client.invoker.auth.*;
-import de.healthIMIS.sormas.client.model.*;
-import de.healthIMIS.sormas.client.api.ActionControllerApi;
+import iris.sormas.client.invoker.*;
+import iris.sormas.client.invoker.auth.*;
+import iris.sormas.client.model.*;
+import iris.sormas.client.api.ActionControllerApi;
 
 import java.io.File;
 import java.util.*;
@@ -126,10 +126,10 @@ public class ActionControllerApiExample {
         }
     }
 }
-import de.healthIMIS.sormas.client.invoker.*;
-import de.healthIMIS.sormas.client.invoker.auth.*;
-import de.healthIMIS.sormas.client.model.*;
-import de.healthIMIS.sormas.client.api.ActionControllerApi;
+import iris.sormas.client.invoker.*;
+import iris.sormas.client.invoker.auth.*;
+import iris.sormas.client.model.*;
+import iris.sormas.client.api.ActionControllerApi;
 
 import java.io.File;
 import java.util.*;
@@ -154,10 +154,10 @@ public class ActionControllerApiExample {
         }
     }
 }
-import de.healthIMIS.sormas.client.invoker.*;
-import de.healthIMIS.sormas.client.invoker.auth.*;
-import de.healthIMIS.sormas.client.model.*;
-import de.healthIMIS.sormas.client.api.ActionControllerApi;
+import iris.sormas.client.invoker.*;
+import iris.sormas.client.invoker.auth.*;
+import iris.sormas.client.model.*;
+import iris.sormas.client.api.ActionControllerApi;
 
 import java.io.File;
 import java.util.*;

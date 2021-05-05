@@ -22,11 +22,11 @@ Get latest follow up end date assigned to the specified person. Note: Only retur
 ### Example
 ```java
 // Import classes:
-//import de.healthIMIS.sormas.client.invoker.ApiClient;
-//import de.healthIMIS.sormas.client.invoker.ApiException;
-//import de.healthIMIS.sormas.client.invoker.Configuration;
-//import de.healthIMIS.sormas.client.invoker.auth.*;
-//import de.healthIMIS.sormas.client.api.ExternalVisitsControllerApi;
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.ExternalVisitsControllerApi;
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 // Configure HTTP basic authorization: basicAuth
@@ -75,11 +75,11 @@ Get some personal data for a specific person
 ### Example
 ```java
 // Import classes:
-//import de.healthIMIS.sormas.client.invoker.ApiClient;
-//import de.healthIMIS.sormas.client.invoker.ApiException;
-//import de.healthIMIS.sormas.client.invoker.Configuration;
-//import de.healthIMIS.sormas.client.invoker.auth.*;
-//import de.healthIMIS.sormas.client.api.ExternalVisitsControllerApi;
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.ExternalVisitsControllerApi;
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 // Configure HTTP basic authorization: basicAuth
@@ -126,11 +126,11 @@ Get API version
 ### Example
 ```java
 // Import classes:
-//import de.healthIMIS.sormas.client.invoker.ApiClient;
-//import de.healthIMIS.sormas.client.invoker.ApiException;
-//import de.healthIMIS.sormas.client.invoker.Configuration;
-//import de.healthIMIS.sormas.client.invoker.auth.*;
-//import de.healthIMIS.sormas.client.api.ExternalVisitsControllerApi;
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.ExternalVisitsControllerApi;
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 // Configure HTTP basic authorization: basicAuth
@@ -175,11 +175,11 @@ Check if a the Uuid given as parameter exists in SORMAS.
 ### Example
 ```java
 // Import classes:
-//import de.healthIMIS.sormas.client.invoker.ApiClient;
-//import de.healthIMIS.sormas.client.invoker.ApiException;
-//import de.healthIMIS.sormas.client.invoker.Configuration;
-//import de.healthIMIS.sormas.client.invoker.auth.*;
-//import de.healthIMIS.sormas.client.api.ExternalVisitsControllerApi;
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.ExternalVisitsControllerApi;
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 // Configure HTTP basic authorization: basicAuth
@@ -228,11 +228,11 @@ Upload visits with all symptom and disease related data to SORMAS.
 ### Example
 ```java
 // Import classes:
-//import de.healthIMIS.sormas.client.invoker.ApiClient;
-//import de.healthIMIS.sormas.client.invoker.ApiException;
-//import de.healthIMIS.sormas.client.invoker.Configuration;
-//import de.healthIMIS.sormas.client.invoker.auth.*;
-//import de.healthIMIS.sormas.client.api.ExternalVisitsControllerApi;
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.ExternalVisitsControllerApi;
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 // Configure HTTP basic authorization: basicAuth
@@ -279,11 +279,11 @@ Save symptom journal status
 ### Example
 ```java
 // Import classes:
-//import de.healthIMIS.sormas.client.invoker.ApiClient;
-//import de.healthIMIS.sormas.client.invoker.ApiException;
-//import de.healthIMIS.sormas.client.invoker.Configuration;
-//import de.healthIMIS.sormas.client.invoker.auth.*;
-//import de.healthIMIS.sormas.client.api.ExternalVisitsControllerApi;
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.ExternalVisitsControllerApi;
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 // Configure HTTP basic authorization: basicAuth

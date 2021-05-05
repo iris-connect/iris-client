@@ -13,28 +13,28 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-@ApiModel(description = "Extended person data type for contact persons who had contact with the queried person during the queried time.")
-public class ContactPerson   {
+@ApiModel(
+		description = "Extended person data type for contact persons who had contact with the queried person during the queried time.")
+public class ContactPerson {
 
-  private String firstName;
+	private String firstName;
 
-  private String lastName;
+	private String lastName;
 
-  private LocalDate dateOfBirth;
+	private LocalDate dateOfBirth;
 
-  private Sex sex = Sex.UNKNOWN;
+	private Sex sex = Sex.UNKNOWN;
 
-  private String email;
+	private String email;
 
-  private String phone;
+	private String phone;
 
-  private String mobilePhone;
+	private String mobilePhone;
 
-  private Address address;
+	private Address address;
 
-  private ContactPersonAllOfWorkPlace workPlace;
+	private ContactPersonAllOfWorkPlace workPlace;
 
-  private ContactPersonAllOfContactInformation contactInformation;
+	private ContactPersonAllOfContactInformation contactInformation;
 
 }
-

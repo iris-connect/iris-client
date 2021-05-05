@@ -29,7 +29,6 @@ public class UserAccount {
 
 	private String lastName;
 
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
+	@Enumerated(EnumType.STRING) @Column(nullable = false)
 	private UserRole role;
 }

@@ -14,12 +14,12 @@
  *******************************************************************************/
 package iris.client_bff.sormas_integration;
 
-import de.healthIMIS.sormas.client.api.TaskControllerApi;
-import de.healthIMIS.sormas.client.model.TaskDto;
-import de.healthIMIS.sormas.client.model.TaskStatus;
-import de.healthIMIS.sormas.client.model.UserReferenceDto;
 import iris.client_bff.core.SormasRefId;
 import iris.client_bff.data_request.DataRequest;
+import iris.sormas.client.api.TaskControllerApi;
+import iris.sormas.client.model.TaskDto;
+import iris.sormas.client.model.TaskStatus;
+import iris.sormas.client.model.UserReferenceDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

@@ -4,6 +4,7 @@ import iris.client_bff.auth.db.jwt.JWTSigner;
 import iris.client_bff.auth.db.jwt.JWTVerifier;
 import iris.client_bff.users.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -39,21 +40,20 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 	private UserDetailsServiceImpl userDetailsService;
 
 	@Override
-    protected void configure(HttpSecurity http) throws Exception {
+	protected void configure(HttpSecurity http) throws Exception {
 
-        http.cors().and().csrf().disable()
-                .authorizeRequests()
-                .antMatchers(SWAGGER_WHITELIST)
-                .permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilter(
-                        new JWTAuthenticationFilter(authenticationManager(), jwtSigner))
-                .addFilter(
-                        new JWTAuthorizationFilter(authenticationManager(), jwtVerifier)
-                )
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
+		http.cors().and().csrf().disable()
+				.authorizeRequests()
+				.antMatchers(SWAGGER_WHITELIST)
+				.permitAll()
+				.anyRequest().authenticated()
+				.and()
+				.addFilter(
+						new JWTAuthenticationFilter(authenticationManager(), jwtSigner))
+				.addFilter(
+						new JWTAuthorizationFilter(authenticationManager(), jwtVerifier))
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+	}
 
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {

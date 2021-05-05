@@ -14,14 +14,14 @@
  *******************************************************************************/
 package iris.client_bff.sormas_integration;
 
-import de.healthIMIS.iris.api.sidecarclient.model.ContactsAndEvents;
-import de.healthIMIS.sormas.client.api.ContactControllerApi;
-import de.healthIMIS.sormas.client.api.EventControllerApi;
-import de.healthIMIS.sormas.client.api.EventParticipantControllerApi;
-import de.healthIMIS.sormas.client.api.PersonControllerApi;
-import de.healthIMIS.sormas.client.api.TaskControllerApi;
 import iris.client_bff.data_request.DataRequest;
+import iris.client_bff.data_request.web.dto.ContactsAndEvents;
 import iris.client_bff.data_submission.DataSubmissionDto;
+import iris.sormas.client.api.ContactControllerApi;
+import iris.sormas.client.api.EventControllerApi;
+import iris.sormas.client.api.EventParticipantControllerApi;
+import iris.sormas.client.api.PersonControllerApi;
+import iris.sormas.client.api.TaskControllerApi;
 
 import java.security.KeyStore;
 
