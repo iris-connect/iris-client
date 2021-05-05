@@ -8,7 +8,7 @@ on:
       - main
       - develop
     paths:
-      - infrastructure/iris-client/docker/nginx/**
+      - infrastructure/docker/nginx/**
       - .github/workflows/nginx.yml
 
 jobs:
