@@ -2,10 +2,30 @@
 
 # image:iris-logo.png[width=100] IRIS Client
 
-<<dev>>
-
 [[dev]]
-== Development 
+== Development
+=== Commits
+
+We use the specification https://www.conventionalcommits.org[Conventional Commits] for our commit messages and want to use it to generate our changelogs and semantic versions as automatically as possible. Each commit message should thus contain a type and, if necessary, the note "BREAKING CHANGE". As types we have not specified anything beyond the specification.
+
+Commits should always refer to an issue (user story, bug or task). Therefore, always include the reference to the issue at the end of the commit message.
+```
+Refs #{issue number} ⇒ same repository
+Refs iris-gateway/iris-backlog#{issue number} ⇒ other repository
+```
+
+=== Branches
+
+Git Flow is our branching strategy and the base of our release prozess. Thus, development takes place on feature branches, which is merged in the `develop` branch. The `main` branch is reserved for releases.
+
+Branches should be named according to the following scheme:
+```
+feature/{issue number}-{name}
+bugfix/{issue number}-{name}
+chore/{issue number}-{name} ⇒ which is neither feature nor bugfix
+```
+
+[[java]]
 === Java parts
 
 We use *Java 11* and the following code style. 
