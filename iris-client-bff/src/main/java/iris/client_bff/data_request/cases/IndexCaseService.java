@@ -76,6 +76,7 @@ public class IndexCaseService {
 		indexCaseDetailsDTO.setEnd(indexCase.getRequestEnd());
 
 		// TODO assign real data submission values
+		indexCaseDetailsDTO.setSubmissionData(null);
 
 		return indexCaseDetailsDTO;
 	}

@@ -1624,7 +1624,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
         dataRequestClientCasesCaseIdGet: async (caseId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'caseId' is not null or undefined
             assertParamExists('dataRequestClientCasesCaseIdGet', 'caseId', caseId)
-            const localVarPath = `/data-request-client/cases/{caseId}`
+            const localVarPath = `/data-requests-client/cases/{caseId}`
                 .replace(`{${"caseId"}}`, encodeURIComponent(String(caseId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1662,7 +1662,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
          * @throws {RequiredError}
          */
         dataRequestClientCasesGet: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/data-request-client/cases`;
+            const localVarPath = `/data-requests-client/cases`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1702,7 +1702,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
         dataRequestClientCasesPost: async (dataRequestCaseClient: DataRequestCaseClient, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'dataRequestCaseClient' is not null or undefined
             assertParamExists('dataRequestClientCasesPost', 'dataRequestCaseClient', dataRequestCaseClient)
-            const localVarPath = `/data-request-client/cases`;
+            const localVarPath = `/data-requests-client/cases`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;

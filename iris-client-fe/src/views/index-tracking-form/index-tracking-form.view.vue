@@ -188,6 +188,7 @@ export default class IndexTrackingFormView extends Vue {
         end: this.form.model.end,
         name: this.form.model.name,
         externalCaseId: this.form.model.externalId,
+        comment: this.form.model.comment,
       };
       const created: DataRequestCaseDetails = await store.dispatch(
         "indexTrackingForm/createIndexTracking",
