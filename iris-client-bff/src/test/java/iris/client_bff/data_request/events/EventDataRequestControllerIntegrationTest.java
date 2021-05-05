@@ -1,4 +1,4 @@
-package iris.client_bff.data_request.events.web;
+package iris.client_bff.data_request.events;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -7,9 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import iris.client_bff.data_request.DataRequest.Status;
-import iris.client_bff.data_request.Location;
-import iris.client_bff.data_request.events.EventDataRequest;
-import iris.client_bff.data_request.events.EventDataRequestService;
+import iris.client_bff.data_request.events.web.TestData;
 import iris.client_bff.data_request.events.web.dto.EventDataRequestList;
 import java.io.InputStream;
 import java.time.Instant;
@@ -32,7 +30,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Disabled
-class DataRequestControllerIntegrationTest {
+class EventDataRequestControllerIntegrationTest {
 
 	@Autowired
 	private MockMvc mockMvc;

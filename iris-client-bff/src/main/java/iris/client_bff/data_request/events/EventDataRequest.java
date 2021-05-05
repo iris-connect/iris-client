@@ -15,7 +15,6 @@
 package iris.client_bff.data_request.events;
 
 import iris.client_bff.data_request.DataRequest;
-import iris.client_bff.data_request.Location;
 import java.time.Instant;
 import java.util.Set;
 import javax.persistence.CascadeType;

@@ -17,6 +17,7 @@ package iris.client_bff.data_request;
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,8 +37,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "data_request")
 @NoArgsConstructor
-@Getter
-@Setter(AccessLevel.PACKAGE)
+@Data
 @Inheritance
 @DiscriminatorColumn(name = "data_request_type")
 public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestIdentifier> {
@@ -56,7 +56,7 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	private Set<Feature> features;
 
 	@Column(nullable = false) @Enumerated(EnumType.STRING)
-	private @Setter Status status = Status.DATA_REQUESTED;
+	private Status status = Status.DATA_REQUESTED;
 
 	public DataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
 			String hdUserId, String comment, Set<Feature> features) {

@@ -24,8 +24,6 @@ import iris.client_bff.config.IrisProperties;
 import iris.client_bff.data_request.DataRequest.DataRequestIdentifier;
 import iris.client_bff.data_request.DataRequest.Feature;
 import iris.client_bff.data_request.DataRequest.Status;
-import iris.client_bff.data_request.Location;
-import iris.client_bff.data_request.events.web.dto.DataRequestDetails;
 import iris.client_bff.data_request.events.web.dto.EventUpdateDTO;
 import iris.client_bff.search_client.SearchClient;
 import lombok.Data;

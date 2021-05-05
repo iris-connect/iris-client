@@ -1,4 +1,4 @@
-package iris.client_bff.data_request;
+package iris.client_bff.data_request.events;
 
 import iris.client_bff.core.Id;
 import lombok.AllArgsConstructor;

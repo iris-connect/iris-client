@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/data-requests-client/events")
 @RestController
 @AllArgsConstructor
-public class DataRequestController {
+public class EventDataRequestController {
 
 	private EventDataRequestService dataRequestService;
 	private DataSubmissionRepository submissionRepo;

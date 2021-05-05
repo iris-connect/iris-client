@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  *******************************************************************************/
-package iris.client_bff.data_request;
+package iris.client_bff.data_request.events;
 
 import static java.time.temporal.ChronoUnit.*;
 
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class DataRequestDataInitializer implements DataInitializer {
+public class EventDataRequestDataInitializer implements DataInitializer {
 
 	public static final DataRequestIdentifier REQ_ID_1 = DataRequestIdentifier
 			.of(UUID.fromString("790b9a69-17f8-4ba7-a8ae-2f7bf34e0b80"));
