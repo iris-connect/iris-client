@@ -172,7 +172,6 @@ public class EventDto {
 
 	@JsonProperty("multiDayEvent")
 	private Boolean multiDayEvent = null;
-	private String comment;
 
 	public EventDto creationDate(Instant creationDate) {
 		this.creationDate = creationDate;
@@ -1196,12 +1195,4 @@ public class EventDto {
 		}
 		return o.toString().replace("\n", "\n    ");
 	}
-
-  public String getComment() {
-    return comment;
-  }
-
-  public void setComment(String comment) {
-    this.comment = comment;
-  }
 }

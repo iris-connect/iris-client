@@ -216,7 +216,7 @@ class DataRequestJob {
 			var startDate = eventDto.getStartDate();
 			var endDate = eventDto.getEndDate();
 
-			String comment = eventDto.getComment();
+			String comment = "";
 			var requestDetails = task.getCreatorComment();
 
 			var dataRequest = dataRequests.createLocationRequest(eventId, name, startDate,
