@@ -16,7 +16,7 @@ Refs iris-gateway/iris-backlog#{issue number} ⇒ other repository
 
 === Branches
 
-Git Flow is our branching strategy and the base of our release prozess. Thus, development takes place on feature branches, which is merged in the `develop` branch. The `main` branch is reserved for releases.
+https://www.atlassian.com/de/git/tutorials/comparing-workflows/gitflow-workflow[Git Flow] is our branching strategy and the base of our release prozess. Thus, development takes place on feature branches, which is merged in the `develop` branch. The `main` branch is reserved for releases.
 
 Branches should be named according to the following scheme:
 ```
