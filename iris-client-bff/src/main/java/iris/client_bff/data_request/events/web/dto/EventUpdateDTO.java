@@ -1,12 +1,13 @@
 package iris.client_bff.data_request.events.web.dto;
 
-import iris.client_bff.data_request.events.web.dto.DataRequestDetails.StatusEnum;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class EventUpdateDTO {
   private String comment;
-  private String externalCaseId;
+  private String externalRequestId;
   private String name;
-  private StatusEnum status;
+  private EventStatusDTO status;
 }

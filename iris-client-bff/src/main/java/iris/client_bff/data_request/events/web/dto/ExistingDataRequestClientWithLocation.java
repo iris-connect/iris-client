@@ -25,7 +25,9 @@ public class ExistingDataRequestClientWithLocation {
 
 		DATA_RECEIVED("DATA_RECEIVED"),
 
-		CLOSED("CLOSED");
+		CLOSED("CLOSED"),
+
+		ABORTED("ABORTED");
 
 		private String value;
 
@@ -95,7 +97,7 @@ public class ExistingDataRequestClientWithLocation {
 
 	/**
 	 * Get status
-	 * 
+	 *
 	 * @return status
 	 */
 	@ApiModelProperty(value = "")
@@ -115,7 +117,7 @@ public class ExistingDataRequestClientWithLocation {
 
 	/**
 	 * Code for DataRequest
-	 * 
+	 *
 	 * @return code
 	 */
 	@ApiModelProperty(value = "Code for DataRequest")
@@ -135,7 +137,7 @@ public class ExistingDataRequestClientWithLocation {
 
 	/**
 	 * Friendly name of the request to be identified easily by GA
-	 * 
+	 *
 	 * @return name
 	 */
 	@ApiModelProperty(value = "Friendly name of the request to be identified easily by GA")
@@ -155,7 +157,7 @@ public class ExistingDataRequestClientWithLocation {
 
 	/**
 	 * External ID outside of IRIS
-	 * 
+	 *
 	 * @return externalRequestId
 	 */
 	@ApiModelProperty(value = "External ID outside of IRIS")
@@ -175,7 +177,7 @@ public class ExistingDataRequestClientWithLocation {
 
 	/**
 	 * The start time for which data should be submitted with this request.
-	 * 
+	 *
 	 * @return start
 	 */
 	@ApiModelProperty(value = "The start time for which data should be submitted with this request.")
@@ -197,7 +199,7 @@ public class ExistingDataRequestClientWithLocation {
 
 	/**
 	 * The end time for which data should be submitted with this request.
-	 * 
+	 *
 	 * @return end
 	 */
 	@ApiModelProperty(value = "The end time for which data should be submitted with this request.")
@@ -220,7 +222,7 @@ public class ExistingDataRequestClientWithLocation {
 	/**
 	 * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table
 	 * and environment, seat, rank, ...).
-	 * 
+	 *
 	 * @return requestDetails
 	 */
 	@ApiModelProperty(
@@ -241,7 +243,7 @@ public class ExistingDataRequestClientWithLocation {
 
 	/**
 	 * Get locationInformation
-	 * 
+	 *
 	 * @return locationInformation
 	 */
 	@ApiModelProperty(value = "")
@@ -258,7 +260,7 @@ public class ExistingDataRequestClientWithLocation {
 
 	/**
 	 * Timestamp when the data request was created.
-	 * 
+	 *
 	 * @return requestedAt
 	 */
 	@ApiModelProperty(value = "Timestamp when the data request was created.")
@@ -280,7 +282,7 @@ public class ExistingDataRequestClientWithLocation {
 
 	/**
 	 * Timestamp when the data request was last updated.
-	 * 
+	 *
 	 * @return lastUpdatedAt
 	 */
 	@ApiModelProperty(value = "Timestamp when the data request was last updated.")

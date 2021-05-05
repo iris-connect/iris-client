@@ -19,7 +19,9 @@ public class DataRequestDetails {
 
 		DATA_RECEIVED("DATA_RECEIVED"),
 
-		CLOSED("CLOSED");
+    CLOSED("CLOSED"),
+
+    ABORTED("ABORTED");
 
 		private String value;
 

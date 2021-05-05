@@ -2,7 +2,7 @@ package iris.client_bff.data_submission.model;
 
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
-import iris.client_bff.data_request.DataRequest;
+import iris.client_bff.data_request.events.EventDataRequest;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class DataSubmission extends Aggregate<DataSubmission, DataSubmission.Dat
 
 	@ManyToOne //
 	@JoinColumn(name = "request_id")
-	private final DataRequest request;
+	private final EventDataRequest request;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //
 	@JoinColumn(name = "submission_id")
@@ -42,7 +42,7 @@ public class DataSubmission extends Aggregate<DataSubmission, DataSubmission.Dat
 	private Instant startDate;
 	private Instant endDate;
 
-	public DataSubmission(DataRequest request, Set<Guest> guests, GuestListDataProvider dataProvider,
+	public DataSubmission(EventDataRequest request, Set<Guest> guests, GuestListDataProvider dataProvider,
 			String additionalInformation,
 			Instant startDate, Instant endDate) {
 

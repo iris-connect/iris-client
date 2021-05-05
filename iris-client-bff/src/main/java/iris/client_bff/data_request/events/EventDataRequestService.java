@@ -177,8 +177,8 @@ public class EventDataRequestService {
 		if (StringUtils.isNotEmpty(patch.getComment())) {
 			dataRequest.setComment(patch.getComment());
 		}
-		if (StringUtils.isNotEmpty(patch.getExternalCaseId())) {
-			dataRequest.setRefId(patch.getExternalCaseId());
+		if (StringUtils.isNotEmpty(patch.getExternalRequestId())) {
+			dataRequest.setRefId(patch.getExternalRequestId());
 		}
 		if (StringUtils.isNotEmpty(patch.getName())) {
 			dataRequest.setName(patch.getName());

@@ -3,23 +3,21 @@ package iris.client_bff.data_request.events;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
+import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.data_request.DataRequest.Status;
 import iris.client_bff.data_request.events.web.TestData;
 import iris.client_bff.data_request.events.web.dto.EventDataRequestList;
-import java.io.InputStream;
+import iris.client_bff.data_request.events.web.dto.EventStatusDTO;
+import iris.client_bff.data_request.events.web.dto.EventUpdateDTO;
 import java.time.Instant;
 import java.util.Optional;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -29,7 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Disabled
+@IrisWebIntegrationTest
 class EventDataRequestControllerIntegrationTest {
 
 	@Autowired
@@ -90,10 +88,6 @@ class EventDataRequestControllerIntegrationTest {
 				new Location(),
 				Sets.newSet(EventDataRequest.Feature.Guests)));
 
-		Resource resource = resourceLoader.getResource("classpath:testdata/DataRequestControllerDataRequestClientUpdate.json");
-		InputStream jsonStream = resource.getInputStream();
-		String update = new String(jsonStream.readAllBytes());
-
 		var dataRequestUpdated = new EventDataRequest(
 			REFID,
 			"name",
@@ -111,16 +105,22 @@ class EventDataRequestControllerIntegrationTest {
 
 		Mockito.when(dataRequestManagement.findById(anyString())).thenReturn(Optional.of(dataRequest));
 
-		Mockito.when(dataRequestManagement.save(dataRequestUpdated)).thenReturn(dataRequestUpdated);
+		EventUpdateDTO patch = EventUpdateDTO.builder()
+				.name("new name")
+				.externalRequestId("new external ref id")
+				.comment("a great new comment")
+				.status(EventStatusDTO.ABORTED)
+				.build();
+		var patchBody = om.writeValueAsString(patch);
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/data-requests-client/events/123"))
-			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andReturn();
+		Mockito.when(dataRequestManagement.update(dataRequest, patch)).thenReturn(dataRequestUpdated);
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/data-requests-client/events/123").content(update).contentType(MediaType.APPLICATION_JSON))
-			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andReturn();
-		verify(dataRequestManagement, times(1)).save(dataRequestUpdated);
+		mockMvc.perform(MockMvcRequestBuilders
+				.patch("/data-requests-client/events/123")
+				.content(patchBody)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
 	}
 
 	@Test
