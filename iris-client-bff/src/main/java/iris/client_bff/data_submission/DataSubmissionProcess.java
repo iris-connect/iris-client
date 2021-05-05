@@ -15,6 +15,7 @@
 package iris.client_bff.data_submission;
 
 import iris.client_bff.data_request.DataRequest;
+import iris.client_bff.data_request.events.EventDataRequest;
 import lombok.Getter;
 
 import java.security.InvalidKeyException;
@@ -41,9 +42,9 @@ public abstract class DataSubmissionProcess<T> {
 	private final Class<T> dtoType;
 	private final KeyStore keyStore;
 	private final ObjectMapper mapper;
-	private final DataRequest request;
+	private final EventDataRequest request;
 
-	public DataSubmissionProcess(DataSubmissionDto submissionDto, Class<T> dtoType, DataRequest request,
+	public DataSubmissionProcess(DataSubmissionDto submissionDto, Class<T> dtoType, EventDataRequest request,
 			KeyStore keyStore, ObjectMapper mapper) {
 
 		// super(request, taskApi);

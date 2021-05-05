@@ -14,10 +14,10 @@
  *******************************************************************************/
 package iris.client_bff.data_submission;
 
-import iris.client_bff.data_request.DataRequest;
+import iris.client_bff.data_request.events.EventDataRequest;
 import iris.client_bff.data_request.DataRequest.Status;
-import iris.client_bff.data_request.DataRequestManagement;
-import iris.client_bff.data_request.web.dto.GuestList;
+import iris.client_bff.data_request.events.EventDataRequestService;
+import iris.client_bff.data_request.events.web.dto.GuestList;
 import iris.client_bff.data_submission.model.DataSubmission;
 import iris.client_bff.data_submission.model.Guest;
 import iris.client_bff.data_submission.model.GuestListDataProvider;
@@ -40,11 +40,11 @@ public class GuestsSubmissionProcess extends DataSubmissionProcess<GuestList> {
 
 	private @NonNull ModelMapper mapper;
 	private @NonNull DataSubmissionRepository submissions;
-	private @NonNull DataRequestManagement dataRequests;
+	private @NonNull EventDataRequestService dataRequests;
 
-	public GuestsSubmissionProcess(DataSubmissionDto submissionDto, DataRequest request, KeyStore keyStore,
+	public GuestsSubmissionProcess(DataSubmissionDto submissionDto, EventDataRequest request, KeyStore keyStore,
 			ObjectMapper mapper, @NonNull ModelMapper modelMapper, @NonNull DataSubmissionRepository submissions,
-			@NonNull DataRequestManagement dataRequests) {
+			@NonNull EventDataRequestService dataRequests) {
 
 		super(submissionDto, GuestList.class, request, keyStore, mapper);
 
@@ -64,7 +64,7 @@ public class GuestsSubmissionProcess extends DataSubmissionProcess<GuestList> {
 
 		var dataProvider = mapper.map(guestList.getDataProvider(), GuestListDataProvider.class);
 
-		DataRequest request = getRequest();
+		EventDataRequest request = getRequest();
 
 		var submission = new DataSubmission(request, guests, dataProvider, guestList.getAdditionalInformation(),
 				guestList.getStartDate(), guestList.getEndDate());

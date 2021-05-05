@@ -24,7 +24,7 @@ import iris.client_bff.core.sync.SyncTimes;
 import iris.client_bff.core.sync.SyncTimes.DataTypes;
 import iris.client_bff.core.sync.SyncTimesRepository;
 import iris.client_bff.data_request.DataRequest;
-import iris.client_bff.data_request.DataRequestManagement;
+import iris.client_bff.data_request.events.EventDataRequestService;
 import iris.sormas.client.api.CaseControllerApi;
 import iris.sormas.client.api.EventControllerApi;
 import iris.sormas.client.api.PersonControllerApi;
@@ -75,7 +75,7 @@ class DataRequestJob {
 	private final @NonNull TaskControllerApi taskControllerApi;
 	private final @NonNull EventControllerApi eventControllerApi;
 	private final @NonNull SampleControllerApi sampleControllerApi;
-	private final @NonNull DataRequestManagement dataRequests;
+	private final @NonNull EventDataRequestService dataRequests;
 
 	private long errorCounter = 0;
 
@@ -216,10 +216,11 @@ class DataRequestJob {
 			var startDate = eventDto.getStartDate();
 			var endDate = eventDto.getEndDate();
 
+			String comment = eventDto.getComment();
 			var requestDetails = task.getCreatorComment();
 
 			var dataRequest = dataRequests.createLocationRequest(eventId, name, startDate,
-					Option.of(endDate), Option.of(requestDetails), Option.of(sormasUserId));
+					Option.of(endDate), Option.of(comment), Option.of(requestDetails), Option.of(sormasUserId));
 
 			var now = Instant.now();
 			var irisMessage = createNoteTextForIrisRequest("Ereignisnachverfolgung", dataRequest, now);

@@ -1,4 +1,4 @@
-# IRIS Client SORMAS Sidecar
+# IRIS Client BFF
 
 "Backend for frontend" service for [IRIS client frontend](https://github.com/iris-gateway/iris-client-frontend).
 

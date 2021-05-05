@@ -35,22 +35,20 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "data_request")
-@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 @Getter
 @Setter(AccessLevel.PACKAGE)
+@Inheritance
+@DiscriminatorColumn(name = "data_request_type")
 public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestIdentifier> {
 
-	private String refId;
+	private @Setter String refId;
 	private String hdUserId;
 
-	@OneToOne(orphanRemoval = true, cascade = { CascadeType.ALL }) @JoinColumn(name = "location_id")
-	private Location location;
-
-	private String name;
+	private @Setter String name;
+	private @Setter String comment;
 	private Instant requestStart;
 	private Instant requestEnd;
-
-	private @Lob String requestDetails;
 
 	@Enumerated(EnumType.STRING) @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
 			name = "data_request_feature",
@@ -60,8 +58,8 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	@Column(nullable = false) @Enumerated(EnumType.STRING)
 	private @Setter Status status = Status.DATA_REQUESTED;
 
-	public DataRequest(String refId, String name, Instant requestStart, Instant requestEnd, String requestDetails,
-			String hdUserId, Location location, Set<Feature> features) {
+	public DataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
+			String hdUserId, String comment, Set<Feature> features) {
 
 		super();
 
@@ -70,9 +68,8 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 		this.name = name;
 		this.requestStart = requestStart;
 		this.requestEnd = requestEnd;
-		this.requestDetails = requestDetails;
 		this.hdUserId = hdUserId;
-		this.location = location;
+		this.comment = comment;
 		this.features = features;
 	}
 
@@ -112,6 +109,6 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	}
 
 	public enum Status {
-		DATA_REQUESTED, DATA_RECEIVED, CLOSED
+		DATA_REQUESTED, DATA_RECEIVED, CLOSED, ABORTED
 	}
 }

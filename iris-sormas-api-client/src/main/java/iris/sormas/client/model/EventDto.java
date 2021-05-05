@@ -23,12 +23,13 @@ import iris.sormas.client.model.*;
 
 import java.time.OffsetDateTime;
 import java.time.Instant;
+import javax.annotation.Generated;
 
 /**
  * EventDto
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
+@Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
 		date = "2021-01-28T11:46:54.705673+01:00[Europe/Berlin]")
 public class EventDto {
 	@JsonProperty("creationDate")
@@ -171,6 +172,7 @@ public class EventDto {
 
 	@JsonProperty("multiDayEvent")
 	private Boolean multiDayEvent = null;
+	private String comment;
 
 	public EventDto creationDate(Instant creationDate) {
 		this.creationDate = creationDate;
@@ -1066,7 +1068,7 @@ public class EventDto {
 	}
 
 	@Override
-	public boolean equals(java.lang.Object o) {
+	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -1188,11 +1190,18 @@ public class EventDto {
 	/**
 	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(Object o) {
 		if (o == null) {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
 	}
 
+  public String getComment() {
+    return comment;
+  }
+
+  public void setComment(String comment) {
+    this.comment = comment;
+  }
 }

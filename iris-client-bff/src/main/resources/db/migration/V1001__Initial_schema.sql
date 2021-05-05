@@ -19,14 +19,16 @@ CREATE TABLE data_request (
 	request_id uuid NOT NULL,
 	ref_id varchar(100) NOT NULL,
 	name varchar(500) NULL,
+    comment varchar(500) NULL,
 	hd_user_id varchar(100) NULL,
 	location_id uuid NULL,
 	request_start timestamp NOT NULL,
 	request_end timestamp NULL,
-	request_details text NULL,
+	request_details varchar(500) NULL,
 	status varchar(50) NOT NULL,
 	created timestamp NOT NULL,
 	last_modified timestamp NOT NULL,
+    data_request_type varchar(31),
 	CONSTRAINT request_pkey PRIMARY KEY (request_id),
 	CONSTRAINT data_request_location_fk FOREIGN KEY (location_id) REFERENCES location(id)
 );

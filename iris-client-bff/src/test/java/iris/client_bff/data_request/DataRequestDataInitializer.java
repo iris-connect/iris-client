@@ -19,6 +19,8 @@ import static java.time.temporal.ChronoUnit.*;
 import iris.client_bff.DataInitializer;
 import iris.client_bff.data_request.DataRequest.DataRequestIdentifier;
 import iris.client_bff.data_request.DataRequest.Feature;
+import iris.client_bff.data_request.events.EventDataRequest;
+import iris.client_bff.data_request.events.EventDataRequestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,10 +43,10 @@ public class DataRequestDataInitializer implements DataInitializer {
 	static final DataRequestIdentifier REQ_ID_3 = DataRequestIdentifier
 			.of(UUID.fromString("3907e730-af89-4944-8e75-fbe6ba60c904"));
 
-	public static final DataRequest DATA_REQUEST_1 = new DataRequest(REQ_ID_1.toString(), "Anfrage 1",
-			Instant.now().minus(2, DAYS), null, null, null, null, EnumSet.of(Feature.Contacts_Events));
+	public static final EventDataRequest DATA_REQUEST_1 = new EventDataRequest(REQ_ID_1.toString(), "Anfrage 1",
+			Instant.now().minus(2, DAYS), null, null, null, null, null, EnumSet.of(Feature.Contacts_Events));
 
-	private final DataRequestRepository requests;
+	private final EventDataRequestRepository requests;
 
 	/*
 	 * (non-Javadoc)
@@ -55,15 +57,15 @@ public class DataRequestDataInitializer implements DataInitializer {
 
 		log.debug("Test data: creating data requests …");
 
-		var list = new ArrayList<DataRequest>();
+		var list = new ArrayList<EventDataRequest>();
 
 		list.add(DATA_REQUEST_1);
 
-		list.add(new DataRequest(REQ_ID_2.toString(), "Anfrage 2", Instant.now().minus(4, DAYS),
-				Instant.now().minus(2, DAYS), null, null, null, EnumSet.of(Feature.Contacts_Events)));
+		list.add(new EventDataRequest(REQ_ID_2.toString(), "Anfrage 2", Instant.now().minus(4, DAYS),
+				Instant.now().minus(2, DAYS), null, null, null, null, EnumSet.of(Feature.Contacts_Events)));
 
-		list.add(new DataRequest(REQ_ID_3.toString(), "Anfrage 3", Instant.now().minus(4, DAYS),
-				Instant.now().minus(2, DAYS), null, null, null, EnumSet.of(Feature.Contacts_Events)));
+		list.add(new EventDataRequest(REQ_ID_3.toString(), "Anfrage 3", Instant.now().minus(4, DAYS),
+				Instant.now().minus(2, DAYS), null, null, null, null, EnumSet.of(Feature.Contacts_Events)));
 
 		requests.saveAll(list);
 	}
