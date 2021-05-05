@@ -12,11 +12,10 @@
           </v-card-subtitle>
           <v-divider class="theme--light primary" />
         </div>
-        <v-container class="mt-1 px-sm-10">
+        <v-container class="mt-1 px-sm-15">
           <v-autocomplete
             :items="['Verbesserungsvorschlag', 'Probleme']"
             label="Katergorie auswählen"
-            multiple
           ></v-autocomplete>
 
           <v-text-field label="Titel*" required maxlength="100"></v-text-field>
@@ -45,6 +44,7 @@
           ></v-text-field>
         </v-container>
         <v-divider class="theme--light primary" />
+
         <v-container>
           <v-row>
             <v-col class="d-flex justify-center">
@@ -99,18 +99,28 @@
       max-width="20%"
     >
       <v-card>
-        <v-card-title>
+        <v-card-title class="justify-center">
           <span>Bestätigen</span>
-          <v-spacer></v-spacer>
-          Sind sie sich Sicher, dass sie den Feedback Bogen abschicken
-          wollen.Die Daten werden in einem GitHub Issue gespeichert und es wird
-          ihnen ein Link zum Issue zu ihrer E-Mail Addresse gesendet.
         </v-card-title>
-        <v-card-actions>
-          <v-btn color="primary" text @click="showConfirmDialog = false">
-            Abbrechen
+        <hr />
+        <v-card-text class="mt-3">
+          Möchten sie ihr Feedback abschicken? Die Daten werden in einem GitHub
+          Issue gespeichert und es wird ihnen ein Link zum Issue zu ihrer E-Mail
+          Addresse gesendet.
+        </v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn
+            class="my-2"
+            color="secondary"
+            plain
+            text
+            @click="showConfirmDialog = false"
+          >
+            Zurück
           </v-btn>
-          <v-btn color="primary" text @click="confirm()"> Abschicken</v-btn>
+          <v-btn color="primary" text @click="confirm()" class="my-2">
+            Abschicken
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
