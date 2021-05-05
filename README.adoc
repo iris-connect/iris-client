@@ -31,12 +31,14 @@ chore/{issue number}-{name} ⇒ which is neither feature nor bugfix
 We use *Java 11* and the following code style. 
 
 ==== Eclipse
-link:infrastructure/eclipse-code-formatter.xml[] +
-link:infrastructure/eclipse.importorder[]
+
+* link:infrastructure/eclipse-code-formatter.xml[]
+* link:infrastructure/eclipse.importorder[]
 
 ==== IntelliJ
 
 You can use following plugin to consume the eclipse formatting config:
+
 * https://plugins.jetbrains.com/plugin/6546-eclipse-code-formatter
 * https://github.com/krasa/EclipseCodeFormatter
 
