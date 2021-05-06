@@ -51,7 +51,7 @@ public class IrisClientSormasSidecarApplication {
 	}
 
 	@Bean
-	@Profile("local & dev")
+	@Profile({"local", "dev"})
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
