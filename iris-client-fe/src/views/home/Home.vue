@@ -97,37 +97,37 @@ import CounterWidget from "@/components/dashboard/counter-widget.vue";
 import EventList from "@/components/event-list.vue";
 import store from "@/store";
 import {
-  ExistingDataRequestClientWithLocationStatusEnum,
+  DataRequestStatus,
   ExistingDataRequestClientWithLocation,
 } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
 import { ErrorMessage } from "@/utils/axios";
 
-function getStatusColor(
-  status?: ExistingDataRequestClientWithLocationStatusEnum
-): string {
+function getStatusColor(status?: DataRequestStatus): string {
   switch (status) {
-    case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+    case DataRequestStatus.DataRequested:
       return "blue";
-    case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+    case DataRequestStatus.DataReceived:
       return "red";
-    case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+    case DataRequestStatus.Closed:
       return "green";
+    case DataRequestStatus.Aborted:
+      return "black";
     default:
       return "gray"; // TODO
   }
 }
 
-function getStatusName(
-  status?: ExistingDataRequestClientWithLocationStatusEnum
-): string {
+function getStatusName(status?: DataRequestStatus): string {
   switch (status) {
-    case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+    case DataRequestStatus.DataRequested:
       return "Angefragt";
-    case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+    case DataRequestStatus.DataReceived:
       return "Geliefert";
-    case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+    case DataRequestStatus.Closed:
       return "Abgeschlossen";
+    case DataRequestStatus.Aborted:
+      return "Abgebrochen";
     default:
       return "Unbekannt"; // TODO find better name
   }
@@ -193,11 +193,7 @@ export default class Home extends Vue {
   get openEventListData(): TableRow[] {
     const dataRequests = store.state.home.eventTrackingList?.dataRequests || [];
     return dataRequests
-      .filter(
-        (request) =>
-          request.status ===
-          ExistingDataRequestClientWithLocationStatusEnum.DataRequested
-      )
+      .filter((request) => request.status === DataRequestStatus.DataRequested)
       .map(tableRowMapper);
   }
 }

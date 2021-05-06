@@ -1,19 +1,15 @@
-import {
-  DataRequestCaseDetailsStatusEnum,
-  ExistingDataRequestClientWithLocationStatusEnum,
-} from "@/api";
+import { DataRequestStatus } from "@/api";
 
-const getMessage = function (status: string): string {
+const getMessage = function (status: DataRequestStatus): string {
   switch (status) {
-    case DataRequestCaseDetailsStatusEnum.DataRequested:
-    case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+    case DataRequestStatus.DataRequested:
       return "Angefragt";
-    case DataRequestCaseDetailsStatusEnum.DataReceived:
-    case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+    case DataRequestStatus.DataReceived:
       return "Geliefert";
-    case DataRequestCaseDetailsStatusEnum.Closed:
-    case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+    case DataRequestStatus.Closed:
       return "Abgeschlossen";
+    case DataRequestStatus.Aborted:
+      return "Abgebrochen";
     default:
       return "Unbekannt"; // TODO find better name
   }

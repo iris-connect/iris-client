@@ -87,7 +87,7 @@
 
 <script lang="ts">
 import {
-  ExistingDataRequestClientWithLocationStatusEnum,
+  DataRequestStatus,
   ExistingDataRequestClientWithLocation,
 } from "@/api";
 import store from "@/store";
@@ -146,12 +146,10 @@ type TableRow = {
   },
 })
 export default class EventTrackingListView extends Vue {
-  statusFilter: ExistingDataRequestClientWithLocationStatusEnum | null = null;
-  statusEnum = ExistingDataRequestClientWithLocationStatusEnum;
+  statusFilter: DataRequestStatus | null = null;
+  statusEnum = DataRequestStatus;
   statusButtonSelected = 4;
-  filterStatus(
-    target: ExistingDataRequestClientWithLocationStatusEnum | null
-  ): void {
+  filterStatus(target: DataRequestStatus | null): void {
     this.statusFilter = target;
   }
 
@@ -222,15 +220,11 @@ export default class EventTrackingListView extends Vue {
     console.log("NOT IMPLEMENTED", item);
   }
 
-  getStatusColor(
-    status: ExistingDataRequestClientWithLocationStatusEnum
-  ): string {
+  getStatusColor(status: DataRequestStatus): string {
     return StatusColors.getColor(status);
   }
 
-  getStatusName(
-    status: ExistingDataRequestClientWithLocationStatusEnum
-  ): string {
+  getStatusName(status: DataRequestStatus): string {
     return StatusMessages.getMessage(status);
   }
 }

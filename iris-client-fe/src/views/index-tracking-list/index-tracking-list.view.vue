@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts">
-import { DataRequestCaseDetailsStatusEnum } from "@/api";
+import { DataRequestStatus } from "@/api";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import IndexTrackingFormView from "../index-tracking-form/index-tracking-form.view.vue";
@@ -119,10 +119,10 @@ type TableRow = {
   },
 })
 export default class IndexTrackingListView extends Vue {
-  statusFilter: DataRequestCaseDetailsStatusEnum | null = null;
-  statusEnum = DataRequestCaseDetailsStatusEnum;
+  statusFilter: DataRequestStatus | null = null;
+  statusEnum = DataRequestStatus;
   statusButtonSelected = 3;
-  filterStatus(target: DataRequestCaseDetailsStatusEnum | null): void {
+  filterStatus(target: DataRequestStatus | null): void {
     this.statusFilter = target;
   }
 
@@ -179,11 +179,11 @@ export default class IndexTrackingListView extends Vue {
     return "item.actions";
   }
 
-  getStatusColor(status: DataRequestCaseDetailsStatusEnum): string {
+  getStatusColor(status: DataRequestStatus): string {
     return StatusColors.getColor(status);
   }
 
-  getStatusName(status: DataRequestCaseDetailsStatusEnum): string {
+  getStatusName(status: DataRequestStatus): string {
     return StatusMessages.getMessage(status);
   }
 }

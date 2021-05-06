@@ -182,7 +182,7 @@
 import {
   Address,
   ContactPersonAllOfWorkPlace,
-  DataRequestCaseDetailsStatusEnum,
+  DataRequestStatus,
   Sex,
 } from "@/api";
 import router from "@/router";
@@ -457,11 +457,11 @@ export default class IndexTrackingDetailsView extends Vue {
     this.currentTab = index;
   }
 
-  getStatusName(status: DataRequestCaseDetailsStatusEnum): string {
+  getStatusName(status: DataRequestStatus): string {
     return StatusMessages.getMessage(status);
   }
 
-  getStatusColor(status: DataRequestCaseDetailsStatusEnum): string {
+  getStatusColor(status: DataRequestStatus): string {
     return StatusColors.getColor(status);
   }
 

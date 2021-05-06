@@ -1,19 +1,15 @@
-import {
-  DataRequestCaseDetailsStatusEnum,
-  ExistingDataRequestClientWithLocationStatusEnum,
-} from "@/api";
+import { DataRequestStatus } from "@/api";
 
-const getColor = function (status: string): string {
+const getColor = function (status: DataRequestStatus): string {
   switch (status) {
-    case DataRequestCaseDetailsStatusEnum.DataRequested:
-    case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
+    case DataRequestStatus.DataRequested:
       return "blue";
-    case DataRequestCaseDetailsStatusEnum.DataReceived:
-    case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
+    case DataRequestStatus.DataReceived:
       return "red";
-    case DataRequestCaseDetailsStatusEnum.Closed:
-    case ExistingDataRequestClientWithLocationStatusEnum.Closed:
+    case DataRequestStatus.Closed:
       return "green";
+    case DataRequestStatus.Aborted:
+      return "black";
     default:
       return "gray"; // TODO
   }

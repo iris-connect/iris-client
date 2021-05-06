@@ -1,72 +1,43 @@
 <template>
-  <div>    
+  <div>
     <v-card>
       <v-card-title
         >Details für Ereignis ID: {{ eventData.extID }}</v-card-title
       >
       <v-card-text>
-        <v-row class="align-center">
+        <v-row>
           <v-col cols="12" md="6">
-            <strong> Name: </strong>
-            {{ eventData.name }}
+            <v-row>
+              <v-col cols="12">
+                <strong> Name: </strong>
+                {{ eventData.name }}
+              </v-col>
+              <v-col cols="12">
+                <strong> Zeitraum: </strong>
+                {{ eventData.startTime }} - {{ eventData.endTime }}
+              </v-col>
+            </v-row>
           </v-col>
           <v-col cols="12" md="6">
-            <span class="d-inline-block mr-3">
-              <strong> Status: </strong>
-            </span>
-            <v-chip :color="getStatusColor(eventData.status)" dark>
-              {{ getStatusName(eventData.status) }}
-            </v-chip>
-          </v-col>
-        </v-row>
-        <v-row class="align-center">
-          <v-col cols="12" md="6">
-            <strong> Zeitraum: </strong>
-            {{ eventData.startTime }} - {{ eventData.endTime }}
-          </v-col>
-          <v-col cols="12" md="6">
-            <v-dialog
-              v-model="dialog"
-              width="500"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  text   
-                  color="error"      
-                  x-small         
-                  v-bind="attrs"
-                  v-on="on"
+            <v-row>
+              <v-col cols="12">
+                <span class="d-inline-block mr-3">
+                  <strong> Status: </strong>
+                </span>
+                <v-chip
+                  :color="getStatusColor(eventData.status)"
+                  dark
+                  class="my-n2"
                 >
+                  {{ getStatusName(eventData.status) }}
+                </v-chip>
+              </v-col>
+              <v-col cols="12" v-if="isAbortable(eventData.status)">
+                <event-tracking-data-request-abort-button @click="abortRequest">
                   Anfrage abbrechen
-                </v-btn>
-              </template>
-
-              <v-card>
-                <v-card-title class="headline grey lighten-2">
-                  Anfrage abbrechen?
-                </v-card-title>
-                <v-card-text>
-                  Sind sie sich sicher, dass sie die Anfrage abbrechen wollen? Dieser Schritt kann nicht rückgängig gemacht werden.
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-actions>    
-                  <v-btn
-                    text
-                    @click="dialog = false"
-                  >
-                    Zurück
-                  </v-btn>              
-                  <v-spacer></v-spacer>                  
-                  <v-btn
-                    color="error"
-                    text
-                    @click="dialog = false"
-                  >
-                    Bestätigen
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+                </event-tracking-data-request-abort-button>
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
         <event-tracking-details-location-info :location="eventData.location" />
@@ -141,6 +112,7 @@
             </td>
           </template>
         </v-data-table>
+        <error-message-alert :errors="errorMessages" />
       </v-card-text>
       <v-card-actions>
         <v-btn color="white" @click="$router.back()"> Zurück </v-btn>
@@ -158,12 +130,7 @@
 </template>
 <style></style>
 <script lang="ts">
-import {
-  Address,
-  LocationInformation,
-  DataRequestDetailsStatusEnum,
-  Sex,
-} from "@/api";
+import { Address, LocationInformation, DataRequestStatus, Sex } from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
@@ -173,6 +140,9 @@ import dayjs from "@/utils/date";
 import Genders from "@/constants/Genders";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
+import EventTrackingDataRequestAbortButton from "@/views/event-tracking-details/components/event-tracking-data-request-abort-button.vue";
+import ErrorMessageAlert from "@/components/error-message-alert.vue";
+import { ErrorMessage } from "@/utils/axios";
 
 type EventData = {
   extID: string;
@@ -180,7 +150,7 @@ type EventData = {
   startTime: string;
   endTime: string;
   generatedTime: string;
-  status?: DataRequestDetailsStatusEnum;
+  status?: DataRequestStatus;
   lastChange: string;
   location?: LocationInformation;
   additionalInformation: string;
@@ -216,14 +186,17 @@ function getFormattedAddress(address?: Address | null): string {
 
 @Component({
   components: {
+    ErrorMessageAlert,
+    EventTrackingDataRequestAbortButton,
     EventTrackingDetailsLocationInfo,
     EventTrackingDetailsView: EventTrackingDetailsView,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
-    await store.dispatch("eventTrackingDetails/fetchEventTrackingDetails", [
-      router.currentRoute.params.id,
-    ]);
+    await store.dispatch(
+      "eventTrackingDetails/fetchEventTrackingDetails",
+      router.currentRoute.params.id
+    );
   },
   beforeRouteLeave(to, from, next) {
     store.commit("eventTrackingDetails/reset");
@@ -288,12 +261,6 @@ export default class EventTrackingDetailsView extends Vue {
     ],
   };
 
-  data () {
-    return {
-      dialog: false,
-    }
-  }
-
   get eventData(): EventData {
     const dataRequest = store.state.eventTrackingDetails.eventTrackingDetails;
     return {
@@ -326,16 +293,34 @@ export default class EventTrackingDetailsView extends Vue {
     if (!store.state.eventTrackingDetails.eventTrackingDetails) return false;
     return (
       store.state.eventTrackingDetails.eventTrackingDetails.status ===
-      DataRequestDetailsStatusEnum.DataRequested
+      DataRequestStatus.DataRequested
     );
   }
 
-  getStatusName(status: DataRequestDetailsStatusEnum): string {
+  getStatusName(status: DataRequestStatus): string {
     return StatusMessages.getMessage(status);
   }
 
-  getStatusColor(status: DataRequestDetailsStatusEnum): string {
+  getStatusColor(status: DataRequestStatus): string {
     return StatusColors.getColor(status);
+  }
+
+  get errorMessages(): ErrorMessage[] {
+    return [
+      store.state.eventTrackingDetails.eventTrackingDetailsLoadingError,
+      store.state.eventTrackingDetails.dataRequestAbortError,
+    ];
+  }
+
+  isAbortable(status: DataRequestStatus): boolean {
+    return status === DataRequestStatus.DataRequested;
+  }
+
+  async abortRequest(): Promise<void> {
+    await store.dispatch(
+      "eventTrackingDetails/abortDataRequest",
+      router.currentRoute.params.id
+    );
   }
 
   get guests(): TableRow[] {
