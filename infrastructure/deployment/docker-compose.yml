@@ -28,7 +28,7 @@ services:
 
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-sormas-sidecar:v0.0.3
+    image: inoeg/iris-client-bff:v0.0.3
     expose:
       - 8092
     ports: 
