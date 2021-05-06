@@ -32,8 +32,8 @@ We use *Java 11* and the following code style.
 
 ==== Eclipse
 
-* link:infrastructure/eclipse-code-formatter.xml[]
-* link:infrastructure/eclipse.importorder[]
+* link:infrastructure/ide/eclipse-code-formatter.xml[]
+* link:infrastructure/ide/eclipse.importorder[]
 
 ==== IntelliJ
 
