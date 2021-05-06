@@ -1,50 +1,32 @@
 ########################################################
 # Intended for deployments at the health departments
 # 
-# Provides IRIS client BFF and frontend together with a Postgresql database and NGINX
+# Provides IRIS client BFF and frontend together with an NGINX. Uses an externally provided postgres database.
 # IRIS frontend over NGINX: port = 443
 ########################################################
 version: '3.4'
 services:
 
-  # Postgres Database
-  postgres:
-    image: postgres:9.6-alpine
-    expose:
-      - 5432
-    environment:
-      POSTGRES_USER:
-      POSTGRES_PASSWORD:
-    volumes:
-      - psqldata_iris:/var/lib/postgresql/data
-
-    restart: unless-stopped
-    healthcheck:
-      test: [ "CMD", "psql", "-U", "${POSTGRES_USER}", "-c", "SELECT 1;", "${POSTGRES_USER}" ]
-      interval: 15s
-      timeout: 3s
-      retries: 4
-      start_period: 30s
 
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-sormas-sidecar:v0.0.2
+    image: inoeg/iris-client-sormas-sidecar:v0.0.3
     expose:
       - 8092
     ports: 
       - 8092:8092
     environment: 
-      IRIS_SERVER_ADDRESS:
-      IRIS_SERVER_PORT:
-      SECURITY_JWT_JWT_SHARED_SECRET:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_USER}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
+      IRIS_SERVER_ADDRESS:
+      IRIS_SERVER_PORT:
+      SECURITY_JWT_JWT_SHARED_SECRET:
+      HTTP_CLIENT_PROXY_HOST:
+      HTTP_CLIENT_PROXY_PORT:
+      HTTP_CLIENT_PROXY_SCHEME:
     restart: unless-stopped
-    depends_on:
-      postgres:
-        condition: service_healthy
 
   # IRIS Client Frontend
   iris-frontend:
@@ -55,8 +37,6 @@ services:
       SORMAS_SIDECAR_BASE_URL: /api
     ports: 
       - 28080:28080
-    env_file:
-      - .env
     restart: unless-stopped
     depends_on:
       - iris-client

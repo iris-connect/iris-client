@@ -1,3 +1,2 @@
 FROM nginx
-COPY config/nginx.conf /etc/nginx/
-COPY config/sites-enabled/ /etc/nginx/sites-enabled/
+COPY config/templates/ /etc/nginx/templates/
