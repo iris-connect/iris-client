@@ -25,4 +25,4 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PW }}
           repository: inoeg/iris-client-nginx
           tag_with_ref: true
-          path: ./infrastructure/iris-client/docker/nginx/
+          path: ./infrastructure/docker/nginx
