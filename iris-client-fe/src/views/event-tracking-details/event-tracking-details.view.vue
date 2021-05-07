@@ -1,17 +1,56 @@
 <template>
   <div>
     <v-card>
-      <v-card-title
-        >Details für Ereignis ID: {{ eventData.extID }}</v-card-title
-      >
+      <v-card-title>
+        <editable-field
+          v-model="formModel.externalRequestId"
+          name="externalRequestId"
+          :rules="validationRules.defined"
+          label="Details für Ereignis ID"
+          v-slot="{ entry }"
+          @submit="handleEditableField"
+        >
+          Details für Ereignis ID:
+          {{ entry }}
+        </editable-field>
+      </v-card-title>
       <v-card-text>
         <v-row>
           <v-col cols="12" md="6">
+            <editable-field
+              v-model="formModel.name"
+              name="name"
+              :rules="validationRules.defined"
+              label="Name"
+              v-slot="{ entry }"
+              @submit="handleEditableField"
+            >
+              <strong> Name: </strong><br />
+              {{ entry }}
+            </editable-field>
+          </v-col>
+          <v-col cols="12" md="6">
+            <editable-field
+              v-model="formModel.comment"
+              name="comment"
+              label="Kommentar"
+              v-slot="{ entry }"
+              @submit="handleEditableField"
+              component="v-textarea"
+            >
+              <strong> Kommentar: </strong><br />
+              {{ entry }}
+            </editable-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-divider />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="6">
             <v-row>
-              <v-col cols="12">
-                <strong> Name: </strong>
-                {{ eventData.name }}
-              </v-col>
               <v-col cols="12">
                 <strong> Zeitraum: </strong>
                 {{ eventData.startTime }} - {{ eventData.endTime }}
@@ -130,10 +169,17 @@
 </template>
 <style></style>
 <script lang="ts">
-import { Address, LocationInformation, DataRequestStatus, Sex } from "@/api";
+import {
+  Address,
+  LocationInformation,
+  DataRequestStatus,
+  Sex,
+  DataRequestDetails,
+  DataRequestStatusUpdateByUser,
+} from "@/api";
 import router from "@/router";
 import store from "@/store";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import DataExport from "@/utils/DataExport";
 import EventTrackingDetailsLocationInfo from "@/views/event-tracking-details/components/event-tracking-details-location-info.vue";
 import dayjs from "@/utils/date";
@@ -143,6 +189,8 @@ import StatusMessages from "@/constants/StatusMessages";
 import EventTrackingDataRequestAbortButton from "@/views/event-tracking-details/components/event-tracking-data-request-abort-button.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { ErrorMessage } from "@/utils/axios";
+import rules from "@/common/validation-rules";
+import EditableField from "@/components/form/editable-field.vue";
 
 type EventData = {
   extID: string;
@@ -170,6 +218,12 @@ type TableRow = {
   address: string;
 };
 
+type EventTrackingDetailsEditFormModel = {
+  name?: string;
+  externalRequestId?: string;
+  comment?: string;
+};
+
 function getFormattedDate(date?: string): string {
   if (date && dayjs(date).isValid()) {
     return dayjs(date).format("LLL");
@@ -186,6 +240,7 @@ function getFormattedAddress(address?: Address | null): string {
 
 @Component({
   components: {
+    EditableField,
     ErrorMessageAlert,
     EventTrackingDataRequestAbortButton,
     EventTrackingDetailsLocationInfo,
@@ -261,6 +316,31 @@ export default class EventTrackingDetailsView extends Vue {
     ],
   };
 
+  get eventTrackingDetails(): DataRequestDetails | null {
+    return store.state.eventTrackingDetails.eventTrackingDetails;
+  }
+
+  formModel: EventTrackingDetailsEditFormModel = {
+    externalRequestId: "",
+    name: "",
+    comment: "",
+  };
+
+  @Watch("eventTrackingDetails")
+  onEventTrackingDetailsChange(details: DataRequestDetails | null): void {
+    this.formModel = {
+      externalRequestId: details?.externalRequestId,
+      name: details?.name,
+      comment: details?.comment,
+    };
+  }
+
+  get validationRules(): Record<string, Array<unknown>> {
+    return {
+      defined: [rules.defined],
+    };
+  }
+
   get eventData(): EventData {
     const dataRequest = store.state.eventTrackingDetails.eventTrackingDetails;
     return {
@@ -308,7 +388,7 @@ export default class EventTrackingDetailsView extends Vue {
   get errorMessages(): ErrorMessage[] {
     return [
       store.state.eventTrackingDetails.eventTrackingDetailsLoadingError,
-      store.state.eventTrackingDetails.dataRequestAbortError,
+      store.state.eventTrackingDetails.dataRequestPatchError,
     ];
   }
 
@@ -317,10 +397,26 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   async abortRequest(): Promise<void> {
-    await store.dispatch(
-      "eventTrackingDetails/abortDataRequest",
-      router.currentRoute.params.id
-    );
+    await store.dispatch("eventTrackingDetails/patchDataRequest", {
+      id: router.currentRoute.params.id,
+      data: {
+        status: DataRequestStatusUpdateByUser.Aborted,
+      },
+    });
+  }
+
+  handleEditableField(
+    data: Record<string, unknown>,
+    resolve: () => void,
+    reject: (error: string | undefined) => void
+  ): void {
+    store
+      .dispatch("eventTrackingDetails/patchDataRequest", {
+        id: router.currentRoute.params.id,
+        data,
+      })
+      .then(resolve)
+      .catch(reject);
   }
 
   get guests(): TableRow[] {

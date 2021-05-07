@@ -1,4 +1,4 @@
-import { DataRequestDetails, DataRequestStatusUpdateByUser } from "@/api";
+import { DataRequestClientUpdate, DataRequestDetails } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Dispatch, Module } from "vuex";
@@ -9,8 +9,8 @@ export type EventTrackingDetailsState = {
   eventTrackingDetails: DataRequestDetails | null;
   eventTrackingDetailsLoading: boolean;
   eventTrackingDetailsLoadingError: ErrorMessage;
-  dataRequestAbortOngoing: boolean;
-  dataRequestAbortError: ErrorMessage;
+  dataRequestPatchOngoing: boolean;
+  dataRequestPatchError: ErrorMessage;
 };
 
 export interface EventTrackingDetailsModule
@@ -28,11 +28,11 @@ export interface EventTrackingDetailsModule
       state: EventTrackingDetailsState,
       payload: ErrorMessage
     ): void;
-    setDataRequestAbortOngoing(
+    setDataRequestPatchOngoing(
       state: EventTrackingDetailsState,
       payload: boolean
     ): void;
-    setDataRequestAbortError(
+    setDataRequestPatchError(
       state: EventTrackingDetailsState,
       payload: ErrorMessage
     ): void;
@@ -43,9 +43,12 @@ export interface EventTrackingDetailsModule
       { commit }: { commit: Commit },
       eventId: string
     ): Promise<void>;
-    abortDataRequest(
+    patchDataRequest(
       { commit, dispatch }: { commit: Commit; dispatch: Dispatch },
-      eventId: string
+      payload: {
+        id: string;
+        data: DataRequestClientUpdate;
+      }
     ): Promise<void>;
   };
 }
@@ -54,8 +57,8 @@ const defaultState: EventTrackingDetailsState = {
   eventTrackingDetails: null,
   eventTrackingDetailsLoading: false,
   eventTrackingDetailsLoadingError: null,
-  dataRequestAbortOngoing: false,
-  dataRequestAbortError: null,
+  dataRequestPatchOngoing: false,
+  dataRequestPatchError: null,
 };
 
 const eventTrackingDetails: EventTrackingDetailsModule = {
@@ -73,11 +76,11 @@ const eventTrackingDetails: EventTrackingDetailsModule = {
     setEventTrackingDetailsLoadingError(state, payload) {
       state.eventTrackingDetailsLoadingError = payload;
     },
-    setDataRequestAbortOngoing(state, payload) {
-      state.dataRequestAbortOngoing = payload;
+    setDataRequestPatchOngoing(state, payload) {
+      state.dataRequestPatchOngoing = payload;
     },
-    setDataRequestAbortError(state, payload) {
-      state.dataRequestAbortError = payload;
+    setDataRequestPatchError(state, payload) {
+      state.dataRequestPatchError = payload;
     },
     reset(state) {
       Object.assign(state, { ...defaultState });
@@ -98,20 +101,21 @@ const eventTrackingDetails: EventTrackingDetailsModule = {
         commit("setEventTrackingDetailsLoading", false);
       }
     },
-    async abortDataRequest({ commit, dispatch }, eventId): Promise<void> {
-      commit("setDataRequestAbortOngoing", true);
-      commit("setDataRequestAbortError", null);
+    async patchDataRequest({ commit, dispatch }, payload): Promise<void> {
+      commit("setDataRequestPatchOngoing", true);
+      commit("setDataRequestPatchError", null);
       try {
-        await authClient.dataRequestsClientLocationsCodePatch(eventId, {
-          status: DataRequestStatusUpdateByUser.Aborted,
-        });
+        await authClient.dataRequestsClientLocationsCodePatch(
+          payload.id,
+          payload.data
+        );
       } catch (e) {
-        commit("setDataRequestAbortError", getErrorMessage(e));
+        commit("setDataRequestPatchError", getErrorMessage(e));
         throw e;
       } finally {
-        commit("setDataRequestAbortOngoing", false);
+        commit("setDataRequestPatchOngoing", false);
       }
-      await dispatch("fetchEventTrackingDetails", eventId);
+      await dispatch("fetchEventTrackingDetails", payload.id);
     },
   },
 };
