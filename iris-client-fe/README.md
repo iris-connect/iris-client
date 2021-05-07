@@ -89,6 +89,18 @@ We are currently not supporting any URL query parameters to e.g. prefill text fi
 /events/list
 ```
 
+#### Case creation
+
+```text
+/cases/new
+```
+
+### Case details
+
+```text
+/cases/details/:id
+```
+
 #### Case list
 
 ```text

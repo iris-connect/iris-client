@@ -14,7 +14,7 @@
  *******************************************************************************/
 package iris.client_bff.data_submission;
 
-import iris.client_bff.data_request.DataRequestManagement;
+import iris.client_bff.data_request.events.EventDataRequestService;
 import iris.client_bff.data_submission.supplier_connection.FetchedDataSubmissions;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequiredArgsConstructor
 class DataSubmissionProcessor {
 
-	private final @NonNull DataRequestManagement dataRequests;
+	private final @NonNull EventDataRequestService dataRequests;
 	private final @NonNull ObjectMapper mapper;
 	private final @NonNull KeyStore keyStore;
 	private final @NonNull ModelMapper modelMapper;

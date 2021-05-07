@@ -102,16 +102,11 @@
         }}</v-alert>
       </v-card-text>
       <v-card-actions>
-        <v-btn class="mt-4" color="secondary" plain @click="$router.back()">
+        <v-btn color="secondary" plain @click="$router.back()">
           Abbrechen
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn
-          :disabled="eventCreationOngoing"
-          class="mt-4"
-          color="primary"
-          @click="submit"
-        >
+        <v-btn :disabled="eventCreationOngoing" color="primary" @click="submit">
           Anfrage senden
         </v-btn>
       </v-card-actions>
@@ -131,7 +126,7 @@ import router from "@/router";
 import LocationSelectDialog from "@/views/event-tracking-form/components/location-select-dialog.vue";
 import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
-import DateTimeInputField from "@/views/event-tracking-form/components/form/date-time-input-field.vue";
+import DateTimeInputField from "@/components/form/date-time-input-field.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
 import EventTrackingFormLocationInfo from "@/views/event-tracking-form/components/event-tracking-form-location-info.vue";
 import rules from "@/common/validation-rules";

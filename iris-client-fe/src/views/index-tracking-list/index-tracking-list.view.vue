@@ -1,45 +1,47 @@
 <template>
-  <div v-if="workInProgress" class="work-in-progress">
+  <div>
     <v-row>
-      <v-col>
-        <v-card>
-          <v-card-title>Indexfallverfolgung</v-card-title>
-          <v-card-text>
-            Hier erhalten Sie in Kürze eine Übersicht der Indexfälle sowie die
-            Möglichkeit, eine neue Indexfallverfolgung zu starten.
-          </v-card-text>
-        </v-card>
+      <v-col cols="12">
+        <div class="mb-6">
+          <v-btn
+            class="float-right"
+            color="primary"
+            :to="{ name: 'index-new' }"
+          >
+            Neuen Indexfall erstellen
+          </v-btn>
+        </div>
       </v-col>
     </v-row>
-  </div>
-  <div v-else>
-    <v-row>
+    <v-row class="mb-6">
       <v-col cols="8">
-        <div class="mb-6">
-          Status:
-          <v-btn class="ml-2 mr-2" color="white" @click="on">Angefragt </v-btn>
-          <v-btn class="mr-2" color="white" @click="on">Update </v-btn>
-          <v-btn class="mr-2" color="white" @click="on">Geschlossen </v-btn>
-        </div>
-      </v-col>
-      <v-col cols="4">
-        <div class="mb-6">
-          <v-dialog
-            transition="dialog-bottom-transition"
-            max-width="98%"
-            width="1600px"
+        Status:
+        <v-btn-toggle dense mandatory v-model="statusButtonSelected">
+          <v-btn
+            @click="filterStatus(statusEnum.DataRequested)"
+            style="opacity: 100%; background-color: white"
           >
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="float-right"
-                color="primary"
-                v-bind="attrs"
-                @click="on"
-                >Neue Indexfallverfolgung starten
-              </v-btn>
-            </template>
-          </v-dialog>
-        </div>
+            {{ getStatusName(statusEnum.DataRequested) }}
+          </v-btn>
+          <v-btn
+            @click="filterStatus(statusEnum.DataReceived)"
+            style="opacity: 100%; background-color: white"
+          >
+            {{ getStatusName(statusEnum.DataReceived) }}
+          </v-btn>
+          <v-btn
+            @click="filterStatus(statusEnum.Closed)"
+            style="opacity: 100%; background-color: white"
+          >
+            {{ getStatusName(statusEnum.Closed) }}
+          </v-btn>
+          <v-btn
+            @click="filterStatus(null)"
+            style="opacity: 100%; background-color: white"
+          >
+            Alle
+          </v-btn>
+        </v-btn-toggle>
       </v-col>
     </v-row>
 
@@ -54,22 +56,23 @@
           hide-details
         ></v-text-field>
         <v-data-table
+          :loading="indexListLoading"
           :headers="tableData.headers"
-          :items="tableData.eventList"
+          :items="indexList"
           :items-per-page="5"
           class="elevation-1 mt-5 twolineTable"
           :search="tableData.search"
         >
-          <template v-slot:item.status="{ item }">
+          <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
-              {{ item.status }}
+              {{ getStatusName(item.status) }}
             </v-chip>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:[itemActionSlotName]="{ item }">
+            <!-- TODO use imported route name -->
             <v-btn
               color="primary"
-              :to="'details/' + item.tan"
-              @click="selectItem(item)"
+              :to="{ name: 'index-details', params: { caseId: item.caseId } }"
             >
               Details
             </v-btn>
@@ -81,16 +84,48 @@
 </template>
 
 <script lang="ts">
+import { DataRequestCaseDetailsStatusEnum } from "@/api";
+import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
+import IndexTrackingFormView from "../index-tracking-form/index-tracking-form.view.vue";
+import StatusColors from "@/constants/StatusColors";
+import StatusMessages from "@/constants/StatusMessages";
+
+function getFormattedDate(date?: string): string {
+  return date
+    ? `${new Date(date).toDateString()}, ${new Date(date).toLocaleTimeString()}`
+    : "-";
+}
+
+type TableRow = {
+  endTime: string;
+  extID: string;
+  name: string;
+  startTime: string;
+  status: string;
+};
 
 @Component({
   components: {
-    EventTrackingFormView: EventTrackingFormView,
+    IndexTrackingFormView: IndexTrackingFormView,
+  },
+  async beforeRouteEnter(_from, _to, next) {
+    next();
+    await store.dispatch("indexTrackingList/fetchIndexTrackingList");
+  },
+  beforeRouteLeave(to, from, next) {
+    store.commit("indexTrackingList/reset");
+    next();
   },
 })
-export default class EventTrackingListView extends Vue {
-  workInProgress = true;
+export default class IndexTrackingListView extends Vue {
+  statusFilter: DataRequestCaseDetailsStatusEnum | null = null;
+  statusEnum = DataRequestCaseDetailsStatusEnum;
+  statusButtonSelected = 3;
+  filterStatus(target: DataRequestCaseDetailsStatusEnum | null): void {
+    this.statusFilter = target;
+  }
+
   tableData = {
     search: "",
     headers: [
@@ -100,57 +135,56 @@ export default class EventTrackingListView extends Vue {
         sortable: true,
         value: "extID",
       },
-      { text: "Name", value: "name" },
-      { text: "Geburtsdatum", value: "birthdate" },
-      { text: "Datum (Start)", value: "startTime" },
-      { text: "Generiert", value: "generatedTime" },
-      { text: "TAN", value: "tan" },
+      { text: "Index-Bezeichner", value: "name" },
+      { text: "Zeit (Start)", value: "startTime" },
+      { text: "Zeit (Ende)", value: "endTime" },
       { text: "Status", value: "status" },
-      { text: "Letzte Ändrung", value: "lastChange" },
       { text: "", value: "actions" },
-    ],
-    eventList: [
-      {
-        extID: "ZEUCTEAL",
-        name: "Hans Müller",
-        birthdate: "14.03.1968",
-        startTime: "20.03.2021",
-        generatedTime: "31.03.2021 09:44",
-        tan: "ASUE-DU3Z9-KTB8U",
-        status: "Angefragt",
-        lastChange: "31.03.2021 09:44",
-      },
-      {
-        extID: "JAUTGREO",
-        name: "Lisa Maier",
-        birthdate: "05.10.1988",
-        startTime: "23.03.2021",
-        generatedTime: "26.03.2021 13:15",
-        tan: "AS3H-65TYJ-9RHM",
-        status: "UPDATE",
-        lastChange: "26.03.2021 13:19",
-      },
     ],
   };
 
-  on(): void {
-    console.log("NOT IMPLEMENTED");
+  get indexListLoading(): boolean {
+    return store.state.indexTrackingList.indexTrackingListLoading;
   }
 
-  getStatusColor(status: string): string {
-    if (status == "Angefragt") return "blue";
-    else if (status == "UPDATE") return "red";
-    else if (status == "Abgeschlossen") return "green";
-    else return "";
+  get indexList(): TableRow[] {
+    const dataRequests = store.state.indexTrackingList.indexTrackingList || [];
+    //console.log(dataRequests);
+    return (
+      dataRequests
+        // TODO this filtering could probably also be done in vuetify data-table
+        .filter(
+          (dataRequests) =>
+            !this.statusFilter || this.statusFilter === dataRequests.status
+        )
+        .map((dataRequest) => {
+          return {
+            endTime: getFormattedDate(dataRequest.end),
+            startTime: getFormattedDate(dataRequest.start),
+            extID: dataRequest.externalCaseId || "-",
+            name: dataRequest.name || "-",
+            status: dataRequest.status?.toString() || "-",
+            caseId: dataRequest.caseId,
+          };
+        })
+    );
+  }
+
+  // TODO improve this - we need it to circumvent v-slot eslint errors
+  // https://stackoverflow.com/questions/61344980/v-slot-directive-doesnt-support-any-modifier
+  get itemStatusSlotName(): string {
+    return "item.status";
+  }
+  get itemActionSlotName(): string {
+    return "item.actions";
+  }
+
+  getStatusColor(status: DataRequestCaseDetailsStatusEnum): string {
+    return StatusColors.getColor(status);
+  }
+
+  getStatusName(status: DataRequestCaseDetailsStatusEnum): string {
+    return StatusMessages.getMessage(status);
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.work-in-progress {
-  & > * {
-    margin-bottom: 1em;
-    margin-top: 1em;
-  }
-}
-</style>

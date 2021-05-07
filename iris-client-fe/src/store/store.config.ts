@@ -6,6 +6,10 @@ import adminUserList from "@/views/admin-user-list/admin-user-list.store";
 import adminUserCreate from "@/views/admin-user-create/admin-user-create.store";
 import adminUserEdit from "@/views/admin-user-edit/admin-user-edit.store";
 
+import indexTrackingForm from "../views/index-tracking-form/index-tracking-form.store";
+import indexTrackingList from "../views/index-tracking-list/index-tracking-list.store";
+import indexTrackingDetails from "@/views/index-tracking-details/index-tracking-details.store";
+
 import { StoreOptions } from "vuex";
 import { RootState } from "@/store/types";
 import home from "@/views/home/home.store";
@@ -25,6 +29,9 @@ export const storeOptions: StoreOptions<RootState> = {
     adminUserList,
     adminUserCreate,
     adminUserEdit,
+    indexTrackingForm,
+    indexTrackingList,
+    indexTrackingDetails,
   },
   plugins: [
     createPersistedState({

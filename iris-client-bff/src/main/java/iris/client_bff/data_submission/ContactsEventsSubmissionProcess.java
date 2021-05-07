@@ -14,11 +14,11 @@
  *******************************************************************************/
 package iris.client_bff.data_submission;
 
-import iris.client_bff.data_request.DataRequest;
-import iris.client_bff.data_request.web.dto.ContactPersonList;
-import iris.client_bff.data_request.web.dto.ContactsAndEvents;
-import iris.client_bff.data_request.web.dto.EventList;
+import iris.client_bff.data_request.events.web.dto.ContactPersonList;
+import iris.client_bff.data_request.events.web.dto.ContactsAndEvents;
+import iris.client_bff.data_request.events.web.dto.EventList;
 
+import iris.client_bff.data_request.events.EventDataRequest;
 import java.security.KeyStore;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ContactsEventsSubmissionProcess extends DataSubmissionProcess<ContactsAndEvents> {
 
-	public ContactsEventsSubmissionProcess(DataSubmissionDto submissionDto, DataRequest request, KeyStore keyStore,
+	public ContactsEventsSubmissionProcess(DataSubmissionDto submissionDto, EventDataRequest request, KeyStore keyStore,
 			ObjectMapper mapper) {
 
 		super(submissionDto, ContactsAndEvents.class, request, keyStore, mapper);

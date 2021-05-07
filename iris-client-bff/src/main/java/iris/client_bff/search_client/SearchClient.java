@@ -1,8 +1,8 @@
 package iris.client_bff.search_client;
 
-import iris.client_bff.data_request.Location;
 import iris.client_bff.search_client.web.dto.LocationInformation;
 import iris.client_bff.search_client.web.dto.LocationList;
+import iris.client_bff.data_request.events.Location;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 

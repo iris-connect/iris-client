@@ -1,10 +1,14 @@
-import { DataRequestDetails, User } from "@/api";
+import { DataRequestCaseDetails, DataRequestDetails, User } from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
 import {
   dummyDataRequests,
   getDummyDetailsWithStatus,
 } from "@/server/data/data-requests";
 import { createServer, Request, Response } from "miragejs";
+import {
+  dummyDataRequestsCases,
+  getDummyDetailsCases,
+} from "@/server/data/data-requests-cases";
 import router from "@/router";
 import {
   dummyUserList,
@@ -107,6 +111,22 @@ export function makeMockAPIServer() {
 
       this.get("/data-requests-client/locations/:id", (schema, request) => {
         const data = getDummyDetailsWithStatus(router.currentRoute.params.id);
+        return authResponse(request, data);
+      });
+
+      this.post("/data-requests-client/cases", (schema, request) => {
+        const created: Partial<DataRequestCaseDetails> = {
+          caseId: "NEWCASE123",
+        };
+        return authResponse(request, created);
+      });
+
+      this.get("/data-requests-client/cases", (schema, request) => {
+        return authResponse(request, dummyDataRequestsCases);
+      });
+
+      this.get("/data-requests-client/cases/:caseId", (schema, request) => {
+        const data = getDummyDetailsCases(router.currentRoute.params.caseId);
         return authResponse(request, data);
       });
 

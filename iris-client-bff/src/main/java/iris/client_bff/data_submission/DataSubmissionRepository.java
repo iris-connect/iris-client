@@ -14,7 +14,7 @@
  *******************************************************************************/
 package iris.client_bff.data_submission;
 
-import iris.client_bff.data_request.DataRequest;
+import iris.client_bff.data_request.events.EventDataRequest;
 import iris.client_bff.data_submission.model.DataSubmission;
 import iris.client_bff.data_submission.model.DataSubmission.DataSubmissionIdentifier;
 
@@ -29,5 +29,5 @@ import org.springframework.data.util.Streamable;
 public interface DataSubmissionRepository extends CrudRepository<DataSubmission, DataSubmissionIdentifier> {
 
 	@Transactional
-	Streamable<DataSubmission> findAllByRequest(DataRequest request);
+	Streamable<DataSubmission> findAllByRequest(EventDataRequest request);
 }

@@ -78,6 +78,17 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
+    path: "/cases/new",
+    name: "index-new",
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "../views/index-tracking-form/index-tracking-form.view.vue"
+      ),
+  },
+  {
     path: "/events/list",
     name: "event-list" /* Caution: This acts as an identifier! */,
     meta: {
@@ -110,6 +121,17 @@ export const routes: Array<RouteConfig> = [
     component: () =>
       import(
         /* webpackChunkName: "about" */ "../views/event-tracking-details/event-tracking-details.view.vue"
+      ),
+  },
+  {
+    path: "/cases/details/:caseId",
+    name: "index-details" /* Caution: This acts as an identifier! */,
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "../views/index-tracking-details/index-tracking-details.view.vue"
       ),
   },
 ];
