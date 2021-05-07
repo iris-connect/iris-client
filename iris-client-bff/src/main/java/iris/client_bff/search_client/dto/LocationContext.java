@@ -10,12 +10,11 @@
  * Do not edit the class manually.
  */
 
-package iris.client_bff.search_client.web.dto;
+package iris.client_bff.search_client.dto;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -24,44 +23,67 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * LocationList
+ * Ein Standort hat ggf. weitere Informationen wie Tische/Räume, etc.
  */
+@ApiModel(description = "Ein Standort hat ggf. weitere Informationen wie Tische/Räume, etc.")
 @JsonPropertyOrder({
-		LocationList.JSON_PROPERTY_LOCATIONS
+		LocationContext.JSON_PROPERTY_ID,
+		LocationContext.JSON_PROPERTY_NAME
 })
-@JsonTypeName("LocationList")
+@JsonTypeName("LocationContext")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen",
 		date = "2021-05-03T15:54:40.838481+02:00[Europe/Berlin]")
-public class LocationList {
-	public static final String JSON_PROPERTY_LOCATIONS = "locations";
-	private List<LocationInformation> locations = new ArrayList<>();
+public class LocationContext {
+	public static final String JSON_PROPERTY_ID = "id";
+	private String id;
 
-	public LocationList locations(List<LocationInformation> locations) {
+	public static final String JSON_PROPERTY_NAME = "name";
+	private String name;
 
-		this.locations = locations;
-		return this;
-	}
+	public LocationContext id(String id) {
 
-	public LocationList addLocationsItem(LocationInformation locationsItem) {
-		this.locations.add(locationsItem);
+		this.id = id;
 		return this;
 	}
 
 	/**
-	 * Get locations
+	 * Interne ID des Kontext
 	 * 
-	 * @return locations
+	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "")
-	@JsonProperty(JSON_PROPERTY_LOCATIONS)
+	@ApiModelProperty(example = "5f4bfff742c1bf5f72918851", required = true, value = "Interne ID des Kontext")
+	@JsonProperty(JSON_PROPERTY_ID)
 	@JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-	public List<LocationInformation> getLocations() {
-		return locations;
+	public String getId() {
+		return id;
 	}
 
-	public void setLocations(List<LocationInformation> locations) {
-		this.locations = locations;
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public LocationContext name(String name) {
+
+		this.name = name;
+		return this;
+	}
+
+	/**
+	 * Bezeichnung
+	 * 
+	 * @return name
+	 **/
+	@ApiModelProperty(example = "Raum 0815", required = true, value = "Bezeichnung")
+	@JsonProperty(JSON_PROPERTY_NAME)
+	@JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
@@ -72,20 +94,22 @@ public class LocationList {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		LocationList locationList = (LocationList) o;
-		return Objects.equals(this.locations, locationList.locations);
+		LocationContext locationContext = (LocationContext) o;
+		return Objects.equals(this.id, locationContext.id) &&
+				Objects.equals(this.name, locationContext.name);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(locations);
+		return Objects.hash(id, name);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("class LocationList {\n");
-		sb.append("    locations: ").append(toIndentedString(locations)).append("\n");
+		sb.append("class LocationContext {\n");
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

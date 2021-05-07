@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package iris.client_bff.search_client.web.dto;
+package iris.client_bff.search_client.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,67 +23,94 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Ein Standort hat ggf. weitere Informationen wie Tische/Räume, etc.
+ * Anschrift des Standorts
  */
-@ApiModel(description = "Ein Standort hat ggf. weitere Informationen wie Tische/Räume, etc.")
+@ApiModel(description = "Anschrift des Standorts")
 @JsonPropertyOrder({
-		LocationContext.JSON_PROPERTY_ID,
-		LocationContext.JSON_PROPERTY_NAME
+		LocationAddress.JSON_PROPERTY_STREET,
+		LocationAddress.JSON_PROPERTY_CITY,
+		LocationAddress.JSON_PROPERTY_ZIP
 })
-@JsonTypeName("LocationContext")
+@JsonTypeName("LocationAddress")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen",
 		date = "2021-05-03T15:54:40.838481+02:00[Europe/Berlin]")
-public class LocationContext {
-	public static final String JSON_PROPERTY_ID = "id";
-	private String id;
+public class LocationAddress {
+	public static final String JSON_PROPERTY_STREET = "street";
+	private String street;
 
-	public static final String JSON_PROPERTY_NAME = "name";
-	private String name;
+	public static final String JSON_PROPERTY_CITY = "city";
+	private String city;
 
-	public LocationContext id(String id) {
+	public static final String JSON_PROPERTY_ZIP = "zip";
+	private String zip;
 
-		this.id = id;
+	public LocationAddress street(String street) {
+
+		this.street = street;
 		return this;
 	}
 
 	/**
-	 * Interne ID des Kontext
+	 * street + number
 	 * 
-	 * @return id
+	 * @return street
 	 **/
-	@ApiModelProperty(example = "5f4bfff742c1bf5f72918851", required = true, value = "Interne ID des Kontext")
-	@JsonProperty(JSON_PROPERTY_ID)
+	@ApiModelProperty(example = "Türkenstr. 7", required = true, value = "street + number")
+	@JsonProperty(JSON_PROPERTY_STREET)
 	@JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-	public String getId() {
-		return id;
+	public String getStreet() {
+		return street;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setStreet(String street) {
+		this.street = street;
 	}
 
-	public LocationContext name(String name) {
+	public LocationAddress city(String city) {
 
-		this.name = name;
+		this.city = city;
 		return this;
 	}
 
 	/**
-	 * Bezeichnung
+	 * Stadt
 	 * 
-	 * @return name
+	 * @return city
 	 **/
-	@ApiModelProperty(example = "Raum 0815", required = true, value = "Bezeichnung")
-	@JsonProperty(JSON_PROPERTY_NAME)
+	@ApiModelProperty(example = "München", required = true, value = "Stadt")
+	@JsonProperty(JSON_PROPERTY_CITY)
 	@JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-	public String getName() {
-		return name;
+	public String getCity() {
+		return city;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public LocationAddress zip(String zip) {
+
+		this.zip = zip;
+		return this;
+	}
+
+	/**
+	 * Postleitzahl
+	 * 
+	 * @return zip
+	 **/
+	@ApiModelProperty(example = "80333", required = true, value = "Postleitzahl")
+	@JsonProperty(JSON_PROPERTY_ZIP)
+	@JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+	public String getZip() {
+		return zip;
+	}
+
+	public void setZip(String zip) {
+		this.zip = zip;
 	}
 
 	@Override
@@ -94,22 +121,24 @@ public class LocationContext {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		LocationContext locationContext = (LocationContext) o;
-		return Objects.equals(this.id, locationContext.id) &&
-				Objects.equals(this.name, locationContext.name);
+		LocationAddress locationAddress = (LocationAddress) o;
+		return Objects.equals(this.street, locationAddress.street) &&
+				Objects.equals(this.city, locationAddress.city) &&
+				Objects.equals(this.zip, locationAddress.zip);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name);
+		return Objects.hash(street, city, zip);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("class LocationContext {\n");
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    name: ").append(toIndentedString(name)).append("\n");
+		sb.append("class LocationAddress {\n");
+		sb.append("    street: ").append(toIndentedString(street)).append("\n");
+		sb.append("    city: ").append(toIndentedString(city)).append("\n");
+		sb.append("    zip: ").append(toIndentedString(zip)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

@@ -10,11 +10,12 @@
  * Do not edit the class manually.
  */
 
-package iris.client_bff.search_client.web.dto;
+package iris.client_bff.search_client.dto;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -23,94 +24,44 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Anschrift des Standorts
+ * LocationList
  */
-@ApiModel(description = "Anschrift des Standorts")
 @JsonPropertyOrder({
-		LocationAddress.JSON_PROPERTY_STREET,
-		LocationAddress.JSON_PROPERTY_CITY,
-		LocationAddress.JSON_PROPERTY_ZIP
+		LocationList.JSON_PROPERTY_LOCATIONS
 })
-@JsonTypeName("LocationAddress")
+@JsonTypeName("LocationList")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen",
 		date = "2021-05-03T15:54:40.838481+02:00[Europe/Berlin]")
-public class LocationAddress {
-	public static final String JSON_PROPERTY_STREET = "street";
-	private String street;
+public class LocationList {
+	public static final String JSON_PROPERTY_LOCATIONS = "locations";
+	private List<LocationInformation> locations = new ArrayList<>();
 
-	public static final String JSON_PROPERTY_CITY = "city";
-	private String city;
+	public LocationList locations(List<LocationInformation> locations) {
 
-	public static final String JSON_PROPERTY_ZIP = "zip";
-	private String zip;
+		this.locations = locations;
+		return this;
+	}
 
-	public LocationAddress street(String street) {
-
-		this.street = street;
+	public LocationList addLocationsItem(LocationInformation locationsItem) {
+		this.locations.add(locationsItem);
 		return this;
 	}
 
 	/**
-	 * street + number
+	 * Get locations
 	 * 
-	 * @return street
+	 * @return locations
 	 **/
-	@ApiModelProperty(example = "Türkenstr. 7", required = true, value = "street + number")
-	@JsonProperty(JSON_PROPERTY_STREET)
+	@ApiModelProperty(required = true, value = "")
+	@JsonProperty(JSON_PROPERTY_LOCATIONS)
 	@JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-	public String getStreet() {
-		return street;
+	public List<LocationInformation> getLocations() {
+		return locations;
 	}
 
-	public void setStreet(String street) {
-		this.street = street;
-	}
-
-	public LocationAddress city(String city) {
-
-		this.city = city;
-		return this;
-	}
-
-	/**
-	 * Stadt
-	 * 
-	 * @return city
-	 **/
-	@ApiModelProperty(example = "München", required = true, value = "Stadt")
-	@JsonProperty(JSON_PROPERTY_CITY)
-	@JsonInclude(value = JsonInclude.Include.ALWAYS)
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public LocationAddress zip(String zip) {
-
-		this.zip = zip;
-		return this;
-	}
-
-	/**
-	 * Postleitzahl
-	 * 
-	 * @return zip
-	 **/
-	@ApiModelProperty(example = "80333", required = true, value = "Postleitzahl")
-	@JsonProperty(JSON_PROPERTY_ZIP)
-	@JsonInclude(value = JsonInclude.Include.ALWAYS)
-
-	public String getZip() {
-		return zip;
-	}
-
-	public void setZip(String zip) {
-		this.zip = zip;
+	public void setLocations(List<LocationInformation> locations) {
+		this.locations = locations;
 	}
 
 	@Override
@@ -121,24 +72,20 @@ public class LocationAddress {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		LocationAddress locationAddress = (LocationAddress) o;
-		return Objects.equals(this.street, locationAddress.street) &&
-				Objects.equals(this.city, locationAddress.city) &&
-				Objects.equals(this.zip, locationAddress.zip);
+		LocationList locationList = (LocationList) o;
+		return Objects.equals(this.locations, locationList.locations);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(street, city, zip);
+		return Objects.hash(locations);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("class LocationAddress {\n");
-		sb.append("    street: ").append(toIndentedString(street)).append("\n");
-		sb.append("    city: ").append(toIndentedString(city)).append("\n");
-		sb.append("    zip: ").append(toIndentedString(zip)).append("\n");
+		sb.append("class LocationList {\n");
+		sb.append("    locations: ").append(toIndentedString(locations)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

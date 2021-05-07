@@ -25,7 +25,9 @@ import iris.client_bff.data_request.DataRequest.DataRequestIdentifier;
 import iris.client_bff.data_request.DataRequest.Feature;
 import iris.client_bff.data_request.DataRequest.Status;
 import iris.client_bff.data_request.events.web.dto.EventUpdateDTO;
-import iris.client_bff.search_client.SearchClient;
+import iris.client_bff.search_client.eps.EPSSearchClient;
+import iris.client_bff.search_client.eps.LocationMapper;
+import iris.client_bff.search_client.exceptions.IRISSearchException;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -60,13 +62,14 @@ public class EventDataRequestService {
 
 	private final @NonNull EventDataRequestRepository repository;
 
-	@NonNull @Qualifier("iris-rest")
+	@NonNull
+	@Qualifier("iris-rest")
 	private final RestTemplate rest;
 
 	private final @NonNull IrisClientProperties clientProperties;
 	private final @NonNull IrisProperties properties;
 	private final @NonNull ModelMapper mapper;
-	private final @NonNull SearchClient searchClient;
+	private final @NonNull EPSSearchClient searchClient;
 
 	public List<EventDataRequest> getAll() {
 		// ToDo: Pagination
@@ -93,27 +96,32 @@ public class EventDataRequestService {
 	}
 
 	public EventDataRequest createLocationRequest(String refId, String name, Instant startDate, Instant endDate,
-      Option<String> comment, Option<String> requestDetails, String locationId, String providerId) {
+			Option<String> comment, Option<String> requestDetails, String locationId, String providerId) {
 
 		return createDataRequest(refId, name, startDate, Option.of(endDate), comment, requestDetails, none(),
 				Option.of(locationId), Option.of(providerId), Set.of(Feature.Guests));
 	}
 
 	public EventDataRequest createLocationRequest(String refId, String name, Instant startDate, Option<Instant> endDate,
-      Option<String> comment, Option<String> requestDetails, Option<String> hdUserId) {
+			Option<String> comment, Option<String> requestDetails, Option<String> hdUserId) {
 
 		return createDataRequest(refId, name, startDate, endDate, comment, requestDetails, hdUserId,
 				none(), none(), Set.of(Feature.Guests));
 	}
 
 	EventDataRequest createDataRequest(String refId, String name, Instant startDate, Option<Instant> endDate,
-      Option<String> comment, Option<String> requestDetails, Option<String> hdUserId, Option<String> locationId,
+			Option<String> comment, Option<String> requestDetails, Option<String> hdUserId, Option<String> locationId,
 			Option<String> providerId, Set<Feature> feature) {
 
-		var location = fetchLocation(locationId, providerId);
+		Location location = null;
+		try {
+			location = fetchLocation(locationId, providerId);
+		} catch (IRISSearchException e) {
+			// TODO handle
+		}
 
 		var dataRequest = new EventDataRequest(refId, name, startDate, endDate.getOrNull(), comment.getOrNull(),
-        requestDetails.getOrNull(), hdUserId.getOrNull(), location, feature);
+				requestDetails.getOrNull(), hdUserId.getOrNull(), location, feature);
 
 		log.trace("Request job - PUT to server is sent: {}", dataRequest.getId().toString());
 
@@ -143,13 +151,15 @@ public class EventDataRequestService {
 	 * @param providerId
 	 * @return The location entity fetched from location service
 	 */
-	private Location fetchLocation(Option<String> locationId, Option<String> providerId) {
+	private Location fetchLocation(Option<String> locationId, Option<String> providerId)
+			throws IRISSearchException {
 
 		if (locationId.isEmpty() || providerId.isEmpty()) {
 			return null;
 		}
 
-		return searchClient.findByProviderIdAndLocationId(providerId.get(), locationId.get());
+		var locationInformation = searchClient.findByProviderIdAndLocationId(providerId.get(), locationId.get());
+		return LocationMapper.map(locationInformation);
 	}
 
 	// ToDo: I guess this will be the method for the TAN generation. So I will leave it here for now.

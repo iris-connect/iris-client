@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package iris.client_bff.search_client.web.dto;
+package iris.client_bff.search_client.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 
