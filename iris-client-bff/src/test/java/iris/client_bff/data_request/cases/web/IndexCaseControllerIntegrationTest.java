@@ -5,6 +5,7 @@ import static iris.client_bff.data_request.cases.web.IndexCaseMapper.mapDetailed
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +28,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @IrisWebIntegrationTest
 class IndexCaseControllerIntegrationTest {
@@ -74,7 +74,7 @@ class IndexCaseControllerIntegrationTest {
   @Test
   void endpointShouldBeProtected() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))
-        .andExpect(MockMvcResultMatchers.status().isForbidden())
+        .andExpect(status().isForbidden())
         .andReturn();
   }
 
@@ -83,7 +83,7 @@ class IndexCaseControllerIntegrationTest {
   void getAll() throws Exception {
 
     var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))
-        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(status().isOk())
         .andReturn();
 
     var allCases = om.readValue(res.getResponse().getContentAsString(), LIST_TYPE);
@@ -101,7 +101,7 @@ class IndexCaseControllerIntegrationTest {
 
     mockMvc.perform(MockMvcRequestBuilders.post(baseUrl).content(insert)
         .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(status().isOk())
         .andReturn();
   }
 
@@ -116,7 +116,7 @@ class IndexCaseControllerIntegrationTest {
 
     mockMvc.perform(MockMvcRequestBuilders.post(baseUrl).content(insert)
         .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(status().isBadRequest())
         .andReturn();
   }
 
@@ -127,7 +127,7 @@ class IndexCaseControllerIntegrationTest {
     var url = baseUrl + "/" + MOCK_CASE_ID.toString();
 
     var res = mockMvc.perform(MockMvcRequestBuilders.get(url))
-        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(status().isOk())
         .andReturn();
 
     var detailed = om.readValue(res.getResponse().getContentAsString(), IndexCaseDetailsDTO.class);
@@ -142,7 +142,7 @@ class IndexCaseControllerIntegrationTest {
     var url_404 = baseUrl + "/" + UUID.randomUUID().toString();
 
     mockMvc.perform(MockMvcRequestBuilders.get(url_404))
-        .andExpect(MockMvcResultMatchers.status().isNotFound())
+        .andExpect(status().isNotFound())
         .andReturn();
   }
 
@@ -159,7 +159,7 @@ class IndexCaseControllerIntegrationTest {
     var url = baseUrl + "/" + MOCK_CASE_ID.toString();
     var res = mockMvc.perform(
         MockMvcRequestBuilders.patch(url).content(payload).contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(status().isOk())
         .andReturn();
 
     var updated = om.readValue(res.getResponse().getContentAsString(), IndexCaseDetailsDTO.class);
@@ -178,7 +178,7 @@ class IndexCaseControllerIntegrationTest {
 
     mockMvc.perform(
         MockMvcRequestBuilders.patch(url_404).content("{}").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(status().isNotFound())
         .andReturn();
   }
 
@@ -189,7 +189,7 @@ class IndexCaseControllerIntegrationTest {
     var url = baseUrl + "/" + MOCK_CASE_ID.toString();
 
     mockMvc.perform(MockMvcRequestBuilders.patch(url))
-        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(status().isBadRequest())
         .andReturn();
   }
 
