@@ -217,6 +217,7 @@ export default class Home extends Vue {
       )
       .map(tableRowMapper);
   }
+
   data() {
     return {
       showFeedbackDialog: false,
