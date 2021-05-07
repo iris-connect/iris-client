@@ -17,7 +17,7 @@ package iris.client_bff.data_submission;
 import iris.client_bff.data_request.events.EventDataRequest;
 import iris.client_bff.data_request.DataRequest.Status;
 import iris.client_bff.data_request.events.EventDataRequestService;
-import iris.client_bff.data_request.events.web.dto.GuestList;
+import iris.client_bff.data_submission.dto.GuestList;
 import iris.client_bff.data_submission.model.DataSubmission;
 import iris.client_bff.data_submission.model.Guest;
 import iris.client_bff.data_submission.model.GuestListDataProvider;

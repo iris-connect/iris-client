@@ -14,9 +14,9 @@
  *******************************************************************************/
 package iris.client_bff.data_submission;
 
-import iris.client_bff.data_request.events.web.dto.ContactPersonList;
-import iris.client_bff.data_request.events.web.dto.ContactsAndEvents;
-import iris.client_bff.data_request.events.web.dto.EventList;
+import iris.client_bff.data_submission.dto.ContactPersonList;
+import iris.client_bff.data_submission.dto.ContactsAndEvents;
+import iris.client_bff.data_submission.dto.EventList;
 
 import iris.client_bff.data_request.events.EventDataRequest;
 import java.security.KeyStore;

@@ -15,8 +15,8 @@
 package iris.client_bff.sormas_integration;
 
 import iris.client_bff.data_request.DataRequest;
-import iris.client_bff.data_request.events.web.dto.ContactsAndEvents;
 import iris.client_bff.data_submission.DataSubmissionDto;
+import iris.client_bff.data_submission.dto.ContactsAndEvents;
 import iris.sormas.client.api.ContactControllerApi;
 import iris.sormas.client.api.EventControllerApi;
 import iris.sormas.client.api.EventParticipantControllerApi;
@@ -34,26 +34,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 // @ConditionalOnBean(TaskControllerApi.class)
 public class ContactsEventsSubmissionSormasProcessor extends DataSubmissionSormasProcessor<ContactsAndEvents> {
 
-	private ContactsSubmissionProcessor contactsProcessor;
-	private EventsSubmissionProcessor eventsProcessor;
+  private ContactsSubmissionProcessor contactsProcessor;
+  private EventsSubmissionProcessor eventsProcessor;
 
-	public ContactsEventsSubmissionSormasProcessor(DataSubmissionDto submissionDto, DataRequest request,
-			KeyStore keyStore,
-			ObjectMapper mapper, TaskControllerApi sormasTaskApi, PersonControllerApi sormasPersonApi,
-			ContactControllerApi sormasContactApi, EventControllerApi sormasEventApi,
-			EventParticipantControllerApi sormasParticipantApi) {
+  public ContactsEventsSubmissionSormasProcessor(DataSubmissionDto submissionDto, DataRequest request,
+	  KeyStore keyStore,
+	  ObjectMapper mapper, TaskControllerApi sormasTaskApi, PersonControllerApi sormasPersonApi,
+	  ContactControllerApi sormasContactApi, EventControllerApi sormasEventApi,
+	  EventParticipantControllerApi sormasParticipantApi) {
 
-		super(submissionDto, ContactsAndEvents.class, request, keyStore, mapper, sormasTaskApi);
+	super(submissionDto, ContactsAndEvents.class, request, keyStore, mapper, sormasTaskApi);
 
-		contactsProcessor = new ContactsSubmissionProcessor(request, sormasTaskApi, sormasPersonApi, sormasContactApi);
-		eventsProcessor = new EventsSubmissionProcessor(request, sormasTaskApi, sormasEventApi, sormasParticipantApi,
-				sormasPersonApi);
-	}
+	contactsProcessor = new ContactsSubmissionProcessor(request, sormasTaskApi, sormasPersonApi, sormasContactApi);
+	eventsProcessor = new EventsSubmissionProcessor(request, sormasTaskApi, sormasEventApi, sormasParticipantApi,
+		sormasPersonApi);
+  }
 
-	@Override
-	public void process(ContactsAndEvents dto) {
+  @Override
+  public void process(ContactsAndEvents dto) {
 
-		contactsProcessor.process(dto.getContacts());
-		eventsProcessor.process(dto.getEvents());
-	}
+	contactsProcessor.process(dto.getContacts());
+	eventsProcessor.process(dto.getEvents());
+  }
 }
