@@ -1,4 +1,4 @@
-package iris.client_bff.data_request.events;
+package iris.client_bff.data_request.events.web;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -6,7 +6,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.data_request.DataRequest.Status;
-import iris.client_bff.data_request.events.web.TestData;
+import iris.client_bff.data_request.events.EventDataRequest;
+import iris.client_bff.data_request.events.EventDataRequestService;
+import iris.client_bff.data_request.events.Location;
 import iris.client_bff.data_request.events.web.dto.EventDataRequestList;
 import iris.client_bff.data_request.events.web.dto.EventStatusDTO;
 import iris.client_bff.data_request.events.web.dto.EventUpdateDTO;
@@ -18,7 +20,6 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,9 +36,6 @@ class EventDataRequestControllerIntegrationTest {
 
 	@Autowired
 	private ObjectMapper om;
-
-	@Autowired
-	private ResourceLoader resourceLoader;
 
 	@MockBean
 	private EventDataRequestService dataRequestManagement;

@@ -42,6 +42,8 @@ import javax.persistence.*;
 @DiscriminatorColumn(name = "data_request_type")
 public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestIdentifier> {
 
+	private DataRequestIdentifier id = DataRequestIdentifier.of(UUID.randomUUID());
+
 	private @Setter String refId;
 	private String hdUserId;
 
@@ -63,7 +65,6 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 
 		super();
 
-		this.id = DataRequestIdentifier.of(UUID.randomUUID());
 		this.refId = refId;
 		this.name = name;
 		this.requestStart = requestStart;
