@@ -1,4 +1,4 @@
-package iris.client_bff.data_submission;
+package iris.client_bff.sormas_integration;
 
 import lombok.Data;
 

@@ -14,13 +14,10 @@
  *******************************************************************************/
 package iris.client_bff.data_request.events;
 
-import static io.vavr.control.Option.*;
-import static java.nio.charset.StandardCharsets.*;
-import static org.springframework.http.MediaType.*;
+import static io.vavr.control.Option.none;
 
 import io.vavr.control.Option;
 import iris.client_bff.config.IrisClientProperties;
-import iris.client_bff.config.IrisProperties;
 import iris.client_bff.data_request.DataRequest.DataRequestIdentifier;
 import iris.client_bff.data_request.DataRequest.Feature;
 import iris.client_bff.data_request.DataRequest.Status;
@@ -44,13 +41,7 @@ import java.util.zip.CRC32;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * @author Jens Kutzsche
@@ -62,13 +53,7 @@ public class EventDataRequestService {
 
 	private final @NonNull EventDataRequestRepository repository;
 
-	@NonNull
-	@Qualifier("iris-rest")
-	private final RestTemplate rest;
-
 	private final @NonNull IrisClientProperties clientProperties;
-	private final @NonNull IrisProperties properties;
-	private final @NonNull ModelMapper mapper;
 	private final @NonNull EPSSearchClient searchClient;
 
 	public List<EventDataRequest> getAll() {
@@ -127,11 +112,12 @@ public class EventDataRequestService {
 
 		var dto = DataRequestDto.of(dataRequest, clientProperties.getClientId(), clientProperties.getRkiCode());
 
-		var headers = new HttpHeaders();
-		headers.setContentType(new MediaType(APPLICATION_JSON, UTF_8));
+		// TODO: submit data request via EPS
 
-		rest.put("https://{address}:{port}/hd/data-requests/{id}", new HttpEntity<>(dto, headers),
-				properties.getServerAddress().getHostName(), properties.getServerPort(), dataRequest.getId());
+		// var headers = new HttpHeaders();
+		// headers.setContentType(new MediaType(APPLICATION_JSON, UTF_8));
+		// rest.put("https://{address}:{port}/hd/data-requests/{id}", new HttpEntity<>(dto, headers),
+		// properties.getServerAddress().getHostName(), properties.getServerPort(), dataRequest.getId());
 
 		log.debug("Request job - PUT to server sent: {}; Features = {}", dataRequest.getId().toString(),
 				dataRequest.getFeatures());

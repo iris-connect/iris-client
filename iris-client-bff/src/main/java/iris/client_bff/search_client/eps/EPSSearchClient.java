@@ -34,8 +34,8 @@ public class EPSSearchClient implements SearchClient {
 			throw new IRISSearchException(t);
 		}
 
-
 		// TODO check: why do we need to do this?
+
 		if (StringUtils.isEmpty(locationInformation.getProviderId())) {
 			locationInformation.setProviderId(providerId);
 		}

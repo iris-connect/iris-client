@@ -17,7 +17,6 @@ package iris.client_bff.sormas_integration;
 import static java.nio.charset.StandardCharsets.*;
 
 import iris.client_bff.data_request.DataRequest;
-import iris.client_bff.data_submission.DataSubmissionDto;
 import iris.sormas.client.api.TaskControllerApi;
 import lombok.Getter;
 
