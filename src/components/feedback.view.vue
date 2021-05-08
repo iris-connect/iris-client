@@ -163,6 +163,15 @@ export default {
     };
   },
   methods: {
+    export() {
+      return {
+        category: "",
+        title: "",
+        feedback: "",
+        organisation: "",
+        email: "",
+      };
+    },
     cancel() {
       this.showCancelDialog = false;
       this.show = false;

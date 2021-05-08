@@ -91,6 +91,21 @@
         </v-row>
       </v-card-text>
     </v-card>
+    <v-btn
+      class="mr-0 mb-0"
+      large
+      fab
+      dark
+      fixed
+      bottom
+      right
+      :max-height="48"
+      :max-width="48"
+      @click="showFeedbackDialog = true"
+    >
+      <v-icon :size="30"> mdi-chat-alert-outline </v-icon>
+    </v-btn>
+    <FeedbackDialog v-model="showFeedbackDialog" />
   </div>
 </template>
 <style></style>
@@ -105,6 +120,7 @@ import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import DataExport from "@/utils/DataExport";
+import FeedbackDialog from "@/components/feedback.view.vue";
 
 type EventData = {
   extID: string;
@@ -157,6 +173,7 @@ function getFormattedAddress(address?: Address | null): string {
 @Component({
   components: {
     EventTrackingDetailsView: EventTrackingDetailsView,
+    FeedbackDialog,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
@@ -358,6 +375,12 @@ export default class EventTrackingDetailsView extends Vue {
       this.tableData.select,
       [this.eventData.extID, Date.now()].join("_")
     );
+  }
+
+  data() {
+    return {
+      showFeedbackDialog: false,
+    };
   }
 }
 </script>
