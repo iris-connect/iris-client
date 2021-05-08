@@ -9,19 +9,21 @@
             </v-card-title>
 
             <v-card-subtitle style="text-align: center">
-              <span class="subtitle-1">Wir freuen uns über ihr Feedback.</span>
+              <span class="subtitle-1">Wir freuen uns über Ihr Feedback.</span>
             </v-card-subtitle>
             <v-divider class="theme--light primary" />
           </div>
           <v-container class="mt-1 px-sm-15">
             <v-autocomplete
-              :items="['Verbesserungsvorschlag', 'Probleme']"
+              v-model="category"
+              :items="['Verbesserungsvorschlag', 'Problem']"
               label="Katergorie auswählen*"
               required
               :rules="kategoryRules"
             ></v-autocomplete>
 
             <v-text-field
+              v-model="title"
               label="Titel*"
               required
               :rules="titelRules"
@@ -29,6 +31,7 @@
             ></v-text-field>
 
             <v-textarea
+              v-model="feedback"
               class="justify-center"
               label="Ihr Platz für Feedback*"
               no-resize
@@ -40,6 +43,7 @@
             ></v-textarea>
 
             <v-text-field
+              v-model="organisation"
               class="justify-center"
               label="Organisation"
               required
@@ -47,6 +51,7 @@
             ></v-text-field>
 
             <v-text-field
+              v-model="email"
               class="justify-center"
               label="E-Mail"
               required
@@ -57,26 +62,28 @@
 
           <v-container>
             <v-row>
-              <v-col class="d-flex justify-center">
-                <v-btn
-                  class="my-2"
-                  color="secondary"
-                  plain
-                  @click="showCancelDialog = true"
-                >
-                  Abbrechen
-                </v-btn>
-              </v-col>
-              <v-col class="d-flex justify-center">
-                <v-btn
-                  class="my-2"
-                  color="primary"
-                  :disabled="!isFormValid"
-                  @click="showConfirmDialog = true"
-                >
-                  Absenden
-                </v-btn>
-              </v-col>
+              <!-- <v-col class="d-flex justify-center"> -->
+              <v-btn
+                class="ma-4"
+                color="secondary"
+                plain
+                @click="showCancelDialog = true"
+              >
+                Abbrechen
+              </v-btn>
+              <v-spacer></v-spacer>
+              <!-- </v-col>
+             
+              <v-col class="d-flex justify-center"> -->
+              <v-btn
+                class="ma-4"
+                color="primary"
+                :disabled="!isFormValid"
+                @click="showConfirmDialog = true"
+              >
+                Absenden
+              </v-btn>
+              <!-- </v-col>-->
             </v-row>
           </v-container>
         </v-form>
@@ -89,17 +96,28 @@
       max-width="20%"
       persistent
     >
-      <v-card>
-        <v-card-title>
+      <v-card style="height: fit-content">
+        <v-card-title class="justify-center">
           <span>ACHTUNG!</span>
-          <v-spacer></v-spacer>
-          Wenn sie abbrechen, schliesen sie den Dialog.
         </v-card-title>
+        <v-divider class="theme--light primary" />
+        <v-card-text class="mt-3">
+          Wenn Sie auf "Bestätigen" klicken, schließen Sie den Feedback-Bogen.
+        </v-card-text>
         <v-card-actions>
-          <v-btn color="secondary" text @click="showCancelDialog = false">
+          <v-btn
+            class="mt-4"
+            color="secondary"
+            plain
+            text
+            @click="showCancelDialog = false"
+          >
             Zurück
           </v-btn>
-          <v-btn color="primary" text @click="cancel()"> Bestätigen</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn class="mt-4" color="primary" @click="cancel()">
+            Bestätigen</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -114,15 +132,14 @@
         <v-card-title class="justify-center">
           <span>Bestätigen</span>
         </v-card-title>
-        <hr />
+        <v-divider class="theme--light primary" />
         <v-card-text class="mt-3">
-          Möchten sie ihr Feedback abschicken? Die Daten werden in einem GitHub
-          Issue gespeichert und es wird ihnen ein Link zum Issue zu ihrer E-Mail
-          Addresse gesendet.
+          Wenn Sie Ihr Feedback abschicken möchten, dann klicken Sie auf
+          "Absenden".
         </v-card-text>
         <v-card-actions class="justify-center">
           <v-btn
-            class="my-2"
+            class="mt-4"
             color="secondary"
             plain
             text
@@ -131,7 +148,8 @@
           >
             Zurück
           </v-btn>
-          <v-btn color="primary" text @click="confirm()" class="my-2">
+          <v-spacer></v-spacer>
+          <v-btn color="primary" @click="confirm()" class="mt-4">
             Absenden
           </v-btn>
         </v-card-actions>
@@ -141,6 +159,29 @@
 </template>
 
 <script>
+/*
+type SurveyForm ={
+  model:SurveyFormModel,
+  valid:boolean,
+}
+type SurveyFormModel = {
+  category:string,
+  title:string,
+  feedback:string,
+  organisation:string,
+  email:string,
+}
+
+form: survey = {
+  model: {
+    category: "",
+    title: "",
+    feedback: "",
+    organisation: "",
+    email: "",
+  },
+};
+*/
 export default {
   data() {
     return {
@@ -152,26 +193,26 @@ export default {
         (content) => !!content || "Pflichtfeld",
         (content) =>
           (content && content.length <= 100) ||
-          "Der Titel darf nur 100 Charactäre überschreiten",
+          "Der Titel darf nicht mehr als 100 Zeichen beinhalten.",
       ],
       textRules: [
         (content) => !!content || "Pflichtfeld",
         (content) =>
           (content && content.length <= 1000) ||
-          "Der Text darf nur 1000 Charactäre überschreiten",
+          "Das Feedback darf nicht mehr als 1000 Zeichen beinhalten.",
       ],
     };
   },
   methods: {
-    export() {
+    /* export() {
       return {
-        category: "",
-        title: "",
-        feedback: "",
-        organisation: "",
-        email: "",
+        category: "survey.category",
+        title: "survey.title",
+        feedback: "survey.feedback",
+        organisation: "this.orga",
+        email: "this.mail",
       };
-    },
+    },*/
     cancel() {
       this.showCancelDialog = false;
       this.show = false;
