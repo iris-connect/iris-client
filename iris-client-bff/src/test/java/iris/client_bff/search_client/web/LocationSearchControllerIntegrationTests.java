@@ -7,9 +7,9 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.search_client.SearchClient;
-import iris.client_bff.search_client.web.dto.LocationInformation;
-import iris.client_bff.search_client.web.dto.LocationList;
+import iris.client_bff.search_client.eps.EPSSearchClient;
+import iris.client_bff.search_client.dto.LocationInformation;
+import iris.client_bff.search_client.dto.LocationList;
 import lombok.RequiredArgsConstructor;
 
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class LocationSearchControllerIntegrationTests {
 	private final MockMvc mvc;
 
 	@MockBean
-	private SearchClient searchClient;
+	private EPSSearchClient searchClient;
 
 	@Test
 	public void endpointShouldBeProtected() throws Exception {

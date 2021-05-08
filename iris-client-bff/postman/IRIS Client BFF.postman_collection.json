@@ -1,0 +1,895 @@
+{
+	"info": {
+		"_postman_id": "31fbe887-c00c-43f9-b950-4e93da8c25d7",
+		"name": "IRIS Client BFF",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_iris_client}}/users",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const req = JSON.parse(pm.request.body);",
+									"const body = JSON.parse(responseBody);",
+									"pm.globals.set(\"iris_user_name\", body.userName);",
+									"pm.globals.set(\"iris_user_pass\", req.password);",
+									"pm.globals.set(\"iris_user_id\", body.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userName\": \"{{$randomUserName}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"password\": \"mypass12\",\n    \"role\": \"USER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_iris_client}}/users",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const req = JSON.parse(pm.request.body);",
+									"const body = JSON.parse(responseBody);",
+									"pm.globals.set(\"iris_user_name\", body.userName);",
+									"pm.globals.set(\"iris_user_pass\", req.password);",
+									"pm.globals.set(\"iris_user_id\", body.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userName\": \"{{$randomUserName}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"password\": \"mypass12\",\n    \"role\": \"USER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_iris_client}}/users/{{iris_user_id}}",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"users",
+								"{{iris_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update username",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userName\": \"{{$randomUserName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_iris_client}}/users/{{iris_user_id}}",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"users",
+								"{{iris_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update firstname",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"{{$randomFirstName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_iris_client}}/users/{{iris_user_id}}",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"users",
+								"{{iris_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update lastname",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lastName\": \"{{$randomLastName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_iris_client}}/users/{{iris_user_id}}",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"users",
+								"{{iris_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const req = JSON.parse(pm.request.body);",
+									"pm.globals.set(\"iris_user_pass\", req.password);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"{{$randomPassword}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_iris_client}}/users/{{iris_user_id}}",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"users",
+								"{{iris_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update role",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userName\": \"{{$randomUserName}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"password\": \"mypass12\",\n    \"role\": \"USER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_iris_client}}/users/{{iris_user_id}}",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"users",
+								"{{iris_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_iris_client}}/users/{{iris_user_id}}",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"users",
+								"{{iris_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login-with-new-user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jwt = pm.response.headers.find((header) => header.key === \"Authentication-Info\").value.split(\" \")[1];",
+									"pm.globals.set(\"token\", jwt);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userName\": \"{{iris_user_name}}\",\n    \"password\": \"{{iris_user_pass}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_iris_client}}/login",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "login",
+			"item": [
+				{
+					"name": "admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jwt = pm.response.headers.find((header) => header.key === \"Authentication-Info\").value.split(\" \")[1];",
+									"pm.globals.set(\"token\", jwt);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userName\": \"admin\",\n    \"password\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_iris_client}}/login",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "data-request",
+			"item": [
+				{
+					"name": "cases",
+					"item": [
+						{
+							"name": "all",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url_iris_client}}/data-requests-client/cases",
+									"host": [
+										"{{base_url_iris_client}}"
+									],
+									"path": [
+										"data-requests-client",
+										"cases"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const body = JSON.parse(responseBody);",
+											"pm.globals.set(\"iris_case_id\", body.caseId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"externalCaseId\": \"{{$randomAlphaNumeric}}\",\n  \"name\": \"{{$randomProductName}}\",\n  \"comment\": \"{{$randomUserName}}\",\n  \"start\": \"{{$isoTimestamp}}\",\n  \"end\": \"{{$isoTimestamp}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_iris_client}}/data-requests-client/cases",
+									"host": [
+										"{{base_url_iris_client}}"
+									],
+									"path": [
+										"data-requests-client",
+										"cases"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"externalCaseId\": \"{{$randomAlphaNumeric}}\",\n  \"name\": \"{{$randomProductName}}\",\n  \"comment\": \"{{$randomUserName}}\",\n  \"status\" : \"DATA_RECEIVED\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_iris_client}}/data-requests-client/cases/{{iris_case_id}}",
+									"host": [
+										"{{base_url_iris_client}}"
+									],
+									"path": [
+										"data-requests-client",
+										"cases",
+										"{{iris_case_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_iris_client}}/data-requests-client/cases/{{iris_case_id}}",
+									"host": [
+										"{{base_url_iris_client}}"
+									],
+									"path": [
+										"data-requests-client",
+										"cases",
+										"{{iris_case_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "details 404",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_iris_client}}/data-requests-client/cases/{{$randomUUID}}",
+									"host": [
+										"{{base_url_iris_client}}"
+									],
+									"path": [
+										"data-requests-client",
+										"cases",
+										"{{$randomUUID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "events",
+					"item": [
+						{
+							"name": "all",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url_iris_client}}/data-requests-client/events",
+									"host": [
+										"{{base_url_iris_client}}"
+									],
+									"path": [
+										"data-requests-client",
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const body = JSON.parse(responseBody);",
+											"pm.globals.set(\"iris_event_id\", body.code);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"locationId\": \"5eddd61036d39a0ff8b11fdb\",\n    \"providerId\": \"6b3f5dee-acb0-11eb-8529-0242ac130003\",\n    \"requestDetails\": \"{{$randomLoremSentence}}\",\n    \"externalRequestId\": \"{{$randomAlphaNumeric}}\",\n    \"name\": \"{{$randomProductName}}\",\n    \"comment\": \"{{$randomLoremSentence}}\",\n    \"start\": \"{{$isoTimestamp}}\",\n    \"end\": \"{{$isoTimestamp}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_iris_client}}/data-requests-client/events",
+									"host": [
+										"{{base_url_iris_client}}"
+									],
+									"path": [
+										"data-requests-client",
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_iris_client}}/data-requests-client/events/{{iris_event_id}}",
+									"host": [
+										"{{base_url_iris_client}}"
+									],
+									"path": [
+										"data-requests-client",
+										"events",
+										"{{iris_event_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[{\n  \"externalRequestId\": \"{{$randomAlphaNumeric}}\",\n  \"name\": \"{{$randomProductName}}\",\n  \"comment\": \"{{$randomUserName}}\",\n  \"status\" : \"CLOSED\"\n}, {\n\t\"name\": \"NameSecond\",\n\t\"externalRequestId\": \"refIdSecond\",\n\t\"comment\": \"Different test comment\",\n\t\"status\": \"ABORTED\"\n}]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_iris_client}}/data-requests-client/events/{{iris_event_id}}",
+									"host": [
+										"{{base_url_iris_client}}"
+									],
+									"path": [
+										"data-requests-client",
+										"events",
+										"{{iris_event_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "user-profile",
+			"item": [
+				{
+					"name": "user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_iris_client}}/user-profile",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"user-profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "search",
+			"item": [
+				{
+					"name": "Search by keyword",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{bearer}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"locations\": [\n        {\n            \"id\": \"0d4b783a-59fa-4687-9bf8-d1f7e15d040d\",\n            \"name\": \"FC Darmstadt\",\n            \"publicKey\": \"FC Darmstadt\",\n            \"contact\": {\n                \"officialName\": \"Fussballclub Darmstadt\",\n                \"representative\": \"Hans Mueller\",\n                \"address\": {\n                    \"street\": \"Testallee 42\",\n                    \"city\": \"Hintertupfingen\",\n                    \"zip\": \"12345\"\n                },\n                \"ownerEmail\": \"tim@smartmeeting.online\",\n                \"email\": \"tim@smartmeeting.online\",\n                \"phone\": \"0151 47110815\"\n            },\n            \"contexts\": [\n                {\n                    \"id\": \"702830d0-7665-400e-821e-1cef4df4c792\",\n                    \"name\": \"Ausssenbereich\"\n                },\n                {\n                    \"id\": \"b220f816-d850-4260-b988-ef0ae171a498\",\n                    \"name\": \"Innenbereich\"\n                }\n            ]\n        },\n        {\n            \"id\": \"7dd80f34-f9cd-456a-9b60-357d0a3485c7\",\n            \"name\": \"Da Michele\",\n            \"publicKey\": \"Da Michele\",\n            \"contact\": {\n                \"officialName\": \"SmartMeeting GmbH\",\n                \"representative\": \"Tim Lusa\",\n                \"address\": {\n                    \"street\": \"Europaplatz 5\",\n                    \"city\": \"Darmstadt\",\n                    \"zip\": \"64293\"\n                },\n                \"ownerEmail\": \"tim@smartmeeting.online\",\n                \"email\": \"tim@smartmeeting.online\",\n                \"phone\": \"0151 47110815\"\n            },\n            \"contexts\": [\n                {\n                    \"id\": \"862b483c-35b8-4de7-a6af-61a30f355b9b\",\n                    \"name\": \"Tisch 1\"\n                }\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_iris_client}}/search/Restaurant",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"search",
+								"Restaurant"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "eps",
+			"item": [
+				{
+					"name": "locations",
+					"item": [
+						{
+							"name": "create location",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"method\": \"ls-1.postLocationsToSearchIndex\",\n    \"id\": \"1\",\n    \"params\": {\n        \"providerId\": \"6b3f5dee-acb0-11eb-8529-0242ac130003\",\n        \"locations\": [\n            {\n                \"id\": \"5eddd61036d39a0ff8b11fdb\",\n                \"name\": \"Restaurant Alberts\",\n                \"contact\": {\n                    \"officialName\": \"Darfichrein GmbH\",\n                    \"representative\": \"Silke \",\n                    \"address\": {\n                        \"street\": \"Türkenstr. 7\",\n                        \"city\": \"München\",\n                        \"zip\": \"80333\"\n                    },\n                    \"email\": \"covid2@restaurant.de\",\n                    \"phone\": \"die bleibt privat :-)\"\n                }\n            }\n        ]\n    },\n    \"jsonrpc\": \"2.0\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5554/jsonrpc",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5554",
+									"path": [
+										"jsonrpc"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get locations",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"method\": \"ls-1.getLocationDetails\",\n    \"id\": \"1\",\n    \"params\": {\n        \"providerId\": \"6b3f5dee-acb0-11eb-8529-0242ac130003\",\n        \"locationId\": \"5eddd61036d39a0ff8b11fdb\"\n    },\n    \"jsonrpc\": \"2.0\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5554/jsonrpc",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5554",
+									"path": [
+										"jsonrpc"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "data submission",
+					"item": [
+						{
+							"name": "submit guest list",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"method\": \"hd-1.submitGuestList\",\n    \"id\": \"1\",\n    \"params\": {\n        \"requestId\": \"{{iris_event_id}}\",\n        \"guestList\": {\n            \"secret\": \"string\",\n            \"keyReference\": \"string\",\n            \"guests\": [\n                {\n                    \"firstName\": \"string\",\n                    \"lastName\": \"string\",\n                    \"dateOfBirth\": \"2021-05-08\",\n                    \"sex\": \"UNKNOWN\",\n                    \"email\": \"user@example.com\",\n                    \"phone\": \"string\",\n                    \"mobilPhone\": \"string\",\n                    \"address\": {\n                        \"street\": \"string\",\n                        \"houseNumber\": \"string\",\n                        \"zipCode\": \"string\",\n                        \"city\": \"string\"\n                    },\n                    \"attendanceInformation\": {\n                        \"descriptionOfParticipation\": \"Guest or Staff\",\n                        \"attendFrom\": \"2021-05-08T11:31:29.659Z\",\n                        \"attendTo\": \"2021-05-08T11:31:29.659Z\",\n                        \"additionalInformation\": \"Table: 3; Floor: 2\"\n                    },\n                    \"identityChecked\": true\n                }\n            ],\n            \"dataProvider\": {\n                \"name\": \"string\",\n                \"address\": {\n                    \"street\": \"string\",\n                    \"houseNumber\": \"string\",\n                    \"zipCode\": \"string\",\n                    \"city\": \"string\"\n                }\n            },\n            \"additionalInformation\": \"string\",\n            \"startDate\": \"2021-05-08T11:31:29.659Z\",\n            \"endDate\": \"2021-05-08T11:31:29.659Z\"\n        }\n    },\n    \"jsonrpc\": \"2.0\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5554/jsonrpc",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5554",
+									"path": [
+										"jsonrpc"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "bearer",
+			"value": ""
+		}
+	]
+}

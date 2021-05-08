@@ -27,6 +27,7 @@ import javax.persistence.Transient;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.lang.NonNull;
 
 /**
  * Base class of aggregates in the sense of DDD
@@ -40,7 +41,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public abstract class Aggregate<T extends Aggregate<T, ID>, ID extends Id> extends AbstractAggregateRoot<T>
 		implements Persistable<ID> {
 
+	@NonNull
 	protected @EmbeddedId ID id;
+
 	private Metadata metadata = new Metadata();
 	private @Transient boolean isNew = true;
 

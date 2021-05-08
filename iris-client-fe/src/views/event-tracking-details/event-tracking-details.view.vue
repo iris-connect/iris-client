@@ -97,22 +97,18 @@
             </td>
           </template>
         </v-data-table>
-        <v-row class="mt-2">
-          <v-col cols="12">
-            <v-btn class="ml-2 mr-2" color="white" @click="$router.back()">
-              Zurück
-            </v-btn>
-            <v-btn
-              class="mr-2 float-right"
-              color="primary"
-              @click="handleExport"
-              :disabled="tableData.select.length <= 0"
-            >
-              Auswahl exportieren
-            </v-btn>
-          </v-col>
-        </v-row>
       </v-card-text>
+      <v-card-actions>
+        <v-btn color="white" @click="$router.back()"> Zurück </v-btn>
+        <v-spacer />
+        <v-btn
+          color="primary"
+          @click="handleExport"
+          :disabled="tableData.select.length <= 0"
+        >
+          Auswahl exportieren
+        </v-btn>
+      </v-card-actions>
     </v-card>
   </div>
 </template>
@@ -130,6 +126,9 @@ import { Component, Vue } from "vue-property-decorator";
 import DataExport from "@/utils/DataExport";
 import EventTrackingDetailsLocationInfo from "@/views/event-tracking-details/components/event-tracking-details-location-info.vue";
 import dayjs from "@/utils/date";
+import Genders from "@/constants/Genders";
+import StatusColors from "@/constants/StatusColors";
+import StatusMessages from "@/constants/StatusMessages";
 
 type EventData = {
   extID: string;
@@ -282,29 +281,11 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   getStatusName(status: DataRequestDetailsStatusEnum): string {
-    switch (status) {
-      case DataRequestDetailsStatusEnum.DataRequested:
-        return "Angefragt";
-      case DataRequestDetailsStatusEnum.DataReceived:
-        return "Geliefert";
-      case DataRequestDetailsStatusEnum.Closed:
-        return "Abgeschlossen";
-      default:
-        return "-";
-    }
+    return StatusMessages.getMessage(status);
   }
 
   getStatusColor(status: DataRequestDetailsStatusEnum): string {
-    switch (status) {
-      case DataRequestDetailsStatusEnum.DataRequested:
-        return "blue";
-      case DataRequestDetailsStatusEnum.DataReceived:
-        return "red";
-      case DataRequestDetailsStatusEnum.Closed:
-        return "green";
-      default:
-        return "gray"; // TODO
-    }
+    return StatusColors.getColor(status);
   }
 
   get guests(): TableRow[] {
@@ -386,16 +367,7 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   getSexName(sex: Sex): string {
-    switch (sex) {
-      case Sex.Male:
-        return "m";
-      case Sex.Female:
-        return "w";
-      case Sex.Other:
-        return "d";
-      default:
-        return "Unbekannt";
-    }
+    return Genders.getName(sex);
   }
 
   handleExport(): void {

@@ -24,7 +24,8 @@ import iris.client_bff.core.sync.SyncTimes;
 import iris.client_bff.core.sync.SyncTimes.DataTypes;
 import iris.client_bff.core.sync.SyncTimesRepository;
 import iris.client_bff.data_request.DataRequest;
-import iris.client_bff.data_request.DataRequestManagement;
+import iris.client_bff.data_request.events.EventDataRequest;
+import iris.client_bff.data_request.events.EventDataRequestService;
 import iris.sormas.client.api.CaseControllerApi;
 import iris.sormas.client.api.EventControllerApi;
 import iris.sormas.client.api.PersonControllerApi;
@@ -75,7 +76,7 @@ class DataRequestJob {
 	private final @NonNull TaskControllerApi taskControllerApi;
 	private final @NonNull EventControllerApi eventControllerApi;
 	private final @NonNull SampleControllerApi sampleControllerApi;
-	private final @NonNull DataRequestManagement dataRequests;
+	private final @NonNull EventDataRequestService dataRequests;
 
 	private long errorCounter = 0;
 
@@ -152,8 +153,8 @@ class DataRequestJob {
 
 				var startDate = firstRelevantSymptomDate(caseDto).orElse(positivSampleDate(caseDto)).get();
 
-				var dataRequest = dataRequests.createContactEventRequest(caseId, name,
-						startDate, Option.none(), sormasUserId);
+				EventDataRequest dataRequest = null;
+				dataRequest = dataRequests.createContactEventRequest(caseId, name, startDate, Option.none(), sormasUserId);
 
 				var now = Instant.now();
 				var irisMessage = createNoteTextForIrisRequest("Kontaktnachverfolgung", dataRequest, now);
@@ -216,10 +217,12 @@ class DataRequestJob {
 			var startDate = eventDto.getStartDate();
 			var endDate = eventDto.getEndDate();
 
+			String comment = "";
 			var requestDetails = task.getCreatorComment();
 
-			var dataRequest = dataRequests.createLocationRequest(eventId, name, startDate,
-					Option.of(endDate), Option.of(requestDetails), Option.of(sormasUserId));
+			EventDataRequest dataRequest = null;
+			dataRequest = dataRequests.createLocationRequest(eventId, name, startDate,
+					Option.of(endDate), Option.of(comment), Option.of(requestDetails), Option.of(sormasUserId));
 
 			var now = Instant.now();
 			var irisMessage = createNoteTextForIrisRequest("Ereignisnachverfolgung", dataRequest, now);
@@ -245,7 +248,7 @@ class DataRequestJob {
 		}
 	}
 
-	private String createNoteTextForIrisRequest(String title, DataRequest dataRequest, Instant now) {
+	private String createNoteTextForIrisRequest(String title,  DataRequest dataRequest, Instant now) {
 		return String.format("%s über IRIS gestartet am %s\nIRIS-Code: %s",
 				title, now.atZone(ZoneId.systemDefault()).format(ofLocalizedDateTime(MEDIUM)), dataRequest.getId());
 	}

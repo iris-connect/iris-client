@@ -87,6 +87,8 @@ import {
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
+import StatusColors from "@/constants/StatusColors";
+import StatusMessages from "@/constants/StatusMessages";
 import { orderBy } from "lodash";
 import dayjs from "@/utils/date";
 
@@ -217,31 +219,13 @@ export default class EventTrackingListView extends Vue {
   getStatusColor(
     status: ExistingDataRequestClientWithLocationStatusEnum
   ): string {
-    switch (status) {
-      case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
-        return "blue";
-      case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
-        return "red";
-      case ExistingDataRequestClientWithLocationStatusEnum.Closed:
-        return "green";
-      default:
-        return "gray"; // TODO
-    }
+    return StatusColors.getColor(status);
   }
 
   getStatusName(
     status: ExistingDataRequestClientWithLocationStatusEnum
   ): string {
-    switch (status) {
-      case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
-        return "Angefragt";
-      case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
-        return "Geliefert";
-      case ExistingDataRequestClientWithLocationStatusEnum.Closed:
-        return "Abgeschlossen";
-      default:
-        return "Unbekannt"; // TODO find better name
-    }
+    return StatusMessages.getMessage(status);
   }
 }
 </script>

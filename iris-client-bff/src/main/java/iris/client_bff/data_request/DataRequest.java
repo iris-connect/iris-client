@@ -17,6 +17,7 @@ package iris.client_bff.data_request;
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,22 +36,21 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "data_request")
-@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-@Getter
-@Setter(AccessLevel.PACKAGE)
+@NoArgsConstructor
+@Data
+@Inheritance
+@DiscriminatorColumn(name = "data_request_type")
 public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestIdentifier> {
 
-	private String refId;
+	private DataRequestIdentifier id = DataRequestIdentifier.of(UUID.randomUUID());
+
+	private @Setter String refId;
 	private String hdUserId;
 
-	@OneToOne(orphanRemoval = true, cascade = { CascadeType.ALL }) @JoinColumn(name = "location_id")
-	private Location location;
-
-	private String name;
+	private @Setter String name;
+	private @Setter String comment;
 	private Instant requestStart;
 	private Instant requestEnd;
-
-	private @Lob String requestDetails;
 
 	@Enumerated(EnumType.STRING) @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
 			name = "data_request_feature",
@@ -58,21 +58,19 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	private Set<Feature> features;
 
 	@Column(nullable = false) @Enumerated(EnumType.STRING)
-	private @Setter Status status = Status.DATA_REQUESTED;
+	private Status status = Status.DATA_REQUESTED;
 
-	public DataRequest(String refId, String name, Instant requestStart, Instant requestEnd, String requestDetails,
-			String hdUserId, Location location, Set<Feature> features) {
+	public DataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
+			String hdUserId, String comment, Set<Feature> features) {
 
 		super();
 
-		this.id = DataRequestIdentifier.of(UUID.randomUUID());
 		this.refId = refId;
 		this.name = name;
 		this.requestStart = requestStart;
 		this.requestEnd = requestEnd;
-		this.requestDetails = requestDetails;
 		this.hdUserId = hdUserId;
-		this.location = location;
+		this.comment = comment;
 		this.features = features;
 	}
 
@@ -112,6 +110,6 @@ public class DataRequest extends Aggregate<DataRequest, DataRequest.DataRequestI
 	}
 
 	public enum Status {
-		DATA_REQUESTED, DATA_RECEIVED, CLOSED
+		DATA_REQUESTED, DATA_RECEIVED, CLOSED, ABORTED
 	}
 }

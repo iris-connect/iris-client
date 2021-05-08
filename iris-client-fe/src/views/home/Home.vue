@@ -50,7 +50,7 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn color="primary" :to="{ name: 'index-list' }" class="mb-5"
+                <v-btn color="primary" :to="{ name: 'index-new' }" class="mb-5"
                   >Indexfall-Daten anfordern
                 </v-btn>
               </v-col>

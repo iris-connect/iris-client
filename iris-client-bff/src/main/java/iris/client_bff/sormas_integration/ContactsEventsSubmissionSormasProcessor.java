@@ -15,8 +15,7 @@
 package iris.client_bff.sormas_integration;
 
 import iris.client_bff.data_request.DataRequest;
-import iris.client_bff.data_request.web.dto.ContactsAndEvents;
-import iris.client_bff.data_submission.DataSubmissionDto;
+import iris.client_bff.data_request.events.web.dto.ContactsAndEvents;
 import iris.sormas.client.api.ContactControllerApi;
 import iris.sormas.client.api.EventControllerApi;
 import iris.sormas.client.api.EventParticipantControllerApi;

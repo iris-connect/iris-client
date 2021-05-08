@@ -17,7 +17,7 @@ package iris.client_bff.data_submission;
 import static java.time.temporal.ChronoUnit.*;
 
 import iris.client_bff.DataInitializer;
-import iris.client_bff.data_request.DataRequestDataInitializer;
+import iris.client_bff.data_request.events.EventDataRequestDataInitializer;
 import iris.client_bff.data_submission.model.Address;
 import iris.client_bff.data_submission.model.AttendanceInformation;
 import iris.client_bff.data_submission.model.DataSubmission;
@@ -55,7 +55,7 @@ class DataSubmissionDataInitializer implements DataInitializer {
 		var address = new Address("Straße C", "1", "Stadt C", "12345");
 		var dataProvider = new GuestListDataProvider("DIR", address);
 
-		var submission = new DataSubmission(DataRequestDataInitializer.DATA_REQUEST_1, guests, dataProvider, null, null,
+		var submission = new DataSubmission(EventDataRequestDataInitializer.DATA_REQUEST_1, guests, dataProvider, null, null,
 				null);
 
 		address = new Address("Straße A", "1", "Stadt A", "12345");
