@@ -1,5 +1,7 @@
 package iris.client_bff.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -34,8 +37,13 @@ public class RPCClientConfig {
 	@Bean
 	public JsonRpcHttpClient rpcClient() throws MalformedURLException, NoSuchAlgorithmException, KeyManagementException {
 
+		ObjectMapper jacksonObjectMapper = new ObjectMapper();
+		jacksonObjectMapper.registerModule(new JavaTimeModule());
+
 		JsonRpcHttpClient client = new JsonRpcHttpClient(
-				new URL(clientUrl));
+				jacksonObjectMapper,
+				new URL(clientUrl),
+				new HashMap<>());
 
 		// Can be removed when we include the root certs
 		SSLContext sc = getAllCertsTrustedSSLContext();

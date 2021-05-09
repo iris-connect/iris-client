@@ -21,6 +21,8 @@ import iris.client_bff.config.IrisClientProperties;
 import iris.client_bff.data_request.DataRequest.DataRequestIdentifier;
 import iris.client_bff.data_request.DataRequest.Feature;
 import iris.client_bff.data_request.DataRequest.Status;
+import iris.client_bff.data_request.eps.EPSDataRequestClient;
+import iris.client_bff.data_request.eps.dto.EventDataRequestDto;
 import iris.client_bff.data_request.events.web.dto.EventUpdateDTO;
 import iris.client_bff.search_client.eps.EPSSearchClient;
 import iris.client_bff.search_client.eps.LocationMapper;
@@ -55,6 +57,7 @@ public class EventDataRequestService {
 
 	private final @NonNull IrisClientProperties clientProperties;
 	private final @NonNull EPSSearchClient searchClient;
+	private final @NonNull EPSDataRequestClient epsDataRequestClient;
 
 	public List<EventDataRequest> getAll() {
 		// ToDo: Pagination
@@ -110,22 +113,26 @@ public class EventDataRequestService {
 
 		log.trace("Request job - PUT to server is sent: {}", dataRequest.getId().toString());
 
-		var dto = DataRequestDto.of(dataRequest, clientProperties.getClientId(), clientProperties.getRkiCode());
-
-		// TODO: submit data request via EPS
-
-		// var headers = new HttpHeaders();
-		// headers.setContentType(new MediaType(APPLICATION_JSON, UTF_8));
-		// rest.put("https://{address}:{port}/hd/data-requests/{id}", new HttpEntity<>(dto, headers),
-		// properties.getServerAddress().getHostName(), properties.getServerPort(), dataRequest.getId());
-
-		log.debug("Request job - PUT to server sent: {}; Features = {}", dataRequest.getId().toString(),
-				dataRequest.getFeatures());
+		EventDataRequestDto locationDataRequestDto = EventDataRequestDto.builder()
+				.dataAuthorizationToken(dataRequest.getId().toString())
+				.locationId(dataRequest.getLocation().getLocationId())
+				.start(dataRequest.getRequestStart())
+				.end(dataRequest.getRequestEnd())
+				.build();
 
 		// TODO: verify that DATA_REQUESTED can be used as default
 		dataRequest.setStatus(Status.DATA_REQUESTED);
 
 		dataRequest = repository.save(dataRequest);
+
+		try {
+			epsDataRequestClient.requestGuestListData(dataRequest.getLocation().getProviderId(), locationDataRequestDto);
+		} catch (IRISSearchException e) {
+			e.printStackTrace();
+		}
+
+		log.debug("Request job - PUT to server sent: {}; Features = {}", dataRequest.getId().toString(),
+				dataRequest.getFeatures());
 
 		return dataRequest;
 	}
@@ -188,7 +195,7 @@ public class EventDataRequestService {
 	}
 
 	@Data
-	static class DataRequestDto {
+	public static class DataRequestDto {
 
 		private final String departmentId;
 
@@ -203,6 +210,8 @@ public class EventDataRequestService {
 		private final Set<Feature> features;
 		private final Status status;
 
+		private final String dataAuthorizationToken;
+
 		static DataRequestDto of(EventDataRequest request, UUID departmentId, String rkiCode) {
 
 			var location = request.getLocation();
@@ -211,7 +220,7 @@ public class EventDataRequestService {
 
 			return new DataRequestDto(departmentId.toString(), locationId,
 					providerId, request.getRequestStart(), request.getRequestEnd(),
-					request.getRequestDetails(), request.getFeatures(), request.getStatus());
+					request.getRequestDetails(), request.getFeatures(), request.getStatus(), request.getId().toString());
 		}
 	}
 }
