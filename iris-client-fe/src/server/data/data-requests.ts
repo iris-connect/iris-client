@@ -130,7 +130,8 @@ export const getDummyDetailsWithStatus = (id: string): DataRequestDetails => {
   if (dataRequest) {
     const status = dataRequest.status;
     const guests: Guest[] =
-      status !== DataRequestStatus.DataRequested
+      status !== DataRequestStatus.DataRequested &&
+      status !== DataRequestStatus.Aborted
         ? dummyDataDetails?.submissionData?.guests ?? []
         : [];
     return {
