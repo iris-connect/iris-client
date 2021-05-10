@@ -18,7 +18,7 @@
         :value="format(model)"
         @input="onValueChange"
         v-bind:is="component"
-        :append-icon="value !== model ? 'mdi-undo-variant' : ''"
+        :append-icon="isEdited() ? 'mdi-undo-variant' : ''"
         @click:append="reset"
         :append-outer-icon="isValid ? 'mdi-check' : ''"
         @click:append-outer="submit"
@@ -74,6 +74,10 @@ export default class EditableField extends EditableFieldProps {
 
   model = "";
 
+  isEdited(): boolean {
+    return this.normalize(this.value) !== this.model;
+  }
+
   // formats the model value to be displayed in the field input.
   format(value: string): string {
     return value === this.defaultValue ? "" : value;
@@ -90,14 +94,14 @@ export default class EditableField extends EditableFieldProps {
   }
 
   reset(): void {
-    this.model = this.value;
+    this.model = this.normalize(this.value);
     this.error = "";
     this.disabled = false;
     this.isEditing = false;
   }
 
   submit(): void {
-    if (this.model === this.value) {
+    if (!this.isEdited()) {
       return this.reset();
     }
     this.error = "";
@@ -122,7 +126,7 @@ export default class EditableField extends EditableFieldProps {
   cursor: pointer;
   border-bottom: 1px solid transparent;
   &.hover {
-    border-bottom-color: #000;
+    border-bottom-color: rgba(0, 0, 0, 0.12);
   }
 }
 </style>
