@@ -120,6 +120,7 @@ export const dummyDataDetails: DataRequestDetails = {
     endDate: hoursAgo(3),
   },
   locationInformation: dummyLocations[1],
+  comment: "",
 };
 
 export const getDummyDetailsWithStatus = (id: string): DataRequestDetails => {

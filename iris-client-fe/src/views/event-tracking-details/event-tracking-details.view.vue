@@ -9,6 +9,7 @@
           label="Details für Ereignis ID"
           v-slot="{ entry }"
           @submit="handleEditableField"
+          required
         >
           Details für Ereignis ID:
           {{ entry }}
@@ -24,6 +25,7 @@
               label="Name"
               v-slot="{ entry }"
               @submit="handleEditableField"
+              required
             >
               <strong> Name: </strong><br />
               {{ entry }}
@@ -37,6 +39,7 @@
               v-slot="{ entry }"
               @submit="handleEditableField"
               component="v-textarea"
+              default-value="-"
             >
               <strong> Kommentar: </strong><br />
               {{ entry }}
@@ -416,7 +419,11 @@ export default class EventTrackingDetailsView extends Vue {
         data,
       })
       .then(resolve)
-      .catch(reject);
+      .catch((error) => {
+        // reset vuex error as it is handled locally
+        store.commit("eventTrackingDetails/setDataRequestPatchError", null);
+        reject(error);
+      });
   }
 
   get guests(): TableRow[] {
