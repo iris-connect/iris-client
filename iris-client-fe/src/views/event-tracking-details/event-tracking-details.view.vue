@@ -73,11 +73,10 @@
                 >
                   {{ getStatusName(eventData.status) }}
                 </v-chip>
-              </v-col>
-              <v-col cols="12" v-if="isAbortable(eventData.status)">
-                <event-tracking-data-request-abort-button @click="abortRequest">
-                  Anfrage abbrechen
-                </event-tracking-data-request-abort-button>
+                <event-tracking-status-change
+                  :status="eventData.status"
+                  @update="updateRequestStatus"
+                />
               </v-col>
             </v-row>
           </v-col>
@@ -174,11 +173,11 @@
 <script lang="ts">
 import {
   Address,
-  LocationInformation,
-  DataRequestStatus,
-  Sex,
   DataRequestDetails,
+  DataRequestStatus,
   DataRequestStatusUpdateByUser,
+  LocationInformation,
+  Sex,
 } from "@/api";
 import router from "@/router";
 import store from "@/store";
@@ -189,11 +188,12 @@ import dayjs from "@/utils/date";
 import Genders from "@/constants/Genders";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
-import EventTrackingDataRequestAbortButton from "@/views/event-tracking-details/components/event-tracking-data-request-abort-button.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { ErrorMessage } from "@/utils/axios";
 import rules from "@/common/validation-rules";
 import EditableField from "@/components/form/editable-field.vue";
+import StatusChangeConfirmDialog from "@/views/event-tracking-details/components/confirm-dialog.vue";
+import EventTrackingStatusChange from "@/views/event-tracking-details/components/event-tracking-status-change.vue";
 
 type EventData = {
   extID: string;
@@ -243,9 +243,10 @@ function getFormattedAddress(address?: Address | null): string {
 
 @Component({
   components: {
+    EventTrackingStatusChange,
+    StatusChangeConfirmDialog,
     EditableField,
     ErrorMessageAlert,
-    EventTrackingDataRequestAbortButton,
     EventTrackingDetailsLocationInfo,
     EventTrackingDetailsView: EventTrackingDetailsView,
   },
@@ -395,15 +396,11 @@ export default class EventTrackingDetailsView extends Vue {
     ];
   }
 
-  isAbortable(status: DataRequestStatus): boolean {
-    return status === DataRequestStatus.DataRequested;
-  }
-
-  async abortRequest(): Promise<void> {
-    await store.dispatch("eventTrackingDetails/patchDataRequest", {
+  updateRequestStatus(status: DataRequestStatusUpdateByUser): void {
+    store.dispatch("eventTrackingDetails/patchDataRequest", {
       id: router.currentRoute.params.id,
       data: {
-        status: DataRequestStatusUpdateByUser.Aborted,
+        status,
       },
     });
   }

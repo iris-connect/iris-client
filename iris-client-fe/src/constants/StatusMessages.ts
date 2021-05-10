@@ -1,13 +1,13 @@
 import { DataRequestStatus } from "@/api";
 
-const getMessage = function (status: DataRequestStatus): string {
+const getMessage = function (status?: DataRequestStatus): string {
   switch (status) {
     case DataRequestStatus.DataRequested:
       return "Angefragt";
     case DataRequestStatus.DataReceived:
       return "Geliefert";
     case DataRequestStatus.Closed:
-      return "Abgeschlossen";
+      return "Bearbeitet";
     case DataRequestStatus.Aborted:
       return "Abgebrochen";
     default:

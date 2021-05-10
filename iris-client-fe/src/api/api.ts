@@ -837,6 +837,7 @@ export enum DataRequestStatus {
  * @enum {string}
  */
 export enum DataRequestStatusUpdateByUser {
+    DataReceived = 'DATA_RECEIVED',
     Closed = 'CLOSED',
     Aborted = 'ABORTED'
 }

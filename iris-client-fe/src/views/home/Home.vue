@@ -102,36 +102,8 @@ import {
 } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
 import { ErrorMessage } from "@/utils/axios";
-
-function getStatusColor(status?: DataRequestStatus): string {
-  switch (status) {
-    case DataRequestStatus.DataRequested:
-      return "blue";
-    case DataRequestStatus.DataReceived:
-      return "red";
-    case DataRequestStatus.Closed:
-      return "green";
-    case DataRequestStatus.Aborted:
-      return "black";
-    default:
-      return "gray"; // TODO
-  }
-}
-
-function getStatusName(status?: DataRequestStatus): string {
-  switch (status) {
-    case DataRequestStatus.DataRequested:
-      return "Angefragt";
-    case DataRequestStatus.DataReceived:
-      return "Geliefert";
-    case DataRequestStatus.Closed:
-      return "Abgeschlossen";
-    case DataRequestStatus.Aborted:
-      return "Abgebrochen";
-    default:
-      return "Unbekannt"; // TODO find better name
-  }
-}
+import StatusColors from "@/constants/StatusColors";
+import StatusMessages from "@/constants/StatusMessages";
 
 const tableRowMapper = (
   dataRequest: ExistingDataRequestClientWithLocation
@@ -146,8 +118,8 @@ const tableRowMapper = (
     code: dataRequest.code || "-",
     name: dataRequest.name || "-",
     status: dataRequest.status?.toString() || "-",
-    statusColor: getStatusColor(dataRequest.status),
-    statusName: getStatusName(dataRequest.status),
+    statusColor: StatusColors.getColor(dataRequest.status),
+    statusName: StatusMessages.getMessage(dataRequest.status),
   };
 };
 

@@ -1,6 +1,6 @@
 import { DataRequestStatus } from "@/api";
 
-const getColor = function (status: DataRequestStatus): string {
+const getColor = function (status?: DataRequestStatus): string {
   switch (status) {
     case DataRequestStatus.DataRequested:
       return "blue";
