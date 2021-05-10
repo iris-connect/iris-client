@@ -99,7 +99,7 @@ function getFormattedAddress(
     if (data.locationInformation) {
       const contact = data.locationInformation.contact;
       if (contact) {
-        return `${data.locationInformation.name}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+      return `${data.locationInformation.name} (${data.locationInformation.contact.officialName}), ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
       }
       return data.locationInformation.name;
     }

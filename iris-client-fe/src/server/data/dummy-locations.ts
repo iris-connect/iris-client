@@ -13,14 +13,14 @@ export const dummyLocations: LocationInformation[] = [
       },
       email: "pizza-muster@example.com",
       phone: "06973928393",
-      officialName: "Pizzeria Mio Muster",
+      officialName: "Pizzeria Mio Muster GmbH",
       ownerEmail: "legal-pizza-muster@exmaple.com",
       representative: "Luigi Calzone",
     },
   },
   {
     id: "id-brauwirt-keller",
-    name: "Brauwirt-Keller",
+    name: "Brauwirt-Keller Pub",
     providerId: "recover-app",
     contact: {
       address: {
@@ -37,7 +37,7 @@ export const dummyLocations: LocationInformation[] = [
   },
   {
     id: "id-bowling-bahn",
-    name: "Bowling World Musterstadt",
+    name: "Bowling World",
     providerId: "recover-app",
     contact: {
       address: {
