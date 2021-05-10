@@ -110,6 +110,21 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+    <v-btn
+      class="mr-0 mb-0"
+      large
+      fab
+      dark
+      fixed
+      bottom
+      right
+      :max-height="48"
+      :max-width="48"
+      @click="showFeedbackDialog = true"
+    >
+      <v-icon :size="30"> mdi-chat-alert-outline </v-icon>
+    </v-btn>
+    <FeedbackDialog v-model="showFeedbackDialog" />
   </div>
 </template>
 <style></style>
@@ -129,6 +144,7 @@ import dayjs from "@/utils/date";
 import Genders from "@/constants/Genders";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
+import FeedbackDialog from "@/components/feedback.view.vue";
 
 type EventData = {
   extID: string;
@@ -174,6 +190,7 @@ function getFormattedAddress(address?: Address | null): string {
   components: {
     EventTrackingDetailsLocationInfo,
     EventTrackingDetailsView: EventTrackingDetailsView,
+    FeedbackDialog,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
@@ -376,6 +393,12 @@ export default class EventTrackingDetailsView extends Vue {
       this.tableData.select,
       [this.eventData.extID, Date.now()].join("_")
     );
+  }
+
+  data() {
+    return {
+      showFeedbackDialog: false,
+    };
   }
 }
 </script>

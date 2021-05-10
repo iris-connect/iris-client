@@ -1,4 +1,5 @@
 <template>
+  <div>
   <v-card class="my-3">
     <v-form
       ref="form"
@@ -112,6 +113,23 @@
       </v-card-actions>
     </v-form>
   </v-card>
+  <v-btn
+    class="mr-0 mb-0"
+    large
+    fab
+    dark
+    fixed
+    bottom
+    right
+    :color="black"
+    :max-height="48"
+    :max-width="48"
+    @click="showFeedbackDialog = true"
+>
+  <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
+</v-btn>
+  <FeedbackDialog v-model="showFeedbackDialog" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -130,6 +148,7 @@ import DateTimeInputField from "@/components/form/date-time-input-field.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
 import EventTrackingFormLocationInfo from "@/views/event-tracking-form/components/event-tracking-form-location-info.vue";
 import rules from "@/common/validation-rules";
+import FeedbackDialog from "@/components/feedback.view.vue";
 
 type EventTrackingForm = {
   model: EventTrackingFormModel;
@@ -154,6 +173,7 @@ type EventTrackingFormQueryParameters = Partial<
     DateTimeInputField,
     LocationSelectDialog,
     EventTrackingFormView: EventTrackingFormView,
+    FeedbackDialog,
   },
   beforeRouteLeave(to, from, next) {
     store.commit("eventTrackingForm/reset");
@@ -273,6 +293,11 @@ export default class EventTrackingFormView extends Vue {
         },
       });
     }
+  }
+  data() {
+    return {
+      showFeedbackDialog: false,
+    };
   }
 }
 </script>
