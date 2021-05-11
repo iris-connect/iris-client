@@ -70,8 +70,8 @@ export default class DateTimeInputField extends DateTimeInputFieldProps {
         : "",
       (v: unknown): string | boolean =>
         !v ||
-        (typeof v === "string" && /\d{4}-\d{2}-\d{2}/.test(v)) ||
-        "Bitte geben Sie ein Datum im Format YYYY-MM-DD an",
+        (typeof v === "string" && /\d{2}.\d{2}.\d{4}/.test(v)) ||
+        "Bitte geben Sie ein Datum im Format DD.MM.YYYY an",
     ].filter((v) => v),
     time: [
       this.required
@@ -99,8 +99,14 @@ export default class DateTimeInputField extends DateTimeInputFieldProps {
   }
 
   setDateTime(): void {
+    console.log("setDateTime:");
+
+    console.log("this.date: " + this.date);
+    console.log("this.time: " + this.time);
     const value = dayjs(this.date + " " + this.time, "YYYY-MM-DD HH:mm");
     const dateString = value.isValid() ? value.toISOString() : "";
+    console.log("value: " + value);
+    console.log("dateString: " + dateString);
     this.$emit("input", dateString);
   }
 

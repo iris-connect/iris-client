@@ -10,11 +10,12 @@
       <div class="d-flex align-center">
         <div class="w-100" v-on="on" v-bind="attrs">
           <v-text-field
+            slot="activator"
             class="picker-input-field"
-            v-model="model"
+            v-model="dateFormatted"
             prepend-icon="mdi-calendar"
-            readonly
             v-bind="$attrs"
+            @blur="date = parseDate(dateFormatted)"
           ></v-text-field>
         </div>
         <v-icon v-if="model" @click="model = ''"> mdi-close </v-icon>
@@ -56,7 +57,25 @@ const DateInputFieldProps = Vue.extend({
 export default class DateInputField extends DateInputFieldProps {
   active = false;
 
-  get model(): string {
+  formatDate(date: string) {
+    if (!date) return date
+
+    const [year, month, day] = date.split('-')
+    return `${day}.${month}.${year}`
+  }
+
+  parseDate (date: string) {
+    if (!date) return null
+
+    const [month, day, year] = date.split('/')
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+  }
+
+  get dateFormatted(): string {    
+    return this.formatDate(this.value);
+  }
+  
+  get model(): string {    
     return this.value;
   }
 
