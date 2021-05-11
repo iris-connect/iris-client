@@ -98,18 +98,18 @@ export function makeMockAPIServer() {
         return authResponse(request);
       });
 
-      this.post("/data-requests-client/locations", () => {
+      this.post("/data-requests-client/events", () => {
         const created: Partial<DataRequestDetails> = {
           code: "NEWREQUEST123",
         };
         return created;
       });
 
-      this.get("/data-requests-client/locations", (schema, request) => {
+      this.get("/data-requests-client/events", (schema, request) => {
         return authResponse(request, dummyDataRequests);
       });
 
-      this.get("/data-requests-client/locations/:id", (schema, request) => {
+      this.get("/data-requests-client/events/:id", (schema, request) => {
         const data = getDummyDetailsWithStatus(router.currentRoute.params.id);
         return authResponse(request, data);
       });
