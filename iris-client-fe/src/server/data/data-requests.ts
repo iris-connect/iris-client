@@ -82,6 +82,12 @@ export const dummyDataDetails: DataRequestDetails = {
         phone: "01234 000000",
         mobilePhone: "0123 0815",
         sex: Sex.Male,
+        address: {
+          street: "Universitätsplatz",
+          houseNumber: "1",
+          zipCode: "39104",
+          city: "Magdeburg",
+        },
         attendanceInformation: {
           attendFrom: hoursAgo(9),
           attendTo: hoursAgo(3),
@@ -94,6 +100,12 @@ export const dummyDataDetails: DataRequestDetails = {
         phone: "01234 567890",
         mobilePhone: "0123 456789",
         sex: Sex.Female,
+        address: {
+          street: "Universitätsplatz",
+          houseNumber: "1",
+          zipCode: "39104",
+          city: "Magdeburg",
+        },
         attendanceInformation: {
           attendFrom: hoursAgo(10),
           attendTo: hoursAgo(8),
