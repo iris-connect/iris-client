@@ -59,6 +59,9 @@
           class="elevation-1 mt-5 twolineTable"
           :search="tableData.search"
         >
+          <template v-slot:[itemAddressSlotName]="{ item }">
+            <span style="white-space: pre-wrap;"> {{item.address}} </span>
+          </template>
           <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
               {{ getStatusName(item.status) }}
@@ -99,7 +102,7 @@ function getFormattedAddress(
     if (data.locationInformation) {
       const contact = data.locationInformation.contact;
       if (contact) {
-      return `${data.locationInformation.name} (${data.locationInformation.contact.officialName}), ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+      return `${data.locationInformation.name} \n(${data.locationInformation.contact.officialName}) \n${contact.address.street} \n${contact.address.zip} ${contact.address.city}`;
       }
       return data.locationInformation.name;
     }
@@ -206,6 +209,9 @@ export default class EventTrackingListView extends Vue {
   }
   get itemActionSlotName(): string {
     return "item.actions";
+  }
+  get itemAddressSlotName(): string {
+    return "item.address";
   }
 
   on(): void {

@@ -31,7 +31,10 @@
           :items-per-page="5"
           class="twolineTable"
         >
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:[itemNameSlotName]="{ item }">
+            <span style="white-space: pre-wrap;"> {{item.name}} </span>
+          </template>
+          <template v-slot:[itemActionsSlotName]="{ item }">
             <v-btn color="primary" @click="handleSelect(item)"> Wählen </v-btn>
           </template>
         </v-data-table>
@@ -99,11 +102,19 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
     this.$emit("input", value);
   }
 
+  get itemNameSlotName(): string {
+    return "item.name";
+  }
+
+  get itemActionsSlotName(): string {
+    return "item.actions";
+  }
+
   get locationRows(): LocationInformationTableRow[] {
     return (this.locations || []).map((location) => {
       const { name, contact } = location;
       return {
-        name: name || "-",
+        name: name + " \n(" + contact.officialName + ")" || "-",
         address: getFormattedAddress(contact.address) || "-",
         representative: contact.representative || "-",
         email: contact.email || "-",

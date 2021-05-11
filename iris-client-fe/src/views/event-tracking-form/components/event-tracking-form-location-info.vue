@@ -1,9 +1,15 @@
 <template>
   <div>
-    <p>
-      <strong>{{ locationName }}</strong>
-    </p>
     <v-row>
+      <v-col>
+        <strong
+          class="d-block"
+          v-for="(item, index) in locationName"
+          :key="index"
+        >
+          {{ item }}
+        </strong>
+      </v-col>
       <v-col>
         <span
           class="d-block"
@@ -41,8 +47,11 @@ const EventTrackingFormLocationInfoProps = Vue.extend({
 
 @Component
 export default class EventTrackingFormLocationInfo extends EventTrackingFormLocationInfoProps {
-  get locationName(): string {
-    return this.location?.contact?.officialName ?? "";
+  get locationName(): Array<string> {
+    return [
+      this.location?.name ?? "",
+      "(" + this.location?.contact?.officialName + ")" ?? "",
+      ].filter((v) => v);
   }
   get locationContact(): Array<string> {
     const contact: LocationContact = this.location?.contact;
