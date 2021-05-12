@@ -124,7 +124,7 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: "/cases/details/:caseId",
+    path: "/cases/details/:caseId/:is_created",
     name: "index-details" /* Caution: This acts as an identifier! */,
     meta: {
       menu: false,

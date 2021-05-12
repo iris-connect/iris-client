@@ -1,6 +1,18 @@
 <template>
   <div>
     <v-card>
+      <div class="alertOverlay">
+        <v-alert
+          :value="alert"
+          color="blue"
+          prominent
+          dismissible
+          elevation="4"
+          type="success"
+          transition="scale-transition"
+        > Die Kontaktdaten zu diesem Indexfall wurden angefragt.
+        </v-alert>
+      </div>
       <v-card-title
         >Details für Indexfall ID: {{ indexData.extID }}</v-card-title
       >
@@ -273,6 +285,8 @@ function getFormattedAddress(address?: Address | null): string {
   },
 })
 export default class IndexTrackingDetailsView extends Vue {
+  alert = false;
+
   tableDataContacts = {
     search: "",
     expanded: [],
@@ -450,6 +464,19 @@ export default class IndexTrackingDetailsView extends Vue {
         additionalInformation: event.additionalInformation || "-",
       };
     });
+  }
+
+  created() {
+    if(this.$route.params.is_created == 'true') {
+      this.openAlert();
+    }
+  }
+
+  openAlert(): void {    
+    this.alert = true;
+    setTimeout(()=>{
+      this.alert = false;
+    }, 2000);
   }
 
   currentTab = 0;

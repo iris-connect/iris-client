@@ -72,7 +72,7 @@
             <!-- TODO use imported route name -->
             <v-btn
               color="primary"
-              :to="{ name: 'index-details', params: { caseId: item.caseId } }"
+              :to="{ name: 'index-details', params: { caseId: item.caseId, is_created: 'false' } }"
             >
               Details
             </v-btn>

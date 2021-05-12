@@ -2,29 +2,40 @@
   color: rgba(0, 0, 0, 0.87) !important;
 }
 
-a:active, .v-btn--active, a:hover{
+a:active,
+.v-btn--active,
+a:hover {
   outline-width: 0;
   text-decoration: underline #46ff9f 3px;
   text-underline-offset: 3px;
 }
 
-.theme--light.v-btn--active:hover::before, .theme--light.v-btn--active::before {
+.theme--light.v-btn--active:hover::before,
+.theme--light.v-btn--active::before {
   opacity: 0;
 }
 
-.v-data-table{
-  thead{
-    tr{
+.v-data-table {
+  thead {
+    tr {
       height: initial;
     }
   }
-  tr{
+  tr {
     height: initial;
     /*height: 100px; TODO: Fix this shit. It applies to all data-tables globally.*/
   }
 }
-.twolineTable{
-  tr{
+
+.twolineTable {
+  tr {
     height: 100px;
   }
+}
+
+.alertOverlay {
+  position: fixed;
+  z-index: 9999;
+  left: 20%;
+  right: 20%;
 }

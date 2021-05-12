@@ -1,19 +1,18 @@
 <template>
   <div>
-    <div>
-      <v-alert
-        :value="alert"
-        color="blue"
-        prominent
-        dismissible
-        elevation="4"
-        text
-        type="success"
-        transition="scale-transition"
-      > Die Kontaktdaten zu diesem Ereignis wurden angefragt.
-      </v-alert>
-    </div>
     <v-card>
+      <div class="alertOverlay">
+        <v-alert
+          :value="alert"
+          color="blue"
+          prominent
+          dismissible
+          elevation="4"
+          type="success"
+          transition="scale-transition"
+        > Die Kontaktdaten zu diesem Ereignis wurden angefragt.
+        </v-alert>
+      </div>
       <v-card-title
         >Details für Ereignis ID: {{ eventData.extID }}</v-card-title
       >
@@ -190,16 +189,7 @@ function getFormattedAddress(address?: Address | null): string {
   },
   async beforeRouteEnter(_from, _to, next) {
     next(); 
-    
-    if(router.currentRoute.params.is_created == 'false') {
-      console.log("beforeRouteEnter: " + router.currentRoute.params.is_created);      
-      next(vm => {
-        (vm as EventTrackingDetailsView).openAlert();
-      });
-    } else {
-      next();
-    }
-    
+
     await store.dispatch("eventTrackingDetails/fetchEventTrackingDetails", [
       router.currentRoute.params.id,
     ]);
@@ -293,11 +283,18 @@ export default class EventTrackingDetailsView extends Vue {
         dataRequest?.submissionData?.additionalInformation || "-",
     };
   }
-  openAlert(): void {
-    console.log("openAlert: " + this.alert);
-    this.alert = true;
 
-    console.log("openAlert: " + this.alert);
+  created() {
+    if(this.$route.params.is_created == 'true') {
+      this.openAlert();
+    }
+  }
+
+  openAlert(): void {    
+    this.alert = true;
+    setTimeout(()=>{
+      this.alert = false;
+    }, 2000);
   }
 
   get listLoading(): boolean {
@@ -322,8 +319,6 @@ export default class EventTrackingDetailsView extends Vue {
 
   get guests(): TableRow[] {
     // TODO attendanceInformation is optional
-    
-    console.log("guest()");
     const guests =
       store.state.eventTrackingDetails.eventTrackingDetails?.submissionData
         ?.guests || [];

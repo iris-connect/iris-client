@@ -198,6 +198,7 @@ export default class IndexTrackingFormView extends Vue {
         name: `index-details`,
         params: {
           caseId: created.caseId || "",
+          is_created: 'true',
         },
       });
     }
