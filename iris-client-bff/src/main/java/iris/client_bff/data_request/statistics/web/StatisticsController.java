@@ -26,15 +26,16 @@ public class StatisticsController {
 	@GetMapping
 	@ResponseStatus(OK)
 	public StatisticsDTO getWeeklyData() {
-		StatisticsDTO stats = new StatisticsDTO();
-
 		Instant oneWeekAgo = Instant.now().minus(7, ChronoUnit.DAYS);
+		int indexCasesCount = indexCaseService.getCountSinceDate(oneWeekAgo);
+		int eventsCount = eventService.getCountSinceDate(oneWeekAgo);
+		int sumStatus = indexCaseService.getCountWithStatus(Status.DATA_RECEIVED)
+				+ eventService.getCountWithStatus(Status.DATA_RECEIVED);
 
-		stats.setIndexCasesCount(indexCaseService.getCountSinceDate(oneWeekAgo));
-		stats.setEventsCount(eventService.getCountSinceDate(oneWeekAgo));
-		stats.setSumStatus(indexCaseService.getCountWithStatus(Status.DATA_RECEIVED)
-				+ eventService.getCountWithStatus(Status.DATA_RECEIVED));
-
-		return stats;
+		return StatisticsDTO.builder()
+				.indexCasesCount(indexCasesCount)
+				.eventsCount(eventsCount)
+				.sumStatus(sumStatus)
+				.build();
 	}
 }
