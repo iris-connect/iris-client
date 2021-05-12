@@ -82,7 +82,7 @@
                         <v-list-item-title>
                           {{ expandedHeader.text }}
                         </v-list-item-title>
-                        <v-list-item-subtitle>
+                        <v-list-item-subtitle class="text-pre-line">
                           {{
                             item[expandedHeader.value]
                               ? item[expandedHeader.value]
@@ -165,7 +165,7 @@ function getFormattedDate(date?: string): string {
 
 function getFormattedAddress(address?: Address | null): string {
   if (address) {
-    return `${address.street} ${address.houseNumber}, ${address.zipCode} ${address.city}`;
+    return `${address.street} ${address.houseNumber} \n${address.zipCode} ${address.city}`;
   }
   return "-";
 }
