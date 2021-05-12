@@ -1742,7 +1742,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
          * @throws {RequiredError}
          */
         dataRequestsClientLocationsGet: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/data-requests-client/locations`;
+            const localVarPath = `/data-requests-client/events`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1782,7 +1782,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
         dataRequestsClientLocationsPost: async (dataRequestClient: DataRequestClient, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'dataRequestClient' is not null or undefined
             assertParamExists('dataRequestsClientLocationsPost', 'dataRequestClient', dataRequestClient)
-            const localVarPath = `/data-requests-client/locations`;
+            const localVarPath = `/data-requests-client/events`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1825,7 +1825,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
         getLocationDetails: async (code: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'code' is not null or undefined
             assertParamExists('getLocationDetails', 'code', code)
-            const localVarPath = `/data-requests-client/locations/{code}`
+            const localVarPath = `/data-requests-client/events/{code}`
                 .replace(`{${"code"}}`, encodeURIComponent(String(code)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
