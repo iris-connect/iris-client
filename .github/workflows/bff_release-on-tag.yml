@@ -37,7 +37,7 @@ jobs:
 
       - uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r iris-client-fe-${{ steps.get_version.outputs.VERSION }}.zip iris-client-fe/dist
+          args: zip -j -qq -r iris-client-fe-${{ steps.get_version.outputs.VERSION }}.zip iris-client-fe/dist
 
       - name: Cache local Maven repository
         uses: actions/cache@v2
