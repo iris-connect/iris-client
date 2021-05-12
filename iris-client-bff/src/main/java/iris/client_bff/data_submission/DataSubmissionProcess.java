@@ -14,8 +14,7 @@
  *******************************************************************************/
 package iris.client_bff.data_submission;
 
-import iris.client_bff.data_request.DataRequest;
-import iris.client_bff.data_request.events.EventDataRequest;
+import iris.client_bff.events.EventDataRequest;
 import lombok.Getter;
 
 import java.security.InvalidKeyException;
@@ -38,52 +37,52 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Getter
 public abstract class DataSubmissionProcess<T> {
 
-	private final DataSubmissionDto submissionDto;
-	private final Class<T> dtoType;
-	private final KeyStore keyStore;
-	private final ObjectMapper mapper;
-	private final EventDataRequest request;
+  private final DataSubmissionDto submissionDto;
+  private final Class<T> dtoType;
+  private final KeyStore keyStore;
+  private final ObjectMapper mapper;
+  private final EventDataRequest request;
 
-	public DataSubmissionProcess(DataSubmissionDto submissionDto, Class<T> dtoType, EventDataRequest request,
-			KeyStore keyStore, ObjectMapper mapper) {
+  public DataSubmissionProcess(DataSubmissionDto submissionDto, Class<T> dtoType, EventDataRequest request,
+	  KeyStore keyStore, ObjectMapper mapper) {
 
-		// super(request, taskApi);
+	// super(request, taskApi);
 
-		this.submissionDto = submissionDto;
-		this.dtoType = dtoType;
-		this.request = request;
-		this.keyStore = keyStore;
-		this.mapper = mapper;
+	this.submissionDto = submissionDto;
+	this.dtoType = dtoType;
+	this.request = request;
+	this.keyStore = keyStore;
+	this.mapper = mapper;
+  }
+
+  public abstract void process(T dto);
+
+  void process() {
+	try {
+
+	  var content = decryptContent(submissionDto.getEncryptedData(), submissionDto.getKeyReference(),
+		  submissionDto.getSecret());
+	  var dto = mapper.readValue(content, dtoType);
+
+	  process(dto);
+
+	} catch (JsonProcessingException | InvalidKeyException | UnrecoverableKeyException | NoSuchAlgorithmException
+		| NoSuchPaddingException | InvalidKeySpecException | IllegalBlockSizeException | BadPaddingException
+		| KeyStoreException e) {
+	  // TODO Auto-generated catch block
+	  e.printStackTrace();
+	  return;
 	}
+  }
 
-	public abstract void process(T dto);
+  protected String decryptContent(String content, String keyReference, String encryptedSecretKeyString)
+	  throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException,
+	  IllegalBlockSizeException, BadPaddingException, UnrecoverableKeyException, KeyStoreException {
 
-	void process() {
-		try {
+	var privateKey = keyStore.getKey(keyReference, null);
 
-			var content = decryptContent(submissionDto.getEncryptedData(), submissionDto.getKeyReference(),
-					submissionDto.getSecret());
-			var dto = mapper.readValue(content, dtoType);
+	var decryptor = new Decryptor(encryptedSecretKeyString, privateKey, content);
 
-			process(dto);
-
-		} catch (JsonProcessingException | InvalidKeyException | UnrecoverableKeyException | NoSuchAlgorithmException
-				| NoSuchPaddingException | InvalidKeySpecException | IllegalBlockSizeException | BadPaddingException
-				| KeyStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		}
-	}
-
-	protected String decryptContent(String content, String keyReference, String encryptedSecretKeyString)
-			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException,
-			IllegalBlockSizeException, BadPaddingException, UnrecoverableKeyException, KeyStoreException {
-
-		var privateKey = keyStore.getKey(keyReference, null);
-
-		var decryptor = new Decryptor(encryptedSecretKeyString, privateKey, content);
-
-		return decryptor.decrypt();
-	}
+	return decryptor.decrypt();
+  }
 }
