@@ -38,7 +38,11 @@ public class StatisticsControllerIntegrationTest {
 	EventDataRequestService eventService;
 
 	// mock responses
-	private final StatisticsDTO MOCK_STATISTICS_DTO = new StatisticsDTO(5, 10, 45);
+	private final StatisticsDTO MOCK_STATISTICS_DTO = StatisticsDTO.builder()
+			.indexCasesCount(5)
+			.eventsCount(10)
+			.sumStatus(45)
+			.build();
 
 	@BeforeEach
 	void setUp() {
