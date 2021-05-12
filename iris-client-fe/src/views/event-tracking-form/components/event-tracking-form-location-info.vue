@@ -48,9 +48,15 @@ const EventTrackingFormLocationInfoProps = Vue.extend({
 @Component
 export default class EventTrackingFormLocationInfo extends EventTrackingFormLocationInfoProps {
   get locationName(): Array<string> {
+    var officalName;
+    if(this.location?.contact?.officialName) {
+      officalName = "(" + this.location?.contact?.officialName + ")";
+    } else {
+      officalName = "";
+    }
     return [
       this.location?.name ?? "",
-      "(" + this.location?.contact?.officialName + ")" ?? "",
+      officalName,
       ].filter((v) => v);
   }
   get locationContact(): Array<string> {

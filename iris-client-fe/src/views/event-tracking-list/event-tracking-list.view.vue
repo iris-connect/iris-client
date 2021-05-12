@@ -60,7 +60,7 @@
           :search="tableData.search"
         >
           <template v-slot:[itemAddressSlotName]="{ item }">
-            <span style="white-space: pre-wrap;"> {{item.address}} </span>
+            <span class="text-pre-wrap"> {{item.address}} </span>
           </template>
           <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
@@ -102,8 +102,13 @@ function getFormattedAddress(
     if (data.locationInformation) {
       const contact = data.locationInformation.contact;
       if (contact) {
-      return `${data.locationInformation.name} \n(${data.locationInformation.contact.officialName}) \n${contact.address.street} \n${contact.address.zip} ${contact.address.city}`;
+        var name = `${data.locationInformation.name}`;        
+        if(contact.officialName) {
+          name = name + `\n(${contact.officialName})`;
+        }
+        return name + `\n${contact.address.street} \n${contact.address.zip} ${contact.address.city}`;
       }
+
       return data.locationInformation.name;
     }
     return "-";
