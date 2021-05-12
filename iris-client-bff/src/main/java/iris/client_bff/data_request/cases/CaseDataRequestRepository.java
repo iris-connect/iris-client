@@ -17,6 +17,7 @@ package iris.client_bff.data_request.cases;
 import iris.client_bff.data_request.DataRequest;
 import iris.client_bff.data_request.DataRequest.DataRequestIdentifier;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.Query;
@@ -29,5 +30,8 @@ public interface CaseDataRequestRepository extends CrudRepository<CaseDataReques
 
 	@Query("select count(1) = 0 from DataRequest r where r.id = :code")
 	boolean isCodeAvailable(UUID code);
+
+	@Query("select count(r) from DataRequest r where r.metadata.created >= :date")
+	int getCountSinceDate(Instant date);
 
 }

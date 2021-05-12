@@ -4,6 +4,8 @@ import iris.client_bff.data_request.DataRequest.DataRequestIdentifier;
 import iris.client_bff.data_request.DataRequest.Status;
 import iris.client_bff.data_request.cases.web.dto.IndexCaseInsertDTO;
 import iris.client_bff.data_request.cases.web.dto.IndexCaseUpdateDTO;
+
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -60,5 +62,9 @@ public class IndexCaseService {
 				.requestEnd(insert.getEnd())
 				.build();
 		return repository.save(dataRequest);
+	}
+
+	public int getCountSinceDate(Instant date) {
+		return repository.getCountSinceDate(date);
 	}
 }
