@@ -181,7 +181,7 @@ import {
 } from "@/api";
 import router from "@/router";
 import store from "@/store";
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import DataExport from "@/utils/DataExport";
 import EventTrackingDetailsLocationInfo from "@/views/event-tracking-details/components/event-tracking-details-location-info.vue";
 import dayjs from "@/utils/date";
@@ -324,26 +324,17 @@ export default class EventTrackingDetailsView extends Vue {
     return store.state.eventTrackingDetails.eventTrackingDetails;
   }
 
-  formModel: EventTrackingDetailsEditFormModel = {
-    externalRequestId: "",
-    name: "",
-    comment: "",
-  };
-
-  @Watch("eventTrackingDetails")
-  onEventTrackingDetailsChange(details: DataRequestDetails | null): void {
-    this.formModel = {
-      externalRequestId: details?.externalRequestId,
-      name: details?.name,
-      comment: details?.comment,
-    };
-  }
-
-  get validationRules(): Record<string, Array<unknown>> {
+  get formModel(): EventTrackingDetailsEditFormModel {
     return {
-      defined: [rules.defined],
+      externalRequestId: this.eventTrackingDetails?.externalRequestId || "",
+      name: this.eventTrackingDetails?.name || "",
+      comment: this.eventTrackingDetails?.comment || "",
     };
   }
+
+  validationRules = {
+    defined: [rules.defined],
+  };
 
   get eventData(): EventData {
     const dataRequest = store.state.eventTrackingDetails.eventTrackingDetails;
