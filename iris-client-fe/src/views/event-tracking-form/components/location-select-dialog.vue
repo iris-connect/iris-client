@@ -113,7 +113,7 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
   get locationRows(): LocationInformationTableRow[] {
     return (this.locations || []).map((location) => {
       const { name, contact } = location;
-      var combinedName = name;
+      let combinedName = name;
       if(contact.officialName) {
         combinedName += "\n(" + contact.officialName + ")";
       }
