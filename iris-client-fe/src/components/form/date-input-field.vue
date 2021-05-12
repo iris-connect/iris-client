@@ -67,20 +67,52 @@ export default class DateInputField extends DateInputFieldProps {
   parseDate (date: string) {
     if (!date) return null
 
-    const [month, day, year] = date.split('/')
+    const [day, month, year] = date.split('.')
     return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
   }
 
-  get dateFormatted(): string {    
-    return this.formatDate(this.value);
+  get dateFormatted(): string {   
+    if(this.isGermanFormat(this.value)) {
+      return this.value;
+    } else {
+      if(this.isNoneGermanFormat(this.value)) {
+        return this.formatDate(this.value);
+      }
+    }
+    return this.value;
+  }
+
+  set dateFormatted(value: string) {
+    if(this.isGermanFormat(value)) {
+      console.log("dateFormatted set: " + this.parseDate(value));
+      this.$emit("input", this.parseDate(value));
+    }
   }
   
   get model(): string {    
+    console.log("model get: " + this.value);
     return this.value;
   }
 
   set model(value: string) {
+    console.log("model set: " + value);
     this.$emit("input", value);
+  }
+
+  isGermanFormat(value: string): boolean {
+    if(typeof value === "string" && /\d{2}.\d{2}.\d{4}/.test(value)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isNoneGermanFormat(value: string): boolean {
+    if(typeof value === "string" && /\d{4}.\d{2}.\d{2}/.test(value)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 </script>
