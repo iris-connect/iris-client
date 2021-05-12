@@ -14,10 +14,6 @@
  *******************************************************************************/
 package iris.client_bff.data_request.events;
 
-import static io.vavr.control.Option.*;
-import static java.nio.charset.StandardCharsets.*;
-import static org.springframework.http.MediaType.*;
-
 import io.vavr.control.Option;
 import iris.client_bff.config.IrisClientProperties;
 import iris.client_bff.config.IrisProperties;
@@ -30,6 +26,15 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 import java.util.List;
@@ -40,15 +45,9 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import java.util.zip.CRC32;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import static io.vavr.control.Option.none;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 /**
  * @author Jens Kutzsche
@@ -60,7 +59,8 @@ public class EventDataRequestService {
 
 	private final @NonNull EventDataRequestRepository repository;
 
-	@NonNull @Qualifier("iris-rest")
+	@NonNull
+	@Qualifier("iris-rest")
 	private final RestTemplate rest;
 
 	private final @NonNull IrisClientProperties clientProperties;
@@ -93,27 +93,27 @@ public class EventDataRequestService {
 	}
 
 	public EventDataRequest createLocationRequest(String refId, String name, Instant startDate, Instant endDate,
-      Option<String> comment, Option<String> requestDetails, String locationId, String providerId) {
+			Option<String> comment, Option<String> requestDetails, String locationId, String providerId) {
 
 		return createDataRequest(refId, name, startDate, Option.of(endDate), comment, requestDetails, none(),
 				Option.of(locationId), Option.of(providerId), Set.of(Feature.Guests));
 	}
 
 	public EventDataRequest createLocationRequest(String refId, String name, Instant startDate, Option<Instant> endDate,
-      Option<String> comment, Option<String> requestDetails, Option<String> hdUserId) {
+			Option<String> comment, Option<String> requestDetails, Option<String> hdUserId) {
 
 		return createDataRequest(refId, name, startDate, endDate, comment, requestDetails, hdUserId,
 				none(), none(), Set.of(Feature.Guests));
 	}
 
 	EventDataRequest createDataRequest(String refId, String name, Instant startDate, Option<Instant> endDate,
-      Option<String> comment, Option<String> requestDetails, Option<String> hdUserId, Option<String> locationId,
+			Option<String> comment, Option<String> requestDetails, Option<String> hdUserId, Option<String> locationId,
 			Option<String> providerId, Set<Feature> feature) {
 
 		var location = fetchLocation(locationId, providerId);
 
 		var dataRequest = new EventDataRequest(refId, name, startDate, endDate.getOrNull(), comment.getOrNull(),
-        requestDetails.getOrNull(), hdUserId.getOrNull(), location, feature);
+				requestDetails.getOrNull(), hdUserId.getOrNull(), location, feature);
 
 		log.trace("Request job - PUT to server is sent: {}", dataRequest.getId().toString());
 
@@ -193,6 +193,10 @@ public class EventDataRequestService {
 
 	public int getCountSinceDate(Instant date) {
 		return repository.getCountSinceDate(date);
+	}
+
+	public int getCountWithStatus(Status status) {
+		return repository.getCountWithStatus(status);
 	}
 
 	@Data
