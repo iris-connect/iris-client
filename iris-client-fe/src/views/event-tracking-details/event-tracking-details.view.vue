@@ -1,5 +1,18 @@
 <template>
   <div>
+    <div>
+      <v-alert
+        :value="alert"
+        color="blue"
+        prominent
+        dismissible
+        elevation="4"
+        text
+        type="success"
+        transition="scale-transition"
+      > Die Kontaktdaten zu diesem Ereignis wurden angefragt.
+      </v-alert>
+    </div>
     <v-card>
       <v-card-title
         >Details für Ereignis ID: {{ eventData.extID }}</v-card-title
@@ -176,7 +189,17 @@ function getFormattedAddress(address?: Address | null): string {
     EventTrackingDetailsView: EventTrackingDetailsView,
   },
   async beforeRouteEnter(_from, _to, next) {
-    next();
+    next(); 
+    
+    if(router.currentRoute.params.is_created == 'false') {
+      console.log("beforeRouteEnter: " + router.currentRoute.params.is_created);      
+      next(vm => {
+        (vm as EventTrackingDetailsView).openAlert();
+      });
+    } else {
+      next();
+    }
+    
     await store.dispatch("eventTrackingDetails/fetchEventTrackingDetails", [
       router.currentRoute.params.id,
     ]);
@@ -187,6 +210,9 @@ function getFormattedAddress(address?: Address | null): string {
   },
 })
 export default class EventTrackingDetailsView extends Vue {
+
+  alert = false;
+
   tableData = {
     search: "",
     expanded: [],
@@ -267,6 +293,12 @@ export default class EventTrackingDetailsView extends Vue {
         dataRequest?.submissionData?.additionalInformation || "-",
     };
   }
+  openAlert(): void {
+    console.log("openAlert: " + this.alert);
+    this.alert = true;
+
+    console.log("openAlert: " + this.alert);
+  }
 
   get listLoading(): boolean {
     return store.state.eventTrackingDetails.eventTrackingDetailsLoading;
@@ -290,6 +322,8 @@ export default class EventTrackingDetailsView extends Vue {
 
   get guests(): TableRow[] {
     // TODO attendanceInformation is optional
+    
+    console.log("guest()");
     const guests =
       store.state.eventTrackingDetails.eventTrackingDetails?.submissionData
         ?.guests || [];

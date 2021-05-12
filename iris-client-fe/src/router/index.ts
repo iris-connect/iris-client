@@ -113,7 +113,7 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: "/events/details/:id",
+    path: "/events/details/:id/:is_created",
     name: "event-details" /* Caution: This acts as an identifier! */,
     meta: {
       menu: false,
