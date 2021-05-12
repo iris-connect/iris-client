@@ -191,6 +191,10 @@ public class EventDataRequestService {
 		return repository.save(dataRequest);
 	}
 
+	public int getCountSinceDate(Instant date) {
+		return repository.getCountSinceDate(date);
+	}
+
 	@Data
 	static class DataRequestDto {
 
