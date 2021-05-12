@@ -30,6 +30,6 @@ public interface EventDataRequestRepository extends CrudRepository<EventDataRequ
 	@Query("select count(1) = 0 from DataRequest r where r.id = :code")
 	boolean isCodeAvailable(UUID code);
 
-	@Query("select count(r) from DataRequest r where r.metadata.created >= :date")
+	@Query("select count(r) from EventDataRequest r where r.metadata.created >= :date")
 	int getCountSinceDate(Instant date);
 }
