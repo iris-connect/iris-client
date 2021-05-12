@@ -1,173 +1,14 @@
 <template>
-  <div>
-    <v-card>
-      <v-card-title>
-        <editable-field
-          v-model="formModel.externalRequestId"
-          name="externalRequestId"
-          :rules="validationRules.defined"
-          label="Details für Ereignis ID"
-          v-slot="{ entry }"
-          @submit="handleEditableField"
-          required
-        >
-          Details für Ereignis ID:
-          {{ entry }}
-        </editable-field>
-      </v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col cols="12" md="6">
-            <editable-field
-              v-model="formModel.name"
-              name="name"
-              :rules="validationRules.defined"
-              label="Name"
-              v-slot="{ entry }"
-              @submit="handleEditableField"
-              required
-            >
-              <strong> Name: </strong><br />
-              {{ entry }}
-            </editable-field>
-          </v-col>
-          <v-col cols="12" md="6">
-            <editable-field
-              v-model="formModel.comment"
-              name="comment"
-              label="Kommentar"
-              v-slot="{ entry }"
-              @submit="handleEditableField"
-              component="v-textarea"
-              default-value="-"
-            >
-              <strong> Kommentar: </strong><br />
-              {{ entry }}
-            </editable-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-divider />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" md="6">
-            <v-row>
-              <v-col cols="12">
-                <strong> Zeitraum: </strong>
-                {{ eventData.startTime }} - {{ eventData.endTime }}
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col cols="12" md="6">
-            <v-row>
-              <v-col cols="12">
-                <span class="d-inline-block mr-3">
-                  <strong> Status: </strong>
-                </span>
-                <v-chip
-                  :color="getStatusColor(eventData.status)"
-                  dark
-                  class="my-n2"
-                >
-                  {{ getStatusName(eventData.status) }}
-                </v-chip>
-                <event-tracking-status-change
-                  :status="eventData.status"
-                  @update="updateRequestStatus"
-                />
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
-        <event-tracking-details-location-info :location="eventData.location" />
-        <v-row>
-          <v-col cols="12" md="6">
-            <strong> Generiert: </strong>
-            {{ eventData.generatedTime }}
-          </v-col>
-          <v-col cols="12" md="6">
-            <strong> Letzte Änderung: </strong>
-            {{ eventData.lastChange }}
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <strong> Anfragedetails: </strong>
-            {{ eventData.additionalInformation }}
-          </v-col>
-        </v-row>
-        <v-text-field
-          v-model="tableData.search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-        <v-data-table
-          :loading="listLoading"
-          :headers="tableData.headers"
-          :items="guests"
-          :items-per-page="5"
-          class="elevation-1 mt-5"
-          :search="tableData.search"
-          show-select
-          v-model="tableData.select"
-          show-expand
-          single-expand
-          :expanded.sync="tableData.expanded"
-          @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
-        >
-          <template v-if="statusDataRequested" #no-data>
-            <span class="black--text">
-              Die Kontaktdaten zu diesem Ereignis werden derzeit angefragt. Zum
-              jetzigen Zeitpunkt liegen noch keine Daten vor.
-            </span>
-          </template>
-          <template v-slot:expanded-item="{ headers, item }">
-            <td></td>
-            <td :colspan="headers.length - 1">
-              <v-row>
-                <template
-                  v-for="(expandedHeader, ehIndex) in tableData.expandedHeaders"
-                >
-                  <v-col :key="ehIndex" cols="12" sm="4" md="2">
-                    <v-list-item two-line dense>
-                      <v-list-item-content>
-                        <v-list-item-title>
-                          {{ expandedHeader.text }}
-                        </v-list-item-title>
-                        <v-list-item-subtitle class="text-pre-line">
-                          {{
-                            item[expandedHeader.value]
-                              ? item[expandedHeader.value]
-                              : "-"
-                          }}
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-col>
-                </template>
-              </v-row>
-            </td>
-          </template>
-        </v-data-table>
-        <error-message-alert :errors="errorMessages" />
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="white" @click="$router.back()"> Zurück </v-btn>
-        <v-spacer />
-        <v-btn
-          color="primary"
-          @click="handleExport"
-          :disabled="tableData.select.length <= 0"
-        >
-          Auswahl exportieren
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </div>
+  <event-tracking-details-component
+    :table-rows="guests"
+    :event-data="eventData"
+    :form-data="formData"
+    :loading="loading"
+    :errors="errorMessages"
+    @field-edit="handleEditableField"
+    @status-update="updateRequestStatus"
+    @data-export="handleExport"
+  />
 </template>
 <style></style>
 <script lang="ts">
@@ -177,27 +18,28 @@ import {
   DataRequestStatus,
   DataRequestStatusUpdateByUser,
   LocationInformation,
-  Sex,
 } from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import DataExport from "@/utils/DataExport";
+import dataExport from "@/utils/data-export";
 import EventTrackingDetailsLocationInfo from "@/views/event-tracking-details/components/event-tracking-details-location-info.vue";
 import dayjs from "@/utils/date";
 import Genders from "@/constants/Genders";
-import StatusColors from "@/constants/StatusColors";
-import StatusMessages from "@/constants/StatusMessages";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { ErrorMessage } from "@/utils/axios";
-import rules from "@/common/validation-rules";
 import EditableField from "@/components/form/editable-field.vue";
 import StatusChangeConfirmDialog from "@/views/event-tracking-details/components/confirm-dialog.vue";
 import EventTrackingStatusChange from "@/views/event-tracking-details/components/event-tracking-status-change.vue";
+import EventTrackingDetailsComponent from "@/views/event-tracking-details/components/event-tracking-details.component.vue";
 
-type EventData = {
-  extID: string;
-  name: string;
+export type FormData = {
+  name?: string;
+  externalRequestId?: string;
+  comment?: string;
+};
+
+export type EventData = {
   startTime: string;
   endTime: string;
   generatedTime: string;
@@ -207,7 +49,7 @@ type EventData = {
   additionalInformation: string;
 };
 
-type TableRow = {
+export type TableRow = {
   lastName: string;
   firstName: string;
   checkInTime: string;
@@ -221,13 +63,15 @@ type TableRow = {
   address: string;
 };
 
-type EventTrackingDetailsEditFormModel = {
-  name?: string;
-  externalRequestId?: string;
-  comment?: string;
+export type ExportData = {
+  headers: Array<{
+    text: string;
+    value: string;
+  }>;
+  rows: string[][];
 };
 
-function getFormattedDate(date?: string): string {
+function getFormattedDate(date?: string | Date): string {
   if (date && dayjs(date).isValid()) {
     return dayjs(date).format("LLL");
   }
@@ -236,13 +80,14 @@ function getFormattedDate(date?: string): string {
 
 function getFormattedAddress(address?: Address | null): string {
   if (address) {
-    return `${address.street} ${address.houseNumber} \n${address.zipCode} ${address.city}`;
+    return `${address.street} ${address.houseNumber}, ${address.zipCode} ${address.city}`;
   }
   return "-";
 }
 
 @Component({
   components: {
+    EventTrackingDetailsComponent,
     EventTrackingStatusChange,
     StatusChangeConfirmDialog,
     EditableField,
@@ -263,68 +108,12 @@ function getFormattedAddress(address?: Address | null): string {
   },
 })
 export default class EventTrackingDetailsView extends Vue {
-  tableData = {
-    search: "",
-    expanded: [],
-    select: [],
-    headers: [
-      { text: "", value: "data-table-select" },
-      {
-        text: "Nachname",
-        value: "lastName",
-        align: "start",
-      },
-      {
-        text: "Vorname",
-        value: "firstName",
-      },
-      {
-        text: "Check-In",
-        value: "checkInTime",
-      },
-      {
-        text: "Check-Out",
-        value: "checkOutTime",
-      },
-      {
-        text: "max. Kontaktdauer",
-        value: "maxDuration",
-      },
-      {
-        text: "Kommentar",
-        value: "comment",
-      },
-      { text: "", value: "data-table-expand" },
-    ],
-    expandedHeaders: [
-      {
-        text: "Geschlecht",
-        value: "sex",
-      },
-      {
-        text: "E-Mail",
-        value: "email",
-      },
-      {
-        text: "Telefon",
-        value: "phone",
-      },
-      {
-        text: "Mobil",
-        value: "mobilePhone",
-      },
-      {
-        text: "Adresse",
-        value: "address",
-      },
-    ],
-  };
-
   get eventTrackingDetails(): DataRequestDetails | null {
     return store.state.eventTrackingDetails.eventTrackingDetails;
   }
 
-  get formModel(): EventTrackingDetailsEditFormModel {
+  // Editable values => formData. Readonly values => eventData.
+  get formData(): FormData {
     return {
       externalRequestId: this.eventTrackingDetails?.externalRequestId || "",
       name: this.eventTrackingDetails?.name || "",
@@ -332,25 +121,11 @@ export default class EventTrackingDetailsView extends Vue {
     };
   }
 
-  validationRules = {
-    defined: [rules.defined],
-  };
-
   get eventData(): EventData {
-    const dataRequest = store.state.eventTrackingDetails.eventTrackingDetails;
+    const dataRequest = this.eventTrackingDetails;
     return {
-      extID: dataRequest?.externalRequestId || "-",
-      name: dataRequest?.name || "-",
-      startTime: dataRequest?.start
-        ? `${new Date(dataRequest.start).toLocaleDateString(
-            "de-DE"
-          )}, ${new Date(dataRequest.start).toLocaleTimeString("de-DE")}`
-        : "-",
-      endTime: dataRequest?.end
-        ? `${new Date(dataRequest.end).toLocaleDateString("de-DE")}, ${new Date(
-            dataRequest.end
-          ).toLocaleTimeString("de-DE")}`
-        : "-",
+      startTime: getFormattedDate(dataRequest?.start),
+      endTime: getFormattedDate(dataRequest?.end),
       generatedTime: getFormattedDate(dataRequest?.requestedAt),
       status: dataRequest?.status,
       lastChange: getFormattedDate(dataRequest?.lastUpdatedAt),
@@ -360,24 +135,8 @@ export default class EventTrackingDetailsView extends Vue {
     };
   }
 
-  get listLoading(): boolean {
+  get loading(): boolean {
     return store.state.eventTrackingDetails.eventTrackingDetailsLoading;
-  }
-
-  get statusDataRequested(): boolean {
-    if (!store.state.eventTrackingDetails.eventTrackingDetails) return false;
-    return (
-      store.state.eventTrackingDetails.eventTrackingDetails.status ===
-      DataRequestStatus.DataRequested
-    );
-  }
-
-  getStatusName(status: DataRequestStatus): string {
-    return StatusMessages.getMessage(status);
-  }
-
-  getStatusColor(status: DataRequestStatus): string {
-    return StatusColors.getColor(status);
   }
 
   get errorMessages(): ErrorMessage[] {
@@ -437,16 +196,12 @@ export default class EventTrackingDetailsView extends Vue {
 
       let checkInTime = "-";
       if (checkIn && startTime) {
-        checkInTime = `${checkIn.toLocaleDateString(
-          "de-DE"
-        )}, ${checkIn.toLocaleTimeString("de-DE")}`;
+        checkInTime = getFormattedDate(checkIn);
       }
 
       let checkOutTime = "-";
       if (checkOut) {
-        checkOutTime = `${checkOut.toLocaleDateString(
-          "de-DE"
-        )}, ${checkOut.toLocaleTimeString("de-DE")}`;
+        checkOutTime = getFormattedDate(checkOut);
       }
 
       // min(iE, cE)-max(iS, cS)
@@ -476,7 +231,7 @@ export default class EventTrackingDetailsView extends Vue {
         checkOutTime,
         maxDuration: maxDuration,
         comment: guest.attendanceInformation.additionalInformation || "-", // TODO: Line Breaks
-        sex: guest.sex ? this.getSexName(guest.sex) : "-",
+        sex: guest.sex ? Genders.getName(guest.sex) : "-",
         email: guest.email || "-",
         phone: guest.phone || "-",
         mobilePhone: guest.mobilePhone || "-",
@@ -485,22 +240,11 @@ export default class EventTrackingDetailsView extends Vue {
     });
   }
 
-  /**
-   * @deprecated
-   */
-  on(): void {
-    console.log("NOT IMPLEMENTED");
-  }
-
-  getSexName(sex: Sex): string {
-    return Genders.getName(sex);
-  }
-
-  handleExport(): void {
-    DataExport.exportCsv(
-      [...this.tableData.headers, ...this.tableData.expandedHeaders],
-      this.tableData.select,
-      [this.eventData.extID, Date.now()].join("_")
+  handleExport(payload: ExportData): void {
+    dataExport.exportCsv(
+      payload.headers,
+      payload.rows,
+      [this.eventTrackingDetails?.externalRequestId, Date.now()].join("_")
     );
   }
 }

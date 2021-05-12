@@ -188,7 +188,7 @@ import {
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import DataExport from "@/utils/DataExport";
+import dataExport from "@/utils/data-export";
 import Genders from "@/constants/Genders";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
@@ -470,7 +470,7 @@ export default class IndexTrackingDetailsView extends Vue {
   }
 
   handleContactsExport(): void {
-    DataExport.exportCsv(
+    dataExport.exportCsv(
       [
         ...this.tableDataContacts.headers,
         ...this.tableDataContacts.expandedHeaders,
@@ -481,7 +481,7 @@ export default class IndexTrackingDetailsView extends Vue {
   }
 
   handleEventsExport(): void {
-    DataExport.exportCsv(
+    dataExport.exportCsv(
       [...this.tableDataEvents.headers],
       this.tableDataEvents.select,
       [this.indexData.extID, Date.now()].join("_")
