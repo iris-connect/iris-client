@@ -1,9 +1,9 @@
-name: Build and release runnable Jars for IRIS apps
+name: Build and releace runnable Jars for IRIS apps
 
 on:
   push:
     tags:
-      - 'v*'
+      - 'test-release-*'
 
 defaults:
   run:
@@ -17,6 +17,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          # Version Spec of the version to use.  Examples: 12.x, 10.15.1, >=10.15.0
+          node-version: 12.x
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./iris-client-fe
+
+      - name: Build
+        run: npm run build
+        working-directory: ./iris-client-fe
+
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r iris-client-fe-${{ steps.get_version.outputs.VERSION }}.zip iris-client-fe/dist
+
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
@@ -24,11 +46,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-    
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-    
+
       - name: build Jars and Images
         run: mvn -B clean package spring-boot:repackage spring-boot:build-image -Dspring-boot.build-image.publish=true -Dversion.tag=${{ steps.get_version.outputs.VERSION }}
         env:
@@ -47,5 +65,6 @@ jobs:
           files: |
             **/target/*${{ steps.get_version.outputs.VERSION }}.jar
             **/deployment-${{ steps.get_version.outputs.VERSION }}.zip
+            **/iris-client-fe-${{ steps.get_version.outputs.VERSION }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
