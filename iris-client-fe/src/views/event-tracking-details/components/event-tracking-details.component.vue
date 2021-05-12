@@ -173,6 +173,7 @@ import {
   ExportData,
   EventData,
   TableRow,
+  FormData,
 } from "@/views/event-tracking-details/event-tracking-details.view.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import rules from "@/common/validation-rules";
