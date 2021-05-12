@@ -80,7 +80,7 @@ function getFormattedDate(date?: string | Date): string {
 
 function getFormattedAddress(address?: Address | null): string {
   if (address) {
-    return `${address.street} ${address.houseNumber}, ${address.zipCode} ${address.city}`;
+    return `${address.street} ${address.houseNumber} \n${address.zipCode} ${address.city}`;
   }
   return "-";
 }

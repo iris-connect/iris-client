@@ -133,7 +133,7 @@
                       <v-list-item-title>
                         {{ expandedHeader.text }}
                       </v-list-item-title>
-                      <v-list-item-subtitle>
+                      <v-list-item-subtitle class="text-pre-line">
                         {{
                           item[expandedHeader.value]
                             ? item[expandedHeader.value]
