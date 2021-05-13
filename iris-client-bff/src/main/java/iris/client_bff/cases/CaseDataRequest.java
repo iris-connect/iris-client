@@ -16,24 +16,12 @@ package iris.client_bff.cases;
 
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
 
 /**
  * @author Jens Kutzsche

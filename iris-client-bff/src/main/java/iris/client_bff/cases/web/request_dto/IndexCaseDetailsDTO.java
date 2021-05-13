@@ -1,15 +1,11 @@
 package iris.client_bff.cases.web.request_dto;
 
-import static lombok.AccessLevel.*;
-
 import iris.client_bff.cases.web.submission_dto.ContactsAndEvents;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.Instant;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Data
 @Builder
