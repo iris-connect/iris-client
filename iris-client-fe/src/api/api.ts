@@ -1632,6 +1632,31 @@ export interface UserUpdate {
      */
     role?: UserRole;
 }
+/**
+ *
+ * @export
+ * @interface Statistics
+ */
+export interface Statistics {
+    /**
+     *
+     * @type {number}
+     * @memberof Statistics
+     */
+    eventsCount?: any;
+    /**
+     *
+     * @type {number}
+     * @memberof Statistics
+     */
+    indexCasesCount?: any;
+    /**
+     *
+     * @type {number}
+     * @memberof Statistics
+     */
+    sumStatus?: any;
+}
 
 /**
  * IrisClientFrontendApi - axios parameter creator
@@ -2216,6 +2241,39 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
                 options: localVarRequestOptions,
             };
         },
+        /**
+         *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getWeeklyData: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/data-requests-client/statistics`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                query.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -2377,6 +2435,18 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.usersPost(userInsert, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getWeeklyData(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Statistics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getWeeklyData(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
     }
 };
 
@@ -2523,6 +2593,14 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
          */
         usersPost(userInsert: UserInsert, options?: any): AxiosPromise<User> {
             return localVarFp.usersPost(userInsert, options).then((request) => request(axios, basePath));
+        },
+        /**
+         *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getWeeklyData(options?: any): AxiosPromise<Statistics> {
+            return localVarFp.getWeeklyData(options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2697,6 +2775,16 @@ export class IrisClientFrontendApi extends BaseAPI {
      */
     public usersPost(userInsert: UserInsert, options?: any) {
         return IrisClientFrontendApiFp(this.configuration).usersPost(userInsert, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StatisticsControllerApi
+     */
+    public getWeeklyData(options?: any) {
+        return IrisClientFrontendApiFp(this.configuration).getWeeklyData(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
