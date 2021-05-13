@@ -34,7 +34,6 @@ public class EPSDataProviderClient implements DataProviderClient {
 				"dataRequest", SubmitPayload.builder()
 						.start(request.getRequestStart())
 						.end(request.getRequestEnd())
-						.hdEndpoint("hd-1")
 						.dataAuthorizationToken(requestId)
 						.locationId(request.getLocation().getLocationId())
 						.requestDetails(request.getRequestDetails())
@@ -55,7 +54,7 @@ public class EPSDataProviderClient implements DataProviderClient {
 	@Data
 	@Builder
 	public static class SubmitPayload {
-		String hdEndpoint;
+
 		String dataAuthorizationToken;
 
 		String requestDetails;
