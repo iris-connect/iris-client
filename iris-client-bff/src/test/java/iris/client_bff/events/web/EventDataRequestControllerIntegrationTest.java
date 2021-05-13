@@ -1,20 +1,14 @@
 package iris.client_bff.events.web;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.Status;
-import iris.client_bff.events.model.Location;
 import iris.client_bff.events.EventDataRequestService;
+import iris.client_bff.events.model.Location;
 import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocationList;
-
-import java.time.Instant;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +19,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Instant;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 
 @IrisWebIntegrationTest
 class EventDataRequestControllerIntegrationTest {
