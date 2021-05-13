@@ -14,8 +14,10 @@
  *******************************************************************************/
 package iris.client_bff.data_submission;
 
-import iris.client_bff.data_request.events.EventDataRequestService;
 import iris.client_bff.data_submission.supplier_connection.FetchedDataSubmissions;
+import iris.client_bff.events.EventDataRequestService;
+import iris.client_bff.events.EventDataSubmissionRepository;
+import iris.client_bff.events.EventSubmissionProcess;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -33,31 +35,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequiredArgsConstructor
 class DataSubmissionProcessor {
 
-	private final @NonNull EventDataRequestService dataRequests;
-	private final @NonNull ObjectMapper mapper;
-	private final @NonNull KeyStore keyStore;
-	private final @NonNull ModelMapper modelMapper;
-	private final @NonNull DataSubmissionRepository submissions;
+  private final @NonNull EventDataRequestService dataRequests;
+  private final @NonNull ObjectMapper mapper;
+  private final @NonNull KeyStore keyStore;
+  private final @NonNull ModelMapper modelMapper;
+  private final @NonNull EventDataSubmissionRepository submissions;
 
-	void processSubmissions(FetchedDataSubmissions fetchedSubmissions) {
-		fetchedSubmissions.map(this::mapToStrategie).forEach(DataSubmissionProcess::process);
+  void processSubmissions(FetchedDataSubmissions fetchedSubmissions) {
+	fetchedSubmissions.map(this::mapToStrategie).forEach(DataSubmissionProcess::process);
+  }
+
+  private DataSubmissionProcess<?> mapToStrategie(DataSubmissionDto it) {
+
+	var request = dataRequests.findById(it.getRequestId()).get();
+
+	switch (it.getFeature()) {
+	  case Contacts_Events:
+		// return new ContactsEventsSubmissionProcess(it, request, keyStore, mapper);
+		// return new ContactsEventsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasPersonApi,
+		// sormasContactApi, sormasEventApi, sormasParticipantApi);
+	  case Guests:
+		return new EventSubmissionProcess(it, request, keyStore, mapper, modelMapper, submissions, dataRequests);
+	  // return new GuestsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasParticipantApi,
+	  // sormasPersonApi);
+	  default:
+		return null;
 	}
-
-	private DataSubmissionProcess<?> mapToStrategie(DataSubmissionDto it) {
-
-		var request = dataRequests.findById(it.getRequestId()).get();
-
-		switch (it.getFeature()) {
-			case Contacts_Events:
-				return new ContactsEventsSubmissionProcess(it, request, keyStore, mapper);
-			// return new ContactsEventsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasPersonApi,
-			// sormasContactApi, sormasEventApi, sormasParticipantApi);
-			case Guests:
-				return new GuestsSubmissionProcess(it, request, keyStore, mapper, modelMapper, submissions, dataRequests);
-			// return new GuestsSubmissionProcessor(it, request, keyStore, mapper, sormasTaskApi, sormasParticipantApi,
-			// sormasPersonApi);
-			default:
-				return null;
-		}
-	}
+  }
 }
