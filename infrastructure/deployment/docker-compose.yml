@@ -1,15 +1,14 @@
 ########################################################
 # Intended for deployments at the health departments
-# 
+#
 # Provides IRIS client BFF and frontend together with a Postgresql database and NGINX
 # IRIS frontend over NGINX: port = 443
 ########################################################
-version: '3.4'
+version: "3.4"
 services:
-
   # Postgres Database
   postgres:
-    image: postgres:13.2-alpine    
+    image: postgres:13.2-alpine
     expose:
       - 5432
     environment:
@@ -20,7 +19,16 @@ services:
 
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD", "psql", "-U", "${POSTGRES_USER}", "-c", "SELECT 1;", "${POSTGRES_USER}" ]
+      test:
+        [
+          "CMD",
+          "psql",
+          "-U",
+          "${POSTGRES_USER}",
+          "-c",
+          "SELECT 1;",
+          "${POSTGRES_USER}",
+        ]
       interval: 15s
       timeout: 3s
       retries: 4
@@ -28,12 +36,12 @@ services:
 
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-bff:v0.0.3
+    image: inoeg/iris-client-bff:v1.0.2-alpha
     expose:
       - 8092
-    ports: 
+    ports:
       - 8092:8092
-    environment: 
+    environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_USER}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
@@ -44,6 +52,7 @@ services:
       HTTP_CLIENT_PROXY_HOST:
       HTTP_CLIENT_PROXY_PORT:
       HTTP_CLIENT_PROXY_SCHEME:
+      EPS_CLIENT_CLIENT_URL: https://eps:5556/jsonrpc
     restart: unless-stopped
     depends_on:
       postgres:
@@ -51,23 +60,38 @@ services:
 
   # IRIS Client Frontend
   iris-frontend:
-    image: inoeg/iris-client-frontend:v0.1.0
+    image: inoeg/iris-client-frontend:v1.0.2-alpha
     expose:
       - 28080
-    environment: 
+    environment:
       SORMAS_SIDECAR_BASE_URL: /api
-    ports: 
+    ports:
       - 28080:28080
     restart: unless-stopped
     depends_on:
       - iris-client
 
+  eps:
+    image: luckylusa/iris-eps-server:latest
+    expose:
+      - 4446
+      - 5556
+    ports:
+      - 4446:4446
+    depends_on:
+      - iris-client
+    volumes:
+      - "/home/iris/iris-eps/iris-gateway/infrastructure/eps/settings:/app/settings"
+    environment:
+      - EPS_SETTINGS=settings/dev/roles/hd-1
+    command: ["--level", "debug", "server", "run"]
+
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:v0.0.2
+    image: inoeg/iris-client-nginx:v1.0.2-alpha
     ports:
-      - 443:443
-    environment: 
+      - 9443:443
+    environment:
       IRIS_CLIENT_DOMAIN:
       IRIS_CLIENT_DOMAIN_CERT:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
@@ -76,6 +100,6 @@ services:
     depends_on:
       - iris-client
       - iris-frontend
-  
+
 volumes:
-  psqldata_iris: 
+  psqldata_iris:

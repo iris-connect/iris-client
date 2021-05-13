@@ -9,6 +9,11 @@ import iris.client_bff.events.model.Location;
 import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocationList;
+
+import java.time.Instant;
+import java.util.Optional;
+
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +103,7 @@ class EventDataRequestControllerIntegrationTest {
 	dataRequestUpdated.setRefId("refIdSecond");
 	dataRequestUpdated.setStatus(Status.ABORTED);
 
-	Mockito.when(dataRequestManagement.findById(anyString())).thenReturn(Optional.of(dataRequest));
+	Mockito.when(dataRequestManagement.findById(any(UUID.class))).thenReturn(Optional.of(dataRequest));
 
 	EventUpdateDTO patch = EventUpdateDTO.builder()
 		.name("new name")
@@ -140,10 +145,10 @@ class EventDataRequestControllerIntegrationTest {
 	Mockito.doReturn(Instant.now()).when(dataRequest).getCreatedAt();
 	Mockito.doReturn(Instant.now()).when(dataRequest).getLastModifiedAt();
 
-	Mockito.when(dataRequestManagement.createLocationRequest(any(), any(), any(), any(), any(), any(), any(), any()))
+	Mockito.when(dataRequestManagement.createDataRequest(any(), any(), any(), any(), any(), any(), any(), any(), any()))
 		.thenReturn(dataRequest);
 
-	Mockito.when(dataRequestManagement.findById(anyString())).thenReturn(Optional.of(dataRequest));
+	Mockito.when(dataRequestManagement.findById(any(UUID.class))).thenReturn(Optional.of(dataRequest));
 
 	mockMvc
 		.perform(
