@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -46,6 +47,7 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers(SWAGGER_WHITELIST)
 				.permitAll()
+				.antMatchers(HttpMethod.POST, "/data-submission-rpc").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.addFilter(
