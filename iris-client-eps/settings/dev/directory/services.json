@@ -1,0 +1,34 @@
+{
+  "entries": [
+    {
+      "name": "op-1",
+      "channels": [
+        {
+          "type": "grpc_server",
+          "settings": {
+            "address": "localhost:4444"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ls-1",
+      "channels": [
+        {
+          "type": "grpc_server",
+          "settings": {
+            "address": "localhost:4445"
+          }
+        }
+      ]
+    },
+    {
+      "name": "hd-1",
+      "channels": [
+        {
+          "type": "grpc_client"
+        }
+      ]
+    }
+  ]
+}

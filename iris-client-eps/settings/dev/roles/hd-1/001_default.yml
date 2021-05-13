@@ -1,0 +1,38 @@
+name: hd-1
+directory:
+  type: json
+  settings:
+    path: "$DIR/../../directory/services.json"
+channels: # defines all the channels that we want to open when starting the server
+  - name: Stdout channel
+    type: stdout
+    settings: {}
+  - name: main gRPC server # accepts incoming gRPC connections to deliver and receive messages
+    type: grpc_server
+    settings:
+      bind_address: "localhost:4446"
+      tls:
+        ca_certificate_file: "$DIR/../../certs/root.crt"
+        certificate_file: "$DIR/../../certs/hd-1.crt"
+        key_file: "$DIR/../../certs/hd-1.key"
+  - name: main JSON-RPC client # creates outgoing JSONRPC connections to deliver and receive messages
+    type: jsonrpc_client
+    settings:
+      endpoint: http://localhost:8092/data-submission-rpc
+  - name: main gRPC client # creates outgoing gRPC connections to deliver and receive messages
+    type: grpc_client
+    settings:
+      tls:
+        ca_certificate_file: "$DIR/../../certs/root.crt"
+        certificate_file: "$DIR/../../certs/hd-1.crt"
+        key_file: "$DIR/../../certs/hd-1.key"
+  - name: main JSON-RPC server # accepts incoming JSONRPC connections to deliver and receive messages
+    type: jsonrpc_server
+    settings:
+      bind_address: "localhost:5556"
+      cors:
+        allowed_hosts: ["^http(?:s)?://localhost\\:\\d+$"]
+      tls:
+        ca_certificate_file: "$DIR/../../certs/root.crt"
+        certificate_file: "$DIR/../../certs/hd-1.crt"
+        key_file: "$DIR/../../certs/hd-1.key"
