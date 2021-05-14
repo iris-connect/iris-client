@@ -1,4 +1,4 @@
-import { ExistingDataRequestClientWithLocationList } from "@/api";
+import { ExistingDataRequestClientWithLocationList, Statistics } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
@@ -9,6 +9,7 @@ export type HomeState = {
   eventTrackingList: ExistingDataRequestClientWithLocationList | null;
   eventTrackingListLoading: boolean;
   eventTrackingListError: ErrorMessage;
+  statistics: Statistics;
 };
 
 export interface HomeModule extends Module<HomeState, RootState> {
@@ -19,10 +20,12 @@ export interface HomeModule extends Module<HomeState, RootState> {
     ): void;
     setEventTrackingListLoading(state: HomeState, payload: boolean): void;
     setEventTrackingListError(state: HomeState, payload: ErrorMessage): void;
+    setStatistics(state: HomeState, stats: Statistics): void;
     reset(state: HomeState, payload: null): void;
   };
   actions: {
     fetchEventTrackingList({ commit }: { commit: Commit }): Promise<void>;
+    fetchStatistics({ commit }: { commit: Commit }): Promise<void>;
   };
 }
 
@@ -30,6 +33,7 @@ const defaultState: HomeState = {
   eventTrackingList: null,
   eventTrackingListLoading: false,
   eventTrackingListError: null,
+  statistics: { eventsCount: 0, indexCasesCount: 0, sumStatus: 0 },
 };
 
 const home: HomeModule = {
@@ -46,6 +50,9 @@ const home: HomeModule = {
     },
     setEventTrackingListError(state, error: ErrorMessage) {
       state.eventTrackingListError = error;
+    },
+    setStatistics(state, stats: Statistics) {
+      state.statistics = stats;
     },
     reset(state) {
       // we can keep the data, no need to reset it
@@ -67,6 +74,16 @@ const home: HomeModule = {
         commit("setEventTrackingListLoading", false);
       }
     },
+    async fetchStatistics({ commit }) {
+      let statistics: Statistics | null = { eventsCount: 0, indexCasesCount: 0, sumStatus: 0 };
+      try {
+        statistics = (await authClient.getWeeklyData()).data;
+      } catch (e) {
+        // TODO
+      } finally {
+        commit("setStatistics", statistics);
+      }
+    }
   },
 };
 
