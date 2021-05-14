@@ -72,7 +72,7 @@ services:
       - iris-client
 
   eps:
-    image: luckylusa/iris-eps-server:latest
+    image: luckylusa/iris-eps-server:v2
     expose:
       - 4446
       - 5556
@@ -102,20 +102,20 @@ services:
       - iris-frontend
 
   private-proxy:
-    image: luckylusa/eps-proxy:latest
+    image: luckylusa/iris-eps-proxy:latest
     expose:
       - 5544
+      - 8877
     volumes:
       - "/home/iris/iris-eps/iris-gateway/infrastructure/eps/settings:/app/settings"
     environment:
-      - EPS_SETTINGS=settings/dev/roles/private-proxy-1
-    command: [ "--level", "trace", "run", "public" ]
+      - PROXY_SETTINGS=settings/dev/roles/private-proxy-1
+    command: [ "--level", "trace", "run", "private" ]
 
-  private-proxy-eps:
+  private-proxy-1:
     image: luckylusa/iris-eps-server:v2
     expose:
       - 7766
-      - 8877
     volumes:
       - "/home/iris/iris-eps/iris-gateway/infrastructure/eps/settings:/app/settings"
     environment:
@@ -124,7 +124,7 @@ services:
 
 
   internal-server:
-    image: luckylusa/eps-internal-server:latest
+    image: luckylusa/iris-eps-internal-server:latest
     volumes:
       - "/home/iris/iris-eps/iris-gateway/infrastructure/eps/settings:/app/settings"
     expose:
