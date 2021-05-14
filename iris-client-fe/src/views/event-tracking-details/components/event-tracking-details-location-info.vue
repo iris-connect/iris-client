@@ -48,10 +48,16 @@ export default class EventTrackingDetailsLocationInfo extends EventTrackingDetai
   }
   get locationAddress(): Array<string> {
     const address: LocationAddress = this.location?.contact?.address;
+    let officalName = "";
+    if(this.location?.contact?.officialName) {
+      officalName = "(" + this.location?.contact?.officialName + ")";
+    } 
+    
     return [
-      this.location?.contact?.officialName ?? "",
+      this.location?.name ?? "",
+      officalName,
       address?.street ?? "",
-      [address?.zip ?? "", address?.city ?? ""].join(" ").trim(),
+      [address?.zip ?? "", address?.city ?? ""].join(" ").trim(),      
     ].filter((v) => v);
   }
   get locationInfo(): Array<Array<string | Array<string>>> {

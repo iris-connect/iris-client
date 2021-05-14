@@ -194,13 +194,13 @@
 import {
   Address,
   ContactPersonAllOfWorkPlace,
-  DataRequestCaseDetailsStatusEnum,
+  DataRequestStatus,
   Sex,
 } from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import DataExport from "@/utils/DataExport";
+import dataExport from "@/utils/data-export";
 import Genders from "@/constants/Genders";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
@@ -484,11 +484,11 @@ export default class IndexTrackingDetailsView extends Vue {
     this.currentTab = index;
   }
 
-  getStatusName(status: DataRequestCaseDetailsStatusEnum): string {
+  getStatusName(status: DataRequestStatus): string {
     return StatusMessages.getMessage(status);
   }
 
-  getStatusColor(status: DataRequestCaseDetailsStatusEnum): string {
+  getStatusColor(status: DataRequestStatus): string {
     return StatusColors.getColor(status);
   }
 
@@ -497,7 +497,7 @@ export default class IndexTrackingDetailsView extends Vue {
   }
 
   handleContactsExport(): void {
-    DataExport.exportCsv(
+    dataExport.exportCsv(
       [
         ...this.tableDataContacts.headers,
         ...this.tableDataContacts.expandedHeaders,
@@ -508,7 +508,7 @@ export default class IndexTrackingDetailsView extends Vue {
   }
 
   handleEventsExport(): void {
-    DataExport.exportCsv(
+    dataExport.exportCsv(
       [...this.tableDataEvents.headers],
       this.tableDataEvents.select,
       [this.indexData.extID, Date.now()].join("_")

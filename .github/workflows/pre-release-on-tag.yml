@@ -3,7 +3,7 @@ name: Build and pre-release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 defaults:
   run:
@@ -33,6 +33,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VUE_APP_API_BASE_URL: /api
         working-directory: ./iris-client-fe
 
       - uses: montudor/action-zip@v1

@@ -18,28 +18,12 @@
         Status:
         <v-btn-toggle dense mandatory v-model="statusButtonSelected">
           <v-btn
-            @click="filterStatus(statusEnum.DataRequested)"
-            style="opacity: 100%; background-color: white"
+            text
+            @click="filterStatus(selectableStatus[status])"
+            v-for="status in Object.keys(selectableStatus)"
+            :key="status"
           >
-            {{ getStatusName(statusEnum.DataRequested) }}
-          </v-btn>
-          <v-btn
-            @click="filterStatus(statusEnum.DataReceived)"
-            style="opacity: 100%; background-color: white"
-          >
-            {{ getStatusName(statusEnum.DataReceived) }}
-          </v-btn>
-          <v-btn
-            @click="filterStatus(statusEnum.Closed)"
-            style="opacity: 100%; background-color: white"
-          >
-            {{ getStatusName(statusEnum.Closed) }}
-          </v-btn>
-          <v-btn
-            @click="filterStatus(null)"
-            style="opacity: 100%; background-color: white"
-          >
-            Alle
+            {{ getStatusSelectLabel(selectableStatus[status]) }}
           </v-btn>
         </v-btn-toggle>
       </v-col>
@@ -84,12 +68,13 @@
 </template>
 
 <script lang="ts">
-import { DataRequestCaseDetailsStatusEnum } from "@/api";
+import { DataRequestStatus } from "@/api";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import IndexTrackingFormView from "../index-tracking-form/index-tracking-form.view.vue";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
+import _omit from "lodash/omit";
 
 function getFormattedDate(date?: string): string {
   return date
@@ -119,10 +104,13 @@ type TableRow = {
   },
 })
 export default class IndexTrackingListView extends Vue {
-  statusFilter: DataRequestCaseDetailsStatusEnum | null = null;
-  statusEnum = DataRequestCaseDetailsStatusEnum;
-  statusButtonSelected = 3;
-  filterStatus(target: DataRequestCaseDetailsStatusEnum | null): void {
+  statusFilter: DataRequestStatus | null = null;
+  selectableStatus = {
+    ..._omit(DataRequestStatus, ["Aborted"]),
+    All: null,
+  };
+  statusButtonSelected = Object.keys(this.selectableStatus).length - 1;
+  filterStatus(target: DataRequestStatus | null): void {
     this.statusFilter = target;
   }
 
@@ -179,11 +167,16 @@ export default class IndexTrackingListView extends Vue {
     return "item.actions";
   }
 
-  getStatusColor(status: DataRequestCaseDetailsStatusEnum): string {
+  getStatusColor(status: DataRequestStatus): string {
     return StatusColors.getColor(status);
   }
 
-  getStatusName(status: DataRequestCaseDetailsStatusEnum): string {
+  getStatusName(status: DataRequestStatus): string {
+    return StatusMessages.getMessage(status);
+  }
+
+  getStatusSelectLabel(status: DataRequestStatus | null): string {
+    if (!status) return "Alle";
     return StatusMessages.getMessage(status);
   }
 }

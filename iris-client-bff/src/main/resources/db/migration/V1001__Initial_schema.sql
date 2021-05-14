@@ -15,7 +15,22 @@ CREATE TABLE location (
 	CONSTRAINT location_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE data_request (
+CREATE TABLE case_data_request (
+	request_id uuid NOT NULL,
+	ref_id varchar(100) NOT NULL,
+	name varchar(500) NULL,
+	hd_user_id varchar(100) NULL,
+	request_start timestamp NOT NULL,
+	request_end timestamp NULL,
+	status varchar(50) NOT NULL,
+	comment varchar(500) NULL,
+	created timestamp NOT NULL,
+	last_modified timestamp NOT NULL,
+	CONSTRAINT case_request_pkey PRIMARY KEY (request_id)
+);
+CREATE INDEX case_request_ref_id ON case_data_request (ref_id);
+
+CREATE TABLE event_data_request (
 	request_id uuid NOT NULL,
 	ref_id varchar(100) NOT NULL,
 	name varchar(500) NULL,
@@ -23,26 +38,17 @@ CREATE TABLE data_request (
 	location_id uuid NULL,
 	request_start timestamp NOT NULL,
 	request_end timestamp NULL,
-	request_details text NULL,
+	request_details varchar(500) NULL,
 	status varchar(50) NOT NULL,
+	comment varchar(500) NULL,
 	created timestamp NOT NULL,
 	last_modified timestamp NOT NULL,
-	CONSTRAINT request_pkey PRIMARY KEY (request_id),
-	CONSTRAINT data_request_location_fk FOREIGN KEY (location_id) REFERENCES location(id)
+	CONSTRAINT event_request_pkey PRIMARY KEY (request_id),
+	CONSTRAINT event_request_location_fk FOREIGN KEY (location_id) REFERENCES location(id)
 );
+CREATE INDEX event_request_ref_id ON event_data_request (ref_id);
 
-CREATE TABLE data_request_feature (
-    request_id uuid,
-	feature varchar(50),
-    PRIMARY KEY (request_id, feature),
-    FOREIGN KEY (request_id) REFERENCES data_request(request_id)
-    	ON DELETE CASCADE
-    	ON UPDATE CASCADE
-);
-
-CREATE INDEX data_request_ref_id ON data_request (ref_id);
-
-CREATE TABLE data_submission (
+CREATE TABLE event_data_submission (
 	submission_id uuid NOT NULL,
 	request_id uuid NOT NULL,
 	name varchar(256) NULL,
@@ -56,7 +62,7 @@ CREATE TABLE data_submission (
 	created timestamp NOT NULL,
 	last_modified timestamp NOT NULL,
 	PRIMARY KEY (submission_id),
-	FOREIGN KEY (request_id) REFERENCES data_request(request_id)
+	FOREIGN KEY (request_id) REFERENCES event_data_request(request_id)
 );
 
 CREATE TABLE guest (
@@ -79,7 +85,7 @@ CREATE TABLE guest (
 	attend_to timestamp with time zone NULL,
 	additional_information varchar(500) NULL,
 	PRIMARY KEY (guest_id),
-    FOREIGN KEY (submission_id) REFERENCES data_submission(submission_id)
+    FOREIGN KEY (submission_id) REFERENCES event_data_submission(submission_id)
 );
 
 CREATE TABLE sync_times (

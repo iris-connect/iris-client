@@ -4,7 +4,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import iris.client_bff.IrisWireMockTest;
-import iris.client_bff.data_request.events.Location;
+import iris.client_bff.events.model.Location;
 import iris.client_bff.search_client.web.dto.LocationInformation;
 import iris.client_bff.search_client.web.dto.LocationList;
 import lombok.RequiredArgsConstructor;
