@@ -4,7 +4,7 @@
       <v-col>
         <counter-widget
           subtitle="Ereignisse/Woche"
-          count="233"
+          :count="statistics.eventsCount"
           actionlabel="Zur Ereignisübersicht"
           image="sketch_file_analysis.svg"
           actionlink="events/list"
@@ -13,7 +13,7 @@
       <v-col>
         <counter-widget
           subtitle="Indexfälle/Woche"
-          count="23"
+          :count="statistics.indexCasesCount"
           actionlabel="Zur Indexübersicht"
           image="sketch_medicine.svg"
           actionlink="cases/list"
@@ -22,7 +22,7 @@
       <v-col>
         <counter-widget
           subtitle="Statusänderungen"
-          count="12"
+          :count="statistics.sumStatus"
           actionlabel="Anzeigen"
           image="sketch_reviewed_docs.svg"
           actionlink="events/list"
@@ -98,7 +98,7 @@ import EventList from "@/components/event-list.vue";
 import store from "@/store";
 import {
   DataRequestStatus,
-  ExistingDataRequestClientWithLocation,
+  ExistingDataRequestClientWithLocation, Statistics,
 } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
 import { ErrorMessage } from "@/utils/axios";
@@ -152,6 +152,7 @@ function getFormattedDate(date?: string): string {
   async beforeRouteEnter(_from, _to, next) {
     next();
     await store.dispatch("home/fetchEventTrackingList");
+    await store.dispatch("home/fetchStatistics")
   },
   beforeRouteLeave(to, from, next) {
     store.commit("home/reset");
@@ -167,6 +168,9 @@ export default class Home extends Vue {
     return dataRequests
       .filter((request) => request.status === DataRequestStatus.DataRequested)
       .map(tableRowMapper);
+  }
+  get statistics(): Statistics {
+    return store.state.home.statistics;
   }
 }
 </script>
