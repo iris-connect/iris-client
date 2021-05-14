@@ -119,7 +119,7 @@ export function makeMockAPIServer() {
         return authResponse(request, data);
       });
 
-      this.patch("/data-requests-client/locations/:id", (schema, request) => {
+      this.patch("/data-requests-client/events/:id", (schema, request) => {
         try {
           if (validateAuthHeader(request)) {
             const id = request.params.id;

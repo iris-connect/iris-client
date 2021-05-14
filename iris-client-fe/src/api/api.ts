@@ -1773,7 +1773,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             assertParamExists('dataRequestsClientLocationsCodePatch', 'code', code)
             // verify required parameter 'dataRequestClientUpdate' is not null or undefined
             assertParamExists('dataRequestsClientLocationsCodePatch', 'dataRequestClientUpdate', dataRequestClientUpdate)
-            const localVarPath = `/data-requests-client/locations/{code}`
+            const localVarPath = `/data-requests-client/events/{code}`
                 .replace(`{${"code"}}`, encodeURIComponent(String(code)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
