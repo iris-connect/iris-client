@@ -6,6 +6,8 @@ import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -25,6 +27,10 @@ public class IndexCaseService {
 	public List<CaseDataRequest> findAll() {
 		Spliterator<CaseDataRequest> all = repository.findAll().spliterator();
 		return StreamSupport.stream(all, false).collect(Collectors.toList());
+	}
+
+	public Page<CaseDataRequest> findAll(Pageable pageable) {
+		return repository.findAll(pageable);
 	}
 
 	public Optional<CaseDataRequest> findDetailed(UUID uuid) {

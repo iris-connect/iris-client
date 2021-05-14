@@ -20,13 +20,13 @@ import iris.client_bff.cases.CaseDataRequest.Status;
 import java.time.Instant;
 import java.util.UUID;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 
 /**
  * @author Jens Kutzsche
  */
-public interface CaseDataRequestRepository extends CrudRepository<CaseDataRequest, DataRequestIdentifier> {
+public interface CaseDataRequestRepository extends JpaRepository<CaseDataRequest, DataRequestIdentifier> {
 
   @Query("select count(1) = 0 from CaseDataRequest r where r.id = :code")
   boolean isCodeAvailable(UUID code);
