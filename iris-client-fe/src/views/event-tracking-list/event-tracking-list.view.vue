@@ -100,6 +100,7 @@ function getFormattedAddress(
 ): string {
   if (data) {
     if (data.locationInformation) {
+      
       const contact = data.locationInformation.contact;
       if (contact) {
         let name = `${data.locationInformation.name}`;        
