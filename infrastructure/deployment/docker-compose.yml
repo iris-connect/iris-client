@@ -101,5 +101,31 @@ services:
       - iris-client
       - iris-frontend
 
+  private-proxy:
+    image: luckylusa/eps-proxy:latest
+    expose:
+      - 4433
+      - 9999
+    ports:
+      - 4433:4433
+    volumes:
+      - "/home/iris/iris-eps/iris-gateway/infrastructure/eps/settings:/app/settings"
+    environment:
+      - EPS_SETTINGS=settings/dev/roles/private-proxy-1
+    command: [ "--level", "trace", "run", "public" ]
+
+  private-proxy-eps:
+    image: luckylusa/iris-eps-server:v2
+    expose:
+      - 5556
+      - 5544
+    ports:
+      - 5556:5556
+    volumes:
+      - "/home/iris/iris-eps/iris-gateway/infrastructure/eps/settings:/app/settings"
+    environment:
+      - EPS_SETTINGS=settings/dev/roles/private-proxy-eps-1
+    command: [ "--level", "trace", "server", "run" ]
+
 volumes:
   psqldata_iris:
