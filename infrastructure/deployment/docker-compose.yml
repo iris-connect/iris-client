@@ -122,5 +122,14 @@ services:
       - EPS_SETTINGS=settings/dev/roles/private-proxy-eps-1
     command: [ "--level", "trace", "server", "run" ]
 
+
+  internal-server:
+    image: luckylusa/eps-internal-server:latest
+    volumes:
+      - "/home/iris/iris-eps/iris-gateway/infrastructure/eps/settings:/app/settings"
+    expose:
+      - 8888
+    command: [ "--level", "trace" ]
+
 volumes:
   psqldata_iris:
