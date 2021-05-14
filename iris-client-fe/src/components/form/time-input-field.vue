@@ -15,7 +15,6 @@
             class="picker-input-field"
             v-model="model"
             prepend-icon="mdi-clock"
-            readonly
             v-bind="$attrs"
           ></v-text-field>
         </div>

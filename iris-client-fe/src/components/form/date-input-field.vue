@@ -84,18 +84,15 @@ export default class DateInputField extends DateInputFieldProps {
 
   set dateFormatted(value: string) {
     if(this.isGermanFormat(value)) {
-      console.log("dateFormatted set: " + this.parseDate(value));
       this.$emit("input", this.parseDate(value));
     }
   }
   
   get model(): string {    
-    console.log("model get: " + this.value);
     return this.value;
   }
 
   set model(value: string) {
-    console.log("model set: " + value);
     this.$emit("input", value);
   }
 
