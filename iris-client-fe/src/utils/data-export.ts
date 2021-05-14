@@ -56,8 +56,8 @@ const downloadCsvFile = function (fileName: string, csv: string): void {
   }
 };
 
-const DataExport = {
+const dataExport = {
   exportCsv,
 };
 
-export default DataExport;
+export default dataExport;

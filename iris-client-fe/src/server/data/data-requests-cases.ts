@@ -1,22 +1,10 @@
 import {
   ContactCategory,
   DataRequestCaseData,
-  DataRequestCaseDataStatusEnum,
+  DataRequestStatus,
   Sex,
 } from "@/api";
-
-function daysAgo(days = 0, date = new Date().toISOString()) {
-  // could be that
-  const d = new Date(date);
-  d.setDate(d.getDate() - days);
-  return d.toISOString();
-}
-
-function hoursAgo(hours = 0, date = new Date().toISOString()) {
-  const d = new Date(date);
-  d.setHours(d.getHours() - hours);
-  return d.toISOString();
-}
+import { daysAgo, hoursAgo } from "@/server/utils/date";
 
 export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
   {
@@ -25,7 +13,7 @@ export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
     externalCaseId: "12345",
     start: daysAgo(3),
     comment: "leerer Kommentar",
-    status: DataRequestCaseDataStatusEnum.DataReceived,
+    status: DataRequestStatus.DataReceived,
   },
   {
     caseId: "1111",
@@ -34,7 +22,7 @@ export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
     start: hoursAgo(3),
     end: hoursAgo(1),
     comment: "das könnte ihr Kommentar sein",
-    status: DataRequestCaseDataStatusEnum.DataRequested,
+    status: DataRequestStatus.DataRequested,
   },
   {
     caseId: "2233",
@@ -42,7 +30,7 @@ export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
     externalCaseId: "2233",
     start: hoursAgo(2),
     comment: "leer",
-    status: DataRequestCaseDataStatusEnum.Closed,
+    status: DataRequestStatus.Closed,
   },
 ];
 

@@ -14,28 +14,12 @@
         Status:
         <v-btn-toggle dense mandatory v-model="statusButtonSelected">
           <v-btn
-            @click="filterStatus(statusEnum.DataRequested)"
-            style="opacity: 100%; background-color: white"
+            text
+            @click="filterStatus(selectableStatus[status])"
+            v-for="status in Object.keys(selectableStatus)"
+            :key="status"
           >
-            {{ getStatusName(statusEnum.DataRequested) }}
-          </v-btn>
-          <v-btn
-            @click="filterStatus(statusEnum.DataReceived)"
-            style="opacity: 100%; background-color: white"
-          >
-            {{ getStatusName(statusEnum.DataReceived) }}
-          </v-btn>
-          <v-btn
-            @click="filterStatus(statusEnum.Closed)"
-            style="opacity: 100%; background-color: white"
-          >
-            {{ getStatusName(statusEnum.Closed) }}
-          </v-btn>
-          <v-btn
-            @click="filterStatus(null)"
-            style="opacity: 100%; background-color: white"
-          >
-            Alle
+            {{ getStatusSelectLabel(selectableStatus[status]) }}
           </v-btn>
         </v-btn-toggle>
       </v-col>
@@ -81,7 +65,7 @@
 
 <script lang="ts">
 import {
-  ExistingDataRequestClientWithLocationStatusEnum,
+  DataRequestStatus,
   ExistingDataRequestClientWithLocation,
 } from "@/api";
 import store from "@/store";
@@ -140,12 +124,13 @@ type TableRow = {
   },
 })
 export default class EventTrackingListView extends Vue {
-  statusFilter: ExistingDataRequestClientWithLocationStatusEnum | null = null;
-  statusEnum = ExistingDataRequestClientWithLocationStatusEnum;
-  statusButtonSelected = 3;
-  filterStatus(
-    target: ExistingDataRequestClientWithLocationStatusEnum | null
-  ): void {
+  statusFilter: DataRequestStatus | null = null;
+  selectableStatus = {
+    ...DataRequestStatus,
+    All: null,
+  };
+  statusButtonSelected = Object.keys(this.selectableStatus).length - 1;
+  filterStatus(target: DataRequestStatus | null): void {
     this.statusFilter = target;
   }
 
@@ -208,23 +193,16 @@ export default class EventTrackingListView extends Vue {
     return "item.actions";
   }
 
-  on(): void {
-    console.log("NOT IMPLEMENTED");
-  }
-
-  selectItem(item: unknown): void {
-    console.log("NOT IMPLEMENTED", item);
-  }
-
-  getStatusColor(
-    status: ExistingDataRequestClientWithLocationStatusEnum
-  ): string {
+  getStatusColor(status: DataRequestStatus): string {
     return StatusColors.getColor(status);
   }
 
-  getStatusName(
-    status: ExistingDataRequestClientWithLocationStatusEnum
-  ): string {
+  getStatusName(status: DataRequestStatus): string {
+    return StatusMessages.getMessage(status);
+  }
+
+  getStatusSelectLabel(status: DataRequestStatus | null): string {
+    if (!status) return "Alle";
     return StatusMessages.getMessage(status);
   }
 }

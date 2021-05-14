@@ -97,41 +97,13 @@ import CounterWidget from "@/components/dashboard/counter-widget.vue";
 import EventList from "@/components/event-list.vue";
 import store from "@/store";
 import {
-  ExistingDataRequestClientWithLocationStatusEnum,
+  DataRequestStatus,
   ExistingDataRequestClientWithLocation,
 } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
 import { ErrorMessage } from "@/utils/axios";
-
-function getStatusColor(
-  status?: ExistingDataRequestClientWithLocationStatusEnum
-): string {
-  switch (status) {
-    case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
-      return "blue";
-    case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
-      return "red";
-    case ExistingDataRequestClientWithLocationStatusEnum.Closed:
-      return "green";
-    default:
-      return "gray"; // TODO
-  }
-}
-
-function getStatusName(
-  status?: ExistingDataRequestClientWithLocationStatusEnum
-): string {
-  switch (status) {
-    case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
-      return "Angefragt";
-    case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
-      return "Geliefert";
-    case ExistingDataRequestClientWithLocationStatusEnum.Closed:
-      return "Abgeschlossen";
-    default:
-      return "Unbekannt"; // TODO find better name
-  }
-}
+import StatusColors from "@/constants/StatusColors";
+import StatusMessages from "@/constants/StatusMessages";
 
 const tableRowMapper = (
   dataRequest: ExistingDataRequestClientWithLocation
@@ -146,8 +118,8 @@ const tableRowMapper = (
     code: dataRequest.code || "-",
     name: dataRequest.name || "-",
     status: dataRequest.status?.toString() || "-",
-    statusColor: getStatusColor(dataRequest.status),
-    statusName: getStatusName(dataRequest.status),
+    statusColor: StatusColors.getColor(dataRequest.status),
+    statusName: StatusMessages.getMessage(dataRequest.status),
   };
 };
 
@@ -193,11 +165,7 @@ export default class Home extends Vue {
   get openEventListData(): TableRow[] {
     const dataRequests = store.state.home.eventTrackingList?.dataRequests || [];
     return dataRequests
-      .filter(
-        (request) =>
-          request.status ===
-          ExistingDataRequestClientWithLocationStatusEnum.DataRequested
-      )
+      .filter((request) => request.status === DataRequestStatus.DataRequested)
       .map(tableRowMapper);
   }
 }

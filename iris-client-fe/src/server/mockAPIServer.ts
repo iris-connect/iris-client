@@ -1,4 +1,9 @@
-import { DataRequestCaseDetails, DataRequestDetails, User } from "@/api";
+import {
+  DataRequestCaseDetails,
+  DataRequestDetails,
+  ExistingDataRequestClientWithLocation,
+  User,
+} from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
 import {
   dummyDataRequests,
@@ -112,6 +117,24 @@ export function makeMockAPIServer() {
       this.get("/data-requests-client/events/:id", (schema, request) => {
         const data = getDummyDetailsWithStatus(router.currentRoute.params.id);
         return authResponse(request, data);
+      });
+
+      this.patch("/data-requests-client/locations/:id", (schema, request) => {
+        try {
+          if (validateAuthHeader(request)) {
+            const id = request.params.id;
+            const dataRequest = dummyDataRequests?.dataRequests?.find(
+              (entry: ExistingDataRequestClientWithLocation) =>
+                entry.code === id
+            );
+            if (dataRequest) {
+              Object.assign(dataRequest, JSON.parse(request.requestBody));
+            }
+          }
+        } catch (e) {
+          // ignored
+        }
+        return authResponse(request);
       });
 
       this.post("/data-requests-client/cases", (schema, request) => {

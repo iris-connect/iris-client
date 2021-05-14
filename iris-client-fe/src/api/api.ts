@@ -387,6 +387,12 @@ export interface DataRequest {
      * @memberof DataRequest
      */
     requestDetails?: string;
+    /**
+     * Comment from an IRIS user
+     * @type {string}
+     * @memberof DataRequest
+     */
+    comment?: string;
 }
 /**
  * Creates a new index case data request from FE - persistent data has to be refined. Starting with contact persons name.
@@ -469,10 +475,10 @@ export interface DataRequestCaseData {
     caseId?: string;
     /**
      * 
-     * @type {string}
+     * @type {DataRequestStatus}
      * @memberof DataRequestCaseData
      */
-    status?: DataRequestCaseDataStatusEnum;
+    status?: DataRequestStatus;
     /**
      * Nonce used in provider app to authorize data upload
      * @type {string}
@@ -486,17 +492,6 @@ export interface DataRequestCaseData {
      */
     submissionData?: ContactsAndEvents;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum DataRequestCaseDataStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
-}
-
 /**
  * 
  * @export
@@ -554,22 +549,11 @@ export interface DataRequestCaseDetails {
     caseId?: string;
     /**
      * 
-     * @type {string}
+     * @type {DataRequestStatus}
      * @memberof DataRequestCaseDetails
      */
-    status?: DataRequestCaseDetailsStatusEnum;
+    status?: DataRequestStatus;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum DataRequestCaseDetailsStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
-}
-
 /**
  * 
  * @export
@@ -584,22 +568,11 @@ export interface DataRequestCaseDetailsAllOf {
     caseId?: string;
     /**
      * 
-     * @type {string}
+     * @type {DataRequestStatus}
      * @memberof DataRequestCaseDetailsAllOf
      */
-    status?: DataRequestCaseDetailsAllOfStatusEnum;
+    status?: DataRequestStatus;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum DataRequestCaseDetailsAllOfStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
-}
-
 /**
  * Details for index case
  * @export
@@ -644,10 +617,10 @@ export interface DataRequestCaseExtendedDetails {
     caseId?: string;
     /**
      * 
-     * @type {string}
+     * @type {DataRequestStatus}
      * @memberof DataRequestCaseExtendedDetails
      */
-    status?: DataRequestCaseExtendedDetailsStatusEnum;
+    status?: DataRequestStatus;
     /**
      * Nonce used in provider app to authorize data upload
      * @type {string}
@@ -655,17 +628,6 @@ export interface DataRequestCaseExtendedDetails {
      */
     nonce?: string;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum DataRequestCaseExtendedDetailsStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
-}
-
 /**
  * 
  * @export
@@ -727,6 +689,43 @@ export interface DataRequestClient {
      * @memberof DataRequestClient
      */
     requestDetails?: string;
+    /**
+     * Comment from an IRIS user.
+     * @type {string}
+     * @memberof DataRequestClient
+     */
+    comment?: string;
+}
+/**
+ * The data request that will be updated by the FE.
+ * @export
+ * @interface DataRequestClientUpdate
+ */
+export interface DataRequestClientUpdate {
+    /**
+     * Friendly name of the request to be identified easily by GA
+     * @type {string}
+     * @memberof DataRequestClientUpdate
+     */
+    name?: string;
+    /**
+     * External ID outside of IRIS
+     * @type {string}
+     * @memberof DataRequestClientUpdate
+     */
+    externalRequestId?: string;
+    /**
+     * Comment from an IRIS user.
+     * @type {string}
+     * @memberof DataRequestClientUpdate
+     */
+    comment?: string;
+    /**
+     * 
+     * @type {DataRequestStatusUpdateByUser}
+     * @memberof DataRequestClientUpdate
+     */
+    status?: DataRequestStatusUpdateByUser;
 }
 /**
  * 
@@ -735,17 +734,17 @@ export interface DataRequestClient {
  */
 export interface DataRequestDetails {
     /**
-     * 
-     * @type {GuestList}
-     * @memberof DataRequestDetails
-     */
-    submissionData?: GuestList;
-    /**
-     * 
+     * Comments on given data request from GA employees
      * @type {string}
      * @memberof DataRequestDetails
      */
-    status?: DataRequestDetailsStatusEnum;
+    comment?: string;
+    /**
+     * 
+     * @type {DataRequestStatus}
+     * @memberof DataRequestDetails
+     */
+    status?: DataRequestStatus;
     /**
      * Code for DataRequest
      * @type {string}
@@ -800,16 +799,47 @@ export interface DataRequestDetails {
      * @memberof DataRequestDetails
      */
     locationInformation?: LocationInformation;
+    /**
+     * 
+     * @type {GuestList}
+     * @memberof DataRequestDetails
+     */
+    submissionData?: GuestList;
+}
+/**
+ * 
+ * @export
+ * @interface DataRequestDetailsAllOf
+ */
+export interface DataRequestDetailsAllOf {
+    /**
+     * 
+     * @type {GuestList}
+     * @memberof DataRequestDetailsAllOf
+     */
+    submissionData?: GuestList;
+}
+/**
+ * Status of data request.
+ * @export
+ * @enum {string}
+ */
+export enum DataRequestStatus {
+    DataRequested = 'DATA_REQUESTED',
+    DataReceived = 'DATA_RECEIVED',
+    Closed = 'CLOSED',
+    Aborted = 'ABORTED'
 }
 
 /**
-    * @export
-    * @enum {string}
-    */
-export enum DataRequestDetailsStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
+ * Status of data request.
+ * @export
+ * @enum {string}
+ */
+export enum DataRequestStatusUpdateByUser {
     DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
+    Closed = 'CLOSED',
+    Aborted = 'ABORTED'
 }
 
 /**
@@ -895,10 +925,10 @@ export interface EventList {
 export interface ExistingDataRequestClientWithLocation {
     /**
      * 
-     * @type {string}
+     * @type {DataRequestStatus}
      * @memberof ExistingDataRequestClientWithLocation
      */
-    status?: ExistingDataRequestClientWithLocationStatusEnum;
+    status?: DataRequestStatus;
     /**
      * Code for DataRequest
      * @type {string}
@@ -954,17 +984,6 @@ export interface ExistingDataRequestClientWithLocation {
      */
     locationInformation?: LocationInformation;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum ExistingDataRequestClientWithLocationStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
-}
-
 /**
  * 
  * @export
@@ -1318,6 +1337,12 @@ export interface LocationDataRequest {
      * @memberof LocationDataRequest
      */
     requestDetails?: string;
+    /**
+     * Comment from an IRIS user
+     * @type {string}
+     * @memberof LocationDataRequest
+     */
+    comment?: string;
     /**
      * The URI that can be used to submit contact data for this tracing code.
      * @type {string}
@@ -1729,6 +1754,53 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(dataRequestCaseClient, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Patches details of an existing data request
+         * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+         * @param {DataRequestClientUpdate} dataRequestClientUpdate 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        dataRequestsClientLocationsCodePatch: async (code: string, dataRequestClientUpdate: DataRequestClientUpdate, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'code' is not null or undefined
+            assertParamExists('dataRequestsClientLocationsCodePatch', 'code', code)
+            // verify required parameter 'dataRequestClientUpdate' is not null or undefined
+            assertParamExists('dataRequestsClientLocationsCodePatch', 'dataRequestClientUpdate', dataRequestClientUpdate)
+            const localVarPath = `/data-requests-client/locations/{code}`
+                .replace(`{${"code"}}`, encodeURIComponent(String(code)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(dataRequestClientUpdate, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2188,6 +2260,18 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Patches details of an existing data request
+         * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+         * @param {DataRequestClientUpdate} dataRequestClientUpdate 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async dataRequestsClientLocationsCodePatch(code: string, dataRequestClientUpdate: DataRequestClientUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DataRequestDetails>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestsClientLocationsCodePatch(code, dataRequestClientUpdate, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Fetches data requests
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2334,6 +2418,17 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
         },
         /**
          * 
+         * @summary Patches details of an existing data request
+         * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+         * @param {DataRequestClientUpdate} dataRequestClientUpdate 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        dataRequestsClientLocationsCodePatch(code: string, dataRequestClientUpdate: DataRequestClientUpdate, options?: any): AxiosPromise<DataRequestDetails> {
+            return localVarFp.dataRequestsClientLocationsCodePatch(code, dataRequestClientUpdate, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Fetches data requests
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2472,6 +2567,19 @@ export class IrisClientFrontendApi extends BaseAPI {
      */
     public dataRequestClientCasesPost(dataRequestCaseClient: DataRequestCaseClient, options?: any) {
         return IrisClientFrontendApiFp(this.configuration).dataRequestClientCasesPost(dataRequestCaseClient, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Patches details of an existing data request
+     * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+     * @param {DataRequestClientUpdate} dataRequestClientUpdate 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IrisClientFrontendApi
+     */
+    public dataRequestsClientLocationsCodePatch(code: string, dataRequestClientUpdate: DataRequestClientUpdate, options?: any) {
+        return IrisClientFrontendApiFp(this.configuration).dataRequestsClientLocationsCodePatch(code, dataRequestClientUpdate, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
