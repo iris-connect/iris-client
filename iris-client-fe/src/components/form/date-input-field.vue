@@ -97,7 +97,7 @@ export default class DateInputField extends DateInputFieldProps {
   }
 
   isGermanFormat(value: string): boolean {
-    if(typeof value === "string" && /\d{2}.\d{2}.\d{4}/.test(value)) {
+    if(typeof value === "string" && /^\d{2}.\d{2}.\d{4}$/.test(value)) {
       return true;
     } else {
       return false;
@@ -105,7 +105,7 @@ export default class DateInputField extends DateInputFieldProps {
   }
 
   isNoneGermanFormat(value: string): boolean {
-    if(typeof value === "string" && /\d{4}.\d{2}.\d{2}/.test(value)) {
+    if(typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
       return true;
     } else {
       return false;
