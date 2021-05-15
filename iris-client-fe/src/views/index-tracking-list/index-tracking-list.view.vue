@@ -96,7 +96,8 @@ type TableRow = {
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
-    await store.dispatch("indexTrackingList/fetchIndexTrackingList");
+    const page = { size: 5, page: 0 };
+    await store.dispatch("indexTrackingList/fetchIndexTrackingList", page);
   },
   beforeRouteLeave(to, from, next) {
     store.commit("indexTrackingList/reset");
@@ -136,10 +137,10 @@ export default class IndexTrackingListView extends Vue {
   }
 
   get indexList(): TableRow[] {
-    const dataRequests = store.state.indexTrackingList.indexTrackingList || [];
+    const dataRequests = store.state.indexTrackingList.indexTrackingList;
     //console.log(dataRequests);
     return (
-      dataRequests
+      dataRequests == null ? [] : dataRequests.content
         // TODO this filtering could probably also be done in vuetify data-table
         .filter(
           (dataRequests) =>

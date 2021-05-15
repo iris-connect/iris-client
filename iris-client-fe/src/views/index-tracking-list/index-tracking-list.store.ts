@@ -1,11 +1,11 @@
-import { DataRequestCaseDetails } from "@/api";
+import {PageIndexCase} from "@/api";
 import client from "@/api-client";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 
 export type IndexTrackingListState = {
-  indexTrackingList: Array<DataRequestCaseDetails> | null;
+  indexTrackingList: PageIndexCase | null;
   indexTrackingListLoading: boolean;
 };
 
@@ -14,7 +14,7 @@ export interface IndexTrackingListModule
   mutations: {
     setIndexTrackingList(
       state: IndexTrackingListState,
-      indexTrackingList: Array<DataRequestCaseDetails> | null
+      indexTrackingList: PageIndexCase | null
     ): void;
     setIndexTrackingListLoading(
       state: IndexTrackingListState,
@@ -23,7 +23,7 @@ export interface IndexTrackingListModule
     reset(state: IndexTrackingListState, payload: null): void;
   };
   actions: {
-    fetchIndexTrackingList({ commit }: { commit: Commit }): Promise<void>;
+    fetchIndexTrackingList({ commit }: { commit: Commit }, payload: null): Promise<void>;
   };
 }
 
@@ -48,14 +48,15 @@ const indexTrackingList: IndexTrackingListModule = {
       // we can keep the data, no need to reset it
       // Object.assign(state, { ...defaultState });
       state.indexTrackingListLoading = false;
-    },
+    }
   },
   actions: {
-    async fetchIndexTrackingList({ commit }) {
-      let indexTrackingList: Array<DataRequestCaseDetails> | null = null;
+    async fetchIndexTrackingList({ commit }, page) {
+      let indexTrackingList: PageIndexCase | null = null;
+      const query = page ? { query: page } : null;
       commit("setIndexTrackingListLoading", true);
       try {
-        indexTrackingList = (await client.dataRequestClientCasesGet()).data;
+        indexTrackingList = (await client.dataRequestClientCasesGet(query)).data;
       } finally {
         commit("setIndexTrackingList", indexTrackingList);
         commit("setIndexTrackingListLoading", false);
