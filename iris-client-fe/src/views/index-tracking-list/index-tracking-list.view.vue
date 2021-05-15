@@ -41,11 +41,15 @@
         ></v-text-field>
         <v-data-table
           :loading="indexListLoading"
+          :page="tableData.page"
+          :pageCount="tableData.numberOfPages"
+          :server-items-length="tableData.totalElements"
           :headers="tableData.headers"
           :items="indexList"
-          :items-per-page="5"
+          :items-per-page="tableData.itemsPerPage"
           class="elevation-1 mt-5 twolineTable"
           :search="tableData.search"
+          @update:options="updatePagination"
         >
           <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
@@ -96,8 +100,7 @@ type TableRow = {
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
-    const page = { size: 5, page: 0 };
-    await store.dispatch("indexTrackingList/fetchIndexTrackingList", page);
+    await store.dispatch("indexTrackingList/fetchIndexTrackingList", store.state.indexTrackingList.tableData);
   },
   beforeRouteLeave(to, from, next) {
     store.commit("indexTrackingList/reset");
@@ -115,32 +118,19 @@ export default class IndexTrackingListView extends Vue {
     this.statusFilter = target;
   }
 
-  tableData = {
-    search: "",
-    headers: [
-      {
-        text: "Ext.ID",
-        align: "start",
-        sortable: true,
-        value: "extID",
-      },
-      { text: "Index-Bezeichner", value: "name" },
-      { text: "Zeit (Start)", value: "startTime" },
-      { text: "Zeit (Ende)", value: "endTime" },
-      { text: "Status", value: "status" },
-      { text: "", value: "actions" },
-    ],
-  };
+  get tableData() {
+    return store.state.indexTrackingList.tableData;
+  }
 
   get indexListLoading(): boolean {
     return store.state.indexTrackingList.indexTrackingListLoading;
   }
 
   get indexList(): TableRow[] {
-    const dataRequests = store.state.indexTrackingList.indexTrackingList;
+    const dataRequests = store.state.indexTrackingList.indexTrackingList || [];
     //console.log(dataRequests);
     return (
-      dataRequests == null ? [] : dataRequests.content
+      dataRequests
         // TODO this filtering could probably also be done in vuetify data-table
         .filter(
           (dataRequests) =>
@@ -166,6 +156,12 @@ export default class IndexTrackingListView extends Vue {
   }
   get itemActionSlotName(): string {
     return "item.actions";
+  }
+
+  async updatePagination(pagination: any) {
+    store.state.indexTrackingList.tableData.page = pagination.page;
+    store.state.indexTrackingList.tableData.itemsPerPage = pagination.itemsPerPage;
+    await store.dispatch("indexTrackingList/fetchIndexTrackingList", store.state.indexTrackingList.tableData);
   }
 
   getStatusColor(status: DataRequestStatus): string {

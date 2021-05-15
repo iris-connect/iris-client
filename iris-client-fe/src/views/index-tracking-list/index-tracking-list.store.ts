@@ -1,12 +1,13 @@
-import {PageIndexCase} from "@/api";
+import {DataRequestCaseDetails, PageIndexCase} from "@/api";
 import client from "@/api-client";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 
 export type IndexTrackingListState = {
-  indexTrackingList: PageIndexCase | null;
+  indexTrackingList: Array<DataRequestCaseDetails> | null;
   indexTrackingListLoading: boolean;
+  tableData: any;
 };
 
 export interface IndexTrackingListModule
@@ -14,12 +15,16 @@ export interface IndexTrackingListModule
   mutations: {
     setIndexTrackingList(
       state: IndexTrackingListState,
-      indexTrackingList: PageIndexCase | null
+      indexTrackingList: Array<DataRequestCaseDetails> | null
     ): void;
     setIndexTrackingListLoading(
       state: IndexTrackingListState,
       payload: boolean
     ): void;
+    setTableData(
+        state: IndexTrackingListState,
+        tableData: any
+    ): void
     reset(state: IndexTrackingListState, payload: null): void;
   };
   actions: {
@@ -30,6 +35,26 @@ export interface IndexTrackingListModule
 const defaultState: IndexTrackingListState = {
   indexTrackingList: null,
   indexTrackingListLoading: false,
+  tableData: {
+    search: "",
+    page: 1,
+    itemsPerPage: 5,
+    numberOfPages: 1,
+    totalElements: 0,
+    headers: [
+      {
+        text: "Ext.ID",
+        align: "start",
+        sortable: true,
+        value: "extID",
+      },
+      { text: "Index-Bezeichner", value: "name" },
+      { text: "Zeit (Start)", value: "startTime" },
+      { text: "Zeit (Ende)", value: "endTime" },
+      { text: "Status", value: "status" },
+      { text: "", value: "actions" },
+    ],
+  },
 };
 
 const indexTrackingList: IndexTrackingListModule = {
@@ -44,6 +69,9 @@ const indexTrackingList: IndexTrackingListModule = {
     setIndexTrackingListLoading(state, loading) {
       state.indexTrackingListLoading = loading;
     },
+    setTableData(state, tableData) {
+      state.tableData = tableData;
+    },
     reset(state) {
       // we can keep the data, no need to reset it
       // Object.assign(state, { ...defaultState });
@@ -51,14 +79,20 @@ const indexTrackingList: IndexTrackingListModule = {
     }
   },
   actions: {
-    async fetchIndexTrackingList({ commit }, page) {
+    async fetchIndexTrackingList({ commit }, page: any) {
       let indexTrackingList: PageIndexCase | null = null;
-      const query = page ? { query: page } : null;
+      const query = page ? { query: {
+          size: page.itemsPerPage,
+          page: page.page - 1
+        }} : null;
       commit("setIndexTrackingListLoading", true);
       try {
         indexTrackingList = (await client.dataRequestClientCasesGet(query)).data;
+        page.numberOfPages = indexTrackingList.totalPages;
+        page.totalElements = indexTrackingList.totalElements;
       } finally {
-        commit("setIndexTrackingList", indexTrackingList);
+        commit("setTableData", page);
+        commit("setIndexTrackingList", indexTrackingList?.content);
         commit("setIndexTrackingListLoading", false);
       }
     },
