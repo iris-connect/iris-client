@@ -125,3 +125,20 @@ Object someMethod(…) {
 ==== Sonarlint
 
 As further support, use https://www.sonarlint.org/[SonarLint] to avoid code smells. We don't currently use any fixed rules here, but Sonarlint gives useful hints during development.
+
+== License
+
+Currently this code is licensed under Affero GPL 3.0.
+
+
+== Feedback
+
+If you have any questions mailto:iris@steiger-stiftung.de[just contact us].
+
+== Participation
+
+We are happy about your contribution to the project! In order to ensure compliance with the licensing conditions and the future development of the project, we require a signed contributor license agreement (CLA) for all contributions in accordance with the http://selector.harmonyagreements.org[Harmony standard]. Please sign the corresponding document for link:.clas%2FIRIS%20Gateway-Individual.pdf[natural persons] or for link:.clas%2FIRIS%20Gateway-Entity.pdf[organizations] and send it to mailto:iris@steiger-stiftung.de[us].
+
+## Supporting organizations
+
+- Björn Steiger Stiftung SbR - https://www.steiger-stiftung.de
