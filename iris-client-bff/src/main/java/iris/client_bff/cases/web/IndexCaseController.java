@@ -1,5 +1,6 @@
 package iris.client_bff.cases.web;
 
+import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.IndexCaseService;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
@@ -26,7 +27,8 @@ public class IndexCaseController {
 
 	@GetMapping
 	@ResponseStatus(OK)
-	public Page<IndexCaseDTO> getAll(Pageable pageable) {
+	public Page<IndexCaseDTO> getAll(@RequestParam(required = false) Status status, Pageable pageable) {
+		if (status != null) return indexCaseService.findByStatus(status, pageable).map(IndexCaseMapper::map);
 		return indexCaseService.findAll(pageable).map(IndexCaseMapper::map);
 	}
 

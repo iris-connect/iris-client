@@ -33,6 +33,10 @@ public class IndexCaseService {
 		return repository.findAll(pageable);
 	}
 
+	public Page<CaseDataRequest> findByStatus(Status status, Pageable pageable) {
+		return repository.findByStatus(status, pageable);
+	}
+
 	public Optional<CaseDataRequest> findDetailed(UUID uuid) {
 		var id = DataRequestIdentifier.of(uuid);
 		return repository.findById(id);
