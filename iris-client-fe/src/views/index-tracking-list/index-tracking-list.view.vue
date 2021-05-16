@@ -161,6 +161,8 @@ export default class IndexTrackingListView extends Vue {
   async updatePagination(pagination: any) {
     store.state.indexTrackingList.tableData.page = pagination.page;
     store.state.indexTrackingList.tableData.itemsPerPage = pagination.itemsPerPage;
+    store.state.indexTrackingList.tableData.sortBy = pagination.sortBy;
+    store.state.indexTrackingList.tableData.sortOrder = pagination.sortDesc;
     await store.dispatch("indexTrackingList/fetchIndexTrackingList", store.state.indexTrackingList.tableData);
   }
 

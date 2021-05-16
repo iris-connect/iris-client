@@ -81,10 +81,7 @@ const indexTrackingList: IndexTrackingListModule = {
   actions: {
     async fetchIndexTrackingList({ commit }, page: any) {
       let indexTrackingList: PageIndexCase | null = null;
-      const query = page ? { query: {
-          size: page.itemsPerPage,
-          page: page.page - 1
-        }} : null;
+      const query = page ? generateQuery(page) : null;
       commit("setIndexTrackingListLoading", true);
       try {
         indexTrackingList = (await client.dataRequestClientCasesGet(query)).data;
@@ -98,5 +95,26 @@ const indexTrackingList: IndexTrackingListModule = {
     },
   },
 };
+
+function generateQuery(page: any) {
+  const sortAttributes : { [key: string]: string; } = {
+    extID: 'refId',
+    name: 'name',
+    startTime: 'requestStart',
+    endTime: 'requestEnd',
+    status: 'status'
+  }
+  const query : any = {
+    size: page.itemsPerPage,
+    page: page.page - 1,
+    sort: (page.sortBy && page.sortBy.length > 0) ? sortAttributes[page.sortBy[0]] : null
+  };
+
+  // TODO: Check if necessary to do it this way, because setting non-existing attribute is marked as error
+  if (!query.sort) delete query.sort;
+  else if (page.sortOrder && page.sortOrder.length > 0) page.sortOrder[0] ? query.sort = query.sort + ',desc' : query.sort = query.sort + ',asc'
+
+  return { query: query };
+}
 
 export default indexTrackingList;
