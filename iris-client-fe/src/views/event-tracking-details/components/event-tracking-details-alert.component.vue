@@ -27,7 +27,7 @@ export default class EventTrackingDetailsAlertComponent extends EventTrackingDet
   alert = false;
 
   created() {
-    if(this.$route.params.is_created == 'true') {
+    if(this.$route.query.is_created == 'true') {
       this.openAlert();
     }
   }

@@ -55,7 +55,7 @@
             <!-- TODO use imported route name -->
             <v-btn
               color="primary"
-              :to="{ name: 'event-details', params: { id: item.code, is_created: 'false' } }"
+              :to="{ name: 'event-details', params: { id: item.code }, query: {is_created: 'false'} }"
             >
               Details
             </v-btn>

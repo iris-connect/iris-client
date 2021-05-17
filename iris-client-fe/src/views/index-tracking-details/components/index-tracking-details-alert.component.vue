@@ -27,8 +27,7 @@ export default class IndexTrackingDetailsAlertComponent extends IndexTrackingDet
   alert = false;
 
   created() {
-    console.log("Test component index tracking details altert");
-    if(this.$route.params.is_created == 'true') {
+    if(this.$route.query.is_created == 'true') {
       this.openAlert();
     }
   }

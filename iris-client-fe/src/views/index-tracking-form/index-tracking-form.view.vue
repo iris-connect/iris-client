@@ -197,9 +197,9 @@ export default class IndexTrackingFormView extends Vue {
       router.push({
         name: `index-details`,
         params: {
-          caseId: created.caseId || "",
-          is_created: 'true',
-        },
+          caseId: created.caseId || ""
+        }, 
+        query: {is_created: 'true'}
       });
     }
   }
