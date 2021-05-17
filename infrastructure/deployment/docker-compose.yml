@@ -36,7 +36,7 @@ services:
 
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-bff:v1.0.2-alpha
+    image: inoeg/iris-client-bff:v1.0.3-alpha
     expose:
       - 8092
     ports:
