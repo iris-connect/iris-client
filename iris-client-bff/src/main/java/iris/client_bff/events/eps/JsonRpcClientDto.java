@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 @RequiredArgsConstructor
 public class JsonRpcClientDto {
 
-	@JsonProperty("Name")
 	private @NotNull String name;
 
 }
