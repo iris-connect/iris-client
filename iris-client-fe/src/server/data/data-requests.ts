@@ -70,7 +70,7 @@ export const dummyDataDetails: DataRequestDetails = {
   start: hoursAgo(5),
   end: hoursAgo(1),
   requestDetails: "leer",
-  lastUpdatedAt: hoursAgo(4),
+  lastModifiedAt: hoursAgo(4),
   requestedAt: hoursAgo(6),
   submissionData: {
     guests: [
