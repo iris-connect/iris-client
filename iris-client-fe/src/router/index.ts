@@ -129,7 +129,7 @@ export const routes: Array<RouteConfig> = [
     meta: {
       menu: false,
     },
-    component: () =>
+    component: () => 
       import(
         /* webpackChunkName: "about" */ "../views/index-tracking-details/index-tracking-details.view.vue"
       ),

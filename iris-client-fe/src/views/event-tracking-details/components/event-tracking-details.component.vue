@@ -1,17 +1,6 @@
 <template>
   <v-card>
-    <div class="alertOverlay">
-      <v-alert
-        :value="alert"
-        color="blue"
-        prominent
-        dismissible
-        elevation="4"
-        type="success"
-        transition="scale-transition"
-      > Die Kontaktdaten zu diesem Ereignis wurden angefragt.
-      </v-alert>
-    </div>
+    <event-tracking-details-alert-component />
     <v-card-title>
       <editable-field
         :value="formData.externalRequestId"
@@ -193,6 +182,7 @@ import { DataRequestStatus, DataRequestStatusUpdateByUser } from "@/api";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import { ErrorMessage } from "@/utils/axios";
+import EventTrackingDetailsAlertComponent from "@/views/event-tracking-details/components/event-tracking-details-alert.component.vue";
 
 const EventTrackingDetailsComponentProps = Vue.extend({
   props: {
@@ -218,12 +208,14 @@ const EventTrackingDetailsComponentProps = Vue.extend({
     },
   },
 });
+
 @Component({
   components: {
     ErrorMessageAlert,
     EventTrackingDetailsLocationInfo,
     EventTrackingStatusChange,
     EditableField,
+    EventTrackingDetailsAlertComponent
   },
 })
 export default class EventTrackingDetailsComponent extends EventTrackingDetailsComponentProps {
@@ -320,19 +312,6 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
       rows: this.tableData.select,
     };
     this.$emit("data-export", exportData);
-  }
-
-  created() {
-    if(this.$route.params.is_created == 'true') {
-      this.openAlert();
-    }
-  }
-
-  openAlert(): void {    
-    this.alert = true;
-    setTimeout(()=>{
-      this.alert = false;
-    }, 2000);
   }
 }
 </script>

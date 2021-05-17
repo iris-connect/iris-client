@@ -1,18 +1,7 @@
 <template>
   <div>
     <v-card>
-      <div class="alertOverlay">
-        <v-alert
-          :value="alert"
-          color="blue"
-          prominent
-          dismissible
-          elevation="4"
-          type="success"
-          transition="scale-transition"
-        > Die Kontaktdaten zu diesem Indexfall wurden angefragt.
-        </v-alert>
-      </div>
+      <index-tracking-details-alert-component/>
       <v-card-title
         >Details für Indexfall ID: {{ indexData.extID }}</v-card-title
       >
@@ -190,6 +179,7 @@
   </div>
 </template>
 <style></style>
+
 <script lang="ts">
 import {
   Address,
@@ -206,6 +196,7 @@ import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import dayjs from "@/utils/date";
 import ContactCategories from "@/constants/ContactCategories";
+import IndexTrackingDetailsAlertComponent from "@/views/index-tracking-details/components/index-tracking-details-alert.component.vue";
 
 type IndexData = {
   extID: string;
@@ -271,6 +262,7 @@ function getFormattedAddress(address?: Address | null): string {
 @Component({
   components: {
     IndexTrackingDetailsView: IndexTrackingDetailsView,
+    IndexTrackingDetailsAlertComponent
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
@@ -285,7 +277,6 @@ function getFormattedAddress(address?: Address | null): string {
   },
 })
 export default class IndexTrackingDetailsView extends Vue {
-  alert = false;
 
   tableDataContacts = {
     search: "",
@@ -464,19 +455,6 @@ export default class IndexTrackingDetailsView extends Vue {
         additionalInformation: event.additionalInformation || "-",
       };
     });
-  }
-
-  created() {
-    if(this.$route.params.is_created == 'true') {
-      this.openAlert();
-    }
-  }
-
-  openAlert(): void {    
-    this.alert = true;
-    setTimeout(()=>{
-      this.alert = false;
-    }, 2000);
   }
 
   currentTab = 0;
