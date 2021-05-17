@@ -18,8 +18,10 @@ public class DataSubmissionRPCImpl implements DataSubmissionRPC {
   private final EventDataRequestService requestService;
   private final EventDataSubmissionService dataSubmissionService;
 
-  public String submitGuestList(UUID requestId, GuestList guestList) {
+  public String submitGuestList(JsonRpcClientDto client, UUID requestId, GuestList guestList) {
     log.trace("Start submission {}", requestId);
+
+    // Todo check client.getName() vs. providerId
 
     return requestService.findById(requestId).map(dataRequest -> {
 
