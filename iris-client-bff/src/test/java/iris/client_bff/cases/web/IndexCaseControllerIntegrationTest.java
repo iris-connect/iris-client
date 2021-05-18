@@ -1,14 +1,14 @@
 package iris.client_bff.cases.web;
 
-import static iris.client_bff.cases.web.IndexCaseMapper.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static iris.client_bff.cases.web.IndexCaseMapper.map;
+import static iris.client_bff.cases.web.IndexCaseMapper.mapDetailed;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.RestResponsePage;
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.IndexCaseService;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
@@ -20,21 +20,26 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
 class IndexCaseControllerIntegrationTest {
 
   private final String baseUrl = "/data-requests-client/cases";
 
-  private final TypeReference<List<IndexCaseDTO>> LIST_TYPE = new TypeReference<>() {
+  TypeReference<RestResponsePage<IndexCaseDTO>> PAGE_TYPE = new TypeReference<>() {
   };
 
   @Autowired
@@ -51,11 +56,12 @@ class IndexCaseControllerIntegrationTest {
   private final UUID MOCK_CASE_ID = UUID.fromString(MOCK_CASE.getId().toString());
   private final IndexCaseDTO MOCK_CASE_DTO = map(MOCK_CASE);
   private final IndexCaseDetailsDTO MOCK_CASE_DETAILED_DTO = mapDetailed(MOCK_CASE);
+  private final RestResponsePage<CaseDataRequest> casesPage = new RestResponsePage<>(List.of(MOCK_CASE));
 
   @BeforeEach
   void setUp() {
-    when(service.findAll())
-        .thenReturn(List.of(MOCK_CASE));
+    when(service.findAll(any(Pageable.class)))
+        .thenReturn(casesPage);
 
     when(service.findDetailed(MOCK_CASE_ID))
         .thenReturn(Optional.of(MOCK_CASE));
@@ -86,8 +92,8 @@ class IndexCaseControllerIntegrationTest {
         .andExpect(status().isOk())
         .andReturn();
 
-    var allCases = om.readValue(res.getResponse().getContentAsString(), LIST_TYPE);
-    assertEquals(List.of(MOCK_CASE_DTO), allCases);
+    var allCases = om.readValue(res.getResponse().getContentAsString(), PAGE_TYPE);
+    assertEquals(List.of(MOCK_CASE_DTO), allCases.getContent());
   }
 
   @Test
