@@ -35,9 +35,10 @@
         <v-text-field
           v-model="tableData.search"
           append-icon="mdi-magnify"
-          label="Search"
+          label="Suche (min. 2 Buchstaben)"
           single-line
           hide-details
+          @keyup="triggerSearch"
         ></v-text-field>
         <v-data-table
           :loading="indexListLoading"
@@ -79,6 +80,7 @@ import IndexTrackingFormView from "../index-tracking-form/index-tracking-form.vi
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
 import _omit from "lodash/omit";
+import { debounce } from "lodash";
 
 function getFormattedDate(date?: string): string {
   return date
@@ -114,6 +116,15 @@ export default class IndexTrackingListView extends Vue {
     All: null,
   };
   statusButtonSelected = Object.keys(this.selectableStatus).length - 1;
+
+  runSearch = debounce(async () => {
+    let search = store.state.indexTrackingList.tableData.search;
+    if ((search && search.length > 1 && search.trim()) || search === '') {
+      // If search is changed, page should be reset
+      store.state.indexTrackingList.tableData.page = 1;
+      await store.dispatch("indexTrackingList/fetchIndexTrackingList", store.state.indexTrackingList.tableData);
+    }
+  }, 1000);
 
   async filterStatus(target: DataRequestStatus | null) {
     this.statusFilter = target;
@@ -169,6 +180,10 @@ export default class IndexTrackingListView extends Vue {
     store.state.indexTrackingList.tableData.sortBy = pagination.sortBy;
     store.state.indexTrackingList.tableData.sortOrder = pagination.sortDesc;
     await store.dispatch("indexTrackingList/fetchIndexTrackingList", store.state.indexTrackingList.tableData);
+  }
+
+  async triggerSearch() {
+    await this.runSearch();
   }
 
   getStatusColor(status: DataRequestStatus): string {

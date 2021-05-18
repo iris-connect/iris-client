@@ -101,6 +101,7 @@ export type IndexDataQuery = {
   page: number,
   sort?: string,
   status?: string
+  search?: string
 }
 
 function generateQuery(page: any) {
@@ -120,6 +121,8 @@ function generateQuery(page: any) {
   if (query.sort && page.sortOrder && page.sortOrder.length > 0) page.sortOrder[0] ? query.sort = query.sort + ',desc' : query.sort = query.sort + ',asc'
 
   if (page.statusFilter) query.status = page.statusFilter;
+
+  if(page.search && page.search !== '') query.search = page.search;
 
   return { query: query };
 }
