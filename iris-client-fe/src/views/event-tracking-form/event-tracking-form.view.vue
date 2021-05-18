@@ -269,9 +269,9 @@ export default class EventTrackingFormView extends Vue {
       router.push({
         name: `event-details`,
         params: {
-          id: created.code || ""
+          id: created.code || "",
         },
-        query: {is_created: 'true'}
+        query: { is_created: "true" },
       });
     }
   }

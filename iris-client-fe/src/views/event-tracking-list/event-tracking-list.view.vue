@@ -44,7 +44,7 @@
           :search="tableData.search"
         >
           <template v-slot:[itemAddressSlotName]="{ item }">
-            <span class="text-pre-wrap"> {{item.address}} </span>
+            <span class="text-pre-wrap"> {{ item.address }} </span>
           </template>
           <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
@@ -55,7 +55,11 @@
             <!-- TODO use imported route name -->
             <v-btn
               color="primary"
-              :to="{ name: 'event-details', params: { id: item.code }, query: {is_created: 'false'} }"
+              :to="{
+                name: 'event-details',
+                params: { id: item.code },
+                query: { is_created: 'false' },
+              }"
             >
               Details
             </v-btn>
@@ -84,14 +88,16 @@ function getFormattedAddress(
 ): string {
   if (data) {
     if (data.locationInformation) {
-      
       const contact = data.locationInformation.contact;
       if (contact) {
-        let name = `${data.locationInformation.name}`;        
-        if(contact.officialName) {
+        let name = `${data.locationInformation.name}`;
+        if (contact.officialName) {
           name = name + `\n(${contact.officialName})`;
         }
-        return name + `\n${contact.address.street} \n${contact.address.zip} ${contact.address.city}`;
+        return (
+          name +
+          `\n${contact.address.street} \n${contact.address.zip} ${contact.address.city}`
+        );
       }
 
       return data.locationInformation.name;

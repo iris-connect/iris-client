@@ -1,6 +1,10 @@
 <template>
   <v-card>
-    <alert-component />
+    <alert-component v-bind:is_created="this.$route.query.is_created">
+      <template v-slot:message>
+        Die Kontaktdaten zu diesem Ereignis wurden angefragt.
+      </template>
+    </alert-component>
     <v-card-title>
       <editable-field
         :value="formData.externalRequestId"
@@ -215,7 +219,7 @@ const EventTrackingDetailsComponentProps = Vue.extend({
     EventTrackingDetailsLocationInfo,
     EventTrackingStatusChange,
     EditableField,
-    AlertComponent
+    AlertComponent,
   },
 })
 export default class EventTrackingDetailsComponent extends EventTrackingDetailsComponentProps {

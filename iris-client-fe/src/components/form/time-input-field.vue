@@ -64,17 +64,17 @@ export default class TimeInputField extends TimeInputFieldProps {
   }
 
   set model(value: string) {
-    if(this.isTimeFormat(value)) { 
+    if (this.isTimeFormat(value)) {
       this.$emit("input", value);
     }
 
-    if(value == "") {
+    if (value == "") {
       this.$emit("input", value);
     }
   }
 
   isTimeFormat(value: string): boolean {
-    if(typeof value === "string" && /^\d{2}:\d{2}$/.test(value)) {
+    if (typeof value === "string" && /^\d{2}:\d{2}$/.test(value)) {
       return true;
     } else {
       return false;

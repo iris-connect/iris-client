@@ -75,7 +75,11 @@ const home: HomeModule = {
       }
     },
     async fetchStatistics({ commit }) {
-      let statistics: Statistics | null = { eventsCount: 0, indexCasesCount: 0, sumStatus: 0 };
+      let statistics: Statistics | null = {
+        eventsCount: 0,
+        indexCasesCount: 0,
+        sumStatus: 0,
+      };
       try {
         statistics = (await authClient.getWeeklyData()).data;
       } catch (e) {
@@ -83,7 +87,7 @@ const home: HomeModule = {
       } finally {
         commit("setStatistics", statistics);
       }
-    }
+    },
   },
 };
 

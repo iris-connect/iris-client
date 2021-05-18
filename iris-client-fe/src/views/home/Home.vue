@@ -98,7 +98,8 @@ import EventList from "@/components/event-list.vue";
 import store from "@/store";
 import {
   DataRequestStatus,
-  ExistingDataRequestClientWithLocation, Statistics,
+  ExistingDataRequestClientWithLocation,
+  Statistics,
 } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
 import { ErrorMessage } from "@/utils/axios";
@@ -152,7 +153,7 @@ function getFormattedDate(date?: string): string {
   async beforeRouteEnter(_from, _to, next) {
     next();
     await store.dispatch("home/fetchEventTrackingList");
-    await store.dispatch("home/fetchStatistics")
+    await store.dispatch("home/fetchStatistics");
   },
   beforeRouteLeave(to, from, next) {
     store.commit("home/reset");

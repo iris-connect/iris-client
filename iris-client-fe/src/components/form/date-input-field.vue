@@ -58,24 +58,24 @@ const DateInputFieldProps = Vue.extend({
 export default class DateInputField extends DateInputFieldProps {
   active = false;
 
-  formatDate(date: string) {
-    if (!date) return date
+  formatDate(date: string): string {
+    if (!date) return date;
 
-    return dayjs(date).format('DD.MM.YYYY');
+    return dayjs(date).format("DD.MM.YYYY");
   }
 
-  parseDate (date: string) {
-    if (!date) return null
-    
-    const [day, month, year] = date.split('.');
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+  parseDate(date: string): string | null {
+    if (!date) return null;
+
+    const [day, month, year] = date.split(".");
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   }
 
-  get dateFormatted(): string {   
-    if(this.isGermanFormat(this.value)) {
+  get dateFormatted(): string {
+    if (this.isGermanFormat(this.value)) {
       return this.value;
     } else {
-      if(this.isValidDate(this.value)) {
+      if (this.isValidDate(this.value)) {
         return this.formatDate(this.value);
       }
     }
@@ -83,12 +83,12 @@ export default class DateInputField extends DateInputFieldProps {
   }
 
   set dateFormatted(value: string) {
-    if(this.isGermanFormat(value)) {
+    if (this.isGermanFormat(value)) {
       this.$emit("input", this.parseDate(value));
     }
   }
-  
-  get model(): string {  
+
+  get model(): string {
     return this.value;
   }
 
@@ -97,7 +97,7 @@ export default class DateInputField extends DateInputFieldProps {
   }
 
   isGermanFormat(value: string): boolean {
-    if(typeof value === "string" && /^\d{2}.\d{2}.\d{4}$/.test(value)) {
+    if (typeof value === "string" && /^\d{2}.\d{2}.\d{4}$/.test(value)) {
       return true;
     } else {
       return false;
@@ -105,7 +105,7 @@ export default class DateInputField extends DateInputFieldProps {
   }
 
   isValidDate(value: string): boolean {
-    if(typeof value === "string" && dayjs(value).isValid) {
+    if (typeof value === "string" && dayjs(value).isValid) {
       return true;
     } else {
       return false;

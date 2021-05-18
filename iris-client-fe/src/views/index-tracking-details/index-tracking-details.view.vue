@@ -1,7 +1,11 @@
 <template>
   <div>
     <v-card>
-      <alert-component/>
+      <alert-component v-bind:is_created="this.$route.query.is_created">
+        <template v-slot:message>
+          Die Kontaktdaten zu diesem Indexfall wurden angefragt.
+        </template>
+      </alert-component>
       <v-card-title
         >Details für Indexfall ID: {{ indexData.extID }}</v-card-title
       >
@@ -262,7 +266,7 @@ function getFormattedAddress(address?: Address | null): string {
 @Component({
   components: {
     IndexTrackingDetailsView: IndexTrackingDetailsView,
-    AlertComponent
+    AlertComponent,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
@@ -277,7 +281,6 @@ function getFormattedAddress(address?: Address | null): string {
   },
 })
 export default class IndexTrackingDetailsView extends Vue {
-
   tableDataContacts = {
     search: "",
     expanded: [],

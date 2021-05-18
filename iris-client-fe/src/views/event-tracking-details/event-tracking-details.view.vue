@@ -108,7 +108,6 @@ function getFormattedAddress(address?: Address | null): string {
   },
 })
 export default class EventTrackingDetailsView extends Vue {
-
   get eventTrackingDetails(): DataRequestDetails | null {
     return store.state.eventTrackingDetails.eventTrackingDetails;
   }
@@ -135,7 +134,7 @@ export default class EventTrackingDetailsView extends Vue {
         dataRequest?.submissionData?.additionalInformation || "-",
     };
   }
-  
+
   get loading(): boolean {
     return store.state.eventTrackingDetails.eventTrackingDetailsLoading;
   }
