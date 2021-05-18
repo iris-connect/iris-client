@@ -37,6 +37,14 @@ public class IndexCaseService {
 		return repository.findByStatus(status, pageable);
 	}
 
+	public Page<CaseDataRequest> findByStatusAndSearchByRefIdOrName(Status status, String search, Pageable pageable) {
+		return repository.findByStatusAndSearchByRefIdOrName(status, search, pageable);
+	}
+
+	public Page<CaseDataRequest> searchByRefIdOrName(String search, Pageable pageable) {
+		return repository.findByRefIdContainsOrNameContainsAllIgnoreCase(search, search, pageable);
+	}
+
 	public Optional<CaseDataRequest> findDetailed(UUID uuid) {
 		var id = DataRequestIdentifier.of(uuid);
 		return repository.findById(id);
