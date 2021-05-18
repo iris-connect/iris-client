@@ -147,11 +147,6 @@ export default class IndexTrackingListView extends Vue {
     //console.log(dataRequests);
     return (
       dataRequests
-        // TODO this filtering could probably also be done in vuetify data-table
-        .filter(
-          (dataRequests) =>
-            !this.statusFilter || this.statusFilter === dataRequests.status
-        )
         .map((dataRequest) => {
           return {
             endTime: getFormattedDate(dataRequest.end),
