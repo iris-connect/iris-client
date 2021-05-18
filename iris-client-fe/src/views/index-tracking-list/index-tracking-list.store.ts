@@ -96,6 +96,13 @@ const indexTrackingList: IndexTrackingListModule = {
   },
 };
 
+export type IndexDataQuery = {
+  size: number,
+  page: number,
+  sort?: string,
+  status?: string
+}
+
 function generateQuery(page: any) {
   const sortAttributes : { [key: string]: string; } = {
     extID: 'refId',
@@ -104,15 +111,15 @@ function generateQuery(page: any) {
     endTime: 'requestEnd',
     status: 'status'
   }
-  const query : any = {
+  const query : IndexDataQuery = {
     size: page.itemsPerPage,
     page: page.page - 1,
-    sort: (page.sortBy && page.sortBy.length > 0) ? sortAttributes[page.sortBy[0]] : null
   };
 
-  // TODO: Check if necessary to do it this way, because setting non-existing attribute is marked as error
-  if (!query.sort) delete query.sort;
-  else if (page.sortOrder && page.sortOrder.length > 0) page.sortOrder[0] ? query.sort = query.sort + ',desc' : query.sort = query.sort + ',asc'
+  if ((page.sortBy && page.sortBy.length > 0)) query.sort = sortAttributes[page.sortBy[0]];
+  if (query.sort && page.sortOrder && page.sortOrder.length > 0) page.sortOrder[0] ? query.sort = query.sort + ',desc' : query.sort = query.sort + ',asc'
+
+  if (page.statusFilter) query.status = page.statusFilter;
 
   return { query: query };
 }

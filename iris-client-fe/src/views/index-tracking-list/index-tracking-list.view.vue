@@ -114,8 +114,13 @@ export default class IndexTrackingListView extends Vue {
     All: null,
   };
   statusButtonSelected = Object.keys(this.selectableStatus).length - 1;
-  filterStatus(target: DataRequestStatus | null): void {
+
+  async filterStatus(target: DataRequestStatus | null) {
     this.statusFilter = target;
+    store.state.indexTrackingList.tableData.statusFilter = target;
+    // If filter is changed, page should be reset
+    store.state.indexTrackingList.tableData.page = 1;
+    await store.dispatch("indexTrackingList/fetchIndexTrackingList", store.state.indexTrackingList.tableData);
   }
 
   get tableData() {
