@@ -71,7 +71,7 @@ export default class DateTimeInputField extends DateTimeInputFieldProps {
       (v: unknown): string | boolean =>
         !v ||
         (typeof v === "string" && /^\d{2}.\d{2}.\d{4}$/.test(v)) ||
-        "Bitte geben Sie ein Datum im Format DD.MM.YYYY an",
+        "Bitte geben Sie ein Datum im Format DD.MM.YYYY ein",
     ].filter((v) => v),
     time: [
       this.required

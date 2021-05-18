@@ -16,18 +16,18 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
-const EventTrackingDetailsAlertComponentProps = Vue.extend({
+const AlertComponentProps = Vue.extend({
   props: {
   }
 });
 
 @Component
-export default class EventTrackingDetailsAlertComponent extends EventTrackingDetailsAlertComponentProps {
+export default class AlertComponent extends AlertComponentProps {
   
   alert = false;
 
   created() {
-    if(this.$route.query.is_created == 'true') {
+    if(this.$route.query.is_created == 'false') {
       this.openAlert();
     }
   }

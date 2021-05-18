@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <event-tracking-details-alert-component />
+    <alert-component />
     <v-card-title>
       <editable-field
         :value="formData.externalRequestId"
@@ -182,7 +182,7 @@ import { DataRequestStatus, DataRequestStatusUpdateByUser } from "@/api";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import { ErrorMessage } from "@/utils/axios";
-import EventTrackingDetailsAlertComponent from "@/views/event-tracking-details/components/event-tracking-details-alert.component.vue";
+import AlertComponent from "@/components/alerts/alert.component.vue";
 
 const EventTrackingDetailsComponentProps = Vue.extend({
   props: {
@@ -215,7 +215,7 @@ const EventTrackingDetailsComponentProps = Vue.extend({
     EventTrackingDetailsLocationInfo,
     EventTrackingStatusChange,
     EditableField,
-    EventTrackingDetailsAlertComponent
+    AlertComponent
   },
 })
 export default class EventTrackingDetailsComponent extends EventTrackingDetailsComponentProps {

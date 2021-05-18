@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card>
-      <index-tracking-details-alert-component/>
+      <alert-component/>
       <v-card-title
         >Details für Indexfall ID: {{ indexData.extID }}</v-card-title
       >
@@ -196,7 +196,7 @@ import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import dayjs from "@/utils/date";
 import ContactCategories from "@/constants/ContactCategories";
-import IndexTrackingDetailsAlertComponent from "@/views/index-tracking-details/components/index-tracking-details-alert.component.vue";
+import AlertComponent from "@/components/alerts/alert.component.vue";
 
 type IndexData = {
   extID: string;
@@ -262,7 +262,7 @@ function getFormattedAddress(address?: Address | null): string {
 @Component({
   components: {
     IndexTrackingDetailsView: IndexTrackingDetailsView,
-    IndexTrackingDetailsAlertComponent
+    AlertComponent
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
