@@ -159,7 +159,9 @@ export const generateQuery = function (page: any) {
     name: 'name',
     startTime: 'requestStart',
     endTime: 'requestEnd',
-    status: 'status'
+    status: 'status',
+    lastChange: 'metadata.lastModified',
+    generatedTime: 'metadata.created'
   }
   const query: DataQuery = {
     size: page.itemsPerPage,
