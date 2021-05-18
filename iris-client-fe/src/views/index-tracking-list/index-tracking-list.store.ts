@@ -3,6 +3,7 @@ import client from "@/api-client";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
+import {generateQuery} from "@/api/common";
 
 export type IndexTrackingListState = {
   indexTrackingList: Array<DataRequestCaseDetails> | null;
@@ -95,36 +96,5 @@ const indexTrackingList: IndexTrackingListModule = {
     },
   },
 };
-
-export type IndexDataQuery = {
-  size: number,
-  page: number,
-  sort?: string,
-  status?: string
-  search?: string
-}
-
-function generateQuery(page: any) {
-  const sortAttributes : { [key: string]: string; } = {
-    extID: 'refId',
-    name: 'name',
-    startTime: 'requestStart',
-    endTime: 'requestEnd',
-    status: 'status'
-  }
-  const query : IndexDataQuery = {
-    size: page.itemsPerPage,
-    page: page.page - 1,
-  };
-
-  if ((page.sortBy && page.sortBy.length > 0)) query.sort = sortAttributes[page.sortBy[0]];
-  if (query.sort && page.sortOrder && page.sortOrder.length > 0) page.sortOrder[0] ? query.sort = query.sort + ',desc' : query.sort = query.sort + ',asc'
-
-  if (page.statusFilter) query.status = page.statusFilter;
-
-  if(page.search && page.search !== '') query.search = page.search;
-
-  return { query: query };
-}
 
 export default indexTrackingList;
