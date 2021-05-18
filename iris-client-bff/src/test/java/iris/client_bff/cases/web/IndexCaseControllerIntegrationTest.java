@@ -1,38 +1,44 @@
 package iris.client_bff.cases.web;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static iris.client_bff.cases.web.IndexCaseMapper.map;
+import static iris.client_bff.cases.web.IndexCaseMapper.mapDetailed;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
 import iris.client_bff.cases.CaseDataRequest;
+import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.IndexCaseService;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static iris.client_bff.cases.web.IndexCaseMapper.map;
-import static iris.client_bff.cases.web.IndexCaseMapper.mapDetailed;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class IndexCaseControllerIntegrationTest {
 
   private final String baseUrl = "/data-requests-client/cases";
@@ -54,12 +60,21 @@ class IndexCaseControllerIntegrationTest {
   private final UUID MOCK_CASE_ID = UUID.fromString(MOCK_CASE.getId().toString());
   private final IndexCaseDTO MOCK_CASE_DTO = map(MOCK_CASE);
   private final IndexCaseDetailsDTO MOCK_CASE_DETAILED_DTO = mapDetailed(MOCK_CASE);
-  private final RestResponsePage<CaseDataRequest> casesPage = new RestResponsePage<>(List.of(MOCK_CASE));
+  private final Page<CaseDataRequest> casesPage = new RestResponsePage<>(List.of(MOCK_CASE));
 
   @BeforeEach
   void setUp() {
     when(service.findAll(any(Pageable.class)))
         .thenReturn(casesPage);
+
+    when(service.findByStatus(any(Status.class), any(Pageable.class)))
+            .thenReturn(casesPage);
+
+    when(service.searchByRefIdOrName(any(String.class), any(Pageable.class)))
+            .thenReturn(casesPage);
+
+    when(service.findByStatusAndSearchByRefIdOrName(any(Status.class), any(String.class), any(Pageable.class)))
+            .thenReturn(casesPage);
 
     when(service.findDetailed(MOCK_CASE_ID))
         .thenReturn(Optional.of(MOCK_CASE));
@@ -76,6 +91,7 @@ class IndexCaseControllerIntegrationTest {
   }
 
   @Test
+  @Order(1)
   void endpointShouldBeProtected() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))
         .andExpect(status().isForbidden())
@@ -84,12 +100,56 @@ class IndexCaseControllerIntegrationTest {
 
   @Test
   @WithMockUser()
+  @Order(2)
   void getAll() throws Exception {
 
     var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))
         .andExpect(status().isOk())
         .andReturn();
 
+    verify(service).findAll(any(Pageable.class));
+    var allCases = om.readValue(res.getResponse().getContentAsString(), PAGE_TYPE);
+    assertEquals(List.of(MOCK_CASE_DTO), allCases.getContent());
+  }
+
+  @Test
+  @WithMockUser()
+  @Order(3)
+  void getAllWithStatus() throws Exception {
+
+    var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?status=DATA_REQUESTED"))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    verify(service).findByStatus(eq(Status.DATA_REQUESTED), any(Pageable.class));
+    var allCases = om.readValue(res.getResponse().getContentAsString(), PAGE_TYPE);
+    assertEquals(List.of(MOCK_CASE_DTO), allCases.getContent());
+  }
+
+  @Test
+  @WithMockUser()
+  @Order(4)
+  void getAllFiltered() throws Exception {
+
+    var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test"))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    verify(service).searchByRefIdOrName(eq("test"), any(Pageable.class));
+    var allCases = om.readValue(res.getResponse().getContentAsString(), PAGE_TYPE);
+    assertEquals(List.of(MOCK_CASE_DTO), allCases.getContent());
+  }
+
+  @Test
+  @WithMockUser()
+  @Order(5)
+  void getAllWithStatusAndFiltered() throws Exception {
+
+    var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test&status=DATA_REQUESTED"))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    verify(service).findByStatusAndSearchByRefIdOrName(eq(Status.DATA_REQUESTED), eq("test"), any(Pageable.class));
     var allCases = om.readValue(res.getResponse().getContentAsString(), PAGE_TYPE);
     assertEquals(List.of(MOCK_CASE_DTO), allCases.getContent());
   }
