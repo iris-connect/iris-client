@@ -11,23 +11,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
-import java.util.Spliterator;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @AllArgsConstructor
 public class IndexCaseService {
 
 	CaseDataRequestRepository repository;
-
-	public List<CaseDataRequest> findAll() {
-		Spliterator<CaseDataRequest> all = repository.findAll().spliterator();
-		return StreamSupport.stream(all, false).collect(Collectors.toList());
-	}
 
 	public Page<CaseDataRequest> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
