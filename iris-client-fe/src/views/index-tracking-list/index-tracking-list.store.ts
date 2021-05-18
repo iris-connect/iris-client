@@ -24,7 +24,7 @@ export interface IndexTrackingListModule
     setTableData(
         state: IndexTrackingListState,
         tableData: any
-    ): void
+    ): void;
     reset(state: IndexTrackingListState, payload: null): void;
   };
   actions: {
