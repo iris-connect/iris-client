@@ -1,14 +1,7 @@
 package iris.client_bff.cases.web;
 
-import static iris.client_bff.cases.web.IndexCaseMapper.map;
-import static iris.client_bff.cases.web.IndexCaseMapper.mapDetailed;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
 import iris.client_bff.cases.CaseDataRequest;
@@ -18,12 +11,6 @@ import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -34,8 +21,19 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static iris.client_bff.cases.web.IndexCaseMapper.map;
+import static iris.client_bff.cases.web.IndexCaseMapper.mapDetailed;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IrisWebIntegrationTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
