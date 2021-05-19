@@ -14,6 +14,9 @@
  *******************************************************************************/
 package iris.client_bff;
 
+import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImplExporter;
+import iris.client_bff.events.eps.DataSubmissionRPCImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ResourceBanner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -64,4 +67,12 @@ public class IrisClientSormasSidecarApplication {
 			}
 		};
 	}
+
+	@Bean
+	public static AutoJsonRpcServiceImplExporter autoJsonRpcServiceImplExporter() {
+		return new AutoJsonRpcServiceImplExporter();
+	}
+
+	@Autowired
+	public DataSubmissionRPCImpl dataSubmissionRPCImpl;
 }
