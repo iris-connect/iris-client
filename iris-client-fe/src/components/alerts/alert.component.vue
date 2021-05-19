@@ -21,7 +21,7 @@ const AlertComponentProps = Vue.extend({
   props: {
     is_created: {
       type: String,
-      default: "true",
+      default: "false",
     },
   },
 });

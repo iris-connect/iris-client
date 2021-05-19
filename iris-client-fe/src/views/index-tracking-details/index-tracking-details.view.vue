@@ -1,11 +1,11 @@
 <template>
   <div>
+    <alert-component v-bind:is_created="this.$route.query.is_created">
+      <template v-slot:message>
+        Die Kontaktdaten zu diesem Indexfall wurden angefragt.
+      </template>
+    </alert-component>
     <v-card>
-      <alert-component v-bind:is_created="this.$route.query.is_created">
-        <template v-slot:message>
-          Die Kontaktdaten zu diesem Indexfall wurden angefragt.
-        </template>
-      </alert-component>
       <v-card-title
         >Details für Indexfall ID: {{ indexData.extID }}</v-card-title
       >
@@ -458,6 +458,12 @@ export default class IndexTrackingDetailsView extends Vue {
         additionalInformation: event.additionalInformation || "-",
       };
     });
+  }
+
+  mounted(): void {
+    let query = Object.assign({}, this.$route.query);
+    delete query.is_created;
+    this.$router.replace({ query });
   }
 
   currentTab = 0;

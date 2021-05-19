@@ -38,125 +38,128 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class EventDataRequestController {
 
-  private EventDataRequestService dataRequestService;
-  private EventDataSubmissionRepository submissionRepo;
+	private EventDataRequestService dataRequestService;
+	private EventDataSubmissionRepository submissionRepo;
 
-  private ModelMapper modelMapper;
+	private ModelMapper modelMapper;
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public ResponseEntity<DataRequestDetails> createDataRequest(@Valid @RequestBody DataRequestClient request) {
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<DataRequestDetails> createDataRequest(@Valid @RequestBody DataRequestClient request) {
 
-	var result = dataRequestService.createLocationRequest(
-		request.getExternalRequestId(),
-		request.getName(),
-		request.getStart(),
-		request.getEnd(),
-		Option.of(request.getComment()),
-		Option.of(request.getRequestDetails()),
-		request.getLocationId(),
-		request.getProviderId());
+		var result = dataRequestService.createLocationRequest(
+			request.getExternalRequestId(),
+			request.getName(),
+			request.getStart(),
+			request.getEnd(),
+			Option.of(request.getComment()),
+			Option.of(request.getRequestDetails()),
+			request.getLocationId(),
+			request.getProviderId());
 
-	return ResponseEntity.ok(map(result));
-  }
-
-  @GetMapping
-  @ResponseStatus(HttpStatus.OK)
-  public ResponseEntity<ExistingDataRequestClientWithLocationList> getDataRequests() {
-	var response = dataRequestService.getAll().stream().map(request -> {
-	  var mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
-	  mapped.setCode(request.getId().toString());
-	  mapped.setStart(request.getRequestStart());
-	  mapped.setEnd(request.getRequestEnd());
-	  mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
-	  mapped.setLastUpdatedAt(request.getLastModifiedAt());
-	  mapped.setRequestedAt(request.getCreatedAt());
-	  mapped.setExternalRequestId(request.getRefId());
-	  return mapped;
-	})
-		.collect(Collectors.toList());
-	var res = ExistingDataRequestClientWithLocationList.builder().dataRequests(response).build();
-	return ResponseEntity.of(Optional.of(res));
-  }
-
-  @GetMapping("/{code}")
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable String code) {
-	var dataRequest = dataRequestService.findById(code);
-	if (dataRequest.isPresent()) {
-
-	  var requestDetails = map(dataRequest.get());
-
-	  addSubmissionsToRequest(dataRequest.get(), requestDetails);
-
-	  return ResponseEntity.of(Optional.of(requestDetails));
-	} else {
-	  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return ResponseEntity.ok(mapDataRequestDetails(result));
 	}
-  }
 
-  @PatchMapping("/{code}")
-  @ResponseStatus(HttpStatus.OK)
-  public ResponseEntity<DataRequestDetails> update(@PathVariable String code, @RequestBody EventUpdateDTO patch) {
-
-	var dataRequest = dataRequestService.findById(code);
-	if (dataRequest.isPresent()) {
-	  var updated = dataRequestService.update(dataRequest.get(), patch);
-	  var requestDetails = map(updated);
-
-	  addSubmissionsToRequest(dataRequest.get(), requestDetails);
-
-	  return ResponseEntity.of(Optional.of(requestDetails));
-	} else {
-	  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<ExistingDataRequestClientWithLocationList> getDataRequests() {
+		var response = dataRequestService.getAll().stream().map(request -> {
+			return mapExistingDataRequestClientWithLocation(request);
+		}).collect(Collectors.toList());
+		var res = ExistingDataRequestClientWithLocationList.builder().dataRequests(response).build();
+		return ResponseEntity.of(Optional.of(res));
 	}
-  }
 
-  private DataRequestDetails map(EventDataRequest request) {
-	var mapped = modelMapper.map(request, DataRequestDetails.class);
-	mapped.setCode(request.getId().toString());
-	mapped.setStart(request.getRequestStart());
-	mapped.setEnd(request.getRequestEnd());
-	mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
-	mapped.setLastModifiedAt(request.getLastModifiedAt());
-	mapped.setRequestedAt(request.getCreatedAt());
-	mapped.setExternalRequestId(request.getRefId());
-	return mapped;
-  }
+	@GetMapping("/{code}")
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable String code) {
+		var dataRequest = dataRequestService.findById(code);
+		if (dataRequest.isPresent()) {
 
-  /**
-   * @param request
-   * @param requestDetails
-   */
-  private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
+			DataRequestDetails requestDetails = mapDataRequestDetails(dataRequest.get());
 
-	submissionRepo.findAllByRequest(request)
-		.get()
-		.findFirst()
-		.ifPresent(it -> addSubmissionToRequest(requestDetails, it));
-  }
+			addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
-  /**
-   * @param requestDetails
-   * @param submission
-   * @return
-   */
-  private void addSubmissionToRequest(DataRequestDetails requestDetails, EventDataSubmission submission) {
+			return ResponseEntity.of(Optional.of(requestDetails));
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 
-	var dataProvider = modelMapper.map(submission.getDataProvider(), GuestListDataProvider.class);
+	@PatchMapping("/{code}")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<DataRequestDetails> update(@PathVariable String code, @RequestBody EventUpdateDTO patch) {
 
-	var guests = submission.getGuests().stream()
-		.map(it -> modelMapper.map(it, Guest.class))
-		.collect(Collectors.toList());
+		var dataRequest = dataRequestService.findById(code);
+		if (dataRequest.isPresent()) {
+			var updated = dataRequestService.update(dataRequest.get(), patch);
+			DataRequestDetails requestDetails = mapDataRequestDetails(updated);
 
-	var guestList = GuestList.builder()
-		.additionalInformation(submission.getAdditionalInformation())
-		.startDate(submission.getStartDate())
-		.endDate(submission.getEndDate())
-		.dataProvider(dataProvider)
-		.guests(guests)
-		.build();
+			addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
-	requestDetails.setSubmissionData(guestList);
-  }
+			return ResponseEntity.of(Optional.of(requestDetails));
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	private DataRequestDetails mapDataRequestDetails(EventDataRequest request) {
+		DataRequestDetails mapped = modelMapper.map(request, DataRequestDetails.class);
+		mapped.setCode(request.getId().toString());
+		mapped.setStart(request.getRequestStart());
+		mapped.setEnd(request.getRequestEnd());
+		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
+		mapped.setLastModifiedAt(request.getLastModifiedAt());
+		mapped.setRequestedAt(request.getCreatedAt());
+		mapped.setExternalRequestId(request.getRefId());
+		mapped.setRequestDetails(request.getRequestDetails());
+		mapped.setComment(request.getComment());
+		mapped.setName(request.getName());
+		return mapped;
+	}
+
+	private ExistingDataRequestClientWithLocation mapExistingDataRequestClientWithLocation(EventDataRequest request) {
+		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
+		mapped.setCode(request.getId().toString());
+		mapped.setStart(request.getRequestStart());
+		mapped.setEnd(request.getRequestEnd());
+		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
+		mapped.setLastUpdatedAt(request.getLastModifiedAt());
+		mapped.setRequestedAt(request.getCreatedAt());
+		mapped.setExternalRequestId(request.getRefId());
+		mapped.setRequestDetails(request.getRequestDetails());
+		mapped.setName(request.getName());
+		return mapped;
+	}
+
+	/**
+	 * @param request
+	 * @param requestDetails
+	 */
+	private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
+
+		submissionRepo.findAllByRequest(request).get().findFirst().ifPresent(it -> addSubmissionToRequest(requestDetails, it));
+	}
+
+	/**
+	 * @param requestDetails
+	 * @param submission
+	 * @return
+	 */
+	private void addSubmissionToRequest(DataRequestDetails requestDetails, EventDataSubmission submission) {
+
+		var dataProvider = modelMapper.map(submission.getDataProvider(), GuestListDataProvider.class);
+
+		var guests = submission.getGuests().stream().map(it -> modelMapper.map(it, Guest.class)).collect(Collectors.toList());
+
+		var guestList = GuestList.builder()
+			.additionalInformation(submission.getAdditionalInformation())
+			.startDate(submission.getStartDate())
+			.endDate(submission.getEndDate())
+			.dataProvider(dataProvider)
+			.guests(guests)
+			.build();
+
+		requestDetails.setSubmissionData(guestList);
+	}
 }
