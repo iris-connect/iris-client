@@ -1,6 +1,7 @@
 package iris.client_bff.search_client.web;
 
 import iris.client_bff.search_client.SearchClient;
+import iris.client_bff.search_client.exceptions.IRISSearchException;
 import iris.client_bff.search_client.web.dto.LocationList;
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +27,11 @@ public class LocationSearchController {
 	public ResponseEntity<LocationList> searchSearchKeywordGet(
 			@Size(min = 4) @PathVariable("search_keyword") String searchKeyword) {
 
-		return new ResponseEntity<>(searchClient.search(searchKeyword), HttpStatus.OK);
+		try {
+			return new ResponseEntity<>(searchClient.search(searchKeyword), HttpStatus.OK);
+		} catch (IRISSearchException e) {
+			// TODO handle
+			throw new RuntimeException(e);
+		}
 	}
 }
