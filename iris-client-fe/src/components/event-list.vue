@@ -8,6 +8,7 @@
         :headers="tableData.headers"
         :items="tableRowData"
         :items-per-page="10"
+        :hide-default-footer="true"
         class="elevation-1 mt-5"
       >
         <template v-slot:[itemActionSlotName]="{ item }">
