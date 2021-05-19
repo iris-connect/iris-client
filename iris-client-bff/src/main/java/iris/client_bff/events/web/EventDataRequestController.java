@@ -63,13 +63,16 @@ public class EventDataRequestController {
 	public Page<ExistingDataRequestClientWithLocation> getDataRequests(
 			@RequestParam(required = false) Status status,
 			@RequestParam(required = false) String search, Pageable pageable) {
-		if (status != null && search != null)
+		if (status != null && search != null) {
 			return dataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable)
 					.map(request -> mapRequest(request));
-		else if (search != null)
+		}
+		else if (search != null) {
 			return dataRequestService.searchByRefIdOrName(search, pageable).map(request -> mapRequest(request));
-		else if (status != null)
+		}
+		else if (status != null) {
 			return dataRequestService.findByStatus(status, pageable).map(request -> mapRequest(request));
+		}
 		return dataRequestService.findAll(pageable).map(request -> mapRequest(request));
 	}
 

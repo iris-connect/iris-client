@@ -29,12 +29,15 @@ public class IndexCaseController {
 	@ResponseStatus(OK)
 	public Page<IndexCaseDTO> getAll(@RequestParam(required = false) Status status,
 			@RequestParam(required = false) String search, Pageable pageable) {
-		if (status != null && search != null)
+		if (status != null && search != null) {
 			return indexCaseService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(IndexCaseMapper::map);
-		else if (search != null)
+		}
+		else if (search != null) {
 			return indexCaseService.searchByRefIdOrName(search, pageable).map(IndexCaseMapper::map);
-		else if (status != null)
+		}
+		else if (status != null) {
 			return indexCaseService.findByStatus(status, pageable).map(IndexCaseMapper::map);
+		}
 		return indexCaseService.findAll(pageable).map(IndexCaseMapper::map);
 	}
 
