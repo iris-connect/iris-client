@@ -1,6 +1,6 @@
 <template>
   <div>
-    <alert-component v-bind:is_created="this.$route.query.is_created">
+    <alert-component v-if="alert">
       <template v-slot:message>
         Die Kontaktdaten zu diesem Ereignis wurden angefragt.
       </template>
@@ -117,6 +117,8 @@ function getFormattedAddress(address?: Address | null): string {
   },
 })
 export default class EventTrackingDetailsView extends Vue {
+  alert = false;
+
   get eventTrackingDetails(): DataRequestDetails | null {
     return store.state.eventTrackingDetails.eventTrackingDetails;
   }
@@ -153,6 +155,19 @@ export default class EventTrackingDetailsView extends Vue {
       store.state.eventTrackingDetails.eventTrackingDetailsLoadingError,
       store.state.eventTrackingDetails.dataRequestPatchError,
     ];
+  }
+
+  created(): void {
+    if (this.$route.query.is_created == "true") {
+      this.openAlert();
+    }
+  }
+
+  openAlert(): void {
+    this.alert = true;
+    setTimeout(() => {
+      this.alert = false;
+    }, 2000);
   }
 
   mounted(): void {

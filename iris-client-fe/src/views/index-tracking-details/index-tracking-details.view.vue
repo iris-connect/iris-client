@@ -1,6 +1,6 @@
 <template>
   <div>
-    <alert-component v-bind:is_created="this.$route.query.is_created">
+    <alert-component v-if="alert">
       <template v-slot:message>
         Die Kontaktdaten zu diesem Indexfall wurden angefragt.
       </template>
@@ -281,6 +281,8 @@ function getFormattedAddress(address?: Address | null): string {
   },
 })
 export default class IndexTrackingDetailsView extends Vue {
+  alert = false;
+
   tableDataContacts = {
     search: "",
     expanded: [],
@@ -458,6 +460,19 @@ export default class IndexTrackingDetailsView extends Vue {
         additionalInformation: event.additionalInformation || "-",
       };
     });
+  }
+
+  created(): void {
+    if (this.$route.query.is_created == "true") {
+      this.openAlert();
+    }
+  }
+
+  openAlert(): void {
+    this.alert = true;
+    setTimeout(() => {
+      this.alert = false;
+    }, 2000);
   }
 
   mounted(): void {
