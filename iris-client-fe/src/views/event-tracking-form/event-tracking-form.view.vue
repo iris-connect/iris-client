@@ -88,6 +88,7 @@
         <v-row>
           <v-col>
             <v-textarea
+              v-model="form.model.requestDetails"
               name="requestComment"
               label="Anfragendetails für den Betrieb"
               auto-grow
@@ -142,6 +143,7 @@ type EventTrackingFormModel = {
   end: string;
   name: string;
   location: LocationInformation | null;
+  requestDetails: string;
 };
 
 type EventTrackingFormQueryParameters = Partial<
@@ -219,6 +221,7 @@ export default class EventTrackingFormView extends Vue {
       end: "",
       name: "",
       location: null,
+      requestDetails: "",
     },
     valid: false,
   };
@@ -261,6 +264,7 @@ export default class EventTrackingFormView extends Vue {
         locationId: location.id,
         providerId: location.providerId,
         externalRequestId: this.form.model.externalId,
+        requestDetails: this.form.model.requestDetails,
       };
       const created: DataRequestDetails = await store.dispatch(
         "eventTrackingForm/createEventTracking",
