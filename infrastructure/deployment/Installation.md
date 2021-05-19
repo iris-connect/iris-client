@@ -44,7 +44,7 @@ Desweiteren gibt es folgende infrastrukturelle Anhängigkeiten
 |-|-|
 | HTTPS Proxy | Proxy server für EPS. Unterstützung für [HTTP_CONNECT](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/CONNECT) notwendig.  |
 | Proxy Freischaltung - IRIS Central Services - Staging | Zugriff auf iris.staging.iris-gateway.de (ConnectPorts: 3322, 4445, 5559)  |
-| Proxy Freischaltung - IRIS App Provider - Staging (ConnectPorts: 4444) | Zugriff auf *.apps.staging.iris-gateway.de  |
+| Proxy Freischaltung - IRIS App Provider - Staging | Zugriff auf *.apps.staging.iris-gateway.de (ConnectPorts: 4444)  |
 | Proxy Freischaltung - IRIS Central Services - Live | - (TBD) |
 | Proxy Freischaltung - IRIS App Provider - Live | - (TBD) |
 
@@ -103,6 +103,10 @@ Bei dem IRIS Backend handelt es sich um eine Java Applikation (min Java 11).
 ## IRIS Client - Installation mit Docker Compose
 
 Für diese Installationsart wird der IRIS Client in einer [Docker](https://docker.io) Umgebung gestartet. Die notwendigen Images werden vom [INÖG Vereichnis im Dockerhub](https://hub.docker.com/u/inoeg) heruntergeladen. 
+
+Das folgende Schaubild visualisiert das Setup. 
+
+![IRIS Lokale Installation](iris-docker-installation.jpg)
 
 ### Installation Docker und Docker compose
 
