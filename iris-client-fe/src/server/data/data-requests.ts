@@ -1,26 +1,13 @@
 import {
   ExistingDataRequestClientWithLocationList,
-  ExistingDataRequestClientWithLocationStatusEnum,
   DataRequestDetails,
-  DataRequestDetailsStatusEnum,
   Sex,
   Guest,
   GuestList,
+  DataRequestStatus,
 } from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
-
-function daysAgo(days = 0, date = new Date().toISOString()) {
-  // could be that
-  const d = new Date(date);
-  d.setDate(d.getDate() - days);
-  return d.toISOString();
-}
-
-function hoursAgo(hours = 0, date = new Date().toISOString()) {
-  const d = new Date(date);
-  d.setHours(d.getHours() - hours);
-  return d.toISOString();
-}
+import { daysAgo, hoursAgo } from "@/server/utils/date";
 
 export const dummyDataRequests: ExistingDataRequestClientWithLocationList = {
   dataRequests: [
@@ -32,7 +19,7 @@ export const dummyDataRequests: ExistingDataRequestClientWithLocationList = {
       locationInformation: dummyLocations[0],
       name: "Fall 12638",
       requestDetails: "Bitte ignorieren Sie die...",
-      status: ExistingDataRequestClientWithLocationStatusEnum.DataRequested,
+      status: DataRequestStatus.DataRequested,
       lastUpdatedAt: hoursAgo(1),
       requestedAt: hoursAgo(2),
     },
@@ -44,7 +31,7 @@ export const dummyDataRequests: ExistingDataRequestClientWithLocationList = {
       locationInformation: dummyLocations[1],
       name: "Fall 63736",
       requestDetails: "Bitte beachten Sie, dass...",
-      status: ExistingDataRequestClientWithLocationStatusEnum.DataReceived,
+      status: DataRequestStatus.DataReceived,
       lastUpdatedAt: hoursAgo(4),
       requestedAt: hoursAgo(6),
     },
@@ -56,15 +43,27 @@ export const dummyDataRequests: ExistingDataRequestClientWithLocationList = {
       locationInformation: dummyLocations[2],
       name: "Fall 85938",
       requestDetails: "Tisch 7",
-      status: ExistingDataRequestClientWithLocationStatusEnum.Closed,
+      status: DataRequestStatus.Closed,
       lastUpdatedAt: hoursAgo(7),
       requestedAt: hoursAgo(9),
+    },
+    {
+      externalRequestId: "bowling-457",
+      start: hoursAgo(3),
+      end: hoursAgo(1),
+      code: "BOWL457",
+      locationInformation: dummyLocations[2],
+      name: "Fall 91247",
+      requestDetails: "Tisch 9",
+      status: DataRequestStatus.Aborted,
+      lastUpdatedAt: hoursAgo(1),
+      requestedAt: hoursAgo(4),
     },
   ],
 };
 
 export const dummyDataDetails: DataRequestDetails = {
-  status: DataRequestDetailsStatusEnum.DataRequested,
+  status: DataRequestStatus.Aborted,
   code: "ABCDE",
   name: "TestLokalität",
   externalRequestId: "12345",
@@ -121,18 +120,18 @@ export const dummyDataDetails: DataRequestDetails = {
     endDate: hoursAgo(3),
   },
   locationInformation: dummyLocations[1],
+  comment: "",
 };
 
 export const getDummyDetailsWithStatus = (id: string): DataRequestDetails => {
   const dataRequest = dummyDataRequests.dataRequests?.find(
-    (request) => request.externalRequestId === id
+    (request) => request.code === id
   );
   if (dataRequest) {
-    const status = (<unknown>(
-      dataRequest.status
-    )) as DataRequestDetailsStatusEnum;
+    const status = dataRequest.status;
     const guests: Guest[] =
-      status === DataRequestDetailsStatusEnum.DataRequested
+      status !== DataRequestStatus.DataRequested &&
+      status !== DataRequestStatus.Aborted
         ? dummyDataDetails?.submissionData?.guests ?? []
         : [];
     return {

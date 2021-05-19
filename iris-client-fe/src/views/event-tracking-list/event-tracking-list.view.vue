@@ -14,28 +14,12 @@
         Status:
         <v-btn-toggle dense mandatory v-model="statusButtonSelected">
           <v-btn
-            @click="filterStatus(statusEnum.DataRequested)"
-            style="opacity: 100%; background-color: white"
+            text
+            @click="filterStatus(selectableStatus[status])"
+            v-for="status in Object.keys(selectableStatus)"
+            :key="status"
           >
-            {{ getStatusName(statusEnum.DataRequested) }}
-          </v-btn>
-          <v-btn
-            @click="filterStatus(statusEnum.DataReceived)"
-            style="opacity: 100%; background-color: white"
-          >
-            {{ getStatusName(statusEnum.DataReceived) }}
-          </v-btn>
-          <v-btn
-            @click="filterStatus(statusEnum.Closed)"
-            style="opacity: 100%; background-color: white"
-          >
-            {{ getStatusName(statusEnum.Closed) }}
-          </v-btn>
-          <v-btn
-            @click="filterStatus(null)"
-            style="opacity: 100%; background-color: white"
-          >
-            Alle
+            {{ getStatusSelectLabel(selectableStatus[status]) }}
           </v-btn>
         </v-btn-toggle>
       </v-col>
@@ -59,6 +43,9 @@
           class="elevation-1 mt-5 twolineTable"
           :search="tableData.search"
         >
+          <template v-slot:[itemAddressSlotName]="{ item }">
+            <span class="text-pre-wrap"> {{item.address}} </span>
+          </template>
           <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
               {{ getStatusName(item.status) }}
@@ -81,7 +68,7 @@
 
 <script lang="ts">
 import {
-  ExistingDataRequestClientWithLocationStatusEnum,
+  DataRequestStatus,
   ExistingDataRequestClientWithLocation,
 } from "@/api";
 import store from "@/store";
@@ -97,10 +84,16 @@ function getFormattedAddress(
 ): string {
   if (data) {
     if (data.locationInformation) {
+      
       const contact = data.locationInformation.contact;
       if (contact) {
-        return `${data.locationInformation.name}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
+        let name = `${data.locationInformation.name}`;        
+        if(contact.officialName) {
+          name = name + `\n(${contact.officialName})`;
+        }
+        return name + `\n${contact.address.street} \n${contact.address.zip} ${contact.address.city}`;
       }
+
       return data.locationInformation.name;
     }
     return "-";
@@ -140,12 +133,13 @@ type TableRow = {
   },
 })
 export default class EventTrackingListView extends Vue {
-  statusFilter: ExistingDataRequestClientWithLocationStatusEnum | null = null;
-  statusEnum = ExistingDataRequestClientWithLocationStatusEnum;
-  statusButtonSelected = 3;
-  filterStatus(
-    target: ExistingDataRequestClientWithLocationStatusEnum | null
-  ): void {
+  statusFilter: DataRequestStatus | null = null;
+  selectableStatus = {
+    ...DataRequestStatus,
+    All: null,
+  };
+  statusButtonSelected = Object.keys(this.selectableStatus).length - 1;
+  filterStatus(target: DataRequestStatus | null): void {
     this.statusFilter = target;
   }
 
@@ -207,24 +201,20 @@ export default class EventTrackingListView extends Vue {
   get itemActionSlotName(): string {
     return "item.actions";
   }
-
-  on(): void {
-    console.log("NOT IMPLEMENTED");
+  get itemAddressSlotName(): string {
+    return "item.address";
   }
 
-  selectItem(item: unknown): void {
-    console.log("NOT IMPLEMENTED", item);
-  }
-
-  getStatusColor(
-    status: ExistingDataRequestClientWithLocationStatusEnum
-  ): string {
+  getStatusColor(status: DataRequestStatus): string {
     return StatusColors.getColor(status);
   }
 
-  getStatusName(
-    status: ExistingDataRequestClientWithLocationStatusEnum
-  ): string {
+  getStatusName(status: DataRequestStatus): string {
+    return StatusMessages.getMessage(status);
+  }
+
+  getStatusSelectLabel(status: DataRequestStatus | null): string {
+    if (!status) return "Alle";
     return StatusMessages.getMessage(status);
   }
 }

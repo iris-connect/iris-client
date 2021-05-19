@@ -114,4 +114,12 @@ public class EventDataRequestService {
 
 		return repository.save(dataRequest);
 	}
+
+	public int getCountSinceDate(Instant date) {
+		return repository.getCountSinceDate(date);
+	}
+
+	public int getCountWithStatus(Status status) {
+		return repository.getCountWithStatus(status);
+	}
 }

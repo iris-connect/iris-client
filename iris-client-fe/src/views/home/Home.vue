@@ -4,7 +4,7 @@
       <v-col>
         <counter-widget
           subtitle="Ereignisse/Woche"
-          count="233"
+          :count="statistics.eventsCount"
           actionlabel="Zur Ereignisübersicht"
           image="sketch_file_analysis.svg"
           actionlink="events/list"
@@ -13,7 +13,7 @@
       <v-col>
         <counter-widget
           subtitle="Indexfälle/Woche"
-          count="23"
+          :count="statistics.indexCasesCount"
           actionlabel="Zur Indexübersicht"
           image="sketch_medicine.svg"
           actionlink="cases/list"
@@ -22,7 +22,7 @@
       <v-col>
         <counter-widget
           subtitle="Statusänderungen"
-          count="12"
+          :count="statistics.sumStatus"
           actionlabel="Anzeigen"
           image="sketch_reviewed_docs.svg"
           actionlink="events/list"
@@ -97,41 +97,13 @@ import CounterWidget from "@/components/dashboard/counter-widget.vue";
 import EventList from "@/components/event-list.vue";
 import store from "@/store";
 import {
-  ExistingDataRequestClientWithLocationStatusEnum,
-  ExistingDataRequestClientWithLocation,
+  DataRequestStatus,
+  ExistingDataRequestClientWithLocation, Statistics,
 } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
 import { ErrorMessage } from "@/utils/axios";
-
-function getStatusColor(
-  status?: ExistingDataRequestClientWithLocationStatusEnum
-): string {
-  switch (status) {
-    case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
-      return "blue";
-    case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
-      return "red";
-    case ExistingDataRequestClientWithLocationStatusEnum.Closed:
-      return "green";
-    default:
-      return "gray"; // TODO
-  }
-}
-
-function getStatusName(
-  status?: ExistingDataRequestClientWithLocationStatusEnum
-): string {
-  switch (status) {
-    case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
-      return "Angefragt";
-    case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
-      return "Geliefert";
-    case ExistingDataRequestClientWithLocationStatusEnum.Closed:
-      return "Abgeschlossen";
-    default:
-      return "Unbekannt"; // TODO find better name
-  }
-}
+import StatusColors from "@/constants/StatusColors";
+import StatusMessages from "@/constants/StatusMessages";
 
 const tableRowMapper = (
   dataRequest: ExistingDataRequestClientWithLocation
@@ -146,8 +118,8 @@ const tableRowMapper = (
     code: dataRequest.code || "-",
     name: dataRequest.name || "-",
     status: dataRequest.status?.toString() || "-",
-    statusColor: getStatusColor(dataRequest.status),
-    statusName: getStatusName(dataRequest.status),
+    statusColor: StatusColors.getColor(dataRequest.status),
+    statusName: StatusMessages.getMessage(dataRequest.status),
   };
 };
 
@@ -180,6 +152,7 @@ function getFormattedDate(date?: string): string {
   async beforeRouteEnter(_from, _to, next) {
     next();
     await store.dispatch("home/fetchEventTrackingList");
+    await store.dispatch("home/fetchStatistics")
   },
   beforeRouteLeave(to, from, next) {
     store.commit("home/reset");
@@ -193,12 +166,11 @@ export default class Home extends Vue {
   get openEventListData(): TableRow[] {
     const dataRequests = store.state.home.eventTrackingList?.dataRequests || [];
     return dataRequests
-      .filter(
-        (request) =>
-          request.status ===
-          ExistingDataRequestClientWithLocationStatusEnum.DataRequested
-      )
+      .filter((request) => request.status === DataRequestStatus.DataRequested)
       .map(tableRowMapper);
+  }
+  get statistics(): Statistics {
+    return store.state.home.statistics;
   }
 }
 </script>
