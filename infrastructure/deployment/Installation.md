@@ -43,8 +43,8 @@ Desweiteren gibt es folgende infrastrukturelle Anhängigkeiten
 | Infrastruktur-Abhängigkeit | Beschreibung  |
 |-|-|
 | HTTPS Proxy | Proxy server für EPS. Unterstützung für [HTTP_CONNECT](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/CONNECT) notwendig.  |
-| Proxy Freischaltung - IRIS Central Services - Staging | Zugriff auf iris.staging.iris-gateway.de  |
-| Proxy Freischaltung - IRIS App Provider - Staging | Zugriff auf *.apps.staging.iris-gateway.de  |
+| Proxy Freischaltung - IRIS Central Services - Staging | Zugriff auf iris.staging.iris-gateway.de (ConnectPorts: 3322, 4445, 5559)  |
+| Proxy Freischaltung - IRIS App Provider - Staging (ConnectPorts: 4444) | Zugriff auf *.apps.staging.iris-gateway.de  |
 | Proxy Freischaltung - IRIS Central Services - Live | - (TBD) |
 | Proxy Freischaltung - IRIS App Provider - Live | - (TBD) |
 
