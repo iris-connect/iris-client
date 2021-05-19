@@ -31,20 +31,25 @@
         <v-text-field
           v-model="tableData.search"
           append-icon="mdi-magnify"
-          label="Search"
+          label="Suche (min. 2 Buchstaben)"
           single-line
           hide-details
+          @keyup="triggerSearch"
         ></v-text-field>
         <v-data-table
           :loading="eventListLoading"
+          :page="tableData.page"
+          :pageCount="tableData.numberOfPages"
+          :server-items-length="tableData.totalElements"
           :headers="tableData.headers"
           :items="eventList"
-          :items-per-page="5"
+          :items-per-page="tableData.itemsPerPage"
           class="elevation-1 mt-5 twolineTable"
           :search="tableData.search"
+          @update:options="updatePagination"
         >
           <template v-slot:[itemAddressSlotName]="{ item }">
-            <span class="text-pre-wrap"> {{item.address}} </span>
+            <span class="text-pre-wrap"> {{ item.address }} </span>
           </template>
           <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
@@ -76,7 +81,7 @@ import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
-import { orderBy } from "lodash";
+import { debounce, orderBy } from "lodash";
 import dayjs from "@/utils/date";
 
 function getFormattedAddress(
@@ -84,14 +89,16 @@ function getFormattedAddress(
 ): string {
   if (data) {
     if (data.locationInformation) {
-      
       const contact = data.locationInformation.contact;
       if (contact) {
-        let name = `${data.locationInformation.name}`;        
-        if(contact.officialName) {
+        let name = `${data.locationInformation.name}`;
+        if (contact.officialName) {
           name = name + `\n(${contact.officialName})`;
         }
-        return name + `\n${contact.address.street} \n${contact.address.zip} ${contact.address.city}`;
+        return (
+          name +
+          `\n${contact.address.street} \n${contact.address.zip} ${contact.address.city}`
+        );
       }
 
       return data.locationInformation.name;
@@ -125,7 +132,10 @@ type TableRow = {
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
-    await store.dispatch("eventTrackingList/fetchEventTrackingList");
+    await store.dispatch(
+      "eventTrackingList/fetchEventTrackingList",
+      store.state.eventTrackingList.tableData
+    );
   },
   beforeRouteLeave(to, from, next) {
     store.commit("eventTrackingList/reset");
@@ -139,58 +149,53 @@ export default class EventTrackingListView extends Vue {
     All: null,
   };
   statusButtonSelected = Object.keys(this.selectableStatus).length - 1;
-  filterStatus(target: DataRequestStatus | null): void {
-    this.statusFilter = target;
-  }
 
-  tableData = {
-    search: "",
-    headers: [
-      {
-        text: "Ext.ID",
-        align: "start",
-        sortable: true,
-        value: "extID",
-      },
-      { text: "Event", value: "name" },
-      { text: "Ort", value: "address" },
-      { text: "Zeit (Start)", value: "startTime" },
-      { text: "Zeit (Ende)", value: "endTime" },
-      { text: "Generiert", value: "generatedTime" },
-      { text: "Status", value: "status" },
-      { text: "Letzte Änderung", value: "lastChange" },
-      { text: "", value: "actions" },
-    ],
-  };
+  runSearch = debounce(async () => {
+    let search = store.state.eventTrackingList.tableData.search;
+    if ((search && search.length > 1 && search.trim()) || search === "") {
+      // If search is changed, page should be reset
+      store.state.eventTrackingList.tableData.page = 1;
+      await store.dispatch(
+        "eventTrackingList/fetchEventTrackingList",
+        store.state.eventTrackingList.tableData
+      );
+    }
+  }, 1000);
+
+  async filterStatus(target: DataRequestStatus | null) {
+    this.statusFilter = target;
+    store.state.eventTrackingList.tableData.statusFilter = target;
+    // If filter is changed, page should be reset
+    store.state.eventTrackingList.tableData.page = 1;
+    await store.dispatch(
+      "eventTrackingList/fetchEventTrackingList",
+      store.state.eventTrackingList.tableData
+    );
+  }
 
   get eventListLoading(): boolean {
     return store.state.eventTrackingList.eventTrackingListLoading;
   }
 
+  get tableData() {
+    return store.state.eventTrackingList.tableData;
+  }
+
   get eventList(): TableRow[] {
-    const dataRequests =
-      store.state.eventTrackingList.eventTrackingList?.dataRequests || [];
-    const list = dataRequests
-      // TODO this filtering could probably also be done in vuetify data-table
-      .filter(
-        (dataRequests) =>
-          !this.statusFilter || this.statusFilter === dataRequests.status
-      )
-      .map((dataRequest) => {
-        return {
-          address: getFormattedAddress(dataRequest),
-          endTime: getFormattedDate(dataRequest.end),
-          startTime: getFormattedDate(dataRequest.start),
-          generatedTime: getFormattedDate(dataRequest.requestedAt),
-          lastChange: getFormattedDate(dataRequest.lastUpdatedAt),
-          extID: dataRequest.externalRequestId || "-",
-          code: dataRequest.code,
-          name: dataRequest.name || "-",
-          status: dataRequest.status?.toString() || "-",
-        };
-      });
-    // default sorting. Could be done in data-table but then there would be a sort icon in the header.
-    return orderBy(list, "lastChange", "desc");
+    const dataRequests = store.state.eventTrackingList.eventTrackingList || [];
+    return dataRequests.map((dataRequest) => {
+      return {
+        address: getFormattedAddress(dataRequest),
+        endTime: getFormattedDate(dataRequest.end),
+        startTime: getFormattedDate(dataRequest.start),
+        generatedTime: getFormattedDate(dataRequest.requestedAt),
+        lastChange: getFormattedDate(dataRequest.lastUpdatedAt),
+        extID: dataRequest.externalRequestId || "-",
+        code: dataRequest.code,
+        name: dataRequest.name || "-",
+        status: dataRequest.status?.toString() || "-",
+      };
+    });
   }
 
   // TODO improve this - we need it to circumvent v-slot eslint errors
@@ -198,11 +203,29 @@ export default class EventTrackingListView extends Vue {
   get itemStatusSlotName(): string {
     return "item.status";
   }
+
   get itemActionSlotName(): string {
     return "item.actions";
   }
+
   get itemAddressSlotName(): string {
     return "item.address";
+  }
+
+  async updatePagination(pagination: any) {
+    store.state.eventTrackingList.tableData.page = pagination.page;
+    store.state.eventTrackingList.tableData.itemsPerPage =
+      pagination.itemsPerPage;
+    store.state.eventTrackingList.tableData.sortBy = pagination.sortBy;
+    store.state.eventTrackingList.tableData.sortOrder = pagination.sortDesc;
+    await store.dispatch(
+      "eventTrackingList/fetchEventTrackingList",
+      store.state.eventTrackingList.tableData
+    );
+  }
+
+  async triggerSearch() {
+    await this.runSearch();
   }
 
   getStatusColor(status: DataRequestStatus): string {
