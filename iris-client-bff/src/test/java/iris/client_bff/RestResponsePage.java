@@ -10,6 +10,10 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class was added for testing purposes only and is required for the deserialization of Page JSONs
+ * @param <T>
+ */
 public class RestResponsePage<T> extends PageImpl<T> {
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
