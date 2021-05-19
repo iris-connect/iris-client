@@ -14,10 +14,10 @@ import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.events.web.dto.GuestListDataProvider;
 import iris.client_bff.events.web.dto.LocationInformation;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -48,28 +48,34 @@ public class EventDataRequestController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<DataRequestDetails> createDataRequest(@Valid @RequestBody DataRequestClient request) {
 		var result = dataRequestService.createDataRequest(
-				request.getExternalRequestId(),
-				request.getName(),
-				request.getStart(),
-				Option.of(request.getEnd()),
-				Option.of(request.getComment()),
-				Option.of(request.getRequestDetails()),
-				Option.none(),
-				Option.of(request.getLocationId()),
-				Option.of(request.getProviderId()));
+			request.getExternalRequestId(),
+			request.getName(),
+			request.getStart(),
+			Option.of(request.getEnd()),
+			Option.of(request.getComment()),
+			Option.of(request.getRequestDetails()),
+			Option.none(),
+			Option.of(request.getLocationId()),
+			Option.of(request.getProviderId()));
 
-		return ResponseEntity.ok(mapDataRequestDetails(result));
+		return ResponseEntity.ok(map(result));
 	}
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<ExistingDataRequestClientWithLocationList> getDataRequests() {
 		var response = dataRequestService.getAll().stream().map(request -> {
-			return mapExistingDataRequestClientWithLocation(request);
-		})
-				.collect(Collectors.toList());
-		var res = ExistingDataRequestClientWithLocationList
-				.builder().dataRequests(response).build();
+			var mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
+			mapped.setCode(request.getId().toString());
+			mapped.setStart(request.getRequestStart());
+			mapped.setEnd(request.getRequestEnd());
+			mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
+			mapped.setLastUpdatedAt(request.getLastModifiedAt());
+			mapped.setRequestedAt(request.getCreatedAt());
+			mapped.setExternalRequestId(request.getRefId());
+			return mapped;
+		}).collect(Collectors.toList());
+		var res = ExistingDataRequestClientWithLocationList.builder().dataRequests(response).build();
 		return ResponseEntity.of(Optional.of(res));
 	}
 
@@ -79,7 +85,7 @@ public class EventDataRequestController {
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
 
-			DataRequestDetails requestDetails = mapDataRequestDetails(dataRequest.get());
+			DataRequestDetails requestDetails = map(dataRequest.get());
 
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
@@ -91,13 +97,12 @@ public class EventDataRequestController {
 
 	@PatchMapping("/{code}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<DataRequestDetails> update(@PathVariable UUID code, @RequestBody
-			EventUpdateDTO patch) {
+	public ResponseEntity<DataRequestDetails> update(@PathVariable UUID code, @RequestBody EventUpdateDTO patch) {
 
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
 			var updated = dataRequestService.update(dataRequest.get(), patch);
-			DataRequestDetails requestDetails = mapDataRequestDetails(updated);
+			DataRequestDetails requestDetails = map(updated);
 
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
@@ -107,7 +112,7 @@ public class EventDataRequestController {
 		}
 	}
 
-	private DataRequestDetails mapDataRequestDetails(EventDataRequest request) {
+	private DataRequestDetails map(EventDataRequest request) {
 		DataRequestDetails mapped = modelMapper.map(request, DataRequestDetails.class);
 		mapped.setCode(request.getId().toString());
 		mapped.setStart(request.getRequestStart());
@@ -116,51 +121,28 @@ public class EventDataRequestController {
 		mapped.setLastModifiedAt(request.getLastModifiedAt());
 		mapped.setRequestedAt(request.getCreatedAt());
 		mapped.setExternalRequestId(request.getRefId());
-		mapped.setRequestDetails(request.getRequestDetails());
-		mapped.setComment(request.getComment());
-		mapped.setName(request.getName());
-		return mapped;
-	}
-
-	private ExistingDataRequestClientWithLocation mapExistingDataRequestClientWithLocation(EventDataRequest request) {
-		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
-		mapped.setCode(request.getId().toString());
-		mapped.setStart(request.getRequestStart());
-		mapped.setEnd(request.getRequestEnd());
-		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
-		mapped.setLastUpdatedAt(request.getLastModifiedAt());
-		mapped.setRequestedAt(request.getCreatedAt());
-		mapped.setExternalRequestId(request.getRefId());
-		mapped.setRequestDetails(request.getRequestDetails());
-		mapped.setName(request.getName());
 		return mapped;
 	}
 
 	private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
 
-		submissionRepo.findAllByRequest(request)
-				.get()
-				.findFirst()
-				.ifPresent(it -> addSubmissionToRequest(requestDetails, it));
+		submissionRepo.findAllByRequest(request).get().findFirst().ifPresent(it -> addSubmissionToRequest(requestDetails, it));
 	}
 
 	private void addSubmissionToRequest(DataRequestDetails requestDetails, EventDataSubmission submission) {
 
 		var dataProvider = modelMapper.map(submission.getDataProvider(), GuestListDataProvider.class);
 
-		var guests = submission.getGuests().stream()
-				.map(it -> modelMapper.map(it, Guest.class))
-				.collect(Collectors.toList());
+		var guests = submission.getGuests().stream().map(it -> modelMapper.map(it, Guest.class)).collect(Collectors.toList());
 
 		var guestList = GuestList.builder()
-				.additionalInformation(submission.getAdditionalInformation())
-				.startDate(submission.getStartDate())
-				.endDate(submission.getEndDate())
-				.dataProvider(dataProvider)
-				.guests(guests)
-				.build();
+			.additionalInformation(submission.getAdditionalInformation())
+			.startDate(submission.getStartDate())
+			.endDate(submission.getEndDate())
+			.dataProvider(dataProvider)
+			.guests(guests)
+			.build();
 
 		requestDetails.setSubmissionData(guestList);
 	}
 }
-
