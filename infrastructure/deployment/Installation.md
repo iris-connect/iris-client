@@ -30,7 +30,7 @@ Folgende Laufzeit-Abhängigkeiten werden vom IRIS Client vorausgesetzt.
 
 > Die Standard-Installationsvariante mit Docker Compose bringt bereits ein vorkonfiguriertes Setup inklusive der Postgres DB, dem Webserver (nginx) und EPS mit. 
 
-Desweiteren werden folgende Konfigurations-Abhängikeiten benötigt. 
+Des Weiteren werden folgende Konfigurations-Abhängikeiten benötigt. 
 
 | Konfigurations-Abhängigkeit | Beschreibung  |
 |-|-|
@@ -38,7 +38,7 @@ Desweiteren werden folgende Konfigurations-Abhängikeiten benötigt.
 | Domain Zertifikat und Schlüssel | Für die o.g. Domain muss ein valides Zertifikat inklusive privatem Schlüssel bereitgestellt werden. |
 | GA Client Zertifikat | Der IRIS Client benutzt ein für das GA ausgestelltes Client Zertifikat um mit den zentralen IRIS Servicen zu kommunizieren. Darüber hinaus werden alle Anfragen die vom IRIS Client ausgehen mit dem Zertifikat signiert. |
 
-Desweiteren gibt es folgende infrastrukturelle Anhängigkeiten
+Des Weiteren gibt es folgende infrastrukturelle Anhängigkeiten
 
 | Infrastruktur-Abhängigkeit | Beschreibung  |
 |-|-|
@@ -80,10 +80,6 @@ Bei dem IRIS Backend handelt es sich um eine Java Applikation (min Java 11).
     export SPRING_DATASOURCE_USERNAME=iris
     export SPRING_DATASOURCE_PASSWORD=iris
     export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/iris
-
-    # Needs to be kept for now for compatibility reasons
-    export IRIS_SERVER_ADDRESS=api.staging.iris-gateway.de
-    export IRIS_SERVER_PORT=443
 
     export SECURITY_JWT_JWT_SHARED_SECRET=foobar
 
