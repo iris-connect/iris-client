@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import iris.client_bff.events.EventDataRequest.Status;
-import iris.client_bff.events.connection.DataRequestEndpointConnector;
+import iris.client_bff.events.eps.DataProviderClient;
 import iris.client_bff.search_client.SearchClient;
 
 import java.time.Instant;
@@ -30,14 +30,14 @@ public class EventDataRequestServiceTest {
 	@Mock
 	SearchClient searchClient;
 
-	@Mock
-	DataRequestEndpointConnector dataRequestEndpointConnector;
-
 	EventDataRequestService service;
+
+	@Mock
+	DataProviderClient epsDataRequestClient;
 
 	@BeforeEach
 	void setUp() {
-		service = new EventDataRequestService(repository, dataRequestEndpointConnector, modelMapper, searchClient);
+		service = new EventDataRequestService(repository, searchClient, epsDataRequestClient);
 	}
 
 	@Test
