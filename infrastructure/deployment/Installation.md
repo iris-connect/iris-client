@@ -18,6 +18,7 @@ Folgende Komponenten werden vom IRIS Team bereit gestellt.
 |-|-|-|
 | IRIS Client Frontend | Statische Web-Anwendung (Single Page Application) | [Typescript](https://www.typescriptlang.org/), [Vue.js](https://vuejs.org/), [Vuetify](https://vuetifyjs.com/en/) |
 | IRIS Client Backend | Backend Komponente für die Webanwendung. Kümmert sich um Authentifizierung und Authorisierung, stellte die gesicherte Verbindung zu den zentralen und de-zentralen IRIS Servicen bereit. | Java, [Spring Boot](https://spring.io/projects/spring-boot) |
+| EPS | Endpunktserver für den Punkt-zu-Punkt Datenübertragung der Gästelisten und Kontakttagebüchern (https://github.com/iris-gateway/eps) | [Go](https://golang.org/) |
 
 Folgende Laufzeit-Abhängigkeiten werden vom IRIS Client vorausgesetzt. 
 
@@ -27,9 +28,9 @@ Folgende Laufzeit-Abhängigkeiten werden vom IRIS Client vorausgesetzt.
 | Webserver | Für die Bereistellung des IRIS Client Frontend über eine sichere HTTPS Verbindung wird ein Webserver benötigt. Dieser muss in der Lage sein a) Die statische Webanwendung auszuliefern und b) Anfragen an die API an das Backend weiterzuleiten |
 | Proxy Server | In vielen GAs werden ausgehende Verbindungen über einen Proxy Server geroutet. Der IRIS Client stellt eine Konfigurationsmöglichkeit dafür zur Verfügung. |
 
-> Die Standard-Installationsvariante mit Docker Compose bringt bereits ein vorkonfiguriertes Setup inklusive der Postgres DB und dem Webserver (nginx) mit. 
+> Die Standard-Installationsvariante mit Docker Compose bringt bereits ein vorkonfiguriertes Setup inklusive der Postgres DB, dem Webserver (nginx) und EPS mit. 
 
-Desweiteren werden folgende Konfigurations-Abhängikeiten benötigt. 
+Des Weiteren werden folgende Konfigurations-Abhängikeiten benötigt. 
 
 | Konfigurations-Abhängigkeit | Beschreibung  |
 |-|-|
@@ -37,16 +38,71 @@ Desweiteren werden folgende Konfigurations-Abhängikeiten benötigt.
 | Domain Zertifikat und Schlüssel | Für die o.g. Domain muss ein valides Zertifikat inklusive privatem Schlüssel bereitgestellt werden. |
 | GA Client Zertifikat | Der IRIS Client benutzt ein für das GA ausgestelltes Client Zertifikat um mit den zentralen IRIS Servicen zu kommunizieren. Darüber hinaus werden alle Anfragen die vom IRIS Client ausgehen mit dem Zertifikat signiert. |
 
+Des Weiteren gibt es folgende infrastrukturelle Anhängigkeiten
+
+| Infrastruktur-Abhängigkeit | Beschreibung  |
+|-|-|
+| HTTPS Proxy | Proxy server für EPS. Unterstützung für [HTTP_CONNECT](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/CONNECT) notwendig.  |
+| Proxy Freischaltung - IRIS Central Services - Staging | Zugriff auf iris.staging.iris-gateway.de (ConnectPorts: 3322, 4445, 5559)  |
+| Proxy Freischaltung - IRIS App Provider - Staging | Zugriff auf *.apps.staging.iris-gateway.de (ConnectPorts: 4444)  |
+| Proxy Freischaltung - IRIS Central Services - Live | - (TBD) |
+| Proxy Freischaltung - IRIS App Provider - Live | - (TBD) |
+
 
 ## Authentifizierung und Authorisierung
 
 Aktuell bietet der IRIS client eine eigene Benutzerverwaltung an, die von einem IT Administrator betreut werden muss. 
 
 
+## IRIS Client - Installation Stand-Alone
 
+Für diese Installationsart werden alle Komponenten des IRIS Clients separat auf einem Server installiert. Das folgende Schaubild visualisiert das Setup. 
+
+![IRIS Lokale Installation](iris-local-installation.jpg)
+
+
+### Installation IRIS Backend (IRIS BE)
+
+Bei dem IRIS Backend handelt es sich um eine Java Applikation (min Java 11). 
+
+1) Download Jar Datei
+
+    ```
+    https://github.com/iris-gateway/iris-client/releases
+    ```
+
+2) Anlegen einer Konfigurations Datei (Beispielwerte)
+
+    ```
+    > touch conf.env
+    export SPRING_PROFILES_ACTIVE=prod
+
+    export SPRING_DATASOURCE_USERNAME=iris
+    export SPRING_DATASOURCE_PASSWORD=iris
+    export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/iris
+
+    export SECURITY_JWT_JWT_SHARED_SECRET=foobar
+
+    export SECURITY_AUTH_DB_ADMIN_USER_NAME=admin
+    export SECURITY_AUTH_DB_ADMIN_USER_PASSWORD=admin
+    ```
+3) Konfigurations Parameter als Umgebungsvariablen exportieren
+
+    ```
+    source conf.env
+    ```
+4) Starten der Java Applikation (Beispiel Version: v1.0.3-alpha)
+
+    ```
+    java -jar iris-client-bff-v1.0.3-alpha.jar
+    ```
 ## IRIS Client - Installation mit Docker Compose
 
 Für diese Installationsart wird der IRIS Client in einer [Docker](https://docker.io) Umgebung gestartet. Die notwendigen Images werden vom [INÖG Vereichnis im Dockerhub](https://hub.docker.com/u/inoeg) heruntergeladen. 
+
+Das folgende Schaubild visualisiert das Setup. 
+
+![IRIS Lokale Installation](iris-docker-installation.jpg)
 
 ### Installation Docker und Docker compose
 
