@@ -31,8 +31,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
     
+      - name: Get version from GITHUB_REF
+        id: get_version
+        run: |
+          VERSION=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=pr-${{ github.event.number }}
+          fi
+          echo ::set-output name=version::${VERSION}
+    
       - name: build, package and publish the image
-        run: mvn -B clean package spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true
+        run: mvn -B clean package spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=${{ steps.get_version.outputs.version }}
         env:
           DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
           DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
