@@ -266,6 +266,7 @@ export default class EventTrackingFormView extends Vue {
         externalRequestId: this.form.model.externalId,
         requestDetails: this.form.model.requestDetails,
       };
+
       const created: DataRequestDetails = await store.dispatch(
         "eventTrackingForm/createEventTracking",
         payload
