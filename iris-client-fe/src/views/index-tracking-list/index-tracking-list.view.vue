@@ -50,6 +50,7 @@
             :items-per-page="indexList.itemsPerPage"
             class="elevation-1 mt-5 twolineTable"
             :search="search"
+            :footer-props="{'items-per-page-options': [5, 10, 15]}"
             @update:options="updatePagination"
         >
           <template v-slot:[itemStatusSlotName]="{ item }">
