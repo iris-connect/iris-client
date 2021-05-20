@@ -32,7 +32,7 @@ LEN="4096"
 openssl genrsa -out "${CN}.key" ${LEN};
 openssl rsa -in "${CN}.key" -pubout -out "${CN}.pub";
 
-openssl req -new -sha256 -key "${CN}.key" -subj "/C=${C}/ST=${ST}/L=${L}/O=${O}/OU=${OU}/CN=${CN}" -addext "keyUsage=digitalSignature" -addext "subjectAltName = URI:iris-name://${CN},URI:iris-group://health-departments,DNS:${CN};DNS:*.${CN}.local"  -out "${CN}.csr";
+openssl req -new -sha256 -key "${CN}.key" -subj "/C=${C}/ST=${ST}/L=${L}/O=${O}/OU=${OU}/CN=${CN}" -addext "keyUsage=digitalSignature" -addext "subjectAltName = URI:iris-name://${CN},URI:iris-group://health-departments,DNS:${CN},DNS:*.${CN}.local"  -out "${CN}.csr";
 ```
 
 Senden Sie die .csr und Ihre Domain an [IRIS-Rollout-Team](mailto:rollout@iris-gateway.de) und erhalten Sie Ihre .crt-Datei von uns zurück.
