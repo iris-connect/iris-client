@@ -114,9 +114,6 @@ public class EventDataRequestController {
 		mapped.setLastModifiedAt(request.getLastModifiedAt());
 		mapped.setRequestedAt(request.getCreatedAt());
 		mapped.setExternalRequestId(request.getRefId());
-		mapped.setRequestDetails(request.getRequestDetails());
-		mapped.setComment(request.getComment());
-		mapped.setName(request.getName());
 		return mapped;
 	}
 
