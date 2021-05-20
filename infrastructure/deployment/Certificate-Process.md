@@ -10,12 +10,17 @@ Die Struktur des CN Feldes ist wie folgt:
 # RKI: https://tools.rki.de/PLZTool
 ga-${sanitized_name(Offizieller RKI Name)}
 
+# sanitized_name = Ersetzung aller Umlaute (z.B. ö -> oe). Sonderzeichen und Leerzeichen (auch aufeinanderfolgend) werden durch ein '-' ersetzt. Alles Lower Case.
 
-# Beispiel Köln
+# Beispiele
+#
 # RKI Name: Stadt Köln
+# Link: https://tools.rki.de/PLZTool/?q=K%C3%B6ln#1.05.3.15.
 # -> CN: ga-stadt-koeln
-
-# sanitized_name = Ersetzung aller Umlaute. Sonderzeichen werden durch '-' ersetzt. Alles Lower Case.
+#
+# RKI Name: Landkreis Südliche Weinstraße / Landau
+# Link: https://tools.rki.de/PLZTool/?q=Landau#1.07.0.69.
+# -> CN: ga-landkreis-suedliche-weinstrasse-landau
 ```
 
 Beispiel CSR Request für GA Köln:
