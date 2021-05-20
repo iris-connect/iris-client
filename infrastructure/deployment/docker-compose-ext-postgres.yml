@@ -10,7 +10,7 @@ services:
 
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-sormas-sidecar:v0.0.3
+    image: inoeg/iris-client-sormas-sidecar:0.2.0-rc.1
     expose:
       - 8092
     ports: 
@@ -30,7 +30,7 @@ services:
 
   # IRIS Client Frontend
   iris-frontend:
-    image: inoeg/iris-client-frontend:v0.1.0
+    image: inoeg/iris-client-frontend:0.2.0-rc.1
     expose:
       - 28080
     environment: 
@@ -43,7 +43,7 @@ services:
 
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:v0.0.2
+    image: inoeg/iris-client-nginx:0.2.0-rc.1
     ports:
       - 443:443
     environment: 
