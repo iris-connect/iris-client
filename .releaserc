@@ -1,5 +1,5 @@
 {
-     "repositoryUrl": "https://github.com/jekutzsche/iris-test.git",
+     "repositoryUrl": "https://github.com/iris-connect/iris-client.git",
      "branches": ["+([0-9])?(.{+([0-9]),x}).x", "main", "next", "next-major", {"name": "release", "prerelease": "rc"}],
      "debug": "true",
      "plugins": [
