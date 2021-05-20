@@ -1,24 +1,23 @@
-name: Build and Publish Docker Image for NGINX
+# Build and Publish Docker Image for NGINX
+
+name: NGINX Develop
 
 on:
   push:
-    tags:
-      - 'v*'
     branches:
-      - main
       - develop
     paths:
       - infrastructure/docker/nginx/**
-      - .github/workflows/nginx.yml
+      - .github/workflows/nginx_develop.yml
 
 jobs:
   push_to_registry:
-    name: Push Docker image
+    name: Build and push Docker image
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2.3.4
-      - name: Push to docker.io
+      - name: Build and push to docker.io
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}

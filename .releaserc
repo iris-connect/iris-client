@@ -1,0 +1,88 @@
+{
+     "repositoryUrl": "https://github.com/jekutzsche/iris-test.git",
+     "branches": ["+([0-9])?(.{+([0-9]),x}).x", "main", "next", "next-major", {"name": "release", "prerelease": "rc"}],
+     "debug": "true",
+     "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        [
+            "@semantic-release/changelog",
+            {
+                "changelogFile": "CHANGELOG.md",
+                "changelogTitle": "# Changelog"
+            }
+        ],
+        [
+      	  	"@google/semantic-release-replace-plugin",
+	      	{
+	        	"replacements": [
+	          		{
+	            		"files": ["infrastructure/deployment/docker-compose-ext-postgres.yml", "infrastructure/deployment/docker-compose.yml"],
+	            		"from": "inoeg/(.*):.*",
+	            		"to": "inoeg/$1:${nextRelease.version}",
+	            		"results": [
+	              			{
+				                "file": "infrastructure/deployment/docker-compose-ext-postgres.yml",
+				                "hasChanged": true,
+				                "numMatches": 3,
+				                "numReplacements": 3
+		              		},
+		              		{
+				                "file": "infrastructure/deployment/docker-compose.yml",
+				                "hasChanged": true,
+				                "numMatches": 3,
+				                "numReplacements": 3
+		              		}
+	            		],
+	            		"countMatches": true
+	          		}
+	        	]
+	      	}
+	    ],
+        [
+            "@semantic-release/exec",
+            {
+                "prepareCmd": "./.prepare-release.sh ${nextRelease.version}"
+            }
+        ],
+        [
+            "@semantic-release/git",
+            {
+                "assets": [
+                    "CHANGELOG.md",
+                    "**/pom.xml",
+                    "infrastructure/deployment/docker-compose.yml",
+                    "infrastructure/deployment/docker-compose-ext-postgres.yml"
+                ]
+            }
+        ],
+        [
+        	"semantic-release-docker",
+        	{
+	    		"name": "inoeg/iris-client-nginx"
+	    	}
+    	],
+        [
+        	"semantic-release-docker",
+        	{
+	    		"name": "inoeg/iris-client-frontend"
+	    	}
+    	],
+        [
+        	"semantic-release-docker",
+        	{
+	    		"name": "inoeg/iris-client-bff"
+	    	}
+    	],
+        [
+            "@semantic-release/github",
+            {
+                "assets": [
+                    {
+                        "path": "release/**"
+                    }
+                ]
+            }
+        ]
+    ]
+} 

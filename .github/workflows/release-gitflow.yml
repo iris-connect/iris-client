@@ -1,0 +1,65 @@
+# Release the client with all components according to Gitflow
+
+name: Release according to Gitflow
+
+on:
+  push:
+    branches:
+      - main
+      - release
+      - next
+      - next-major
+      - 1.**
+
+defaults:
+  run:
+    shell: bash
+      
+jobs:
+  release-client:
+    name: Build and release Client
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.3.4
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v2.1.5
+        with:
+          # Version Spec of the version to use.  Examples: 12.x, 10.15.1, >=10.15.0
+          node-version: 12.x
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2.1.5
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      
+      - run: chmod +x ./.prepare-release.sh
+  
+      - name: Build all and create release with semantic-release
+        uses: cycjimmy/semantic-release-action@v2
+        # you'll need to add an `id` in order to access output variables
+        id: semantic
+        with:
+          # You can specify specifying version range for the extra plugins if you prefer.
+          extra_plugins: |
+            @semantic-release/changelog
+            @google/semantic-release-replace-plugin
+            @semantic-release/exec
+            @semantic-release/git
+            semantic-release-docker
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_HUB_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_PW }}
