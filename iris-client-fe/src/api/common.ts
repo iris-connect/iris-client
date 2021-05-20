@@ -186,7 +186,7 @@ export const generateQuery = function (page: DataPage<any>) {
     page: page.page - 1,
   };
 
-  if ((page.sortBy && page.sortBy.length > 0)) query.sort = sortAttributes[page.sortBy];
+  if ((page.sortBy && page.sortBy.length > 0) && sortAttributes[page.sortBy]) query.sort = sortAttributes[page.sortBy];
   if (query.sort) page.sortOrderDesc ? query.sort = query.sort + ',desc' : query.sort = query.sort + ',asc'
 
   if (page.statusFilter) query.status = page.statusFilter;
