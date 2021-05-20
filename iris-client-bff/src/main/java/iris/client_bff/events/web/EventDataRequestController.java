@@ -8,16 +8,19 @@ import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.*;
 import lombok.AllArgsConstructor;
+
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequestMapping("/data-requests-client/events")
 @RestController
@@ -45,15 +48,16 @@ public class EventDataRequestController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<DataRequestDetails> createDataRequest(@Valid @RequestBody DataRequestClient request) {
 
-		var result = dataRequestService.createLocationRequest(
+		var result = dataRequestService.createDataRequest(
 				request.getExternalRequestId(),
 				request.getName(),
 				request.getStart(),
-				request.getEnd(),
+				Option.of(request.getEnd()),
 				Option.of(request.getComment()),
 				Option.of(request.getRequestDetails()),
-				request.getLocationId(),
-				request.getProviderId());
+				Option.none(),
+				Option.of(request.getLocationId()),
+				Option.of(request.getProviderId()));
 
 		return ResponseEntity.ok(map(result));
 	}
@@ -66,19 +70,18 @@ public class EventDataRequestController {
 		if (status != null && search != null) {
 			return dataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable)
 					.map(request -> mapRequest(request));
-		}
-		else if (search != null) {
+		} else if (search != null) {
 			return dataRequestService.searchByRefIdOrName(search, pageable).map(request -> mapRequest(request));
-		}
-		else if (status != null) {
+		} else if (status != null) {
 			return dataRequestService.findByStatus(status, pageable).map(request -> mapRequest(request));
 		}
 		return dataRequestService.findAll(pageable).map(request -> mapRequest(request));
+
 	}
 
 	@GetMapping("/{code}")
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable String code) {
+	public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable UUID code) {
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
 
@@ -94,7 +97,7 @@ public class EventDataRequestController {
 
 	@PatchMapping("/{code}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<DataRequestDetails> update(@PathVariable String code, @RequestBody EventUpdateDTO patch) {
+	public ResponseEntity<DataRequestDetails> update(@PathVariable UUID code, @RequestBody EventUpdateDTO patch) {
 
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
@@ -121,10 +124,6 @@ public class EventDataRequestController {
 		return mapped;
 	}
 
-	/**
-	 * @param request
-	 * @param requestDetails
-	 */
 	private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
 
 		submissionRepo.findAllByRequest(request)
@@ -133,11 +132,6 @@ public class EventDataRequestController {
 				.ifPresent(it -> addSubmissionToRequest(requestDetails, it));
 	}
 
-	/**
-	 * @param requestDetails
-	 * @param submission
-	 * @return
-	 */
 	private void addSubmissionToRequest(DataRequestDetails requestDetails, EventDataSubmission submission) {
 
 		var dataProvider = modelMapper.map(submission.getDataProvider(), GuestListDataProvider.class);
