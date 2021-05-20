@@ -160,13 +160,13 @@ export default class EventTrackingListView extends Vue {
       value: "extID",
     },
     { text: "Event", value: "name" },
-    { text: "Ort", value: "address" },
+    { text: "Ort", value: "address", sortable: false },
     { text: "Zeit (Start)", value: "startTime" },
     { text: "Zeit (Ende)", value: "endTime" },
     { text: "Generiert", value: "generatedTime" },
     { text: "Status", value: "status" },
     { text: "Letzte Änderung", value: "lastChange" },
-    { text: "", value: "actions" },
+    { text: "", value: "actions", sortable: false },
   ];
 
   search = "";

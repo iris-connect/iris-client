@@ -131,7 +131,7 @@ export default class IndexTrackingListView extends Vue {
     {text: "Zeit (Start)", value: "startTime"},
     {text: "Zeit (Ende)", value: "endTime"},
     {text: "Status", value: "status"},
-    {text: "", value: "actions"},
+    {text: "", value: "actions", sortable: false},
   ];
 
   search = "";
