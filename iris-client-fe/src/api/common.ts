@@ -16,6 +16,7 @@
 import {Configuration} from "./configuration";
 import {RequestArgs, RequiredError} from "./base";
 import {AxiosInstance} from 'axios';
+import {DataRequestCaseDetails, DataRequestStatus, ExistingDataRequestClientWithLocation} from "@/api/api";
 
 /**
  *
@@ -142,18 +143,35 @@ export const createRequestFunction = function (axiosArgs: RequestArgs, globalAxi
  * @export
  */
 export type DataQuery = {
-  size: number,
-  page: number,
-  sort?: string,
-  status?: string
-  search?: string
+  size?: number,
+  page?: number,
+  sort?: string | null,
+  status?: DataRequestStatus | null,
+  search?: string | null,
+  sortOrderDesc?: boolean,
 }
 
 /**
  *
  * @export
  */
-export const generateQuery = function (page: any) {
+export interface DataPage<T> {
+  content: Array<T>,
+  page: number,
+  itemsPerPage: number,
+  numberOfPages: number,
+  totalElements: number,
+  statusFilter?: DataRequestStatus | null,
+  search?: string | null,
+  sortBy?: string | null,
+  sortOrderDesc?: boolean,
+}
+
+/**
+ *
+ * @export
+ */
+export const generateQuery = function (page: DataPage<any>) {
   const sortAttributes: { [key: string]: string; } = {
     extID: 'refId',
     name: 'name',
@@ -168,8 +186,8 @@ export const generateQuery = function (page: any) {
     page: page.page - 1,
   };
 
-  if ((page.sortBy && page.sortBy.length > 0)) query.sort = sortAttributes[page.sortBy[0]];
-  if (query.sort && page.sortOrder && page.sortOrder.length > 0) page.sortOrder[0] ? query.sort = query.sort + ',desc' : query.sort = query.sort + ',asc'
+  if ((page.sortBy && page.sortBy.length > 0)) query.sort = sortAttributes[page.sortBy];
+  if (query.sort) page.sortOrderDesc ? query.sort = query.sort + ',desc' : query.sort = query.sort + ',asc'
 
   if (page.statusFilter) query.status = page.statusFilter;
 
