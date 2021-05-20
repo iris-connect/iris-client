@@ -97,7 +97,6 @@ import CounterWidget from "@/components/dashboard/counter-widget.vue";
 import EventList from "@/components/event-list.vue";
 import store from "@/store";
 import {
-  DataRequestStatus,
   ExistingDataRequestClientWithLocation,
   Statistics,
 } from "@/api";

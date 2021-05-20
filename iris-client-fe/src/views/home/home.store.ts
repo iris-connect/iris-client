@@ -1,14 +1,10 @@
-import {
-  ExistingDataRequestClientWithLocation,
-  PageEvent,
-  Statistics,
-} from "@/api";
-import { RootState } from "@/store/types";
+import {DataRequestStatus, ExistingDataRequestClientWithLocation, PageEvent, Statistics,} from "@/api";
+import {RootState} from "@/store/types";
 
-import { Commit, Module } from "vuex";
+import {Commit, Module} from "vuex";
 import authClient from "@/api-client";
-import { ErrorMessage, getErrorMessage } from "@/utils/axios";
-import {DataQuery, generateQuery} from "@/api/common";
+import {ErrorMessage, getErrorMessage} from "@/utils/axios";
+import {generateQuery} from "@/api/common";
 
 export type HomeState = {
   eventTrackingList: Array<ExistingDataRequestClientWithLocation> | null;
@@ -70,11 +66,14 @@ const home: HomeModule = {
       commit("setEventTrackingListError", null);
       commit("setEventTrackingListLoading", true);
       const query = generateQuery({
+        content: [],
         itemsPerPage: 10,
         page: 1,
-        sortBy: ['generatedTime'],
-        sortOrder: [true],
-        statusFilter: 'DATA_RECEIVED'
+        numberOfPages: 0,
+        totalElements: 0,
+        sortBy: 'generatedTime',
+        sortOrderDesc: true,
+        statusFilter: DataRequestStatus.DataReceived
       });
       try {
         eventTrackingList = (
