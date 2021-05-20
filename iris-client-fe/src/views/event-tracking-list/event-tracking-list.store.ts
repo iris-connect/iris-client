@@ -3,12 +3,11 @@ import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 import authClient from "@/api-client";
-import { generateQuery } from "@/api/common";
+import {DataPage, DataQuery, generateQuery} from "@/api/common";
 
 export type EventTrackingListState = {
-  eventTrackingList: Array<ExistingDataRequestClientWithLocation> | null;
+  eventTrackingList: DataPage<ExistingDataRequestClientWithLocation>;
   eventTrackingListLoading: boolean;
-  tableData: any;
 };
 
 export interface EventTrackingListModule
@@ -16,49 +15,35 @@ export interface EventTrackingListModule
   mutations: {
     setEventTrackingList(
       state: EventTrackingListState,
-      eventTrackingList: Array<ExistingDataRequestClientWithLocation> | null
+      eventTrackingList: PageEvent
     ): void;
     setEventTrackingListLoading(
       state: EventTrackingListState,
       payload: boolean
     ): void;
-    setTableData(state: EventTrackingListState, tableData: any): void;
+    updatePageInfo(
+        state: EventTrackingListState,
+        payload: DataQuery
+    ): void;
     reset(state: EventTrackingListState, payload: null): void;
   };
   actions: {
     fetchEventTrackingList(
-      { commit }: { commit: Commit },
-      payload: null
+      { commit, state }: { commit: Commit, state: EventTrackingListState },
+      payload: DataQuery
     ): Promise<void>;
   };
 }
 
 const defaultState: EventTrackingListState = {
-  eventTrackingList: null,
-  eventTrackingListLoading: false,
-  tableData: {
-    search: "",
+  eventTrackingList: {
+    content: [],
     page: 1,
     itemsPerPage: 5,
     numberOfPages: 1,
     totalElements: 0,
-    headers: [
-      {
-        text: "Ext.ID",
-        align: "start",
-        sortable: true,
-        value: "extID",
-      },
-      { text: "Event", value: "name" },
-      { text: "Ort", value: "address" },
-      { text: "Zeit (Start)", value: "startTime" },
-      { text: "Zeit (Ende)", value: "endTime" },
-      { text: "Generiert", value: "generatedTime" },
-      { text: "Status", value: "status" },
-      { text: "Letzte Änderung", value: "lastChange" },
-      { text: "", value: "actions" },
-    ],
   },
+  eventTrackingListLoading: false,
 };
 
 const eventTrackingList: EventTrackingListModule = {
@@ -67,14 +52,21 @@ const eventTrackingList: EventTrackingListModule = {
     return { ...defaultState };
   },
   mutations: {
-    setEventTrackingList(state, eventTrackingList) {
-      state.eventTrackingList = eventTrackingList;
+    setEventTrackingList(state, payload) {
+      state.eventTrackingList.content = payload?.content;
+      state.eventTrackingList.numberOfPages = payload?.totalPages;
+      state.eventTrackingList.totalElements = payload?.totalElements;
     },
     setEventTrackingListLoading(state, loading) {
       state.eventTrackingListLoading = loading;
     },
-    setTableData(state, tableData) {
-      state.tableData = tableData;
+    updatePageInfo(state: EventTrackingListState, payload: DataQuery) {
+      if (payload.page) state.eventTrackingList.page = payload.page;
+      if (payload.size) state.eventTrackingList.itemsPerPage = payload.size;
+      if (payload.search !== undefined) state.eventTrackingList.search = payload.search;
+      if (payload.status !== undefined) state.eventTrackingList.statusFilter = payload.status;
+      if (payload.sort !== undefined) state.eventTrackingList.sortBy = payload.sort;
+      state.eventTrackingList.sortOrderDesc = payload.sortOrderDesc;
     },
     reset(state) {
       // we can keep the data, no need to reset it
@@ -83,19 +75,17 @@ const eventTrackingList: EventTrackingListModule = {
     },
   },
   actions: {
-    async fetchEventTrackingList({ commit }, page: any) {
+    async fetchEventTrackingList({ commit, state }, queryDelta: DataQuery) {
       let eventTrackingList: PageEvent | null = null;
-      const query = page ? generateQuery(page) : null;
+      commit("updatePageInfo", queryDelta)
+      const query = queryDelta ? generateQuery(state.eventTrackingList) : null;
       commit("setEventTrackingListLoading", true);
       try {
         eventTrackingList = (
           await authClient.dataRequestsClientLocationsGet(query)
         ).data;
-        page.numberOfPages = eventTrackingList.totalPages;
-        page.totalElements = eventTrackingList.totalElements;
       } finally {
-        commit("setTableData", page);
-        commit("setEventTrackingList", eventTrackingList?.content);
+        commit("setEventTrackingList", eventTrackingList);
         commit("setEventTrackingListLoading", false);
       }
     },
