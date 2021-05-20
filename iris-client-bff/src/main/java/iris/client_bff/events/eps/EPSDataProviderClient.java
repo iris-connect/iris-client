@@ -1,20 +1,17 @@
 package iris.client_bff.events.eps;
 
-import iris.client_bff.config.IrisClientProperties;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Map;
-
-import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
 @Slf4j
 @Service
@@ -22,8 +19,6 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 public class EPSDataProviderClient implements DataProviderClient {
 
 	private final JsonRpcHttpClient rpcClient;
-
-	private final IrisClientProperties clientProperties;
 
 	public void requestGuestListData(EventDataRequest request) throws IRISDataRequestException {
 
