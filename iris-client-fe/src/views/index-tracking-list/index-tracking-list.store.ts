@@ -3,12 +3,11 @@ import client from "@/api-client";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
-import {generateQuery} from "@/api/common";
+import {DataPage, DataQuery, generateQuery} from "@/api/common";
 
 export type IndexTrackingListState = {
-  indexTrackingList: Array<DataRequestCaseDetails> | null;
+  indexTrackingList: DataPage<DataRequestCaseDetails>;
   indexTrackingListLoading: boolean;
-  tableData: any;
 };
 
 export interface IndexTrackingListModule
@@ -16,46 +15,32 @@ export interface IndexTrackingListModule
   mutations: {
     setIndexTrackingList(
       state: IndexTrackingListState,
-      indexTrackingList: Array<DataRequestCaseDetails> | null
+      indexTrackingList: PageIndexCase
     ): void;
     setIndexTrackingListLoading(
       state: IndexTrackingListState,
       payload: boolean
     ): void;
-    setTableData(
+    updatePageInfo(
         state: IndexTrackingListState,
-        tableData: any
+        payload: DataQuery
     ): void;
     reset(state: IndexTrackingListState, payload: null): void;
   };
   actions: {
-    fetchIndexTrackingList({ commit }: { commit: Commit }, payload: null): Promise<void>;
+    fetchIndexTrackingList({ commit, state }: { commit: Commit, state: IndexTrackingListState }, payload: DataQuery): Promise<void>;
   };
 }
 
 const defaultState: IndexTrackingListState = {
-  indexTrackingList: null,
-  indexTrackingListLoading: false,
-  tableData: {
-    search: "",
+  indexTrackingList: {
+    content: [],
     page: 1,
     itemsPerPage: 5,
     numberOfPages: 1,
     totalElements: 0,
-    headers: [
-      {
-        text: "Ext.ID",
-        align: "start",
-        sortable: true,
-        value: "extID",
-      },
-      { text: "Index-Bezeichner", value: "name" },
-      { text: "Zeit (Start)", value: "startTime" },
-      { text: "Zeit (Ende)", value: "endTime" },
-      { text: "Status", value: "status" },
-      { text: "", value: "actions" },
-    ],
   },
+  indexTrackingListLoading: false,
 };
 
 const indexTrackingList: IndexTrackingListModule = {
@@ -64,14 +49,21 @@ const indexTrackingList: IndexTrackingListModule = {
     return { ...defaultState };
   },
   mutations: {
-    setIndexTrackingList(state, indexTrackingList) {
-      state.indexTrackingList = indexTrackingList;
+    setIndexTrackingList(state, payload) {
+      state.indexTrackingList.content = payload?.content;
+      state.indexTrackingList.numberOfPages = payload?.totalPages;
+      state.indexTrackingList.totalElements = payload?.totalElements;
     },
     setIndexTrackingListLoading(state, loading) {
       state.indexTrackingListLoading = loading;
     },
-    setTableData(state, tableData) {
-      state.tableData = tableData;
+    updatePageInfo(state: IndexTrackingListState, payload: DataQuery) {
+      if (payload.page) state.indexTrackingList.page = payload.page;
+      if (payload.size) state.indexTrackingList.itemsPerPage = payload.size;
+      if (payload.search !== undefined) state.indexTrackingList.search = payload.search;
+      if (payload.status !== undefined) state.indexTrackingList.statusFilter = payload.status;
+      if (payload.sort !== undefined) state.indexTrackingList.sortBy = payload.sort;
+      state.indexTrackingList.sortOrderDesc = payload.sortOrderDesc;
     },
     reset(state) {
       // we can keep the data, no need to reset it
@@ -80,17 +72,15 @@ const indexTrackingList: IndexTrackingListModule = {
     }
   },
   actions: {
-    async fetchIndexTrackingList({ commit }, page: any) {
+    async fetchIndexTrackingList({ commit, state }, queryDelta: DataQuery) {
       let indexTrackingList: PageIndexCase | null = null;
-      const query = page ? generateQuery(page) : null;
+      commit("updatePageInfo", queryDelta)
+      const query = queryDelta ? generateQuery(state.indexTrackingList) : null;
       commit("setIndexTrackingListLoading", true);
       try {
         indexTrackingList = (await client.dataRequestClientCasesGet(query)).data;
-        page.numberOfPages = indexTrackingList.totalPages;
-        page.totalElements = indexTrackingList.totalElements;
       } finally {
-        commit("setTableData", page);
-        commit("setIndexTrackingList", indexTrackingList?.content);
+        commit("setIndexTrackingList", indexTrackingList);
         commit("setIndexTrackingListLoading", false);
       }
     },

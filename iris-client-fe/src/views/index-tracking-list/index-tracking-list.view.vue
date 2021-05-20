@@ -4,9 +4,9 @@
       <v-col cols="12">
         <div class="mb-6">
           <v-btn
-            class="float-right"
-            color="primary"
-            :to="{ name: 'index-new' }"
+              class="float-right"
+              color="primary"
+              :to="{ name: 'index-new' }"
           >
             Neuen Indexfall erstellen
           </v-btn>
@@ -18,10 +18,10 @@
         Status:
         <v-btn-toggle dense mandatory v-model="statusButtonSelected">
           <v-btn
-            text
-            @click="filterStatus(selectableStatus[status])"
-            v-for="status in Object.keys(selectableStatus)"
-            :key="status"
+              text
+              @click="filterStatus(selectableStatus[status])"
+              v-for="status in Object.keys(selectableStatus)"
+              :key="status"
           >
             {{ getStatusSelectLabel(selectableStatus[status]) }}
           </v-btn>
@@ -33,24 +33,24 @@
       <v-card-title>Indexfallverfolgung</v-card-title>
       <v-card-text>
         <v-text-field
-          v-model="tableData.search"
-          append-icon="mdi-magnify"
-          label="Suche (min. 2 Buchstaben)"
-          single-line
-          hide-details
-          @keyup="triggerSearch"
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Suche (min. 2 Buchstaben)"
+            single-line
+            hide-details
+            @keyup="triggerSearch(search)"
         ></v-text-field>
         <v-data-table
-          :loading="indexListLoading"
-          :page="tableData.page"
-          :pageCount="tableData.numberOfPages"
-          :server-items-length="tableData.totalElements"
-          :headers="tableData.headers"
-          :items="indexList"
-          :items-per-page="tableData.itemsPerPage"
-          class="elevation-1 mt-5 twolineTable"
-          :search="tableData.search"
-          @update:options="updatePagination"
+            :loading="indexListLoading"
+            :page="indexList.page"
+            :pageCount="indexList.numberOfPages"
+            :server-items-length="indexList.totalElements"
+            :headers="headers"
+            :items="indexList.content"
+            :items-per-page="indexList.itemsPerPage"
+            class="elevation-1 mt-5 twolineTable"
+            :search="search"
+            @update:options="updatePagination"
         >
           <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
@@ -60,8 +60,8 @@
           <template v-slot:[itemActionSlotName]="{ item }">
             <!-- TODO use imported route name -->
             <v-btn
-              color="primary"
-              :to="{ name: 'index-details', params: { caseId: item.caseId } }"
+                color="primary"
+                :to="{ name: 'index-details', params: { caseId: item.caseId } }"
             >
               Details
             </v-btn>
@@ -73,19 +73,21 @@
 </template>
 
 <script lang="ts">
-import { DataRequestStatus } from "@/api";
+import {DataRequestCaseDetails, DataRequestStatus} from "@/api";
 import store from "@/store";
-import { Component, Vue } from "vue-property-decorator";
+import {Component, Vue} from "vue-property-decorator";
 import IndexTrackingFormView from "../index-tracking-form/index-tracking-form.view.vue";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
 import _omit from "lodash/omit";
-import { debounce } from "lodash";
+import {debounce} from "lodash";
+import {DataPage, DataQuery} from "@/api/common";
+import {DataOptions, DataTableItemProps} from "vuetify";
 
 function getFormattedDate(date?: string): string {
   return date
-    ? `${new Date(date).toDateString()}, ${new Date(date).toLocaleTimeString()}`
-    : "-";
+      ? `${new Date(date).toDateString()}, ${new Date(date).toLocaleTimeString()}`
+      : "-";
 }
 
 type TableRow = {
@@ -102,7 +104,7 @@ type TableRow = {
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
-    await store.dispatch("indexTrackingList/fetchIndexTrackingList", store.state.indexTrackingList.tableData);
+    await store.dispatch("indexTrackingList/fetchIndexTrackingList", {page: 1, itemsPerPage: 5});
   },
   beforeRouteLeave(to, from, next) {
     store.commit("indexTrackingList/reset");
@@ -117,47 +119,65 @@ export default class IndexTrackingListView extends Vue {
   };
   statusButtonSelected = Object.keys(this.selectableStatus).length - 1;
 
-  runSearch = debounce(async () => {
-    let search = store.state.indexTrackingList.tableData.search;
-    if ((search && search.length > 1 && search.trim()) || search === '') {
-      // If search is changed, page should be reset
-      store.state.indexTrackingList.tableData.page = 1;
-      await store.dispatch("indexTrackingList/fetchIndexTrackingList", store.state.indexTrackingList.tableData);
+  headers = [
+    {
+      text: "Ext.ID",
+      align: "start",
+      sortable: true,
+      value: "extID",
+    },
+    {text: "Index-Bezeichner", value: "name"},
+    {text: "Zeit (Start)", value: "startTime"},
+    {text: "Zeit (Ende)", value: "endTime"},
+    {text: "Status", value: "status"},
+    {text: "", value: "actions"},
+  ];
+
+  search = ""
+
+  runSearch = debounce(async (input: string) => {
+    let search = input?.trim();
+    if (!search || search.length > 1) {
+      const query: DataQuery = {
+        page: 1,
+        search: search
+      }
+      await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
     }
   }, 1000);
 
   async filterStatus(target: DataRequestStatus | null) {
     this.statusFilter = target;
-    store.state.indexTrackingList.tableData.statusFilter = target;
-    // If filter is changed, page should be reset
-    store.state.indexTrackingList.tableData.page = 1;
-    await store.dispatch("indexTrackingList/fetchIndexTrackingList", store.state.indexTrackingList.tableData);
-  }
-
-  get tableData() {
-    return store.state.indexTrackingList.tableData;
+    const query: DataQuery = {
+      // If filter is changed, page should be reset
+      page: 1,
+      status: target
+    };
+    await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
   }
 
   get indexListLoading(): boolean {
     return store.state.indexTrackingList.indexTrackingListLoading;
   }
 
-  get indexList(): TableRow[] {
-    const dataRequests = store.state.indexTrackingList.indexTrackingList || [];
-    //console.log(dataRequests);
-    return (
-      dataRequests
-        .map((dataRequest) => {
-          return {
-            endTime: getFormattedDate(dataRequest.end),
-            startTime: getFormattedDate(dataRequest.start),
-            extID: dataRequest.externalCaseId || "-",
-            name: dataRequest.name || "-",
-            status: dataRequest.status?.toString() || "-",
-            caseId: dataRequest.caseId,
-          };
-        })
-    );
+  get indexList(): DataPage<TableRow> {
+    const dataRequests: DataPage<DataRequestCaseDetails> = store.state.indexTrackingList.indexTrackingList;
+    return {
+      page: dataRequests.page,
+      itemsPerPage: dataRequests.itemsPerPage,
+      numberOfPages: dataRequests.numberOfPages,
+      totalElements: dataRequests.totalElements,
+      content: dataRequests.content.map((dataRequest) => {
+        return {
+          endTime: getFormattedDate(dataRequest.end),
+          startTime: getFormattedDate(dataRequest.start),
+          extID: dataRequest.externalCaseId || "-",
+          name: dataRequest.name || "-",
+          status: dataRequest.status?.toString() || "-",
+          caseId: dataRequest.caseId,
+        };
+      }),
+    };
   }
 
   // TODO improve this - we need it to circumvent v-slot eslint errors
@@ -165,20 +185,23 @@ export default class IndexTrackingListView extends Vue {
   get itemStatusSlotName(): string {
     return "item.status";
   }
+
   get itemActionSlotName(): string {
     return "item.actions";
   }
 
-  async updatePagination(pagination: any) {
-    store.state.indexTrackingList.tableData.page = pagination.page;
-    store.state.indexTrackingList.tableData.itemsPerPage = pagination.itemsPerPage;
-    store.state.indexTrackingList.tableData.sortBy = pagination.sortBy;
-    store.state.indexTrackingList.tableData.sortOrder = pagination.sortDesc;
-    await store.dispatch("indexTrackingList/fetchIndexTrackingList", store.state.indexTrackingList.tableData);
+  async updatePagination(pagination: DataOptions) {
+    const query: DataQuery = {
+      page: pagination.page,
+      size: pagination.itemsPerPage,
+      sort: pagination.sortBy[0] ?? null,
+      sortOrderDesc: pagination.sortDesc[0]
+    }
+    await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
   }
 
-  async triggerSearch() {
-    await this.runSearch();
+  async triggerSearch(input: string) {
+    await this.runSearch(input);
   }
 
   getStatusColor(status: DataRequestStatus): string {
