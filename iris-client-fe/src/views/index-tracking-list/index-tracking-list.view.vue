@@ -133,7 +133,7 @@ export default class IndexTrackingListView extends Vue {
     {text: "", value: "actions"},
   ];
 
-  search = ""
+  search = "";
 
   runSearch = debounce(async (input: string) => {
     let search = input?.trim();
