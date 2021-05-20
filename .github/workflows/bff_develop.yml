@@ -1,11 +1,9 @@
+# Build and package image for iris-client-bff and publish it to docker.io
 # https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#build-image
 
-name: Build and package image for iris-client-bff and publish it to docker.io
+name: BFF Develop
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - develop
