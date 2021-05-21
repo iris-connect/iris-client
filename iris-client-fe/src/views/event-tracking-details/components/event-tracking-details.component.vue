@@ -312,11 +312,10 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
 }
 </script>
 <style scoped lang="scss">
-.white-space-pre-line{
+.white-space-pre-line {
   white-space: pre-line;
   max-height: 150px;
   width: 100%;
   overflow-y: auto;
 }
 </style>
-
