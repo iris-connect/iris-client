@@ -4,22 +4,56 @@
       <div class="modal-mask">
         <div class="modal-wrapper">
           <div class="modal-container">
-            <div class="modal-header">
-              <h3>custom header</h3>
-            </div>
-
-            <div class="modal-body">
-              <slot name="body"> default body </slot>
-            </div>
-
-            <div class="modal-footer">
-              <slot name="footer">
-                default footer
-                <button class="modal-default-button" @click="closeExportModal">
-                  OK
-                </button>
-              </slot>
-            </div>
+            <v-card>
+              <v-card-title class="modal-header">
+                <h3>Daten exportieren</h3>
+              </v-card-title>
+              <v-divider />
+              <v-card-text class="modal-body">
+                <v-row align="center">
+                  <v-col cols="8">
+                    <span>Standard-csv</span>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-btn color="primary" @click="handleStandardCsvExport"
+                      >Download</v-btn
+                    >
+                  </v-col>
+                </v-row>
+                <v-row align="center">
+                  <v-col cols="8">
+                    <span>SORMAS-csv (Ereignisteilnehmer-Format)</span>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-btn
+                      color="primary"
+                      @click="handleSormasCsvEventParticipantsExport"
+                      >Download</v-btn
+                    >
+                  </v-col>
+                </v-row>
+                <v-row align="center">
+                  <v-col cols="8">
+                    <span>SORMAS-csv (Kontaktpersonen-Format)</span>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-btn
+                      color="primary"
+                      @click="handleSormasCsvContactPersonExport"
+                      >Download</v-btn
+                    >
+                  </v-col>
+                </v-row>
+              </v-card-text>
+              <v-divider />
+              <v-card-actions>
+                <v-row no-gutters justify="end">
+                  <v-col cols="4">
+                    <v-btn text @click="closeExportModal">Schließen</v-btn>
+                  </v-col>
+                </v-row>
+              </v-card-actions>
+            </v-card>
           </div>
         </div>
       </div>
@@ -45,9 +79,8 @@
 }
 
 .modal-container {
-  width: 300px;
+  width: 500px;
   margin: 0px auto;
-  padding: 20px 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
@@ -57,7 +90,6 @@
 
 .modal-header h3 {
   margin-top: 0;
-  color: #42b983;
 }
 
 .modal-body {
@@ -102,6 +134,18 @@ const EventTrackingDetailsExportProps = Vue.extend({
 export default class EventTrackingDetailsExport extends EventTrackingDetailsExportProps {
   closeExportModal(): void {
     this.$emit("close-export-modal");
+  }
+
+  handleStandardCsvExport(): void {
+    this.$emit("handle-standard-csv-export");
+  }
+
+  handleSormasCsvEventParticipantsExport(): void {
+    this.$emit("handle-sormas-csv-event-participants-export");
+  }
+
+  handleSormasCsvContactPersonExport(): void {
+    this.$emit("handle-sormas-csv-contact-person-export");
   }
 }
 </script>

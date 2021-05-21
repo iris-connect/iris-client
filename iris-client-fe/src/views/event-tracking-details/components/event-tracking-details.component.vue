@@ -3,6 +3,13 @@
     <event-tracking-details-export
       v-if="showExportModal"
       @close-export-modal="closeExportModal"
+      @handle-standard-csv-export="handleStandardCsvExport"
+      @handle-sormas-csv-event-participants-export="
+        handleSormasCsvEventParticipantsExport
+      "
+      @handle-sormas-csv-contact-person-export="
+        handleSormasCsvContactPersonExport
+    "
     />
     <v-card>
       <v-card-title>
@@ -162,7 +169,7 @@
         <v-spacer />
         <v-btn
           color="primary"
-          @click="handleExport"
+          @click="handleStandardCsvExport"
           :disabled="tableData.select.length <= 0"
         >
           Auswahl exportieren
@@ -318,12 +325,28 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
     this.$emit("status-update", status);
   }
 
-  handleExport(): void {
+  handleStandardCsvExport(): void {
     const exportData: ExportData = {
       headers: [...this.tableData.headers, ...this.tableData.expandedHeaders],
       rows: this.tableData.select,
     };
-    this.$emit("data-export", exportData);
+    this.$emit("handle-standard-csv-export", exportData);
+  }
+
+  handleSormasCsvEventParticipantsExport(): void {
+    const exportData: ExportData = {
+      headers: [...this.tableData.headers, ...this.tableData.expandedHeaders],
+      rows: this.tableData.select,
+    };
+    this.$emit("handle-sormas-csv-event-participants-export", exportData);
+  }
+
+  handleSormasCsvContactPersonExport(): void {
+    const exportData: ExportData = {
+      headers: [...this.tableData.headers, ...this.tableData.expandedHeaders],
+      rows: this.tableData.select,
+    };
+    this.$emit("handle-sormas-csv-contact-person-export", exportData);
   }
 
   openExportModal(): void {

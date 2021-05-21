@@ -7,7 +7,14 @@
     :errors="errorMessages"
     @field-edit="handleEditableField"
     @status-update="updateRequestStatus"
-    @data-export="handleExport"
+    @data-export="handleStandardCsvExport"
+    @handle-standard-csv-export="handleStandardCsvExport"
+    @handle-sormas-csv-event-participants-export="
+      handleSormasCsvEventParticipantsExport
+    "
+    @handle-sormas-csv-contact-person-export="
+      handleSormasCsvContactPersonExport
+    "
   />
 </template>
 <style></style>
@@ -240,7 +247,23 @@ export default class EventTrackingDetailsView extends Vue {
     });
   }
 
-  handleExport(payload: ExportData): void {
+  handleStandardCsvExport(payload: ExportData): void {
+    dataExport.exportCsv(
+      payload.headers,
+      payload.rows,
+      [this.eventTrackingDetails?.externalRequestId, Date.now()].join("_")
+    );
+  }
+
+  handleSormasCsvEventParticipantsExport(payload: ExportData): void {
+    dataExport.exportCsv(
+      payload.headers,
+      payload.rows,
+      [this.eventTrackingDetails?.externalRequestId, Date.now()].join("_")
+    );
+  }
+
+  handleSormasCsvContactPersonExport(payload: ExportData): void {
     dataExport.exportCsv(
       payload.headers,
       payload.rows,
