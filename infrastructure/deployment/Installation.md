@@ -1,6 +1,6 @@
 # IRIS Client
 
-Der IRIS Client ist der Teil vom IRIS Ecosystem, der auf einem Server im Gesundheitsamt (bzw. beim IT Dienstleiser) installiert wird und die Kernfunktionalitäten für Endbenutzer zur Verfügung stellt.
+Der IRIS Client ist der Teil vom IRIS Ecosystem, der auf einem Server im Gesundheitsamt (bzw. beim IT Dienstleistungsunternehmen) installiert wird und die Kernfunktionalitäten für Endanwender\*innen zur Verfügung stellt.
 
 ## Systemvoraussetzungen
 
@@ -24,21 +24,21 @@ Folgende Laufzeit-Abhängigkeiten werden vom IRIS Client vorausgesetzt.
 
 | Laufzeit-Abhängigkeit | Beschreibung                                                                                                                                                                                                                                    |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Postgres DB           | Das IRIS Client Backend benutzt eine Postgres Datenbank für die a) Verwaltung der Benutzer und b) für die Speicherung der offenen Index Fall Anfragen und Ereignis Anfragen                                                                     |
+| Postgres DB           | Das IRIS Client Backend benutzt eine Postgres Datenbank für die a) Verwaltung der Accounts und b) für die Speicherung der offenen Indexfall-Anfragen und Ereignis-Anfragen                                                                     |
 | Webserver             | Für die Bereistellung des IRIS Client Frontend über eine sichere HTTPS Verbindung wird ein Webserver benötigt. Dieser muss in der Lage sein a) Die statische Webanwendung auszuliefern und b) Anfragen an die API an das Backend weiterzuleiten |
-| Proxy Server          | In vielen GAs werden ausgehende Verbindungen über einen Proxy Server geroutet. Der IRIS Client stellt eine Konfigurationsmöglichkeit dafür zur Verfügung.                                                                                       |
+| Proxy Server          | In vielen Gesundheitsämtern werden ausgehende Verbindungen über einen Proxy-Server geleitet. Der IRIS Client stellt eine Konfigurationsmöglichkeit dafür zur Verfügung.                                                                                       |
 
 > Die Standard-Installationsvariante mit Docker Compose bringt bereits ein vorkonfiguriertes Setup inklusive der Postgres DB, dem Webserver (nginx) und EPS mit.
 
-Des Weiteren werden folgende Konfigurations-Abhängikeiten benötigt.
+Des Weiteren werden folgende Konfigurationsabhängigkeiten benötigt:
 
-| Konfigurations-Abhängigkeit     | Beschreibung                                                                                                                                                                                                                                                                                                    |
+| Konfigurationsabhängigkeit     | Beschreibung                                                                                                                                                                                                                                                                                                    |
 | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Domain                          | Die vom GA anhängige Domain unter der der IRIS Client für die Benutzer erreichbar ist (z.B. iris.bonn.local)                                                                                                                                                                                                    |
+| Domain                          | Die vom GA anhängige Domain unter der der IRIS Client für die Benutzer erreichbar ist (z.B. iris.meinestadt.local)                                                                                                                                                                                                    |
 | Domain Zertifikat und Schlüssel | Für die o.g. Domain muss ein valides Zertifikat inklusive privatem Schlüssel bereitgestellt werden.                                                                                                                                                                                                             |
-| GA Client Zertifikat            | Der IRIS Client benutzt ein für das GA ausgestelltes Client Zertifikat um mit den zentralen IRIS Servicen zu kommunizieren. Darüber hinaus werden alle Anfragen die vom IRIS Client ausgehen mit dem Zertifikat signiert. Für die Staging Umgebung ist der Prozess [hier](Certificate-Process.md) dokumentiert. |
+| GA Client Zertifikat            | Der IRIS Client benutzt ein für das GA ausgestelltes Client Zertifikat um mit den zentralen IRIS Services zu kommunizieren. Darüber hinaus werden alle Anfragen die vom IRIS Client ausgehen mit dem Zertifikat signiert. Für die Stagingumgebung ist der Prozess [hier](Certificate-Process.md) dokumentiert. |
 
-Des Weiteren gibt es folgende infrastrukturelle Anhängigkeiten
+Des Weiteren gibt es folgende infrastrukturelle Anhängigkeiten:
 
 | Infrastruktur-Abhängigkeit                            | Beschreibung                                                                                                                         |
 | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
@@ -50,7 +50,7 @@ Des Weiteren gibt es folgende infrastrukturelle Anhängigkeiten
 
 ## Authentifizierung und Authorisierung
 
-Aktuell bietet der IRIS client eine eigene Benutzerverwaltung an, die von einem IT Administrator betreut werden muss.
+Aktuell bietet der IRIS Client eine eigene Zugangsverwaltung an, die von IT-Personal betreut werden muss.
 
 ## IRIS Client - Installation Stand-Alone
 
@@ -60,15 +60,15 @@ Für diese Installationsart werden alle Komponenten des IRIS Clients separat auf
 
 ### Installation IRIS Backend (IRIS BE)
 
-Bei dem IRIS Backend handelt es sich um eine Java Applikation (min Java 11).
+Beim IRIS Backend handelt es sich um eine Java Applikation (min Java 11).
 
-1. Download Jar Datei
+1. Download Jar-Datei
 
    ```
    https://github.com/iris-gateway/iris-client/releases
    ```
 
-2. Anlegen einer Konfigurations Datei (Beispielwerte)
+2. Anlegen einer Konfigurationsdatei (Beispielwerte)
 
    ```
    > touch conf.env
@@ -84,21 +84,21 @@ Bei dem IRIS Backend handelt es sich um eine Java Applikation (min Java 11).
    export SECURITY_AUTH_DB_ADMIN_USER_PASSWORD=admin
    ```
 
-3. Konfigurations Parameter als Umgebungsvariablen exportieren
+3. Konfigurationsparameter als Umgebungsvariablen exportieren
 
    ```
    source conf.env
    ```
 
-4. Starten der Java Applikation (Beispiel Version: v1.0.3-alpha)
+4. Starten der Java-Applikation (Beispiel Version: v1.0.3-alpha)
 
    ```
    java -jar iris-client-bff-v1.0.3-alpha.jar
    ```
 
-## IRIS Client - Installation mit Docker Compose
+## IRIS Client – Installation mit Docker Compose
 
-Für diese Installationsart wird der IRIS Client in einer [Docker](https://docker.io) Umgebung gestartet. Die notwendigen Images werden vom [INÖG Vereichnis im Dockerhub](https://hub.docker.com/u/inoeg) heruntergeladen.
+Für diese Installationsart wird der IRIS Client in einer [Docker](https://docker.io) Umgebung gestartet. Die notwendigen Images werden vom [InÖG Vereichnis im Dockerhub](https://hub.docker.com/u/inoeg) heruntergeladen.
 
 Das folgende Schaubild visualisiert das Setup.
 
@@ -106,13 +106,13 @@ Das folgende Schaubild visualisiert das Setup.
 
 ### Installation Docker und Docker compose
 
-Bevor man mit der Installation des IRIS Clients beginnen kann, muss man die Docker Umgebung Installieren. Die Art der Installation ist abhängig vom jeweiligen Betriebssystem des Servers.
+Bevor man mit der Installation des IRIS Clients beginnen kann, muss man die Dockerumgebung installieren. Die Art der Installation ist abhängig vom jeweiligen Betriebssystem des Servers.
 
 #### Linux Ubuntu
 
-1. Installation der Docker Engine ist [hier beschrieben](https://docs.docker.com/engine/install/ubuntu/).
+1. Installation der Docker-Engine ist [hier beschrieben](https://docs.docker.com/engine/install/ubuntu/).
 
-2. Installation von Docker Compose ist [hier beschrieben](https://docs.docker.com/compose/install/#install-compose-on-linux-systems).
+2. Installation von Docker-Compose ist [hier beschrieben](https://docs.docker.com/compose/install/#install-compose-on-linux-systems).
 
 #### Microsoft Windows 10
 
@@ -122,11 +122,11 @@ Bevor man mit der Installation des IRIS Clients beginnen kann, muss man die Dock
 
 3. Installation »Docker Desktop für Windows«, Desktop-Applikation, die alle Werkzeuge (Docker Engine, Docker Compose) mitbringt, um Docker auf Windows zu betreiben. [hier beschrieben](https://docs.docker.com/docker-for-windows/install/)
 
-4. »Docker Desktop für Windows« starten - auch OHNE Administrator-Rolle möglich.
+4. »Docker Desktop für Windows« starten - auch OHNE Administrationsrolle möglich.
 
 ### Installation IRIS Client
 
-1. Auspacken des Installations Archives
+1. Entpacken des Installations Archives
 
    ```
    unzip iris-client.zip
@@ -138,25 +138,25 @@ Bevor man mit der Installation des IRIS Clients beginnen kann, muss man die Dock
    cp .env.sample .env
    ```
 
-1. Konfigurations Parameter anpassen
+1. Konfigurationsparameter anpassen
 
    ```
    .env öffnen und bearbeiten (siehe Konfiguration IRIS Client)
    ```
 
-1. IRIS Client mit Docker Compose und interner Postgres starten.
+1. IRIS Client mit Docker-Compose und interner Postgres starten.
 
    ```
    docker-compose up -d
    ```
 
-1. IRIS Client mit Docker Compose und externer Postgres starten.
+1. IRIS Client mit Docker-Compose und externer Postgres starten.
 
    ```
    docker-compose -f docker-compose-ext-postgres.yml up -d
    ```
 
-1. Überprüfen ob alle services laufen
+1. Überprüfen ob alle Services laufen
 
    ```
    # embedded Postgres
