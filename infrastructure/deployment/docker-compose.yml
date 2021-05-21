@@ -33,6 +33,8 @@ services:
       timeout: 3s
       retries: 4
       start_period: 30s
+    depends_on:
+      - logger
 
   # IRIS Client backend for frontend
   iris-client:
@@ -108,6 +110,8 @@ services:
       HTTPS_PROXY: ${PROXY_URL}
       TRUSTED_CA_CRT:
     command: ["--level", "trace", "run", "private"]
+    depends_on:
+      - logger
 
   private-proxy-eps:
     image: inoeg/eps:v0.1.8
@@ -126,6 +130,8 @@ services:
       PROXY_URL: ""
       TRUSTED_CA_CRT:
     command: ["--level", "trace", "server", "run"]
+    depends_on:
+      - logger
 
   # Reverse Proxy
   nginx:
@@ -156,6 +162,28 @@ services:
       WATCHTOWER_NO_PULL: "true"
     depends_on:
       - nginx
+
+  # Log shipper
+  logger:
+    image: umputun/docker-logger
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    environment:
+      - LOG_FILES=true
+      - LOG_SYSLOG=false
+      - EXCLUDE=deployment_logger_1
+      - MAX_FILES=10
+      - MAX_SIZE=50
+      - MAX_AGE=28
+      - DEBUG=false
+#      - TIME_ZONE=Europe/Berlin
+    volumes:
+      - ${LOG_FOLDER}:/srv/logs
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   psqldata_iris:
