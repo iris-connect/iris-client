@@ -14,8 +14,4 @@
     # rewrite to index.html for client side routing
     try_files {path} /index.html
 
-    # secure page with http basic auth
-    basicauth /* {
-        iris JDJhJDEwJHBNb1ZNOUl6d3FkMzNubHlsamlvd09LajNpbG5zUEV1ZkZyblg0M1VIMEhabGhFVFlSbkpp
-    }
 }
