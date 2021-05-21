@@ -16,7 +16,7 @@
 import {Configuration} from "./configuration";
 import {RequestArgs, RequiredError} from "./base";
 import {AxiosInstance} from 'axios';
-import {DataRequestCaseDetails, DataRequestStatus, ExistingDataRequestClientWithLocation} from "@/api/api";
+import {DataRequestStatus} from "@/api/api";
 
 /**
  *
@@ -171,6 +171,24 @@ export interface DataPage<T> {
  *
  * @export
  */
+export const getSortAttribute = function (key: string) {
+  const sortAttributes: { [key: string]: string; } = {
+    extID: 'refId',
+    name: 'name',
+    startTime: 'requestStart',
+    endTime: 'requestEnd',
+    status: 'status',
+    lastChange: 'metadata.lastModified',
+    generatedTime: 'metadata.created'
+  };
+
+  return sortAttributes[key];
+}
+
+/**
+ *
+ * @export
+ */
 export const generateQuery = function (page: DataPage<any>) {
   const sortAttributes: { [key: string]: string; } = {
     extID: 'refId',
@@ -180,7 +198,7 @@ export const generateQuery = function (page: DataPage<any>) {
     status: 'status',
     lastChange: 'metadata.lastModified',
     generatedTime: 'metadata.created'
-  }
+  };
   const query: DataQuery = {
     size: page.itemsPerPage,
     page: page.page - 1,

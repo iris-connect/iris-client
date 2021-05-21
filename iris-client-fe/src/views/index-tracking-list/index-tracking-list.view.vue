@@ -15,7 +15,7 @@
     </v-row>
     <v-row class="mb-6">
       <v-col cols="8">
-        Status:
+        Status {{ statusButtonSelected }}:
         <v-btn-toggle dense mandatory v-model="statusButtonSelected">
           <v-btn
             text
@@ -81,10 +81,9 @@ import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
 import _omit from "lodash/omit";
 import { debounce } from "lodash";
-import { DataPage, DataQuery } from "@/api/common";
+import { DataPage, DataQuery, getSortAttribute } from "@/api/common";
 import { DataOptions } from "vuetify";
-import { NavigationGuardNext, Route } from "vue-router";
-import { Dictionary } from "vue-router/types/router";
+import { Route } from "vue-router";
 
 function getFormattedDate(date?: string): string {
   return date
@@ -126,46 +125,39 @@ function getPageFromRouteWithDefault(route: Route) {
 function getStatusFilterFromRoute(route: Route) {
   const s = getStringParamFromRouteWithOptionalFallback("status", route);
   if (!s) {
-    return undefined;
+    return null;
   }
-  return DataRequestStatus[s as keyof typeof DataRequestStatus];
-}
-
-async function updateViewData(
-  to: Route,
-  _from: Route,
-  next: NavigationGuardNext
-) {
-  next();
-
-  const query: DataQuery = {
-    size: getPageSizeFromRouteWithDefault(to),
-    page: getPageFromRouteWithDefault(to),
-    status: getStatusFilterFromRoute(to),
-    search: getStringParamFromRouteWithOptionalFallback("search", to),
-  };
-
-  await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
+  return s as DataRequestStatus;
 }
 
 @Component({
   components: {
     IndexTrackingFormView: IndexTrackingFormView,
   },
-  // beforeRouteUpdate: updateViewData,
-  // beforeRouteEnter: updateViewData,
   beforeRouteLeave(to, from, next) {
     store.commit("indexTrackingList/reset");
     next();
   },
 })
 export default class IndexTrackingListView extends Vue {
-  statusFilter: DataRequestStatus | null = null;
+  statusFilter: DataRequestStatus | null = getStatusFilterFromRoute(
+    this.$route
+  );
+
   selectableStatus = {
     ..._omit(DataRequestStatus, ["Aborted"]),
-    All: null,
+    All: undefined,
   };
-  statusButtonSelected = Object.keys(this.selectableStatus).length - 1;
+  statusButtonSelected = this.statusFilter
+    ? Object.values(this.selectableStatus).findIndex((v) => {
+        return v === this.statusFilter;
+      })
+    : Object.keys(this.selectableStatus).length - 1;
+
+  dataTableOptions = {
+    currentPage: getPageFromRouteWithDefault(this.$route),
+    itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
+  };
 
   headers = [
     {
@@ -194,12 +186,27 @@ export default class IndexTrackingListView extends Vue {
     }
   }, 1000);
 
-  async filterStatus(target: DataRequestStatus | null) {
+  async filterStatus(target: DataRequestStatus | null): Promise<void> {
     this.statusFilter = target;
+
+    this.$router.replace({
+      name: this.$route.name as string | undefined,
+      query: {
+        ...this.$route.query,
+        page: `1`,
+        status: target,
+      },
+    });
+
     const query: DataQuery = {
-      // If filter is changed, page should be reset
-      page: 1,
+      size: getPageSizeFromRouteWithDefault(this.$route),
+      page: 0,
+      sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
       status: target,
+      search: getStringParamFromRouteWithOptionalFallback(
+        "search",
+        this.$route
+      ),
     };
     await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
   }
@@ -239,16 +246,11 @@ export default class IndexTrackingListView extends Vue {
     return "item.actions";
   }
 
-  dataTableOptions = {
-    currentPage: getPageFromRouteWithDefault(this.$route),
-    itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
-  };
-
   async updatePagination(pagination: DataOptions): Promise<void> {
-    // const query: DataQuery = {
-    //   sort: pagination.sortBy[0] ?? null,
-    //   sortOrderDesc: pagination.sortDesc[0],
-    // };
+    let sort = getSortAttribute(pagination.sortBy[0]);
+    if (sort) {
+      pagination.sortDesc[0] ? (sort = sort + ",desc") : (sort = sort + ",asc");
+    }
 
     this.$router.replace({
       name: this.$route.name as string | undefined,
@@ -256,12 +258,14 @@ export default class IndexTrackingListView extends Vue {
         ...this.$route.query,
         page: `${pagination.page}`,
         size: `${pagination.itemsPerPage}`,
+        sort: sort,
       },
     });
 
     const query: DataQuery = {
       size: pagination.itemsPerPage,
       page: pagination.page - 1,
+      sort: sort,
       status: getStatusFilterFromRoute(this.$route),
       search: getStringParamFromRouteWithOptionalFallback(
         "search",

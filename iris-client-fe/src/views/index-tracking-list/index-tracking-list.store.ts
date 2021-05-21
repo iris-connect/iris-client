@@ -76,7 +76,6 @@ const indexTrackingList: IndexTrackingListModule = {
   },
   actions: {
     async fetchIndexTrackingList({ commit }, query: DataQuery) {
-      console.log({ query });
       let indexTrackingList: PageIndexCase | null = null;
       // commit("updatePageInfo", queryDelta);
       // const query = queryDelta ? generateQuery(state.indexTrackingList) : null;
