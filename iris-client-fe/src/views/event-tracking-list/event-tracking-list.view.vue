@@ -46,7 +46,7 @@
           :items-per-page="eventList.itemsPerPage"
           class="elevation-1 mt-5 twolineTable"
           :search="search"
-          :footer-props="{'items-per-page-options': [5, 10, 15]}"
+          :footer-props="{ 'items-per-page-options': [5, 10, 15] }"
           @update:options="updatePagination"
         >
           <template v-slot:[itemAddressSlotName]="{ item }">
@@ -84,8 +84,8 @@ import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
 import { debounce } from "lodash";
 import dayjs from "@/utils/date";
-import {DataPage, DataQuery} from "@/api/common";
-import {DataOptions} from "vuetify";
+import { DataPage, DataQuery } from "@/api/common";
+import { DataOptions } from "vuetify";
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
@@ -135,9 +135,10 @@ type TableRow = {
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
-    await store.dispatch(
-      "eventTrackingList/fetchEventTrackingList", {page: 1, itemsPerPage: 5}
-    );
+    await store.dispatch("eventTrackingList/fetchEventTrackingList", {
+      page: 1,
+      itemsPerPage: 5,
+    });
   },
   beforeRouteLeave(to, from, next) {
     store.commit("eventTrackingList/reset");
@@ -176,8 +177,8 @@ export default class EventTrackingListView extends Vue {
     if (!search || search.length > 1) {
       const query: DataQuery = {
         page: 1,
-        search: search
-      }
+        search: search,
+      };
       await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
     }
   }, 1000);
@@ -187,12 +188,9 @@ export default class EventTrackingListView extends Vue {
     const query: DataQuery = {
       // If filter is changed, page should be reset
       page: 1,
-      status: target
+      status: target,
     };
-    await store.dispatch(
-      "eventTrackingList/fetchEventTrackingList",
-      query
-    );
+    await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
   }
 
   get eventListLoading(): boolean {
@@ -200,7 +198,8 @@ export default class EventTrackingListView extends Vue {
   }
 
   get eventList(): DataPage<TableRow> {
-    const dataRequests: DataPage<ExistingDataRequestClientWithLocation> = store.state.eventTrackingList.eventTrackingList;
+    const dataRequests: DataPage<ExistingDataRequestClientWithLocation> =
+      store.state.eventTrackingList.eventTrackingList;
     return {
       page: dataRequests.page,
       itemsPerPage: dataRequests.itemsPerPage,
@@ -237,17 +236,14 @@ export default class EventTrackingListView extends Vue {
   }
 
   async updatePagination(pagination: DataOptions) {
-    console.log(pagination.sortBy)
+    console.log(pagination.sortBy);
     const query: DataQuery = {
       page: pagination.page,
       size: pagination.itemsPerPage,
       sort: pagination.sortBy[0] ?? null,
-      sortOrderDesc: pagination.sortDesc[0]
-    }
-    await store.dispatch(
-      "eventTrackingList/fetchEventTrackingList",
-      query
-    );
+      sortOrderDesc: pagination.sortDesc[0],
+    };
+    await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
   }
 
   async triggerSearch(input: string) {

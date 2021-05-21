@@ -96,10 +96,7 @@ import CounterWidget from "@/components/dashboard/counter-widget.vue";
 // import CasesPieChart from "@/components/dashboard/cases-pie-chart.vue";
 import EventList from "@/components/event-list.vue";
 import store from "@/store";
-import {
-  ExistingDataRequestClientWithLocation,
-  Statistics,
-} from "@/api";
+import { ExistingDataRequestClientWithLocation, Statistics } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
 import { ErrorMessage } from "@/utils/axios";
 import StatusColors from "@/constants/StatusColors";

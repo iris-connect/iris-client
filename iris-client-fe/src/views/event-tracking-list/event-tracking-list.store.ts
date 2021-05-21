@@ -3,7 +3,7 @@ import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 import authClient from "@/api-client";
-import {DataPage, DataQuery, generateQuery} from "@/api/common";
+import { DataPage, DataQuery, generateQuery } from "@/api/common";
 
 export type EventTrackingListState = {
   eventTrackingList: DataPage<ExistingDataRequestClientWithLocation>;
@@ -21,15 +21,12 @@ export interface EventTrackingListModule
       state: EventTrackingListState,
       payload: boolean
     ): void;
-    updatePageInfo(
-        state: EventTrackingListState,
-        payload: DataQuery
-    ): void;
+    updatePageInfo(state: EventTrackingListState, payload: DataQuery): void;
     reset(state: EventTrackingListState, payload: null): void;
   };
   actions: {
     fetchEventTrackingList(
-      { commit, state }: { commit: Commit, state: EventTrackingListState },
+      { commit, state }: { commit: Commit; state: EventTrackingListState },
       payload: DataQuery
     ): Promise<void>;
   };
@@ -63,9 +60,12 @@ const eventTrackingList: EventTrackingListModule = {
     updatePageInfo(state: EventTrackingListState, payload: DataQuery) {
       if (payload.page) state.eventTrackingList.page = payload.page;
       if (payload.size) state.eventTrackingList.itemsPerPage = payload.size;
-      if (payload.search !== undefined) state.eventTrackingList.search = payload.search;
-      if (payload.status !== undefined) state.eventTrackingList.statusFilter = payload.status;
-      if (payload.sort !== undefined) state.eventTrackingList.sortBy = payload.sort;
+      if (payload.search !== undefined)
+        state.eventTrackingList.search = payload.search;
+      if (payload.status !== undefined)
+        state.eventTrackingList.statusFilter = payload.status;
+      if (payload.sort !== undefined)
+        state.eventTrackingList.sortBy = payload.sort;
       state.eventTrackingList.sortOrderDesc = payload.sortOrderDesc;
     },
     reset(state) {
@@ -77,7 +77,7 @@ const eventTrackingList: EventTrackingListModule = {
   actions: {
     async fetchEventTrackingList({ commit, state }, queryDelta: DataQuery) {
       let eventTrackingList: PageEvent | null = null;
-      commit("updatePageInfo", queryDelta)
+      commit("updatePageInfo", queryDelta);
       const query = queryDelta ? generateQuery(state.eventTrackingList) : null;
       commit("setEventTrackingListLoading", true);
       try {
