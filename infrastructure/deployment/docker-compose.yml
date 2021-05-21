@@ -74,6 +74,7 @@ services:
       - 5556
     ports:
       - 4446:4446
+      - 5556:5556
     depends_on:
       - iris-client
     volumes:
