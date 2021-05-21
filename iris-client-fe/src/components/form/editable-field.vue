@@ -5,10 +5,9 @@
         @click="isEditing = true"
         :class="['d-flex editable-button', hover ? 'hover' : '']"
       >
-        <div>
+        <div class="editable-button_text">
           <slot v-bind="{ entry: model || '-' }" />
         </div>
-        <v-spacer />
         <v-icon class="ml-3">mdi-pencil</v-icon>
       </div>
     </v-hover>
@@ -25,6 +24,7 @@
         hide-details="auto"
         :error-messages="error"
         outlined
+        @keypress.enter="keyEnter"
       ></component>
     </template>
   </v-form>
@@ -119,6 +119,11 @@ export default class EditableField extends EditableFieldProps {
     };
     this.$emit("submit", payload, resolve, reject);
   }
+  keyEnter(): void {
+    if (this.$props.component != "v-textarea") {
+      this.submit();
+    }
+  }
 }
 </script>
 <style scoped lang="scss">
@@ -128,5 +133,8 @@ export default class EditableField extends EditableFieldProps {
   &.hover {
     border-bottom-color: rgba(0, 0, 0, 0.12);
   }
+}
+.editable-button_text {
+  width: 100%;
 }
 </style>
