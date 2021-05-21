@@ -1,7 +1,6 @@
 <template>
   <div class="alertOverlay">
     <v-alert
-      :value="alert"
       color="blue"
       prominent
       dismissible
@@ -19,6 +18,5 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class AlertComponent extends Vue {
-  alert = true;
 }
 </script>

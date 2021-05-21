@@ -216,8 +216,6 @@ const EventTrackingDetailsComponentProps = Vue.extend({
   },
 })
 export default class EventTrackingDetailsComponent extends EventTrackingDetailsComponentProps {
-  alert = false;
-
   tableData = {
     search: "",
     expanded: [],

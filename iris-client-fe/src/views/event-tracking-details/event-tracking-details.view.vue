@@ -161,6 +161,12 @@ export default class EventTrackingDetailsView extends Vue {
     if (this.$route.query.is_created == "true") {
       this.openAlert();
     }
+
+    let query = Object.assign({}, this.$route.query);
+    if (query.is_created) {
+      delete query.is_created;
+      this.$router.replace({ query });
+    }
   }
 
   openAlert(): void {
@@ -168,12 +174,6 @@ export default class EventTrackingDetailsView extends Vue {
     setTimeout(() => {
       this.alert = false;
     }, 2000);
-  }
-
-  mounted(): void {
-    let query = Object.assign({}, this.$route.query);
-    delete query.is_created;
-    this.$router.replace({ query });
   }
 
   updateRequestStatus(status: DataRequestStatusUpdateByUser): void {

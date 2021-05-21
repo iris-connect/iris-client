@@ -59,7 +59,6 @@
               :to="{
                 name: 'index-details',
                 params: { caseId: item.caseId },
-                query: { is_created: 'false' },
               }"
             >
               Details

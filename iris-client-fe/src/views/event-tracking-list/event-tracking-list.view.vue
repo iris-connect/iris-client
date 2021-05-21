@@ -58,7 +58,6 @@
               :to="{
                 name: 'event-details',
                 params: { id: item.code },
-                query: { is_created: 'false' },
               }"
             >
               Details
