@@ -104,7 +104,6 @@ services:
       PROXY_CLIENT_CERT_KEY:
       HTTPS_PROXY:
       TRUSTED_CA_CRT:
-
     command: ["--level", "trace", "run", "private"]
 
   private-proxy-eps:
