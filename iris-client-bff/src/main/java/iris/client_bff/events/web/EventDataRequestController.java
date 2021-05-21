@@ -8,19 +8,18 @@ import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.*;
 import lombok.AllArgsConstructor;
-
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RequestMapping("/data-requests-client/events")
 @RestController
@@ -32,17 +31,12 @@ public class EventDataRequestController {
 
 	private ModelMapper modelMapper;
 
-	private ExistingDataRequestClientWithLocation mapRequest(EventDataRequest request) {
-		var mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
-		mapped.setCode(request.getId().toString());
-		mapped.setStart(request.getRequestStart());
-		mapped.setEnd(request.getRequestEnd());
+	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (
+			EventDataRequest request) -> {
+		ExistingDataRequestClientWithLocation mapped = EventMapper.map(request);
 		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
-		mapped.setLastUpdatedAt(request.getLastModifiedAt());
-		mapped.setRequestedAt(request.getCreatedAt());
-		mapped.setExternalRequestId(request.getRefId());
 		return mapped;
-	}
+	};
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -69,13 +63,13 @@ public class EventDataRequestController {
 			@RequestParam(required = false) String search, Pageable pageable) {
 		if (status != null && search != null) {
 			return dataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable)
-					.map(request -> mapRequest(request));
+					.map(eventMapperFunction);
 		} else if (search != null) {
-			return dataRequestService.searchByRefIdOrName(search, pageable).map(request -> mapRequest(request));
+			return dataRequestService.searchByRefIdOrName(search, pageable).map(eventMapperFunction);
 		} else if (status != null) {
-			return dataRequestService.findByStatus(status, pageable).map(request -> mapRequest(request));
+			return dataRequestService.findByStatus(status, pageable).map(eventMapperFunction);
 		}
-		return dataRequestService.findAll(pageable).map(request -> mapRequest(request));
+		return dataRequestService.findAll(pageable).map(eventMapperFunction);
 
 	}
 
