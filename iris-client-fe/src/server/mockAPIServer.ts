@@ -20,6 +20,7 @@ import {
   getDummyUserFromRequest,
 } from "@/server/data/dummy-userlist";
 import { remove, findIndex } from "lodash";
+import { paginated } from "@/server/utils/pagination";
 
 // @todo: find better solution for data type
 const authResponse = (
@@ -145,7 +146,17 @@ export function makeMockAPIServer() {
       });
 
       this.get("/data-requests-client/cases", (schema, request) => {
-        return authResponse(request, dummyDataRequestsCases);
+        return authResponse(
+          request,
+          paginated(
+            dummyDataRequestsCases.map((r) => {
+              return {
+                ...r,
+                externalCaseId: `p${request.queryParams.page}-${r.externalCaseId}`,
+              };
+            })
+          )
+        );
       });
 
       this.get("/data-requests-client/cases/:caseId", (schema, request) => {

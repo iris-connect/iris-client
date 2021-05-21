@@ -42,12 +42,11 @@
         ></v-text-field>
         <v-data-table
           :loading="indexListLoading"
-          :page="indexList.page"
-          :pageCount="indexList.numberOfPages"
+          :page="dataTableOptions.currentPage"
           :server-items-length="indexList.totalElements"
           :headers="headers"
           :items="indexList.content"
-          :items-per-page="indexList.itemsPerPage"
+          :items-per-page="dataTableOptions.itemsPerPage"
           class="elevation-1 mt-5 twolineTable"
           :search="search"
           :footer-props="{ 'items-per-page-options': [5, 10, 15] }"
@@ -83,7 +82,9 @@ import StatusMessages from "@/constants/StatusMessages";
 import _omit from "lodash/omit";
 import { debounce } from "lodash";
 import { DataPage, DataQuery } from "@/api/common";
-import { DataOptions, DataTableItemProps } from "vuetify";
+import { DataOptions } from "vuetify";
+import { NavigationGuardNext, Route } from "vue-router";
+import { Dictionary } from "vue-router/types/router";
 
 function getFormattedDate(date?: string): string {
   return date
@@ -99,17 +100,60 @@ type TableRow = {
   status: string;
 };
 
+function getStringParamFromRouteWithOptionalFallback(
+  param: "page" | "sort" | "search" | "status" | "size",
+  route: Route,
+  fallback?: string
+): string | undefined {
+  const v = route.query[param] as string | undefined;
+  return v || fallback;
+}
+
+function getPageSizeFromRouteWithDefault(route: Route) {
+  const fallback = "15";
+  return Number(
+    getStringParamFromRouteWithOptionalFallback("size", route, fallback)
+  );
+}
+
+function getPageFromRouteWithDefault(route: Route) {
+  const fallback = "1";
+  return Number(
+    getStringParamFromRouteWithOptionalFallback("page", route, fallback)
+  );
+}
+
+function getStatusFilterFromRoute(route: Route) {
+  const s = getStringParamFromRouteWithOptionalFallback("status", route);
+  if (!s) {
+    return undefined;
+  }
+  return DataRequestStatus[s as keyof typeof DataRequestStatus];
+}
+
+async function updateViewData(
+  to: Route,
+  _from: Route,
+  next: NavigationGuardNext
+) {
+  next();
+
+  const query: DataQuery = {
+    size: getPageSizeFromRouteWithDefault(to),
+    page: getPageFromRouteWithDefault(to),
+    status: getStatusFilterFromRoute(to),
+    search: getStringParamFromRouteWithOptionalFallback("search", to),
+  };
+
+  await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
+}
+
 @Component({
   components: {
     IndexTrackingFormView: IndexTrackingFormView,
   },
-  async beforeRouteEnter(_from, _to, next) {
-    next();
-    await store.dispatch("indexTrackingList/fetchIndexTrackingList", {
-      page: 1,
-      itemsPerPage: 5,
-    });
-  },
+  // beforeRouteUpdate: updateViewData,
+  // beforeRouteEnter: updateViewData,
   beforeRouteLeave(to, from, next) {
     store.commit("indexTrackingList/reset");
     next();
@@ -195,17 +239,39 @@ export default class IndexTrackingListView extends Vue {
     return "item.actions";
   }
 
-  async updatePagination(pagination: DataOptions) {
+  dataTableOptions = {
+    currentPage: getPageFromRouteWithDefault(this.$route),
+    itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
+  };
+
+  async updatePagination(pagination: DataOptions): Promise<void> {
+    // const query: DataQuery = {
+    //   sort: pagination.sortBy[0] ?? null,
+    //   sortOrderDesc: pagination.sortDesc[0],
+    // };
+
+    this.$router.replace({
+      name: this.$route.name as string | undefined,
+      query: {
+        ...this.$route.query,
+        page: `${pagination.page}`,
+        size: `${pagination.itemsPerPage}`,
+      },
+    });
+
     const query: DataQuery = {
-      page: pagination.page,
       size: pagination.itemsPerPage,
-      sort: pagination.sortBy[0] ?? null,
-      sortOrderDesc: pagination.sortDesc[0],
+      page: pagination.page - 1,
+      status: getStatusFilterFromRoute(this.$route),
+      search: getStringParamFromRouteWithOptionalFallback(
+        "search",
+        this.$route
+      ),
     };
     await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
   }
 
-  async triggerSearch(input: string) {
+  async triggerSearch(input: string): Promise<void> {
     await this.runSearch(input);
   }
 

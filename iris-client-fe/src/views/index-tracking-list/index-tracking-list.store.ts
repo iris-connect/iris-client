@@ -75,14 +75,18 @@ const indexTrackingList: IndexTrackingListModule = {
     },
   },
   actions: {
-    async fetchIndexTrackingList({ commit, state }, queryDelta: DataQuery) {
+    async fetchIndexTrackingList({ commit }, query: DataQuery) {
+      console.log({ query });
       let indexTrackingList: PageIndexCase | null = null;
-      commit("updatePageInfo", queryDelta);
-      const query = queryDelta ? generateQuery(state.indexTrackingList) : null;
+      // commit("updatePageInfo", queryDelta);
+      // const query = queryDelta ? generateQuery(state.indexTrackingList) : null;
       commit("setIndexTrackingListLoading", true);
       try {
-        indexTrackingList = (await client.dataRequestClientCasesGet(query))
-          .data;
+        indexTrackingList = (
+          await client.dataRequestClientCasesGet({
+            params: query,
+          })
+        ).data;
       } finally {
         commit("setIndexTrackingList", indexTrackingList);
         commit("setIndexTrackingListLoading", false);
