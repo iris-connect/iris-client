@@ -157,7 +157,6 @@ export type DataQuery = {
  */
 export interface DataPage<T> {
   content: Array<T>,
-  itemsPerPage: number,
   totalElements: number,
 }
 

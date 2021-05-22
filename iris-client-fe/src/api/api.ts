@@ -1802,7 +1802,7 @@ export interface PageEvent {
     size?: any;
     /**
      *
-     * @type {Array&lt;IndexCaseDTO&gt;}
+     * @type {Array&lt;ExistingDataRequestClientWithLocation&gt;}
      * @memberof PageEvent
      */
     content: Array<ExistingDataRequestClientWithLocation>;

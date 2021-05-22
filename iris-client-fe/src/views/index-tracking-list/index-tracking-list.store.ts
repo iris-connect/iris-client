@@ -1,12 +1,12 @@
-import { DataRequestCaseDetails, PageIndexCase } from "@/api";
+import { PageIndexCase } from "@/api";
 import client from "@/api-client";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
-import { DataPage, DataQuery } from "@/api/common";
+import { DataQuery } from "@/api/common";
 
 export type IndexTrackingListState = {
-  indexTrackingList: DataPage<DataRequestCaseDetails>;
+  indexTrackingList: PageIndexCase;
   indexTrackingListLoading: boolean;
 };
 
@@ -34,7 +34,6 @@ export interface IndexTrackingListModule
 const defaultState: IndexTrackingListState = {
   indexTrackingList: {
     content: [],
-    itemsPerPage: 5,
     totalElements: 0,
   },
   indexTrackingListLoading: false,
@@ -47,8 +46,7 @@ const indexTrackingList: IndexTrackingListModule = {
   },
   mutations: {
     setIndexTrackingList(state, payload) {
-      state.indexTrackingList.content = payload?.content;
-      state.indexTrackingList.totalElements = payload?.totalElements;
+      state.indexTrackingList = payload;
     },
     setIndexTrackingListLoading(state, loading) {
       state.indexTrackingListLoading = loading;

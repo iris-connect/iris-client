@@ -1,12 +1,12 @@
-import { ExistingDataRequestClientWithLocation, PageEvent } from "@/api";
+import { PageEvent } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 import authClient from "@/api-client";
-import { DataPage, DataQuery } from "@/api/common";
+import { DataQuery } from "@/api/common";
 
 export type EventTrackingListState = {
-  eventTrackingList: DataPage<ExistingDataRequestClientWithLocation>;
+  eventTrackingList: PageEvent;
   eventTrackingListLoading: boolean;
 };
 
@@ -34,7 +34,6 @@ export interface EventTrackingListModule
 const defaultState: EventTrackingListState = {
   eventTrackingList: {
     content: [],
-    itemsPerPage: 5,
     totalElements: 0,
   },
   eventTrackingListLoading: false,
@@ -47,8 +46,7 @@ const eventTrackingList: EventTrackingListModule = {
   },
   mutations: {
     setEventTrackingList(state, payload) {
-      state.eventTrackingList.content = payload?.content;
-      state.eventTrackingList.totalElements = payload?.totalElements;
+      state.eventTrackingList = payload;
     },
     setEventTrackingListLoading(state, loading) {
       state.eventTrackingListLoading = loading;

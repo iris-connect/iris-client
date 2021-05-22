@@ -238,12 +238,10 @@ export default class EventTrackingListView extends Vue {
   }
 
   get eventList(): DataPage<TableRow> {
-    const dataRequests: DataPage<ExistingDataRequestClientWithLocation> =
-      store.state.eventTrackingList.eventTrackingList;
+    const { eventTrackingList } = store.state.eventTrackingList;
     return {
-      itemsPerPage: dataRequests.itemsPerPage,
-      totalElements: dataRequests.totalElements,
-      content: dataRequests.content.map((dataRequest) => {
+      totalElements: eventTrackingList.totalElements,
+      content: eventTrackingList.content.map((dataRequest) => {
         return {
           address: getFormattedAddress(dataRequest),
           endTime: getFormattedDate(dataRequest.end),

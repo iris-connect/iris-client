@@ -73,7 +73,7 @@
 </template>
 
 <script lang="ts">
-import { DataRequestCaseDetails, DataRequestStatus } from "@/api";
+import { DataRequestStatus } from "@/api";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import IndexTrackingFormView from "../index-tracking-form/index-tracking-form.view.vue";
@@ -206,12 +206,10 @@ export default class IndexTrackingListView extends Vue {
   }
 
   get indexList(): DataPage<TableRow> {
-    const dataRequests: DataPage<DataRequestCaseDetails> =
-      store.state.indexTrackingList.indexTrackingList;
+    const { indexTrackingList } = store.state.indexTrackingList;
     return {
-      itemsPerPage: dataRequests.itemsPerPage,
-      totalElements: dataRequests.totalElements,
-      content: dataRequests.content.map((dataRequest) => {
+      totalElements: indexTrackingList.totalElements,
+      content: indexTrackingList.content.map((dataRequest) => {
         return {
           endTime: getFormattedDate(dataRequest.end),
           startTime: getFormattedDate(dataRequest.start),

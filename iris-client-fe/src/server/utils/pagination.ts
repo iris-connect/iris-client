@@ -10,12 +10,11 @@ export function paginated<T extends Named>(
 ): DataPage<T> {
   const pageId = Number(page || 0);
   return {
-    itemsPerPage: 15,
     totalElements: 43,
     content: items.map((r) => {
       return {
         ...r,
-        externalCaseId: `p${pageId}-${r.name}`,
+        name: `p${pageId}-${r.name}`,
       };
     }),
   };
