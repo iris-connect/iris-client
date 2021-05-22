@@ -2,6 +2,7 @@ package iris.client_bff.events.web;
 
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
+import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation.StatusEnum;
 import lombok.NoArgsConstructor;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -13,6 +14,7 @@ public class EventMapper {
 				.code(eventDataRequest.getId().toString())
 				.start(eventDataRequest.getRequestStart())
 				.end(eventDataRequest.getRequestEnd())
+				.status(StatusEnum.valueOf(eventDataRequest.getStatus().toString()))
 				.lastUpdatedAt(eventDataRequest.getLastModifiedAt())
 				.requestedAt(eventDataRequest.getCreatedAt())
 				.externalRequestId(eventDataRequest.getRefId())
