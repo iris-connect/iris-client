@@ -1,6 +1,6 @@
 import { flattenDeep } from "lodash";
 import { Route } from "vue-router";
-import { DataRequestStatus } from "../api";
+import { DataRequestStatus } from "@/api";
 
 export const join = (arr: Array<unknown>, separator: string): string => {
   return flattenDeep(arr)
