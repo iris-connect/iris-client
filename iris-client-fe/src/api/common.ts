@@ -157,14 +157,8 @@ export type DataQuery = {
  */
 export interface DataPage<T> {
   content: Array<T>,
-  page: number,
   itemsPerPage: number,
-  numberOfPages: number,
   totalElements: number,
-  statusFilter?: DataRequestStatus | null,
-  search?: string | null,
-  sortBy?: string | null,
-  sortOrderDesc?: boolean,
 }
 
 /**
@@ -183,33 +177,4 @@ export const getSortAttribute = function (key: string) {
   };
 
   return sortAttributes[key];
-}
-
-/**
- *
- * @export
- */
-export const generateQuery = function (page: DataPage<any>) {
-  const sortAttributes: { [key: string]: string; } = {
-    extID: 'refId',
-    name: 'name',
-    startTime: 'requestStart',
-    endTime: 'requestEnd',
-    status: 'status',
-    lastChange: 'metadata.lastModified',
-    generatedTime: 'metadata.created'
-  };
-  const query: DataQuery = {
-    size: page.itemsPerPage,
-    page: page.page - 1,
-  };
-
-  if ((page.sortBy && page.sortBy.length > 0) && sortAttributes[page.sortBy]) query.sort = sortAttributes[page.sortBy];
-  if (query.sort) page.sortOrderDesc ? query.sort = query.sort + ',desc' : query.sort = query.sort + ',asc'
-
-  if (page.statusFilter) query.status = page.statusFilter;
-
-  if (page.search && page.search !== '') query.search = page.search;
-
-  return {query: query};
 }

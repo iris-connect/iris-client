@@ -173,13 +173,29 @@ export default class IndexTrackingListView extends Vue {
     { text: "", value: "actions", sortable: false },
   ];
 
-  search = "";
+  search = getStringParamFromRouteWithOptionalFallback(
+    "search",
+    this.$route,
+    ""
+  );
 
   runSearch = debounce(async (input: string) => {
     let search = input?.trim();
     if (!search || search.length > 1) {
+      this.$router.replace({
+        name: this.$route.name as string | undefined,
+        query: {
+          ...this.$route.query,
+          page: `1`,
+          search: search || undefined,
+        },
+      });
+
       const query: DataQuery = {
-        page: 1,
+        size: getPageSizeFromRouteWithDefault(this.$route),
+        page: 0,
+        sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
+        status: getStatusFilterFromRoute(this.$route),
         search: search,
       };
       await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
@@ -219,9 +235,7 @@ export default class IndexTrackingListView extends Vue {
     const dataRequests: DataPage<DataRequestCaseDetails> =
       store.state.indexTrackingList.indexTrackingList;
     return {
-      page: dataRequests.page,
       itemsPerPage: dataRequests.itemsPerPage,
-      numberOfPages: dataRequests.numberOfPages,
       totalElements: dataRequests.totalElements,
       content: dataRequests.content.map((dataRequest) => {
         return {
