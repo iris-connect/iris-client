@@ -9,7 +9,7 @@ import { RootState } from "@/store/types";
 import { Commit, Module } from "vuex";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
-import { generateQuery } from "@/api/common";
+import { DataQuery, getSortAttribute } from "@/api/common";
 
 export type HomeState = {
   eventTrackingList: Array<ExistingDataRequestClientWithLocation> | null;
@@ -70,19 +70,15 @@ const home: HomeModule = {
       let eventTrackingList: PageEvent | null = null;
       commit("setEventTrackingListError", null);
       commit("setEventTrackingListLoading", true);
-      const query = generateQuery({
-        content: [],
-        itemsPerPage: 10,
-        page: 1,
-        numberOfPages: 0,
-        totalElements: 0,
-        sortBy: "generatedTime",
-        sortOrderDesc: true,
-        statusFilter: DataRequestStatus.DataReceived,
-      });
+      const query: DataQuery = {
+        page: 0,
+        size: 10,
+        sort: getSortAttribute("generatedTime") + ",desc",
+        status: DataRequestStatus.DataRequested,
+      };
       try {
         eventTrackingList = (
-          await authClient.dataRequestsClientLocationsGet(query)
+          await authClient.dataRequestsClientLocationsGet({query: query})
         ).data;
       } catch (e) {
         commit("setEventTrackingListError", getErrorMessage(e));
