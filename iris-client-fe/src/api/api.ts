@@ -786,7 +786,7 @@ export interface DataRequestDetails {
      * @type {string}
      * @memberof DataRequestDetails
      */
-    lastUpdatedAt?: string;
+    lastModifiedAt?: string;
     /**
      * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
      * @type {string}
