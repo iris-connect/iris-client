@@ -83,7 +83,12 @@ import _omit from "lodash/omit";
 import { debounce } from "lodash";
 import { DataPage, DataQuery, getSortAttribute } from "@/api/common";
 import { DataOptions } from "vuetify";
-import { Route } from "vue-router";
+import {
+  getPageFromRouteWithDefault,
+  getPageSizeFromRouteWithDefault,
+  getStatusFilterFromRoute,
+  getStringParamFromRouteWithOptionalFallback,
+} from "@/utils/misc";
 
 function getFormattedDate(date?: string): string {
   return date
@@ -98,37 +103,6 @@ type TableRow = {
   startTime: string;
   status: string;
 };
-
-function getStringParamFromRouteWithOptionalFallback(
-  param: "page" | "sort" | "search" | "status" | "size",
-  route: Route,
-  fallback?: string
-): string | undefined {
-  const v = route.query[param] as string | undefined;
-  return v || fallback;
-}
-
-function getPageSizeFromRouteWithDefault(route: Route) {
-  const fallback = "15";
-  return Number(
-    getStringParamFromRouteWithOptionalFallback("size", route, fallback)
-  );
-}
-
-function getPageFromRouteWithDefault(route: Route) {
-  const fallback = "1";
-  return Number(
-    getStringParamFromRouteWithOptionalFallback("page", route, fallback)
-  );
-}
-
-function getStatusFilterFromRoute(route: Route) {
-  const s = getStringParamFromRouteWithOptionalFallback("status", route);
-  if (!s) {
-    return null;
-  }
-  return s as DataRequestStatus;
-}
 
 @Component({
   components: {
