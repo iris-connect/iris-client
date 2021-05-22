@@ -74,7 +74,7 @@ const home: HomeModule = {
         page: 0,
         size: 10,
         sort: getSortAttribute("generatedTime") + ",desc",
-        status: DataRequestStatus.DataRequested,
+        status: DataRequestStatus.DataReceived,
       };
       try {
         eventTrackingList = (
