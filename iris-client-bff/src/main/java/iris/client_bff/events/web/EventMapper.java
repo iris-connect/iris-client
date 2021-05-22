@@ -11,6 +11,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class EventMapper {
 	public static ExistingDataRequestClientWithLocation map(EventDataRequest eventDataRequest) {
 		return ExistingDataRequestClientWithLocation.builder()
+				.name(eventDataRequest.getName())
 				.code(eventDataRequest.getId().toString())
 				.start(eventDataRequest.getRequestStart())
 				.end(eventDataRequest.getRequestEnd())
@@ -18,6 +19,7 @@ public class EventMapper {
 				.lastUpdatedAt(eventDataRequest.getLastModifiedAt())
 				.requestedAt(eventDataRequest.getCreatedAt())
 				.externalRequestId(eventDataRequest.getRefId())
+				.requestDetails(eventDataRequest.getRequestDetails())
 				.build();
 	}
 }
