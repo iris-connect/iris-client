@@ -78,7 +78,7 @@ const home: HomeModule = {
       };
       try {
         eventTrackingList = (
-          await authClient.dataRequestsClientLocationsGet({query: query})
+          await authClient.dataRequestsClientLocationsGet({ query: query })
         ).data;
       } catch (e) {
         commit("setEventTrackingListError", getErrorMessage(e));

@@ -25,7 +25,7 @@ export interface EventTrackingListModule
   };
   actions: {
     fetchEventTrackingList(
-      { commit }: { commit: Commit; },
+      { commit }: { commit: Commit },
       payload: DataQuery
     ): Promise<void>;
   };
@@ -66,7 +66,7 @@ const eventTrackingList: EventTrackingListModule = {
       try {
         eventTrackingList = (
           await authClient.dataRequestsClientLocationsGet({
-            params: query
+            params: query,
           })
         ).data;
       } finally {
