@@ -38,12 +38,11 @@
         ></v-text-field>
         <v-data-table
           :loading="eventListLoading"
-          :page="eventList.page"
-          :pageCount="eventList.numberOfPages"
+          :page="dataTableOptions.page"
           :server-items-length="eventList.totalElements"
           :headers="headers"
           :items="eventList.content"
-          :items-per-page="eventList.itemsPerPage"
+          :items-per-page="dataTableOptions.itemsPerPage"
           class="elevation-1 mt-5 twolineTable"
           :search="search"
           :footer-props="{ 'items-per-page-options': [5, 10, 15] }"
@@ -84,8 +83,14 @@ import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
 import { debounce } from "lodash";
 import dayjs from "@/utils/date";
-import { DataPage, DataQuery } from "@/api/common";
+import { DataPage, DataQuery, getSortAttribute } from "@/api/common";
 import { DataOptions } from "vuetify";
+import {
+  getPageFromRouteWithDefault,
+  getPageSizeFromRouteWithDefault,
+  getStatusFilterFromRoute,
+  getStringParamFromRouteWithOptionalFallback,
+} from "@/utils/misc";
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
@@ -133,25 +138,29 @@ type TableRow = {
   components: {
     EventTrackingFormView: EventTrackingFormView,
   },
-  async beforeRouteEnter(_from, _to, next) {
-    next();
-    await store.dispatch("eventTrackingList/fetchEventTrackingList", {
-      page: 1,
-      itemsPerPage: 5,
-    });
-  },
   beforeRouteLeave(to, from, next) {
     store.commit("eventTrackingList/reset");
     next();
   },
 })
 export default class EventTrackingListView extends Vue {
-  statusFilter: DataRequestStatus | null = null;
+  statusFilter: DataRequestStatus | null = getStatusFilterFromRoute(
+    this.$route
+  );
   selectableStatus = {
     ...DataRequestStatus,
-    All: null,
+    All: undefined,
   };
-  statusButtonSelected = Object.keys(this.selectableStatus).length - 1;
+  statusButtonSelected = this.statusFilter
+    ? Object.values(this.selectableStatus).findIndex((v) => {
+        return v === this.statusFilter;
+      })
+    : Object.keys(this.selectableStatus).length - 1;
+
+  dataTableOptions = {
+    currentPage: getPageFromRouteWithDefault(this.$route),
+    itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
+  };
 
   headers = [
     {
@@ -170,25 +179,56 @@ export default class EventTrackingListView extends Vue {
     { text: "", value: "actions", sortable: false },
   ];
 
-  search = "";
+  search = getStringParamFromRouteWithOptionalFallback(
+    "search",
+    this.$route,
+    ""
+  );
 
   runSearch = debounce(async (input: string) => {
     let search = input?.trim();
     if (!search || search.length > 1) {
+      this.$router.replace({
+        name: this.$route.name as string | undefined,
+        query: {
+          ...this.$route.query,
+          page: `1`,
+          search: search || undefined,
+        },
+      });
+
       const query: DataQuery = {
-        page: 1,
+        size: getPageSizeFromRouteWithDefault(this.$route),
+        page: 0,
+        sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
+        status: getStatusFilterFromRoute(this.$route),
         search: search,
       };
       await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
     }
   }, 1000);
 
-  async filterStatus(target: DataRequestStatus | null) {
+  async filterStatus(target: DataRequestStatus | null): Promise<void> {
     this.statusFilter = target;
+
+    this.$router.replace({
+      name: this.$route.name as string | undefined,
+      query: {
+        ...this.$route.query,
+        page: `1`,
+        status: target,
+      },
+    });
+
     const query: DataQuery = {
-      // If filter is changed, page should be reset
-      page: 1,
+      size: getPageSizeFromRouteWithDefault(this.$route),
+      page: 0,
+      sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
       status: target,
+      search: getStringParamFromRouteWithOptionalFallback(
+        "search",
+        this.$route
+      ),
     };
     await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
   }
@@ -201,9 +241,7 @@ export default class EventTrackingListView extends Vue {
     const dataRequests: DataPage<ExistingDataRequestClientWithLocation> =
       store.state.eventTrackingList.eventTrackingList;
     return {
-      page: dataRequests.page,
       itemsPerPage: dataRequests.itemsPerPage,
-      numberOfPages: dataRequests.numberOfPages,
       totalElements: dataRequests.totalElements,
       content: dataRequests.content.map((dataRequest) => {
         return {
@@ -235,18 +273,36 @@ export default class EventTrackingListView extends Vue {
     return "item.address";
   }
 
-  async updatePagination(pagination: DataOptions) {
-    console.log(pagination.sortBy);
+  async updatePagination(pagination: DataOptions): Promise<void> {
+    let sort = getSortAttribute(pagination.sortBy[0]);
+    if (sort) {
+      pagination.sortDesc[0] ? (sort = sort + ",desc") : (sort = sort + ",asc");
+    }
+
+    this.$router.replace({
+      name: this.$route.name as string | undefined,
+      query: {
+        ...this.$route.query,
+        page: `${pagination.page}`,
+        size: `${pagination.itemsPerPage}`,
+        sort: sort,
+      },
+    });
+
     const query: DataQuery = {
-      page: pagination.page,
       size: pagination.itemsPerPage,
-      sort: pagination.sortBy[0] ?? null,
-      sortOrderDesc: pagination.sortDesc[0],
+      page: pagination.page - 1,
+      sort: sort,
+      status: getStatusFilterFromRoute(this.$route),
+      search: getStringParamFromRouteWithOptionalFallback(
+        "search",
+        this.$route
+      ),
     };
     await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
   }
 
-  async triggerSearch(input: string) {
+  async triggerSearch(input: string): Promise<void> {
     await this.runSearch(input);
   }
 
