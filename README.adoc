@@ -1,7 +1,9 @@
 :toc: macro
 
 # IRIS Client
+
 toc::[]
+
 == Feedback
 
 If you have any feedback or questions mailto:iris@steiger-stiftung.de[just contact us].
