@@ -15,7 +15,7 @@
     </v-row>
     <v-row class="mb-6">
       <v-col cols="8">
-        Status {{ statusButtonSelected }}:
+        Status:
         <v-btn-toggle dense mandatory v-model="statusButtonSelected">
           <v-btn
             text
