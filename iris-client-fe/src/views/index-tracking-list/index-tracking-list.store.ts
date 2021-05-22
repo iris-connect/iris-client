@@ -25,7 +25,7 @@ export interface IndexTrackingListModule
   };
   actions: {
     fetchIndexTrackingList(
-      { commit, state }: { commit: Commit; state: IndexTrackingListState },
+      { commit }: { commit: Commit; },
       payload: DataQuery
     ): Promise<void>;
   };
