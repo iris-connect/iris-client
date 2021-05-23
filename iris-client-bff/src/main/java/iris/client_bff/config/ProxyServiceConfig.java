@@ -9,5 +9,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("proxy-service")
 public class ProxyServiceConfig {
 	private String epsName;
-	private String proxyTarget;
+	private String targetProxy;
+	private String targetSubdomain;
 }

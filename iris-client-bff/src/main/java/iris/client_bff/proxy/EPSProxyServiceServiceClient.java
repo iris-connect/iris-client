@@ -29,19 +29,20 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 
 		var domain = UUID.randomUUID()
 				+ "."
-				+ config.getProxyTarget();
+				+ config.getTargetSubdomain();
 
 		var oneWeekFromNow = Instant.now().plus(7, ChronoUnit.DAYS);
 
 		var announcementDto = AnnouncementDto.builder()
 				.domain(domain)
 				.expiresAt(oneWeekFromNow)
+				.targetProxy(config.getTargetProxy())
 				.build();
 
 		// TODO use correct method name
 		var methodName = config.getEpsName()
 				+ "."
-				+ "announ....";
+				+ "announceConnection";
 
 		try {
 			rpcClient.invoke(methodName, announcementDto);
@@ -59,6 +60,6 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 	public static class AnnouncementDto {
 		private String domain;
 		private Instant expiresAt;
-		// TODO anything else?
+		private String targetProxy;
 	}
 }
