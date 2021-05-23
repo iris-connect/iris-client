@@ -1,12 +1,15 @@
 package iris.client_bff.events.web;
 
-import io.vavr.control.Option;
+import static org.springframework.http.ResponseEntity.ok;
+
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionRepository;
+import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.*;
+import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
@@ -41,20 +44,22 @@ public class EventDataRequestController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<DataRequestDetails> createDataRequest(@Valid @RequestBody DataRequestClient request) {
+	public ResponseEntity createDataRequest(@Valid @RequestBody DataRequestClient request) {
 
-		var result = dataRequestService.createDataRequest(
-			request.getExternalRequestId(),
-			request.getName(),
-			request.getStart(),
-			Option.of(request.getEnd()),
-			Option.of(request.getComment()),
-			Option.of(request.getRequestDetails()),
-			Option.none(),
-			Option.of(request.getLocationId()),
-			Option.of(request.getProviderId()));
+		EventDataRequest result = null;
+		try {
+			result = dataRequestService.createDataRequest(request);
 
-		return ResponseEntity.ok(mapDataRequestDetails(result));
+			return ok(mapDataRequestDetails(result));
+
+		} catch (IRISDataRequestException e) {
+
+			// TODO this is an interim solution to improve UX and display user friendly error messages
+			return ResponseEntity
+					.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(ErrorMessages.EVENT_DATA_REQUEST_CREATION);
+		}
+
 	}
 
 	@GetMapping
@@ -120,7 +125,8 @@ public class EventDataRequestController {
 	}
 
 	private ExistingDataRequestClientWithLocation mapExistingDataRequestClientWithLocation(EventDataRequest request) {
-		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
+		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request,
+				ExistingDataRequestClientWithLocation.class);
 		mapped.setCode(request.getId().toString());
 		mapped.setStart(request.getRequestStart());
 		mapped.setEnd(request.getRequestEnd());
@@ -135,22 +141,24 @@ public class EventDataRequestController {
 
 	private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
 
-		submissionRepo.findAllByRequest(request).get().findFirst().ifPresent(it -> addSubmissionToRequest(requestDetails, it));
+		submissionRepo.findAllByRequest(request).get().findFirst()
+				.ifPresent(it -> addSubmissionToRequest(requestDetails, it));
 	}
 
 	private void addSubmissionToRequest(DataRequestDetails requestDetails, EventDataSubmission submission) {
 
 		var dataProvider = modelMapper.map(submission.getDataProvider(), GuestListDataProvider.class);
 
-		var guests = submission.getGuests().stream().map(it -> modelMapper.map(it, Guest.class)).collect(Collectors.toList());
+		var guests = submission.getGuests().stream().map(it -> modelMapper.map(it, Guest.class))
+				.collect(Collectors.toList());
 
 		var guestList = GuestList.builder()
-			.additionalInformation(submission.getAdditionalInformation())
-			.startDate(submission.getStartDate())
-			.endDate(submission.getEndDate())
-			.dataProvider(dataProvider)
-			.guests(guests)
-			.build();
+				.additionalInformation(submission.getAdditionalInformation())
+				.startDate(submission.getStartDate())
+				.endDate(submission.getEndDate())
+				.dataProvider(dataProvider)
+				.guests(guests)
+				.build();
 
 		requestDetails.setSubmissionData(guestList);
 	}
