@@ -20,46 +20,47 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 @AllArgsConstructor
 public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 
-	private final ProxyServiceConfig config;
+    private final ProxyServiceConfig config;
 
-	private final JsonRpcHttpClient rpcClient;
+    private final JsonRpcHttpClient rpcClient;
 
-	@Override
-	public String announce() throws IRISAnnouncementException {
+    @Override
+    public String announce() throws IRISAnnouncementException {
 
-		var domain = UUID.randomUUID()
-				+ "."
-				+ config.getTargetSubdomain();
+        var domain = UUID.randomUUID()
+                + "."
+                + config.getTargetSubdomain();
 
-		var oneWeekFromNow = Instant.now().plus(7, ChronoUnit.DAYS);
+        var oneWeekFromNow = Instant.now().plus(7, ChronoUnit.DAYS);
 
-		var announcementDto = AnnouncementDto.builder()
-				.domain(domain)
-				.expiresAt(oneWeekFromNow)
-				.targetProxy(config.getTargetProxy())
-				.build();
+        var announcementDto = AnnouncementDto.builder()
+                .domain(domain)
+                .expiresAt(oneWeekFromNow)
+                .targetProxy(config.getTargetProxy())
+                .build();
 
-		// TODO use correct method name
-		var methodName = config.getEpsName()
-				+ "."
-				+ "announceConnection";
+        // TODO use correct method name
+        var methodName = config.getEpsName()
+                + "."
+                + "announceConnection";
 
-		try {
-			rpcClient.invoke(methodName, announcementDto);
-		} catch (Throwable throwable) {
-			throw new IRISAnnouncementException(throwable);
-		}
+        try {
+            rpcClient.invoke(methodName, announcementDto);
+            log.debug("Announced {} to {} till {}", announcementDto.getDomain(), announcementDto.getTargetProxy(), announcementDto.getExpiresAt());
+        } catch (Throwable throwable) {
+            throw new IRISAnnouncementException(throwable);
+        }
 
-		return domain;
-	}
+        return domain;
+    }
 
-	@Data
-	@Builder
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class AnnouncementDto {
-		private String domain;
-		private Instant expiresAt;
-		private String targetProxy;
-	}
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AnnouncementDto {
+        private String domain;
+        private Instant expiresAt;
+        private String targetProxy;
+    }
 }
