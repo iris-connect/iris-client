@@ -1,17 +1,3 @@
-/*******************************************************************************
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *******************************************************************************/
 package iris.client_bff;
 
 import lombok.NonNull;
@@ -35,16 +21,16 @@ import org.springframework.stereotype.Component;
 @Order(100)
 class DataInitializerInvoker implements ApplicationRunner {
 
-	private final @NonNull List<DataInitializer> initializers;
+  private final @NonNull List<DataInitializer> initializers;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.boot.ApplicationRunner#run(org.springframework.boot.ApplicationArguments)
-	 */
-	@Override
-	public void run(@Nullable ApplicationArguments args) throws Exception {
-		initializers.stream()
-				.peek(it -> log.info("Data initialization for " + AopUtils.getTargetClass(it)))
-				.forEach(DataInitializer::initialize);
-	}
+  /*
+   * (non-Javadoc)
+   * @see org.springframework.boot.ApplicationRunner#run(org.springframework.boot.ApplicationArguments)
+   */
+  @Override
+  public void run(@Nullable ApplicationArguments args) throws Exception {
+	initializers.stream()
+		.peek(it -> log.info("Data initialization for " + AopUtils.getTargetClass(it)))
+		.forEach(DataInitializer::initialize);
+  }
 }

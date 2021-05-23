@@ -1,17 +1,3 @@
-/*******************************************************************************
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *******************************************************************************/
 package iris.client_bff.core;
 
 import lombok.Getter;
@@ -36,39 +22,39 @@ import org.springframework.stereotype.Component;
 @Component
 public class IrisDateTimeProvider implements DateTimeProvider {
 
-	private DateTimeProperties properties;
-	private @Getter @Setter TemporalAmount delta;
+  private DateTimeProperties properties;
+  private @Getter @Setter TemporalAmount delta;
 
-	public IrisDateTimeProvider(@Nullable DateTimeProperties properties) {
+  public IrisDateTimeProvider(@Nullable DateTimeProperties properties) {
 
-		this.properties = properties;
+	this.properties = properties;
 
-		delta = properties != null ? properties.getDelta() : Period.ZERO;
+	delta = properties != null ? properties.getDelta() : Period.ZERO;
+  }
+
+  public void reset() {
+	this.delta = properties.getDelta();
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.springframework.data.auditing.DateTimeProvider#getNow()
+   */
+  @Override
+  public Optional<TemporalAccessor> getNow() {
+	return Optional.of(Instant.now().plus(delta));
+  }
+
+  @ConstructorBinding
+  @ConfigurationProperties("date-time")
+  @RequiredArgsConstructor
+  // @Profile("!prod")
+  public static class DateTimeProperties {
+
+	private final Period delta;
+
+	public Period getDelta() {
+	  return delta != null ? delta : Period.ZERO;
 	}
-
-	public void reset() {
-		this.delta = properties.getDelta();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.auditing.DateTimeProvider#getNow()
-	 */
-	@Override
-	public Optional<TemporalAccessor> getNow() {
-		return Optional.of(Instant.now().plus(delta));
-	}
-
-	@ConstructorBinding
-	@ConfigurationProperties("date-time")
-	@RequiredArgsConstructor
-	// @Profile("!prod")
-	public static class DateTimeProperties {
-
-		private final Period delta;
-
-		public Period getDelta() {
-			return delta != null ? delta : Period.ZERO;
-		}
-	}
+  }
 }
