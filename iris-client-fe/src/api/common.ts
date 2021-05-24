@@ -155,15 +155,6 @@ export type DataQuery = {
  *
  * @export
  */
-export interface DataPage<T> {
-  content: Array<T>,
-  totalElements: number,
-}
-
-/**
- *
- * @export
- */
 export const getSortAttribute = function (key: string) {
   const sortAttributes: { [key: string]: string; } = {
     extID: 'refId',

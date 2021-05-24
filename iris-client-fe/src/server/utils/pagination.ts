@@ -1,4 +1,4 @@
-import { DataPage } from "@/api/common";
+import { PageEvent, PageIndexCase } from "@/api";
 
 type Named = {
   name?: string;
@@ -7,7 +7,7 @@ type Named = {
 export function paginated<T extends Named>(
   items: T[],
   page?: number | string
-): DataPage<T> {
+): PageEvent | PageIndexCase {
   const pageId = Number(page || 0);
   return {
     totalElements: 43,

@@ -37,12 +37,12 @@
           @keyup="triggerSearch(search)"
         ></v-text-field>
         <v-data-table
-          :loading="eventListLoading"
-          :page="dataTableOptions.page"
-          :server-items-length="eventList.totalElements"
-          :headers="dataTableOptions.headers"
-          :items="eventList.content"
-          :items-per-page="dataTableOptions.itemsPerPage"
+          :loading="dataTableModel.loading"
+          :page="dataTableModel.page"
+          :server-items-length="dataTableModel.itemsLength"
+          :headers="dataTableModel.headers"
+          :items="dataTableModel.data"
+          :items-per-page="dataTableModel.itemsPerPage"
           class="elevation-1 mt-5 twolineTable"
           :search="search"
           :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
@@ -83,7 +83,7 @@ import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
 import { debounce } from "lodash";
 import dayjs from "@/utils/date";
-import { DataPage, DataQuery, getSortAttribute } from "@/api/common";
+import { DataQuery, getSortAttribute } from "@/api/common";
 import { DataOptions } from "vuetify";
 import {
   getPageFromRouteWithDefault,
@@ -123,17 +123,6 @@ function getFormattedDate(date?: string): string {
   return "-";
 }
 
-type TableRow = {
-  address: string;
-  endTime: string;
-  extID: string;
-  generatedTime: string;
-  lastChange: string;
-  name: string;
-  startTime: string;
-  status: string;
-};
-
 @Component({
   components: {
     EventTrackingFormView: EventTrackingFormView,
@@ -150,27 +139,6 @@ export default class EventTrackingListView extends Vue {
   selectableStatus = {
     ...DataRequestStatus,
     All: undefined,
-  };
-
-  dataTableOptions = {
-    currentPage: getPageFromRouteWithDefault(this.$route),
-    itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
-    headers: [
-      {
-        text: "Ext.ID",
-        align: "start",
-        sortable: true,
-        value: "extID",
-      },
-      { text: "Event", value: "name" },
-      { text: "Ort", value: "address", sortable: false },
-      { text: "Zeit (Start)", value: "startTime" },
-      { text: "Zeit (Ende)", value: "endTime" },
-      { text: "Generiert", value: "generatedTime" },
-      { text: "Status", value: "status" },
-      { text: "Letzte Änderung", value: "lastChange" },
-      { text: "", value: "actions", sortable: false },
-    ],
   };
 
   search = getStringParamFromRouteWithOptionalFallback(
@@ -239,11 +207,18 @@ export default class EventTrackingListView extends Vue {
     return store.state.eventTrackingList.eventTrackingListLoading;
   }
 
-  get eventList(): DataPage<TableRow> {
-    const { eventTrackingList } = store.state.eventTrackingList;
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  get dataTableModel() {
+    const {
+      eventTrackingList,
+      eventTrackingListLoading,
+    } = store.state.eventTrackingList;
     return {
-      totalElements: eventTrackingList.totalElements,
-      content: eventTrackingList.content.map((dataRequest) => {
+      currentPage: getPageFromRouteWithDefault(this.$route),
+      itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
+      loading: eventTrackingListLoading,
+      itemsLength: eventTrackingList.totalElements,
+      data: eventTrackingList.content.map((dataRequest) => {
         return {
           address: getFormattedAddress(dataRequest),
           endTime: getFormattedDate(dataRequest.end),
@@ -256,6 +231,22 @@ export default class EventTrackingListView extends Vue {
           status: dataRequest.status?.toString() || "-",
         };
       }),
+      headers: [
+        {
+          text: "Ext.ID",
+          align: "start",
+          sortable: true,
+          value: "extID",
+        },
+        { text: "Event", value: "name" },
+        { text: "Ort", value: "address", sortable: false },
+        { text: "Zeit (Start)", value: "startTime" },
+        { text: "Zeit (Ende)", value: "endTime" },
+        { text: "Generiert", value: "generatedTime" },
+        { text: "Status", value: "status" },
+        { text: "Letzte Änderung", value: "lastChange" },
+        { text: "", value: "actions", sortable: false },
+      ],
     };
   }
 
