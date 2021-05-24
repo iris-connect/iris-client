@@ -7,6 +7,7 @@ import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +30,10 @@ public class IndexCaseController {
 	@ResponseStatus(OK)
 	public Page<IndexCaseDTO> getAll(@RequestParam(required = false) Status status,
 			@RequestParam(required = false) String search, Pageable pageable) {
-		if (status != null && search != null) {
+		if (status != null && StringUtils.isNotEmpty(search)) {
 			return indexCaseService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(IndexCaseMapper::map);
 		}
-		else if (search != null) {
+		else if (StringUtils.isNotEmpty(search)) {
 			return indexCaseService.searchByRefIdOrName(search, pageable).map(IndexCaseMapper::map);
 		}
 		else if (status != null) {

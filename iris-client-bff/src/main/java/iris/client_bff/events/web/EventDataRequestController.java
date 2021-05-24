@@ -8,6 +8,7 @@ import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.*;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,10 +62,10 @@ public class EventDataRequestController {
 	public Page<ExistingDataRequestClientWithLocation> getDataRequests(
 			@RequestParam(required = false) Status status,
 			@RequestParam(required = false) String search, Pageable pageable) {
-		if (status != null && search != null) {
+		if (status != null && StringUtils.isNotEmpty(search)) {
 			return dataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable)
 					.map(eventMapperFunction);
-		} else if (search != null) {
+		} else if (StringUtils.isNotEmpty(search)) {
 			return dataRequestService.searchByRefIdOrName(search, pageable).map(eventMapperFunction);
 		} else if (status != null) {
 			return dataRequestService.findByStatus(status, pageable).map(eventMapperFunction);
