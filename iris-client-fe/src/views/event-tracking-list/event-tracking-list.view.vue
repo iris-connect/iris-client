@@ -12,7 +12,7 @@
     <v-row class="mb-6">
       <v-col cols="8">
         Status:
-        <v-btn-toggle dense mandatory v-model="statusButtonSelected">
+        <v-btn-toggle dense mandatory :value="statusButtonSelected">
           <v-btn
             text
             @click="filterStatus(selectableStatus[status])"
@@ -151,11 +151,6 @@ export default class EventTrackingListView extends Vue {
     ...DataRequestStatus,
     All: undefined,
   };
-  statusButtonSelected = this.statusFilter
-    ? Object.values(this.selectableStatus).findIndex((v) => {
-        return v === this.statusFilter;
-      })
-    : Object.keys(this.selectableStatus).length - 1;
 
   dataTableOptions = {
     currentPage: getPageFromRouteWithDefault(this.$route),
@@ -230,6 +225,14 @@ export default class EventTrackingListView extends Vue {
       ),
     };
     await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
+  }
+
+  get statusButtonSelected(): number {
+    return this.statusFilter
+      ? Object.values(this.selectableStatus).findIndex((v) => {
+          return v === this.statusFilter;
+        })
+      : Object.keys(this.selectableStatus).length - 1;
   }
 
   get eventListLoading(): boolean {
