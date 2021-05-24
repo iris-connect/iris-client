@@ -151,26 +151,29 @@ class EventDataRequestControllerIntegrationTest {
 	@WithMockUser()
 	public void updateDataRequestByCode() throws Exception {
 		String REFID = "refId";
-		var dataRequest = Mockito.spy(
-				new EventDataRequest(
-						REFID,
-						"name",
-						Instant.now(),
-						Instant.now(),
-						"",
-						"requestDetails",
-						"",
-						new Location()));
+		var eventDataRequest = EventDataRequest.builder()
+				.refId(REFID)
+				.name("name")
+				.requestStart(Instant.now())
+				.requestEnd(Instant.now())
+				.comment("")
+				.requestDetails("requestDetails")
+				.hdUserId("")
+				.location(new Location())
+				.build();
+		var dataRequest = Mockito.spy(eventDataRequest);
 
-		var dataRequestUpdated = new EventDataRequest(
-				REFID,
-				"name",
-				Instant.now(),
-				Instant.now(),
-				"This is a test comment",
-				"requestDetails",
-				"",
-				new Location());
+		var dataRequestUpdated = EventDataRequest.builder()
+				.refId(REFID)
+				.name("name")
+				.requestStart(Instant.now())
+				.requestEnd(Instant.now())
+				.comment("This is a test comment")
+				.requestDetails("requestDetails")
+				.hdUserId("")
+				.location(new Location())
+				.build();
+
 		dataRequestUpdated.setComment("Different test comment");
 		dataRequestUpdated.setName("NameSecond");
 		dataRequestUpdated.setRefId("refIdSecond");
@@ -203,16 +206,17 @@ class EventDataRequestControllerIntegrationTest {
 	}
 
 	private void postNewDataRequest() throws Exception {
-		var dataRequest = Mockito.spy(
-				new EventDataRequest(
-						"refId",
-						"name",
-						Instant.now(),
-						Instant.now(),
-						"This is a test comment",
-						"requestDetails",
-						"",
-						new Location()));
+		var eventDataRequest = EventDataRequest.builder()
+				.refId("refId")
+				.name("name")
+				.requestStart(Instant.now())
+				.requestEnd(Instant.now())
+				.comment("This is a test comment")
+				.requestDetails("requestDetails")
+				.hdUserId("")
+				.location(new Location())
+				.build();
+		var dataRequest = Mockito.spy(eventDataRequest);
 
 		// set by JPA on live calls, needs to be mocked here
 		Mockito.doReturn(Instant.now()).when(dataRequest).getCreatedAt();
@@ -232,15 +236,16 @@ class EventDataRequestControllerIntegrationTest {
 	}
 
 	private EventDataRequest getEventDataRequest() {
-		return new EventDataRequest(
-				"refId",
-				"name",
-				Instant.now(),
-				Instant.now(),
-				"",
-				"requestDetails",
-				"",
-				getTestLocation());
+		return EventDataRequest.builder()
+				.refId("refId")
+				.name("name")
+				.requestStart(Instant.now())
+				.requestEnd(Instant.now())
+				.comment("This is a test comment")
+				.requestDetails("requestDetails")
+				.hdUserId("")
+				.location(getTestLocation())
+				.build();
 	}
 
 	private Location getTestLocation() {
