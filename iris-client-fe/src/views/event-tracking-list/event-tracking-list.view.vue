@@ -90,7 +90,7 @@ import {
   getPageSizeFromRouteWithDefault,
   getStatusFilterFromRoute,
   getStringParamFromRouteWithOptionalFallback,
-} from "@/utils/misc";
+} from "@/utils/pagination";
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation

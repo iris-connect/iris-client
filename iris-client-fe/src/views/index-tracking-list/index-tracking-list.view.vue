@@ -88,7 +88,7 @@ import {
   getPageSizeFromRouteWithDefault,
   getStatusFilterFromRoute,
   getStringParamFromRouteWithOptionalFallback,
-} from "@/utils/misc";
+} from "@/utils/pagination";
 
 function getFormattedDate(date?: string): string {
   return date
