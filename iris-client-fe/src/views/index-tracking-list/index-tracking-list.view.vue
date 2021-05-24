@@ -49,7 +49,7 @@
           :items-per-page="dataTableOptions.itemsPerPage"
           class="elevation-1 mt-5 twolineTable"
           :search="search"
-          :footer-props="{ 'items-per-page-options': [5, 10, 15] }"
+          :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
           @update:options="updatePagination"
         >
           <template v-slot:[itemStatusSlotName]="{ item }">
