@@ -44,7 +44,7 @@
           :loading="indexListLoading"
           :page="dataTableOptions.currentPage"
           :server-items-length="indexList.totalElements"
-          :headers="headers"
+          :headers="dataTableOptions.headers"
           :items="indexList.content"
           :items-per-page="dataTableOptions.itemsPerPage"
           class="elevation-1 mt-5 twolineTable"
@@ -131,21 +131,20 @@ export default class IndexTrackingListView extends Vue {
   dataTableOptions = {
     currentPage: getPageFromRouteWithDefault(this.$route),
     itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
+    headers: [
+      {
+        text: "Ext.ID",
+        align: "start",
+        sortable: true,
+        value: "extID",
+      },
+      { text: "Index-Bezeichner", value: "name" },
+      { text: "Zeit (Start)", value: "startTime" },
+      { text: "Zeit (Ende)", value: "endTime" },
+      { text: "Status", value: "status" },
+      { text: "", value: "actions", sortable: false },
+    ],
   };
-
-  headers = [
-    {
-      text: "Ext.ID",
-      align: "start",
-      sortable: true,
-      value: "extID",
-    },
-    { text: "Index-Bezeichner", value: "name" },
-    { text: "Zeit (Start)", value: "startTime" },
-    { text: "Zeit (Ende)", value: "endTime" },
-    { text: "Status", value: "status" },
-    { text: "", value: "actions", sortable: false },
-  ];
 
   search = getStringParamFromRouteWithOptionalFallback(
     "search",

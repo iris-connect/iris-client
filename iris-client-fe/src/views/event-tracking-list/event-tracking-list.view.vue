@@ -40,7 +40,7 @@
           :loading="eventListLoading"
           :page="dataTableOptions.page"
           :server-items-length="eventList.totalElements"
-          :headers="headers"
+          :headers="dataTableOptions.headers"
           :items="eventList.content"
           :items-per-page="dataTableOptions.itemsPerPage"
           class="elevation-1 mt-5 twolineTable"
@@ -160,24 +160,23 @@ export default class EventTrackingListView extends Vue {
   dataTableOptions = {
     currentPage: getPageFromRouteWithDefault(this.$route),
     itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
+    headers: [
+      {
+        text: "Ext.ID",
+        align: "start",
+        sortable: true,
+        value: "extID",
+      },
+      { text: "Event", value: "name" },
+      { text: "Ort", value: "address", sortable: false },
+      { text: "Zeit (Start)", value: "startTime" },
+      { text: "Zeit (Ende)", value: "endTime" },
+      { text: "Generiert", value: "generatedTime" },
+      { text: "Status", value: "status" },
+      { text: "Letzte Änderung", value: "lastChange" },
+      { text: "", value: "actions", sortable: false },
+    ],
   };
-
-  headers = [
-    {
-      text: "Ext.ID",
-      align: "start",
-      sortable: true,
-      value: "extID",
-    },
-    { text: "Event", value: "name" },
-    { text: "Ort", value: "address", sortable: false },
-    { text: "Zeit (Start)", value: "startTime" },
-    { text: "Zeit (Ende)", value: "endTime" },
-    { text: "Generiert", value: "generatedTime" },
-    { text: "Status", value: "status" },
-    { text: "Letzte Änderung", value: "lastChange" },
-    { text: "", value: "actions", sortable: false },
-  ];
 
   search = getStringParamFromRouteWithOptionalFallback(
     "search",
