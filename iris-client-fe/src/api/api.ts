@@ -1728,7 +1728,7 @@ export interface PageIndexCase {
     size?: any;
     /**
      *
-     * @type {Array&lt;IndexCaseDTO&gt;}
+     * @type {Array&lt;DataRequestCaseDetails&gt;}
      * @memberof PageIndexCase
      */
     content: Array<DataRequestCaseDetails>;
