@@ -41,12 +41,12 @@
           @keyup="triggerSearch(search)"
         ></v-text-field>
         <v-data-table
-          :loading="indexListLoading"
-          :page="dataTableOptions.currentPage"
-          :server-items-length="indexList.totalElements"
-          :headers="dataTableOptions.headers"
-          :items="indexList.content"
-          :items-per-page="dataTableOptions.itemsPerPage"
+          :loading="dataTableModel.loading"
+          :page="dataTableModel.page"
+          :server-items-length="dataTableModel.itemsLength"
+          :headers="dataTableModel.headers"
+          :items="dataTableModel.data"
+          :items-per-page="dataTableModel.itemsPerPage"
           class="elevation-1 mt-5 twolineTable"
           :search="search"
           :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
@@ -81,7 +81,7 @@ import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
 import _omit from "lodash/omit";
 import { debounce } from "lodash";
-import { DataPage, DataQuery, getSortAttribute } from "@/api/common";
+import { DataQuery, getSortAttribute } from "@/api/common";
 import { DataOptions } from "vuetify";
 import {
   getPageFromRouteWithDefault,
@@ -95,14 +95,6 @@ function getFormattedDate(date?: string): string {
     ? `${new Date(date).toDateString()}, ${new Date(date).toLocaleTimeString()}`
     : "-";
 }
-
-type TableRow = {
-  endTime: string;
-  extID: string;
-  name: string;
-  startTime: string;
-  status: string;
-};
 
 @Component({
   components: {
@@ -121,24 +113,6 @@ export default class IndexTrackingListView extends Vue {
   selectableStatus = {
     ..._omit(DataRequestStatus, ["Aborted"]),
     All: undefined,
-  };
-
-  dataTableOptions = {
-    currentPage: getPageFromRouteWithDefault(this.$route),
-    itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
-    headers: [
-      {
-        text: "Ext.ID",
-        align: "start",
-        sortable: true,
-        value: "extID",
-      },
-      { text: "Index-Bezeichner", value: "name" },
-      { text: "Zeit (Start)", value: "startTime" },
-      { text: "Zeit (Ende)", value: "endTime" },
-      { text: "Status", value: "status" },
-      { text: "", value: "actions", sortable: false },
-    ],
   };
 
   search = getStringParamFromRouteWithOptionalFallback(
@@ -203,15 +177,18 @@ export default class IndexTrackingListView extends Vue {
       : Object.keys(this.selectableStatus).length - 1;
   }
 
-  get indexListLoading(): boolean {
-    return store.state.indexTrackingList.indexTrackingListLoading;
-  }
-
-  get indexList(): DataPage<TableRow> {
-    const { indexTrackingList } = store.state.indexTrackingList;
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  get dataTableModel() {
+    const {
+      indexTrackingList,
+      indexTrackingListLoading,
+    } = store.state.indexTrackingList;
     return {
-      totalElements: indexTrackingList.totalElements,
-      content: indexTrackingList.content.map((dataRequest) => {
+      page: getPageFromRouteWithDefault(this.$route),
+      itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
+      loading: indexTrackingListLoading,
+      itemsLength: indexTrackingList.totalElements,
+      data: indexTrackingList.content.map((dataRequest) => {
         return {
           endTime: getFormattedDate(dataRequest.end),
           startTime: getFormattedDate(dataRequest.start),
@@ -221,6 +198,19 @@ export default class IndexTrackingListView extends Vue {
           caseId: dataRequest.caseId,
         };
       }),
+      headers: [
+        {
+          text: "Ext.ID",
+          align: "start",
+          sortable: true,
+          value: "extID",
+        },
+        { text: "Index-Bezeichner", value: "name" },
+        { text: "Zeit (Start)", value: "startTime" },
+        { text: "Zeit (Ende)", value: "endTime" },
+        { text: "Status", value: "status" },
+        { text: "", value: "actions", sortable: false },
+      ],
     };
   }
 
