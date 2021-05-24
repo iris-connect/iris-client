@@ -1,5 +1,4 @@
 import {
-  ExistingDataRequestClientWithLocationList,
   DataRequestDetails,
   Sex,
   Guest,
@@ -124,14 +123,12 @@ export const dummyDataDetails: DataRequestDetails = {
 };
 
 export const getDummyDetailsWithStatus = (id: string): DataRequestDetails => {
-  const dataRequest = dummyDataRequests.find(
-    (request) => request.code === id
-  );
+  const dataRequest = dummyDataRequests.find((request) => request.code === id);
   if (dataRequest) {
     const status = dataRequest.status;
     const guests: Guest[] =
       status !== DataRequestStatus.DataRequested &&
-        status !== DataRequestStatus.Aborted
+      status !== DataRequestStatus.Aborted
         ? dummyDataDetails?.submissionData?.guests ?? []
         : [];
     return {
