@@ -1,5 +1,6 @@
 package iris.client_bff.proxy;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import iris.client_bff.config.ProxyServiceConfig;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,7 +37,7 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
         var announcementDto = AnnouncementDto.builder()
                 .domain(domain)
                 .expiresAt(oneWeekFromNow)
-                .targetProxy(config.getTargetProxy())
+                .proxy(config.getTargetProxy())
                 .build();
 
         // TODO use correct method name
@@ -46,7 +47,7 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 
         try {
             rpcClient.invoke(methodName, announcementDto);
-            log.debug("Announced {} to {} till {}", announcementDto.getDomain(), announcementDto.getTargetProxy(), announcementDto.getExpiresAt());
+            log.debug("Announced {} to {} till {}", announcementDto.getDomain(), announcementDto.getProxy(), announcementDto.getExpiresAt());
         } catch (Throwable throwable) {
             throw new IRISAnnouncementException(throwable);
         }
@@ -60,7 +61,8 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
     @AllArgsConstructor
     public static class AnnouncementDto {
         private String domain;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "UTC")
         private Instant expiresAt;
-        private String targetProxy;
+        private String proxy;
     }
 }
