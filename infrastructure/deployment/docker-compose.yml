@@ -68,7 +68,7 @@ services:
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: luckylusa/iris-eps-bundle:latest
+    image: inoeg/eps:v0.0.4
     expose:
       - 4446
       - 5556
@@ -79,9 +79,47 @@ services:
     volumes:
       - ./conf/eps:/app/settings
     environment:
-      - EPS_SETTINGS=settings/roles/hd
-      - HTTPS_PROXY=https://host.docker.internal:8899
+      EPS_SETTINGS: "settings/roles/hd"
+      EPS_OP:
+      EPS_CLIENT_CERT:
+      EPS_CLIENT_CERT_KEY:
+      EPS_SD_ENDPOINT:
+      HTTPS_PROXY:
     command: ["--level", "debug", "server", "run"]
+
+  # Proxy for inbound connections.
+  private-proxy:
+    image: inoeg/proxy:v0.0.4
+    expose:
+      - 5545
+      - 8877
+    volumes:
+      - ./conf/proxy:/app/settings
+      - proxy_db_iris:/app/db
+    environment:
+      PROXY_SETTINGS: settings/roles/private-proxy
+      PROXY_OP:
+      PROXY_CLIENT_CERT:
+      PROXY_CLIENT_CERT_KEY:
+      HTTPS_PROXY:
+
+    command: ["--level", "trace", "run", "private"]
+
+  private-proxy-eps:
+    image: inoeg/eps:v0.0.4
+    expose:
+      - 7766
+      - 7776
+    volumes:
+      - ./conf/proxy:/app/settings
+    environment:
+      EPS_SETTINGS: settings/roles/private-proxy-eps
+      PROXY_OP:
+      PROXY_CLIENT_CERT:
+      PROXY_CLIENT_CERT_KEY:
+      EPS_SD_ENDPOINT:
+      HTTPS_PROXY:
+    command: ["--level", "trace", "server", "run"]
 
   # Reverse Proxy
   nginx:
@@ -93,10 +131,11 @@ services:
       IRIS_CLIENT_DOMAIN_CERT:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
     volumes:
-      - ./conf:/etc/iris
+      - ./conf/nginx:/etc/iris
     depends_on:
       - iris-client
       - iris-frontend
 
 volumes:
   psqldata_iris:
+  proxy_db_iris:

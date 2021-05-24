@@ -1,0 +1,60 @@
+
+vars:
+  PROXY_OP:
+    source: env
+    variable: PROXY_OP
+    type: string
+  PROXY_CLIENT_CERT:
+    source: env
+    variable: PROXY_CLIENT_CERT
+    type: string
+  PROXY_CLIENT_CERT_KEY:
+    source: env
+    variable: PROXY_CLIENT_CERT_KEY
+    type: string  
+  EPS_SD_ENDPOINT:
+    source: env
+    variable: EPS_SD_ENDPOINT
+    type: string        
+name: "$PROXY_OP"
+directory:
+  type: api
+  settings:
+    jsonrpc_client:
+      tls:
+        certificate_file: "$DIR/../../certs/$PROXY_CLIENT_CERT"
+        key_file: "$DIR/../../certs/$PROXY_CLIENT_CERT_KEY"
+        ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
+    ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
+    endpoints: [ "$EPS_SD_ENDPOINT" ]
+    server_names: [ "sd-1" ]
+channels: # defines all the channels that we want to open when starting the server
+  - name: main gRPC server # accepts incoming gRPC connections to deliver and receive messages
+    type: grpc_server
+    settings:
+      bind_address: "0.0.0.0:7776"
+      tls:
+        ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
+        certificate_file: "$DIR/../../certs/$PROXY_CLIENT_CERT"
+        key_file: "$DIR/../../certs/$PROXY_CLIENT_CERT_KEY"
+  - name: main JSON-RPC client # creates outgoing JSONRPC connections to deliver and receive messages
+    type: jsonrpc_client
+    settings:
+      endpoint: http://private-proxy:8877/jsonrpc
+      #tls:
+      #  ca_certificate_files: ["$DIR/../../certs/root.crt"]
+  - name: main gRPC client # creates outgoing gRPC connections to deliver and receive messages
+    type: grpc_client
+    settings:
+      tls:
+        ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
+        certificate_file: "$DIR/../../certs/$PROXY_CLIENT_CERT"
+        key_file: "$DIR/../../certs/$PROXY_CLIENT_CERT_KEY"
+  - name: main JSON-RPC server # accepts incoming JSONRPC connections to deliver and receive messages
+    type: jsonrpc_server
+    settings:
+      bind_address: "0.0.0.0:7766"
+      tls:
+        ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
+        certificate_file: "$DIR/../../certs/$PROXY_CLIENT_CERT"
+        key_file: "$DIR/../../certs/$PROXY_CLIENT_CERT_KEY"
