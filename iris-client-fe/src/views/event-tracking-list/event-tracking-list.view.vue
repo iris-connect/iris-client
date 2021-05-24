@@ -31,7 +31,7 @@
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
-          label="Suche (min. 2 Buchstaben)"
+          label="Suchbegriff (min. 2 Buchstaben)"
           single-line
           hide-details
           @keyup="triggerSearch(search)"
