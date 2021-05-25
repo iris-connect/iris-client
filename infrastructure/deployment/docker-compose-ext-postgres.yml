@@ -1,60 +1,110 @@
 ########################################################
 # Intended for deployments at the health departments
-# 
+#
 # Provides IRIS client BFF and frontend together with an NGINX. Uses an externally provided postgres database.
 # IRIS frontend over NGINX: port = 443
 ########################################################
-version: '3.4'
+version: "3.4"
 services:
-
-
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-sormas-sidecar:v0.0.3
+    image: inoeg/iris-client-bff:develop
     expose:
       - 8092
-    ports: 
+    ports:
       - 8092:8092
-    environment: 
+    environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
-      IRIS_SERVER_ADDRESS:
-      IRIS_SERVER_PORT:
+      EPS_CLIENT_CLIENT_URL: https://eps:5556/jsonrpc
       SECURITY_JWT_JWT_SHARED_SECRET:
-      HTTP_CLIENT_PROXY_HOST:
-      HTTP_CLIENT_PROXY_PORT:
-      HTTP_CLIENT_PROXY_SCHEME:
     restart: unless-stopped
 
-  # IRIS Client Frontend
+  # IRIS Client Frontend for users
   iris-frontend:
-    image: inoeg/iris-client-frontend:v0.1.0
+    image: inoeg/iris-client-frontend:develop
     expose:
       - 28080
-    environment: 
+    environment:
       SORMAS_SIDECAR_BASE_URL: /api
-    ports: 
+    ports:
       - 28080:28080
     restart: unless-stopped
     depends_on:
       - iris-client
 
+  # Endpoint server to communicate with Apps and IRIS Connect central services
+  eps:
+    image: inoeg/eps:v0.0.4
+    expose:
+      - 4446
+      - 5556
+    ports:
+      - 4446:4446
+    depends_on:
+      - iris-client
+    volumes:
+      - ./conf/eps:/app/settings
+    environment:
+      EPS_SETTINGS: "settings/roles/hd"
+      EPS_OP:
+      EPS_CLIENT_CERT:
+      EPS_CLIENT_CERT_KEY:
+      EPS_SD_ENDPOINT:
+      HTTPS_PROXY:
+    command: ["--level", "debug", "server", "run"]
+
+  # Proxy for inbound connections.
+  private-proxy:
+    image: inoeg/proxy:v0.0.4
+    expose:
+      - 5545
+      - 8877
+    volumes:
+      - ./conf/proxy:/app/settings
+      - proxy_db_iris:/app/db
+    environment:
+      PROXY_SETTINGS: settings/roles/private-proxy
+      PROXY_OP:
+      PROXY_CLIENT_CERT:
+      PROXY_CLIENT_CERT_KEY:
+      HTTPS_PROXY:
+
+    command: ["--level", "trace", "run", "private"]
+
+  private-proxy-eps:
+    image: inoeg/eps:v0.0.4
+    expose:
+      - 7766
+      - 7776
+    volumes:
+      - ./conf/proxy:/app/settings
+    environment:
+      EPS_SETTINGS: settings/roles/private-proxy-eps
+      PROXY_OP:
+      PROXY_CLIENT_CERT:
+      PROXY_CLIENT_CERT_KEY:
+      EPS_SD_ENDPOINT:
+      HTTPS_PROXY:
+    command: ["--level", "trace", "server", "run"]
+
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:v0.0.2
+    image: inoeg/iris-client-nginx:develop
     ports:
       - 443:443
-    environment: 
+    environment:
       IRIS_CLIENT_DOMAIN:
       IRIS_CLIENT_DOMAIN_CERT:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
     volumes:
-      - ./conf:/etc/iris
+      - ./conf/nginx:/etc/iris
     depends_on:
       - iris-client
       - iris-frontend
-  
+
 volumes:
-  psqldata_iris: 
+  psqldata_iris:
+  proxy_db_iris:

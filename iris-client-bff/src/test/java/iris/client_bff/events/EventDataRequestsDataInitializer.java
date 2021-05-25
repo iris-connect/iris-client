@@ -42,7 +42,7 @@ public class EventDataRequestsDataInitializer implements DataInitializer {
 	  .of(UUID.fromString("3907e730-af89-4944-8e75-fbe6ba60c904"));
 
   public static final EventDataRequest DATA_REQUEST_1 = new EventDataRequest(REQ_ID_1.toString(), "Anfrage 1",
-	  Instant.now().minus(2, DAYS), null, null, null, null, null);
+	  Instant.now().minus(2, DAYS), null, null, null, null, null, null);
 
   private final EventDataRequestRepository requests;
 
@@ -60,10 +60,10 @@ public class EventDataRequestsDataInitializer implements DataInitializer {
 	list.add(DATA_REQUEST_1);
 
 	list.add(new EventDataRequest(REQ_ID_2.toString(), "Anfrage 2", Instant.now().minus(4, DAYS),
-		Instant.now().minus(2, DAYS), null, null, null, null));
+		Instant.now().minus(2, DAYS), null, null, null, null, null));
 
 	list.add(new EventDataRequest(REQ_ID_3.toString(), "Anfrage 3", Instant.now().minus(4, DAYS),
-		Instant.now().minus(2, DAYS), null, null, null, null));
+		Instant.now().minus(2, DAYS), null, null, null, null, null));
 
 	requests.saveAll(list);
   }
