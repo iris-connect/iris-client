@@ -14,13 +14,19 @@
  *******************************************************************************/
 package iris.client_bff.events;
 
+import static iris.client_bff.search_client.eps.LocationMapper.*;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 import io.vavr.control.Option;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.eps.DataProviderClient;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.model.Location;
+import iris.client_bff.events.web.dto.DataRequestClient;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
+import iris.client_bff.proxy.IRISAnnouncementException;
+import iris.client_bff.proxy.ProxyServiceClient;
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.eps.LocationMapper;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
@@ -47,6 +53,7 @@ public class EventDataRequestService {
 	private final EventDataRequestRepository repository;
 
 	private final SearchClient searchClient;
+	private final ProxyServiceClient proxyClient;
 	private final DataProviderClient epsDataRequestClient;
 
 	public Page<EventDataRequest> findAll(Pageable pageable) {
@@ -73,48 +80,69 @@ public class EventDataRequestService {
 		return repository.save(request);
 	}
 
-	public EventDataRequest createDataRequest(String refId, String name, Instant startDate, Option<Instant> endDate,
-			Option<String> comment, Option<String> requestDetails, Option<String> hdUserId, Option<String> locationId,
-			Option<String> providerId) {
+	public EventDataRequest createDataRequest(DataRequestClient request)
+			throws IRISDataRequestException {
+
+		var providerId = request.getProviderId();
+		var locationId = request.getLocationId();
 
 		Location location = null;
 		try {
-			if (locationId.isDefined() && providerId.isDefined()) {
-				location = LocationMapper
-						.map(searchClient.findByProviderIdAndLocationId(providerId.get(), locationId.get()));
+			if (isNotEmpty(providerId) && isNotEmpty(locationId)) {
+				location = map(searchClient.findByProviderIdAndLocationId(providerId, locationId));
 			}
 		} catch (IRISSearchException e) {
-			// TODO handle
-			throw new RuntimeException(e);
+			log.error("Location {} with provider {} could not be obtained: {}", locationId, providerId, e);
+
+			throw new IRISDataRequestException(e);
 		}
 
-		var dataRequest = new EventDataRequest(refId, name, startDate, endDate.getOrNull(), comment.getOrNull(),
-				requestDetails.getOrNull(), hdUserId.getOrNull(), location);
+		String announcementToken;
+		try {
+			announcementToken = proxyClient.announce();
+		} catch (IRISAnnouncementException e) {
+			e.printStackTrace();
 
-		log.trace("Request job - PUT to server is sent: {}", dataRequest.getId().toString());
+			throw new IRISDataRequestException(e);
+		}
+
+		var dataRequest = new EventDataRequest(
+				request.getExternalRequestId(),
+				request.getName(),
+				request.getStart(),
+				request.getEnd(),
+				request.getComment(),
+				request.getRequestDetails(),
+				null,
+				location,
+				announcementToken);
 
 		try {
 			dataRequest.setStatus(Status.DATA_REQUESTED);
 			dataRequest = repository.save(dataRequest);
 			epsDataRequestClient.requestGuestListData(dataRequest);
-		} catch (IRISDataRequestException e) {
-			// TODO delete request?
-			e.printStackTrace();
-		}
 
-		log.debug("Request job - PUT to server sent: {}", dataRequest.getId().toString());
+			log.info("Event Data Request submit success: {}", dataRequest.getId().toString());
+
+		} catch (IRISDataRequestException e) {
+			log.error("Event Data Request {} could not be submitted: {}", dataRequest.getId(), e);
+
+			repository.delete(dataRequest);
+
+			throw new IRISDataRequestException(e);
+		}
 
 		return dataRequest;
 	}
 
 	public EventDataRequest update(EventDataRequest dataRequest, EventUpdateDTO patch) {
-		if (StringUtils.isNotEmpty(patch.getComment())) {
+		if (isNotEmpty(patch.getComment())) {
 			dataRequest.setComment(patch.getComment());
 		}
-		if (StringUtils.isNotEmpty(patch.getExternalRequestId())) {
+		if (isNotEmpty(patch.getExternalRequestId())) {
 			dataRequest.setRefId(patch.getExternalRequestId());
 		}
-		if (StringUtils.isNotEmpty(patch.getName())) {
+		if (isNotEmpty(patch.getName())) {
 			dataRequest.setName(patch.getName());
 		}
 		if (patch.getStatus() != null) {

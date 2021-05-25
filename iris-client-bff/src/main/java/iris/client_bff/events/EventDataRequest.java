@@ -69,9 +69,11 @@ public class EventDataRequest extends Aggregate<EventDataRequest, EventDataReque
   @OneToOne(orphanRemoval = true, cascade = { CascadeType.ALL }) @JoinColumn(name = "location_id")
   private Location location;
 
+  private String announcementToken;
+
   @Builder
   public EventDataRequest(String refId, String name, Instant requestStart, Instant requestEnd, String comment,
-	  String requestDetails, String hdUserId, Location location) {
+	  String requestDetails, String hdUserId, Location location, String announcementToken) {
 
 	super();
 
@@ -83,6 +85,7 @@ public class EventDataRequest extends Aggregate<EventDataRequest, EventDataReque
 	this.comment = comment;
 	this.requestDetails = requestDetails;
 	this.location = location;
+	this.announcementToken = announcementToken;
   }
 
   public Instant getLastModifiedAt() {
