@@ -18,7 +18,7 @@
 	        	"replacements": [
 	          		{
 	            		"files": ["infrastructure/deployment/docker-compose-ext-postgres.yml", "infrastructure/deployment/docker-compose.yml"],
-	            		"from": "inoeg/(.*):.*",
+	            		"from": "inoeg/(iris-client.*):.*",
 	            		"to": "inoeg/$1:${nextRelease.version}",
 	            		"results": [
 	              			{
