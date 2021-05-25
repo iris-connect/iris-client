@@ -41,15 +41,15 @@ Die Struktur des Archives ist wie folgt.
 ├── conf 
 │   ├── eps
 │   │   ├── certs
-│   │   │   ├── # hier müssen die GA Client Zertifikate für EPS abgelegt werden.
+│   │   │   └── # hier müssen die GA Client Zertifikate für EPS abgelegt werden.
 │   │   └── roles
 │   │       └── hd
 │   │           └── 001_default.yml # Die Konfiguration für den EPS service. Diese wird mit Umgebungsvariablen parameterisiert. 
 │   └── nginx
-│       ├── # hier müssen die Server Zertifikate für die Interne Domain abgelegt werden. 
+│       └── # hier müssen die Server Zertifikate für die Interne Domain abgelegt werden. 
 │   └── proxy
 │       ├── certs
-│       │   ├── # hier müssen die Proxy Client Zertifikate abgelegt werden.
+│       │   └── # hier müssen die Proxy Client Zertifikate abgelegt werden.
 │       └── roles
 │           ├── private-proxy
 │           │   └── 001_default.yml # Die Konfiguration für den Proxy service. Diese wird mit Umgebungsvariablen parameterisiert. 
@@ -58,7 +58,7 @@ Die Struktur des Archives ist wie folgt.
 ├── docker-compose-ext-postgres.yml # Die Docker Compose Konfiguration mit einer externen Postgres DB.
 ├── docker-compose.yml # Die Docker Compose Konfiguration mit einer embedded Postgres DB.
 └── docs
-    ├── # Die Dokumentation
+    └── # Die Dokumentation
 ```
 
 ### Anlegen der Konfiguration
@@ -121,7 +121,7 @@ Das Zertifikat und der Key müssen im Order `./conf/nginx` abgelegt werden.
 ├── conf 
 │   └── nginx
 │       ├── iris-ga.crt
-│       ├── iris-ga.key
+│       └── iris-ga.key
 ```
 
 Danach müssen folgende Parameter in der Konfiguration gesetzt werden.
@@ -189,7 +189,7 @@ Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüsse
 │   ├── eps
 │   │   ├── certs
 │   │   │   ├── ga-client.crt
-│   │   │   ├── ga-client.key
+│   │   │   └── ga-client.key
 ```
 
 Danach muss man die Zertifikate in der Konfiguration hinterlegen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist der selbe wie der CN Name aus dem Zertifikats Prozess.
@@ -213,7 +213,7 @@ Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüsse
 │   └── proxy
 │       ├── certs
 │       │   ├── ga-client-proxy.crt
-│       │   ├── ga-client-proxy.key
+│       │   └── ga-client-proxy.key
 ```
 Danach muss man die Zertifikate in der Konfiguration hinterlegen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist der selbe wie der CN Name aus dem Zertifikats Prozess.
 
