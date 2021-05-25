@@ -32,7 +32,7 @@ services:
       timeout: 3s
       retries: 4
       start_period: 30s
-​
+
   # IRIS Client backend for frontend
   iris-client:
     image: inoeg/iris-client-bff:develop
@@ -55,7 +55,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-​
+
   # IRIS Client Frontend
   iris-frontend:
     image: inoeg/iris-client-frontend:develop
@@ -66,7 +66,7 @@ services:
     restart: unless-stopped
     depends_on:
       - iris-client
-​
+
   eps:
     image: inoeg/eps:v0.0.4
     expose:
@@ -79,7 +79,7 @@ services:
     environment:
       - EPS_SETTINGS=settings/dev/roles/hd-1
     command: ["--level", "debug", "server", "run"]
-​
+
   # Reverse Proxy
   nginx:
     image: inoeg/iris-client-nginx:develop
@@ -92,7 +92,7 @@ services:
     depends_on:
       - iris-client
       - iris-frontend
-​
+
   private-proxy:
     image: inoeg/proxy:v0.0.4
     expose:
@@ -104,7 +104,7 @@ services:
     environment:
       - PROXY_SETTINGS=settings/dev/roles/private-proxy-1
     command: [ "--level", "trace", "run", "private" ]
-​
+
   private-proxy-1:
     image: inoeg/eps:v0.0.4
     expose:
@@ -115,8 +115,8 @@ services:
     environment:
       - EPS_SETTINGS=settings/dev/roles/private-proxy-eps-1
     command: [ "--level", "trace", "server", "run" ]
-​
-​
+
+
   internal-server:
     image: luckylusa/iris-eps-internal-server:v0.0.3007
     volumes:
@@ -125,6 +125,6 @@ services:
       - 8888
     entrypoint: ./internal-server
     command: [ "--level", "trace" ]
-​
+
 volumes:
   psqldata_iris:
