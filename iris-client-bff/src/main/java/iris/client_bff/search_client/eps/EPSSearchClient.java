@@ -2,15 +2,15 @@ package iris.client_bff.search_client.eps;
 
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.SearchClientProperties;
-import iris.client_bff.search_client.exceptions.IRISSearchException;
 import iris.client_bff.search_client.eps.dto.IdSearch;
 import iris.client_bff.search_client.eps.dto.KeywordSearch;
-
+import iris.client_bff.search_client.exceptions.IRISSearchException;
 import iris.client_bff.search_client.web.dto.LocationInformation;
 import iris.client_bff.search_client.web.dto.LocationList;
 import lombok.AllArgsConstructor;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
@@ -23,7 +23,8 @@ public class EPSSearchClient implements SearchClient {
 
 	private final JsonRpcHttpClient rpcClient;
 
-	public LocationInformation findByProviderIdAndLocationId(String providerId, String locationId) throws IRISSearchException {
+	public LocationInformation findByProviderIdAndLocationId(String providerId, String locationId)
+			throws IRISSearchException {
 
 		var payload = IdSearch.builder().providerId(providerId).locationId(locationId).build();
 
@@ -48,8 +49,8 @@ public class EPSSearchClient implements SearchClient {
 		return locationInformation;
 	}
 
-	public LocationList search(String keyword) throws IRISSearchException {
-		KeywordSearch search = KeywordSearch.builder().searchKeyword(keyword).build();
+	public LocationList search(String keyword, Pageable pageable) throws IRISSearchException {
+		KeywordSearch search = KeywordSearch.builder().searchKeyword(keyword).pageable(pageable).build();
 		try {
 			var methodName = config.getEndpoint() + ".searchForLocation";
 			return rpcClient.invoke(methodName, search, LocationList.class);

@@ -12,82 +12,107 @@
 
 package iris.client_bff.search_client.web.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 @JsonPropertyOrder({
-	LocationList.JSON_PROPERTY_LOCATIONS
+		LocationList.JSON_PROPERTY_LOCATIONS,
+		LocationList.JSON_PROPERTY_TOTAL_ELEMENTS
 })
 public class LocationList {
-  public static final String JSON_PROPERTY_LOCATIONS = "locations";
-  private List<LocationInformation> locations = new ArrayList<>();
+	public static final String JSON_PROPERTY_LOCATIONS = "locations";
+	public static final String JSON_PROPERTY_TOTAL_ELEMENTS = "totalElements";
+	private List<LocationInformation> locations = new ArrayList<>();
+	private long totalElements;
 
-  public LocationList locations(List<LocationInformation> locations) {
+	public LocationList locations(List<LocationInformation> locations) {
 
-	this.locations = locations;
-	return this;
-  }
-
-  public LocationList addLocationsItem(LocationInformation locationsItem) {
-	this.locations.add(locationsItem);
-	return this;
-  }
-
-  /**
-   * Get locations
-   * 
-   * @return locations
-   **/
-  @JsonProperty(JSON_PROPERTY_LOCATIONS)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-
-  public List<LocationInformation> getLocations() {
-	return locations;
-  }
-
-  public void setLocations(List<LocationInformation> locations) {
-	this.locations = locations;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-	if (this == o) {
-	  return true;
+		this.locations = locations;
+		return this;
 	}
-	if (o == null || getClass() != o.getClass()) {
-	  return false;
+
+	public LocationList addLocationsItem(LocationInformation locationsItem) {
+		this.locations.add(locationsItem);
+		return this;
 	}
-	LocationList locationList = (LocationList) o;
-	return Objects.equals(this.locations, locationList.locations);
-  }
 
-  @Override
-  public int hashCode() {
-	return Objects.hash(locations);
-  }
+	public LocationList totalElements(long totalElements) {
 
-  @Override
-  public String toString() {
-	StringBuilder sb = new StringBuilder();
-	sb.append("class LocationList {\n");
-	sb.append("    locations: ").append(toIndentedString(locations)).append("\n");
-	sb.append("}");
-	return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
-   */
-  private String toIndentedString(Object o) {
-	if (o == null) {
-	  return "null";
+		this.totalElements = totalElements;
+		return this;
 	}
-	return o.toString().replace("\n", "\n    ");
-  }
+
+	/**
+	 * Get locations
+	 * 
+	 * @return locations
+	 **/
+	@JsonProperty(JSON_PROPERTY_LOCATIONS)
+	@JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+	public List<LocationInformation> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(List<LocationInformation> locations) {
+		this.locations = locations;
+	}
+
+	/**
+	 * Get totalElements
+	 *
+	 * @return totalElements
+	 **/
+	@JsonProperty(JSON_PROPERTY_TOTAL_ELEMENTS)
+	@JsonInclude(value = JsonInclude.Include.ALWAYS)
+	public long getTotalElements() {
+		return totalElements;
+	}
+
+	public void setTotalElements(long totalElements) {
+		this.totalElements = totalElements;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		LocationList locationList = (LocationList) o;
+		return Objects.equals(this.locations, locationList.locations);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(locations);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class LocationList {\n");
+		sb.append("    locations: ").append(toIndentedString(locations)).append("\n");
+		sb.append("    totalElements: ").append(totalElements).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }
