@@ -1,6 +1,8 @@
 import { Route } from "vue-router";
 import { DataRequestStatus } from "@/api";
 
+const DEFAULT_PAGE_SIZE = 20;
+
 export function getStringParamFromRouteWithOptionalFallback(
   param: "page" | "sort" | "search" | "status" | "size",
   route: Route,
@@ -11,7 +13,7 @@ export function getStringParamFromRouteWithOptionalFallback(
 }
 
 export function getPageSizeFromRouteWithDefault(route: Route): number {
-  const fallback = "15";
+  const fallback = `${DEFAULT_PAGE_SIZE}`;
   return Number(
     getStringParamFromRouteWithOptionalFallback("size", route, fallback)
   );
@@ -26,10 +28,10 @@ export function getPageFromRouteWithDefault(route: Route): number {
 
 export function getStatusFilterFromRoute(
   route: Route
-): DataRequestStatus | null {
+): DataRequestStatus | undefined {
   const s = getStringParamFromRouteWithOptionalFallback("status", route);
   if (!s) {
-    return null;
+    return;
   }
   return s as DataRequestStatus;
 }

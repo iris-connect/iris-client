@@ -26,7 +26,7 @@
             {{ getStatusSelectLabel(selectableStatus[status]) }}
           </v-btn>
           <!-- this needs to come last, see statusButtonSelected() -->
-          <v-btn text @click="filterStatus(null)"> Alle </v-btn>
+          <v-btn text @click="filterStatus(undefined)"> Alle </v-btn>
         </v-btn-toggle>
       </v-col>
     </v-row>
@@ -109,7 +109,7 @@ function getFormattedDate(date?: string): string {
   },
 })
 export default class IndexTrackingListView extends Vue {
-  statusFilter: DataRequestStatus | null = getStatusFilterFromRoute(
+  statusFilter: DataRequestStatus | undefined = getStatusFilterFromRoute(
     this.$route
   );
 
@@ -146,7 +146,7 @@ export default class IndexTrackingListView extends Vue {
     }
   }, 1000);
 
-  async filterStatus(target: DataRequestStatus | null): Promise<void> {
+  async filterStatus(target: DataRequestStatus | undefined): Promise<void> {
     this.statusFilter = target;
 
     this.$router.replace({
