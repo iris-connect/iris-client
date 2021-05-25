@@ -59,7 +59,6 @@ public class EventDataRequestController {
 					.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(ErrorMessages.EVENT_DATA_REQUEST_CREATION);
 		}
-
 	}
 
 	@GetMapping
@@ -84,9 +83,7 @@ public class EventDataRequestController {
 	public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable UUID code) {
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
-
 			DataRequestDetails requestDetails = mapDataRequestDetails(dataRequest.get());
-
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
 			return ResponseEntity.of(Optional.of(requestDetails));
@@ -103,7 +100,6 @@ public class EventDataRequestController {
 		if (dataRequest.isPresent()) {
 			var updated = dataRequestService.update(dataRequest.get(), patch);
 			DataRequestDetails requestDetails = mapDataRequestDetails(updated);
-
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
 			return ResponseEntity.of(Optional.of(requestDetails));

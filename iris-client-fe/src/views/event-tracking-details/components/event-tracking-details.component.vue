@@ -208,6 +208,7 @@ const EventTrackingDetailsComponentProps = Vue.extend({
     },
   },
 });
+
 @Component({
   components: {
     ErrorMessageAlert,

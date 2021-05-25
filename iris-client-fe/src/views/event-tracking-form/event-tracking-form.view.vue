@@ -276,6 +276,7 @@ export default class EventTrackingFormView extends Vue {
         params: {
           id: created.code || "",
         },
+        query: { is_created: "true" },
       });
     }
   }
