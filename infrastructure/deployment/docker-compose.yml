@@ -39,8 +39,6 @@ services:
     image: inoeg/iris-client-bff:develop
     expose:
       - 8092
-    ports:
-      - 8092:8092
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_USER}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
@@ -62,8 +60,6 @@ services:
       - 28080
     environment:
       SORMAS_SIDECAR_BASE_URL: /api
-    ports:
-      - 28080:28080
     restart: unless-stopped
     depends_on:
       - iris-client
@@ -74,9 +70,6 @@ services:
     expose:
       - 4446
       - 5556
-    ports:
-      - 4446:4446
-      - 5556:5556
     depends_on:
       - iris-client
     volumes:
