@@ -4,6 +4,9 @@
       v-if="showExportModal"
       @close-export-modal="closeExportModal"
       @handle-standard-csv-export="handleStandardCsvExport"
+      @handle-alternative-standard-csv-export="
+        handleAlternativeStandardCsvExport
+      "
       @handle-sormas-csv-event-participants-export="
         handleSormasCsvEventParticipantsExport
       "
@@ -331,6 +334,14 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
       rows: this.tableData.select,
     };
     this.$emit("handle-standard-csv-export", exportData);
+  }
+
+  handleAlternativeStandardCsvExport(): void {
+    const exportData: ExportData = {
+      headers: [...this.tableData.headers, ...this.tableData.expandedHeaders],
+      rows: this.tableData.select,
+    };
+    this.$emit("handle-alternative-standard-csv-export", exportData);
   }
 
   handleSormasCsvEventParticipantsExport(): void {

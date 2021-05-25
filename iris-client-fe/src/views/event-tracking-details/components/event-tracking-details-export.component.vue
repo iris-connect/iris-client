@@ -22,6 +22,18 @@
                 </v-row>
                 <v-row align="center">
                   <v-col cols="8">
+                    <span>Alternative Standard-csv</span>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-btn
+                      color="primary"
+                      @click="handleAlternativeStandardCsvExport"
+                      >Download</v-btn
+                    >
+                  </v-col>
+                </v-row>
+                <v-row align="center">
+                  <v-col cols="8">
                     <span>SORMAS-csv (Ereignisteilnehmer-Format)</span>
                   </v-col>
                   <v-col cols="4">
@@ -138,6 +150,10 @@ export default class EventTrackingDetailsExport extends EventTrackingDetailsExpo
 
   handleStandardCsvExport(): void {
     this.$emit("handle-standard-csv-export");
+  }
+
+  handleAlternativeStandardCsvExport(): void {
+    this.$emit("handle-alternative-standard-csv-export");
   }
 
   handleSormasCsvEventParticipantsExport(): void {

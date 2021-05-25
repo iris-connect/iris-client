@@ -6,7 +6,7 @@ export interface Header {
   value: string;
 }
 
-const exportCsv = function (
+const exportStandardCsv = function (
   headers: Array<Header>,
   rows: Array<Array<string>>,
   fileName?: string
@@ -26,6 +26,110 @@ const exportCsv = function (
         fields,
         withBOM: true,
         defaultValue: "-",
+      });
+      const csv = parser.parse(rows);
+      downloadCsvFile(fileName || "Export", csv);
+      resolve(csv);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const exportAlternativeStandardCsv = function (
+  headers: Array<Header>,
+  rows: Array<Array<string>>,
+  fileName?: string
+): Promise<string> {
+  console.log("exportAlternativeStandardCsv:");
+  console.log("headers");
+  console.log(headers);
+  console.log("rows");
+  console.log(rows);
+  console.log("fileName");
+  console.log(fileName);
+
+  return new Promise((resolve, reject) => {
+    const fields = headers
+      .map((header) => {
+        if (!header.text) return;
+        return {
+          label: header.text,
+          value: header.value,
+        };
+      })
+      .filter((v) => v);
+    try {
+      const parser = new Parser({
+        fields,
+        withBOM: true,
+        defaultValue: "-",
+        delimiter: ";",
+        quote: "",
+      });
+      const csv = parser.parse(rows);
+      downloadCsvFile(fileName || "Export", csv);
+      resolve(csv);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const exportSormasEventParticipantsCsv = function (
+  headers: Array<Header>,
+  rows: Array<Array<string>>,
+  fileName?: string
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const fields = headers
+      .map((header) => {
+        if (!header.text) return;
+        return {
+          label: header.text,
+          value: header.value,
+        };
+      })
+      .filter((v) => v);
+    try {
+      const parser = new Parser({
+        fields,
+        withBOM: true,
+        defaultValue: "-",
+        delimiter: ";",
+        quote: "",
+      });
+      const csv = parser.parse(rows);
+      downloadCsvFile(fileName || "Export", csv);
+      resolve(csv);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const exportSormasContactPersonCsv = function (
+  headers: Array<Header>,
+  rows: Array<Array<string>>,
+  fileName?: string
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const fields = headers
+      .map((header) => {
+        if (!header.text) return;
+        return {
+          label: header.text,
+          value: header.value,
+        };
+      })
+      .filter((v) => v);
+    try {
+      const parser = new Parser({
+        fields,
+        withBOM: true,
+        defaultValue: "-",
+        delimiter: ";",
+        quote: "",
       });
       const csv = parser.parse(rows);
       downloadCsvFile(fileName || "Export", csv);
@@ -57,7 +161,10 @@ const downloadCsvFile = function (fileName: string, csv: string): void {
 };
 
 const dataExport = {
-  exportCsv,
+  exportStandardCsv,
+  exportAlternativeStandardCsv,
+  exportSormasEventParticipantsCsv,
+  exportSormasContactPersonCsv,
 };
 
 export default dataExport;

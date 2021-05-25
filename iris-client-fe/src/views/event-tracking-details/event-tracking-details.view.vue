@@ -9,6 +9,7 @@
     @status-update="updateRequestStatus"
     @data-export="handleStandardCsvExport"
     @handle-standard-csv-export="handleStandardCsvExport"
+    @handle-alternative-standard-csv-export="handleAlternativeStandardCsvExport"
     @handle-sormas-csv-event-participants-export="
       handleSormasCsvEventParticipantsExport
     "
@@ -248,7 +249,15 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   handleStandardCsvExport(payload: ExportData): void {
-    dataExport.exportCsv(
+    dataExport.exportStandardCsv(
+      payload.headers,
+      payload.rows,
+      [this.eventTrackingDetails?.externalRequestId, Date.now()].join("_")
+    );
+  }
+
+  handleAlternativeStandardCsvExport(payload: ExportData): void {
+    dataExport.exportAlternativeStandardCsv(
       payload.headers,
       payload.rows,
       [this.eventTrackingDetails?.externalRequestId, Date.now()].join("_")
@@ -256,7 +265,7 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   handleSormasCsvEventParticipantsExport(payload: ExportData): void {
-    dataExport.exportCsv(
+    dataExport.exportSormasEventParticipantsCsv(
       payload.headers,
       payload.rows,
       [this.eventTrackingDetails?.externalRequestId, Date.now()].join("_")
@@ -264,7 +273,7 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   handleSormasCsvContactPersonExport(payload: ExportData): void {
-    dataExport.exportCsv(
+    dataExport.exportSormasContactPersonCsv(
       payload.headers,
       payload.rows,
       [this.eventTrackingDetails?.externalRequestId, Date.now()].join("_")
