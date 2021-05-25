@@ -32,7 +32,7 @@
           class="twolineTable"
         >
           <template v-slot:[itemNameSlotName]="{ item }">
-            <span class="text-pre-wrap"> {{item.name}} </span>
+            <span class="text-pre-wrap"> {{ item.name }} </span>
           </template>
           <template v-slot:[itemActionsSlotName]="{ item }">
             <v-btn color="primary" @click="handleSelect(item)"> Wählen </v-btn>
@@ -114,10 +114,10 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
     return (this.locations || []).map((location) => {
       const { name, contact } = location;
       let combinedName = name;
-      if(contact.officialName) {
+      if (contact.officialName) {
         combinedName += "\n(" + contact.officialName + ")";
       }
-      
+
       return {
         name: combinedName || "-",
         address: getFormattedAddress(contact.address) || "-",

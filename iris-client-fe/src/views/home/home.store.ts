@@ -1,12 +1,18 @@
-import { ExistingDataRequestClientWithLocationList, Statistics } from "@/api";
+import {
+  DataRequestStatus,
+  ExistingDataRequestClientWithLocation,
+  PageEvent,
+  Statistics,
+} from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
+import { DataQuery, getSortAttribute } from "@/api/common";
 
 export type HomeState = {
-  eventTrackingList: ExistingDataRequestClientWithLocationList | null;
+  eventTrackingList: Array<ExistingDataRequestClientWithLocation> | null;
   eventTrackingListLoading: boolean;
   eventTrackingListError: ErrorMessage;
   statistics: Statistics;
@@ -16,7 +22,7 @@ export interface HomeModule extends Module<HomeState, RootState> {
   mutations: {
     setEventTrackingList(
       state: HomeState,
-      eventTrackingList: ExistingDataRequestClientWithLocationList | null
+      eventTrackingList: Array<ExistingDataRequestClientWithLocation> | null
     ): void;
     setEventTrackingListLoading(state: HomeState, payload: boolean): void;
     setEventTrackingListError(state: HomeState, payload: ErrorMessage): void;
@@ -61,21 +67,32 @@ const home: HomeModule = {
   },
   actions: {
     async fetchEventTrackingList({ commit }) {
-      let eventTrackingList: ExistingDataRequestClientWithLocationList | null = null;
+      let eventTrackingList: PageEvent | null = null;
       commit("setEventTrackingListError", null);
       commit("setEventTrackingListLoading", true);
+      const query: DataQuery = {
+        page: 0,
+        size: 10,
+        sort: getSortAttribute("generatedTime") + ",desc",
+        status: DataRequestStatus.DataReceived,
+      };
       try {
-        eventTrackingList = (await authClient.dataRequestsClientLocationsGet())
-          .data;
+        eventTrackingList = (
+          await authClient.dataRequestsClientLocationsGet({ query: query })
+        ).data;
       } catch (e) {
         commit("setEventTrackingListError", getErrorMessage(e));
       } finally {
-        commit("setEventTrackingList", eventTrackingList);
+        commit("setEventTrackingList", eventTrackingList?.content);
         commit("setEventTrackingListLoading", false);
       }
     },
     async fetchStatistics({ commit }) {
-      let statistics: Statistics | null = { eventsCount: 0, indexCasesCount: 0, sumStatus: 0 };
+      let statistics: Statistics | null = {
+        eventsCount: 0,
+        indexCasesCount: 0,
+        sumStatus: 0,
+      };
       try {
         statistics = (await authClient.getWeeklyData()).data;
       } catch (e) {
@@ -83,7 +100,7 @@ const home: HomeModule = {
       } finally {
         commit("setStatistics", statistics);
       }
-    }
+    },
   },
 };
 
