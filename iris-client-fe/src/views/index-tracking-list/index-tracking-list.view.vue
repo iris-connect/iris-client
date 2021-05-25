@@ -25,6 +25,8 @@
           >
             {{ getStatusSelectLabel(selectableStatus[status]) }}
           </v-btn>
+          <!-- this needs to come last, see statusButtonSelected() -->
+          <v-btn text @click="filterStatus(null)"> Alle </v-btn>
         </v-btn-toggle>
       </v-col>
     </v-row>
@@ -89,6 +91,7 @@ import {
   getStatusFilterFromRoute,
   getStringParamFromRouteWithOptionalFallback,
 } from "@/utils/pagination";
+import { Dictionary } from "vue-router/types/router";
 
 function getFormattedDate(date?: string): string {
   return date
@@ -110,9 +113,8 @@ export default class IndexTrackingListView extends Vue {
     this.$route
   );
 
-  selectableStatus = {
+  selectableStatus: Dictionary<DataRequestStatus> = {
     ..._omit(DataRequestStatus, ["Aborted"]),
-    All: undefined,
   };
 
   search = getStringParamFromRouteWithOptionalFallback(
@@ -121,7 +123,7 @@ export default class IndexTrackingListView extends Vue {
     ""
   );
 
-  runSearch = debounce(async (input: string) => {
+  runSearch = debounce(async (input: string | undefined) => {
     let search = input?.trim();
     if (!search || search.length > 1) {
       this.$router.replace({
@@ -170,11 +172,13 @@ export default class IndexTrackingListView extends Vue {
   }
 
   get statusButtonSelected(): number {
-    return this.statusFilter
-      ? Object.values(this.selectableStatus).findIndex((v) => {
-          return v === this.statusFilter;
-        })
-      : Object.keys(this.selectableStatus).length - 1;
+    if (!this.statusFilter) {
+      // return length + 1, assuming "Alle" button is displayed last
+      return Object.keys(this.selectableStatus).length;
+    }
+    return Object.values(this.selectableStatus).findIndex((v) => {
+      return v === this.statusFilter;
+    });
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -253,7 +257,7 @@ export default class IndexTrackingListView extends Vue {
     await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
   }
 
-  async triggerSearch(input: string): Promise<void> {
+  async triggerSearch(input: string | undefined): Promise<void> {
     await this.runSearch(input);
   }
 
