@@ -28,13 +28,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -50,9 +49,20 @@ public class EventDataRequestService {
 	private final SearchClient searchClient;
 	private final DataProviderClient epsDataRequestClient;
 
-	public List<EventDataRequest> getAll() {
-		// ToDo: Pagination
-		return StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
+	public Page<EventDataRequest> findAll(Pageable pageable) {
+		return repository.findAll(pageable);
+	}
+
+	public Page<EventDataRequest> findByStatus(Status status, Pageable pageable) {
+		return repository.findByStatus(status, pageable);
+	}
+
+	public Page<EventDataRequest> findByStatusAndSearchByRefIdOrName(Status status, String search, Pageable pageable) {
+		return repository.findByStatusAndSearchByRefIdOrName(status, search, pageable);
+	}
+
+	public Page<EventDataRequest> searchByRefIdOrName(String search, Pageable pageable) {
+		return repository.findByRefIdContainsOrNameContainsAllIgnoreCase(search, search, pageable);
 	}
 
 	public Optional<EventDataRequest> findById(UUID uuid) {
