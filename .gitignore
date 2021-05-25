@@ -80,5 +80,5 @@ hs_err_pid*
 *.crt
 *.key
 !root-staging.crt
-.env.*
+.env*
 !.env.sample
