@@ -1,25 +1,23 @@
 package iris.client_bff.search_client.eps;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.matches;
-import static org.mockito.Mockito.when;
-
+import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import iris.client_bff.IrisWireMockTest;
 import iris.client_bff.search_client.eps.dto.IdSearch;
 import iris.client_bff.search_client.eps.dto.KeywordSearch;
 import iris.client_bff.search_client.web.dto.LocationInformation;
 import iris.client_bff.search_client.web.dto.LocationList;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ResourceLoader;
 
-import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.matches;
+import static org.mockito.Mockito.when;
 
 @IrisWireMockTest
 @RequiredArgsConstructor
@@ -46,15 +44,16 @@ public class EPSSearchClientTests {
 		var mockedSearchResult = new LocationList().locations(List.of(new LocationInformation()
 				.id(LOCATION_ID)
 				.name(NAME)
-				.providerId(PROVIDER_ID)));
+				.providerId(PROVIDER_ID)))
+				.totalElements(1);
 
-		var payload = KeywordSearch.builder().searchKeyword(SEARCH_KEY).build();
+		var payload = KeywordSearch.builder().searchKeyword(SEARCH_KEY).pageable(null).build();
 
 		when(rpcClient.invoke(matches(".*\\.searchForLocation"), eq(payload), eq(LocationList.class)))
 				.thenReturn(mockedSearchResult);
 
 		// when
-		LocationList actualSearchResults = systemUnderTest.search(SEARCH_KEY);
+		LocationList actualSearchResults = systemUnderTest.search(SEARCH_KEY, null);
 
 		// then
 		assertEquals(mockedSearchResult, actualSearchResults);

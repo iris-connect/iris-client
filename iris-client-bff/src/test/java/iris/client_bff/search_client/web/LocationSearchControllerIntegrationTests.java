@@ -1,22 +1,22 @@
 package iris.client_bff.search_client.web;
 
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
-
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.web.dto.LocationInformation;
 import iris.client_bff.search_client.web.dto.LocationList;
 import lombok.RequiredArgsConstructor;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @IrisWebIntegrationTest
 @RequiredArgsConstructor
@@ -45,7 +45,7 @@ class LocationSearchControllerIntegrationTests {
 		var locItem = new LocationInformation().id("id").name("name").providerId("providerId");
 		var locList = new LocationList().addLocationsItem(locItem);
 
-		when(searchClient.search(anyString())).thenReturn(locList);
+		when(searchClient.search(anyString(), any(Pageable.class))).thenReturn(locList);
 
 		given().mockMvc(mvc)
 				.when().get("/search/{search_keyword}", searchString)
@@ -55,7 +55,7 @@ class LocationSearchControllerIntegrationTests {
 				.body("locations[0].name", equalTo("name"))
 				.body("locations[0].providerId", equalTo("providerId"));
 
-		verify(searchClient).search(searchString);
+		verify(searchClient).search(eq(searchString), any(Pageable.class));
 	}
 
 	@Test
