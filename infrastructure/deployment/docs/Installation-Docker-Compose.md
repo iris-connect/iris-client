@@ -237,7 +237,7 @@ PROXY_CLIENT_CERT_KEY=ga-client-proxy.key
    docker-compose -f docker-compose-ext-postgres.yml up -d
    ```
 
-1. Überprüfen ob alle services laufen
+1. Überprüfen ob alle Services laufen
 
    ```
    # embedded Postgres
@@ -247,7 +247,7 @@ PROXY_CLIENT_CERT_KEY=ga-client-proxy.key
    docker-compose -f docker-compose-ext-postgres.yml ps
    ```
 
-1. Die Logfiles der aller Services einsehen
+1. Die Logfiles aller Services einsehen
 
    ```
    # embedded Postgres
