@@ -1,19 +1,21 @@
 package iris.client_bff.search_client.eps;
 
+import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.SearchClientProperties;
 import iris.client_bff.search_client.eps.dto.IdSearch;
 import iris.client_bff.search_client.eps.dto.KeywordSearch;
+import iris.client_bff.search_client.eps.dto.PageableDto;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
 import iris.client_bff.search_client.web.dto.LocationInformation;
 import iris.client_bff.search_client.web.dto.LocationList;
 import lombok.AllArgsConstructor;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -50,7 +52,18 @@ public class EPSSearchClient implements SearchClient {
 	}
 
 	public LocationList search(String keyword, Pageable pageable) throws IRISSearchException {
-		KeywordSearch search = KeywordSearch.builder().searchKeyword(keyword).pageable(pageable).build();
+		PageableDto pageableDto = PageableDto.builder()
+				.page(pageable.getPageNumber())
+				.size(pageable.getPageSize()).build();
+
+		if (pageable.getSort().isSorted()) {
+			// We only want to sort by one single property
+			Optional<Sort.Order> order = pageable.getSort().stream().findFirst();
+			pageableDto.setSortBy(order.get().getProperty());
+			pageableDto.setDirection(order.get().getDirection());
+		}
+
+		KeywordSearch search = KeywordSearch.builder().searchKeyword(keyword).pageable(pageableDto).build();
 		try {
 			var methodName = config.getEndpoint() + ".searchForLocation";
 			return rpcClient.invoke(methodName, search, LocationList.class);
