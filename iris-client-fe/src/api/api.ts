@@ -1659,6 +1659,198 @@ export interface Statistics {
 }
 
 /**
+ *
+ * @export
+ * @interface Pageable
+ */
+export interface Pageable {
+    /**
+     *
+     * @type {number}
+     * @memberof Pageable
+     */
+    offset?: any;
+    /**
+     *
+     * @type {Sort}
+     * @memberof Pageable
+     */
+    sort?: any;
+    /**
+     *
+     * @type {number}
+     * @memberof Pageable
+     */
+    pageSize?: any;
+    /**
+     *
+     * @type {number}
+     * @memberof Pageable
+     */
+    pageNumber?: any;
+    /**
+     *
+     * @type {boolean}
+     * @memberof Pageable
+     */
+    paged?: any;
+    /**
+     *
+     * @type {boolean}
+     * @memberof Pageable
+     */
+    unpaged?: any;
+}
+
+/**
+ *
+ * @export
+ * @interface PageIndexCase
+ */
+export interface PageIndexCase {
+    /**
+     *
+     * @type {number}
+     * @memberof PageIndexCase
+     */
+    totalElements?: any;
+    /**
+     *
+     * @type {number}
+     * @memberof PageIndexCase
+     */
+    totalPages?: any;
+    /**
+     *
+     * @type {number}
+     * @memberof PageIndexCase
+     */
+    size?: any;
+    /**
+     *
+     * @type {Array&lt;DataRequestCaseDetails&gt;}
+     * @memberof PageIndexCase
+     */
+    content: Array<DataRequestCaseDetails>;
+    /**
+     *
+     * @type {number}
+     * @memberof PageIndexCase
+     */
+    number?: any;
+    /**
+     *
+     * @type {Sort}
+     * @memberof PageIndexCase
+     */
+    sort?: any;
+    /**
+     *
+     * @type {boolean}
+     * @memberof PageIndexCase
+     */
+    first?: any;
+    /**
+     *
+     * @type {boolean}
+     * @memberof PageIndexCase
+     */
+    last?: any;
+    /**
+     *
+     * @type {number}
+     * @memberof PageIndexCase
+     */
+    numberOfElements?: any;
+    /**
+     *
+     * @type {Pageable}
+     * @memberof PageIndexCase
+     */
+    pageable?: any;
+    /**
+     *
+     * @type {boolean}
+     * @memberof PageIndexCase
+     */
+    empty?: any;
+}
+
+/**
+ *
+ * @export
+ * @interface PageEvent
+ */
+export interface PageEvent {
+    /**
+     *
+     * @type {number}
+     * @memberof PageEvent
+     */
+    totalElements?: any;
+    /**
+     *
+     * @type {number}
+     * @memberof PageEvent
+     */
+    totalPages?: any;
+    /**
+     *
+     * @type {number}
+     * @memberof PageEvent
+     */
+    size?: any;
+    /**
+     *
+     * @type {Array&lt;ExistingDataRequestClientWithLocation&gt;}
+     * @memberof PageEvent
+     */
+    content: Array<ExistingDataRequestClientWithLocation>;
+    /**
+     *
+     * @type {number}
+     * @memberof PageEvent
+     */
+    number?: any;
+    /**
+     *
+     * @type {Sort}
+     * @memberof PageEvent
+     */
+    sort?: any;
+    /**
+     *
+     * @type {boolean}
+     * @memberof PageEvent
+     */
+    first?: any;
+    /**
+     *
+     * @type {boolean}
+     * @memberof PageEvent
+     */
+    last?: any;
+    /**
+     *
+     * @type {number}
+     * @memberof PageEvent
+     */
+    numberOfElements?: any;
+    /**
+     *
+     * @type {Pageable}
+     * @memberof PageEvent
+     */
+    pageable?: any;
+    /**
+     *
+     * @type {boolean}
+     * @memberof PageEvent
+     */
+    empty?: any;
+}
+
+/**
  * IrisClientFrontendApi - axios parameter creator
  * @export
  */
@@ -2310,7 +2502,7 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async dataRequestClientCasesGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<DataRequestCaseDetails>>> {
+        async dataRequestClientCasesGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageIndexCase>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestClientCasesGet(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2343,7 +2535,7 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async dataRequestsClientLocationsGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExistingDataRequestClientWithLocationList>> {
+        async dataRequestsClientLocationsGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageEvent>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestsClientLocationsGet(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2479,7 +2671,7 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        dataRequestClientCasesGet(options?: any): AxiosPromise<Array<DataRequestCaseDetails>> {
+        dataRequestClientCasesGet(options?: any): AxiosPromise<PageIndexCase> {
             return localVarFp.dataRequestClientCasesGet(options).then((request) => request(axios, basePath));
         },
         /**
@@ -2509,7 +2701,7 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        dataRequestsClientLocationsGet(options?: any): AxiosPromise<ExistingDataRequestClientWithLocationList> {
+        dataRequestsClientLocationsGet(options?: any): AxiosPromise<PageEvent> {
             return localVarFp.dataRequestsClientLocationsGet(options).then((request) => request(axios, basePath));
         },
         /**

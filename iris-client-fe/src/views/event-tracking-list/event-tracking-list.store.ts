@@ -1,11 +1,12 @@
-import { ExistingDataRequestClientWithLocationList } from "@/api";
+import { PageEvent } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 import authClient from "@/api-client";
+import { DataQuery } from "@/api/common";
 
 export type EventTrackingListState = {
-  eventTrackingList: ExistingDataRequestClientWithLocationList | null;
+  eventTrackingList: PageEvent;
   eventTrackingListLoading: boolean;
 };
 
@@ -14,7 +15,7 @@ export interface EventTrackingListModule
   mutations: {
     setEventTrackingList(
       state: EventTrackingListState,
-      eventTrackingList: ExistingDataRequestClientWithLocationList | null
+      eventTrackingList: PageEvent
     ): void;
     setEventTrackingListLoading(
       state: EventTrackingListState,
@@ -23,12 +24,18 @@ export interface EventTrackingListModule
     reset(state: EventTrackingListState, payload: null): void;
   };
   actions: {
-    fetchEventTrackingList({ commit }: { commit: Commit }): Promise<void>;
+    fetchEventTrackingList(
+      { commit }: { commit: Commit },
+      payload: DataQuery
+    ): Promise<void>;
   };
 }
 
 const defaultState: EventTrackingListState = {
-  eventTrackingList: null,
+  eventTrackingList: {
+    content: [],
+    totalElements: 0,
+  },
   eventTrackingListLoading: false,
 };
 
@@ -38,8 +45,8 @@ const eventTrackingList: EventTrackingListModule = {
     return { ...defaultState };
   },
   mutations: {
-    setEventTrackingList(state, eventTrackingList) {
-      state.eventTrackingList = eventTrackingList;
+    setEventTrackingList(state, payload) {
+      state.eventTrackingList = payload;
     },
     setEventTrackingListLoading(state, loading) {
       state.eventTrackingListLoading = loading;
@@ -51,12 +58,15 @@ const eventTrackingList: EventTrackingListModule = {
     },
   },
   actions: {
-    async fetchEventTrackingList({ commit }) {
-      let eventTrackingList: ExistingDataRequestClientWithLocationList | null = null;
+    async fetchEventTrackingList({ commit }, query: DataQuery) {
+      let eventTrackingList: PageEvent | null = null;
       commit("setEventTrackingListLoading", true);
       try {
-        eventTrackingList = (await authClient.dataRequestsClientLocationsGet())
-          .data;
+        eventTrackingList = (
+          await authClient.dataRequestsClientLocationsGet({
+            params: query,
+          })
+        ).data;
       } finally {
         commit("setEventTrackingList", eventTrackingList);
         commit("setEventTrackingListLoading", false);

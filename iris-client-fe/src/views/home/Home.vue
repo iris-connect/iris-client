@@ -96,10 +96,7 @@ import CounterWidget from "@/components/dashboard/counter-widget.vue";
 // import CasesPieChart from "@/components/dashboard/cases-pie-chart.vue";
 import EventList from "@/components/event-list.vue";
 import store from "@/store";
-import {
-  DataRequestStatus,
-  ExistingDataRequestClientWithLocation, Statistics,
-} from "@/api";
+import { ExistingDataRequestClientWithLocation, Statistics } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
 import { ErrorMessage } from "@/utils/axios";
 import StatusColors from "@/constants/StatusColors";
@@ -152,7 +149,7 @@ function getFormattedDate(date?: string): string {
   async beforeRouteEnter(_from, _to, next) {
     next();
     await store.dispatch("home/fetchEventTrackingList");
-    await store.dispatch("home/fetchStatistics")
+    await store.dispatch("home/fetchStatistics");
   },
   beforeRouteLeave(to, from, next) {
     store.commit("home/reset");
@@ -163,12 +160,12 @@ export default class Home extends Vue {
   get eventTrackingListError(): ErrorMessage {
     return store.state.home.eventTrackingListError;
   }
+
   get openEventListData(): TableRow[] {
-    const dataRequests = store.state.home.eventTrackingList?.dataRequests || [];
-    return dataRequests
-      .filter((request) => request.status === DataRequestStatus.DataRequested)
-      .map(tableRowMapper);
+    const dataRequests = store.state.home.eventTrackingList || [];
+    return dataRequests.map(tableRowMapper);
   }
+
   get statistics(): Statistics {
     return store.state.home.statistics;
   }
@@ -179,6 +176,7 @@ export default class Home extends Vue {
 .home {
   > * {
     margin-top: 1em;
+
     &:last-child {
       margin-bottom: 1em;
     }

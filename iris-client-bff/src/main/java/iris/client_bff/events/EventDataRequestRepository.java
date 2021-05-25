@@ -14,19 +14,22 @@
  *******************************************************************************/
 package iris.client_bff.events;
 
+import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 
 import java.time.Instant;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 
 /**
  * @author Jens Kutzsche
  */
-public interface EventDataRequestRepository extends CrudRepository<EventDataRequest, DataRequestIdentifier> {
+public interface EventDataRequestRepository extends JpaRepository<EventDataRequest, DataRequestIdentifier> {
 
 	@Query("select count(1) = 0 from EventDataRequest r where r.id = :code")
 	boolean isCodeAvailable(UUID code);
@@ -36,4 +39,11 @@ public interface EventDataRequestRepository extends CrudRepository<EventDataRequ
 
 	@Query("select count(r) from EventDataRequest r where r.status = :status")
 	int getCountWithStatus(Status status);
+
+	Page<EventDataRequest> findByStatus(Status status, Pageable pageable);
+
+	Page<EventDataRequest> findByRefIdContainsOrNameContainsAllIgnoreCase(String search, String search1, Pageable pageable);
+
+	@Query("select r from EventDataRequest r where r.status = :status and ( upper(r.refId) like concat('%', upper(:search), '%') or upper(r.name) like concat('%', upper(:search), '%'))")
+	Page<EventDataRequest> findByStatusAndSearchByRefIdOrName(Status status, String search, Pageable pageable);
 }

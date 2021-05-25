@@ -16,7 +16,7 @@
     <v-row class="mb-6">
       <v-col cols="8">
         Status:
-        <v-btn-toggle dense mandatory v-model="statusButtonSelected">
+        <v-btn-toggle dense mandatory :value="statusButtonSelected">
           <v-btn
             text
             @click="filterStatus(selectableStatus[status])"
@@ -25,6 +25,8 @@
           >
             {{ getStatusSelectLabel(selectableStatus[status]) }}
           </v-btn>
+          <!-- this needs to come last, see statusButtonSelected() -->
+          <v-btn text @click="filterStatus(undefined)"> Alle </v-btn>
         </v-btn-toggle>
       </v-col>
     </v-row>
@@ -33,19 +35,24 @@
       <v-card-title>Indexfallverfolgung</v-card-title>
       <v-card-text>
         <v-text-field
-          v-model="tableData.search"
+          v-model="search"
           append-icon="mdi-magnify"
-          label="Search"
+          label="Suchbegriff (min. 2 Buchstaben)"
           single-line
           hide-details
+          @keyup="triggerSearch(search)"
         ></v-text-field>
         <v-data-table
-          :loading="indexListLoading"
-          :headers="tableData.headers"
-          :items="indexList"
-          :items-per-page="5"
+          :loading="dataTableModel.loading"
+          :page="dataTableModel.page"
+          :server-items-length="dataTableModel.itemsLength"
+          :headers="dataTableModel.headers"
+          :items="dataTableModel.data"
+          :items-per-page="dataTableModel.itemsPerPage"
           class="elevation-1 mt-5 twolineTable"
-          :search="tableData.search"
+          :search="search"
+          :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
+          @update:options="updatePagination"
         >
           <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
@@ -75,6 +82,16 @@ import IndexTrackingFormView from "../index-tracking-form/index-tracking-form.vi
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
 import _omit from "lodash/omit";
+import { debounce } from "lodash";
+import { DataQuery, getSortAttribute } from "@/api/common";
+import { DataOptions } from "vuetify";
+import {
+  getPageFromRouteWithDefault,
+  getPageSizeFromRouteWithDefault,
+  getStatusFilterFromRoute,
+  getStringParamFromRouteWithOptionalFallback,
+} from "@/utils/pagination";
+import { Dictionary } from "vue-router/types/router";
 
 function getFormattedDate(date?: string): string {
   return date
@@ -82,21 +99,9 @@ function getFormattedDate(date?: string): string {
     : "-";
 }
 
-type TableRow = {
-  endTime: string;
-  extID: string;
-  name: string;
-  startTime: string;
-  status: string;
-};
-
 @Component({
   components: {
     IndexTrackingFormView: IndexTrackingFormView,
-  },
-  async beforeRouteEnter(_from, _to, next) {
-    next();
-    await store.dispatch("indexTrackingList/fetchIndexTrackingList");
   },
   beforeRouteLeave(to, from, next) {
     store.commit("indexTrackingList/reset");
@@ -104,58 +109,113 @@ type TableRow = {
   },
 })
 export default class IndexTrackingListView extends Vue {
-  statusFilter: DataRequestStatus | null = null;
-  selectableStatus = {
+  statusFilter: DataRequestStatus | undefined = getStatusFilterFromRoute(
+    this.$route
+  );
+
+  selectableStatus: Dictionary<DataRequestStatus> = {
     ..._omit(DataRequestStatus, ["Aborted"]),
-    All: null,
   };
-  statusButtonSelected = Object.keys(this.selectableStatus).length - 1;
-  filterStatus(target: DataRequestStatus | null): void {
+
+  search = getStringParamFromRouteWithOptionalFallback(
+    "search",
+    this.$route,
+    ""
+  );
+
+  runSearch = debounce(async (input: string | undefined) => {
+    let search = input?.trim();
+    if (!search || search.length > 1) {
+      this.$router.replace({
+        name: this.$route.name as string | undefined,
+        query: {
+          ...this.$route.query,
+          page: `1`,
+          search: search || undefined,
+        },
+      });
+
+      const query: DataQuery = {
+        size: getPageSizeFromRouteWithDefault(this.$route),
+        page: 0,
+        sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
+        status: getStatusFilterFromRoute(this.$route),
+        search: search,
+      };
+      await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
+    }
+  }, 1000);
+
+  async filterStatus(target: DataRequestStatus | undefined): Promise<void> {
     this.statusFilter = target;
-  }
 
-  tableData = {
-    search: "",
-    headers: [
-      {
-        text: "Ext.ID",
-        align: "start",
-        sortable: true,
-        value: "extID",
+    this.$router.replace({
+      name: this.$route.name as string | undefined,
+      query: {
+        ...this.$route.query,
+        page: `1`,
+        status: target,
       },
-      { text: "Index-Bezeichner", value: "name" },
-      { text: "Zeit (Start)", value: "startTime" },
-      { text: "Zeit (Ende)", value: "endTime" },
-      { text: "Status", value: "status" },
-      { text: "", value: "actions" },
-    ],
-  };
+    });
 
-  get indexListLoading(): boolean {
-    return store.state.indexTrackingList.indexTrackingListLoading;
+    const query: DataQuery = {
+      size: getPageSizeFromRouteWithDefault(this.$route),
+      page: 0,
+      sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
+      status: target,
+      search: getStringParamFromRouteWithOptionalFallback(
+        "search",
+        this.$route
+      ),
+    };
+    await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
   }
 
-  get indexList(): TableRow[] {
-    const dataRequests = store.state.indexTrackingList.indexTrackingList || [];
-    //console.log(dataRequests);
-    return (
-      dataRequests
-        // TODO this filtering could probably also be done in vuetify data-table
-        .filter(
-          (dataRequests) =>
-            !this.statusFilter || this.statusFilter === dataRequests.status
-        )
-        .map((dataRequest) => {
-          return {
-            endTime: getFormattedDate(dataRequest.end),
-            startTime: getFormattedDate(dataRequest.start),
-            extID: dataRequest.externalCaseId || "-",
-            name: dataRequest.name || "-",
-            status: dataRequest.status?.toString() || "-",
-            caseId: dataRequest.caseId,
-          };
-        })
-    );
+  get statusButtonSelected(): number {
+    if (!this.statusFilter) {
+      // return length + 1, assuming "Alle" button is displayed last
+      return Object.keys(this.selectableStatus).length;
+    }
+    return Object.values(this.selectableStatus).findIndex((v) => {
+      return v === this.statusFilter;
+    });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  get dataTableModel() {
+    const {
+      indexTrackingList,
+      indexTrackingListLoading,
+    } = store.state.indexTrackingList;
+    return {
+      page: getPageFromRouteWithDefault(this.$route),
+      itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
+      loading: indexTrackingListLoading,
+      itemsLength: indexTrackingList.totalElements,
+      data: indexTrackingList.content.map((dataRequest) => {
+        return {
+          endTime: getFormattedDate(dataRequest.end),
+          startTime: getFormattedDate(dataRequest.start),
+          extID: dataRequest.externalCaseId || "-",
+          name: dataRequest.name || "-",
+          status: dataRequest.status?.toString() || "-",
+          caseId: dataRequest.caseId,
+        };
+      }),
+      headers: [
+        {
+          text: "Ext.ID",
+          align: "start",
+          sortable: true,
+          value: "extID",
+        },
+        { text: "Index-Bezeichner", value: "name" },
+        { text: "Zeit (Start)", value: "startTime" },
+        { text: "Zeit (Ende)", value: "endTime" },
+        { text: "Status", value: "status" },
+        { text: "", value: "actions", sortable: false },
+      ],
+    };
   }
 
   // TODO improve this - we need it to circumvent v-slot eslint errors
@@ -163,8 +223,42 @@ export default class IndexTrackingListView extends Vue {
   get itemStatusSlotName(): string {
     return "item.status";
   }
+
   get itemActionSlotName(): string {
     return "item.actions";
+  }
+
+  async updatePagination(pagination: DataOptions): Promise<void> {
+    let sort = getSortAttribute(pagination.sortBy[0]);
+    if (sort) {
+      pagination.sortDesc[0] ? (sort = sort + ",desc") : (sort = sort + ",asc");
+    }
+
+    this.$router.replace({
+      name: this.$route.name as string | undefined,
+      query: {
+        ...this.$route.query,
+        page: `${pagination.page}`,
+        size: `${pagination.itemsPerPage}`,
+        sort: sort,
+      },
+    });
+
+    const query: DataQuery = {
+      size: pagination.itemsPerPage,
+      page: pagination.page - 1,
+      sort: sort,
+      status: getStatusFilterFromRoute(this.$route),
+      search: getStringParamFromRouteWithOptionalFallback(
+        "search",
+        this.$route
+      ),
+    };
+    await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
+  }
+
+  async triggerSearch(input: string | undefined): Promise<void> {
+    await this.runSearch(input);
   }
 
   getStatusColor(status: DataRequestStatus): string {
