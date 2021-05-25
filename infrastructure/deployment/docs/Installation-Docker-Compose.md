@@ -164,6 +164,19 @@ EPS_SD_ENDPOINT=https://iris.staging.iris-gateway.de:3322/jsonrpc
 EPS_SD_ENDPOINT=TBD
 ```
 
+### Einrichtung Root Zertifikat
+
+Wie in der [Architektur](./Architektur.md) beschrieben besteht das IRIS Netzwerk aus viele Akteuren die sich untereinander vertrauen. Dafür muss je nach Umgebung ein Zertifikat konfiguriert werden, welchem der IRIS Client vertraut. Die Zertifikate liegen dem IRIS Client bei und müssen je mach Umgebung konfiguriert werden.
+
+Dafür muss folgender Parameter gesetzt werden.
+
+```
+# Staging: 
+TRUSTED_CA_CRT=root-staging.crt
+
+# Live: 
+TRUSTED_CA_CRT=root-live.crt
+```
 ### Einrichtung GA Client Zertifikat
 
 Damit der IRIS Client sich im IRIS Netzwerk anmelden und mit anderen Teilnehmern kommunizieren und Daten austauschen kann, benötigt man ein IRIS GA Client Zertifikat. Der Prozess dafür ist [hier](Certificate-Process-Staging.md) dokumentiert. 

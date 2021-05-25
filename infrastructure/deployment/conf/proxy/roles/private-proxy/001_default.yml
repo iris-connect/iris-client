@@ -10,7 +10,12 @@ vars:
   PROXY_CLIENT_CERT_KEY:
     source: env
     variable: PROXY_CLIENT_CERT_KEY
-    type: string      
+    type: string    
+  TRUSTED_CA_CRT:
+    source: env
+    variable: TRUSTED_CA_CRT
+    type: string        
+
 private:
   name: "$PROXY_OP"
   database_file: /app/db/private-proxy-announcements.db
@@ -20,7 +25,7 @@ private:
     endpoint: https://private-proxy-eps:7766/jsonrpc
     server_name: "$PROXY_OP"
     tls:
-      ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
+      ca_certificate_files: [ "$DIR/../../certs/$TRUSTED_CA_CRT" ]
       certificate_file: "$DIR/../../certs/$PROXY_CLIENT_CERT"
       key_file: "$DIR/../../certs/$PROXY_CLIENT_CERT_KEY"
   jsonrpc_server: # the JSON-RPC server that the EPS server uses for communication

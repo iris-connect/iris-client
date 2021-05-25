@@ -79,6 +79,6 @@ hs_err_pid*
 # For IRIS Client deployment
 *.crt
 *.key
-!root.crt
+!root-staging.crt
 .env.*
 !.env.sample

@@ -85,6 +85,7 @@ services:
       EPS_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
       HTTPS_PROXY:
+      TRUSTED_CA_CRT:
     command: ["--level", "debug", "server", "run"]
 
   # Proxy for inbound connections.
@@ -102,6 +103,7 @@ services:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
       HTTPS_PROXY:
+      TRUSTED_CA_CRT:
 
     command: ["--level", "trace", "run", "private"]
 
@@ -119,6 +121,7 @@ services:
       PROXY_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
       HTTPS_PROXY:
+      TRUSTED_CA_CRT:
     command: ["--level", "trace", "server", "run"]
 
   # Reverse Proxy
