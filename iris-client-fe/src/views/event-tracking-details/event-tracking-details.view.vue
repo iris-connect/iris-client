@@ -134,15 +134,15 @@ export default class EventTrackingDetailsView extends Vue {
 
   get eventData(): EventData {
     const dataRequest = this.eventTrackingDetails;
+
     return {
       startTime: getFormattedDate(dataRequest?.start),
       endTime: getFormattedDate(dataRequest?.end),
       generatedTime: getFormattedDate(dataRequest?.requestedAt),
       status: dataRequest?.status,
-      lastChange: getFormattedDate(dataRequest?.lastUpdatedAt),
+      lastChange: getFormattedDate(dataRequest?.lastModifiedAt),
       location: dataRequest?.locationInformation,
-      additionalInformation:
-        dataRequest?.submissionData?.additionalInformation || "-",
+      additionalInformation: dataRequest?.requestDetails || "-",
     };
   }
 

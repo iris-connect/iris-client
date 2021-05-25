@@ -58,22 +58,14 @@ public class EventDataRequestController {
 			Option.of(request.getLocationId()),
 			Option.of(request.getProviderId()));
 
-		return ResponseEntity.ok(map(result));
+		return ResponseEntity.ok(mapDataRequestDetails(result));
 	}
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<ExistingDataRequestClientWithLocationList> getDataRequests() {
 		var response = dataRequestService.getAll().stream().map(request -> {
-			var mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
-			mapped.setCode(request.getId().toString());
-			mapped.setStart(request.getRequestStart());
-			mapped.setEnd(request.getRequestEnd());
-			mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
-			mapped.setLastUpdatedAt(request.getLastModifiedAt());
-			mapped.setRequestedAt(request.getCreatedAt());
-			mapped.setExternalRequestId(request.getRefId());
-			return mapped;
+			return mapExistingDataRequestClientWithLocation(request);
 		}).collect(Collectors.toList());
 		var res = ExistingDataRequestClientWithLocationList.builder().dataRequests(response).build();
 		return ResponseEntity.of(Optional.of(res));
@@ -84,9 +76,7 @@ public class EventDataRequestController {
 	public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable UUID code) {
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
-
-			DataRequestDetails requestDetails = map(dataRequest.get());
-
+			DataRequestDetails requestDetails = mapDataRequestDetails(dataRequest.get());
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
 			return ResponseEntity.of(Optional.of(requestDetails));
@@ -102,8 +92,7 @@ public class EventDataRequestController {
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
 			var updated = dataRequestService.update(dataRequest.get(), patch);
-			DataRequestDetails requestDetails = map(updated);
-
+			DataRequestDetails requestDetails = mapDataRequestDetails(updated);
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
 			return ResponseEntity.of(Optional.of(requestDetails));
@@ -112,7 +101,7 @@ public class EventDataRequestController {
 		}
 	}
 
-	private DataRequestDetails map(EventDataRequest request) {
+	private DataRequestDetails mapDataRequestDetails(EventDataRequest request) {
 		DataRequestDetails mapped = modelMapper.map(request, DataRequestDetails.class);
 		mapped.setCode(request.getId().toString());
 		mapped.setStart(request.getRequestStart());
@@ -121,6 +110,20 @@ public class EventDataRequestController {
 		mapped.setLastModifiedAt(request.getLastModifiedAt());
 		mapped.setRequestedAt(request.getCreatedAt());
 		mapped.setExternalRequestId(request.getRefId());
+		return mapped;
+	}
+
+	private ExistingDataRequestClientWithLocation mapExistingDataRequestClientWithLocation(EventDataRequest request) {
+		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
+		mapped.setCode(request.getId().toString());
+		mapped.setStart(request.getRequestStart());
+		mapped.setEnd(request.getRequestEnd());
+		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
+		mapped.setLastUpdatedAt(request.getLastModifiedAt());
+		mapped.setRequestedAt(request.getCreatedAt());
+		mapped.setExternalRequestId(request.getRefId());
+		mapped.setRequestDetails(request.getRequestDetails());
+		mapped.setName(request.getName());
 		return mapped;
 	}
 
