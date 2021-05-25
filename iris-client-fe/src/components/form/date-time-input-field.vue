@@ -70,8 +70,8 @@ export default class DateTimeInputField extends DateTimeInputFieldProps {
         : "",
       (v: unknown): string | boolean =>
         !v ||
-        (typeof v === "string" && /\d{4}-\d{2}-\d{2}/.test(v)) ||
-        "Bitte geben Sie ein Datum im Format YYYY-MM-DD an",
+        (typeof v === "string" && /^\d{2}.\d{2}.\d{4}$/.test(v)) ||
+        "Bitte geben Sie ein Datum im Format DD.MM.YYYY ein",
     ].filter((v) => v),
     time: [
       this.required
@@ -80,7 +80,7 @@ export default class DateTimeInputField extends DateTimeInputFieldProps {
         : "",
       (v: unknown): string | boolean =>
         !v ||
-        (typeof v === "string" && /\d\d:\d\d/.test(v)) ||
+        (typeof v === "string" && /^\d\d:\d\d$/.test(v)) ||
         "Bitte geben Sie eine Uhrzeit im Format HH:mm an",
     ].filter((v) => v),
   };

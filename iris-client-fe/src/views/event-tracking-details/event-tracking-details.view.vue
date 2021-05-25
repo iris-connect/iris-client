@@ -1,14 +1,21 @@
 <template>
-  <event-tracking-details-component
-    :table-rows="guests"
-    :event-data="eventData"
-    :form-data="formData"
-    :loading="loading"
-    :errors="errorMessages"
-    @field-edit="handleEditableField"
-    @status-update="updateRequestStatus"
-    @data-export="handleExport"
-  />
+  <div>
+    <alert-component v-if="alert">
+      <template v-slot:message>
+        Die Kontaktdaten zu diesem Ereignis wurden angefragt.
+      </template>
+    </alert-component>
+    <event-tracking-details-component
+      :table-rows="guests"
+      :event-data="eventData"
+      :form-data="formData"
+      :loading="loading"
+      :errors="errorMessages"
+      @field-edit="handleEditableField"
+      @status-update="updateRequestStatus"
+      @data-export="handleExport"
+    />
+  </div>
 </template>
 <style></style>
 <script lang="ts">
@@ -32,6 +39,7 @@ import EditableField from "@/components/form/editable-field.vue";
 import StatusChangeConfirmDialog from "@/views/event-tracking-details/components/confirm-dialog.vue";
 import EventTrackingStatusChange from "@/views/event-tracking-details/components/event-tracking-status-change.vue";
 import EventTrackingDetailsComponent from "@/views/event-tracking-details/components/event-tracking-details.component.vue";
+import AlertComponent from "@/components/alerts/alert.component.vue";
 
 export type FormData = {
   name?: string;
@@ -94,6 +102,7 @@ function getFormattedAddress(address?: Address | null): string {
     ErrorMessageAlert,
     EventTrackingDetailsLocationInfo,
     EventTrackingDetailsView: EventTrackingDetailsView,
+    AlertComponent,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
@@ -108,6 +117,8 @@ function getFormattedAddress(address?: Address | null): string {
   },
 })
 export default class EventTrackingDetailsView extends Vue {
+  alert = false;
+
   get eventTrackingDetails(): DataRequestDetails | null {
     return store.state.eventTrackingDetails.eventTrackingDetails;
   }
@@ -144,6 +155,25 @@ export default class EventTrackingDetailsView extends Vue {
       store.state.eventTrackingDetails.eventTrackingDetailsLoadingError,
       store.state.eventTrackingDetails.dataRequestPatchError,
     ];
+  }
+
+  created(): void {
+    if (this.$route.query.is_created == "true") {
+      this.openAlert();
+    }
+
+    let query = Object.assign({}, this.$route.query);
+    if (query.is_created) {
+      delete query.is_created;
+      this.$router.replace({ query });
+    }
+  }
+
+  openAlert(): void {
+    this.alert = true;
+    setTimeout(() => {
+      this.alert = false;
+    }, 2000);
   }
 
   updateRequestStatus(status: DataRequestStatusUpdateByUser): void {
