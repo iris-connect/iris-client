@@ -163,7 +163,11 @@ export const getSortAttribute = function (key: string) {
     endTime: 'requestEnd',
     status: 'status',
     lastChange: 'metadata.lastModified',
-    generatedTime: 'metadata.created'
+    generatedTime: 'metadata.created',
+    address: 'contactAddressStreet',
+    representative: 'contactRepresentative',
+    email: 'contactEmail',
+    phone: 'contactPhone'
   };
 
   return sortAttributes[key];
