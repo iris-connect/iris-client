@@ -1,5 +1,10 @@
 <template>
   <div>
+    <alert-component v-if="alert">
+      <template v-slot:message>
+        Die Kontaktdaten zu diesem Indexfall wurden angefragt.
+      </template>
+    </alert-component>
     <v-card>
       <v-card-title
         >Details für Indexfall ID: {{ indexData.extID }}</v-card-title
@@ -178,6 +183,7 @@
   </div>
 </template>
 <style></style>
+
 <script lang="ts">
 import {
   Address,
@@ -194,6 +200,7 @@ import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import dayjs from "@/utils/date";
 import ContactCategories from "@/constants/ContactCategories";
+import AlertComponent from "@/components/alerts/alert.component.vue";
 
 type IndexData = {
   extID: string;
@@ -259,6 +266,7 @@ function getFormattedAddress(address?: Address | null): string {
 @Component({
   components: {
     IndexTrackingDetailsView: IndexTrackingDetailsView,
+    AlertComponent,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
@@ -273,6 +281,8 @@ function getFormattedAddress(address?: Address | null): string {
   },
 })
 export default class IndexTrackingDetailsView extends Vue {
+  alert = false;
+
   tableDataContacts = {
     search: "",
     expanded: [],
@@ -450,6 +460,26 @@ export default class IndexTrackingDetailsView extends Vue {
         additionalInformation: event.additionalInformation || "-",
       };
     });
+  }
+
+  created(): void {
+    if (this.$route.query.is_created == "true") {
+      this.openAlert();
+    }
+
+    let query = Object.assign({}, this.$route.query);
+
+    if (query.is_created) {
+      delete query.is_created;
+      this.$router.replace({ query });
+    }
+  }
+
+  openAlert(): void {
+    this.alert = true;
+    setTimeout(() => {
+      this.alert = false;
+    }, 2000);
   }
 
   currentTab = 0;

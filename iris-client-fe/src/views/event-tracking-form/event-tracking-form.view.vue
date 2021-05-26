@@ -22,7 +22,7 @@
         </v-row>
         <location-select-dialog
           v-model="form.model.location"
-          :locations="locations"
+          :locationList="locationList"
           :disabled="locationsLoading"
           :error="locationsError"
           @search="handleLocationSearch"
@@ -122,6 +122,7 @@ import {
   DataRequestClient,
   LocationInformation,
   DataRequestDetails,
+  LocationList,
 } from "@/api";
 import router from "@/router";
 import LocationSelectDialog from "@/views/event-tracking-form/components/location-select-dialog.vue";
@@ -131,6 +132,7 @@ import DateTimeInputField from "@/components/form/date-time-input-field.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
 import EventTrackingFormLocationInfo from "@/views/event-tracking-form/components/event-tracking-form-location-info.vue";
 import rules from "@/common/validation-rules";
+import { DataQuery } from "@/api/common";
 
 type EventTrackingForm = {
   model: EventTrackingFormModel;
@@ -183,12 +185,12 @@ export default class EventTrackingFormView extends Vue {
     return store.state.eventTrackingForm.locationsError;
   }
 
-  get locations(): LocationInformation[] | null {
-    return store.state.eventTrackingForm.locations;
+  get locationList(): LocationList | null {
+    return store.state.eventTrackingForm.locationList;
   }
 
-  async handleLocationSearch(searchText: string): Promise<void> {
-    await store.dispatch("eventTrackingForm/fetchEventLocations", searchText);
+  async handleLocationSearch(query: DataQuery): Promise<void> {
+    await store.dispatch("eventTrackingForm/fetchEventLocations", query);
   }
 
   homeRoute = "/";
@@ -276,6 +278,7 @@ export default class EventTrackingFormView extends Vue {
         params: {
           id: created.code || "",
         },
+        query: { is_created: "true" },
       });
     }
   }

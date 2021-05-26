@@ -16,7 +16,6 @@ services:
       POSTGRES_PASSWORD:
     volumes:
       - psqldata_iris:/var/lib/postgresql/data
-
     restart: unless-stopped
     healthcheck:
       test:
@@ -44,16 +43,20 @@ services:
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
-      EPS_CLIENT_CLIENT_URL: https://eps:5556/jsonrpc
-      PROXY_SERVICE_EPS_NAME: ${PROXY_OP}
-      PROXY_SERVICE_TARGET_SUBDOMAIN: proxy.test-gesundheitsamt.de
+      IRIS_SERVER_ADDRESS:
+      IRIS_SERVER_PORT:
       SECURITY_JWT_JWT_SHARED_SECRET:
+      HTTP_CLIENT_PROXY_HOST:
+      HTTP_CLIENT_PROXY_PORT:
+      HTTP_CLIENT_PROXY_SCHEME:
+      EPS_CLIENT_CLIENT_URL: https://eps:5556/jsonrpc
+      PROXY_SERVICE_TARGET_SUBDOMAIN: proxy.test-gesundheitsamt.de
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
 
-  # IRIS Client Frontend for users
+  # IRIS Client Frontend
   iris-frontend:
     image: inoeg/iris-client-frontend:develop
     expose:
@@ -64,7 +67,6 @@ services:
     depends_on:
       - iris-client
 
-  # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
     image: inoeg/eps:v0.0.4
     expose:
@@ -73,51 +75,10 @@ services:
     depends_on:
       - iris-client
     volumes:
-      - ./conf/eps:/app/settings
+      - /home/iris/iris-eps/iris-gateway/infrastructure/eps/settings:/app/settings
     environment:
-      EPS_SETTINGS: "settings/roles/hd"
-      EPS_OP:
-      EPS_CLIENT_CERT:
-      EPS_CLIENT_CERT_KEY:
-      EPS_SD_ENDPOINT:
-      HTTPS_PROXY:
-      TRUSTED_CA_CRT:
+      - EPS_SETTINGS=settings/dev/roles/hd-1
     command: ["--level", "debug", "server", "run"]
-
-  # Proxy for inbound connections.
-  private-proxy:
-    image: inoeg/proxy:v0.0.4
-    expose:
-      - 5545
-      - 8877
-    volumes:
-      - ./conf/proxy:/app/settings
-      - proxy_db_iris:/app/db
-    environment:
-      PROXY_SETTINGS: settings/roles/private-proxy
-      PROXY_OP:
-      PROXY_CLIENT_CERT:
-      PROXY_CLIENT_CERT_KEY:
-      HTTPS_PROXY:
-      TRUSTED_CA_CRT:
-    command: ["--level", "trace", "run", "private"]
-
-  private-proxy-eps:
-    image: inoeg/eps:v0.0.4
-    expose:
-      - 7766
-      - 7776
-    volumes:
-      - ./conf/proxy:/app/settings
-    environment:
-      EPS_SETTINGS: settings/roles/private-proxy-eps
-      PROXY_OP:
-      PROXY_CLIENT_CERT:
-      PROXY_CLIENT_CERT_KEY:
-      EPS_SD_ENDPOINT:
-      HTTPS_PROXY:
-      TRUSTED_CA_CRT:
-    command: ["--level", "trace", "server", "run"]
 
   # Reverse Proxy
   nginx:
@@ -128,12 +89,42 @@ services:
       IRIS_CLIENT_DOMAIN:
       IRIS_CLIENT_DOMAIN_CERT:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
-    volumes:
-      - ./conf/nginx:/etc/iris
     depends_on:
       - iris-client
       - iris-frontend
 
+  private-proxy:
+    image: inoeg/proxy:v0.0.4
+    expose:
+      - 5545
+      - 8877
+    volumes:
+      - /home/iris/iris-eps/iris-gateway/infrastructure/eps/settings:/app/settings
+      - /home/iris/private-proxy-db:/tmp
+    environment:
+      - PROXY_SETTINGS=settings/dev/roles/private-proxy-1
+    command: [ "--level", "trace", "run", "private" ]
+
+  private-proxy-1:
+    image: inoeg/eps:v0.0.4
+    expose:
+      - 7766
+      - 7776
+    volumes:
+      - /home/iris/iris-eps/iris-gateway/infrastructure/eps/settings:/app/settings
+    environment:
+      - EPS_SETTINGS=settings/dev/roles/private-proxy-eps-1
+    command: [ "--level", "trace", "server", "run" ]
+
+
+  internal-server:
+    image: luckylusa/iris-eps-internal-server:v0.0.3007
+    volumes:
+      - "/home/iris/iris-eps/iris-gateway/infrastructure/eps/settings:/app/settings"
+    expose:
+      - 8888
+    entrypoint: ./internal-server
+    command: [ "--level", "trace" ]
+
 volumes:
   psqldata_iris:
-  proxy_db_iris:

@@ -222,8 +222,7 @@ class EventDataRequestControllerIntegrationTest {
 		Mockito.doReturn(Instant.now()).when(dataRequest).getCreatedAt();
 		Mockito.doReturn(Instant.now()).when(dataRequest).getLastModifiedAt();
 
-		Mockito.when(dataRequestManagement.createDataRequest(any(), any(), any(), any(), any(), any(), any(), any(), any()))
-				.thenReturn(dataRequest);
+		Mockito.when(dataRequestManagement.createDataRequest(any())).thenReturn(dataRequest);
 
 		Mockito.when(dataRequestManagement.findById(any(UUID.class))).thenReturn(Optional.of(dataRequest));
 
