@@ -98,8 +98,6 @@ const eventTrackingForm: EventTrackingFormModule = {
         locationList = (
           await authClient.searchSearchKeywordGet({ params: query })
         ).data;
-        locationList.page = query.page;
-        locationList.size = query.size;
       } catch (e) {
         commit("setEventLocationsError", getErrorMessage(e));
       } finally {
