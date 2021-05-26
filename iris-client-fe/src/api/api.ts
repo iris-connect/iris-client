@@ -1432,10 +1432,22 @@ export interface LocationList {
     locations: Array<LocationInformation>;
     /**
      * 
-     * @type {Number}
+     * @type {number}
      * @memberof LocationList
      */
-    totalElements: Number
+    totalElements: number
+    /**
+     * 
+     * @type {number}
+     * @memberof LocationList
+     */
+    page: number
+    /**
+     * 
+     * @type {number}
+     * @memberof LocationList
+     */
+    size: number
 }
 /**
  * Basic data type of a person.

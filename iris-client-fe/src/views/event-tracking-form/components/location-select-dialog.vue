@@ -12,15 +12,18 @@
               v-model="search"
               :disabled="disabled"
               append-icon="mdi-magnify"
-              label="Suche nach Name/Adresse"
+              label="Suche (min. 4 Buchstaben)"
               single-line
               hide-details
               @keydown.enter="handleSearch(search)"
             />
           </v-col>
           <v-col cols="12" sm="6" class="d-flex align-end">
-            <v-btn :disabled="disabled" @click="handleSearch(search)">
-              Ereignisort suchen (min. 4 Buchstaben)
+            <v-btn
+              :disabled="disabled || search.length < 4"
+              @click="handleSearch(search)"
+            >
+              Ereignisort suchen
             </v-btn>
           </v-col>
         </v-row>
@@ -138,9 +141,9 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   get dataTableModel() {
     return {
-      page: 1,
-      itemsPerPage: 20,
-      itemsLength: this.locationList?.totalElements,
+      page: this.locationList.page + 1,
+      itemsPerPage: this.locationList.size,
+      itemsLength: this.locationList.totalElements,
       data: this.locationRows,
       headers: [
         {
@@ -159,6 +162,9 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
   }
 
   async updatePagination(pagination: DataOptions): Promise<void> {
+    if (this.search.length < 4) {
+      return;
+    }
     let sort = getSortAttribute(pagination.sortBy[0]);
     if (sort) {
       pagination.sortDesc[0] ? (sort = sort + ",desc") : (sort = sort + ",asc");
@@ -168,14 +174,8 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
       size: pagination.itemsPerPage,
       page: pagination.page - 1,
       sort: sort,
+      search: this.search,
     };
-
-    if (this.search && this.search.length > 3) {
-      query.search = this.search;
-    } else {
-      return;
-    }
-    // await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
     this.$emit("search", query);
   }
 
@@ -185,15 +185,16 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
   }
 
   handleSearch(searchText: string): void {
-    if (searchText && searchText.length > 3) {
-      const query: DataQuery = {
-        size: 20,
-        page: 0,
-        search: searchText,
-      };
-      this.search = searchText;
-      this.$emit("search", query);
+    if (searchText.length < 4) {
+      return;
     }
+    const query: DataQuery = {
+      size: this.dataTableModel.itemsPerPage,
+      page: 0,
+      search: searchText,
+    };
+    this.search = searchText;
+    this.$emit("search", query);
   }
 }
 </script>

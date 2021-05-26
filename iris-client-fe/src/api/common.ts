@@ -143,8 +143,8 @@ export const createRequestFunction = function (axiosArgs: RequestArgs, globalAxi
  * @export
  */
 export type DataQuery = {
-  size?: number,
-  page?: number,
+  size: number,
+  page: number,
   sort?: string | null,
   status?: DataRequestStatus | null,
   search?: string | null,
