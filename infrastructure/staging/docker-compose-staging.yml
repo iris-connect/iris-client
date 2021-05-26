@@ -89,6 +89,8 @@ services:
       IRIS_CLIENT_DOMAIN:
       IRIS_CLIENT_DOMAIN_CERT:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
+    volumes:
+      - ./conf:/etc/iris
     depends_on:
       - iris-client
       - iris-frontend
