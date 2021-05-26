@@ -8,7 +8,7 @@ import iris.client_bff.search_client.eps.dto.KeywordSearch;
 import iris.client_bff.search_client.eps.dto.PageableDto;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
 import iris.client_bff.search_client.web.dto.LocationInformation;
-import iris.client_bff.search_client.web.dto.LocationList;
+import iris.client_bff.search_client.web.dto.LocationQueryResult;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
@@ -51,22 +51,24 @@ public class EPSSearchClient implements SearchClient {
 		return locationInformation;
 	}
 
-	public LocationList search(String keyword, Pageable pageable) throws IRISSearchException {
-		PageableDto pageableDto = PageableDto.builder()
-				.page(pageable.getPageNumber())
-				.size(pageable.getPageSize()).build();
+	public LocationQueryResult search(String keyword, Pageable pageable) throws IRISSearchException {
+		PageableDto pageableDto = PageableDto.builder().build();
+		if (pageable != null && pageable.isPaged()) {
+			pageableDto.setPage(pageable.getPageNumber());
+			pageableDto.setSize(pageable.getPageSize());
 
-		if (pageable.getSort().isSorted()) {
-			// We only want to sort by one single property
-			Optional<Sort.Order> order = pageable.getSort().stream().findFirst();
-			pageableDto.setSortBy(order.get().getProperty());
-			pageableDto.setDirection(order.get().getDirection());
+			if (pageable.getSort().isSorted()) {
+				// We only want to sort by one single property
+				Optional<Sort.Order> order = pageable.getSort().stream().findFirst();
+				pageableDto.setSortBy(order.get().getProperty());
+				pageableDto.setDirection(order.get().getDirection());
+			}
 		}
 
 		KeywordSearch search = KeywordSearch.builder().searchKeyword(keyword).pageable(pageableDto).build();
 		try {
 			var methodName = config.getEndpoint() + ".searchForLocation";
-			return rpcClient.invoke(methodName, search, LocationList.class);
+			return rpcClient.invoke(methodName, search, LocationQueryResult.class);
 		} catch (Throwable t) {
 			throw new IRISSearchException(t);
 		}

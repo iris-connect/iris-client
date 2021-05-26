@@ -21,29 +21,44 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonPropertyOrder({
-		LocationList.JSON_PROPERTY_LOCATIONS,
-		LocationList.JSON_PROPERTY_TOTAL_ELEMENTS
+		LocationQueryResult.JSON_PROPERTY_LOCATIONS,
+		LocationQueryResult.JSON_PROPERTY_TOTAL_ELEMENTS,
+		LocationQueryResult.JSON_PROPERTY_PAGE,
+		LocationQueryResult.JSON_PROPERTY_SIZE
 })
-public class LocationList {
+public class LocationQueryResult {
 	public static final String JSON_PROPERTY_LOCATIONS = "locations";
 	public static final String JSON_PROPERTY_TOTAL_ELEMENTS = "totalElements";
+	public static final String JSON_PROPERTY_PAGE = "page";
+	public static final String JSON_PROPERTY_SIZE = "size";
 	private List<LocationInformation> locations = new ArrayList<>();
 	private long totalElements;
+	private int page;
+	private int size;
 
-	public LocationList locations(List<LocationInformation> locations) {
+	public LocationQueryResult locations(List<LocationInformation> locations) {
 
 		this.locations = locations;
 		return this;
 	}
 
-	public LocationList addLocationsItem(LocationInformation locationsItem) {
+	public LocationQueryResult addLocationsItem(LocationInformation locationsItem) {
 		this.locations.add(locationsItem);
 		return this;
 	}
 
-	public LocationList totalElements(long totalElements) {
-
+	public LocationQueryResult totalElements(long totalElements) {
 		this.totalElements = totalElements;
+		return this;
+	}
+
+	public LocationQueryResult page(int page) {
+		this.page = page;
+		return this;
+	}
+
+	public LocationQueryResult size(int size) {
+		this.size = size;
 		return this;
 	}
 
@@ -78,6 +93,37 @@ public class LocationList {
 		this.totalElements = totalElements;
 	}
 
+	/**
+	 * Get totalElements
+	 *
+	 * @return totalElements
+	 **/
+	@JsonProperty(JSON_PROPERTY_PAGE)
+	@JsonInclude(value = JsonInclude.Include.ALWAYS)
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+
+	/**
+	 * Get totalElements
+	 *
+	 * @return totalElements
+	 **/
+	@JsonProperty(JSON_PROPERTY_SIZE)
+	@JsonInclude(value = JsonInclude.Include.ALWAYS)
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -86,8 +132,8 @@ public class LocationList {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		LocationList locationList = (LocationList) o;
-		return Objects.equals(this.locations, locationList.locations);
+		LocationQueryResult locationQueryResult = (LocationQueryResult) o;
+		return Objects.equals(this.locations, locationQueryResult.locations);
 	}
 
 	@Override
@@ -101,6 +147,8 @@ public class LocationList {
 		sb.append("class LocationList {\n");
 		sb.append("    locations: ").append(toIndentedString(locations)).append("\n");
 		sb.append("    totalElements: ").append(totalElements).append("\n");
+		sb.append("    page: ").append(page).append("\n");
+		sb.append("    size: ").append(size).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

@@ -2,7 +2,7 @@ package iris.client_bff.search_client.web;
 
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
-import iris.client_bff.search_client.web.dto.LocationList;
+import iris.client_bff.search_client.web.dto.LocationQueryResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class LocationSearchController {
 
 	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
-	public LocationList searchSearchKeywordGet(
+	public LocationQueryResult searchSearchKeywordGet(
 			@Size(min = 4) @RequestParam String search, Pageable pageable) {
 
 		try {

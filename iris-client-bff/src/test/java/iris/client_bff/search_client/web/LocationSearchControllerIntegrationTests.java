@@ -3,7 +3,7 @@ package iris.client_bff.search_client.web;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.web.dto.LocationInformation;
-import iris.client_bff.search_client.web.dto.LocationList;
+import iris.client_bff.search_client.web.dto.LocationQueryResult;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -43,7 +43,7 @@ class LocationSearchControllerIntegrationTests {
 		var searchString = "Test";
 
 		var locItem = new LocationInformation().id("id").name("name").providerId("providerId");
-		var locList = new LocationList().addLocationsItem(locItem);
+		var locList = new LocationQueryResult().addLocationsItem(locItem);
 
 		when(searchClient.search(anyString(), any(Pageable.class))).thenReturn(locList);
 
