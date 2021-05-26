@@ -12,23 +12,30 @@
               v-model="search"
               :disabled="disabled"
               append-icon="mdi-magnify"
-              label="Suche nach Name/Adresse"
+              label="Suche (min. 4 Buchstaben)"
               single-line
               hide-details
               @keydown.enter="handleSearch(search)"
             />
           </v-col>
           <v-col cols="12" sm="6" class="d-flex align-end">
-            <v-btn :disabled="disabled" @click="handleSearch(search)">
+            <v-btn
+              :disabled="disabled || search.length < 4"
+              @click="handleSearch(search)"
+            >
               Ereignisort suchen
             </v-btn>
           </v-col>
         </v-row>
         <v-data-table
           :loading="disabled"
-          :headers="tableProps.headers"
-          :items="locationRows"
-          :items-per-page="5"
+          :page="dataTableModel.page"
+          :server-items-length="dataTableModel.itemsLength"
+          :headers="dataTableModel.headers"
+          :items="dataTableModel.data"
+          :items-per-page="dataTableModel.itemsPerPage"
+          :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
+          @update:options="updatePagination"
           class="twolineTable"
         >
           <template v-slot:[itemNameSlotName]="{ item }">
@@ -52,8 +59,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { LocationAddress, LocationInformation } from "@/api";
+import { LocationAddress, LocationInformation, LocationList } from "@/api";
 import { join } from "@/utils/misc";
+import { DataQuery, getSortAttribute } from "@/api/common";
+import { DataOptions } from "node_modules/vuetify/types";
 
 const getFormattedAddress = (address: LocationAddress): string => {
   const { street, zip, city } = address;
@@ -75,9 +84,9 @@ const EventTrackingFormLocationSelectProps = Vue.extend({
       type: Object as () => LocationInformation,
       default: null,
     },
-    locations: {
-      type: Array as () => LocationInformation[],
-      default: () => [],
+    locationList: {
+      type: Object as () => LocationList,
+      default: null,
     },
     disabled: {
       type: Boolean,
@@ -111,7 +120,7 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
   }
 
   get locationRows(): LocationInformationTableRow[] {
-    return (this.locations || []).map((location) => {
+    return (this.locationList?.locations || []).map((location) => {
       const { name, contact } = location;
       let combinedName = name;
       if (contact.officialName) {
@@ -129,22 +138,46 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
     });
   }
 
-  tableProps = {
-    search: "rep",
-    headers: [
-      {
-        text: "Name",
-        align: "start",
-        sortable: true,
-        value: "name",
-      },
-      { text: "Adresse", value: "address" },
-      { text: "Ansprechpartner", value: "representative" },
-      { text: "Mail", value: "email" },
-      { text: "Telefon", value: "phone" },
-      { text: "", value: "actions", sortable: false },
-    ],
-  };
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  get dataTableModel() {
+    return {
+      page: this.locationList.page + 1,
+      itemsPerPage: this.locationList.size,
+      itemsLength: this.locationList.totalElements,
+      data: this.locationRows,
+      headers: [
+        {
+          text: "Name",
+          align: "start",
+          sortable: true,
+          value: "name",
+        },
+        { text: "Adresse", value: "address" },
+        { text: "Ansprechpartner", value: "representative" },
+        { text: "Mail", value: "email" },
+        { text: "Telefon", value: "phone" },
+        { text: "", value: "actions", sortable: false },
+      ],
+    };
+  }
+
+  async updatePagination(pagination: DataOptions): Promise<void> {
+    if (this.search.length < 4) {
+      return;
+    }
+    let sort = getSortAttribute(pagination.sortBy[0]);
+    if (sort) {
+      pagination.sortDesc[0] ? (sort = sort + ",desc") : (sort = sort + ",asc");
+    }
+
+    const query: DataQuery = {
+      size: pagination.itemsPerPage,
+      page: pagination.page - 1,
+      sort: sort,
+      search: this.search,
+    };
+    this.$emit("search", query);
+  }
 
   handleSelect(item: { location: LocationInformation }): void {
     this.model = item.location;
@@ -152,7 +185,16 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
   }
 
   handleSearch(searchText: string): void {
-    this.$emit("search", searchText);
+    if (searchText.length < 4) {
+      return;
+    }
+    const query: DataQuery = {
+      size: this.dataTableModel.itemsPerPage,
+      page: 0,
+      search: searchText,
+    };
+    this.search = searchText;
+    this.$emit("search", query);
   }
 }
 </script>

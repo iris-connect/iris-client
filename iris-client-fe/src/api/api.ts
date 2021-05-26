@@ -1430,6 +1430,24 @@ export interface LocationList {
      * @memberof LocationList
      */
     locations: Array<LocationInformation>;
+    /**
+     * 
+     * @type {number}
+     * @memberof LocationList
+     */
+    totalElements: number
+    /**
+     * 
+     * @type {number}
+     * @memberof LocationList
+     */
+    page: number
+    /**
+     * 
+     * @type {number}
+     * @memberof LocationList
+     */
+    size: number
 }
 /**
  * Basic data type of a person.
@@ -2190,15 +2208,11 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
         },
         /**
          * 
-         * @param {string} searchKeyword The search keyword
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        searchSearchKeywordGet: async (searchKeyword: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'searchKeyword' is not null or undefined
-            assertParamExists('searchSearchKeywordGet', 'searchKeyword', searchKeyword)
-            const localVarPath = `/search/{search_keyword}`
-                .replace(`{${"search_keyword"}}`, encodeURIComponent(String(searchKeyword)));
+        searchSearchKeywordGet: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/search`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2574,12 +2588,11 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} searchKeyword The search keyword
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async searchSearchKeywordGet(searchKeyword: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LocationList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.searchSearchKeywordGet(searchKeyword, options);
+        async searchSearchKeywordGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LocationList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.searchSearchKeywordGet(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -2736,12 +2749,11 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
         },
         /**
          * 
-         * @param {string} searchKeyword The search keyword
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        searchSearchKeywordGet(searchKeyword: string, options?: any): AxiosPromise<LocationList> {
-            return localVarFp.searchSearchKeywordGet(searchKeyword, options).then((request) => request(axios, basePath));
+        searchSearchKeywordGet(options?: any): AxiosPromise<LocationList> {
+            return localVarFp.searchSearchKeywordGet(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2907,13 +2919,11 @@ export class IrisClientFrontendApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} searchKeyword The search keyword
      * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
      * @memberof IrisClientFrontendApi
      */
-    public searchSearchKeywordGet(searchKeyword: string, options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).searchSearchKeywordGet(searchKeyword, options).then((request) => request(this.axios, this.basePath));
+    public searchSearchKeywordGet(options?: any) {
+        return IrisClientFrontendApiFp(this.configuration).searchSearchKeywordGet(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

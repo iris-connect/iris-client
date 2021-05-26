@@ -1,25 +1,25 @@
 package iris.client_bff.search_client.eps;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.matches;
-import static org.mockito.Mockito.when;
-
+import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import iris.client_bff.IrisWireMockTest;
 import iris.client_bff.search_client.eps.dto.IdSearch;
 import iris.client_bff.search_client.eps.dto.KeywordSearch;
+import iris.client_bff.search_client.eps.dto.PageableDto;
 import iris.client_bff.search_client.web.dto.LocationInformation;
-import iris.client_bff.search_client.web.dto.LocationList;
+import iris.client_bff.search_client.web.dto.LocationQueryResult;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.Pageable;
 
-import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.matches;
+import static org.mockito.Mockito.when;
 
 @IrisWireMockTest
 @RequiredArgsConstructor
@@ -43,18 +43,21 @@ public class EPSSearchClientTests {
 	public void searchByKeywordReturnsLocation() throws Throwable {
 
 		// given
-		var mockedSearchResult = new LocationList().locations(List.of(new LocationInformation()
+		var mockedSearchResult = new LocationQueryResult().locations(List.of(new LocationInformation()
 				.id(LOCATION_ID)
 				.name(NAME)
-				.providerId(PROVIDER_ID)));
+				.providerId(PROVIDER_ID)))
+				.totalElements(1)
+				.page(0)
+				.size(10);
 
-		var payload = KeywordSearch.builder().searchKeyword(SEARCH_KEY).build();
+		var payload = KeywordSearch.builder().searchKeyword(SEARCH_KEY).pageable(PageableDto.builder().build()).build();
 
-		when(rpcClient.invoke(matches(".*\\.searchForLocation"), eq(payload), eq(LocationList.class)))
+		when(rpcClient.invoke(matches(".*\\.searchForLocation"), eq(payload), eq(LocationQueryResult.class)))
 				.thenReturn(mockedSearchResult);
 
 		// when
-		LocationList actualSearchResults = systemUnderTest.search(SEARCH_KEY);
+		LocationQueryResult actualSearchResults = systemUnderTest.search(SEARCH_KEY, Pageable.unpaged());
 
 		// then
 		assertEquals(mockedSearchResult, actualSearchResults);
