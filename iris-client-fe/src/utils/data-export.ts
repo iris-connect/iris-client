@@ -62,12 +62,14 @@ const exportStandardCsv = function (
       })
       .filter((v) => v);
     try {
+      const separator = ";";
       const parser = new Parser({
         fields,
         withBOM: true,
+        delimiter: separator,
         defaultValue: "-",
       });
-      const csv = parser.parse(rows);
+      const csv = parser.parse(sanitiseRows(rows, separator));
       downloadCsvFile(fileName, csv);
       resolve(csv);
     } catch (error) {
@@ -92,14 +94,16 @@ const exportAlternativeStandardCsv = function (
       })
       .filter((v) => v);
     try {
+      const separator = ";";
       const parser = new Parser({
         fields,
         withBOM: true,
         defaultValue: "-",
-        delimiter: ";",
+        delimiter: separator,
         quote: "",
       });
-      const csv = parser.parse(rows);
+      const test = sanitiseRows(rows, separator);
+      const csv = parser.parse(test);
       downloadCsvFile(fileName, csv);
       resolve(csv);
     } catch (error) {
@@ -109,11 +113,10 @@ const exportAlternativeStandardCsv = function (
 };
 
 const exportSormasEventParticipantsCsv = function (
-  headers: Array<Header>,
   rows: Array<EventParticipantData>,
   fileName: string
 ): Promise<string> {
-  headers = [
+  const headers = [
     {
       text: "EventParticipant",
       value: "involvementDescription",
@@ -167,14 +170,15 @@ const exportSormasEventParticipantsCsv = function (
       })
       .filter((v) => v);
     try {
+      const separator = ";";
       const parser = new Parser({
         fields,
         withBOM: true,
         defaultValue: "-",
-        delimiter: ";",
+        delimiter: separator,
         quote: "",
       });
-      const csv = parser.parse(rows);
+      const csv = parser.parse(sanitiseRows(rows, separator));
       downloadCsvFile(fileName, csv);
       resolve(csv);
     } catch (error) {
@@ -184,11 +188,10 @@ const exportSormasEventParticipantsCsv = function (
 };
 
 const exportSormasContactPersonCsv = function (
-  headers: Array<Header>,
   rows: Array<ContactCaseData>,
   fileName: string
 ): Promise<string> {
-  headers = [
+  const headers = [
     {
       text: "description",
       value: "description",
@@ -242,14 +245,15 @@ const exportSormasContactPersonCsv = function (
       })
       .filter((v) => v);
     try {
+      const separator = ";";
       const parser = new Parser({
         fields,
         withBOM: true,
         defaultValue: "-",
-        delimiter: ";",
+        delimiter: separator,
         quote: "",
       });
-      const csv = parser.parse(rows);
+      const csv = parser.parse(sanitiseRows(rows, separator));
       downloadCsvFile(fileName, csv);
       resolve(csv);
     } catch (error) {
@@ -276,6 +280,42 @@ const downloadCsvFile = function (fileName: string, csv: string): void {
     link.click();
     document.body.removeChild(link);
   }
+};
+
+const sanitiseRows = function (rows: unknown, separator: string): unknown {
+  let rowsDict: Array<Record<string, string>>;
+  rowsDict = JSON.parse(JSON.stringify(rows));
+  rowsDict = rowsDict.map((row) => {
+    for (const prop in row) {
+      row[prop] = sanitiseField(row[prop].toString(), separator);
+    }
+    return row;
+  });
+  return rowsDict;
+};
+
+export const sanitiseField = function (
+  field: string | undefined,
+  separator = ""
+): string {
+  const headRE = RegExp(/^[=?+-@ /!*\\\\%]/);
+  const innerRE = RegExp(/['"`´]/, "g");
+  const whitespaceRE = RegExp(/\s+/, "g");
+
+  if (typeof field !== "undefined") {
+    field = field.replace(innerRE, "");
+    field = field.replace(whitespaceRE, " ");
+    if (separator != "") {
+      let separator_replacement = ",";
+      if (separator === ",") separator_replacement = ";";
+      while (field.includes(separator))
+        field = field.replace(separator, separator_replacement);
+    }
+    while (headRE.test(field) && field.length > 0) {
+      field = field.substring(1);
+    }
+    return field;
+  } else return "";
 };
 
 const dataExport = {

@@ -104,6 +104,7 @@ export type EventParticipantData = {
 
 export type ContactCaseData = {
   description: string;
+
   firstName: string;
   lastName: string;
   sex: string;
@@ -124,9 +125,19 @@ function getFormattedDate(date?: string | Date): string {
 
 function getFormattedAddress(address?: Address | null): string {
   if (address) {
-    return `${address.street} ${address.houseNumber} \n${address.zipCode} ${address.city}`;
+    return `${sanitiseFieldForDisplay(
+      address.street
+    )} ${sanitiseFieldForDisplay(
+      address.houseNumber
+    )} \n${sanitiseFieldForDisplay(address.zipCode)} ${sanitiseFieldForDisplay(
+      address.city
+    )}`;
   }
   return "-";
+}
+function sanitiseFieldForDisplay(text = ""): string {
+  const RE = RegExp(/\s+/, "g");
+  return text.replace(RE, " ");
 }
 
 @Component({
@@ -291,26 +302,25 @@ export default class EventTrackingDetailsView extends Vue {
       }
       return {
         id: index,
-        lastName: guest.lastName || "-",
-        firstName: guest.firstName || "-",
+        lastName: sanitiseFieldForDisplay(guest.lastName) || "-",
+        firstName: sanitiseFieldForDisplay(guest.firstName) || "-",
         checkInTime,
         checkOutTime,
         maxDuration: maxDuration,
-        comment: guest.attendanceInformation.additionalInformation || "-", // TODO: Line Breaks
+        comment:
+          sanitiseFieldForDisplay(
+            guest.attendanceInformation.additionalInformation
+          ) || "-",
         sex: guest.sex ? Genders.getName(guest.sex) : "-",
-        email: guest.email || "-",
-        phone: guest.phone || "-",
-        mobilePhone: guest.mobilePhone || "-",
+        email: sanitiseFieldForDisplay(guest.email) || "-",
+        phone: sanitiseFieldForDisplay(guest.phone) || "-",
+        mobilePhone: sanitiseFieldForDisplay(guest.mobilePhone) || "-",
         address: getFormattedAddress(guest.address),
       };
     });
   }
 
   handleStandardCsvExport(payload: ExportData): void {
-    payload.rows = this.removeSpecialSignsFromPayload(
-      (payload.rows as unknown) as TableRow[]
-    );
-
     dataExport.exportStandardCsv(
       payload.headers,
       payload.rows,
@@ -322,10 +332,6 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   handleAlternativeStandardCsvExport(payload: ExportData): void {
-    payload.rows = this.removeSpecialSignsFromPayload(
-      (payload.rows as unknown) as TableRow[]
-    );
-
     dataExport.exportAlternativeStandardCsv(
       payload.headers,
       payload.rows,
@@ -338,7 +344,6 @@ export default class EventTrackingDetailsView extends Vue {
 
   handleSormasCsvEventParticipantsExport(payload: ExportData): void {
     dataExport.exportSormasEventParticipantsCsv(
-      payload.headers,
       this.convertTableRowToEventParticipationData(
         (payload.rows as unknown) as TableRow[]
       ),
@@ -351,7 +356,6 @@ export default class EventTrackingDetailsView extends Vue {
 
   handleSormasCsvContactPersonExport(payload: ExportData): void {
     dataExport.exportSormasContactPersonCsv(
-      payload.headers,
       this.convertTableRowToContactCaseData(
         (payload.rows as unknown) as TableRow[],
         this.eventTrackingDetails?.externalRequestId || "-"
@@ -363,41 +367,6 @@ export default class EventTrackingDetailsView extends Vue {
     );
   }
 
-  removeSpecialSignsFromPayload(data: TableRow[]): string[][] {
-    data.forEach((element) => {
-      element.address = this.removeSpecialSignsFromString(element.address);
-      element.checkInTime = this.removeSpecialSignsFromString(
-        element.checkInTime
-      );
-      element.checkOutTime = this.removeSpecialSignsFromString(
-        element.checkOutTime
-      );
-      element.comment = this.removeSpecialSignsFromString(element.comment);
-      element.email = this.removeSpecialSignsFromString(element.email);
-      element.firstName = this.removeSpecialSignsFromString(element.firstName);
-      element.lastName = this.removeSpecialSignsFromString(element.lastName);
-      element.maxDuration = this.removeSpecialSignsFromString(
-        element.maxDuration
-      );
-      element.mobilePhone = this.removeSpecialSignsFromString(
-        element.mobilePhone
-      );
-      element.phone = this.removeSpecialSignsFromString(element.phone);
-      element.sex = this.removeSpecialSignsFromString(element.sex);
-    });
-    return (data as unknown) as string[][];
-  }
-
-  removeSpecialSignsFromString(data: string): string {
-    let processedString: string = data.replace("\n", "");
-    return processedString;
-  }
-
-  switchSemiColonToComma(data: string): string {
-    let processedString: string = data.replace(";", ",");
-    return processedString;
-  }
-
   convertTableRowToContactCaseData(
     tableRows: TableRow[],
     externalId: string
@@ -407,25 +376,15 @@ export default class EventTrackingDetailsView extends Vue {
     tableRows.forEach((element) => {
       const description =
         "Aus Ereignis " +
-        this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(externalId)
-        ) +
+        externalId +
         ": " +
-        this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.comment)
-        ) +
+        element.comment +
         " // " +
-        this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.checkInTime)
-        ) +
+        element.checkInTime +
         " Uhr bis " +
-        this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.checkOutTime)
-        ) +
+        element.checkOutTime +
         " Uhr (Maximale Kontaktdauer " +
-        this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.maxDuration)
-        ) +
+        element.maxDuration +
         ")";
 
       let postalCode = element.address;
@@ -451,52 +410,26 @@ export default class EventTrackingDetailsView extends Vue {
             guest.address.houseNumber &&
             element.address.includes(guest.address.houseNumber)
           ) {
-            postalCode = this.switchSemiColonToComma(
-              this.removeSpecialSignsFromString(guest.address.zipCode)
-            );
-            city = this.switchSemiColonToComma(
-              this.removeSpecialSignsFromString(guest.address.city)
-            );
-            street = this.switchSemiColonToComma(
-              this.removeSpecialSignsFromString(guest.address.street)
-            );
-            houseNumber = this.switchSemiColonToComma(
-              this.removeSpecialSignsFromString(guest.address.houseNumber)
-            );
-            sex = this.switchSemiColonToComma(
-              this.removeSpecialSignsFromString(guest.sex)
-            );
+            postalCode = guest.address.zipCode;
+            city = guest.address.city;
+            street = guest.address.street;
+            houseNumber = guest.address.houseNumber;
+            sex = guest.sex;
           }
         }
       );
 
       const dataInstance: ContactCaseData = {
         description: description,
-        firstName: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.firstName)
-        ),
-        lastName: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.lastName)
-        ),
+        firstName: element.firstName,
+        lastName: element.lastName,
         sex: sex,
-        phone: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.phone)
-        ),
-        email: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.email)
-        ),
-        postalCode: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(postalCode)
-        ),
-        city: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(city)
-        ),
-        street: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(street)
-        ),
-        houseNumber: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(houseNumber)
-        ),
+        phone: element.phone,
+        email: element.email,
+        postalCode: postalCode,
+        city: city,
+        street: street,
+        houseNumber: houseNumber,
       };
       data.push(dataInstance);
     });
@@ -524,21 +457,13 @@ export default class EventTrackingDetailsView extends Vue {
 
     tableRows.forEach((element) => {
       const involvementDescription =
-        this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.comment)
-        ) +
+        element.comment +
         " // " +
-        this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.checkInTime)
-        ) +
+        element.checkInTime +
         " Uhr bis " +
-        this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.checkOutTime)
-        ) +
+        element.checkOutTime +
         " Uhr (Maximale Kontaktdauer " +
-        this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.maxDuration)
-        ) +
+        element.maxDuration +
         ")";
 
       let postalCode = element.address;
@@ -564,52 +489,26 @@ export default class EventTrackingDetailsView extends Vue {
             guest.address.houseNumber &&
             element.address.includes(guest.address.houseNumber)
           ) {
-            postalCode = this.switchSemiColonToComma(
-              this.removeSpecialSignsFromString(guest.address.zipCode)
-            );
-            city = this.switchSemiColonToComma(
-              this.removeSpecialSignsFromString(guest.address.city)
-            );
-            street = this.switchSemiColonToComma(
-              this.removeSpecialSignsFromString(guest.address.street)
-            );
-            houseNumber = this.switchSemiColonToComma(
-              this.removeSpecialSignsFromString(guest.address.houseNumber)
-            );
-            sex = this.switchSemiColonToComma(
-              this.removeSpecialSignsFromString(guest.sex)
-            );
+            postalCode = guest.address.zipCode;
+            city = guest.address.city;
+            street = guest.address.street;
+            houseNumber = guest.address.houseNumber;
+            sex = guest.sex;
           }
         }
       );
 
       const dataInstance: EventParticipantData = {
         involvementDescription: involvementDescription,
-        firstName: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.firstName)
-        ),
-        lastName: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.lastName)
-        ),
+        firstName: element.firstName,
+        lastName: element.lastName,
         sex: sex,
-        phone: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.phone)
-        ),
-        email: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(element.email)
-        ),
-        postalCode: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(postalCode)
-        ),
-        city: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(city)
-        ),
-        street: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(street)
-        ),
-        houseNumber: this.switchSemiColonToComma(
-          this.removeSpecialSignsFromString(houseNumber)
-        ),
+        phone: element.phone,
+        email: element.email,
+        postalCode: postalCode,
+        city: city,
+        street: street,
+        houseNumber: houseNumber,
       };
       data.push(dataInstance);
     });
