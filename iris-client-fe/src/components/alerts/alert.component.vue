@@ -17,6 +17,5 @@
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class AlertComponent extends Vue {
-}
+export default class AlertComponent extends Vue {}
 </script>
