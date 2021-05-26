@@ -58,7 +58,7 @@ Bestimmen Sie den offiziellen RKI Namen Ihres Gesundheitsamtes. Gehen Sie dafür
    sh create-csr-for-eps.sh "${Strasse und Hausnummer Ihres GAs}" "${PLZ und Ort Ihres GAs}" "${CN Ihres GAs (s.o.)}"
    ```
 
-   Wir haben Aufrufbeispiele Beispiele für [Bonn](./examples/Bonn-example.csr) und [Köln](./examples/Koeln-example.csr) hinterlegt.
+   Wir haben Aufrufbeispiele Beispiele für [Bonn](./examples/Bonn-example.txt) und [Köln](./examples/Koeln-example.txt) hinterlegt.
 
 3. Führen Sie das Script aus
 
@@ -105,7 +105,7 @@ Der Prozess für den Proxy enspricht 1 zu 1 dem o.g. Prozess. Mit 2 Unterschiede
    sh create-csr-for-proxy.sh "${Strasse und Hausnummer Ihres GAs}" "${PLZ und Ort Ihres GAs}" "${CN Ihres GAs (s.o.)}"
    ```
 
-   Auch hierfür haben wir Aufrufbeispiele Beispiele für [Bonn](./examples/Bonn-example-proxy.csr) und [Köln](./examples/Koeln-example-proxy.csr) hinterlegt.
+   Auch hierfür haben wir Aufrufbeispiele Beispiele für [Bonn](./examples/Bonn-example-proxy.txt) und [Köln](./examples/Koeln-example-proxy.txt) hinterlegt.
 
 3. Führen Sie das Script aus
 
@@ -178,7 +178,7 @@ cp .env.sample .env
 Passen Sie die Konfiguration auf ihr GA an.
 
 ```
-.env öffnen und bearbeiten (siehe Konfiguration IRIS Client)
+.env öffnen und bearbeiten (siehe nächste Schritte)
 ```
 
 ## Datenbankverbindung einrichten
