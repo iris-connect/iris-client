@@ -48,7 +48,7 @@ class LocationSearchControllerIntegrationTests {
 		when(searchClient.search(anyString(), any(Pageable.class))).thenReturn(locList);
 
 		given().mockMvc(mvc)
-				.when().get("/search/{search_keyword}", searchString)
+				.when().get("/search/?search={search_keyword}", searchString)
 				.then()
 				.statusCode(200)
 				.body("locations[0].id", equalTo("id"))
@@ -65,7 +65,7 @@ class LocationSearchControllerIntegrationTests {
 		var searchString = "Tes";
 
 		given().mockMvc(mvc)
-				.when().get("/search/{search_keyword}", searchString)
+				.when().get("/search/?search={search_keyword}", searchString)
 				.then()
 				.statusCode(400);
 	}
