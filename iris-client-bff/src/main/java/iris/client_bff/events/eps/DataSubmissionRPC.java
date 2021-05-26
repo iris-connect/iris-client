@@ -12,7 +12,7 @@ public interface DataSubmissionRPC {
 
     String submitGuestList(
             @Valid @JsonRpcParam(value = "_client") JsonRpcClientDto client,
-            @JsonRpcParam(value = "requestId") UUID providerId,
+            @JsonRpcParam(value = "dataAuthorizationToken") UUID dataAuthorizationToken,
             @JsonRpcParam(value = "guestList") GuestList guestList);
 
 }

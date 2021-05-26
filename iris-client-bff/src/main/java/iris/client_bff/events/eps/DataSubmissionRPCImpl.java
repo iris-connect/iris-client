@@ -18,16 +18,16 @@ public class DataSubmissionRPCImpl implements DataSubmissionRPC {
   private final EventDataRequestService requestService;
   private final EventDataSubmissionService dataSubmissionService;
 
-  public String submitGuestList(JsonRpcClientDto client, UUID requestId, GuestList guestList) {
-    log.trace("Start submission {}", requestId);
+  public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
+    log.trace("Start submission {}", dataAuthorizationToken);
 
     // Todo check client.getName() vs. providerId
 
-    return requestService.findById(requestId).map(dataRequest -> {
+    return requestService.findById(dataAuthorizationToken).map(dataRequest -> {
 
       dataSubmissionService.save(dataRequest, guestList);
 
-      log.trace("Done submission {}", requestId);
+      log.trace("Done submission {}", dataAuthorizationToken);
 
       return "OK";
 
@@ -36,9 +36,9 @@ public class DataSubmissionRPCImpl implements DataSubmissionRPC {
       // TODO sufficient?
       // probably throw exception
 
-      log.error("Data submission for unknown data request occurred: {}", requestId);
+      log.error("Data submission for unknown data request occurred: {}", dataAuthorizationToken);
 
-      return "Unknown requestId: " + requestId.toString();
+      return "Unknown requestId: " + dataAuthorizationToken.toString();
     });
   }
 }
