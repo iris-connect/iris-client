@@ -6,10 +6,50 @@ export interface Header {
   value: string;
 }
 
+export type TableRow = {
+  lastName: string;
+  firstName: string;
+  checkInTime: string;
+  checkOutTime: string;
+  maxDuration: string;
+  comment: string;
+  sex: string;
+  email: string;
+  phone: string;
+  mobilePhone: string;
+  address: string;
+};
+
+export type ContactCaseData = {
+  description: string;
+  firstName: string;
+  lastName: string;
+  sex: string;
+  phone: string;
+  email: string;
+  postalCode: string;
+  city: string;
+  street: string;
+  houseNumber: string;
+};
+
+export type EventParticipantData = {
+  involvementDescription: string;
+  firstName: string;
+  lastName: string;
+  sex: string;
+  phone: string;
+  email: string;
+  postalCode: string;
+  city: string;
+  street: string;
+  houseNumber: string;
+};
+
 const exportStandardCsv = function (
   headers: Array<Header>,
   rows: Array<Array<string>>,
-  fileName?: string
+  fileName: string
 ): Promise<string> {
   return new Promise((resolve, reject) => {
     const fields = headers
@@ -28,7 +68,7 @@ const exportStandardCsv = function (
         defaultValue: "-",
       });
       const csv = parser.parse(rows);
-      downloadCsvFile(fileName || "Export", csv);
+      downloadCsvFile(fileName, csv);
       resolve(csv);
     } catch (error) {
       reject(error);
@@ -39,16 +79,8 @@ const exportStandardCsv = function (
 const exportAlternativeStandardCsv = function (
   headers: Array<Header>,
   rows: Array<Array<string>>,
-  fileName?: string
+  fileName: string
 ): Promise<string> {
-  console.log("exportAlternativeStandardCsv:");
-  console.log("headers");
-  console.log(headers);
-  console.log("rows");
-  console.log(rows);
-  console.log("fileName");
-  console.log(fileName);
-
   return new Promise((resolve, reject) => {
     const fields = headers
       .map((header) => {
@@ -68,7 +100,7 @@ const exportAlternativeStandardCsv = function (
         quote: "",
       });
       const csv = parser.parse(rows);
-      downloadCsvFile(fileName || "Export", csv);
+      downloadCsvFile(fileName, csv);
       resolve(csv);
     } catch (error) {
       reject(error);
@@ -78,9 +110,52 @@ const exportAlternativeStandardCsv = function (
 
 const exportSormasEventParticipantsCsv = function (
   headers: Array<Header>,
-  rows: Array<Array<string>>,
-  fileName?: string
+  rows: Array<EventParticipantData>,
+  fileName: string
 ): Promise<string> {
+  headers = [
+    {
+      text: "EventParticipant",
+      value: "involvementDescription",
+    },
+    {
+      text: "Person",
+      value: "firstName",
+    },
+    {
+      text: "Person",
+      value: "lastName",
+    },
+    {
+      text: "Person",
+      value: "sex",
+    },
+    {
+      text: "Person",
+      value: "phone",
+    },
+    {
+      text: "Person",
+      value: "email",
+    },
+    {
+      text: "Person",
+      value: "postalCode",
+    },
+    {
+      text: "Person",
+      value: "city",
+    },
+    {
+      text: "Person",
+      value: "street",
+    },
+    {
+      text: "Person",
+      value: "houseNumber",
+    },
+  ];
+
   return new Promise((resolve, reject) => {
     const fields = headers
       .map((header) => {
@@ -100,7 +175,7 @@ const exportSormasEventParticipantsCsv = function (
         quote: "",
       });
       const csv = parser.parse(rows);
-      downloadCsvFile(fileName || "Export", csv);
+      downloadCsvFile(fileName, csv);
       resolve(csv);
     } catch (error) {
       reject(error);
@@ -110,9 +185,52 @@ const exportSormasEventParticipantsCsv = function (
 
 const exportSormasContactPersonCsv = function (
   headers: Array<Header>,
-  rows: Array<Array<string>>,
-  fileName?: string
+  rows: Array<ContactCaseData>,
+  fileName: string
 ): Promise<string> {
+  headers = [
+    {
+      text: "description",
+      value: "description",
+    },
+    {
+      text: "person.firstName",
+      value: "firstName",
+    },
+    {
+      text: "person.lastName",
+      value: "lastName",
+    },
+    {
+      text: "person.sex",
+      value: "sex",
+    },
+    {
+      text: "person.phone",
+      value: "phone",
+    },
+    {
+      text: "person.emailAddress",
+      value: "email",
+    },
+    {
+      text: "person.address.postalCode",
+      value: "postalCode",
+    },
+    {
+      text: "person.address.city",
+      value: "city",
+    },
+    {
+      text: "person.address.street",
+      value: "street",
+    },
+    {
+      text: "person.address.houseNumber",
+      value: "houseNumber",
+    },
+  ];
+
   return new Promise((resolve, reject) => {
     const fields = headers
       .map((header) => {
@@ -132,7 +250,7 @@ const exportSormasContactPersonCsv = function (
         quote: "",
       });
       const csv = parser.parse(rows);
-      downloadCsvFile(fileName || "Export", csv);
+      downloadCsvFile(fileName, csv);
       resolve(csv);
     } catch (error) {
       reject(error);

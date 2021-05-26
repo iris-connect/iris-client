@@ -12,7 +12,7 @@
       "
       @handle-sormas-csv-contact-person-export="
         handleSormasCsvContactPersonExport
-    "
+      "
     />
     <v-card>
       <v-card-title>

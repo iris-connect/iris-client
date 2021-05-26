@@ -79,6 +79,32 @@ export type ExportData = {
   rows: string[][];
 };
 
+export type EventParticipantData = {
+  involvementDescription: string;
+  firstName: string;
+  lastName: string;
+  sex: string;
+  phone: string;
+  email: string;
+  postalCode: string;
+  city: string;
+  street: string;
+  houseNumber: string;
+};
+
+export type ContactCaseData = {
+  description: string;
+  firstName: string;
+  lastName: string;
+  sex: string;
+  phone: string;
+  email: string;
+  postalCode: string;
+  city: string;
+  street: string;
+  houseNumber: string;
+};
+
 function getFormattedDate(date?: string | Date): string {
   if (date && dayjs(date).isValid()) {
     return dayjs(date).format("LLL");
@@ -249,35 +275,313 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   handleStandardCsvExport(payload: ExportData): void {
+    payload.rows = this.removeSpecialSignsFromPayload(
+      (payload.rows as unknown) as TableRow[]
+    );
+
     dataExport.exportStandardCsv(
       payload.headers,
       payload.rows,
-      [this.eventTrackingDetails?.externalRequestId, Date.now()].join("_")
+      [
+        this.eventTrackingDetails?.externalRequestId || "Export",
+        Date.now(),
+      ].join("_")
     );
   }
 
   handleAlternativeStandardCsvExport(payload: ExportData): void {
+    payload.rows = this.removeSpecialSignsFromPayload(
+      (payload.rows as unknown) as TableRow[]
+    );
+
     dataExport.exportAlternativeStandardCsv(
       payload.headers,
       payload.rows,
-      [this.eventTrackingDetails?.externalRequestId, Date.now()].join("_")
+      [
+        this.eventTrackingDetails?.externalRequestId || "Export",
+        Date.now(),
+      ].join("_")
     );
   }
 
   handleSormasCsvEventParticipantsExport(payload: ExportData): void {
     dataExport.exportSormasEventParticipantsCsv(
       payload.headers,
-      payload.rows,
-      [this.eventTrackingDetails?.externalRequestId, Date.now()].join("_")
+      this.convertTableRowToEventParticipationData(
+        (payload.rows as unknown) as TableRow[]
+      ),
+      [
+        this.eventTrackingDetails?.externalRequestId || "Export",
+        Date.now(),
+      ].join("_")
     );
   }
 
   handleSormasCsvContactPersonExport(payload: ExportData): void {
     dataExport.exportSormasContactPersonCsv(
       payload.headers,
-      payload.rows,
-      [this.eventTrackingDetails?.externalRequestId, Date.now()].join("_")
+      this.convertTableRowToContactCaseData(
+        (payload.rows as unknown) as TableRow[],
+        this.eventTrackingDetails?.externalRequestId || "-"
+      ),
+      [
+        this.eventTrackingDetails?.externalRequestId || "Export",
+        Date.now(),
+      ].join("_")
     );
+  }
+
+  removeSpecialSignsFromPayload(data: TableRow[]): string[][] {
+    data.forEach((element) => {
+      element.address = this.removeSpecialSignsFromString(element.address);
+      element.checkInTime = this.removeSpecialSignsFromString(
+        element.checkInTime
+      );
+      element.checkOutTime = this.removeSpecialSignsFromString(
+        element.checkOutTime
+      );
+      element.comment = this.removeSpecialSignsFromString(element.comment);
+      element.email = this.removeSpecialSignsFromString(element.email);
+      element.firstName = this.removeSpecialSignsFromString(element.firstName);
+      element.lastName = this.removeSpecialSignsFromString(element.lastName);
+      element.maxDuration = this.removeSpecialSignsFromString(
+        element.maxDuration
+      );
+      element.mobilePhone = this.removeSpecialSignsFromString(
+        element.mobilePhone
+      );
+      element.phone = this.removeSpecialSignsFromString(element.phone);
+      element.sex = this.removeSpecialSignsFromString(element.sex);
+    });
+    return (data as unknown) as string[][];
+  }
+
+  removeSpecialSignsFromString(data: string): string {
+    let processedString: string = data.replace("\n", "");
+    return processedString;
+  }
+
+  switchSemiColonToComma(data: string): string {
+    let processedString: string = data.replace(";", ",");
+    return processedString;
+  }
+
+  convertTableRowToContactCaseData(
+    tableRows: TableRow[],
+    externalId: string
+  ): ContactCaseData[] {
+    const data: ContactCaseData[] = [];
+
+    tableRows.forEach((element) => {
+      const description =
+        "Aus Ereignis " +
+        this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(externalId)
+        ) +
+        ": " +
+        this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.comment)
+        ) +
+        " // " +
+        this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.checkInTime)
+        ) +
+        " Uhr bis " +
+        this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.checkOutTime)
+        ) +
+        " Uhr (Maximale Kontaktdauer " +
+        this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.maxDuration)
+        ) +
+        ")";
+
+      let postalCode = element.address;
+      let city = element.address;
+      let street = element.address;
+      let houseNumber = element.address;
+      let sex = element.sex;
+
+      store.state.eventTrackingDetails.eventTrackingDetails?.submissionData?.guests.forEach(
+        (guest) => {
+          if (
+            guest.address &&
+            guest.sex &&
+            guest.firstName == element.firstName &&
+            guest.lastName == element.lastName &&
+            guest.email == element.email &&
+            guest.address.street &&
+            element.address.includes(guest.address.street) &&
+            guest.address.city &&
+            element.address.includes(guest.address.city) &&
+            guest.address.zipCode &&
+            element.address.includes(guest.address.zipCode) &&
+            guest.address.houseNumber &&
+            element.address.includes(guest.address.houseNumber)
+          ) {
+            postalCode = this.switchSemiColonToComma(
+              this.removeSpecialSignsFromString(guest.address.zipCode)
+            );
+            city = this.switchSemiColonToComma(
+              this.removeSpecialSignsFromString(guest.address.city)
+            );
+            street = this.switchSemiColonToComma(
+              this.removeSpecialSignsFromString(guest.address.street)
+            );
+            houseNumber = this.switchSemiColonToComma(
+              this.removeSpecialSignsFromString(guest.address.houseNumber)
+            );
+            sex = this.switchSemiColonToComma(
+              this.removeSpecialSignsFromString(guest.sex)
+            );
+          }
+        }
+      );
+
+      const dataInstance: ContactCaseData = {
+        description: description,
+        firstName: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.firstName)
+        ),
+        lastName: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.lastName)
+        ),
+        sex: sex,
+        phone: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.phone)
+        ),
+        email: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.email)
+        ),
+        postalCode: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(postalCode)
+        ),
+        city: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(city)
+        ),
+        street: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(street)
+        ),
+        houseNumber: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(houseNumber)
+        ),
+      };
+      data.push(dataInstance);
+    });
+    return data;
+  }
+
+  convertTableRowToEventParticipationData(
+    tableRows: TableRow[]
+  ): EventParticipantData[] {
+    const data: EventParticipantData[] = [];
+
+    const headerInstance: EventParticipantData = {
+      involvementDescription: "involvementDescription",
+      firstName: "person.firstName",
+      lastName: "person.lastName",
+      sex: "person.sex",
+      phone: "person.phone",
+      email: "person.emailAddress",
+      postalCode: "person.address.postalCode",
+      city: "person.address.city",
+      street: "person.address.street",
+      houseNumber: "person.address.houseNumber",
+    };
+    data.push(headerInstance);
+
+    tableRows.forEach((element) => {
+      const involvementDescription =
+        this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.comment)
+        ) +
+        " // " +
+        this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.checkInTime)
+        ) +
+        " Uhr bis " +
+        this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.checkOutTime)
+        ) +
+        " Uhr (Maximale Kontaktdauer " +
+        this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.maxDuration)
+        ) +
+        ")";
+
+      let postalCode = element.address;
+      let city = element.address;
+      let street = element.address;
+      let houseNumber = element.address;
+      let sex = element.sex;
+
+      store.state.eventTrackingDetails.eventTrackingDetails?.submissionData?.guests.forEach(
+        (guest) => {
+          if (
+            guest.address &&
+            guest.sex &&
+            guest.firstName == element.firstName &&
+            guest.lastName == element.lastName &&
+            guest.email == element.email &&
+            guest.address.street &&
+            element.address.includes(guest.address.street) &&
+            guest.address.city &&
+            element.address.includes(guest.address.city) &&
+            guest.address.zipCode &&
+            element.address.includes(guest.address.zipCode) &&
+            guest.address.houseNumber &&
+            element.address.includes(guest.address.houseNumber)
+          ) {
+            postalCode = this.switchSemiColonToComma(
+              this.removeSpecialSignsFromString(guest.address.zipCode)
+            );
+            city = this.switchSemiColonToComma(
+              this.removeSpecialSignsFromString(guest.address.city)
+            );
+            street = this.switchSemiColonToComma(
+              this.removeSpecialSignsFromString(guest.address.street)
+            );
+            houseNumber = this.switchSemiColonToComma(
+              this.removeSpecialSignsFromString(guest.address.houseNumber)
+            );
+            sex = this.switchSemiColonToComma(
+              this.removeSpecialSignsFromString(guest.sex)
+            );
+          }
+        }
+      );
+
+      const dataInstance: EventParticipantData = {
+        involvementDescription: involvementDescription,
+        firstName: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.firstName)
+        ),
+        lastName: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.lastName)
+        ),
+        sex: sex,
+        phone: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.phone)
+        ),
+        email: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(element.email)
+        ),
+        postalCode: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(postalCode)
+        ),
+        city: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(city)
+        ),
+        street: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(street)
+        ),
+        houseNumber: this.switchSemiColonToComma(
+          this.removeSpecialSignsFromString(houseNumber)
+        ),
+      };
+      data.push(dataInstance);
+    });
+    return data;
   }
 }
 </script>

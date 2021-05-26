@@ -1,76 +1,74 @@
 <template>
-  <modal>
-    <transition name="modal">
-      <div class="modal-mask">
-        <div class="modal-wrapper">
-          <div class="modal-container">
-            <v-card>
-              <v-card-title class="modal-header">
-                <h3>Daten exportieren</h3>
-              </v-card-title>
-              <v-divider />
-              <v-card-text class="modal-body">
-                <v-row align="center">
-                  <v-col cols="8">
-                    <span>Standard-csv</span>
-                  </v-col>
-                  <v-col cols="4">
-                    <v-btn color="primary" @click="handleStandardCsvExport"
-                      >Download</v-btn
-                    >
-                  </v-col>
-                </v-row>
-                <v-row align="center">
-                  <v-col cols="8">
-                    <span>Alternative Standard-csv</span>
-                  </v-col>
-                  <v-col cols="4">
-                    <v-btn
-                      color="primary"
-                      @click="handleAlternativeStandardCsvExport"
-                      >Download</v-btn
-                    >
-                  </v-col>
-                </v-row>
-                <v-row align="center">
-                  <v-col cols="8">
-                    <span>SORMAS-csv (Ereignisteilnehmer-Format)</span>
-                  </v-col>
-                  <v-col cols="4">
-                    <v-btn
-                      color="primary"
-                      @click="handleSormasCsvEventParticipantsExport"
-                      >Download</v-btn
-                    >
-                  </v-col>
-                </v-row>
-                <v-row align="center">
-                  <v-col cols="8">
-                    <span>SORMAS-csv (Kontaktpersonen-Format)</span>
-                  </v-col>
-                  <v-col cols="4">
-                    <v-btn
-                      color="primary"
-                      @click="handleSormasCsvContactPersonExport"
-                      >Download</v-btn
-                    >
-                  </v-col>
-                </v-row>
-              </v-card-text>
-              <v-divider />
-              <v-card-actions>
-                <v-row no-gutters justify="end">
-                  <v-col cols="4">
-                    <v-btn text @click="closeExportModal">Schließen</v-btn>
-                  </v-col>
-                </v-row>
-              </v-card-actions>
-            </v-card>
-          </div>
+  <transition name="modal">
+    <div class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+          <v-card>
+            <v-card-title class="modal-header">
+              <h3>Daten exportieren</h3>
+            </v-card-title>
+            <v-divider />
+            <v-card-text class="modal-body">
+              <v-row align="center">
+                <v-col cols="8">
+                  <span>Standard-csv</span>
+                </v-col>
+                <v-col cols="4">
+                  <v-btn color="primary" @click="handleStandardCsvExport"
+                    >Download</v-btn
+                  >
+                </v-col>
+              </v-row>
+              <v-row align="center">
+                <v-col cols="8">
+                  <span>Alternative Standard-csv</span>
+                </v-col>
+                <v-col cols="4">
+                  <v-btn
+                    color="primary"
+                    @click="handleAlternativeStandardCsvExport"
+                    >Download</v-btn
+                  >
+                </v-col>
+              </v-row>
+              <v-row align="center">
+                <v-col cols="8">
+                  <span>SORMAS-csv (Ereignisteilnehmer-Format)</span>
+                </v-col>
+                <v-col cols="4">
+                  <v-btn
+                    color="primary"
+                    @click="handleSormasCsvEventParticipantsExport"
+                    >Download</v-btn
+                  >
+                </v-col>
+              </v-row>
+              <v-row align="center">
+                <v-col cols="8">
+                  <span>SORMAS-csv (Kontaktpersonen-Format)</span>
+                </v-col>
+                <v-col cols="4">
+                  <v-btn
+                    color="primary"
+                    @click="handleSormasCsvContactPersonExport"
+                    >Download</v-btn
+                  >
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <v-divider />
+            <v-card-actions>
+              <v-row no-gutters justify="end">
+                <v-col cols="4">
+                  <v-btn text @click="closeExportModal">Schließen</v-btn>
+                </v-col>
+              </v-row>
+            </v-card-actions>
+          </v-card>
         </div>
       </div>
-    </transition>
-  </modal>
+    </div>
+  </transition>
 </template>
 <style>
 .modal-mask {
