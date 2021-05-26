@@ -4,10 +4,10 @@ directory:
   settings:
     jsonrpc_client:
       tls:
-        certificate_file: "$DIR/../certs/private-proxy-1.crt"
-        key_file: "$DIR/../certs/private-proxy-1.key"
-        ca_certificate_files: [ "$DIR/../certs/root.crt" ]
-    ca_certificate_files: [ "$DIR/../certs/root.crt" ]
+        certificate_file: "$DIR/../../certs/private-proxy-1.crt"
+        key_file: "$DIR/../../certs/private-proxy-1.key"
+        ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
+    ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
     endpoints: [ "https://iris.staging.iris-gateway.de:3322/jsonrpc" ]
     server_names: [ "sd-1" ]
 channels: # defines all the channels that we want to open when starting the server
@@ -16,9 +16,9 @@ channels: # defines all the channels that we want to open when starting the serv
     settings:
       bind_address: "0.0.0.0:7776"
       tls:
-        ca_certificate_files: [ "$DIR/../certs/root.crt" ]
-        certificate_file: "$DIR/../certs/private-proxy-1.crt"
-        key_file: "$DIR/../erts/private-proxy-1.key"
+        ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
+        certificate_file: "$DIR/../../certs/private-proxy-1.crt"
+        key_file: "$DIR/../../erts/private-proxy-1.key"
   - name: main JSON-RPC client # creates outgoing JSONRPC connections to deliver and receive messages
     type: jsonrpc_client
     settings:
@@ -27,15 +27,15 @@ channels: # defines all the channels that we want to open when starting the serv
     type: grpc_client
     settings:
       tls:
-        ca_certificate_files: [ "$DIR/../certs/root.crt" ]
-        certificate_file: "$DIR/../certs/private-proxy-1.crt"
-        key_file: "$DIR/../certs/private-proxy-1.key"
+        ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
+        certificate_file: "$DIR/../../certs/private-proxy-1.crt"
+        key_file: "$DIR/../../certs/private-proxy-1.key"
   - name: main JSON-RPC server # accepts incoming JSONRPC connections to deliver and receive messages
     type: jsonrpc_server
     settings:
       bind_address: "0.0.0.0:7766"
       tls:
-        ca_certificate_files: [ "$DIR/../certs/root.crt" ]
-        certificate_file: "$DIR/../certs/private-proxy-1.crt"
-        key_file: "$DIR/../certs/private-proxy-1.key"
+        ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
+        certificate_file: "$DIR/../../certs/private-proxy-1.crt"
+        key_file: "$DIR/../../certs/private-proxy-1.key"
 
