@@ -20,7 +20,7 @@
           </v-col>
           <v-col cols="12" sm="6" class="d-flex align-end">
             <v-btn :disabled="disabled" @click="handleSearch(search)">
-              Ereignisort suchen
+              Ereignisort suchen (min. 4 Buchstaben)
             </v-btn>
           </v-col>
         </v-row>
