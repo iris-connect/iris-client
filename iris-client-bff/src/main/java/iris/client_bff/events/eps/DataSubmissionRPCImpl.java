@@ -38,7 +38,7 @@ public class DataSubmissionRPCImpl implements DataSubmissionRPC {
 
       log.error("Data submission for unknown data request occurred: {}", dataAuthorizationToken);
 
-      return "Unknown requestId: " + dataAuthorizationToken.toString();
+      return "Unknown dataAuthorizationToken: " + dataAuthorizationToken.toString();
     });
   }
 }
