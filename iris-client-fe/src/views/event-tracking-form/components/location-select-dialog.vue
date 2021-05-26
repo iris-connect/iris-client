@@ -26,9 +26,13 @@
         </v-row>
         <v-data-table
           :loading="disabled"
-          :headers="tableProps.headers"
-          :items="locationRows"
-          :items-per-page="5"
+          :page="dataTableModel.page"
+          :server-items-length="dataTableModel.itemsLength"
+          :headers="dataTableModel.headers"
+          :items="dataTableModel.data"
+          :items-per-page="dataTableModel.itemsPerPage"
+          :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
+          @update:options="updatePagination"
           class="twolineTable"
         >
           <template v-slot:[itemNameSlotName]="{ item }">
@@ -52,8 +56,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { LocationAddress, LocationInformation } from "@/api";
+import { LocationAddress, LocationInformation, LocationList } from "@/api";
 import { join } from "@/utils/misc";
+import { DataQuery, getSortAttribute } from "@/api/common";
+import { DataOptions } from "node_modules/vuetify/types";
 
 const getFormattedAddress = (address: LocationAddress): string => {
   const { street, zip, city } = address;
@@ -75,9 +81,9 @@ const EventTrackingFormLocationSelectProps = Vue.extend({
       type: Object as () => LocationInformation,
       default: null,
     },
-    locations: {
-      type: Array as () => LocationInformation[],
-      default: () => [],
+    locationList: {
+      type: Object as () => LocationList,
+      default: null,
     },
     disabled: {
       type: Boolean,
@@ -111,7 +117,7 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
   }
 
   get locationRows(): LocationInformationTableRow[] {
-    return (this.locations || []).map((location) => {
+    return (this.locationList?.locations || []).map((location) => {
       const { name, contact } = location;
       let combinedName = name;
       if (contact.officialName) {
@@ -129,22 +135,49 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
     });
   }
 
-  tableProps = {
-    search: "rep",
-    headers: [
-      {
-        text: "Name",
-        align: "start",
-        sortable: true,
-        value: "name",
-      },
-      { text: "Adresse", value: "address" },
-      { text: "Ansprechpartner", value: "representative" },
-      { text: "Mail", value: "email" },
-      { text: "Telefon", value: "phone" },
-      { text: "", value: "actions", sortable: false },
-    ],
-  };
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  get dataTableModel() {
+    return {
+      page: 1,
+      itemsPerPage: 20,
+      itemsLength: this.locationList?.totalElements,
+      data: this.locationRows,
+      headers: [
+        {
+          text: "Name",
+          align: "start",
+          sortable: true,
+          value: "name",
+        },
+        { text: "Adresse", value: "address" },
+        { text: "Ansprechpartner", value: "representative" },
+        { text: "Mail", value: "email" },
+        { text: "Telefon", value: "phone" },
+        { text: "", value: "actions", sortable: false },
+      ],
+    };
+  }
+
+  async updatePagination(pagination: DataOptions): Promise<void> {
+    let sort = getSortAttribute(pagination.sortBy[0]);
+    if (sort) {
+      pagination.sortDesc[0] ? (sort = sort + ",desc") : (sort = sort + ",asc");
+    }
+
+    const query: DataQuery = {
+      size: pagination.itemsPerPage,
+      page: pagination.page - 1,
+      sort: sort,
+    };
+
+    if (this.search && this.search.length > 3) {
+      query.search = this.search;
+    } else {
+      return;
+    }
+    // await store.dispatch("indexTrackingList/fetchIndexTrackingList", query);
+    this.$emit("search", query);
+  }
 
   handleSelect(item: { location: LocationInformation }): void {
     this.model = item.location;
@@ -152,7 +185,15 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
   }
 
   handleSearch(searchText: string): void {
-    this.$emit("search", searchText);
+    if (searchText && searchText.length > 3) {
+      const query: DataQuery = {
+        size: 20,
+        page: 0,
+        search: searchText,
+      };
+      this.search = searchText;
+      this.$emit("search", query);
+    }
   }
 }
 </script>
