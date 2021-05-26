@@ -4,6 +4,7 @@ import { RootState } from "@/store/types";
 import { Commit, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import authClient from "@/api-client";
+import { DataQuery } from "@/api/common";
 
 export type EventTrackingFormState = {
   locationList: LocationList | null;
@@ -41,7 +42,7 @@ export interface EventTrackingFormModule
   actions: {
     fetchEventLocations(
       { commit }: { commit: Commit },
-      keyword: string
+      query: DataQuery
     ): Promise<void>;
     createEventTracking(
       { commit }: { commit: Commit },
