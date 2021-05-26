@@ -34,7 +34,7 @@ npm run build
 cd dist && zip -qq -r ../../release/iris-client-fe-$VERSION.zip *
 
 printf "\n  Create ZIP of deployment scripts and instructions  \n\n"
-cd ../../infrastructure/deployment && zip -qq -r ../../release/deployment-$VERSION.zip *
+cd ../../infrastructure/deployment && zip -qq -r ../../release/deployment-$VERSION.zip * .*
 
 cd ../../
 
