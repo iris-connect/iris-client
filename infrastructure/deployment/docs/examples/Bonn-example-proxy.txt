@@ -1,0 +1,1 @@
+sh create-csr-for-proxy.sh "Engeltalstr. 6" "53111 Bonn" "ga-stadt-bonn-proxy"
