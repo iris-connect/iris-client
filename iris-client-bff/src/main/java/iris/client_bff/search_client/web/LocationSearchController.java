@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Size;
 
@@ -21,13 +18,13 @@ public class LocationSearchController {
 
 	private final SearchClient searchClient;
 
-	@GetMapping("/search/{search_keyword}")
+	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
 	public LocationList searchSearchKeywordGet(
-			@Size(min = 4) @PathVariable("search_keyword") String searchKeyword, Pageable pageable) {
+			@Size(min = 4) @RequestParam String search, Pageable pageable) {
 
 		try {
-			return searchClient.search(searchKeyword, pageable);
+			return searchClient.search(search, pageable);
 		} catch (IRISSearchException e) {
 			// TODO handle
 			throw new RuntimeException(e);
