@@ -143,8 +143,8 @@ export const createRequestFunction = function (axiosArgs: RequestArgs, globalAxi
  * @export
  */
 export type DataQuery = {
-  size?: number,
-  page?: number,
+  size: number,
+  page: number,
   sort?: string | null,
   status?: DataRequestStatus | null,
   search?: string | null,
@@ -163,7 +163,11 @@ export const getSortAttribute = function (key: string) {
     endTime: 'requestEnd',
     status: 'status',
     lastChange: 'metadata.lastModified',
-    generatedTime: 'metadata.created'
+    generatedTime: 'metadata.created',
+    address: 'contactAddressStreet',
+    representative: 'contactRepresentative',
+    email: 'contactEmail',
+    phone: 'contactPhone'
   };
 
   return sortAttributes[key];

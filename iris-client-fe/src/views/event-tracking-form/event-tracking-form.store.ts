@@ -1,16 +1,13 @@
-import {
-  DataRequestClient,
-  DataRequestDetails,
-  LocationInformation,
-} from "@/api";
+import { DataRequestClient, DataRequestDetails, LocationList } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import authClient from "@/api-client";
+import { DataQuery } from "@/api/common";
 
 export type EventTrackingFormState = {
-  locations: LocationInformation[] | null;
+  locationList: LocationList | null;
   locationsLoading: boolean;
   locationsError: ErrorMessage;
   eventCreationOngoing: boolean;
@@ -22,7 +19,7 @@ export interface EventTrackingFormModule
   mutations: {
     setEventLocations(
       state: EventTrackingFormState,
-      locations: LocationInformation[] | null
+      locationList: LocationList | null
     ): void;
     setEventLocationsLoading(
       state: EventTrackingFormState,
@@ -45,7 +42,7 @@ export interface EventTrackingFormModule
   actions: {
     fetchEventLocations(
       { commit }: { commit: Commit },
-      keyword: string
+      query: DataQuery
     ): Promise<void>;
     createEventTracking(
       { commit }: { commit: Commit },
@@ -55,7 +52,12 @@ export interface EventTrackingFormModule
 }
 
 const defaultState: EventTrackingFormState = {
-  locations: null,
+  locationList: {
+    page: 0,
+    size: 20,
+    locations: [],
+    totalElements: 0,
+  },
   locationsLoading: false,
   locationsError: null,
   eventCreationOngoing: false,
@@ -68,8 +70,8 @@ const eventTrackingForm: EventTrackingFormModule = {
     return { ...defaultState };
   },
   mutations: {
-    setEventLocations(state, locations) {
-      state.locations = locations;
+    setEventLocations(state, locationList) {
+      state.locationList = locationList;
     },
     setEventLocationsLoading(state, loading: boolean) {
       state.locationsLoading = loading;
@@ -88,17 +90,18 @@ const eventTrackingForm: EventTrackingFormModule = {
     },
   },
   actions: {
-    async fetchEventLocations({ commit }, keyword) {
-      let locations: LocationInformation[] | null = null;
+    async fetchEventLocations({ commit }, query) {
+      let locationList: LocationList | null = null;
       commit("setEventLocationsError", null);
       commit("setEventLocationsLoading", true);
       try {
-        locations = (await authClient.searchSearchKeywordGet(keyword)).data
-          .locations;
+        locationList = (
+          await authClient.searchSearchKeywordGet({ params: query })
+        ).data;
       } catch (e) {
         commit("setEventLocationsError", getErrorMessage(e));
       } finally {
-        commit("setEventLocations", locations);
+        commit("setEventLocations", locationList);
         commit("setEventLocationsLoading", false);
       }
     },
