@@ -30,6 +30,7 @@ public class EPSDataProviderClient implements DataProviderClient {
 						.start(request.getRequestStart())
 						.end(request.getRequestEnd())
 						.dataAuthorizationToken(requestId)
+						.proxyEndpoint(request.getAnnouncementToken())
 						.locationId(request.getLocation().getLocationId())
 						.requestDetails(request.getRequestDetails())
 						.build());
@@ -51,6 +52,8 @@ public class EPSDataProviderClient implements DataProviderClient {
 	public static class SubmitPayload {
 
 		String dataAuthorizationToken;
+
+		String proxyEndpoint;
 
 		String requestDetails;
 

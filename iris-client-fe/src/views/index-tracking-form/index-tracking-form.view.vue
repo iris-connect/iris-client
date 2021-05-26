@@ -199,6 +199,7 @@ export default class IndexTrackingFormView extends Vue {
         params: {
           caseId: created.caseId || "",
         },
+        query: { is_created: "true" },
       });
     }
   }
