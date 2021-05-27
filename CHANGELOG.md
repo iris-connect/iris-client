@@ -1,5 +1,18 @@
 # Changelog
 
+# [1.0.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.1...v1.0.0-rc.2) (2021-05-27)
+
+
+### Bug Fixes
+
+* adjust unit tests for new location search api ([#108](https://github.com/iris-connect/iris-client/issues/108)) ([bc5343a](https://github.com/iris-connect/iris-client/commit/bc5343ae9ea205e714d52238b0ff26c3f32baf46)), closes [iris-connect/iris-backlog#96](https://github.com/iris-connect/iris-backlog/issues/96)
+* Fixes errors in release process and updates documentation based on user feedback. ([f18b5a7](https://github.com/iris-connect/iris-client/commit/f18b5a78731924f1dddd2f98e268ec3a99518002)), closes [#107](https://github.com/iris-connect/iris-client/issues/107)
+
+
+### Features
+
+* introduce faceting + pagination in location search ([33c0616](https://github.com/iris-connect/iris-client/commit/33c0616ba95e352050b96539c1e3e3103cd3e5b1)), closes [iris-connect/iris-backlog#96](https://github.com/iris-connect/iris-backlog/issues/96)
+
 # [1.0.0-rc.1](https://github.com/iris-connect/iris-client/compare/v0.1.0...v1.0.0-rc.1) (2021-05-26)
 
 
