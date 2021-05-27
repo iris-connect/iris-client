@@ -300,13 +300,15 @@ export const sanitiseField = function (
 ): string {
   const possibleSeperatorRE = /[,;]/g;
   const whitespaceRE = RegExp(/\s+/, "g");
-  const blacklistRE = /(?!([\p{L}\p{N}()[\]:./ -]|(?<=[\p{L}\p{N}])[@][\p{L}\p{N}]))./gu;
+  const whitelistRE = /([\p{L}\p{N}]@[\p{L}\p{N}])|[\p{L}\p{N}()[\]:./ -]/gu;
   const headWhitelistRE = /^([()[\]]*[\p{L}\p{N}])+/u;
 
   if (typeof field !== "undefined") {
     field = field.replace(possibleSeperatorRE, "/");
     field = field.replace(whitespaceRE, " ");
-    field = field.replace(blacklistRE, "");
+    const matches = field.match(whitelistRE);
+    field = matches?.join("") || "";
+
     if (separator != "") {
       let separator_replacement = "/";
       if (separator === "/") separator_replacement = ".";
