@@ -34,6 +34,7 @@ import {
   DataRequestDetails,
   DataRequestStatus,
   DataRequestStatusUpdateByUser,
+  Guest,
   LocationInformation,
 } from "@/api";
 import router from "@/router";
@@ -79,6 +80,7 @@ export type TableRow = {
   phone: string;
   mobilePhone: string;
   address: string;
+  raw: Guest;
 };
 
 export type ExportData = {
@@ -316,6 +318,7 @@ export default class EventTrackingDetailsView extends Vue {
         phone: sanitiseFieldForDisplay(guest.phone) || "-",
         mobilePhone: sanitiseFieldForDisplay(guest.mobilePhone) || "-",
         address: getFormattedAddress(guest.address),
+        raw: guest,
       };
     });
   }
@@ -387,37 +390,11 @@ export default class EventTrackingDetailsView extends Vue {
         element.maxDuration +
         ")";
 
-      let postalCode = element.address;
-      let city = element.address;
-      let street = element.address;
-      let houseNumber = element.address;
-      let sex = element.sex;
-
-      store.state.eventTrackingDetails.eventTrackingDetails?.submissionData?.guests.forEach(
-        (guest) => {
-          if (
-            guest.address &&
-            guest.sex &&
-            guest.firstName == element.firstName &&
-            guest.lastName == element.lastName &&
-            guest.email == element.email &&
-            guest.address.street &&
-            element.address.includes(guest.address.street) &&
-            guest.address.city &&
-            element.address.includes(guest.address.city) &&
-            guest.address.zipCode &&
-            element.address.includes(guest.address.zipCode) &&
-            guest.address.houseNumber &&
-            element.address.includes(guest.address.houseNumber)
-          ) {
-            postalCode = guest.address.zipCode;
-            city = guest.address.city;
-            street = guest.address.street;
-            houseNumber = guest.address.houseNumber;
-            sex = guest.sex;
-          }
-        }
-      );
+      let postalCode = element.raw.address?.zipCode || "";
+      let city = element.raw.address?.city || "";
+      let street = element.raw.address?.street || "";
+      let houseNumber = element.raw.address?.houseNumber || "";
+      let sex = element.raw.sex || "";
 
       const dataInstance: ContactCaseData = {
         description: description,
@@ -466,37 +443,11 @@ export default class EventTrackingDetailsView extends Vue {
         element.maxDuration +
         ")";
 
-      let postalCode = element.address;
-      let city = element.address;
-      let street = element.address;
-      let houseNumber = element.address;
-      let sex = element.sex;
-
-      store.state.eventTrackingDetails.eventTrackingDetails?.submissionData?.guests.forEach(
-        (guest) => {
-          if (
-            guest.address &&
-            guest.sex &&
-            guest.firstName == element.firstName &&
-            guest.lastName == element.lastName &&
-            guest.email == element.email &&
-            guest.address.street &&
-            element.address.includes(guest.address.street) &&
-            guest.address.city &&
-            element.address.includes(guest.address.city) &&
-            guest.address.zipCode &&
-            element.address.includes(guest.address.zipCode) &&
-            guest.address.houseNumber &&
-            element.address.includes(guest.address.houseNumber)
-          ) {
-            postalCode = guest.address.zipCode;
-            city = guest.address.city;
-            street = guest.address.street;
-            houseNumber = guest.address.houseNumber;
-            sex = guest.sex;
-          }
-        }
-      );
+      let postalCode = element.raw.address?.zipCode || "";
+      let city = element.raw.address?.city || "";
+      let street = element.raw.address?.street || "";
+      let houseNumber = element.raw.address?.houseNumber || "";
+      let sex = element.raw.sex || "";
 
       const dataInstance: EventParticipantData = {
         involvementDescription: involvementDescription,
