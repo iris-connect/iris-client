@@ -298,20 +298,24 @@ export const sanitiseField = function (
   field: string | undefined,
   separator = ""
 ): string {
-  const headRE = /^[=?+\-/!*\\\\%\s@§&|$¢£¤¥֏؋৲৳৻૱௹฿៛\u20a0-\u20bd\ua838\ufdfc\ufe69\uff04\uffe0\uffe1\uffe5\uffe6]+/;
-  const innerRE = RegExp(/['"`´]/, "g");
+  const possibleSeperatorRE = /[,;]/g;
   const whitespaceRE = RegExp(/\s+/, "g");
+  const blacklistRE = /(?!([\p{L}\p{N}()[\]:./ -]|(?<=[\p{L}\p{N}])[@][\p{L}\p{N}]))./gu;
+  const headWhitelistRE = /^([()[\]]*[\p{L}\p{N}])+/u;
 
   if (typeof field !== "undefined") {
-    field = field.replace(innerRE, "");
+    field = field.replace(possibleSeperatorRE, "/");
     field = field.replace(whitespaceRE, " ");
+    field = field.replace(blacklistRE, "");
     if (separator != "") {
-      let separator_replacement = ",";
-      if (separator === ",") separator_replacement = ";";
+      let separator_replacement = "/";
+      if (separator === "/") separator_replacement = ".";
       while (field.includes(separator))
         field = field.replace(separator, separator_replacement);
     }
-    field = field.replace(headRE, "");
+    while (!headWhitelistRE.test(field) && field.length > 0) {
+      field = field.substring(1);
+    }
     return field;
   } else return "";
 };
