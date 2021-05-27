@@ -298,7 +298,7 @@ export const sanitiseField = function (
   field: string | undefined,
   separator = ""
 ): string {
-  const headRE = RegExp(/^[=?+-@ /!*\\\\%]/);
+  const headRE = /^[=?+\-/!*\\\\%\s@§&|$¢£¤¥֏؋৲৳৻૱௹฿៛\u20a0-\u20bd\ua838\ufdfc\ufe69\uff04\uffe0\uffe1\uffe5\uffe6]+/;
   const innerRE = RegExp(/['"`´]/, "g");
   const whitespaceRE = RegExp(/\s+/, "g");
 
@@ -311,9 +311,7 @@ export const sanitiseField = function (
       while (field.includes(separator))
         field = field.replace(separator, separator_replacement);
     }
-    while (headRE.test(field) && field.length > 0) {
-      field = field.substring(1);
-    }
+    field = field.replace(headRE, "");
     return field;
   } else return "";
 };
