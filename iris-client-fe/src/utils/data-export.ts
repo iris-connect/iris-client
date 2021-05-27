@@ -46,6 +46,92 @@ export type EventParticipantData = {
   houseNumber: string;
 };
 
+const headerSormasContactPerson = [
+  {
+    text: "description",
+    value: "description",
+  },
+  {
+    text: "person.firstName",
+    value: "firstName",
+  },
+  {
+    text: "person.lastName",
+    value: "lastName",
+  },
+  {
+    text: "person.sex",
+    value: "sex",
+  },
+  {
+    text: "person.phone",
+    value: "phone",
+  },
+  {
+    text: "person.emailAddress",
+    value: "email",
+  },
+  {
+    text: "person.address.postalCode",
+    value: "postalCode",
+  },
+  {
+    text: "person.address.city",
+    value: "city",
+  },
+  {
+    text: "person.address.street",
+    value: "street",
+  },
+  {
+    text: "person.address.houseNumber",
+    value: "houseNumber",
+  },
+];
+
+const headerSormasEventParticipants = [
+  {
+    text: "EventParticipant",
+    value: "involvementDescription",
+  },
+  {
+    text: "Person",
+    value: "firstName",
+  },
+  {
+    text: "Person",
+    value: "lastName",
+  },
+  {
+    text: "Person",
+    value: "sex",
+  },
+  {
+    text: "Person",
+    value: "phone",
+  },
+  {
+    text: "Person",
+    value: "email",
+  },
+  {
+    text: "Person",
+    value: "postalCode",
+  },
+  {
+    text: "Person",
+    value: "city",
+  },
+  {
+    text: "Person",
+    value: "street",
+  },
+  {
+    text: "Person",
+    value: "houseNumber",
+  },
+];
+
 const exportStandardCsv = function (
   headers: Array<Header>,
   rows: Array<Array<string>>,
@@ -62,7 +148,7 @@ const exportStandardCsv = function (
       })
       .filter((v) => v);
     try {
-      const separator = ";";
+      const separator = ",";
       const parser = new Parser({
         fields,
         withBOM: true,
@@ -116,48 +202,7 @@ const exportSormasEventParticipantsCsv = function (
   rows: Array<EventParticipantData>,
   fileName: string
 ): Promise<string> {
-  const headers = [
-    {
-      text: "EventParticipant",
-      value: "involvementDescription",
-    },
-    {
-      text: "Person",
-      value: "firstName",
-    },
-    {
-      text: "Person",
-      value: "lastName",
-    },
-    {
-      text: "Person",
-      value: "sex",
-    },
-    {
-      text: "Person",
-      value: "phone",
-    },
-    {
-      text: "Person",
-      value: "email",
-    },
-    {
-      text: "Person",
-      value: "postalCode",
-    },
-    {
-      text: "Person",
-      value: "city",
-    },
-    {
-      text: "Person",
-      value: "street",
-    },
-    {
-      text: "Person",
-      value: "houseNumber",
-    },
-  ];
+  const headers = headerSormasEventParticipants;
 
   return new Promise((resolve, reject) => {
     const fields = headers
@@ -191,48 +236,7 @@ const exportSormasContactPersonCsv = function (
   rows: Array<ContactCaseData>,
   fileName: string
 ): Promise<string> {
-  const headers = [
-    {
-      text: "description",
-      value: "description",
-    },
-    {
-      text: "person.firstName",
-      value: "firstName",
-    },
-    {
-      text: "person.lastName",
-      value: "lastName",
-    },
-    {
-      text: "person.sex",
-      value: "sex",
-    },
-    {
-      text: "person.phone",
-      value: "phone",
-    },
-    {
-      text: "person.emailAddress",
-      value: "email",
-    },
-    {
-      text: "person.address.postalCode",
-      value: "postalCode",
-    },
-    {
-      text: "person.address.city",
-      value: "city",
-    },
-    {
-      text: "person.address.street",
-      value: "street",
-    },
-    {
-      text: "person.address.houseNumber",
-      value: "houseNumber",
-    },
-  ];
+  const headers = headerSormasContactPerson;
 
   return new Promise((resolve, reject) => {
     const fields = headers
