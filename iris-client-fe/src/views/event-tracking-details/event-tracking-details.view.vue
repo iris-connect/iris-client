@@ -390,23 +390,17 @@ export default class EventTrackingDetailsView extends Vue {
         element.maxDuration +
         ")";
 
-      let postalCode = element.raw.address?.zipCode || "";
-      let city = element.raw.address?.city || "";
-      let street = element.raw.address?.street || "";
-      let houseNumber = element.raw.address?.houseNumber || "";
-      let sex = element.raw.sex || "";
-
       const dataInstance: ContactCaseData = {
         description: description,
         firstName: element.firstName,
         lastName: element.lastName,
-        sex: sex,
+        sex: element.raw.sex || "",
         phone: element.phone,
         email: element.email,
-        postalCode: postalCode,
-        city: city,
-        street: street,
-        houseNumber: houseNumber,
+        postalCode: element.raw.address?.zipCode || "",
+        city: element.raw.address?.city || "",
+        street: element.raw.address?.street || "",
+        houseNumber: element.raw.address?.houseNumber || "",
       };
       data.push(dataInstance);
     });
@@ -443,23 +437,17 @@ export default class EventTrackingDetailsView extends Vue {
         element.maxDuration +
         ")";
 
-      let postalCode = element.raw.address?.zipCode || "";
-      let city = element.raw.address?.city || "";
-      let street = element.raw.address?.street || "";
-      let houseNumber = element.raw.address?.houseNumber || "";
-      let sex = element.raw.sex || "";
-
       const dataInstance: EventParticipantData = {
         involvementDescription: involvementDescription,
         firstName: element.firstName,
         lastName: element.lastName,
-        sex: sex,
+        sex: element.raw.sex || "",
         phone: element.phone,
         email: element.email,
-        postalCode: postalCode,
-        city: city,
-        street: street,
-        houseNumber: houseNumber,
+        postalCode: element.raw.address?.zipCode || "",
+        city: element.raw.address?.city || "",
+        street: element.raw.address?.street || "",
+        houseNumber: element.raw.address?.houseNumber || "",
       };
       data.push(dataInstance);
     });
