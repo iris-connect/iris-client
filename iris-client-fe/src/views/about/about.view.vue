@@ -34,21 +34,20 @@
     <v-card class="mb-6">
       <v-card-title>Support</v-card-title>
 
-      <v-list-item two-line>
-        <v-list-item-content>
-          <v-list-item-title>E-Mail</v-list-item-title>
-          <v-list-item-subtitle
-            ><a :href="mailTo">{{ mail }}</a></v-list-item-subtitle
-          >
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item two-line>
-        <v-list-item-content>
-          <v-list-item-title>Telefon-Hotline</v-list-item-title>
-          <v-list-item-subtitle>{{ phone }}</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
+      <v-card-text>
+        <p>
+          IRIS connect wurde unter dem Dach des Innovationsverbunds Öffentliche
+          Gesundheit (InÖG) initiiert und mit der Open-Source Community
+          entwickelt. Hauptsponsor und Partner hinter IRIS connect ist die Björn
+          Steiger Stiftung, die auch für den verlässlichen Verfahrensbetrieb
+          verantwortlich ist.
+        </p>
+        <p>
+          Bei Fragen und Problemen kontaktieren Sie bitte Ihre IT-koordinierende
+          Stelle, um technische Probleme an den Support des Betreibers
+          weiterzuleiten. Vielen Dank!
+        </p>
+      </v-card-text>
 
       <v-list-item two-line v-if="localContact">
         <v-list-item-content>
