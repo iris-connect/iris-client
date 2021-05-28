@@ -8,9 +8,9 @@ import java.time.Instant;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "token_whitelist")
+@Table(name = "allowed_tokens")
 @Data
-public class HashedToken implements Serializable {
+public class AllowedToken implements Serializable {
 
 	@Id
 	private String jwtTokenDigest;

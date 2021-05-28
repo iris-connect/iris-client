@@ -21,7 +21,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 		havingValue = "db")
 public class JWTService implements JWTVerifier, JWTSigner {
 
-	private final HashedTokenRepository hashedTokenRepository;
+	private final AllowedTokenRepository allowedTokenRepository;
 
 	private JwtProperties jwtProperties;
 
@@ -41,25 +41,25 @@ public class JWTService implements JWTVerifier, JWTSigner {
 
 	@Override
 	public void saveToken(String token, String userName, Instant expirationTime) {
-		var hashedToken = new HashedToken();
+		var hashedToken = new AllowedToken();
 		hashedToken.setJwtTokenDigest(hashToken(token));
 		hashedToken.setUserName(userName);
 		hashedToken.setExpirationTime(expirationTime);
-		hashedTokenRepository.save(hashedToken);
+		allowedTokenRepository.save(hashedToken);
 	}
 
 	@Override
 	public boolean isTokenWhitelisted(String token) {
-		Optional<HashedToken> hashedToken = hashedTokenRepository.findByJwtTokenDigest(hashToken(token));
+		Optional<AllowedToken> hashedToken = allowedTokenRepository.findByJwtTokenDigest(hashToken(token));
 		return hashedToken.isPresent();
 	}
 
 	public void invalidateTokensOfUser(String userName) {
-		hashedTokenRepository.deleteByUserName(userName);
+		allowedTokenRepository.deleteByUserName(userName);
 	}
 
 	public void removeExpiredTokens() {
-		hashedTokenRepository.deleteByExpirationTimeBefore(Instant.now());
+		allowedTokenRepository.deleteByExpirationTimeBefore(Instant.now());
 	}
 
 	private String hashToken(String jwt) {
