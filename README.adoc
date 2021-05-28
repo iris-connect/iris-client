@@ -1,6 +1,8 @@
 :toc: macro
 
-# image:iris-logo.png[width=100] IRIS Client
+# IRIS Client
+
+toc::[]
 
 == Feedback
 
