@@ -467,6 +467,11 @@ export const sanitiseField = function (
     const matches = field.match(whitelistRE);
     field = matches?.join("") || "";
 
+    /**
+     * json2csv uses a seperator to split table columns. We currently are using ; and , as those.
+     * If such a sign would appear in the content than it would result in a split.
+     * To prevent this we change the seperators symbol with another symbol not used as such.
+     */
     if (separator != "") {
       let separator_replacement = "/";
       if (separator === "/") separator_replacement = ".";
