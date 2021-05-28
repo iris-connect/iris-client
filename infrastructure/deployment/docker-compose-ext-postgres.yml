@@ -11,14 +11,16 @@ services:
     image: inoeg/iris-client-bff:1.0.0-rc.1
     expose:
       - 8092
-    ports:
-      - 8092:8092
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
       EPS_CLIENT_CLIENT_URL: https://eps:5556/jsonrpc
+      PROXY_SERVICE_EPS_NAME: ${PROXY_OP}
+      PROXY_SERVICE_TARGET_SUBDOMAIN: proxy.test-gesundheitsamt.de
+      SECURITY_AUTH_DB_ADMIN_USER_NAME:
+      SECURITY_AUTH_DB_ADMIN_USER_PASSWORD:
       SECURITY_JWT_JWT_SHARED_SECRET:
     restart: unless-stopped
 
@@ -29,8 +31,6 @@ services:
       - 28080
     environment:
       SORMAS_SIDECAR_BASE_URL: /api
-    ports:
-      - 28080:28080
     restart: unless-stopped
     depends_on:
       - iris-client
@@ -41,8 +41,6 @@ services:
     expose:
       - 4446
       - 5556
-    ports:
-      - 4446:4446
     depends_on:
       - iris-client
     volumes:
@@ -54,6 +52,7 @@ services:
       EPS_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
       HTTPS_PROXY:
+      TRUSTED_CA_CRT:
     command: ["--level", "debug", "server", "run"]
 
   # Proxy for inbound connections.
@@ -71,7 +70,7 @@ services:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
       HTTPS_PROXY:
-
+      TRUSTED_CA_CRT:
     command: ["--level", "trace", "run", "private"]
 
   private-proxy-eps:
@@ -88,6 +87,7 @@ services:
       PROXY_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
       HTTPS_PROXY:
+      TRUSTED_CA_CRT:
     command: ["--level", "trace", "server", "run"]
 
   # Reverse Proxy
@@ -106,5 +106,4 @@ services:
       - iris-frontend
 
 volumes:
-  psqldata_iris:
   proxy_db_iris:
