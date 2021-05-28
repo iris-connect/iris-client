@@ -101,7 +101,7 @@ export default Vue.extend({
   },
   methods: {
     logoutUser() {
-      this.$store.commit("userLogin/setSession");
+      this.$store.dispatch("userLogin/logout");
     },
   },
 });
