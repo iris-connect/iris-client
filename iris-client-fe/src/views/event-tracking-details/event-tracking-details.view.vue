@@ -83,14 +83,6 @@ export type TableRow = {
   raw: Guest;
 };
 
-export type ExportData = {
-  headers: Array<{
-    text: string;
-    value: string;
-  }>;
-  rows: string[][];
-};
-
 export type EventParticipantData = {
   involvementDescription: string;
   firstName: string;
@@ -323,9 +315,9 @@ export default class EventTrackingDetailsView extends Vue {
     });
   }
 
-  handleStandardCsvExport(payload: ExportData): void {
+  handleStandardCsvExport(payload: Array<Array<string>>): void {
     dataExport.exportStandardCsvForEventTracking(
-      payload.rows,
+      payload,
       [
         this.eventTrackingDetails?.externalRequestId || "Export",
         Date.now(),
@@ -333,9 +325,9 @@ export default class EventTrackingDetailsView extends Vue {
     );
   }
 
-  handleAlternativeStandardCsvExport(payload: ExportData): void {
+  handleAlternativeStandardCsvExport(payload: Array<Array<string>>): void {
     dataExport.exportAlternativeStandardCsvForEventTracking(
-      payload.rows,
+      payload,
       [
         this.eventTrackingDetails?.externalRequestId || "Export",
         Date.now(),
@@ -343,11 +335,9 @@ export default class EventTrackingDetailsView extends Vue {
     );
   }
 
-  handleSormasCsvEventParticipantsExport(payload: ExportData): void {
+  handleSormasCsvEventParticipantsExport(payload: TableRow[]): void {
     dataExport.exportSormasEventParticipantsCsv(
-      this.convertTableRowToEventParticipationData(
-        (payload.rows as unknown) as TableRow[]
-      ),
+      this.convertTableRowToEventParticipationData(payload),
       [
         this.eventTrackingDetails?.externalRequestId || "Export",
         Date.now(),
@@ -355,10 +345,10 @@ export default class EventTrackingDetailsView extends Vue {
     );
   }
 
-  handleSormasCsvContactPersonExport(payload: ExportData): void {
+  handleSormasCsvContactPersonExport(payload: TableRow[]): void {
     dataExport.exportSormasContactPersonCsv(
       this.convertTableRowToContactCaseData(
-        (payload.rows as unknown) as TableRow[],
+        payload,
         this.eventTrackingDetails?.externalRequestId || "-"
       ),
       [

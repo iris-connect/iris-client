@@ -194,12 +194,11 @@ import EditableField from "@/components/form/editable-field.vue";
 import EventTrackingStatusChange from "@/views/event-tracking-details/components/event-tracking-status-change.vue";
 import EventTrackingDetailsLocationInfo from "@/views/event-tracking-details/components/event-tracking-details-location-info.vue";
 import {
-  ExportData,
   EventData,
   TableRow,
   FormData,
 } from "@/views/event-tracking-details/event-tracking-details.view.vue";
-import EventTrackingDetailsExport from "@/views/event-tracking-details/components/event-tracking-details-export.component.vue";
+import EventTrackingDetailsExport from "@/views/event-tracking-details/components/csv-export-modal.component.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import rules from "@/common/validation-rules";
 import { DataRequestStatus, DataRequestStatusUpdateByUser } from "@/api";
@@ -330,34 +329,22 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
   }
 
   handleStandardCsvExport(): void {
-    const exportData: ExportData = {
-      headers: [...this.tableData.headers, ...this.tableData.expandedHeaders],
-      rows: this.tableData.select,
-    };
+    const exportData: TableRow[] = this.tableData.select;
     this.$emit("handle-standard-csv-export", exportData);
   }
 
   handleAlternativeStandardCsvExport(): void {
-    const exportData: ExportData = {
-      headers: [...this.tableData.headers, ...this.tableData.expandedHeaders],
-      rows: this.tableData.select,
-    };
+    const exportData: TableRow[] = this.tableData.select;
     this.$emit("handle-alternative-standard-csv-export", exportData);
   }
 
   handleSormasCsvEventParticipantsExport(): void {
-    const exportData: ExportData = {
-      headers: [...this.tableData.headers, ...this.tableData.expandedHeaders],
-      rows: this.tableData.select,
-    };
+    const exportData: TableRow[] = this.tableData.select;
     this.$emit("handle-sormas-csv-event-participants-export", exportData);
   }
 
   handleSormasCsvContactPersonExport(): void {
-    const exportData: ExportData = {
-      headers: [...this.tableData.headers, ...this.tableData.expandedHeaders],
-      rows: this.tableData.select,
-    };
+    const exportData: TableRow[] = this.tableData.select;
     this.$emit("handle-sormas-csv-contact-person-export", exportData);
   }
 
