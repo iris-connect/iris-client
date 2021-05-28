@@ -58,6 +58,10 @@ public class JWTService implements JWTVerifier, JWTSigner {
 		hashedTokenRepository.deleteByUserName(userName);
 	}
 
+	public void removeExpiredTokens() {
+		hashedTokenRepository.deleteByExpirationTimeBefore(Instant.now());
+	}
+
 	private String hashToken(String jwt) {
 		return DigestUtils.sha256Hex(jwt);
 	}

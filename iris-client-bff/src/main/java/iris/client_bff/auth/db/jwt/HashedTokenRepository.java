@@ -1,5 +1,6 @@
 package iris.client_bff.auth.db.jwt;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,7 @@ public interface HashedTokenRepository extends JpaRepository<HashedToken, String
 
 	@Transactional
 	void deleteByUserName(String userName);
+
+	@Transactional
+	void deleteByExpirationTimeBefore(Instant expirationTime);
 }
