@@ -2,20 +2,26 @@ package iris.client_bff.auth.db.jwt;
 
 import lombok.AllArgsConstructor;
 
+import java.time.Instant;
+import java.util.Optional;
+
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator.Builder;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+@Service
 @AllArgsConstructor
-@Component
 @ConditionalOnProperty(
 		value = "security.auth",
 		havingValue = "db")
 public class JWTService implements JWTVerifier, JWTSigner {
+
+	private final HashedTokenRepository hashedTokenRepository;
 
 	private JwtProperties jwtProperties;
 
@@ -33,4 +39,22 @@ public class JWTService implements JWTVerifier, JWTSigner {
 		return Algorithm.HMAC512(jwtProperties.getJwtSharedSecret());
 	}
 
+	@Override
+	public void saveToken(String token, String userName, Instant expirationTime) {
+		HashedToken hashedToken = new HashedToken();
+		hashedToken.setJwtTokenDigest(hashToken(token));
+		hashedToken.setUserName(userName);
+		hashedToken.setExpirationTime(expirationTime);
+		hashedTokenRepository.save(hashedToken);
+	}
+
+	@Override
+	public boolean isTokenWhitelisted(String token) {
+		Optional<HashedToken> hashedToken = hashedTokenRepository.findByJwtTokenDigest(hashToken(token));
+		return hashedToken.isPresent();
+	}
+
+	private String hashToken(String jwt) {
+		return DigestUtils.sha256Hex(jwt);
+	}
 }

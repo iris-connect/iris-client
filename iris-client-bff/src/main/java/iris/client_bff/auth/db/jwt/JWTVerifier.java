@@ -6,4 +6,5 @@ public interface JWTVerifier {
 
 	DecodedJWT verify(String jwt);
 
+	boolean isTokenWhitelisted(String jwtTokenDigest);
 }
