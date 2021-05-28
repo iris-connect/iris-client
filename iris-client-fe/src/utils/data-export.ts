@@ -46,6 +46,128 @@ export type EventParticipantData = {
   houseNumber: string;
 };
 
+const headerStandardForIndexTrackingContacts = [
+  {
+    text: "Nachname",
+    value: "lastName",
+    align: "start",
+  },
+  {
+    text: "Vorname",
+    value: "firstName",
+  },
+  {
+    text: "Geburtsdatum",
+    value: "dateOfBirth",
+  },
+  {
+    text: "Erster Kontakt am",
+    value: "firstContactDate",
+  },
+  {
+    text: "Letzter Kontakt am",
+    value: "lastContactDate",
+  },
+  {
+    text: "Kontaktkathegorie",
+    value: "contactCategory",
+  },
+  {
+    text: "Geschlecht",
+    value: "sex",
+  },
+  {
+    text: "E-Mail",
+    value: "email",
+  },
+  {
+    text: "Telefon",
+    value: "phone",
+  },
+  {
+    text: "Mobil",
+    value: "mobilePhone",
+  },
+  {
+    text: "Adresse",
+    value: "address",
+  },
+  {
+    text: "Arbeitsplatz",
+    value: "workPlace",
+  },
+  {
+    text: "Kontaktsituation",
+    value: "basicConditions",
+  },
+];
+
+const headerStandardForIndexTrackingEvents = [
+  {
+    text: "Event",
+    value: "name",
+  },
+  {
+    text: "Telefonnummer",
+    value: "phone",
+  },
+  {
+    text: "Adresse",
+    value: "address",
+  },
+  {
+    text: "zus. Informationen",
+    value: "additionalInformation",
+  },
+];
+
+const headerStandardForEventTracking = [
+  {
+    text: "Nachname",
+    value: "lastName",
+  },
+  {
+    text: "Vorname",
+    value: "firstName",
+  },
+  {
+    text: "Check-In",
+    value: "checkInTime",
+  },
+  {
+    text: "Check-Out",
+    value: "checkOutTime",
+  },
+  {
+    text: "max. Kontaktdauer",
+    value: "maxDuration",
+  },
+  {
+    text: "Kommentar",
+    value: "comment",
+  },
+  {
+    text: "Geschlecht",
+    value: "sex",
+  },
+  {
+    text: "E-Mail",
+    value: "email",
+  },
+  {
+    text: "Telefon",
+    value: "phone",
+  },
+  {
+    text: "Mobil",
+    value: "mobilePhone",
+  },
+  {
+    text: "Adresse",
+    value: "address",
+  },
+];
+
 const headerSormasContactPerson = [
   {
     text: "description",
@@ -132,6 +254,30 @@ const headerSormasEventParticipants = [
   },
 ];
 
+const exportStandardCsvForEventTracking = function (
+  rows: Array<Array<string>>,
+  fileName: string
+): Promise<string> {
+  const header = headerStandardForEventTracking;
+  return exportStandardCsv(header, rows, fileName);
+};
+
+const exportStandardCsvForIndexTrackingContacts = function (
+  rows: Array<Array<string>>,
+  fileName: string
+): Promise<string> {
+  const header = headerStandardForIndexTrackingContacts;
+  return exportStandardCsv(header, rows, fileName);
+};
+
+const exportStandardCsvForIndexTrackingEvents = function (
+  rows: Array<Array<string>>,
+  fileName: string
+): Promise<string> {
+  const header = headerStandardForIndexTrackingEvents;
+  return exportStandardCsv(header, rows, fileName);
+};
+
 const exportStandardCsv = function (
   headers: Array<Header>,
   rows: Array<Array<string>>,
@@ -162,6 +308,14 @@ const exportStandardCsv = function (
       reject(error);
     }
   });
+};
+
+const exportAlternativeStandardCsvForEventTracking = function (
+  rows: Array<Array<string>>,
+  fileName: string
+): Promise<string> {
+  const header = headerStandardForEventTracking;
+  return exportAlternativeStandardCsv(header, rows, fileName);
 };
 
 const exportAlternativeStandardCsv = function (
@@ -332,7 +486,11 @@ export const sanitiseField = function (
 
 const dataExport = {
   exportStandardCsv,
+  exportStandardCsvForIndexTrackingContacts,
+  exportStandardCsvForIndexTrackingEvents,
+  exportStandardCsvForEventTracking,
   exportAlternativeStandardCsv,
+  exportAlternativeStandardCsvForEventTracking,
   exportSormasEventParticipantsCsv,
   exportSormasContactPersonCsv,
 };

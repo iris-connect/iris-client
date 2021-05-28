@@ -324,8 +324,7 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   handleStandardCsvExport(payload: ExportData): void {
-    dataExport.exportStandardCsv(
-      payload.headers,
+    dataExport.exportStandardCsvForEventTracking(
       payload.rows,
       [
         this.eventTrackingDetails?.externalRequestId || "Export",
@@ -335,8 +334,7 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   handleAlternativeStandardCsvExport(payload: ExportData): void {
-    dataExport.exportAlternativeStandardCsv(
-      payload.headers,
+    dataExport.exportAlternativeStandardCsvForEventTracking(
       payload.rows,
       [
         this.eventTrackingDetails?.externalRequestId || "Export",
