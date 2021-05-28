@@ -36,7 +36,7 @@ services:
 
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-bff:1.0.0-rc.1
+    image: inoeg/iris-client-bff:1.0.0-rc.2
     expose:
       - 8092
     environment:
@@ -47,6 +47,8 @@ services:
       EPS_CLIENT_CLIENT_URL: https://eps:5556/jsonrpc
       PROXY_SERVICE_EPS_NAME: ${PROXY_OP}
       PROXY_SERVICE_TARGET_SUBDOMAIN: proxy.test-gesundheitsamt.de
+      SECURITY_AUTH_DB_ADMIN_USER_NAME:
+      SECURITY_AUTH_DB_ADMIN_USER_PASSWORD:
       SECURITY_JWT_JWT_SHARED_SECRET:
     restart: unless-stopped
     depends_on:
@@ -55,7 +57,7 @@ services:
 
   # IRIS Client Frontend for users
   iris-frontend:
-    image: inoeg/iris-client-frontend:1.0.0-rc.1
+    image: inoeg/iris-client-frontend:1.0.0-rc.2
     expose:
       - 28080
     environment:
@@ -121,7 +123,7 @@ services:
 
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:1.0.0-rc.1
+    image: inoeg/iris-client-nginx:1.0.0-rc.2
     ports:
       - 443:443
     environment:
