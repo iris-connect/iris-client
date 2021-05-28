@@ -257,42 +257,34 @@ const headerSormasEventParticipants = [
 const exportStandardCsvForEventTracking = function (
   rows: Array<Array<string>>,
   fileName: string
-): Promise<string> {
+): void {
   const header = headerStandardForEventTracking;
-  return exportStandardCsv(header, rows, fileName);
+  exportStandardCsv(header, rows, fileName);
 };
 
 const exportStandardCsvForIndexTrackingContacts = function (
   rows: Array<Array<string>>,
   fileName: string
-): Promise<string> {
+): void {
   const header = headerStandardForIndexTrackingContacts;
-  return exportStandardCsv(header, rows, fileName);
+  exportStandardCsv(header, rows, fileName);
 };
 
 const exportStandardCsvForIndexTrackingEvents = function (
   rows: Array<Array<string>>,
   fileName: string
-): Promise<string> {
+): void {
   const header = headerStandardForIndexTrackingEvents;
-  return exportStandardCsv(header, rows, fileName);
+  exportStandardCsv(header, rows, fileName);
 };
 
 const exportStandardCsv = function (
   headers: Array<Header>,
   rows: Array<Array<string>>,
   fileName: string
-): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const fields = headers
-      .map((header) => {
-        if (!header.text) return;
-        return {
-          label: header.text,
-          value: header.value,
-        };
-      })
-      .filter((v) => v);
+): void {
+  new Promise((resolve, reject) => {
+    const fields = headers.filter((v) => v);
     try {
       const separator = ",";
       const parser = new Parser({
@@ -313,26 +305,18 @@ const exportStandardCsv = function (
 const exportAlternativeStandardCsvForEventTracking = function (
   rows: Array<Array<string>>,
   fileName: string
-): Promise<string> {
+): void {
   const header = headerStandardForEventTracking;
-  return exportAlternativeStandardCsv(header, rows, fileName);
+  exportAlternativeStandardCsv(header, rows, fileName);
 };
 
 const exportAlternativeStandardCsv = function (
   headers: Array<Header>,
   rows: Array<Array<string>>,
   fileName: string
-): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const fields = headers
-      .map((header) => {
-        if (!header.text) return;
-        return {
-          label: header.text,
-          value: header.value,
-        };
-      })
-      .filter((v) => v);
+): void {
+  new Promise((resolve, reject) => {
+    const fields = headers.filter((v) => v);
     try {
       const separator = ";";
       const parser = new Parser({
@@ -355,19 +339,11 @@ const exportAlternativeStandardCsv = function (
 const exportSormasEventParticipantsCsv = function (
   rows: Array<EventParticipantData>,
   fileName: string
-): Promise<string> {
+): void {
   const headers = headerSormasEventParticipants;
 
-  return new Promise((resolve, reject) => {
-    const fields = headers
-      .map((header) => {
-        if (!header.text) return;
-        return {
-          label: header.text,
-          value: header.value,
-        };
-      })
-      .filter((v) => v);
+  new Promise((resolve, reject) => {
+    const fields = headers.filter((v) => v);
     try {
       const separator = ";";
       const parser = new Parser({
@@ -389,19 +365,11 @@ const exportSormasEventParticipantsCsv = function (
 const exportSormasContactPersonCsv = function (
   rows: Array<ContactCaseData>,
   fileName: string
-): Promise<string> {
+): void {
   const headers = headerSormasContactPerson;
 
-  return new Promise((resolve, reject) => {
-    const fields = headers
-      .map((header) => {
-        if (!header.text) return;
-        return {
-          label: header.text,
-          value: header.value,
-        };
-      })
-      .filter((v) => v);
+  new Promise((resolve, reject) => {
+    const fields = headers.filter((v) => v);
     try {
       const separator = ";";
       const parser = new Parser({
@@ -486,7 +454,7 @@ export const sanitiseField = function (
       return "-";
     }
     return field;
-  } else return "";
+  } else return "-";
 };
 
 const dataExport = {
