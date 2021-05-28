@@ -48,7 +48,10 @@
     </noscript>
     <script type="text/javascript">
       window.irisAppContext = {
-        apiBaseURL: "<%= htmlWebpackPlugin.options.irisAppContext.apiBaseURL %>"
+        apiBaseURL:
+          "<%= htmlWebpackPlugin.options.irisAppContext.apiBaseURL %>",
+        localContactPerson:
+          "<%= htmlWebpackPlugin.options.irisAppContext.localContactPerson %>",
       };
     </script>
     <div id="app"></div>

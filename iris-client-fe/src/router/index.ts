@@ -74,7 +74,7 @@ export const routes: Array<RouteConfig> = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/event-tracking-form/event-tracking-form.view.vue"
+        /* webpackChunkName: "event-tracking-form" */ "../views/event-tracking-form/event-tracking-form.view.vue"
       ),
   },
   {
@@ -85,7 +85,7 @@ export const routes: Array<RouteConfig> = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/index-tracking-form/index-tracking-form.view.vue"
+        /* webpackChunkName: "index-tracking-form" */ "../views/index-tracking-form/index-tracking-form.view.vue"
       ),
   },
   {
@@ -97,7 +97,7 @@ export const routes: Array<RouteConfig> = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/event-tracking-list/event-tracking-list.view.vue"
+        /* webpackChunkName: "event-tracking-list" */ "../views/event-tracking-list/event-tracking-list.view.vue"
       ),
   },
   {
@@ -109,7 +109,7 @@ export const routes: Array<RouteConfig> = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/index-tracking-list/index-tracking-list.view.vue"
+        /* webpackChunkName: "index-tracking-list" */ "../views/index-tracking-list/index-tracking-list.view.vue"
       ),
   },
   {
@@ -120,7 +120,7 @@ export const routes: Array<RouteConfig> = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/event-tracking-details/event-tracking-details.view.vue"
+        /* webpackChunkName: "event-tracking-details" */ "../views/event-tracking-details/event-tracking-details.view.vue"
       ),
   },
   {
@@ -131,8 +131,18 @@ export const routes: Array<RouteConfig> = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/index-tracking-details/index-tracking-details.view.vue"
+        /* webpackChunkName: "index-tracking-details" */ "../views/index-tracking-details/index-tracking-details.view.vue"
       ),
+  },
+  {
+    path: "/about",
+    name: "about" /* Caution: This acts as an identifier! */,
+    meta: {
+      menu: true,
+      menuName: "Über IRIS",
+    },
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/about/about.view.vue"),
   },
 ];
 

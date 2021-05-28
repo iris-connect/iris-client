@@ -6,4 +6,5 @@ declare global {
 
 export type IRISAppContext = {
   apiBaseURL: string;
+  localContactPerson: string;
 };
