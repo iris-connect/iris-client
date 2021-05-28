@@ -4,7 +4,7 @@
 
 const config = {
   apiBaseURL: window.irisAppContext?.apiBaseURL,
-  localContactPerson: window.irisAppContext?.localContactPerson,
+  localContactPerson: window.irisAppContext?.localContactPerson || {},
   passwordMinLength: 8,
   appVersionId: process.env.VUE_APP_VERSION_ID,
   appBuildId: process.env.VUE_APP_BUILD_ID,

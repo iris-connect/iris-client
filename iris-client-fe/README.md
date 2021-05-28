@@ -163,6 +163,9 @@ Steps:
 
    ```bash
    export SORMAS_SIDECAR_BASE_URL="https://api.staging.iris-gateway.de"
+   export APP_LOCAL_CONTACT_PERSON_NAME="Max Musterkontakt"
+   export APP_LOCAL_CONTACT_PERSON_PHONE="069 123 4567"
+   export APP_LOCAL_CONTACT_PERSON_MAIL="max.musterkontakt@ga.de"
    ```
 
 5. Start caddy

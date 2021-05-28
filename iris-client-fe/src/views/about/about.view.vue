@@ -49,10 +49,12 @@
         </p>
       </v-card-text>
 
-      <v-list-item two-line v-if="localContact">
+      <v-list-item two-line v-if="contact.length">
         <v-list-item-content>
           <v-list-item-title>Lokaler Ansprechpartner</v-list-item-title>
-          <v-list-item-subtitle>{{ localContact }}</v-list-item-subtitle>
+          <v-list-item-subtitle v-for="(item, i) in contact" :key="i">
+            {{ item }}
+          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </v-card>
@@ -72,11 +74,10 @@ import config from "@/config";
 export default class AboutView extends Vue {
   version = config.appVersionId;
   build = config.appBuildId;
-  localContact = config.localContactPerson;
-
-  // TODO verify mail + phone
-  mail = "iris@steiger-stiftung.de";
-  mailTo = `mailTo${this.mail}`;
-  phone = "0800 123 123 123";
+  contact = [
+    config.localContactPerson.name,
+    config.localContactPerson.phone,
+    config.localContactPerson.mail,
+  ].filter((v) => !!v);
 }
 </script>
