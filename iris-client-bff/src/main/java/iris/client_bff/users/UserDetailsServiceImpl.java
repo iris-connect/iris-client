@@ -22,7 +22,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @AllArgsConstructor
@@ -63,9 +62,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userAccountsRepository.save(userAccount);
 	}
 
-	// Annotation necessary because of multiple DB calls
-	// see https://stackoverflow.com/a/32552558
-	@Transactional
 	public UserAccount update(UUID userId, UserUpdateDTO userUpdateDTO) {
 		log.info("Update user: {}", userId);
 
@@ -99,9 +95,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userAccountsRepository.save(userAccount);
 	}
 
-	// Annotation necessary because of multiple DB calls
-	// see https://stackoverflow.com/a/32552558
-	@Transactional
 	public void deleteById(UUID id) {
 		log.info("Delete user: {}", id);
 		var optional = userAccountsRepository.findById(id);
