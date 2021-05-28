@@ -47,6 +47,8 @@ services:
       EPS_CLIENT_CLIENT_URL: https://eps:5556/jsonrpc
       PROXY_SERVICE_EPS_NAME: ${PROXY_OP}
       PROXY_SERVICE_TARGET_SUBDOMAIN: proxy.test-gesundheitsamt.de
+      SECURITY_AUTH_DB_ADMIN_USER_NAME:
+      SECURITY_AUTH_DB_ADMIN_USER_PASSWORD:
       SECURITY_JWT_JWT_SHARED_SECRET:
     restart: unless-stopped
     depends_on:
