@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.0.0-rc.3](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.2...v1.0.0-rc.3) (2021-05-28)
+
+
+### Bug Fixes
+
+* Admin user settings do not apply ([#115](https://github.com/iris-connect/iris-client/issues/115)) ([2f93a48](https://github.com/iris-connect/iris-client/commit/2f93a4838d3eb475c85a946f3bdb9805d2eb0618))
+
 # [1.0.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.1...v1.0.0-rc.2) (2021-05-27)
 
 

@@ -8,7 +8,7 @@ version: "3.4"
 services:
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-bff:1.0.0-rc.2
+    image: inoeg/iris-client-bff:1.0.0-rc.3
     expose:
       - 8092
     environment:
@@ -26,7 +26,7 @@ services:
 
   # IRIS Client Frontend for users
   iris-frontend:
-    image: inoeg/iris-client-frontend:1.0.0-rc.2
+    image: inoeg/iris-client-frontend:1.0.0-rc.3
     expose:
       - 28080
     environment:
@@ -92,7 +92,7 @@ services:
 
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:1.0.0-rc.2
+    image: inoeg/iris-client-nginx:1.0.0-rc.3
     ports:
       - 443:443
     environment:
