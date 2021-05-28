@@ -112,7 +112,7 @@ export const dummyDataDetails: DataRequestDetails = {
       {
         firstName: " Must\"er'm'an´;=,n",
         lastName: "=?+-@!*/\\%€%=@+µMaxßüäö;",
-        email: "=max@e\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nxample.de",
+        email: "=max@e\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nxample.@.de",
         phone: "=01234 000000",
         mobilePhone: "=0123 0815",
         sex: Sex.Male,
