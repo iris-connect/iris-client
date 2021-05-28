@@ -347,9 +347,7 @@ export default class EventTrackingDetailsView extends Vue {
 
   handleSormasCsvEventParticipantsExport(payload: ExportData): void {
     dataExport.exportSormasEventParticipantsCsv(
-      this.convertTableRowToEventParticipationData(
-        (payload.rows as unknown) as TableRow[]
-      ),
+      (payload.rows as unknown) as TableRow[],
       [
         this.eventTrackingDetails?.externalRequestId || "Export",
         Date.now(),
@@ -392,53 +390,6 @@ export default class EventTrackingDetailsView extends Vue {
 
       const dataInstance: ContactCaseData = {
         description: description,
-        firstName: element.firstName,
-        lastName: element.lastName,
-        sex: element.raw.sex || "",
-        phone: element.phone,
-        email: element.email,
-        postalCode: element.raw.address?.zipCode || "",
-        city: element.raw.address?.city || "",
-        street: element.raw.address?.street || "",
-        houseNumber: element.raw.address?.houseNumber || "",
-      };
-      data.push(dataInstance);
-    });
-    return data;
-  }
-
-  convertTableRowToEventParticipationData(
-    tableRows: TableRow[]
-  ): EventParticipantData[] {
-    const data: EventParticipantData[] = [];
-
-    const headerInstance: EventParticipantData = {
-      involvementDescription: "involvementDescription",
-      firstName: "person.firstName",
-      lastName: "person.lastName",
-      sex: "person.sex",
-      phone: "person.phone",
-      email: "person.emailAddress",
-      postalCode: "person.address.postalCode",
-      city: "person.address.city",
-      street: "person.address.street",
-      houseNumber: "person.address.houseNumber",
-    };
-    data.push(headerInstance);
-
-    tableRows.forEach((element) => {
-      const involvementDescription =
-        element.comment +
-        " // " +
-        element.checkInTime +
-        " Uhr bis " +
-        element.checkOutTime +
-        " Uhr (Maximale Kontaktdauer " +
-        element.maxDuration +
-        ")";
-
-      const dataInstance: EventParticipantData = {
-        involvementDescription: involvementDescription,
         firstName: element.firstName,
         lastName: element.lastName,
         sex: element.raw.sex || "",

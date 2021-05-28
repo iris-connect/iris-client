@@ -1,3 +1,5 @@
+import { Guest } from "@/api";
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Parser } = require("json2csv");
 
@@ -18,6 +20,7 @@ export type TableRow = {
   phone: string;
   mobilePhone: string;
   address: string;
+  raw: Guest;
 };
 
 export type ContactCaseData = {
@@ -199,10 +202,13 @@ const exportAlternativeStandardCsv = function (
 };
 
 const exportSormasEventParticipantsCsv = function (
-  rows: Array<EventParticipantData>,
+  rows: Array<TableRow>,
   fileName: string
 ): Promise<string> {
   const headers = headerSormasEventParticipants;
+  const separator = ";";
+
+  const data = convertTableRowToEventParticipationData(rows, separator);
 
   return new Promise((resolve, reject) => {
     const fields = headers
@@ -215,7 +221,6 @@ const exportSormasEventParticipantsCsv = function (
       })
       .filter((v) => v);
     try {
-      const separator = ";";
       const parser = new Parser({
         fields,
         withBOM: true,
@@ -223,7 +228,7 @@ const exportSormasEventParticipantsCsv = function (
         delimiter: separator,
         quote: "",
       });
-      const csv = parser.parse(sanitiseRows(rows, separator));
+      const csv = parser.parse(data);
       downloadCsvFile(fileName, csv);
       resolve(csv);
     } catch (error) {
@@ -320,8 +325,61 @@ export const sanitiseField = function (
     while (!headWhitelistRE.test(field) && field.length > 0) {
       field = field.substring(1);
     }
+
+    if (field.length == 0) {
+      return "-";
+    }
     return field;
   } else return "";
+};
+
+const convertTableRowToEventParticipationData = function (
+  tableRows: TableRow[],
+  separator: string
+): EventParticipantData[] {
+  const data: EventParticipantData[] = [];
+
+  const headerInstance: EventParticipantData = {
+    involvementDescription: "involvementDescription",
+    firstName: "person.firstName",
+    lastName: "person.lastName",
+    sex: "person.sex",
+    phone: "person.phone",
+    email: "person.emailAddress",
+    postalCode: "person.address.postalCode",
+    city: "person.address.city",
+    street: "person.address.street",
+    houseNumber: "person.address.houseNumber",
+  };
+  data.push(headerInstance);
+
+  tableRows.forEach((element) => {
+    const involvementDescription =
+      sanitiseField(element.comment, separator) +
+      " // " +
+      sanitiseField(element.checkInTime, separator) +
+      " Uhr bis " +
+      sanitiseField(element.checkOutTime, separator) +
+      " Uhr (Maximale Kontaktdauer " +
+      sanitiseField(element.maxDuration, separator) +
+      ")";
+
+    const dataInstance: EventParticipantData = {
+      involvementDescription: involvementDescription,
+      firstName: sanitiseField(element.firstName, separator),
+      lastName: sanitiseField(element.lastName, separator),
+      sex: sanitiseField(element.raw.sex, separator) || "",
+      phone: sanitiseField(element.phone, separator),
+      email: sanitiseField(element.email, separator),
+      postalCode: sanitiseField(element.raw.address?.zipCode, separator) || "",
+      city: sanitiseField(element.raw.address?.city, separator) || "",
+      street: sanitiseField(element.raw.address?.street, separator) || "",
+      houseNumber:
+        sanitiseField(element.raw.address?.houseNumber, separator) || "",
+    };
+    data.push(dataInstance);
+  });
+  return data;
 };
 
 const dataExport = {
