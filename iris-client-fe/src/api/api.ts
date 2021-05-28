@@ -1876,6 +1876,40 @@ export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: 
     return {
         /**
          * 
+         * @summary Logout user
+         * @param {*} [options] Override http request option.
+         */
+         logout: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/user/logout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
+
+            // authentication BearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Detail view for index data request with the data submissions already received
          * @param {string} caseId The internal unique CaseId of a index case in format.
          * @param {*} [options] Override http request option.
@@ -2501,6 +2535,15 @@ export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary Logout user
+         * @param {*} [options] Override http request option.
+         */
+         async logout(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.logout(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Detail view for index data request with the data submissions already received
          * @param {string} caseId The internal unique CaseId of a index case in format.
          * @param {*} [options] Override http request option.
@@ -2670,6 +2713,14 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
     return {
         /**
          * 
+         * @summary Logout user
+         * @param {*} [options] Override http request option.
+         */
+        logout(options?: any): AxiosPromise<void> {
+            return localVarFp.logout(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Detail view for index data request with the data submissions already received
          * @param {string} caseId The internal unique CaseId of a index case in format.
          * @param {*} [options] Override http request option.
@@ -2822,6 +2873,18 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
  * @extends {BaseAPI}
  */
 export class IrisClientFrontendApi extends BaseAPI {
+
+    /**
+     * 
+     * @summary Logout user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IrisClientFrontendApi
+     */
+    public logout(options?: any) {
+        return IrisClientFrontendApiFp(this.configuration).logout(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @summary Detail view for index data request with the data submissions already received
