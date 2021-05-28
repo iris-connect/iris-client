@@ -41,7 +41,7 @@ public class JWTService implements JWTVerifier, JWTSigner {
 
 	@Override
 	public void saveToken(String token, String userName, Instant expirationTime) {
-		HashedToken hashedToken = new HashedToken();
+		var hashedToken = new HashedToken();
 		hashedToken.setJwtTokenDigest(hashToken(token));
 		hashedToken.setUserName(userName);
 		hashedToken.setExpirationTime(expirationTime);
@@ -52,6 +52,10 @@ public class JWTService implements JWTVerifier, JWTSigner {
 	public boolean isTokenWhitelisted(String token) {
 		Optional<HashedToken> hashedToken = hashedTokenRepository.findByJwtTokenDigest(hashToken(token));
 		return hashedToken.isPresent();
+	}
+
+	public void invalidateTokensOfUser(String userName) {
+		hashedTokenRepository.deleteByUserName(userName);
 	}
 
 	private String hashToken(String jwt) {

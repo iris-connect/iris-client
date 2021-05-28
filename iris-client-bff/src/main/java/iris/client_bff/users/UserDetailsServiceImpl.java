@@ -1,5 +1,6 @@
 package iris.client_bff.users;
 
+import iris.client_bff.auth.db.jwt.JWTService;
 import iris.client_bff.users.entities.UserAccount;
 import iris.client_bff.users.entities.UserRole;
 import iris.client_bff.users.web.dto.UserInsertDTO;
@@ -21,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @AllArgsConstructor
@@ -30,6 +32,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private final UserAccountsRepository userAccountsRepository;
 
 	private final PasswordEncoder passwordEncoder;
+
+	private final JWTService jwtService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
@@ -59,6 +63,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userAccountsRepository.save(userAccount);
 	}
 
+	// Annotation necessary because of multiple DB calls
+	// see https://stackoverflow.com/a/32552558
+	@Transactional
 	public UserAccount update(UUID userId, UserUpdateDTO userUpdateDTO) {
 		log.info("Update user: {}", userId);
 
@@ -68,6 +75,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			log.error(error);
 			throw new RuntimeException(error);
 		}
+		jwtService.invalidateTokensOfUser(optional.get().getUserName());
 
 		var userAccount = optional.get();
 		userAccount.setLastName(userUpdateDTO.getLastName());
@@ -91,8 +99,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userAccountsRepository.save(userAccount);
 	}
 
+	// Annotation necessary because of multiple DB calls
+	// see https://stackoverflow.com/a/32552558
+	@Transactional
 	public void deleteById(UUID id) {
 		log.info("Delete user: {}", id);
+		var optional = userAccountsRepository.findById(id);
+		if (optional.isPresent()) {
+			jwtService.invalidateTokensOfUser(optional.get().getUserName());
+		}
 		userAccountsRepository.deleteById(id);
 	}
 
