@@ -62,6 +62,9 @@ services:
       - 28080
     environment:
       SORMAS_SIDECAR_BASE_URL: /api
+      LOCAL_CONTACT_PERSON_NAME:
+      LOCAL_CONTACT_PERSON_MAIL:
+      LOCAL_CONTACT_PERSON_PHONE:
     restart: unless-stopped
     depends_on:
       - iris-client

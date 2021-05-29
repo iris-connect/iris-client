@@ -130,7 +130,7 @@ Die Releases werden [über Github bereitgestellt](https://github.com/iris-connec
 
 Unterhalb vom Release befinden sich verschiedene Installations Artefakte (Assets). Für Docker Compose laden sie sich bitte das Asset `deployment-${version}.zip` herunter. 
 
-## Strutur des Release Archives
+## Struktur des Release Archives
 
 Packen Sie zunächst das Release Archive aus
 
@@ -246,6 +246,16 @@ SECURITY_AUTH_DB_ADMIN_USER_PASSWORD
 
 Sobald der Account beim ersten Starten angelegt wurde. Werden die Parameter ignoriert. 
 
+## Lokale Kontaktinformationen
+
+Sie können für Ihre lokalen Benutzer:innen Informationen zum Support bereit stellen. Diese Informationen werden dann im Web-Interface angezeigt (Beispiel [hier](./images/support-information.png)). 
+
+Folgende Parameter müssen dafür gesetzt sein.
+```
+LOCAL_CONTACT_PERSON_NAME
+LOCAL_CONTACT_PERSON_MAIL
+LOCAL_CONTACT_PERSON_PHONE
+```
 ## Einrichtung HTTPS Proxy
 
 In den meisten GAs werden Verbindungen ins Internet über einen Proxy geleitet. Dafür ist folgender Parameter vorgesehen. 
