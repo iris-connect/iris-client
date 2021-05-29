@@ -23,7 +23,7 @@ public class EPSSearchClient implements SearchClient {
 
 	private SearchClientProperties config;
 
-	private final JsonRpcHttpClient rpcClient;
+	private final JsonRpcHttpClient epsRpcClient;
 
 	public LocationInformation findByProviderIdAndLocationId(String providerId, String locationId)
 			throws IRISSearchException {
@@ -33,7 +33,7 @@ public class EPSSearchClient implements SearchClient {
 		LocationInformation locationInformation;
 		try {
 			var methodName = config.getEndpoint() + ".getLocationDetails";
-			locationInformation = rpcClient.invoke(methodName, payload, LocationInformation.class);
+			locationInformation = epsRpcClient.invoke(methodName, payload, LocationInformation.class);
 		} catch (Throwable t) {
 			throw new IRISSearchException(t);
 		}
@@ -68,7 +68,7 @@ public class EPSSearchClient implements SearchClient {
 		KeywordSearch search = KeywordSearch.builder().searchKeyword(keyword).pageable(pageableDto).build();
 		try {
 			var methodName = config.getEndpoint() + ".searchForLocation";
-			return rpcClient.invoke(methodName, search, LocationQueryResult.class);
+			return epsRpcClient.invoke(methodName, search, LocationQueryResult.class);
 		} catch (Throwable t) {
 			throw new IRISSearchException(t);
 		}

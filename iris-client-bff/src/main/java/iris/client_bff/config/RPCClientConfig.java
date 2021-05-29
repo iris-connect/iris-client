@@ -32,10 +32,21 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 @Getter
 public class RPCClientConfig {
 
-  private final @NonNull String clientUrl;
+  private final @NonNull String epsClientUrl;
+
+  private final @NonNull String proxyClientUrl;
 
   @Bean
-  public JsonRpcHttpClient rpcClient() throws MalformedURLException, NoSuchAlgorithmException, KeyManagementException {
+  public JsonRpcHttpClient epsRpcClient() throws NoSuchAlgorithmException, KeyManagementException, MalformedURLException {
+    return epsRpcClient(epsClientUrl);
+  }
+
+  @Bean
+  public JsonRpcHttpClient proxyRpcClient() throws NoSuchAlgorithmException, KeyManagementException, MalformedURLException {
+    return epsRpcClient(proxyClientUrl);
+  }
+
+  public JsonRpcHttpClient epsRpcClient(String clientUrl) throws MalformedURLException, NoSuchAlgorithmException, KeyManagementException {
 
     ObjectMapper jacksonObjectMapper = new ObjectMapper();
     jacksonObjectMapper.registerModule(new JavaTimeModule());
