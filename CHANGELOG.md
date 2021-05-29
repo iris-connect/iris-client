@@ -1,5 +1,19 @@
 # Changelog
 
+# [1.0.0-rc.4](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.3...v1.0.0-rc.4) (2021-05-29)
+
+
+### Bug Fixes
+
+* update failing unit tests for new rpc client config ([596c7b8](https://github.com/iris-connect/iris-client/commit/596c7b8053d914cbd21684094586124891f1bad3))
+
+
+### Features
+
+* announce connection to private-proxy without service-directory ([967ae33](https://github.com/iris-connect/iris-client/commit/967ae331810913a1a633693a05537c2050e6d570))
+* display about page with iris-client information ([1362b26](https://github.com/iris-connect/iris-client/commit/1362b26af502eb57eb6602f694012688f69636ca)), closes [iris-connect/iris-backlog#95](https://github.com/iris-connect/iris-backlog/issues/95)
+* revoke jwt tokens of modified, deleted or logged out users ([cd1ffb9](https://github.com/iris-connect/iris-client/commit/cd1ffb9ee1a41127042b62cddfee71a60074da1f)), closes [iris-connect/iris-backlog#90](https://github.com/iris-connect/iris-backlog/issues/90)
+
 # [1.0.0-rc.3](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.2...v1.0.0-rc.3) (2021-05-28)
 
 
