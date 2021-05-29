@@ -23,7 +23,7 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 
     private final ProxyServiceConfig config;
 
-    private final JsonRpcHttpClient rpcClient;
+    private final JsonRpcHttpClient proxyRpcClient;
 
     @Override
     public String announce() throws IRISAnnouncementException {
@@ -46,7 +46,7 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
                 + "announceConnection";
 
         try {
-            rpcClient.invoke(methodName, announcementDto);
+            proxyRpcClient.invoke(methodName, announcementDto);
             log.debug("Announced {} to {} till {}", announcementDto.getDomain(), announcementDto.getProxy(), announcementDto.getExpiresAt());
         } catch (Throwable throwable) {
             throw new IRISAnnouncementException(throwable);
