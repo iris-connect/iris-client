@@ -72,8 +72,8 @@ import config from "@/config";
 
 @Component
 export default class AboutView extends Vue {
-  version = config.appVersionId;
-  build = config.appBuildId;
+  version = config.appVersionId || "";
+  build = config.appBuildId || "";
   contact = [
     config.localContactPerson.name,
     config.localContactPerson.phone,
