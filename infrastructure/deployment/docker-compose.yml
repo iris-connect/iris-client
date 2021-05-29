@@ -44,7 +44,8 @@ services:
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
-      EPS_CLIENT_CLIENT_URL: https://eps:5556/jsonrpc
+      EPS_CLIENT_EPS_CLIENT_URL: https://eps:5556/jsonrpc
+      EPS_CLIENT_PROXY_CLIENT_URL: https://private-proxy-eps:7766/jsonrpc
       PROXY_SERVICE_EPS_NAME: ${PROXY_OP}
       PROXY_SERVICE_TARGET_SUBDOMAIN: proxy.test-gesundheitsamt.de
       SECURITY_AUTH_DB_ADMIN_USER_NAME:
@@ -107,8 +108,8 @@ services:
   private-proxy-eps:
     image: inoeg/eps:v0.0.4
     expose:
-      - 7766
-      - 7776
+      - 7766 # JSON-RPC server for internal connections from iris-client
+      - 7776 # gRPC protocol
     volumes:
       - ./conf/proxy:/app/settings
     environment:

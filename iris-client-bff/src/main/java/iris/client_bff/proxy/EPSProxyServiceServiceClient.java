@@ -40,7 +40,6 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
                 .proxy(config.getTargetProxy())
                 .build();
 
-        // TODO use correct method name
         var methodName = config.getEpsName()
                 + "."
                 + "announceConnection";

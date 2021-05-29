@@ -18,7 +18,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class EPSDataProviderClient implements DataProviderClient {
 
-	private final JsonRpcHttpClient rpcClient;
+	private final JsonRpcHttpClient epsRpcClient;
 
 	public void requestGuestListData(EventDataRequest request) throws IRISDataRequestException {
 
@@ -37,7 +37,7 @@ public class EPSDataProviderClient implements DataProviderClient {
 
 		try {
 			log.trace("requestGuestListData start: method {}; request {}", methodName, requestId);
-			rpcClient.invoke(methodName, payload);
+			epsRpcClient.invoke(methodName, payload);
 			log.debug("requestGuestListData done: method {}; request {};", methodName, requestId);
 
 		} catch (Throwable t) {
