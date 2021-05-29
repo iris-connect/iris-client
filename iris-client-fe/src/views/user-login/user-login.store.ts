@@ -1,16 +1,16 @@
-import { Commit, Module } from "vuex";
-import { ErrorMessage, getErrorMessage } from "@/utils/axios";
-import { RootState } from "@/store/types";
 import {
   Credentials,
   IrisClientFrontendApiFactory,
   User,
   UserRole,
 } from "@/api";
-import store from "@/store";
 import authClient, { clientConfig, sessionFromResponse } from "@/api-client";
-import { RawLocation } from "vue-router";
+import store from "@/store";
+import { RootState } from "@/store/types";
+import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import { omit } from "lodash";
+import { RawLocation } from "vue-router";
+import { Commit, Module } from "vuex";
 
 export type UserLoginState = {
   authenticating: boolean;
@@ -43,6 +43,7 @@ export interface UserLoginModule extends Module<UserLoginState, RootState> {
       formData: Credentials
     ): Promise<void>;
     fetchAuthenticatedUser({ commit }: { commit: Commit }): Promise<void>;
+    logout({ commit }: { commit: Commit }): Promise<void>;
   };
   getters: {
     isAuthenticated(): boolean;
@@ -121,6 +122,13 @@ const userLogin: UserLoginModule = {
       } finally {
         commit("setUser", user);
         commit("setUserLoading", false);
+      }
+    },
+    async logout({ commit }): Promise<void> {
+      try {
+        await authClient.logout();
+      } finally {
+        commit("setSession");
       }
     },
   },

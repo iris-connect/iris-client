@@ -1,6 +1,7 @@
 package iris.client_bff.auth.db;
 
-import static iris.client_bff.auth.db.SecurityConstants.*;
+import static iris.client_bff.auth.db.SecurityConstants.BEARER_TOKEN_PREFIX;
+import static iris.client_bff.auth.db.SecurityConstants.JWT_CLAIM_USER_ROLE;
 
 import iris.client_bff.auth.db.jwt.JWTVerifier;
 
@@ -59,11 +60,10 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
 		var userName = jwt.getSubject();
 
-		if (userName != null) {
+		if (userName != null && jwtVerifier.isTokenWhitelisted(token)) {
 			var authority = new SimpleGrantedAuthority(jwt.getClaim(JWT_CLAIM_USER_ROLE).asString());
 			return new UserAccountAuthentication(userName, true, List.of(authority));
 		}
 		return null;
 	}
-
 }
