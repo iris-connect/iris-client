@@ -50,6 +50,7 @@ services:
       HTTP_CLIENT_PROXY_PORT:
       HTTP_CLIENT_PROXY_SCHEME:
       EPS_CLIENT_CLIENT_URL: https://eps:5556/jsonrpc
+      PROXY_EPS_CLIENT_CLIENT_URL: https://private-proxy-1:7766/jsonrpc
       PROXY_SERVICE_TARGET_SUBDOMAIN: proxy.test-gesundheitsamt.de
     restart: unless-stopped
     depends_on:
