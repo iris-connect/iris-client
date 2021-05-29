@@ -6,6 +6,9 @@ printf "\n  Build components and prepare release  \n\n"
 VERSION=`echo $1 | cut -d'v' -f2`
 echo "version = $VERSION"
 
+# expect commit sha as second parameter
+COMMIT=$2
+
 printf "\n  Build NGINX image  \n\n"
 docker build -t inoeg/iris-client-nginx ./infrastructure/docker/nginx/
 
@@ -29,6 +32,9 @@ mvn versions:set -DnewVersion=$VERSION-POST_RELEASE -DprocessAllModules=true
 printf "\n  Build FE ZIP  \n\n"
 cd ./iris-client-fe
 npm ci
+
+export VUE_APP_BUILD_ID=$COMMIT
+export VUE_APP_VERSION_ID=$VERSION
 export VUE_APP_API_BASE_URL="/api"
 npm run build
 cd dist && zip -qq -r ../../release/iris-client-fe-$VERSION.zip *
