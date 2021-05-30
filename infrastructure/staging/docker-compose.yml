@@ -97,7 +97,7 @@ services:
       - iris-frontend
 
   private-proxy:
-    image: inoeg/proxy:v0.1.2
+    image: inoeg/proxy:v0.1.3
     expose:
       - 5545
       - 8877
@@ -118,16 +118,6 @@ services:
     environment:
       - EPS_SETTINGS=settings/roles/private-proxy-eps-1
     command: [ "--level", "trace", "server", "run" ]
-
-
-  internal-server:
-    image: luckylusa/iris-eps-internal-server:v0.0.3007
-    volumes:
-      - ./settings:/app/settings
-    expose:
-      - 8888
-    entrypoint: ./internal-server
-    command: [ "--level", "trace" ]
 
 volumes:
   psqldata_iris:
