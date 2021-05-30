@@ -4,5 +4,20 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
-      
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "infrastructure/docker/nginx"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "iris-client-fe"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
