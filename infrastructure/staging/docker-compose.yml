@@ -97,13 +97,13 @@ services:
       - iris-frontend
 
   private-proxy:
-    image: inoeg/proxy:v0.1.1
+    image: inoeg/proxy:v0.1.2
     expose:
       - 5545
       - 8877
     volumes:
       - ./settings:/app/settings
-      - ./private-proxy-db:/tmp
+      - ./private-proxy-db:/private-proxy
     environment:
       - PROXY_SETTINGS=settings/roles/private-proxy-1
     command: [ "--level", "trace", "run", "private" ]
