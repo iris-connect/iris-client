@@ -1,4 +1,4 @@
-package iris.client_bff.feedback_api;
+package iris.client_bff.feedback.web;
 
 import lombok.NonNull;
 import lombok.ToString;

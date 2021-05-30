@@ -1,4 +1,6 @@
-package iris.client_bff.feedback_api;
+package iris.client_bff.feedback.web;
+
+import iris.client_bff.feedback.DataFeedbackEndpointConnector;
 
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClientException;
 
 /*
  * This class provides an endpoint for post requests from Iris-Client-Frontend.
@@ -30,14 +31,8 @@ public class FeedbackRestAPI {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = "/feedback", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<DataFeedbackRequestDto> takeFeedbackPostRequest(@Valid @RequestBody DataFeedbackRequestDto request) {
-		
-		try {
-			
-			var responseIrisPubServer = requestManager.sendRequestToIrisPubServer(request);
-			return ResponseEntity.ok(responseIrisPubServer);
-			
-		} catch (RestClientException e2) {
-			return ResponseEntity.badRequest().body(null);
-		}
+
+		var responseIrisPubServer = requestManager.sendRequestToIrisPubServer(request);
+		return ResponseEntity.ok(responseIrisPubServer);
 	}
 }

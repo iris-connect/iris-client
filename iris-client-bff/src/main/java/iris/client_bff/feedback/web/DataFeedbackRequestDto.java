@@ -1,4 +1,4 @@
-package iris.client_bff.feedback_api;
+package iris.client_bff.feedback.web;
 
 import io.swagger.annotations.ApiModel;
 import lombok.NonNull;
@@ -13,10 +13,10 @@ import lombok.ToString;
 @ToString
 public class DataFeedbackRequestDto {
 
-	private @NonNull String categorie;
-	
+	private @NonNull String category;
+
 	private @NonNull String title;
-	
+
 	private @NonNull String commentar;
 
 	private String name;
@@ -29,12 +29,12 @@ public class DataFeedbackRequestDto {
 
 	private String browserResolution;
 
-	public String getCategorie() {
-		return categorie;
+	public String getCategory() {
+		return category;
 	}
 
-	public void setCategorie(String categorie) {
-		this.categorie = categorie;
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public String getTitle() {
