@@ -108,7 +108,7 @@ export const routes: Array<RouteConfig> = [
   {
     path: "/cases/list",
     name: "index-list" /* Caution: This acts as an identifier! */,
-    // TODO: Remove redirect line once index cases are activated again
+    // TODO: Remove redirect and disabled lines once index cases are activated again
     // As the "Index-Cases" menu entry is still present on the dashboard,
     // route entry has to be available. The redirect prevents users
     // to manually navigate to the view via address bar.
