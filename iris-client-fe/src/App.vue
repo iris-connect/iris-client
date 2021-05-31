@@ -17,6 +17,7 @@
             :key="link.name"
             :to="link.path"
             :exact="link.meta.menuExact"
+            :disabled="link.meta.disabled"
             text
           >
             {{ link.meta.menuName }}

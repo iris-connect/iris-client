@@ -10,7 +10,7 @@
           actionlink="events/list"
         ></counter-widget>
       </v-col>
-      <v-col>
+      <!-- <v-col>
         <counter-widget
           subtitle="Indexfälle/Woche"
           :count="statistics.indexCasesCount"
@@ -18,7 +18,7 @@
           image="sketch_medicine.svg"
           actionlink="cases/list"
         ></counter-widget>
-      </v-col>
+      </v-col> -->
       <v-col>
         <counter-widget
           subtitle="Statusänderungen"
@@ -50,7 +50,11 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn color="primary" :to="{ name: 'index-new' }" class="mb-5"
+                <v-btn
+                  color="primary"
+                  :to="{ name: 'index-new' }"
+                  class="mb-5"
+                  :disabled="true"
                   >Indexfall-Daten anfordern
                 </v-btn>
               </v-col>
