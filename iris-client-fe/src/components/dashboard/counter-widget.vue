@@ -21,7 +21,9 @@
       </v-list-item>
 
       <v-card-actions>
-        <v-btn :to="actionlink" outlined rounded text> {{ actionlabel }}</v-btn>
+        <v-btn :to="actionlink" outlined rounded text :disabled="linkDisabled">
+          {{ actionlabel }}</v-btn
+        >
       </v-card-actions>
     </v-card>
   </section>
@@ -31,7 +33,7 @@
 
   export default  {
     name: 'counter-widget',
-    props: ['subtitle','count','actionlabel','actionlink','image'],
+    props: ['subtitle','count','actionlabel','actionlink','image', 'linkDisabled'],
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     mounted () {
 //
