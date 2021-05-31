@@ -1,4 +1,4 @@
-package iris.client_bff.core.mail;
+package iris.client_bff.core.mail.support;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

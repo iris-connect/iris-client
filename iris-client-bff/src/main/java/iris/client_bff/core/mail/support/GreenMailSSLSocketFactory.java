@@ -1,4 +1,4 @@
-package iris.client_bff.core.mail;
+package iris.client_bff.core.mail.support;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -23,7 +23,7 @@ import javax.net.ssl.X509TrustManager;
  * <code>spring.mail.properties.mail.smtp.socketFactory.fallback = false</code>
  * </p>
  */
-public class GreenMailSSLSocketFactory extends SSLSocketFactory {
+class GreenMailSSLSocketFactory extends SSLSocketFactory {
 
 	private SSLSocketFactory factory;
 
