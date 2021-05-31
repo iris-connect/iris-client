@@ -10,15 +10,16 @@
           actionlink="events/list"
         ></counter-widget>
       </v-col>
-      <!-- <v-col>
+      <v-col>
         <counter-widget
           subtitle="Indexfälle/Woche"
           :count="statistics.indexCasesCount"
           actionlabel="Zur Indexübersicht"
           image="sketch_medicine.svg"
           actionlink="cases/list"
+          :linkDisabled="true"
         ></counter-widget>
-      </v-col> -->
+      </v-col>
       <v-col>
         <counter-widget
           subtitle="Statusänderungen"
