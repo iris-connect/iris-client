@@ -259,7 +259,7 @@ const exportStandardCsvForEventTracking = function (
   fileName: string
 ): void {
   const header = headerStandardForEventTracking;
-  exportStandardCsv(header, rows, fileName);
+  exportCsvWithoutQuote(header, rows, fileName, ",");
 };
 
 const exportStandardCsvForIndexTrackingContacts = function (
@@ -267,7 +267,7 @@ const exportStandardCsvForIndexTrackingContacts = function (
   fileName: string
 ): void {
   const header = headerStandardForIndexTrackingContacts;
-  exportStandardCsv(header, rows, fileName);
+  exportCsvWithoutQuote(header, rows, fileName, ",");
 };
 
 const exportStandardCsvForIndexTrackingEvents = function (
@@ -275,31 +275,7 @@ const exportStandardCsvForIndexTrackingEvents = function (
   fileName: string
 ): void {
   const header = headerStandardForIndexTrackingEvents;
-  exportStandardCsv(header, rows, fileName);
-};
-
-const exportStandardCsv = function (
-  headers: Array<Header>,
-  rows: Array<Array<string>>,
-  fileName: string
-): void {
-  new Promise((resolve, reject) => {
-    const fields = headers.filter((v) => v);
-    try {
-      const separator = ",";
-      const parser = new Parser({
-        fields,
-        withBOM: true,
-        delimiter: separator,
-        defaultValue: "-",
-      });
-      const csv = parser.parse(sanitiseRows(rows, separator));
-      downloadCsvFile(fileName, csv);
-      resolve(csv);
-    } catch (error) {
-      reject(error);
-    }
-  });
+  exportCsvWithoutQuote(header, rows, fileName, ",");
 };
 
 const exportAlternativeStandardCsvForEventTracking = function (
@@ -307,18 +283,44 @@ const exportAlternativeStandardCsvForEventTracking = function (
   fileName: string
 ): void {
   const header = headerStandardForEventTracking;
-  exportAlternativeStandardCsv(header, rows, fileName);
+  exportCsvWithQuote(header, rows, fileName, ";");
 };
 
-const exportAlternativeStandardCsv = function (
+const exportSormasEventParticipantsCsv = function (
+  rows: Array<EventParticipantData>,
+  fileName: string
+): void {
+  const headers = headerSormasEventParticipants;
+  exportCsvWithQuote(
+    headers,
+    (rows as unknown) as Array<Array<string>>,
+    fileName,
+    ";"
+  );
+};
+
+const exportSormasContactPersonCsv = function (
+  rows: Array<ContactCaseData>,
+  fileName: string
+): void {
+  const headers = headerSormasContactPerson;
+  exportCsvWithQuote(
+    headers,
+    (rows as unknown) as Array<Array<string>>,
+    fileName,
+    ";"
+  );
+};
+
+const exportCsvWithQuote = function (
   headers: Array<Header>,
   rows: Array<Array<string>>,
-  fileName: string
+  fileName: string,
+  separator: string
 ): void {
   new Promise((resolve, reject) => {
     const fields = headers.filter((v) => v);
     try {
-      const separator = ";";
       const parser = new Parser({
         fields,
         withBOM: true,
@@ -336,50 +338,23 @@ const exportAlternativeStandardCsv = function (
   });
 };
 
-const exportSormasEventParticipantsCsv = function (
-  rows: Array<EventParticipantData>,
-  fileName: string
+const exportCsvWithoutQuote = function (
+  headers: Array<Header>,
+  rows: Array<Array<string>>,
+  fileName: string,
+  separator: string
 ): void {
-  const headers = headerSormasEventParticipants;
-
   new Promise((resolve, reject) => {
     const fields = headers.filter((v) => v);
     try {
-      const separator = ";";
       const parser = new Parser({
         fields,
         withBOM: true,
         defaultValue: "-",
         delimiter: separator,
-        quote: "",
       });
-      const csv = parser.parse(sanitiseRows(rows, separator));
-      downloadCsvFile(fileName, csv);
-      resolve(csv);
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
-
-const exportSormasContactPersonCsv = function (
-  rows: Array<ContactCaseData>,
-  fileName: string
-): void {
-  const headers = headerSormasContactPerson;
-
-  new Promise((resolve, reject) => {
-    const fields = headers.filter((v) => v);
-    try {
-      const separator = ";";
-      const parser = new Parser({
-        fields,
-        withBOM: true,
-        defaultValue: "-",
-        delimiter: separator,
-        quote: "",
-      });
-      const csv = parser.parse(sanitiseRows(rows, separator));
+      const test = sanitiseRows(rows, separator);
+      const csv = parser.parse(test);
       downloadCsvFile(fileName, csv);
       resolve(csv);
     } catch (error) {
@@ -408,7 +383,10 @@ const downloadCsvFile = function (fileName: string, csv: string): void {
   }
 };
 
-const sanitiseRows = function (rows: unknown, separator: string): unknown {
+const sanitiseRows = function (
+  rows: Array<Array<string>>,
+  separator: string
+): unknown {
   let rowsDict: Array<Record<string, string>>;
   rowsDict = JSON.parse(JSON.stringify(rows));
   rowsDict = rowsDict.map((row) => {
@@ -429,40 +407,40 @@ export const sanitiseField = function (
   const whitelistRE = /([\p{L}\p{N}]@[\p{L}\p{N}])|[\p{L}\p{N}()[\]:./ -]/gu;
   const headWhitelistRE = /^([()[\]]*[\p{L}\p{N}])+/u;
 
-  if (typeof field !== "undefined") {
-    field = field.replace(possibleSeperatorRE, "/");
-    field = field.replace(whitespaceRE, " ");
-    const matches = field.match(whitelistRE);
-    field = matches?.join("") || "";
+  if (!field) {
+    return field || "-";
+  }
 
-    /**
-     * json2csv uses a seperator to split table columns. We currently are using ; and , as those.
-     * If such a sign would appear in the content than it would result in a split.
-     * To prevent this we change the seperators symbol with another symbol not used as such.
-     */
-    if (separator != "") {
-      let separator_replacement = "/";
-      if (separator === "/") separator_replacement = ".";
-      while (field.includes(separator))
-        field = field.replace(separator, separator_replacement);
-    }
-    while (!headWhitelistRE.test(field) && field.length > 0) {
-      field = field.substring(1);
-    }
+  field = field.replace(possibleSeperatorRE, "/");
+  field = field.replace(whitespaceRE, " ");
+  const matches = field.match(whitelistRE);
+  field = matches?.join("") || "";
 
-    if (field.length == 0) {
-      return "-";
-    }
-    return field;
-  } else return "-";
+  /**
+   * json2csv uses a seperator to split table columns. We currently are using ; and , as those.
+   * If such a sign would appear in the content than it would result in a split.
+   * To prevent this we change the seperators symbol with another symbol not used as such.
+   */
+  if (separator != "") {
+    let separator_replacement = "/";
+    if (separator === "/") separator_replacement = ".";
+    while (field.includes(separator))
+      field = field.replace(separator, separator_replacement);
+  }
+  while (!headWhitelistRE.test(field) && field.length > 0) {
+    field = field.substring(1);
+  }
+
+  if (field.length == 0) {
+    return "-";
+  }
+  return field;
 };
 
 const dataExport = {
-  exportStandardCsv,
   exportStandardCsvForIndexTrackingContacts,
   exportStandardCsvForIndexTrackingEvents,
   exportStandardCsvForEventTracking,
-  exportAlternativeStandardCsv,
   exportAlternativeStandardCsvForEventTracking,
   exportSormasEventParticipantsCsv,
   exportSormasContactPersonCsv,
