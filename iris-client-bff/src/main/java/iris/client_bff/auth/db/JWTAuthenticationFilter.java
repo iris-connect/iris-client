@@ -68,10 +68,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		// By convention we expect that there exists only one authority and it represents the role
 		var role = user.getAuthorities().stream().findFirst().get().getAuthority();
 
+		Date expirationTime = new Date(System.currentTimeMillis() + EXPIRATION_TIME);
 		String token = jwtSigner.sign(JWT.create()
 				.withSubject(user.getUsername())
 				.withClaim(JWT_CLAIM_USER_ROLE, role)
-				.withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME)));
+				.withExpiresAt(expirationTime));
+
+		// Whitelist the token
+		jwtSigner.saveToken(token, user.getUsername(), expirationTime.toInstant());
 
 		res.addHeader(AUTHENTICATION_INFO, BEARER_TOKEN_PREFIX + token);
 		res.addHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, AUTHENTICATION_INFO);

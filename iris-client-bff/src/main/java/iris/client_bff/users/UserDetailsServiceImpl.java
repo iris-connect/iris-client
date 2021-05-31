@@ -1,5 +1,6 @@
 package iris.client_bff.users;
 
+import iris.client_bff.auth.db.jwt.JWTService;
 import iris.client_bff.users.entities.UserAccount;
 import iris.client_bff.users.entities.UserRole;
 import iris.client_bff.users.web.dto.UserInsertDTO;
@@ -30,6 +31,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private final UserAccountsRepository userAccountsRepository;
 
 	private final PasswordEncoder passwordEncoder;
+
+	private final JWTService jwtService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
@@ -68,6 +71,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			log.error(error);
 			throw new RuntimeException(error);
 		}
+		jwtService.invalidateTokensOfUser(optional.get().getUserName());
 
 		var userAccount = optional.get();
 		userAccount.setLastName(userUpdateDTO.getLastName());
@@ -93,6 +97,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	public void deleteById(UUID id) {
 		log.info("Delete user: {}", id);
+		var optional = userAccountsRepository.findById(id);
+		if (optional.isPresent()) {
+			jwtService.invalidateTokensOfUser(optional.get().getUserName());
+		}
 		userAccountsRepository.deleteById(id);
 	}
 

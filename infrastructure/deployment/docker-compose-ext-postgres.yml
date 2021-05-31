@@ -8,7 +8,7 @@ version: "3.4"
 services:
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-bff:1.0.0-rc.2
+    image: inoeg/iris-client-bff:1.0.0-rc.4
     expose:
       - 8092
     environment:
@@ -16,7 +16,8 @@ services:
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
-      EPS_CLIENT_CLIENT_URL: https://eps:5556/jsonrpc
+      EPS_CLIENT_EPS_CLIENT_URL: https://eps:5556/jsonrpc
+      EPS_CLIENT_PROXY_CLIENT_URL: https://private-proxy-eps:7766/jsonrpc
       PROXY_SERVICE_EPS_NAME: ${PROXY_OP}
       PROXY_SERVICE_TARGET_SUBDOMAIN: proxy.test-gesundheitsamt.de
       SECURITY_AUTH_DB_ADMIN_USER_NAME:
@@ -26,11 +27,14 @@ services:
 
   # IRIS Client Frontend for users
   iris-frontend:
-    image: inoeg/iris-client-frontend:1.0.0-rc.2
+    image: inoeg/iris-client-frontend:1.0.0-rc.4
     expose:
       - 28080
     environment:
       SORMAS_SIDECAR_BASE_URL: /api
+      LOCAL_CONTACT_PERSON_NAME:
+      LOCAL_CONTACT_PERSON_MAIL:
+      LOCAL_CONTACT_PERSON_PHONE:
     restart: unless-stopped
     depends_on:
       - iris-client
@@ -92,7 +96,7 @@ services:
 
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:1.0.0-rc.2
+    image: inoeg/iris-client-nginx:1.0.0-rc.4
     ports:
       - 443:443
     environment:
