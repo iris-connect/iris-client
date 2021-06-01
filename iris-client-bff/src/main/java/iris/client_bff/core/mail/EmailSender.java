@@ -1,6 +1,7 @@
 package iris.client_bff.core.mail;
 
 import io.vavr.control.Try;
+import iris.client_bff.core.EmailAddress;
 import iris.client_bff.core.mail.EmailTemplates.Key;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -126,7 +128,7 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 	 * @author Oliver Drotbohm
 	 */
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)
-	public static abstract class AbstractTemplatedEmail implements TemplatedEmail {
+	public abstract static class AbstractTemplatedEmail implements TemplatedEmail {
 
 		/**
 		 * At the moment we can only use a configured fix sender address, to avoid problems with permissions. This comes
@@ -137,10 +139,12 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 		 */
 		private static final String FIX_SENDER_PROPERTY_KEY = "fix-sender";
 		private static final String FIX_SENDER_NAME_PROPERTY_KEY = "fix-sender-name";
-		static final String FIX_RECIPIENT_PROPERTY_KEY = "fix-recipient";
+		private static final String FIX_RECIPIENT_PROPERTY_KEY = "fix-recipient";
+		private static final String IRIS_DOMAIN = "@iris-connect.de";
+		private static final String IRIS_DOMAIN2 = "@iris-gateway.de";
 
-		private final @Getter String from;
-		private final @Getter String to;
+		private final @Getter Sender from;
+		private final @Getter Recipient to;
 		private final @Getter String subject;
 		private final @Getter Key template;
 		private final @Getter Map<String, ? extends Object> placeholders;
@@ -150,8 +154,8 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 		public SimpleMailMessage toMailMessage(EmailTemplates templates, @NonNull MailProperties mailProperties) {
 
 			var message = new SimpleMailMessage();
-			message.setFrom(from);
-			message.setTo(to);
+			message.setFrom(determineSender(mailProperties));
+			message.setTo(determineReceipient(mailProperties));
 			message.setSubject(subject);
 			message.setText(getBody(templates));
 			message.setSentDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
@@ -163,10 +167,85 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 			return message;
 		}
 
+		private String determineSender(MailProperties mailProperties) {
+
+			Map<String, String> properties = mailProperties.getProperties();
+			var fixSender = properties.get(FIX_SENDER_PROPERTY_KEY);
+
+			return StringUtils.isNoneBlank(fixSender)
+					? FixedConfiguredSender.of(mailProperties, this.from).toInternetAddress()
+					: this.from.toInternetAddress();
+		}
+
+		private String determineReceipient(@NonNull MailProperties mailProperties) {
+
+			var fixRecipient = mailProperties.getProperties().get(FIX_RECIPIENT_PROPERTY_KEY);
+
+			return StringUtils.isBlank(fixRecipient) || this.to.getEmailAddress().endsWith(IRIS_DOMAIN)
+					|| this.to.getEmailAddress().endsWith(IRIS_DOMAIN2)
+							? to.toInternetAddress()
+							: FixedConfiguredRecipient.of(EmailAddress.of(fixRecipient.trim()), to).toInternetAddress();
+		}
+
 		@Override
 		public String getBody(EmailTemplates templates) {
+			return templates.expandTemplate(template, locale, placeholders);
+		}
 
-			return "";
+		private interface InternetAdressSource {
+
+			static final String ADRESS_FORMAT = "%s <%s>";
+
+			String getFullName();
+
+			EmailAddress getEmailAddress();
+
+			default String toInternetAddress() {
+
+				var fullName = StringUtils.defaultString(getFullName());
+
+				return String.format(ADRESS_FORMAT, fullName, getEmailAddress());
+			}
+		}
+
+		public interface Sender extends InternetAdressSource {}
+
+		public interface Recipient extends InternetAdressSource {}
+
+		@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+		static class FixedConfiguredSender implements Sender {
+
+			private final @Getter String fullName;
+			private final @Getter EmailAddress emailAddress;
+
+			public static FixedConfiguredSender of(MailProperties mailProperties, Sender originSenderAsFallback) {
+
+				var properties = mailProperties.getProperties();
+				var fixSender = properties.get(FIX_SENDER_PROPERTY_KEY);
+				var fixSenderName = properties.get(FIX_SENDER_NAME_PROPERTY_KEY);
+
+				var fullName = fixSenderName != null ? fixSenderName.trim() : originSenderAsFallback.getFullName();
+				var emailAddress = fixSender != null
+						? EmailAddress.of(fixSender.trim())
+						: originSenderAsFallback.getEmailAddress();
+
+				return new FixedConfiguredSender(fullName, emailAddress);
+			}
+		}
+
+		@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+		static class FixedConfiguredRecipient implements Recipient {
+
+			private final @Getter String fullName;
+			private final @Getter EmailAddress emailAddress;
+
+			public static FixedConfiguredRecipient of(EmailAddress fixRecipient, Recipient originRecipient) {
+
+				var fullName = originRecipient.getFullName() + " - "
+						+ originRecipient.getEmailAddress().toString().replace("@", " {at} ");
+
+				return new FixedConfiguredRecipient(fullName, fixRecipient);
+			}
 		}
 	}
 }

@@ -3,6 +3,7 @@ package iris.client_bff.config;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
+import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import io.vavr.collection.Array;
 import io.vavr.collection.List;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
+import org.springframework.lang.Nullable;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
@@ -38,7 +40,24 @@ class EmailConfiguration {
 	private final I18nProperties i18nProperties;
 
 	@Bean
-	public FreeMarkerConfigurer mailTemplatesConfig() throws IOException {
+	EmailTemplates emailTemplates(FreeMarkerConfigurer configurer) {
+		return new EmailTemplates() {
+
+			Configuration config = configurer.getConfiguration();
+
+			@Override
+			@SneakyThrows
+			public String expandTemplate(Key key, @Nullable Locale locale, Map<String, ? extends Object> placeholders) {
+
+				var template = config.getTemplate(key.getKey(), locale);
+
+				return FreeMarkerTemplateUtils.processTemplateIntoString(template, placeholders);
+			}
+		};
+	}
+
+	@Bean
+	FreeMarkerConfigurer mailTemplatesConfigurer() throws IOException {
 
 		var templateLoaders = new ArrayList<TemplateLoader>();
 
@@ -60,27 +79,18 @@ class EmailConfiguration {
 		return freeMarkerConfigurer;
 	}
 
-	@Bean
-	EmailTemplates emailTemplates(FreeMarkerConfigurer configurer) {
-		return new EmailTemplates() {
-
-			@Override
-			@SneakyThrows
-			public String expandTemplate(Key key, Map<String, Object> placeholders, Locale locale) {
-
-				var template = configurer.getConfiguration().getTemplate(key.getKey(), locale);
-
-				return FreeMarkerTemplateUtils.processTemplateIntoString(template, placeholders);
-			}
-		};
-	}
-
+	/**
+	 * Checks if all templates can be loaded in all supported languages.
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@EventListener
 	void on(ApplicationStartedEvent event) throws IOException {
 
 		var locales = i18nProperties.getSupportedLocales();
 
-		var configuration = mailTemplatesConfig().getConfiguration();
+		var configuration = mailTemplatesConfigurer().getConfiguration();
 
 		Array.of(EmailTemplates.Keys.values())
 				.crossProduct(List.ofAll(locales))

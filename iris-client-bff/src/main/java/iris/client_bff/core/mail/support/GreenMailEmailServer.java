@@ -26,7 +26,7 @@ import com.icegreen.greenmail.util.ServerSetup;
 /**
  * <p>
  * Starts a SMTPS-Server with a random port. Use the following properties to use this with Spring Mail:
- * <code>spring.mail.host=127.0.0.1 spring.mail.port={random port is set} spring.mail.properties.mail.smtp.socketFactory.class = quarano.core.GreenMailSSLSocketFactory</code>
+ * <code>spring.mail.host=127.0.0.1 spring.mail.port={random port is set} spring.mail.properties.mail.smtp.socketFactory.class = iris.client_bff.core.mail.support.GreenMailSSLSocketFactory</code>
  * </p>
  * <p>
  * This starts also an IMAPS-Server with port 3993 or a random port if 3993 is occupied. You can use it with an e-mail

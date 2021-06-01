@@ -16,7 +16,7 @@ import javax.net.ssl.X509TrustManager;
  * <a>https://www.oracle.com/technetwork/java/sslnotes-150073.txt</a>
  * <p>
  * Property to activate this <code>SSLSocketFactory</code>:
- * <code>spring.mail.properties.mail.smtp.socketFactory.class = quarano.core.GreenMailSSLSocketFactory</code>
+ * <code>spring.mail.properties.mail.smtp.socketFactory.class = iris.client_bff.core.mail.support.GreenMailSSLSocketFactory</code>
  * </p>
  * <p>
  * Property to prevent falling back to one standard if this <code>SSLSocketFactory</code> has an error:

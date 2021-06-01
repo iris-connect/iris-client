@@ -19,7 +19,7 @@ public interface EmailTemplates {
 	 * @param locale can be {@literal null}.
 	 * @return will never be {@literal null}.
 	 */
-	String expandTemplate(Key key, Map<String, Object> placeholders, @Nullable Locale locale);
+	String expandTemplate(Key key, @Nullable Locale locale, Map<String, ? extends Object> placeholders);
 
 	/**
 	 * A template key.
