@@ -6,6 +6,7 @@ import freemarker.cache.TemplateLoader;
 import freemarker.cache.TemplateLookupContext;
 import freemarker.cache.TemplateLookupResult;
 import freemarker.cache.TemplateLookupStrategy;
+import freemarker.core.HTMLOutputFormat;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import io.vavr.collection.Array;
@@ -20,13 +21,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 /**
@@ -43,24 +47,7 @@ class EmailConfig {
 	private final I18nProperties i18nProperties;
 
 	@Bean
-	EmailTemplates emailTemplates(FreeMarkerConfigurer configurer) {
-		return new EmailTemplates() {
-
-			Configuration config = configurer.getConfiguration();
-
-			@Override
-			@SneakyThrows
-			public String expandTemplate(Key key, @Nullable Locale locale, Map<String, ? extends Object> placeholders) {
-
-				var template = config.getTemplate(key.getKey(), locale);
-
-				return FreeMarkerTemplateUtils.processTemplateIntoString(template, placeholders);
-			}
-		};
-	}
-
-	@Bean
-	FreeMarkerConfigurer mailTemplatesConfigurer() throws IOException {
+	FreeMarkerConfig mailTemplatesConfigurer() throws IOException {
 
 		var templateLoaders = new ArrayList<TemplateLoader>();
 
@@ -79,6 +66,11 @@ class EmailConfig {
 
 		var freeMarkerConfigurer = new FreeMarkerConfigurer();
 		freeMarkerConfigurer.setPreTemplateLoaders(templateLoaders.toArray(TemplateLoader[]::new));
+
+		var settings = new Properties();
+		settings.put("incompatible_improvements", Configuration.VERSION_2_3_30.toString());
+		freeMarkerConfigurer.setFreemarkerSettings(settings);
+
 		return freeMarkerConfigurer;
 	}
 
@@ -122,5 +114,33 @@ class EmailConfig {
 		configuration.unsetTemplateLookupStrategy();
 
 		log.info("Successfully verified email texts for locales {}.", locales);
+	}
+
+	/**
+	 * @author Jens Kutzsche
+	 */
+	@Component
+	@RequiredArgsConstructor
+	final class FreeMarkerEmailTemplates implements EmailTemplates {
+
+		private final Configuration config;
+
+		@Override
+		@SneakyThrows
+		public String expandTemplate(Key key, @Nullable Locale locale, Map<String, ? extends Object> placeholders) {
+
+			var template = config.getTemplate(key.getKey(), locale);
+
+			return FreeMarkerTemplateUtils.processTemplateIntoString(template, placeholders);
+		}
+
+		@Override
+		@SneakyThrows
+		public EmailType getTemplateType(Key key, Locale locale) {
+
+			var template = config.getTemplate(key.getKey(), locale);
+
+			return template.getOutputFormat() instanceof HTMLOutputFormat ? EmailType.HTML : EmailType.TEXT;
+		}
 	}
 }
