@@ -1,4 +1,4 @@
-# Installation Docker und Docker compose
+# Installation des IRIS Client mit Docker und Docker compose
 
 Bevor man mit der Installation des IRIS connect Clients beginnen kann, muss die Docker Umgebung intalliert werden. Die Art der Installation ist abhängig vom jeweiligen Betriebssystem des Servers.
 
