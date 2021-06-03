@@ -1,4 +1,4 @@
-# IRIS Client - Installation Stand-Alone
+# IRIS Client - Stand-Alone Installation
 
 Für diese Installationsart werden alle Komponenten des IRIS Clients separat auf einem Server installiert. Das folgende Schaubild visualisiert das Setup.
 
