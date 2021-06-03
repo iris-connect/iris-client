@@ -26,12 +26,12 @@ Hinweis
     * [Domains für die Gesundheitsämter bereitstellen]()
     * [Identitätsprüfung durchlaufen]()
 * [Erforderliche Schritte seitens des GA]()
-    * [Beantragen der Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei]()
+    * [Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei beantragen]()
         * [Ansprechperson benennen]()
         * [Zertifikate online beantragen]()
         * [Zertifikate herunterladen]()
         * [Zertifikate einrichten]()
-    * [Erstellen der Zertifikate Nr. 3 und Nr. 4]()
+    * [Zertifikate Nr. 3 und Nr. 4 erstellen]()
         * [Zertifikate erstellen]()
         * [Zertifikate einrichten]()
     * [Zertifikate sicher verwahren]()
@@ -48,7 +48,7 @@ Hier der Ablauf, um die ersten beiden der vier Zertifikate zu bekommen:
 2. Vertreter:in der Behörde nennt der BDr auf sicherem Weg eine Vertreter:in je GA.
 3. BDr prüft Identität von Vertreter:in der Behörde und deren Vertretungsberechtigung.
 4. BDr übermittelt Zugangsdaten zum Antragsportal je GA auf sicherem Wege an die Behörde, die sie an die Vertreter der GÄ weiterleitet.
-5. GA erstellt kryptographische Schlüssel und stellt für diese Zertifikatsanfragen sicher im Antragsportal ein.
+5. GA erstellt kryptografische Schlüssel und stellt für diese Zertifikatsanfragen sicher im Antragsportal ein.
 6. Nach Prüfung und Domain-Validierung der (Sub-)Domain des GA stellt die BDr die Zertifikate bereit.
 7. GA kann die Zertifikate & Domain nun im IRIS-Client gemäß Anleitung konfigurieren.
 8. GA erstellt weitere Zertifikate ohne Zutun der BDr gemäß Anleitung.
@@ -59,36 +59,52 @@ Hier der Ablauf, um die ersten beiden der vier Zertifikate zu bekommen:
 Für die Anbindung an IRIS benötigt ein GA vier Schlüsselpaare bzw. Zertifikate. Davon müssen zwei bei der
 Bundesdruckerei (BDr) bzw. deren Vertrauensdiensteanbieter D-Trust beantragt werden.
 
-1. Ein TLS-Zertifikat für das IRIS-Client-Backend des GA
-    * Anwendungsfall: Identität des GA im Internet (TLS/HTTPS).
-2. Ein Signaturzertifikat für Vertreter:in des GA
-    * Anwendungsfall: Identität des GA im EPS-Netzwerk.
+1. Ein TLS-Zertifikat für das IRIS-Client-Backend des GA  
+Anwendungsfall: Identität des GA im Internet (TLS/HTTPS).
+
+
+2. Ein Signaturzertifikat für Vertreter:in des GA  
+Anwendungsfall: Identität des GA im EPS-Netzwerk.
 
 Die verbleibenden zwei Zertifikate können im Anschluss vom GA oder dessen IT-Dienstleister, je nachdem, wer den
 IRIS-Client betreibt, selbstständig erstellt werden, also ohne Zutun der Bundesdruckerei.
 
-3. Ein mTLS-Zertifikat für den EPS-Server des GA
-    * Anwendungsfall: Absicherung der Kommunikation zwischen EPS-Servern.
-4. Ein Ende-zu-Ende-Zertifikat für das IRIS-Client-Backend des GA
-    * Anwendungsfall: Umsetzung der Datenschutzkonferenz-Anforderung an Betreiber von digitaler Kontaktdatenerfassung,
-      wonach zusätzlich zur Transportverschlüsselung (TLS)
-      eine zweite Verschlüsselungsschicht auf Anwendungsebene (Inhaltsverschlüsselung)
-      umzusetzen ist.
+3. Ein mTLS-Zertifikat für den EPS-Server des GA  
+Anwendungsfall: Absicherung der Kommunikation zwischen EPS-Servern.
+
+
+4. Ein Ende-zu-Ende-Zertifikat für das IRIS-Client-Backend des GA  
+Anwendungsfall: Umsetzung der Datenschutzkonferenz-Anforderung an Betreiber von digitaler Kontaktdatenerfassung,
+wonach zusätzlich zur Transportverschlüsselung (TLS) eine zweite Verschlüsselungsschicht auf Anwendungsebene (Inhaltsverschlüsselung) umzusetzen ist.
 
 
 ## Erforderliche Schritte seitens der Landesbehörde
 
-> Hinweis: Folgende Schritte beziehen sich auf Bundesländer, in denen eine Landesbehörde im Rhmen der einführung von IRIS jedem GA eine Domain bereitstellt.
+> Hinweis: Folgende Schritte beziehen sich auf Bundesländer, in denen eine Landesbehörde im Rahmen der Einführung von IRIS jedem GA eine Domain bereitstellt.
 
 ### Antragsprozesses bei der Bundesdruckerei anstoßem
+Der Antragsprozess wird dadurch angestoßen, dass ein vertretungsberechtigtes Mitglied der Landesbehörde auf sicherem Weg Kontakt zur Bundesdruckerei aufnimmt.
+Die Identität dieser Person, sowie ihre Vertretungsberechtigung werden von der BDr zu gegebenem Zeitpunkt geprüft.
+
+Für das Beantragen und Ausgeben der Zertifikate gibt das Bundesamt für Sicherheit iun der Informationstechnik (BSI) ein sogenanntes "hohes Schutzniveau" vor (Technische Richtlinie [TR-03107-1](https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/TechnischeRichtlinien/TR03107/TR-03107-1.html)).
+Normale E-Mails als Kommunikationsmittel sind in diesem Zusammenhang als unsicher anzusehen und dürfen nur stellenweise genutzt werden. 
+Spätestens die Übergabe der fertig befüllten Liste muss auf einem hinreichend abgesicherten Weg erfolgen.
+
+Vorgesehen ist eine mit S/MIME digital signierte und verschlüsselte E-Mail. 
+Die BDr hat hierfür ein sicheres E-Mail-Postfach (S/MIME) eingerichtet, an das verschlüsselt gemailt werden kann. 
+
+<mark>**TODO: Einzelheiten des S/MIME-Postfachs (z.B. Adresse, S/MIME-Key) mit BDr abstimmen**</mark>
+
+<mark>**TODO: Beschreibung wie der S/MIME-Key der BDr in Outlook konfiguriert wird**</mark>
 
 ### Ansprechpersonen in den Gesundheitsämtern erfassen
-Die Landesbehörde muss der Bundesdruckerei eine Liste der GÄ übermitteln, die Zertifikate erhalten sollen. Je GA muss
-eine Kontaktperson vor Ort und deren Erreichbarkeit angegeben werden. Dazu gehören Anrede, Titel, Vorname, Nachname,
-Funktion, Telefonnummer, E-Mail-Adresse.
+Die Landesbehörde muss der Bundesdruckerei eine Liste der GÄ übermitteln, die Zertifikate erhalten sollen. 
+
+Dabei muss je GA muss eine Kontaktperson vor Ort und deren Erreichbarkeit angegeben werden. 
+Dazu gehören Anrede, Titel, Vorname, Nachname, Funktion, Telefonnummer, E-Mail-Adresse.
 
 Zusätzlich muss je GA auch ein Domain (Internetadresse) angegeben werden, unter der Bürger:innen das GA im Kontext von
-IRIS später erreichen können (z.B. mit einem Webbrowser). Eine beispielhafte Domain wäre ```beispiel.de```.
+IRIS erreichen können (z.B. mit einem Webbrowser). Eine beispielhafte Domain wäre ```beispiel.de```.
 
 Das sieht für das GA Bonn beispielsweise so aus:
 <table>
@@ -128,6 +144,13 @@ Das sieht für das GA Bonn beispielsweise so aus:
 </tr>
 </table>
 
+Ist die Liste fertig gefüllt, übermitteln Sie sie auf sicherem Weg an die BDr. 
+Vorgesehen ist hier wieder eine mit S/MIME digital signierte und verschlüsselte E-Mail.
+
+Wenn gewünscht können diese Informationen auch in einem Wiki-System (Confluence) der BDr zusammengetragen werden.
+Die BDr wird auf Anfrage die genauen Schritte zur Freischaltung eines Zugangs erläutern.
+
+
 ### Domains für die Gesundheitsämter bereitstellen
 Bei den Domains gibt es zwei frei wählbare Gestaltungsmöglichkeiten:
 
@@ -153,16 +176,16 @@ Als Nächstes muss für jedes GA eine Subdomain angelegt werden. Für das GA Erf
 so ```erfurt.iris-thueringen.de``` oder ```gesundheitsamt-erfurt.iris-thueringen.de```. Auch hier gibt es keine feste
 Vorgabe für die Benennung.
 
-### Durchlaufen einer Identitätsprüfung
+### Identitätsprüfung durchlaufen
 Sobald die Liste der Gesundheitsämter vollständig vorliegt, führt die Bundesdruckerei eine formelle Identitätsprüfung der Person durch, die als Vertreter:in der Behörde in Erscheinung getreten ist.
 Zusätzlich prüft sie auch die Vertretungsberechtigung. Den genauen Ablauf dieses Vorgangs schildert die Bundesdruckerei dann im direkten Kontakt.
 
-**TODO: Zum genauen Ablauf brauchen wir noch keine Infos.**
+<mark>**TODO: Identitätsprüfung skizzieren – dazu brauchen wir noch Infos.**</mark>
 
 ## Erforderliche Schritte seitens eines Gesundheitsamts
 > Hinweis: Folgende Schritte beziehen sich auf Bundesländer, in denen eine Landesbehörde im Rhmen der einführung von IRIS jedem GA eine Domain bereitstellt.
 
-### Beantragen der Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei
+### Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei beantragen
 #### Ansprechperson benennen
 Der Antragsprozess bei der Bundesdruckerei wird von der jeweils zuständigen Landesbehörde angestoßen.
 Diese wird zu gegebenem Zeitpunkt auf jedes GA zugehen und um die Benennung einer Ansprechperson vor Ort bitten.
@@ -174,33 +197,86 @@ Je nachdem, ob jemand vom medizinischen oder technisch-administrativen Fachperso
 Bundesdruckerei sendet der Ansprechperson Zugangsdaten zum sog. Certificate Service Manager (CSM), einem Online-Verwaltungsportal für Zertifikate.
 Darin können die Zertifikate mit wenigen Klicks beantragt werden.
 
-**TODO: Video oder Screenshots der Antragsstrecke einfügen**
+Im Folgenden Betrachten wir die Antragsstrecke für Zertifikat Nr. 1. 
+Zertifikat Nr. 2 wird anschließend analog beantragt.
+
+Antragsstrecke:
+
+1. Navigieren Sie in einem Webbrowser zum CSM. Dieses befindet sich unter [https://mycsm.d-trust.net/csm/](https://mycsm.d-trust.net/csm/).
+![Ansicht "Uebersicht" im CSM](images/certificate_service_manager/mycsm_Anmeldung.png)
+
+
+2. Klicken Sie auf "Login mit Username" und loggen Sie sich mit ihrem gewählten Username und Passwort ein.
+
+
+3. Benutzername und Passwort eintragen, dann auf Login klicken. Es öffnet sich die "Übersicht".
+![Ansicht "Uebersicht" im CSM](images/certificate_service_manager/mycsm-Übersicht.png)
+
+
+4. In der linken Seitenleiste auf "Zertifikatsverwaltung" klicken. Es öffnet sich die "Zertifikatsverwaltung".
+![Ansicht "Zertifikatsverwaltung" im CSM](images/certificate_service_manager/mycsm_Zertifikatsverwaltung.png)
+
+
+5. In der linken Seitenleiste auf "Neues Zertifikat" klicken. Es öffnet sich die Ansicht "Produkt auswählen – Schritt 1/4".
+![Ansicht "Produkt auswählen - Schritt 1 / 4)" im CSM](images/certificate_service_manager/mycsm_Produkt_auswählen.png)
+   Die Produktauswahl ist auf zwei Wahlmöglichkeiten beschränkt: "Basic Device ID (EC)" für Zertifikat Nr. 1 und "<mark>**TODO**</mark>" für Zertifikat Nr. 2.
+
+
+6. Wählen Sie als Produkt "Basic Device ID (EC)" für Zertifikat Nr. 1 aus. 
+Klicken Sie anschließend auf weiter. Es öffnet sich die Ansicht "Neues Zertifikat – Schritt 2/4". 
+Hier muss ein Certificate Signing Request (CSR) zu Zertifikat Nr. 1 hochgeladen werden. 
+Diesen können Sie einfach mit einem Script erstellen, das mit dem IRIS-Client zur Verfügung gestellt wird.  
+<mark>**TODO: Ein Script erstellen, das als Input das Signaturzertifikat und einige Parameter nimmt und CSRs zu Zertifikat Nr. 1 und 2 ausspuckt.**</mark>
+![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
+Zusätzlich muss ein Sperrpasswort gesetzt werden. 
+
+
+7. Klicken Sie auf "weiter".  
+<mark>**TODO: Schritte 3 und 4 anhand eines echten CSR nachvollziehen.**</mark>
+
 
 #### Zertifikate herunterladen
-**TODO: Video oder Screenshots der Antragsstrecke einfügen**
+Sobald die Zertifikate fertig sind erhalten Sie eine Benachrichtigung an die im CSM hinterlegte E-Mail-Adresse.
+Sie können die Zertifikate dann einfach im CSM herunterladen.
+
+1. Navigieren Sie wieder im Webbrowser zum CSM unter [https://mycsm.d-trust.net/csm/](https://mycsm.d-trust.net/csm/) und loggen Sie sich dort ein.
+![Ansicht "Uebersicht" im CSM](images/certificate_service_manager/mycsm_Anmeldung.png)
+
+
+2. In der linken Seitenleiste auf "Zertifikatsverwaltung" klicken. Es öffnet sich die "Zertifikatsverwaltung".
+![Ansicht "Zertifikatsverwaltung" im CSM](images/certificate_service_manager/mycsm_Zertifikatsverwaltung.png)
+
+
+3. In der linken Seitenleiste auf "Zertifikate" klicken. Es öffnet sich die Ansicht "Zertifikate". 
+Im unteren Bereich sollten Sie die zwei fertigen Zertifikate Nr. 1 und Nr. 2 sehen können. 
+Falls hier nur ein Zertifikat angezeigt wird, machen Sie sich keine Sorgen; 
+Eine kleine Verzögerung (im Bereich von Minuten bis Stunden) ergibt sich aufgrund des manuellen Freigabeprozesses. 
+Klicken Sie auf "Download", um die zwei Zertifikate herunterzuladen.
+![Ansicht "Zertifikate" im CSM](images/certificate_service_manager/mycsm_Zertifikate.png)
+
 
 #### Zertifikate einrichten
 Die Zertifikate werden gemäß Anleitung in der Dokumentation des IRIS-Clients eingerichtet.
 
-**TODO: Prozessbeschreibung für Prod hier einfügen oder im IRIS-Client-Repo auf Aktualität prüfen und hier verlinken.**
+<mark>**TODO: Prozessbeschreibung für Prod hier einfügen oder im IRIS-Client-Repo auf Aktualität prüfen und hier verlinken.**</mark>
 
-## Erstellen der Zertifikate Nr. 3 und Nr. 4
+## Zertifikate Nr. 3 und Nr. 4 erstellen
 Sobald Zertifikat Nr. 2 vorliegt können die Zertifikate Nr. 3 und Nr. 4 vom GA, bzw. dessen IT-Dienstleister,
 je nachdem, wer den IRIS-Client betreibt, selbstständig erstellt werden, also ohne Zutun der Bundesdruckerei.
 
 ### Zertifikate erstellen
-Das Erstellen der Zertifikate Nr. 3 und Nr. 4 übernimmt ein Script, dass mit dem IRIS-Client zur Verfügung gestellt wird.
+Das Erstellen der Zertifikate Nr. 3 und Nr. 4 übernimmt ein Script, das mit dem IRIS-Client zur Verfügung gestellt wird.
 
-**TODO: Ein Script erstellen, das als Input das Signaturzertifikat und einige Parameter nimmt und Zertifikate Nr. 3 und 4 ausspuckt.**
+<mark>**TODO: Ein Script erstellen, das als Input das Signaturzertifikat und einige Parameter nimmt und Zertifikate Nr. 3 und 4 ausspuckt.**</mark>
 
-**TODO: Eine Anleitung im IRIS-Client-Repo erstellen, die erklärt wie das Script zu nutzen ist. Dann zwecks Vollständigkeit copy-paste hierher.**
+<mark>**TODO: Eine Anleitung im IRIS-Client-Repo erstellen, die erklärt wie das Script zu nutzen ist. Dann zwecks Vollständigkeit copy-paste hierher.**</mark>
 
 ### Zertifikate einrichten
-**TODO: Prozesse ggf. definieren und dokumentieren im IRIS-Client-Repo und copy-paste hierher.**
+<mark>**TODO: Prozesse ggf. definieren und dokumentieren im IRIS-Client-Repo und copy-paste hierher.**</mark>
 
 #### Zertifikat Nr. 3 einrichten
 
 #### Zertifikat Nr. 4 einrichten
 
 ## Zertifikate sicher verwahren
-**TODO: Beschreiben, wie mit den einzelnen Zertifikaten im Anschluss umgegangen werden soll. Z.B. Zertifikat Nr. 2 air-gaped verwahren.**
+<mark>**TODO: Beschreiben, wie mit den einzelnen Zertifikaten im Anschluss umgegangen werden soll. Z.B. Zertifikat Nr. 2 air-gaped verwahren.**</mark>
