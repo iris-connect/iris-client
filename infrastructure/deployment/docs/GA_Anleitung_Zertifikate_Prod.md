@@ -1,19 +1,17 @@
-# Anleitung für das Beantragen und Einrichtung der Zertifikate
+# Anleitung für das Beantragen und Einrichtung der Zertifikate (IRIS Produktivsystem)
 
 ## Vorwort
 
-Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) vier Schlüsselpaare bzw. Zertifikate. Dieses
-Dokument erklärt, wie ein Gesundheitsamt die Zertifikate beantragt und einrichtet.
+Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) vier Schlüsselpaare bzw. Zertifikate. 
+Dieses Dokument erklärt, wie Landesbehörden und Gesundheitsämter die Zertifikate gemeinsam beantragen und einrichten.
 
-Die Anleitung geht davon aus, dass IRIS über das jeweilige Bundesland gebündelt für alle Gesundheitsämter bezogen wird.
-Für GÄ, die sich selbstständig, also unabhängig vom Land, an IRIS anschließen, unterscheiden sich die Schritte teils
-deutlich.
+Die Anleitung nimmt an, dass IRIS über das jeweilige Bundesland gebündelt für alle Gesundheitsämter bezogen wird.
+Die Schritte für GÄ, die sich selbstständig, also unabhängig vom Land, an IRIS anschließen, unterscheiden sich stellenweise.
 
-Beim Rollout von IRIS werden die individuellen Bedürfnisse und Wünsche der Bundesländer berücksichtigt. Dadurch können
-sich von Land zu Land einige Unterschiede beim Antragsprozess ergeben. Die Anleitung geht entsprechend darauf ein.
+Beim Rollout von IRIS werden die individuellen Bedürfnisse und Wünsche der Bundesländer berücksichtigt. 
+Dadurch können sich von Land zu Land einige Unterschiede im Antragsprozess ergeben, auf die hier eingegangen wird.
 
-Sollte die Anleitung die Gegebenheiten in einem Bundesland nicht ausreichend berücksichtigen, bitten wir um kurzen
-Hinweis
+Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt sein, bitten wir um kurzen Hinweis.
 
 **TODO: Kontaktmöglichkeit oder Link auf contribution guideline**
 
@@ -42,16 +40,16 @@ Für die Anbindung an IRIS auf Landesebene ist die Mitwirkung einer Landesbehör
 Diese tritt im Rahmen der Identitätsprüfung gegenüber der Bundesdruckerei stellvertretend für alle GÄ des Landes auf.
 Die GÄ brauchen den Prüfungsprozess also nicht separat zu durchlaufen.
 
-Hier der Ablauf, um die ersten beiden der vier Zertifikate zu bekommen:
+Der ganze Prozess kurz gefasst:
 
 1. Behörde stellt den GÄ ggf. eine (Sub-)Domain bereit, die im Kontext von IRIS genutzt werden kann.
-2. Vertreter:in der Behörde nennt der BDr auf sicherem Weg eine Vertreter:in je GA.
+2. Vertreter:in der Behörde nennt der Bundesdruckerei (BDr) auf sicherem Weg eine Vertreter:in je GA.
 3. BDr prüft Identität von Vertreter:in der Behörde und deren Vertretungsberechtigung.
-4. BDr übermittelt Zugangsdaten zum Antragsportal je GA auf sicherem Wege an die Behörde, die sie an die Vertreter der GÄ weiterleitet.
-5. GA erstellt kryptografische Schlüssel und stellt für diese Zertifikatsanfragen sicher im Antragsportal ein.
-6. Nach Prüfung und Domain-Validierung der (Sub-)Domain des GA stellt die BDr die Zertifikate bereit.
-7. GA kann die Zertifikate & Domain nun im IRIS-Client gemäß Anleitung konfigurieren.
-8. GA erstellt weitere Zertifikate ohne Zutun der BDr gemäß Anleitung.
+4. BDr übermittelt Zugangsdaten zum Antragsportal auf sicherem Wege an die Vertreter:innen der GÄ.
+5. GÄ erstellen kryptografische Schlüssel und stellen für diese Zertifikatsanfragen online im Antragsportal ein.
+6. Nach Prüfung und Domain-Validierung der (Sub-)Domain des GA stellt die BDr die Zertifikate zum Download im Antragsportal bereit.
+8. GÄ erstellen weitere Zertifikate ohne Zutun der BDr gemäß Anleitung.
+7. GÄ konfigurieren die Zertifikate und die Domain im IRIS-Client gemäß Anleitung.
 
 
 ## Welche Zertifikate gibt es?
@@ -86,12 +84,12 @@ wonach zusätzlich zur Transportverschlüsselung (TLS) eine zweite Verschlüssel
 Der Antragsprozess wird dadurch angestoßen, dass ein vertretungsberechtigtes Mitglied der Landesbehörde auf sicherem Weg Kontakt zur Bundesdruckerei aufnimmt.
 Die Identität dieser Person, sowie ihre Vertretungsberechtigung werden von der BDr zu gegebenem Zeitpunkt geprüft.
 
-Für das Beantragen und Ausgeben der Zertifikate gibt das Bundesamt für Sicherheit iun der Informationstechnik (BSI) ein sogenanntes "hohes Schutzniveau" vor (Technische Richtlinie [TR-03107-1](https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/TechnischeRichtlinien/TR03107/TR-03107-1.html)).
-Normale E-Mails als Kommunikationsmittel sind in diesem Zusammenhang als unsicher anzusehen und dürfen nur stellenweise genutzt werden. 
-Spätestens die Übergabe der fertig befüllten Liste muss auf einem hinreichend abgesicherten Weg erfolgen.
+Für das Beantragen und Ausgeben der Zertifikate gibt das Bundesamt für Sicherheit in der Informationstechnik (BSI) ein sogenanntes "hohes Schutzniveau" vor (Technische Richtlinie [TR-03107-1](https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/TechnischeRichtlinien/TR03107/TR-03107-1.html)).
+Normale E-Mails als Kommunikationsmittel gelten in diesem Zusammenhang als unsicher und dürfen nur behilfsweise genutzt werden. 
+Spätestens die Übergabe der fertig befüllten Liste der GÄ (siehe unten) muss hinreichend abgesichert erfolgen.
 
 Vorgesehen ist eine mit S/MIME digital signierte und verschlüsselte E-Mail. 
-Die BDr hat hierfür ein sicheres E-Mail-Postfach (S/MIME) eingerichtet, an das verschlüsselt gemailt werden kann. 
+Die BDr hat hierfür ein sicheres E-Mail-Postfach eingerichtet, an das verschlüsselt gemailt werden kann. 
 
 <mark>**TODO: Einzelheiten des S/MIME-Postfachs (z.B. Adresse, S/MIME-Key) mit BDr abstimmen**</mark>
 
@@ -158,23 +156,27 @@ Bei den Domains gibt es zwei frei wählbare Gestaltungsmöglichkeiten:
 
 Im folgenden Beispiel gehen wir davon aus, dass die Behörde bereits eine Domain besitzt, hier ```www.nrw.de```.
 
-In diesem Fall muss zunächst eine Subdomain angelegt werden, die im Kontext von IRIS angesprochen werden kann. Es gibt
-keine feste Vorgabe für die Benennung dieser Subdomain, wir empfehlen aber ```iris-connct```. Damit ergibt
+In diesem Fall muss zunächst eine Subdomain angelegt werden, die im Kontext von IRIS angesprochen werden kann. 
+Es gibt keine feste Vorgabe für die Benennung dieser Subdomain, wir empfehlen aber ```iris-connct```. Damit ergibt
 sich ```iris-connect.nrw.de```.
 
-Als Nächstes muss für jedes GA eine weitere Subdomain unterhalb der gerade erzeugten angelegt werden. Für das GA Bonn
-ergibt sich so ```bonn.iris-connect.nrw.de``` oder ```gesundheitsamt-bonn.iris-connect.nrw.de```. Auch hier gibt es
-keine feste Vorgabe für die Benennung.
+Als Nächstes muss für jedes GA eine weitere Subdomain unterhalb der gerade erzeugten angelegt werden. 
+So ergibt sich für dsa GA Bonn ```bonn.iris-connect.nrw.de``` oder ```gesundheitsamt-bonn.iris-connect.nrw.de```. 
+Auch hier gibt es keine feste Vorgabe für die Benennung.
 
 **Möglichkeit 2: Die Behörde verwendet eine neue Domain, die sie vorab erwirbt**
 
-Im folgenden Beispiel gehen wir davon aus, dass eine Domain neue Domain verwendet werden soll, die es noch nicht gibt.
-In diesem Fall muss eine Domain ausgesucht und erworben werden. Nennen wir sie ```iris-thueringen.de```. Es gibt keine
-feste Vorgabe für die Benennung der Domain.
+Im folgenden Beispiel gehen wir davon aus, dass eine neue Domain verwendet werden soll, die es noch nicht gibt.
+Diese muss dann erst bei einem Domain-Anbieter käuflich erworben werden. Nennen wir sie ```iris-thueringen.de```. 
+Es gibt keine feste Vorgabe für die Benennung der Domain.
 
-Als Nächstes muss für jedes GA eine Subdomain angelegt werden. Für das GA Erfurt ergibt sich
-so ```erfurt.iris-thueringen.de``` oder ```gesundheitsamt-erfurt.iris-thueringen.de```. Auch hier gibt es keine feste
-Vorgabe für die Benennung.
+Für diese Subdomain muss ein sogenannter DNS [CAA-Eintrag](https://de.wikipedia.org/wiki/DNS_Certification_Authority_Authorization) (Certificate Authority Authorization) vorgenommen werden. 
+Mit diesem Eintrag wird festgelegt, wer für die Domain Zertifikate ausstellen darf. 
+Er kann vom Administrator bzw. der Administratorin direkt im Verwaltungsportal des Domain-Anbieters vorgenommen werden und sollte so aussehen:
+```iris.nrw.de    CAA 0 issue "d-trust.net""```
+
+Als Nächstes muss für jedes GA eine Subdomain angelegt werden. Für das GA Erfurt ergibt sich bspw.```erfurt.iris-thueringen.de``` oder ```gesundheitsamt-erfurt.iris-thueringen.de```. 
+Auch hier gibt es wieder keine feste Vorgabe für die Benennung.
 
 ### Identitätsprüfung durchlaufen
 Sobald die Liste der Gesundheitsämter vollständig vorliegt, führt die Bundesdruckerei eine formelle Identitätsprüfung der Person durch, die als Vertreter:in der Behörde in Erscheinung getreten ist.
@@ -183,7 +185,7 @@ Zusätzlich prüft sie auch die Vertretungsberechtigung. Den genauen Ablauf dies
 <mark>**TODO: Identitätsprüfung skizzieren – dazu brauchen wir noch Infos.**</mark>
 
 ## Erforderliche Schritte seitens eines Gesundheitsamts
-> Hinweis: Folgende Schritte beziehen sich auf Bundesländer, in denen eine Landesbehörde im Rhmen der einführung von IRIS jedem GA eine Domain bereitstellt.
+> Hinweis: Folgende Schritte beziehen sich auf Bundesländer, in denen eine Landesbehörde im Rahmen der einführung von IRIS jedem GA eine Domain bereitstellt.
 
 ### Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei beantragen
 #### Ansprechperson benennen
