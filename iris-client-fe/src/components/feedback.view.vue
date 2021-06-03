@@ -1,6 +1,9 @@
 <template>
   <div>
     <v-dialog v-model="show" max-width="40%">
+      <template v-slot:activator="{ on }">
+        <slot name="activator" v-bind="{ on }"></slot>
+      </template>
       <v-card style="height: fit-content">
         <v-form v-model="isFormValid">
           <div>
@@ -15,7 +18,6 @@
           </div>
           <v-container class="mt-1 px-sm-15">
             <v-autocomplete
-              v-model="category"
               :items="['Verbesserungsvorschlag', 'Problem']"
               label="Katergorie auswählen*"
               required
@@ -23,7 +25,6 @@
             ></v-autocomplete>
 
             <v-text-field
-              v-model="title"
               label="Titel*"
               required
               :rules="titelRules"
@@ -31,7 +32,6 @@
             ></v-text-field>
 
             <v-textarea
-              v-model="feedback"
               class="justify-center"
               label="Ihr Platz für Feedback*"
               no-resize
@@ -43,7 +43,6 @@
             ></v-textarea>
 
             <v-text-field
-              v-model="organisation"
               class="justify-center"
               label="Organisation"
               required
@@ -51,7 +50,6 @@
             ></v-text-field>
 
             <v-text-field
-              v-model="email"
               class="justify-center"
               label="E-Mail"
               required
@@ -62,7 +60,6 @@
 
           <v-container>
             <v-row>
-              <!-- <v-col class="d-flex justify-center"> -->
               <v-btn
                 class="ma-4"
                 color="secondary"
@@ -72,9 +69,7 @@
                 Abbrechen
               </v-btn>
               <v-spacer></v-spacer>
-              <!-- </v-col>
-             
-              <v-col class="d-flex justify-center"> -->
+
               <v-btn
                 class="ma-4"
                 color="primary"
@@ -83,7 +78,6 @@
               >
                 Absenden
               </v-btn>
-              <!-- </v-col>-->
             </v-row>
           </v-container>
         </v-form>
@@ -159,84 +153,38 @@
 </template>
 
 <script>
-/*
-type SurveyForm ={
-  model:SurveyFormModel,
-  valid:boolean,
-}
-type SurveyFormModel = {
-  category:string,
-  title:string,
-  feedback:string,
-  organisation:string,
-  email:string,
-}
-
-form: survey = {
-  model: {
-    category: "",
-    title: "",
-    feedback: "",
-    organisation: "",
-    email: "",
-  },
-};
-*/
-
 //TODO useage of class
-//export default class FeedbackDialog extends Vue {}
-export default {
-  data() {
-    return {
-      showCancelDialog: false,
-      showConfirmDialog: false,
-      isFormValid: false,
-      kategoryRules: [(content) => !!content || "Pflichtfeld"],
-      titelRules: [
-        (content) => !!content || "Pflichtfeld",
-        (content) =>
-          (content && content.length <= 100) ||
-          "Der Titel darf nicht mehr als 100 Zeichen beinhalten.",
-      ],
-      textRules: [
-        (content) => !!content || "Pflichtfeld",
-        (content) =>
-          (content && content.length <= 1000) ||
-          "Das Feedback darf nicht mehr als 1000 Zeichen beinhalten.",
-      ],
-    };
-  },
-  methods: {
-    /* export() {
-      return {
-        category: "survey.category",
-        title: "survey.title",
-        feedback: "survey.feedback",
-        organisation: "this.orga",
-        email: "this.mail",
-      };
-    },*/
-    cancel() {
-      this.showCancelDialog = false;
-      this.show = false;
-    },
-    confirm() {
-      this.showConfirmDialog = false;
-      this.show = false;
-    },
-  },
-  props: {
-    value: Boolean,
-  },
-  computed: {
-    show: {
-      get() {
-        return this.value;
-      },
-      set(value) {
-        this.$emit("input", value);
-      },
-    },
-  },
-};
+
+import { Component, Vue } from "vue-property-decorator";
+
+@Component
+export default class FeedbackDialog extends Vue {
+  show = false;
+  showCancelDialog = false;
+  showConfirmDialog = false;
+  isFormValid = false;
+  kategoryRules = [(content) => !!content || "Pflichtfeld"];
+  titelRules = [
+    (content) => !!content || "Pflichtfeld",
+    (content) =>
+      (content && content.length <= 100) ||
+      "Der Titel darf nicht mehr als 100 Zeichen beinhalten.",
+  ];
+  textRules = [
+    (content) => !!content || "Pflichtfeld",
+    (content) =>
+      (content && content.length <= 1000) ||
+      "Das Feedback darf nicht mehr als 1000 Zeichen beinhalten.",
+  ];
+
+  cancel() {
+    this.showCancelDialog = false;
+    this.show = false;
+  }
+
+  confirm() {
+    this.showConfirmDialog = false;
+    this.show = false;
+  }
+}
 </script>
