@@ -1,6 +1,6 @@
-# IRIS connect Architektur
+# Architektur
 
-Das IRIS connect baut auf einer dezentralen Architektur auf. Dabei findet der Austausch von persönlichen Daten (wie z.B. Gästelisten oder Kontakttagebüchern) direkt zwischen den App Anbietern und dem zuständigen Gesundheitsamt statt. 
+IRIS connect baut auf einer dezentralen Architektur auf. Dabei findet der Austausch von persönlichen Daten (wie z.B. Gästelisten oder Kontakttagebüchern) direkt zwischen den App Anbietern und dem zuständigen Gesundheitsamt statt. 
 
 Das folgende Schaubild visualisiert die Architektur und erklärt die zentralen Bestandteile. 
 
