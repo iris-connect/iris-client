@@ -114,7 +114,9 @@ services:
     image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/localtime:/etc/localtime:ro
+# for Docker on Windows hosts - untested!
+# https://stackoverflow.com/questions/57466568/how-do-you-mount-the-docker-socket-on-windows
+#      - //var/run/docker.sock://var/run/docker.sock
     environment:
       TZ: Europe/Berlin
       WATCHTOWER_SCHEDULE: 0 0 3 * * *
