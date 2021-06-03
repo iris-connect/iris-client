@@ -182,6 +182,9 @@ form: survey = {
   },
 };
 */
+
+//TODO useage of class
+//export default class FeedbackDialog extends Vue {}
 export default {
   data() {
     return {

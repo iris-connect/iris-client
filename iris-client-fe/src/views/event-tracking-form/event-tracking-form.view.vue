@@ -1,134 +1,141 @@
 <template>
   <div>
-  <v-card class="my-3">
-    <v-form
-      ref="form"
-      v-model="form.valid"
-      lazy-validation
-      :disabled="eventCreationOngoing"
-    >
-      <v-card-title>Ereignis-Nachverfolgung starten</v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col cols="12" sm="6">
-            <v-text-field
-              v-model="form.model.externalId"
-              :rules="validationRules.defined"
-              label="Externe ID"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6">
-            <v-text-field v-model="form.model.name" label="Name"></v-text-field>
-          </v-col>
-        </v-row>
-        <location-select-dialog
-          v-model="form.model.location"
-          :locations="locations"
-          :disabled="locationsLoading"
-          :error="locationsError"
-          @search="handleLocationSearch"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-row>
-              <v-col v-if="form.model.location">
-                <event-tracking-form-location-info
-                  :location="form.model.location"
-                />
-              </v-col>
-              <v-col>
-                <v-input
-                  v-model="form.model.location"
-                  :rules="validationRules.location"
-                >
-                  <v-btn
-                    color="red lighten-2"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    :disabled="eventCreationOngoing"
+    <v-card class="my-3">
+      <v-form
+        ref="form"
+        v-model="form.valid"
+        lazy-validation
+        :disabled="eventCreationOngoing"
+      >
+        <v-card-title>Ereignis-Nachverfolgung starten</v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" sm="6">
+              <v-text-field
+                v-model="form.model.externalId"
+                :rules="validationRules.defined"
+                label="Externe ID"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6">
+              <v-text-field
+                v-model="form.model.name"
+                label="Name"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <location-select-dialog
+            v-model="form.model.location"
+            :locations="locations"
+            :disabled="locationsLoading"
+            :error="locationsError"
+            @search="handleLocationSearch"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-row>
+                <v-col v-if="form.model.location">
+                  <event-tracking-form-location-info
+                    :location="form.model.location"
+                  />
+                </v-col>
+                <v-col>
+                  <v-input
+                    v-model="form.model.location"
+                    :rules="validationRules.location"
                   >
-                    {{
-                      form.model.location
-                        ? "Ereignisort ändern"
-                        : "Ereignisort auswählen"
-                    }}
-                  </v-btn>
-                </v-input>
-              </v-col>
-            </v-row>
-          </template>
-        </location-select-dialog>
-        <v-row>
-          <v-col cols="12" md="6">
-            <date-time-input-field
-              v-model="form.model.start"
-              :date-props="{
-                label: 'Datum (Beginn)',
-              }"
-              :time-props="{
-                label: 'Uhrzeit (Beginn)',
-              }"
-              :rules="validationRules.start"
-              required
-            />
-          </v-col>
-          <v-col cols="12" md="6">
-            <date-time-input-field
-              v-model="form.model.end"
-              :date-props="{
-                label: 'Datum (Ende)',
-              }"
-              :time-props="{
-                label: 'Uhrzeit (Ende)',
-              }"
-              :rules="validationRules.end"
-              required
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-textarea
-              name="requestComment"
-              label="Anfragendetails für den Betrieb"
-              auto-grow
-              rows="1"
-              value=""
-              hint="Datenschutz-Hinweis: Die Anfragendetails werden an den Betrieb übermittelt!"
-            ></v-textarea>
-          </v-col>
-        </v-row>
-        <v-alert v-if="eventCreationError" text type="error">{{
-          eventCreationError
-        }}</v-alert>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="secondary" plain @click="$router.back()">
-          Abbrechen
-        </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn :disabled="eventCreationOngoing" color="primary" @click="submit">
-          Anfrage senden
-        </v-btn>
-      </v-card-actions>
-    </v-form>
-  </v-card>
-  <v-btn
-    class="mr-0 mb-0"
-    large
-    fab
-    dark
-    fixed
-    bottom
-    right
-    :color="black"
-    :max-height="48"
-    :max-width="48"
-    @click="showFeedbackDialog = true"
->
-  <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
-</v-btn>
-  <FeedbackDialog v-model="showFeedbackDialog" />
+                    <v-btn
+                      color="red lighten-2"
+                      dark
+                      v-bind="attrs"
+                      v-on="on"
+                      :disabled="eventCreationOngoing"
+                    >
+                      {{
+                        form.model.location
+                          ? "Ereignisort ändern"
+                          : "Ereignisort auswählen"
+                      }}
+                    </v-btn>
+                  </v-input>
+                </v-col>
+              </v-row>
+            </template>
+          </location-select-dialog>
+          <v-row>
+            <v-col cols="12" md="6">
+              <date-time-input-field
+                v-model="form.model.start"
+                :date-props="{
+                  label: 'Datum (Beginn)',
+                }"
+                :time-props="{
+                  label: 'Uhrzeit (Beginn)',
+                }"
+                :rules="validationRules.start"
+                required
+              />
+            </v-col>
+            <v-col cols="12" md="6">
+              <date-time-input-field
+                v-model="form.model.end"
+                :date-props="{
+                  label: 'Datum (Ende)',
+                }"
+                :time-props="{
+                  label: 'Uhrzeit (Ende)',
+                }"
+                :rules="validationRules.end"
+                required
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-textarea
+                name="requestComment"
+                label="Anfragendetails für den Betrieb"
+                auto-grow
+                rows="1"
+                value=""
+                hint="Datenschutz-Hinweis: Die Anfragendetails werden an den Betrieb übermittelt!"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+          <v-alert v-if="eventCreationError" text type="error">{{
+            eventCreationError
+          }}</v-alert>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="secondary" plain @click="$router.back()">
+            Abbrechen
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            :disabled="eventCreationOngoing"
+            color="primary"
+            @click="submit"
+          >
+            Anfrage senden
+          </v-btn>
+        </v-card-actions>
+      </v-form>
+    </v-card>
+    <v-btn
+      class="mr-0 mb-0"
+      large
+      fab
+      dark
+      fixed
+      bottom
+      right
+      :color="black"
+      :max-height="48"
+      :max-width="48"
+      @click="showFeedbackDialog = true"
+    >
+      <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
+    </v-btn>
+    <FeedbackDialog v-model="showFeedbackDialog" />
   </div>
 </template>
 

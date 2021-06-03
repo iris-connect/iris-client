@@ -86,6 +86,7 @@
     <!--        </v-card>-->
     <!--      </v-col>-->
     <!--    </v-row>-->
+    <!--TODO This here needs to be  extracted see feedback-button.component.vue -->
     <v-btn
       class="mr-0 mb-0"
       large
@@ -204,6 +205,7 @@ function getFormattedDate(date?: string): string {
   },
 })
 export default class Home extends Vue {
+  showFeedbackDialog = false;
   get eventTrackingListError(): ErrorMessage {
     return store.state.home.eventTrackingListError;
   }
@@ -216,12 +218,6 @@ export default class Home extends Vue {
           ExistingDataRequestClientWithLocationStatusEnum.DataRequested
       )
       .map(tableRowMapper);
-  }
-
-  data() {
-    return {
-      showFeedbackDialog: false,
-    };
   }
 }
 </script>
