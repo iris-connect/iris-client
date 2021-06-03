@@ -3,6 +3,9 @@ package iris.client_bff.config;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
+import freemarker.cache.TemplateLookupContext;
+import freemarker.cache.TemplateLookupResult;
+import freemarker.cache.TemplateLookupStrategy;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import io.vavr.collection.Array;
@@ -32,7 +35,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 @org.springframework.context.annotation.Configuration
 @Slf4j
 @RequiredArgsConstructor
-class EmailConfiguration {
+class EmailConfig {
 
 	@Value("${spring.mail.templates.path:#{null}}")
 	private File mailTemplatesPath;
@@ -92,19 +95,31 @@ class EmailConfiguration {
 
 		var configuration = mailTemplatesConfigurer().getConfiguration();
 
+		// disable locale lookup to be able to check the existence of all templates.
+		configuration.setTemplateLookupStrategy(new TemplateLookupStrategy() {
+
+			@Override
+			public TemplateLookupResult lookup(TemplateLookupContext ctx) throws IOException {
+				return ctx.lookupWithAcquisitionStrategy(ctx.getTemplateName());
+			}
+		});
+
 		Array.of(EmailTemplates.Keys.values())
 				.crossProduct(List.ofAll(locales))
 				.forEach(it -> {
 
 					try {
 
-						var template = configuration.getTemplate(it._1.getKey(), it._2);
+						var key = it._1.getKey().replace(".ftl", it._2.toLanguageTag() + ".ftl");
+						var template = configuration.getTemplate(key, it._2);
 						FreeMarkerTemplateUtils.processTemplateIntoString(template, null);
 
 					} catch (IOException | TemplateException e) {
 						throw new IllegalStateException(String.format("Missing email text for %s!", it));
 					}
 				});
+
+		configuration.unsetTemplateLookupStrategy();
 
 		log.info("Successfully verified email texts for locales {}.", locales);
 	}

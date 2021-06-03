@@ -31,7 +31,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
  */
 @IrisWebIntegrationTest
 @RequiredArgsConstructor
-class EmailConfigurationTests {
+class EmailConfigTests {
 
 	private final FreeMarkerConfigurer freemarkerConfigurer;
 
@@ -40,12 +40,14 @@ class EmailConfigurationTests {
 
 		var templateModel = Map.of("recipientName", "Name", "text", "Der Text", "senderName", "Sender");
 
-		var template = freemarkerConfigurer.getConfiguration().getTemplate("test-mail.ftl", Locale.GERMAN);
+		var configuration = freemarkerConfigurer.getConfiguration();
+
+		var template = configuration.getTemplate("test-mail.ftl", Locale.GERMAN);
 		var body = FreeMarkerTemplateUtils.processTemplateIntoString(template, templateModel);
 
 		assertThat(body).contains("Name", "Der Text", "Sender", "Gesundheitsamt", "Hallo");
 
-		template = freemarkerConfigurer.getConfiguration().getTemplate("test-mail.ftl", Locale.ENGLISH);
+		template = configuration.getTemplate("test-mail.ftl", Locale.ENGLISH);
 		body = FreeMarkerTemplateUtils.processTemplateIntoString(template, templateModel);
 
 		assertThat(body).contains("Name", "Der Text", "Sender", "Health Department", "Hi");
