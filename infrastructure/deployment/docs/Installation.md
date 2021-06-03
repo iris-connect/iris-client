@@ -67,12 +67,12 @@ IRIS stellt zwei Umgebungen bereit. Staging zum Testen und Live für den Produkt
 
 Aktuell bietet der IRIS client eine eigene Benutzerverwaltung an, die von einem IT Administrator betreut werden muss. Das Startpasswort für den Admin Account kann beim erstmaligen Starten gesetzt werden (siehe [.env.sample](../.env.sample)).
 
-## IRIS Client - Installation Stand-Alone
+## IRIS Client - Stand-Alone Installation
 
 [Hier geht es weiter. ](./Installation-Standalone.md)
 
 
-## IRIS Client - Installation mit Docker Compose
+## IRIS Client - Docker Compose Installation
 
 [Hier geht es weiter. ](./Installation-Docker-Compose.md)
 
