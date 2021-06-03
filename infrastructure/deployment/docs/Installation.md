@@ -1,4 +1,4 @@
-# Client Installation
+# IRIS Client Installation
 
 Der IRIS Client ist der Teil vom IRIS Ecosystem, der auf einem Server im Gesundheitsamt (bzw. beim IT Dienstleiser) installiert wird und die Kernfunktionalitäten für Endbenutzer zur Verfügung stellt.
 
