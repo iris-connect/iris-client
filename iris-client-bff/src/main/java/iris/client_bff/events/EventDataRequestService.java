@@ -145,6 +145,14 @@ public class EventDataRequestService {
 		if (patch.getStatus() != null) {
 			var status = Status.valueOf(patch.getStatus().name());
 			dataRequest.setStatus(status);
+
+			try {
+				proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
+				epsDataRequestClient.abortGuestListDataRequest(dataRequest);
+			} catch (IRISAnnouncementException | IRISDataRequestException e) {
+				e.printStackTrace();
+				// TODO: Should we do something here?
+			}
 		}
 
 		return repository.save(dataRequest);
