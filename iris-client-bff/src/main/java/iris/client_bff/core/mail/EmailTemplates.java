@@ -14,9 +14,12 @@ public interface EmailTemplates {
 	/**
 	 * Expands the template with the given {@link Key} and placeholders in the language of the given locale.
 	 *
-	 * @param key must not be {@literal null}.
-	 * @param placeholders must not be {@literal null}.
-	 * @param locale can be {@literal null}.
+	 * @param key
+	 *            must not be {@literal null}.
+	 * @param placeholders
+	 *            must not be {@literal null}.
+	 * @param locale
+	 *            can be {@literal null}.
 	 * @return will never be {@literal null}.
 	 */
 	String expandTemplate(Key key, @Nullable Locale locale, Map<String, ? extends Object> placeholders);
@@ -41,9 +44,12 @@ public interface EmailTemplates {
 	 * @author Oliver Drotbohm
 	 * @author Jens Kutzsche
 	 */
-	enum Keys implements Key {
+	enum Keys
+		implements
+		Key {
 
-		;
+		CASE_DATA_RECIEVED_MAIL,
+		EVENT_DATA_RECIEVED_MAIL_FTLH;
 
 		@Override
 		public String getKey() {

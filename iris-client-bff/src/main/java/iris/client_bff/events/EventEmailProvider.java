@@ -12,35 +12,42 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  *******************************************************************************/
-package iris.client_bff.cases;
+package iris.client_bff.events;
 
+import io.vavr.control.Try;
 import iris.client_bff.core.mail.EmailProvider;
 import iris.client_bff.core.mail.EmailSender;
+import iris.client_bff.core.mail.EmailTemplates;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Collections;
 
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 
 /**
- * Helper to send out emails during index case processing
+ * Helper to send out emails during event processing
  * 
  * @author Jens Kutzsche
  */
 @Component
 @Slf4j
-public class CaseEmails extends EmailProvider {
+public class EventEmailProvider extends EmailProvider {
 
-	public CaseEmails(EmailSender emailSender, MessageSourceAccessor messages) {
+	public EventEmailProvider(EmailSender emailSender, MessageSourceAccessor messages) {
 		super(emailSender, messages);
 	}
 
-	// Try<Void> sendDataRequestEmail() {
-	//
-	// var parameters = Collections.<String, Object> emptyMap();
-	// var subject = messages.getMessage("DataRequestEmail.subject");
-	//
-	// var email = new CaseEmail(subject, null, parameters);
-	//
-	// return sendMail(email);
-	// }
+	public Try<Void> sendDataRecievedEmail(EventDataRequest eventData) {
+		var parameters = Collections.<String, Object> emptyMap();
+		parameters.put("eventId", eventData.getName());
+		parameters.put("externalId", eventData.getRefId());
+		parameters.put("startTime", eventData.getRequestStart());
+		parameters.put("endTime", eventData.getRequestEnd());
+		var subject = messages.getMessage("EventDataRecievedEmail.subject");
+
+		var email = new EventEmail(subject, EmailTemplates.Keys.EVENT_DATA_RECIEVED_MAIL_FTLH, parameters);
+
+		return sendMail(email);
+	}
 }
