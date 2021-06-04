@@ -38,7 +38,11 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 
         try {
             proxyRpcClient.invoke(methodName, announcementDto);
-            log.debug("Announced {} to {} till {}", announcementDto.getDomain(), announcementDto.getProxy(), announcementDto.getExpiresAt());
+            if (expirationTime.isBefore(Instant.now())) {
+                log.debug("Aborted announcement {} to {}", announcementDto.getDomain(), announcementDto.getProxy());
+            } else {
+                log.debug("Announced {} to {} till {}", announcementDto.getDomain(), announcementDto.getProxy(), announcementDto.getExpiresAt());
+            }
         } catch (Throwable throwable) {
             throw new IRISAnnouncementException(throwable);
         }
