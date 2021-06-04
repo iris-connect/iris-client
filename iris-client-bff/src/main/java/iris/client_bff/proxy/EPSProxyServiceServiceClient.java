@@ -25,18 +25,10 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 
     private final JsonRpcHttpClient proxyRpcClient;
 
-    @Override
-    public String announce() throws IRISAnnouncementException {
-
-        var domain = UUID.randomUUID()
-                + "."
-                + config.getTargetSubdomain();
-
-        var oneWeekFromNow = Instant.now().plus(7, ChronoUnit.DAYS);
-
+    private String sendAnnouncement(String domain, Instant expirationTime) throws IRISAnnouncementException {
         var announcementDto = AnnouncementDto.builder()
                 .domain(domain)
-                .expiresAt(oneWeekFromNow)
+                .expiresAt(expirationTime)
                 .proxy(config.getTargetProxy())
                 .build();
 
@@ -52,6 +44,21 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
         }
 
         return domain;
+    }
+
+    @Override
+    public String announce() throws IRISAnnouncementException {
+        var domain = UUID.randomUUID()
+                + "."
+                + config.getTargetSubdomain();
+        var oneWeekFromNow = Instant.now().plus(7, ChronoUnit.DAYS);
+        return this.sendAnnouncement(domain, oneWeekFromNow);
+    }
+
+    @Override
+    public String abortAnnouncement(String domain) throws IRISAnnouncementException {
+        var oneWeekAgo = Instant.now().minus(7, ChronoUnit.DAYS);
+        return this.sendAnnouncement(domain, oneWeekAgo);
     }
 
     @Data
