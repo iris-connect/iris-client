@@ -1,6 +1,6 @@
-# Installation Docker und Docker compose
+# IRIS Client - Docker und Docker Compose Installation
 
-Bevor man mit der Installation des IRIS Clients beginnen kann, muss man die Docker Umgebung Installieren. Die Art der Installation ist abhängig vom jeweiligen Betriebssystem des Servers.
+Bevor man mit der Installation des IRIS connect Clients beginnen kann, muss die Docker Umgebung intalliert werden. Die Art der Installation ist abhängig vom jeweiligen Betriebssystem des Servers.
 
 ## Linux Ubuntu
 
@@ -18,7 +18,7 @@ Bevor man mit der Installation des IRIS Clients beginnen kann, muss man die Dock
 
 4. »Docker Desktop für Windows« starten - auch OHNE Administrator-Rolle möglich.
 
-# Installation IRIS Client
+# Client Installation
 
 ## Bestellung Zertifikate
 
