@@ -1,13 +1,17 @@
 package iris.client_bff.events.eps;
 
-import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
+import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionService;
 import iris.client_bff.events.web.dto.GuestList;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
+
+import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 
 @Slf4j
 @Service
@@ -15,30 +19,35 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DataSubmissionRPCImpl implements DataSubmissionRPC {
 
-  private final EventDataRequestService requestService;
-  private final EventDataSubmissionService dataSubmissionService;
+	private final EventDataRequestService requestService;
+	private final EventDataSubmissionService dataSubmissionService;
 
-  public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
-    log.trace("Start submission {}", dataAuthorizationToken);
+	public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
+		log.trace("Start submission {}", dataAuthorizationToken);
 
-    // Todo check client.getName() vs. providerId
+		// Todo check client.getName() vs. providerId
 
-    return requestService.findById(dataAuthorizationToken).map(dataRequest -> {
+		return requestService.findById(dataAuthorizationToken).map(dataRequest -> {
 
-      dataSubmissionService.save(dataRequest, guestList);
+			if (dataRequest.getStatus().equals(EventDataRequest.Status.ABORTED)) {
+				log.trace("Submission {} for aborted event {}", dataAuthorizationToken, dataRequest.getId());
+				return "Error: Submission not allowed for " + dataAuthorizationToken.toString() + ". Request was aborted.";
+			}
 
-      log.trace("Done submission {}", dataAuthorizationToken);
+			dataSubmissionService.save(dataRequest, guestList);
 
-      return "OK";
+			log.trace("Done submission {}", dataAuthorizationToken);
 
-    }).orElseGet(() -> {
+			return "OK";
 
-      // TODO sufficient?
-      // probably throw exception
+		}).orElseGet(() -> {
 
-      log.error("Data submission for unknown data request occurred: {}", dataAuthorizationToken);
+			// TODO sufficient?
+			// probably throw exception
 
-      return "Unknown dataAuthorizationToken: " + dataAuthorizationToken.toString();
-    });
-  }
+			log.error("Data submission for unknown data request occurred: {}", dataAuthorizationToken);
+
+			return "Unknown dataAuthorizationToken: " + dataAuthorizationToken.toString();
+		});
+	}
 }
