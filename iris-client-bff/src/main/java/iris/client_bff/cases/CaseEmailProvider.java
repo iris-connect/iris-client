@@ -18,10 +18,12 @@ import io.vavr.control.Try;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.core.mail.EmailProvider;
 import iris.client_bff.core.mail.EmailSender;
+import iris.client_bff.core.mail.EmailTemplates;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +36,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class CaseEmailProvider extends EmailProvider {
 
+	@Value("${iris.client.basePath}")
+	private String basePath;
+
 	public CaseEmailProvider(EmailSender emailSender, MessageSourceAccessor messages) {
 		super(emailSender, messages);
 	}
@@ -44,10 +49,11 @@ public class CaseEmailProvider extends EmailProvider {
 		parameters.put("externalId", caseData.getExternalCaseId());
 		parameters.put("startTime", caseData.getStart());
 		parameters.put("endTime", caseData.getEnd());
+		parameters.put("caseUrl", basePath + "/cases/details/" + caseData.getCaseId());
+
 		var subject = messages.getMessage("CaseDataRecievedEmail.subject");
 
-		var email = new CaseEmail(subject, null, parameters);
-
+		var email = new CaseEmail(subject, EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, parameters);
 		return sendMail(email);
 	}
 }

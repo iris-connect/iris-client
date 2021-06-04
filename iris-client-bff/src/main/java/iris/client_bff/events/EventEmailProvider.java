@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +35,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class EventEmailProvider extends EmailProvider {
 
+	@Value("${iris.client.basePath}")
+	private String basePath;
+
 	public EventEmailProvider(EmailSender emailSender, MessageSourceAccessor messages) {
 		super(emailSender, messages);
 	}
@@ -44,10 +48,11 @@ public class EventEmailProvider extends EmailProvider {
 		parameters.put("externalId", eventData.getRefId());
 		parameters.put("startTime", eventData.getRequestStart());
 		parameters.put("endTime", eventData.getRequestEnd());
+		parameters.put("eventUrl", basePath + "/events/details/" + eventData.getId());
+
 		var subject = messages.getMessage("EventDataRecievedEmail.subject");
 
 		var email = new EventEmail(subject, EmailTemplates.Keys.EVENT_DATA_RECIEVED_MAIL_FTLH, parameters);
-
 		return sendMail(email);
 	}
 }

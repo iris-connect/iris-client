@@ -85,12 +85,13 @@ public class IndexCaseController {
 		if (caseDataRequest.isPresent()) {
 			Optional<IndexCaseDetailsDTO> result = caseDataRequest.map(it -> indexCaseService.update(it, update)).map(IndexCaseMapper::mapDetailed);
 
-			if (update.getStatus() == IndexCaseStatusDTO.DATA_RECEIVED) {
-				caseEmailProvider.sendDataRecievedEmail(result.get());
-			}
+			if (result.isPresent()) {
+				if (update.getStatus() == IndexCaseStatusDTO.DATA_RECEIVED) {
+					caseEmailProvider.sendDataRecievedEmail(result.get());
+				}
 
-			if (result.isPresent())
 				return ok(result.get());
+			}
 		}
 
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
