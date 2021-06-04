@@ -3,6 +3,10 @@ package iris.client_bff.config;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
+import freemarker.cache.TemplateLookupContext;
+import freemarker.cache.TemplateLookupResult;
+import freemarker.cache.TemplateLookupStrategy;
+import freemarker.core.HTMLOutputFormat;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import io.vavr.collection.Array;
@@ -17,13 +21,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 /**
@@ -32,7 +39,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 @org.springframework.context.annotation.Configuration
 @Slf4j
 @RequiredArgsConstructor
-class EmailConfiguration {
+class EmailConfig {
 
 	@Value("${spring.mail.templates.path:#{null}}")
 	private File mailTemplatesPath;
@@ -40,24 +47,7 @@ class EmailConfiguration {
 	private final I18nProperties i18nProperties;
 
 	@Bean
-	EmailTemplates emailTemplates(FreeMarkerConfigurer configurer) {
-		return new EmailTemplates() {
-
-			Configuration config = configurer.getConfiguration();
-
-			@Override
-			@SneakyThrows
-			public String expandTemplate(Key key, @Nullable Locale locale, Map<String, ? extends Object> placeholders) {
-
-				var template = config.getTemplate(key.getKey(), locale);
-
-				return FreeMarkerTemplateUtils.processTemplateIntoString(template, placeholders);
-			}
-		};
-	}
-
-	@Bean
-	FreeMarkerConfigurer mailTemplatesConfigurer() throws IOException {
+	FreeMarkerConfig mailTemplatesConfigurer() throws IOException {
 
 		var templateLoaders = new ArrayList<TemplateLoader>();
 
@@ -76,6 +66,11 @@ class EmailConfiguration {
 
 		var freeMarkerConfigurer = new FreeMarkerConfigurer();
 		freeMarkerConfigurer.setPreTemplateLoaders(templateLoaders.toArray(TemplateLoader[]::new));
+
+		var settings = new Properties();
+		settings.put("incompatible_improvements", Configuration.VERSION_2_3_30.toString());
+		freeMarkerConfigurer.setFreemarkerSettings(settings);
+
 		return freeMarkerConfigurer;
 	}
 
@@ -92,13 +87,23 @@ class EmailConfiguration {
 
 		var configuration = mailTemplatesConfigurer().getConfiguration();
 
+		// disable locale lookup to be able to check the existence of all templates.
+		configuration.setTemplateLookupStrategy(new TemplateLookupStrategy() {
+
+			@Override
+			public TemplateLookupResult lookup(TemplateLookupContext ctx) throws IOException {
+				return ctx.lookupWithAcquisitionStrategy(ctx.getTemplateName());
+			}
+		});
+
 		Array.of(EmailTemplates.Keys.values())
 				.crossProduct(List.ofAll(locales))
 				.forEach(it -> {
 
 					try {
 
-						var template = configuration.getTemplate(it._1.getKey(), it._2);
+						var key = it._1.getKey().replace(".ftl", it._2.toLanguageTag() + ".ftl");
+						var template = configuration.getTemplate(key, it._2);
 						FreeMarkerTemplateUtils.processTemplateIntoString(template, null);
 
 					} catch (IOException | TemplateException e) {
@@ -106,6 +111,36 @@ class EmailConfiguration {
 					}
 				});
 
+		configuration.unsetTemplateLookupStrategy();
+
 		log.info("Successfully verified email texts for locales {}.", locales);
+	}
+
+	/**
+	 * @author Jens Kutzsche
+	 */
+	@Component
+	@RequiredArgsConstructor
+	final class FreeMarkerEmailTemplates implements EmailTemplates {
+
+		private final Configuration config;
+
+		@Override
+		@SneakyThrows
+		public String expandTemplate(Key key, @Nullable Locale locale, Map<String, ? extends Object> placeholders) {
+
+			var template = config.getTemplate(key.getKey(), locale);
+
+			return FreeMarkerTemplateUtils.processTemplateIntoString(template, placeholders);
+		}
+
+		@Override
+		@SneakyThrows
+		public EmailType getTemplateType(Key key, Locale locale) {
+
+			var template = config.getTemplate(key.getKey(), locale);
+
+			return template.getOutputFormat() instanceof HTMLOutputFormat ? EmailType.HTML : EmailType.TEXT;
+		}
 	}
 }

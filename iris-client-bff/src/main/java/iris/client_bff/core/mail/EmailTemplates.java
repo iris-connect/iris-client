@@ -14,15 +14,21 @@ public interface EmailTemplates {
 	/**
 	 * Expands the template with the given {@link Key} and placeholders in the language of the given locale.
 	 *
-	 * @param key
-	 *            must not be {@literal null}.
-	 * @param placeholders
-	 *            must not be {@literal null}.
-	 * @param locale
-	 *            can be {@literal null}.
+	 * @param key must not be {@literal null}.
+	 * @param locale can be {@literal null}.
+	 * @param placeholders must not be {@literal null}.
 	 * @return will never be {@literal null}.
 	 */
 	String expandTemplate(Key key, @Nullable Locale locale, Map<String, ? extends Object> placeholders);
+
+	/**
+	 * Returns the type of the template with the given {@link Key} in the language of the given locale.
+	 *
+	 * @param key must not be {@literal null}.
+	 * @param locale can be {@literal null}.
+	 * @return will never be {@literal null}.
+	 */
+	EmailType getTemplateType(Key key, @Nullable Locale locale);
 
 	/**
 	 * A template key.
@@ -39,7 +45,9 @@ public interface EmailTemplates {
 	}
 
 	/**
-	 * Predefined keys to be usable with the application.
+	 * Predefined keys to be usable with the application. The key name is converted to the template name. Thereby "_FTL"
+	 * becomes the file extension ".ftl" and other "_" become "-". Always use one of Freemarker's two default endings
+	 * "ftlh" for HTML templates - in this case HTML mails - and "ftl" for text mails.
 	 *
 	 * @author Oliver Drotbohm
 	 * @author Jens Kutzsche
@@ -53,7 +61,11 @@ public interface EmailTemplates {
 
 		@Override
 		public String getKey() {
-			return name().toLowerCase(Locale.US).replace('_', '-').concat(".ftl");
+			return name().toLowerCase(Locale.US).replace("_ftl", ".ftl").replace('_', '-');
 		}
+	}
+
+	enum EmailType {
+		HTML, TEXT;
 	}
 }

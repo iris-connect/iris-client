@@ -2,6 +2,7 @@ package iris.client_bff.core.mail;
 
 import io.vavr.control.Try;
 import iris.client_bff.core.EmailAddress;
+import iris.client_bff.core.mail.EmailTemplates.EmailType;
 import iris.client_bff.core.mail.EmailTemplates.Key;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,11 +11,13 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
@@ -22,6 +25,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -79,7 +84,14 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 
 		return !initialized
 				? Try.success(null)
-				: Try.run(() -> internalSender.send(email.toMailMessage(templates, mailProperties)));
+				: Try.run(() -> {
+
+					if (email.toMailType(templates) == EmailType.HTML) {
+						internalSender.send(email.toHmtlMail(templates, mailProperties, internalSender));
+					} else {
+						internalSender.send(email.toSimpleMail(templates, mailProperties));
+					}
+				});
 	}
 
 	/*
@@ -115,9 +127,22 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 		 * @param environment
 		 * @return
 		 */
-		SimpleMailMessage toMailMessage(EmailTemplates templates, MailProperties mailProperties);
+		SimpleMailMessage toSimpleMail(EmailTemplates templates, MailProperties mailProperties);
 
-		String getBody(EmailTemplates templates);
+		/**
+		 * Composes a {@link MimeMailMessage} using the given {@link EmailTemplates} and {@link CoreProperties}.
+		 *
+		 * @param templates must not be {@literal null}.
+		 * @param configuration must not be {@literal null}.
+		 * @param mailProperties
+		 * @param internalSender
+		 * @param environment
+		 * @return
+		 */
+		MimeMessage toHmtlMail(EmailTemplates templates, MailProperties mailProperties,
+				@NonNull JavaMailSenderImpl internalSender) throws MessagingException;
+
+		EmailType toMailType(EmailTemplates templates);
 	}
 
 	/**
@@ -151,20 +176,45 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 		private final Locale locale;
 
 		@Override
-		public SimpleMailMessage toMailMessage(EmailTemplates templates, @NonNull MailProperties mailProperties) {
+		public SimpleMailMessage toSimpleMail(EmailTemplates templates, @NonNull MailProperties mailProperties) {
 
 			var message = new SimpleMailMessage();
 			message.setFrom(determineSender(mailProperties));
 			message.setTo(determineReceipient(mailProperties));
 			message.setSubject(subject);
 			message.setText(getBody(templates));
-			message.setSentDate(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+			message.setSentDate(Date.from(Instant.now()));
 
 			if (log.isDebugEnabled()) {
 				log.debug("Mail message created: " + message);
 			}
 
 			return message;
+		}
+
+		@Override
+		public MimeMessage toHmtlMail(EmailTemplates templates, @NonNull MailProperties mailProperties,
+				@NonNull JavaMailSenderImpl internalSender) throws MessagingException {
+
+			MimeMessage message = internalSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+			helper.setFrom(determineSender(mailProperties));
+			helper.setTo(determineReceipient(mailProperties));
+			helper.setSubject(subject);
+			helper.setText(getBody(templates), true);
+			helper.setSentDate(Date.from(Instant.now()));
+
+			if (log.isDebugEnabled()) {
+				log.debug("Mail message created: " + message);
+			}
+
+			return message;
+		}
+
+		@Override
+		public EmailType toMailType(EmailTemplates templates) {
+			return templates.getTemplateType(template, locale);
 		}
 
 		private String determineSender(MailProperties mailProperties) {
@@ -187,8 +237,7 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 							: FixedConfiguredRecipient.of(EmailAddress.of(fixRecipient.trim()), to).toInternetAddress();
 		}
 
-		@Override
-		public String getBody(EmailTemplates templates) {
+		private String getBody(EmailTemplates templates) {
 			return templates.expandTemplate(template, locale, placeholders);
 		}
 

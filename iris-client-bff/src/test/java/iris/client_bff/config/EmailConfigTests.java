@@ -16,6 +16,7 @@ package iris.client_bff.config;
 
 import static org.assertj.core.api.Assertions.*;
 
+import freemarker.template.Configuration;
 import iris.client_bff.IrisWebIntegrationTest;
 import lombok.RequiredArgsConstructor;
 
@@ -24,28 +25,27 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 /**
  * @author Jens Kutzsche
  */
 @IrisWebIntegrationTest
 @RequiredArgsConstructor
-class EmailConfigurationTests {
+class EmailConfigTests {
 
-	private final FreeMarkerConfigurer freemarkerConfigurer;
+	private final Configuration freemarkerConfig;
 
 	@Test
 	void getTemplate() throws Exception {
 
 		var templateModel = Map.of("recipientName", "Name", "text", "Der Text", "senderName", "Sender");
 
-		var template = freemarkerConfigurer.getConfiguration().getTemplate("test-mail.ftl", Locale.GERMAN);
+		var template = freemarkerConfig.getTemplate("test-mail.ftlh", Locale.GERMAN);
 		var body = FreeMarkerTemplateUtils.processTemplateIntoString(template, templateModel);
 
 		assertThat(body).contains("Name", "Der Text", "Sender", "Gesundheitsamt", "Hallo");
 
-		template = freemarkerConfigurer.getConfiguration().getTemplate("test-mail.ftl", Locale.ENGLISH);
+		template = freemarkerConfig.getTemplate("test-mail.ftl", Locale.ENGLISH);
 		body = FreeMarkerTemplateUtils.processTemplateIntoString(template, templateModel);
 
 		assertThat(body).contains("Name", "Der Text", "Sender", "Health Department", "Hi");
