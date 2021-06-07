@@ -23,6 +23,7 @@ import iris.client_bff.events.eps.DataProviderClient;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.model.Location;
 import iris.client_bff.events.web.dto.DataRequestClient;
+import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
@@ -52,6 +53,7 @@ public class EventDataRequestService {
 	private final SearchClient searchClient;
 	private final ProxyServiceClient proxyClient;
 	private final DataProviderClient epsDataRequestClient;
+	private final EventEmailProvider eventEmailProvider;
 
 	public Page<EventDataRequest> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
@@ -77,8 +79,7 @@ public class EventDataRequestService {
 		return repository.save(request);
 	}
 
-	public EventDataRequest createDataRequest(DataRequestClient request)
-			throws IRISDataRequestException {
+	public EventDataRequest createDataRequest(DataRequestClient request) throws IRISDataRequestException {
 
 		var providerId = request.getProviderId();
 		var locationId = request.getLocationId();
@@ -104,15 +105,15 @@ public class EventDataRequestService {
 		}
 
 		var dataRequest = new EventDataRequest(
-				request.getExternalRequestId(),
-				request.getName(),
-				request.getStart(),
-				request.getEnd(),
-				request.getComment(),
-				request.getRequestDetails(),
-				null,
-				location,
-				announcementToken);
+			request.getExternalRequestId(),
+			request.getName(),
+			request.getStart(),
+			request.getEnd(),
+			request.getComment(),
+			request.getRequestDetails(),
+			null,
+			location,
+			announcementToken);
 
 		try {
 			dataRequest.setStatus(Status.DATA_REQUESTED);
@@ -164,5 +165,11 @@ public class EventDataRequestService {
 
 	public int getCountWithStatus(Status status) {
 		return repository.getCountWithStatus(status);
+	}
+
+	public void sendDataRecievedEmail(EventDataRequest updated, EventStatusDTO status) {
+		if (status == EventStatusDTO.DATA_RECEIVED) {
+			eventEmailProvider.sendDataRecievedEmail(updated);
+		}
 	}
 }

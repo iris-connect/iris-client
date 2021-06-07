@@ -6,12 +6,10 @@ import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionRepository;
-import iris.client_bff.events.EventEmailProvider;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.DataRequestClient;
 import iris.client_bff.events.web.dto.DataRequestDetails;
-import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
 import iris.client_bff.events.web.dto.Guest;
@@ -51,7 +49,6 @@ public class EventDataRequestController {
 
 	private EventDataRequestService dataRequestService;
 	private EventDataSubmissionRepository submissionRepo;
-	private EventEmailProvider eventEmailProvider;
 
 	private ModelMapper modelMapper;
 
@@ -116,9 +113,7 @@ public class EventDataRequestController {
 		if (dataRequest.isPresent()) {
 			EventDataRequest updated = dataRequestService.update(dataRequest.get(), patch);
 
-			if (patch.getStatus() == EventStatusDTO.DATA_RECEIVED) {
-				eventEmailProvider.sendDataRecievedEmail(updated);
-			}
+			dataRequestService.sendDataRecievedEmail(updated, patch.getStatus());
 
 			DataRequestDetails requestDetails = mapDataRequestDetails(updated);
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);

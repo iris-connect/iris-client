@@ -6,12 +6,10 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequest.Status;
-import iris.client_bff.cases.CaseEmailProvider;
 import iris.client_bff.cases.IndexCaseService;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
-import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import lombok.AllArgsConstructor;
 
@@ -41,7 +39,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class IndexCaseController {
 
 	IndexCaseService indexCaseService;
-	CaseEmailProvider caseEmailProvider;
 
 	@GetMapping
 	@ResponseStatus(OK)
@@ -86,9 +83,7 @@ public class IndexCaseController {
 			Optional<IndexCaseDetailsDTO> result = caseDataRequest.map(it -> indexCaseService.update(it, update)).map(IndexCaseMapper::mapDetailed);
 
 			if (result.isPresent()) {
-				if (update.getStatus() == IndexCaseStatusDTO.DATA_RECEIVED) {
-					caseEmailProvider.sendDataRecievedEmail(result.get());
-				}
+				indexCaseService.sendDataRecievedEmail(result.get(), update.getStatus());
 
 				return ok(result.get());
 			}
