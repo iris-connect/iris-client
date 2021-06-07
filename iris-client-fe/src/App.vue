@@ -5,10 +5,10 @@
         alt="IRIS Logo"
         class="shrink mt-3 mr-4"
         contain
-        src="@/assets/logo.png"
+        src="@/assets/logo-iris-connect.png"
         transition="scale-transition"
-        height="100"
-        max-width="100"
+        height="150"
+        max-width="150"
       />
       <template v-if="authenticated">
         <template v-for="link in links">
@@ -17,6 +17,7 @@
             :key="link.name"
             :to="link.path"
             :exact="link.meta.menuExact"
+            :disabled="link.meta.disabled"
             text
           >
             {{ link.meta.menuName }}

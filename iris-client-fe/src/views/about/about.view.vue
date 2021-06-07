@@ -57,6 +57,37 @@
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
+
+      <v-row justify="center" align="center">
+        <v-col>
+          <v-row justify="center" align="center">
+            <v-img
+              alt="IRIS Logo"
+              class="shrink mt-3 mr-4"
+              contain
+              src="@/assets/logo-inoeg.svg"
+              transition="scale-transition"
+              height="150"
+              width="300"
+              max-width="600"
+            />
+          </v-row>
+        </v-col>
+        <v-col>
+          <v-row justify="center" align="center">
+            <v-img
+              alt="IRIS Logo"
+              class="shrink mt-3 mr-4"
+              contain
+              src="@/assets/logo-bss.svg"
+              transition="scale-transition"
+              height="150"
+              width="300"
+              max-width="600"
+            />
+          </v-row>
+        </v-col>
+      </v-row>
     </v-card>
 
     <v-card>

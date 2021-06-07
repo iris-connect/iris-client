@@ -12,7 +12,6 @@
       <div class="d-flex align-center">
         <div class="w-100" v-on="on" v-bind="attrs">
           <v-text-field
-            class="picker-input-field"
             v-model="model"
             prepend-icon="mdi-clock"
             v-bind="$attrs"
