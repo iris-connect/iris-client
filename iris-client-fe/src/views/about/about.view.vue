@@ -68,6 +68,7 @@
               src="@/assets/logo-inoeg.svg"
               transition="scale-transition"
               height="150"
+              width="300"
               max-width="600"
             />
           </v-row>
@@ -81,6 +82,7 @@
               src="@/assets/logo-bss.svg"
               transition="scale-transition"
               height="150"
+              width="300"
               max-width="600"
             />
           </v-row>
