@@ -62,3 +62,4 @@ channels: # defines all the channels that we want to open when starting the serv
         ca_certificate_files: [ "$DIR/../../certs/$TRUSTED_CA_CRT" ]
         certificate_file: "$DIR/../../certs/$PROXY_CLIENT_CERT"
         key_file: "$DIR/../../certs/$PROXY_CLIENT_CERT_KEY"
+        verify_client: false
