@@ -14,10 +14,9 @@
  *******************************************************************************/
 package iris.client_bff.events;
 
-import static iris.client_bff.search_client.eps.LocationMapper.*;
+import static iris.client_bff.search_client.eps.LocationMapper.map;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-import io.vavr.control.Option;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.eps.DataProviderClient;
@@ -28,7 +27,6 @@ import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
 import iris.client_bff.search_client.SearchClient;
-import iris.client_bff.search_client.eps.LocationMapper;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +35,6 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -148,6 +145,14 @@ public class EventDataRequestService {
 		if (patch.getStatus() != null) {
 			var status = Status.valueOf(patch.getStatus().name());
 			dataRequest.setStatus(status);
+
+			try {
+				proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
+				epsDataRequestClient.abortGuestListDataRequest(dataRequest);
+			} catch (IRISAnnouncementException | IRISDataRequestException e) {
+				e.printStackTrace();
+				// TODO: Should we do something here?
+			}
 		}
 
 		return repository.save(dataRequest);
