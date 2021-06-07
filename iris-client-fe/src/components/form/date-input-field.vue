@@ -11,7 +11,6 @@
         <div class="w-100" v-on="on" v-bind="attrs">
           <v-text-field
             slot="activator"
-            class="picker-input-field"
             v-model="dateFormatted"
             prepend-icon="mdi-calendar"
             v-bind="$attrs"
