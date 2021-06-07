@@ -96,20 +96,19 @@ class EmailConfig {
 			}
 		});
 
-		Array.of(EmailTemplates.Keys.values())
-				.crossProduct(List.ofAll(locales))
-				.forEach(it -> {
+		Array.of(EmailTemplates.Keys.values()).crossProduct(List.ofAll(locales)).forEach(it -> {
 
-					try {
+			try {
 
-						var key = it._1.getKey().replace(".ftl", it._2.toLanguageTag() + ".ftl");
-						var template = configuration.getTemplate(key, it._2);
-						FreeMarkerTemplateUtils.processTemplateIntoString(template, null);
+				var key = it._1.getKey().replace(".ftl", "_" + it._2.toLanguageTag() + ".ftl");
+				log.info("This is the needed file:" + key);
+				var template = configuration.getTemplate(key, it._2);
+				FreeMarkerTemplateUtils.processTemplateIntoString(template, null);
 
-					} catch (IOException | TemplateException e) {
-						throw new IllegalStateException(String.format("Missing email text for %s!", it));
-					}
-				});
+			} catch (IOException | TemplateException e) {
+				throw new IllegalStateException(String.format("Missing email text for %s!", it));
+			}
+		});
 
 		configuration.unsetTemplateLookupStrategy();
 
