@@ -2,6 +2,7 @@ package iris.client_bff.search_client.web;
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.search_client.SearchClient;
+import iris.client_bff.search_client.exceptions.IRISSearchException;
 import iris.client_bff.search_client.web.dto.LocationInformation;
 import iris.client_bff.search_client.web.dto.LocationQueryResult;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.net.ConnectException;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -69,4 +72,20 @@ class LocationSearchControllerIntegrationTests {
 				.then()
 				.statusCode(400);
 	}
+
+	@Test
+	@WithMockUser
+	public void error_serviceNotAvailable() throws Exception {
+
+		var searchString = "Test";
+
+		when(searchClient.search(anyString(), any(Pageable.class)))
+				.thenThrow(new IRISSearchException(new ConnectException("Connection refused")));
+
+		given().mockMvc(mvc)
+				.when().get("/search/?search={search_keyword}", searchString)
+				.then()
+				.statusCode(503);
+	}
+
 }

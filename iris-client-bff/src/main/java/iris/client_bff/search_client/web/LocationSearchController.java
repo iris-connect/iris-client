@@ -1,5 +1,6 @@
 package iris.client_bff.search_client.web;
 
+import iris.client_bff.core.web.error.ResponseStatusExceptionMapper;
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
 import iris.client_bff.search_client.web.dto.LocationQueryResult;
@@ -16,6 +17,7 @@ import javax.validation.constraints.Size;
 @RequiredArgsConstructor
 public class LocationSearchController {
 
+	private final ResponseStatusExceptionMapper exceptionMapper;
 	private final SearchClient searchClient;
 
 	@GetMapping("/search")
@@ -26,8 +28,7 @@ public class LocationSearchController {
 		try {
 			return searchClient.search(search, pageable);
 		} catch (IRISSearchException e) {
-			// TODO handle
-			throw new RuntimeException(e);
+			throw exceptionMapper.mapError(e);
 		}
 	}
 }

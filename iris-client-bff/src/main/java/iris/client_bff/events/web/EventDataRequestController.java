@@ -2,6 +2,7 @@ package iris.client_bff.events.web;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+import iris.client_bff.core.web.error.ResponseStatusExceptionMapper;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.EventDataRequestService;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class EventDataRequestController {
 
+	private final ResponseStatusExceptionMapper exceptionMapper;
 	private EventDataRequestService dataRequestService;
 	private EventDataSubmissionRepository submissionRepo;
 
@@ -52,12 +54,8 @@ public class EventDataRequestController {
 
 			return ok(mapDataRequestDetails(result));
 
-		} catch (IRISDataRequestException e) {
-
-			// TODO this is an interim solution to improve UX and display user friendly error messages
-			return ResponseEntity
-					.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ErrorMessages.EVENT_DATA_REQUEST_CREATION);
+		} catch (Exception e) {
+			throw exceptionMapper.mapError(e);
 		}
 	}
 

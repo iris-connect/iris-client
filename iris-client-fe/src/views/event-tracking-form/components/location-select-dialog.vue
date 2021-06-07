@@ -140,10 +140,11 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   get dataTableModel() {
+    const locationList = this.locationList || {};
     return {
-      page: this.locationList.page + 1,
-      itemsPerPage: this.locationList.size,
-      itemsLength: this.locationList.totalElements,
+      page: locationList.page + 1,
+      itemsPerPage: locationList.size,
+      itemsLength: locationList.totalElements,
       data: this.locationRows,
       headers: [
         {
