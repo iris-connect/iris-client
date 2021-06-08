@@ -23,7 +23,7 @@ import javax.net.ssl.X509TrustManager;
  * <code>spring.mail.properties.mail.smtp.socketFactory.fallback = false</code>
  * </p>
  */
-class GreenMailSSLSocketFactory extends SSLSocketFactory {
+public class GreenMailSSLSocketFactory extends SSLSocketFactory {
 
 	private SSLSocketFactory factory;
 

@@ -16,6 +16,7 @@ package iris.client_bff.config;
 
 import static org.assertj.core.api.Assertions.*;
 
+import freemarker.core.HTMLOutputFormat;
 import freemarker.template.Configuration;
 import iris.client_bff.IrisWebIntegrationTest;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ class EmailConfigTests {
 
 		var templateModel = Map.of("recipientName", "Name", "text", "Der Text", "senderName", "Sender");
 
-		var template = freemarkerConfig.getTemplate("test-mail.ftlh", Locale.GERMAN);
+		var template = freemarkerConfig.getTemplate("test-mail.ftl", Locale.GERMAN);
 		var body = FreeMarkerTemplateUtils.processTemplateIntoString(template, templateModel);
 
 		assertThat(body).contains("Name", "Der Text", "Sender", "Gesundheitsamt", "Hallo");
@@ -49,5 +50,11 @@ class EmailConfigTests {
 		body = FreeMarkerTemplateUtils.processTemplateIntoString(template, templateModel);
 
 		assertThat(body).contains("Name", "Der Text", "Sender", "Health Department", "Hi");
+
+		template = freemarkerConfig.getTemplate("test-html-mail.ftlh", Locale.GERMAN);
+		body = FreeMarkerTemplateUtils.processTemplateIntoString(template, templateModel);
+
+		assertThat(template.getOutputFormat()).isExactlyInstanceOf(HTMLOutputFormat.class);
+		assertThat(body).contains("Name", "Der Text", "Sender", "Gesundheitsamt", "Hallo");
 	}
 }
