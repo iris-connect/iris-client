@@ -52,7 +52,9 @@
                     "CHANGELOG.md",
                     "**/pom.xml",
                     "infrastructure/deployment/docker-compose.yml",
-                    "infrastructure/deployment/docker-compose-ext-postgres.yml"
+                    "infrastructure/deployment/docker-compose-ext-postgres.yml",
+                    "FE-THIRD-PARTY-LICENSES.md",
+                    "BFF-THIRD-PARTY-LICENSES.md"
                 ]
             }
         ],
