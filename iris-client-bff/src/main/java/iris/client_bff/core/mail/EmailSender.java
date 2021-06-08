@@ -5,7 +5,6 @@ import iris.client_bff.core.EmailAddress;
 import iris.client_bff.core.mail.EmailTemplates.EmailType;
 import iris.client_bff.core.mail.EmailTemplates.Key;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +45,7 @@ import org.springframework.util.Assert;
 @Slf4j
 public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 
+	private static final String MISSING_FIXED_SENDER = "A fixed sender must be set using the \"spring.mail.properties.fix-sender\" property.";
 	private final @NonNull JavaMailSenderImpl internalSender;
 	private final @NonNull EmailTemplates templates;
 	private final @NonNull MailProperties mailProperties;
@@ -101,6 +101,9 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 
+		Assert.notNull(mailProperties.getProperties().get(AbstractTemplatedEmail.FIX_SENDER_PROPERTY_KEY),
+				MISSING_FIXED_SENDER);
+
 		log.info("Email sender initialized and ready to send out emails.");
 
 		this.initialized = true;
@@ -152,7 +155,7 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 	 * @author Jens Kutzsche
 	 * @author Oliver Drotbohm
 	 */
-	@AllArgsConstructor(access = AccessLevel.PROTECTED)
+	@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 	public abstract static class AbstractTemplatedEmail implements TemplatedEmail {
 
 		/**
@@ -168,7 +171,6 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 		private static final String IRIS_DOMAIN = "@iris-connect.de";
 		private static final String IRIS_DOMAIN2 = "@iris-gateway.de";
 
-		private final @Getter Sender from;
 		private final @Getter Recipient to;
 		private final @Getter String subject;
 		private final @Getter Key template;
@@ -218,13 +220,7 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 		}
 
 		private String determineSender(MailProperties mailProperties) {
-
-			Map<String, String> properties = mailProperties.getProperties();
-			var fixSender = properties.get(FIX_SENDER_PROPERTY_KEY);
-
-			return StringUtils.isNoneBlank(fixSender)
-					? FixedConfiguredSender.of(mailProperties, this.from).toInternetAddress()
-					: this.from.toInternetAddress();
+			return FixedConfiguredSender.of(mailProperties).toInternetAddress();
 		}
 
 		private String determineReceipient(@NonNull MailProperties mailProperties) {
@@ -267,16 +263,16 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 			private final @Getter String fullName;
 			private final @Getter EmailAddress emailAddress;
 
-			public static FixedConfiguredSender of(MailProperties mailProperties, Sender originSenderAsFallback) {
+			public static FixedConfiguredSender of(MailProperties mailProperties) {
 
 				var properties = mailProperties.getProperties();
 				var fixSender = properties.get(FIX_SENDER_PROPERTY_KEY);
 				var fixSenderName = properties.get(FIX_SENDER_NAME_PROPERTY_KEY);
 
-				var fullName = fixSenderName != null ? fixSenderName.trim() : originSenderAsFallback.getFullName();
-				var emailAddress = fixSender != null
-						? EmailAddress.of(fixSender.trim())
-						: originSenderAsFallback.getEmailAddress();
+				Assert.hasLength(fixSender, MISSING_FIXED_SENDER);
+
+				var fullName = StringUtils.defaultString(fixSenderName).trim();
+				var emailAddress = EmailAddress.of(fixSender.trim());
 
 				return new FixedConfiguredSender(fullName, emailAddress);
 			}

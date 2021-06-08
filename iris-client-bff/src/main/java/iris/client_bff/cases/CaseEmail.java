@@ -9,6 +9,6 @@ class CaseEmail extends AbstractTemplatedEmail {
 
 	CaseEmail(String subject, EmailTemplates.Key template, Map<String, ? extends Object> placeholders) {
 
-		super(null, null, subject, template, placeholders, null);
+		super(null, subject, template, placeholders, null);
 	}
 }
