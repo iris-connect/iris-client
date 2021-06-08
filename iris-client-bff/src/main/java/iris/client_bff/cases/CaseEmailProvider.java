@@ -21,7 +21,8 @@ import iris.client_bff.core.mail.EmailSender;
 import iris.client_bff.core.mail.EmailTemplates;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -44,7 +45,7 @@ public class CaseEmailProvider extends EmailProvider {
 	}
 
 	public Try<Void> sendDataRecievedEmail(IndexCaseDetailsDTO caseData) {
-		var parameters = Collections.<String, Object> emptyMap();
+		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("caseId", caseData.getName());
 		parameters.put("externalId", caseData.getExternalCaseId());
 		parameters.put("startTime", caseData.getStart());

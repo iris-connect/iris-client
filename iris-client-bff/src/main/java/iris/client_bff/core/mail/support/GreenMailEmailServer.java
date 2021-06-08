@@ -1,6 +1,5 @@
 package iris.client_bff.core.mail.support;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
@@ -13,7 +12,6 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -43,33 +41,13 @@ import com.icegreen.greenmail.util.ServerSetup;
 @Slf4j
 @Service()
 @Profile("dev_env")
-@RequiredArgsConstructor
-class GreenMailEmailServer implements FactoryBean<GreenMail>, InitializingBean, DisposableBean {
+class GreenMailEmailServer implements FactoryBean<GreenMail>, DisposableBean {
 
 	private static final int DELETE_AFTER_SECONDS = 600;
 
-	private final MailProperties properties;
 	private GreenMail greenMail;
 
-	@Scheduled(fixedDelay = 15000)
-	public void receiveAndLogMessages() {
-
-		if (greenMail != null) {
-
-			var deleteThreshold = Instant.now().minusSeconds(DELETE_AFTER_SECONDS);
-			var messages = greenMail.getReceivedMessages();
-
-			Arrays.stream(messages)
-					.filter(it -> deleteOldMessages(it, deleteThreshold))
-					.filter(GreenMailEmailServer::isMailNew)
-					.peek(GreenMailEmailServer::markSeen)
-					.forEach(GreenMailEmailServer::logMessage);
-		}
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-
+	GreenMailEmailServer(MailProperties properties) {
 		log.debug("GreenMail: Mail server is started…");
 
 		var smtp = ServerSetup.SMTPS.dynamicPort();
@@ -82,7 +60,11 @@ class GreenMailEmailServer implements FactoryBean<GreenMail>, InitializingBean, 
 			imap = imap.dynamicPort();
 		}
 
-		greenMail = new GreenMail(ServerSetup.verbose(new ServerSetup[] { smtp, imap }));
+		greenMail = new GreenMail(
+			ServerSetup.verbose(
+				new ServerSetup[] {
+					smtp,
+					imap }));
 		greenMail.start();
 
 		var smtpPort = greenMail.getSmtps().getPort();
@@ -90,7 +72,23 @@ class GreenMailEmailServer implements FactoryBean<GreenMail>, InitializingBean, 
 
 		properties.setPort(smtpPort);
 
-		log.info("GreenMail: Mail server successfully started on localhost: SMPTS = {}; IMAPS = {}", smtpPort, imapPort);
+		log.info("GreenMail: Mail server successfully started on localhost: SMTPS = {}; IMAPS = {}", smtpPort, imapPort);
+	}
+
+	@Scheduled(fixedDelay = 15000)
+	public void receiveAndLogMessages() {
+
+		if (greenMail != null) {
+
+			var deleteThreshold = Instant.now().minusSeconds(DELETE_AFTER_SECONDS);
+			var messages = greenMail.getReceivedMessages();
+
+			Arrays.stream(messages)
+				.filter(it -> deleteOldMessages(it, deleteThreshold))
+				.filter(GreenMailEmailServer::isMailNew)
+				.peek(GreenMailEmailServer::markSeen)
+				.forEach(GreenMailEmailServer::logMessage);
+		}
 	}
 
 	@Override
@@ -126,7 +124,8 @@ class GreenMailEmailServer implements FactoryBean<GreenMail>, InitializingBean, 
 				return false;
 			}
 
-		} catch (MessagingException e) {}
+		} catch (MessagingException e) {
+		}
 
 		return true;
 	}
@@ -144,7 +143,8 @@ class GreenMailEmailServer implements FactoryBean<GreenMail>, InitializingBean, 
 
 		try {
 			message.setFlag(Flag.SEEN, true);
-		} catch (MessagingException e) {}
+		} catch (MessagingException e) {
+		}
 	}
 
 	private static void logMessage(MimeMessage message) {
@@ -153,8 +153,7 @@ class GreenMailEmailServer implements FactoryBean<GreenMail>, InitializingBean, 
 
 			var from = Arrays.toString(message.getFrom());
 			var to = Arrays.toString(message.getAllRecipients());
-			var date = message.getReceivedDate() == null ? ""
-					: DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT.format(message.getReceivedDate());
+			var date = message.getReceivedDate() == null ? "" : DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT.format(message.getReceivedDate());
 			var subject = String.valueOf(message.getSubject());
 
 			log.debug("Mail received {from {}; to {}; at {}; subject {}}", from, to, date, subject);

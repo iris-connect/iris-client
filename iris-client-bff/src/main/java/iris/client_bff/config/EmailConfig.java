@@ -101,7 +101,6 @@ class EmailConfig {
 			try {
 
 				var key = it._1.getKey().replace(".ftl", "_" + it._2.toLanguageTag() + ".ftl");
-				log.info("This is the needed file:" + key);
 				var template = configuration.getTemplate(key, it._2);
 				FreeMarkerTemplateUtils.processTemplateIntoString(template, null);
 

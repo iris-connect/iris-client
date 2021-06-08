@@ -20,7 +20,8 @@ import iris.client_bff.core.mail.EmailSender;
 import iris.client_bff.core.mail.EmailTemplates;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -43,7 +44,7 @@ public class EventEmailProvider extends EmailProvider {
 	}
 
 	public Try<Void> sendDataRecievedEmail(EventDataRequest eventData) {
-		var parameters = Collections.<String, Object> emptyMap();
+		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("eventId", eventData.getName());
 		parameters.put("externalId", eventData.getRefId());
 		parameters.put("startTime", eventData.getRequestStart());
