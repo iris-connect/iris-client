@@ -44,7 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class IndexCaseControllerIntegrationTest {
+class IndexCaseControllerTest {
 
 	private final String baseUrl = "/data-requests-client/cases";
 
