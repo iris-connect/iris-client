@@ -20,11 +20,17 @@ vars:
     source: env
     variable: TRUSTED_CA_CRT
     type: string        
+  PROXY_URL:
+   source: env
+   variable: PROXY_URL
+   type: string
+
 name: "$PROXY_OP"
 directory:
   type: api
   settings:
     jsonrpc_client:
+      proxy_url: "$PROXY_URL"
       tls:
         certificate_file: "$DIR/../../certs/$PROXY_CLIENT_CERT"
         key_file: "$DIR/../../certs/$PROXY_CLIENT_CERT_KEY"

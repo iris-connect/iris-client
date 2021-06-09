@@ -53,8 +53,7 @@ services:
       SECURITY_JWT_JWT_SHARED_SECRET:
     restart: unless-stopped
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
 
   # IRIS Client Frontend for users
   iris-frontend:
@@ -87,8 +86,8 @@ services:
       EPS_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
       TRUSTED_CA_CRT:
-      HTTPS_PROXY:
-      PROXY_URL:
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ""
 
     command: ["--level", "debug", "server", "run"]
 
@@ -106,7 +105,7 @@ services:
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
-      HTTPS_PROXY:
+      HTTPS_PROXY: ${PROXY_URL}
       TRUSTED_CA_CRT:
     command: ["--level", "trace", "run", "private"]
 
@@ -123,8 +122,8 @@ services:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
-      HTTPS_PROXY:
-      PROXY_URL:
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ""
       TRUSTED_CA_CRT:
     command: ["--level", "trace", "server", "run"]
 
