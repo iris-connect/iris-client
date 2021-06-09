@@ -1,5 +1,7 @@
 #!/bin/bash
 
+NAMESPACE="inoeg"
+
 printf "\n  Build components and prepare release  \n\n"
 
 # Get version number from version tag if this given
@@ -13,18 +15,20 @@ echo "version = $VERSION"
 COMMIT=$2
 
 printf "\n  Build NGINX image  \n\n"
-docker build -t inoeg/iris-client-nginx ./infrastructure/docker/nginx/
+NGINX_IMAGE_NAME="$NAMESPACE/iris-client-nginx"
+docker build -t $NGINX_IMAGE_NAME ./infrastructure/docker/nginx/
 
-docker tag genty/iris-client-nginx genty/iris-client-nginx:$VERSION
-docker tag genty/iris-client-nginx genty/iris-client-nginx:$MAJOR
-docker tag genty/iris-client-nginx genty/iris-client-nginx:$MAJOR.$MINOR
+docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$VERSION
+docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MAJOR
+docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MAJOR.$MINOR
 
 printf "\n  Build FE image  \n\n"
-docker build -t inoeg/iris-client-frontend ./iris-client-fe/
+FE_IMAGE_NAME="$NAMESPACE/iris-client-frontend"
+docker build -t $FE_IMAGE_NAME ./iris-client-fe/
 
-docker tag genty/iris-client-frontend genty/iris-client-frontend:$VERSION
-docker tag genty/iris-client-frontend genty/iris-client-frontend:$MAJOR
-docker tag genty/iris-client-frontend genty/iris-client-frontend:$MAJOR.$MINOR
+docker tag $FE_IMAGE_NAME $FE_IMAGE_NAME:$VERSION
+docker tag $FE_IMAGE_NAME $FE_IMAGE_NAME:$MAJOR
+docker tag $FE_IMAGE_NAME $FE_IMAGE_NAME:$MAJOR.$MINOR
 
 printf "\n  Set version to POMs and build BFF image and JAR  \n\n"
 # Set new version in pom.xml using mvn versions:set command
@@ -35,9 +39,10 @@ mvn versions:set -DnewVersion=$VERSION -DprocessAllModules=true
 mvn -B clean package spring-boot:repackage spring-boot:build-image -Dspring-boot.build-image.publish=false
 mkdir release && cp ./iris-client-bff/target/*.jar release
 
-docker tag genty/iris-client-bff:$VERSION genty/iris-client-bff:latest
-docker tag genty/iris-client-bff:$VERSION genty/iris-client-bff:$MAJOR
-docker tag genty/iris-client-bff:$VERSION genty/iris-client-bff:$MAJOR.$MINOR
+BFF_IMAGE_NAME="$NAMESPACE/iris-client-bff"
+docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:latest
+docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:$MAJOR
+docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:$MAJOR.$MINOR
 
 # Generate third-party dependencies for BFF and move them to root
 # File will be uploaded to github by @semantic-release/github
@@ -73,20 +78,20 @@ cd ../../
 
 printf "\n  Push images and tags to docker registry  \n\n"
 
-docker push genty/iris-client-bff:$VERSION
-docker push genty/iris-client-bff:latest
-docker push genty/iris-client-bff:$MAJOR
-docker push genty/iris-client-bff:$MAJOR.$MINOR
+docker push $BFF_IMAGE_NAME:$VERSION
+docker push $BFF_IMAGE_NAME:latest
+docker push $BFF_IMAGE_NAME:$MAJOR
+docker push $BFF_IMAGE_NAME:$MAJOR.$MINOR
 
-docker push genty/iris-client-frontend:$VERSION
-docker push genty/iris-client-frontend:latest
-docker push genty/iris-client-frontend:$MAJOR
-docker push genty/iris-client-frontend:$MAJOR.$MINOR
+docker push $FE_IMAGE_NAME:$VERSION
+docker push $FE_IMAGE_NAME:latest
+docker push $FE_IMAGE_NAME:$MAJOR
+docker push $FE_IMAGE_NAME:$MAJOR.$MINOR
 
-docker push genty/iris-client-nginx:$VERSION
-docker push genty/iris-client-nginx:latest
-docker push genty/iris-client-nginx:$MAJOR
-docker push genty/iris-client-nginx:$MAJOR.$MINOR
+docker push $NGINX_IMAGE_NAME:$VERSION
+docker push $NGINX_IMAGE_NAME:latest
+docker push $NGINX_IMAGE_NAME:$MAJOR
+docker push $NGINX_IMAGE_NAME:$MAJOR.$MINOR
 
 printf "\n  COMPLETED: Build components and prepare release  \n\n"
 
