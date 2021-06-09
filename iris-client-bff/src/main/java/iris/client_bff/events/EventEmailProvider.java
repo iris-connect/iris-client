@@ -15,8 +15,10 @@
 package iris.client_bff.events;
 
 import io.vavr.control.Try;
+import iris.client_bff.core.EmailAddress;
 import iris.client_bff.core.mail.EmailProvider;
 import iris.client_bff.core.mail.EmailSender;
+import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail.ConfiguredRecipient;
 import iris.client_bff.core.mail.EmailTemplates;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,6 +41,11 @@ public class EventEmailProvider extends EmailProvider {
 	@Value("${iris.client.basePath}")
 	private String basePath;
 
+	@Value("${spring.mail.properties.recipient.event.data-recieved.name}")
+	private String dataRecievedRecipientName;
+	@Value("${spring.mail.properties.recipient.event.data-recieved.email}")
+	private String dataRecievedRecipientEmail;
+
 	public EventEmailProvider(EmailSender emailSender, MessageSourceAccessor messages) {
 		super(emailSender, messages);
 	}
@@ -53,7 +60,17 @@ public class EventEmailProvider extends EmailProvider {
 
 		var subject = messages.getMessage("EventDataRecievedEmail.subject");
 
-		var email = new EventEmail(subject, EmailTemplates.Keys.EVENT_DATA_RECIEVED_MAIL_FTLH, parameters);
+		EventEmail email;
+
+		if (dataRecievedRecipientName != null && dataRecievedRecipientEmail != null) {
+			EmailAddress emailAddress = EmailAddress.of(dataRecievedRecipientEmail);
+			ConfiguredRecipient recipient = new ConfiguredRecipient(dataRecievedRecipientName, emailAddress);
+
+			email = new EventEmail(recipient, subject, EmailTemplates.Keys.EVENT_DATA_RECIEVED_MAIL_FTLH, parameters);
+		} else {
+			email = new EventEmail(null, subject, EmailTemplates.Keys.EVENT_DATA_RECIEVED_MAIL_FTLH, parameters);
+		}
+
 		return sendMail(email);
 	}
 }

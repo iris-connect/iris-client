@@ -16,8 +16,10 @@ package iris.client_bff.cases;
 
 import io.vavr.control.Try;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
+import iris.client_bff.core.EmailAddress;
 import iris.client_bff.core.mail.EmailProvider;
 import iris.client_bff.core.mail.EmailSender;
+import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail.ConfiguredRecipient;
 import iris.client_bff.core.mail.EmailTemplates;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +42,11 @@ public class CaseEmailProvider extends EmailProvider {
 	@Value("${iris.client.basePath}")
 	private String basePath;
 
+	@Value("${spring.mail.properties.recipient.case.data-recieved.name}")
+	private String dataRecievedRecipientName;
+	@Value("${spring.mail.properties.recipient.case.data-recieved.email}")
+	private String dataRecievedRecipientEmail;
+
 	public CaseEmailProvider(EmailSender emailSender, MessageSourceAccessor messages) {
 		super(emailSender, messages);
 	}
@@ -54,7 +61,17 @@ public class CaseEmailProvider extends EmailProvider {
 
 		var subject = messages.getMessage("CaseDataRecievedEmail.subject");
 
-		var email = new CaseEmail(subject, EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, parameters);
+		CaseEmail email;
+
+		if (dataRecievedRecipientName != null && dataRecievedRecipientEmail != null) {
+			EmailAddress emailAddress = EmailAddress.of(dataRecievedRecipientEmail);
+			ConfiguredRecipient recipient = new ConfiguredRecipient(dataRecievedRecipientName, emailAddress);
+
+			email = new CaseEmail(recipient, subject, EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, parameters);
+		} else {
+			email = new CaseEmail(null, subject, EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, parameters);
+		}
+
 		return sendMail(email);
 	}
 }

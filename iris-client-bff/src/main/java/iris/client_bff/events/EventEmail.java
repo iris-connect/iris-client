@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class EventEmail extends AbstractTemplatedEmail {
 
-	EventEmail(String subject, EmailTemplates.Key template, Map<String, ? extends Object> placeholders) {
+	EventEmail(Recipient recipient, String subject, EmailTemplates.Key template, Map<String, ? extends Object> placeholders) {
 
-		super(null, subject, template, placeholders, null);
+		super(recipient, subject, template, placeholders, null);
 	}
 }

@@ -60,38 +60,37 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 	public Try<Object> testConnection() {
 
 		return Try.success(internalSender) //
-				.filter(it -> it.getHost() != null, () -> new IllegalStateException("No email server host configured!"))
-				.andThenTry(JavaMailSenderImpl::testConnection)
-				.map(it -> new Object() {
+			.filter(it -> it.getHost() != null, () -> new IllegalStateException("No email server host configured!"))
+			.andThenTry(JavaMailSenderImpl::testConnection)
+			.map(it -> new Object() {
 
-					@Override
-					@SuppressWarnings("null")
-					public String toString() {
-						return it.getHost() + ":" + it.getPort();
-					}
-				});
+				@Override
+				@SuppressWarnings("null")
+				public String toString() {
+					return it.getHost() + ":" + it.getPort();
+				}
+			});
 	}
 
 	/**
 	 * Sends the given {@link TemplatedEmail}.
 	 *
-	 * @param email must not be {@literal null}.
+	 * @param email
+	 *            must not be {@literal null}.
 	 * @return
 	 */
 	public Try<Void> sendMail(TemplatedEmail email) {
 
 		Assert.notNull(email, "Email must not be null!");
 
-		return !initialized
-				? Try.success(null)
-				: Try.run(() -> {
+		return !initialized ? Try.success(null) : Try.run(() -> {
 
-					if (email.toMailType(templates) == EmailType.HTML) {
-						internalSender.send(email.toHmtlMail(templates, mailProperties, internalSender));
-					} else {
-						internalSender.send(email.toSimpleMail(templates, mailProperties));
-					}
-				});
+			if (email.toMailType(templates) == EmailType.HTML) {
+				internalSender.send(email.toHmtlMail(templates, mailProperties, internalSender));
+			} else {
+				internalSender.send(email.toSimpleMail(templates, mailProperties));
+			}
+		});
 	}
 
 	/*
@@ -101,8 +100,7 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 
-		Assert.notNull(mailProperties.getProperties().get(AbstractTemplatedEmail.FIX_SENDER_PROPERTY_KEY),
-				MISSING_FIXED_SENDER);
+		Assert.notNull(mailProperties.getProperties().get(AbstractTemplatedEmail.FIX_SENDER_PROPERTY_KEY), MISSING_FIXED_SENDER);
 
 		log.info("Email sender initialized and ready to send out emails.");
 
@@ -124,8 +122,10 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 		/**
 		 * Composes a {@link SimpleMailMessage} using the given {@link EmailTemplates} and {@link CoreProperties}.
 		 *
-		 * @param templates must not be {@literal null}.
-		 * @param configuration must not be {@literal null}.
+		 * @param templates
+		 *            must not be {@literal null}.
+		 * @param configuration
+		 *            must not be {@literal null}.
 		 * @param mailProperties
 		 * @param environment
 		 * @return
@@ -135,15 +135,17 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 		/**
 		 * Composes a {@link MimeMailMessage} using the given {@link EmailTemplates} and {@link CoreProperties}.
 		 *
-		 * @param templates must not be {@literal null}.
-		 * @param configuration must not be {@literal null}.
+		 * @param templates
+		 *            must not be {@literal null}.
+		 * @param configuration
+		 *            must not be {@literal null}.
 		 * @param mailProperties
 		 * @param internalSender
 		 * @param environment
 		 * @return
 		 */
-		MimeMessage toHmtlMail(EmailTemplates templates, MailProperties mailProperties,
-				@NonNull JavaMailSenderImpl internalSender) throws MessagingException;
+		MimeMessage toHmtlMail(EmailTemplates templates, MailProperties mailProperties, @NonNull JavaMailSenderImpl internalSender)
+			throws MessagingException;
 
 		EmailType toMailType(EmailTemplates templates);
 	}
@@ -195,8 +197,8 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 		}
 
 		@Override
-		public MimeMessage toHmtlMail(EmailTemplates templates, @NonNull MailProperties mailProperties,
-				@NonNull JavaMailSenderImpl internalSender) throws MessagingException {
+		public MimeMessage toHmtlMail(EmailTemplates templates, @NonNull MailProperties mailProperties, @NonNull JavaMailSenderImpl internalSender)
+			throws MessagingException {
 
 			MimeMessage message = internalSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -227,10 +229,11 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 
 			var fixRecipient = mailProperties.getProperties().get(FIX_RECIPIENT_PROPERTY_KEY);
 
-			return StringUtils.isBlank(fixRecipient) || this.to.getEmailAddress().endsWith(IRIS_DOMAIN)
-					|| this.to.getEmailAddress().endsWith(IRIS_DOMAIN2)
-							? to.toInternetAddress()
-							: FixedConfiguredRecipient.of(EmailAddress.of(fixRecipient.trim()), to).toInternetAddress();
+			return StringUtils.isBlank(fixRecipient)
+				|| this.to.getEmailAddress().endsWith(IRIS_DOMAIN)
+				|| this.to.getEmailAddress().endsWith(IRIS_DOMAIN2)
+					? to.toInternetAddress()
+					: FixedConfiguredRecipient.of(EmailAddress.of(fixRecipient.trim()), to).toInternetAddress();
 		}
 
 		private String getBody(EmailTemplates templates) {
@@ -253,9 +256,11 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 			}
 		}
 
-		public interface Sender extends InternetAdressSource {}
+		public interface Sender extends InternetAdressSource {
+		}
 
-		public interface Recipient extends InternetAdressSource {}
+		public interface Recipient extends InternetAdressSource {
+		}
 
 		@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 		static class FixedConfiguredSender implements Sender {
@@ -286,11 +291,17 @@ public class EmailSender implements ApplicationListener<ApplicationReadyEvent> {
 
 			public static FixedConfiguredRecipient of(EmailAddress fixRecipient, Recipient originRecipient) {
 
-				var fullName = originRecipient.getFullName() + " - "
-						+ originRecipient.getEmailAddress().toString().replace("@", " {at} ");
+				var fullName = originRecipient.getFullName() + " - " + originRecipient.getEmailAddress().toString().replace("@", " {at} ");
 
 				return new FixedConfiguredRecipient(fullName, fixRecipient);
 			}
+		}
+
+		@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
+		public static class ConfiguredRecipient implements Recipient {
+
+			private final @Getter String fullName;
+			private final @Getter EmailAddress emailAddress;
 		}
 	}
 }
