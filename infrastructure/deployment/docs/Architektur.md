@@ -4,7 +4,7 @@ IRIS connect baut auf einer dezentralen Architektur auf. Dabei findet der Austau
 
 Das folgende Schaubild visualisiert die Architektur und erklärt die zentralen Bestandteile. 
 
-![IRIS C2 Architektur](IRIS-C2-with-EPS.jpg)
+![IRIS C2 Architektur](images/IRIS-C2-with-EPS.jpg)
 
 | Nummer | Erklärung |
 |-|-|
