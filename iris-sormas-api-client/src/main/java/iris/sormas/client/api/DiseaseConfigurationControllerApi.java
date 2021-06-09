@@ -1,6 +1,7 @@
 package iris.sormas.client.api;
 
 import iris.sormas.client.invoker.ApiClient;
+
 import iris.sormas.client.model.DiseaseConfigurationDto;
 
 import java.util.ArrayList;
@@ -22,118 +23,117 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
-		date = "2021-01-28T10:11:24.562208+01:00[Europe/Berlin]")
-@Component("iris.sormas.client.api.DiseaseConfigurationControllerApi")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-06-08T06:53:38.737461+02:00[Europe/Berlin]")@Component("iris.sormas.client.api.DiseaseConfigurationControllerApi")
 public class DiseaseConfigurationControllerApi {
-	private ApiClient apiClient;
+    private ApiClient apiClient;
 
-	public DiseaseConfigurationControllerApi() {
-		this(new ApiClient());
-	}
+    public DiseaseConfigurationControllerApi() {
+        this(new ApiClient());
+    }
 
-	@Autowired
-	public DiseaseConfigurationControllerApi(ApiClient apiClient) {
-		this.apiClient = apiClient;
-	}
+    @Autowired
+    public DiseaseConfigurationControllerApi(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
-	public ApiClient getApiClient() {
-		return apiClient;
-	}
+    public ApiClient getApiClient() {
+        return apiClient;
+    }
 
-	public void setApiClient(ApiClient apiClient) {
-		this.apiClient = apiClient;
-	}
+    public void setApiClient(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @param since The since parameter
-	 * @return List&lt;DiseaseConfigurationDto&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<DiseaseConfigurationDto> getAllDiseaseConfigurations(Long since) throws RestClientException {
-		Object postBody = null;
-		// verify the required parameter 'since' is set
-		if (since == null) {
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
-					"Missing the required parameter 'since' when calling getAllDiseaseConfigurations");
-		}
-		// create path and map variables
-		final Map<String, Object> uriVariables = new HashMap<String, Object>();
-		uriVariables.put("since", since);
-		String path = UriComponentsBuilder.fromPath("/diseaseconfigurations/all/{since}").buildAndExpand(uriVariables)
-				.toUriString();
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param since The since parameter
+     * @return List&lt;DiseaseConfigurationDto&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<DiseaseConfigurationDto> getAllDiseaseConfigurations(Long since) throws RestClientException {
+        Object postBody = null;
+        // verify the required parameter 'since' is set
+        if (since == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'since' when calling getAllDiseaseConfigurations");
+        }
+        // create path and map variables
+        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        uriVariables.put("since", since);
+        String path = UriComponentsBuilder.fromPath("/diseaseconfigurations/all/{since}").buildAndExpand(uriVariables).toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = {  };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = {};
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		String[] authNames = new String[] { "basicAuth" };
+        ParameterizedTypeReference<List<DiseaseConfigurationDto>> returnType = new ParameterizedTypeReference<List<DiseaseConfigurationDto>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @return List&lt;String&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<String> getAllUuids11() throws RestClientException {
+        Object postBody = null;
+        String path = UriComponentsBuilder.fromPath("/diseaseconfigurations/uuids").build().toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		ParameterizedTypeReference<List<DiseaseConfigurationDto>> returnType = new ParameterizedTypeReference<List<DiseaseConfigurationDto>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = {  };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @return List&lt;String&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<String> getAllUuids8() throws RestClientException {
-		Object postBody = null;
-		String path = UriComponentsBuilder.fromPath("/diseaseconfigurations/uuids").build().toUriString();
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        ParameterizedTypeReference<List<String>> returnType = new ParameterizedTypeReference<List<String>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param body The body parameter
+     * @return List&lt;DiseaseConfigurationDto&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<DiseaseConfigurationDto> getByUuids14(List<String> body) throws RestClientException {
+        Object postBody = body;
+        String path = UriComponentsBuilder.fromPath("/diseaseconfigurations/query").build().toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = {};
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		String[] authNames = new String[] { "basicAuth" };
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		ParameterizedTypeReference<List<String>> returnType = new ParameterizedTypeReference<List<String>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
-
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @param body The body parameter
-	 * @return List&lt;DiseaseConfigurationDto&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<DiseaseConfigurationDto> getByUuids11(List<String> body) throws RestClientException {
-		Object postBody = body;
-		String path = UriComponentsBuilder.fromPath("/diseaseconfigurations/query").build().toUriString();
-
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
-
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = { "application/json; charset&#x3D;UTF-8" };
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
-
-		String[] authNames = new String[] { "basicAuth" };
-
-		ParameterizedTypeReference<List<DiseaseConfigurationDto>> returnType = new ParameterizedTypeReference<List<DiseaseConfigurationDto>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
+        ParameterizedTypeReference<List<DiseaseConfigurationDto>> returnType = new ParameterizedTypeReference<List<DiseaseConfigurationDto>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
 }

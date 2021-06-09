@@ -5,8 +5,8 @@ All URIs are relative to */sormas-rest*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getAllFeatureConfigurations**](FeatureConfigurationControllerApi.md#getAllFeatureConfigurations) | **GET** /featureconfigurations/all/{since} | 
-[**getAllUuids11**](FeatureConfigurationControllerApi.md#getAllUuids11) | **GET** /featureconfigurations/uuids | 
-[**getByUuids16**](FeatureConfigurationControllerApi.md#getByUuids16) | **POST** /featureconfigurations/query | 
+[**getAllUuids14**](FeatureConfigurationControllerApi.md#getAllUuids14) | **GET** /featureconfigurations/uuids | 
+[**getByUuids19**](FeatureConfigurationControllerApi.md#getByUuids19) | **POST** /featureconfigurations/query | 
 [**getDeletedUuids**](FeatureConfigurationControllerApi.md#getDeletedUuids) | **GET** /featureconfigurations/deleted/{since} | 
 
 <a name="getAllFeatureConfigurations"></a>
@@ -29,6 +29,7 @@ ApiClient defaultClient = Configuration.getDefaultApiClient();
 HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
+
 
 FeatureConfigurationControllerApi apiInstance = new FeatureConfigurationControllerApi();
 Long since = 789L; // Long | 
@@ -53,16 +54,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getAllUuids11"></a>
-# **getAllUuids11**
-> List&lt;String&gt; getAllUuids11()
+<a name="getAllUuids14"></a>
+# **getAllUuids14**
+> List&lt;String&gt; getAllUuids14()
 
 
 
@@ -81,12 +82,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 FeatureConfigurationControllerApi apiInstance = new FeatureConfigurationControllerApi();
 try {
-    List<String> result = apiInstance.getAllUuids11();
+    List<String> result = apiInstance.getAllUuids14();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling FeatureConfigurationControllerApi#getAllUuids11");
+    System.err.println("Exception when calling FeatureConfigurationControllerApi#getAllUuids14");
     e.printStackTrace();
 }
 ```
@@ -100,16 +102,16 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids16"></a>
-# **getByUuids16**
-> List&lt;FeatureConfigurationDto&gt; getByUuids16(body)
+<a name="getByUuids19"></a>
+# **getByUuids19**
+> List&lt;FeatureConfigurationDto&gt; getByUuids19(body)
 
 
 
@@ -128,13 +130,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 FeatureConfigurationControllerApi apiInstance = new FeatureConfigurationControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<FeatureConfigurationDto> result = apiInstance.getByUuids16(body);
+    List<FeatureConfigurationDto> result = apiInstance.getByUuids19(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling FeatureConfigurationControllerApi#getByUuids16");
+    System.err.println("Exception when calling FeatureConfigurationControllerApi#getByUuids19");
     e.printStackTrace();
 }
 ```
@@ -151,7 +154,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -179,6 +182,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 FeatureConfigurationControllerApi apiInstance = new FeatureConfigurationControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -202,7 +206,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

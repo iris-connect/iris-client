@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**creationDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**changeDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**creationDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**changeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **uuid** | **String** |  |  [optional]
 **name** | **String** |  |  [optional]
 **epidCode** | **String** |  |  [optional]
@@ -12,3 +12,4 @@ Name | Type | Description | Notes
 **archived** | **Boolean** |  |  [optional]
 **externalID** | **String** |  |  [optional]
 **area** | [**AreaReferenceDto**](AreaReferenceDto.md) |  |  [optional]
+**country** | [**CountryReferenceDto**](CountryReferenceDto.md) |  |  [optional]

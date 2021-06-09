@@ -4,13 +4,13 @@ All URIs are relative to */sormas-rest*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getAll4**](DistrictControllerApi.md#getAll4) | **GET** /districts/all/{since} | 
-[**getAllUuids9**](DistrictControllerApi.md#getAllUuids9) | **GET** /districts/uuids | 
-[**getByUuids12**](DistrictControllerApi.md#getByUuids12) | **POST** /districts/query | 
+[**getAll6**](DistrictControllerApi.md#getAll6) | **GET** /districts/all/{since} | 
+[**getAllUuids12**](DistrictControllerApi.md#getAllUuids12) | **GET** /districts/uuids | 
+[**getByUuids15**](DistrictControllerApi.md#getByUuids15) | **POST** /districts/query | 
 
-<a name="getAll4"></a>
-# **getAll4**
-> List&lt;DistrictDto&gt; getAll4(since)
+<a name="getAll6"></a>
+# **getAll6**
+> List&lt;DistrictDto&gt; getAll6(since)
 
 
 
@@ -29,13 +29,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 DistrictControllerApi apiInstance = new DistrictControllerApi();
 Long since = 789L; // Long | 
 try {
-    List<DistrictDto> result = apiInstance.getAll4(since);
+    List<DistrictDto> result = apiInstance.getAll6(since);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling DistrictControllerApi#getAll4");
+    System.err.println("Exception when calling DistrictControllerApi#getAll6");
     e.printStackTrace();
 }
 ```
@@ -52,16 +53,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getAllUuids9"></a>
-# **getAllUuids9**
-> List&lt;String&gt; getAllUuids9()
+<a name="getAllUuids12"></a>
+# **getAllUuids12**
+> List&lt;String&gt; getAllUuids12()
 
 
 
@@ -80,12 +81,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 DistrictControllerApi apiInstance = new DistrictControllerApi();
 try {
-    List<String> result = apiInstance.getAllUuids9();
+    List<String> result = apiInstance.getAllUuids12();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling DistrictControllerApi#getAllUuids9");
+    System.err.println("Exception when calling DistrictControllerApi#getAllUuids12");
     e.printStackTrace();
 }
 ```
@@ -99,16 +101,16 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids12"></a>
-# **getByUuids12**
-> List&lt;DistrictDto&gt; getByUuids12(body)
+<a name="getByUuids15"></a>
+# **getByUuids15**
+> List&lt;DistrictDto&gt; getByUuids15(body)
 
 
 
@@ -127,13 +129,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 DistrictControllerApi apiInstance = new DistrictControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<DistrictDto> result = apiInstance.getByUuids12(body);
+    List<DistrictDto> result = apiInstance.getByUuids15(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling DistrictControllerApi#getByUuids12");
+    System.err.println("Exception when calling DistrictControllerApi#getByUuids15");
     e.printStackTrace();
 }
 ```
@@ -150,7 +153,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

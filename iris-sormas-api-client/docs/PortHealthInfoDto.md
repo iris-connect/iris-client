@@ -3,13 +3,13 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**creationDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**changeDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**creationDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**changeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **uuid** | **String** |  |  [optional]
 **airlineName** | **String** |  |  [optional]
 **flightNumber** | **String** |  |  [optional]
-**departureDateTime** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**arrivalDateTime** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**departureDateTime** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**arrivalDateTime** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **freeSeating** | [**YesNoUnknown**](YesNoUnknown.md) |  |  [optional]
 **seatNumber** | **String** |  |  [optional]
 **departureAirport** | **String** |  |  [optional]

@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
+	<groupId>iris-gateway</groupId>
 	<artifactId>iris-sormas-api-client</artifactId>
 	<packaging>jar</packaging>
-	<groupId>iris-gateway</groupId>
-	<name>SORMAS-API-Client</name>
-	<version>1.55.0-SNAPSHOT</version>
+	<name>iris-sormas-api-client</name>
+	<version>1.61.0-SNAPSHOT</version>
 	<url>https://github.com/swagger-api/swagger-codegen</url>
 	<description>Swagger Java</description>
 	<scm>
@@ -39,14 +37,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>2.4.2</version>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -131,17 +121,14 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.6.1</version>
 				<configuration>
-					<source>11</source>
-					<target>11</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.10.4</version>
-				<configuration>
-					<source>8</source>
-				</configuration>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -201,7 +188,7 @@
 		<dependency>
 			<groupId>jakarta.annotation</groupId>
 			<artifactId>jakarta.annotation-api</artifactId>
-			<version>1.3.5</version>
+			<version>2.0.0</version>
 		</dependency>
 
 		<dependency>
@@ -256,7 +243,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<swagger-annotations-version>2.0.0</swagger-annotations-version>
 		<spring-web-version>4.3.9.RELEASE</spring-web-version>
-		<jackson-version>2.12.2</jackson-version>
+		<jackson-version>2.8.9</jackson-version>
 		<maven-plugin-version>1.0.0</maven-plugin-version>
 		<junit-version>4.13.1</junit-version>
 	</properties>

@@ -5,11 +5,16 @@ All URIs are relative to */sormas-rest*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getAllCases**](CaseControllerApi.md#getAllCases) | **GET** /cases/all/{since} | 
-[**getAllUuids5**](CaseControllerApi.md#getAllUuids5) | **GET** /cases/uuids | 
+[**getAllUuids6**](CaseControllerApi.md#getAllUuids6) | **GET** /cases/uuids | 
 [**getArchivedUuidsSince**](CaseControllerApi.md#getArchivedUuidsSince) | **GET** /cases/archived/{since} | 
-[**getByUuids6**](CaseControllerApi.md#getByUuids6) | **POST** /cases/query | 
+[**getByPersonUuids**](CaseControllerApi.md#getByPersonUuids) | **POST** /cases/query/persons | 
+[**getByUuid**](CaseControllerApi.md#getByUuid) | **GET** /cases/{uuid} | 
+[**getByUuids7**](CaseControllerApi.md#getByUuids7) | **POST** /cases/query | 
 [**getDeletedUuidsSince**](CaseControllerApi.md#getDeletedUuidsSince) | **GET** /cases/deleted/{since} | 
 [**getDuplicates**](CaseControllerApi.md#getDuplicates) | **POST** /cases/getduplicates | 
+[**getDuplicates1**](CaseControllerApi.md#getDuplicates1) | **POST** /cases/getduplicates/{reportDateThreshold} | 
+[**getIndexDetailedList**](CaseControllerApi.md#getIndexDetailedList) | **POST** /cases/detailedIndexList | 
+[**getIndexList**](CaseControllerApi.md#getIndexList) | **POST** /cases/indexList | 
 [**postCases**](CaseControllerApi.md#postCases) | **POST** /cases/push | 
 
 <a name="getAllCases"></a>
@@ -32,6 +37,7 @@ ApiClient defaultClient = Configuration.getDefaultApiClient();
 HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
+
 
 CaseControllerApi apiInstance = new CaseControllerApi();
 Long since = 789L; // Long | 
@@ -56,16 +62,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getAllUuids5"></a>
-# **getAllUuids5**
-> List&lt;String&gt; getAllUuids5()
+<a name="getAllUuids6"></a>
+# **getAllUuids6**
+> List&lt;String&gt; getAllUuids6()
 
 
 
@@ -84,12 +90,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CaseControllerApi apiInstance = new CaseControllerApi();
 try {
-    List<String> result = apiInstance.getAllUuids5();
+    List<String> result = apiInstance.getAllUuids6();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CaseControllerApi#getAllUuids5");
+    System.err.println("Exception when calling CaseControllerApi#getAllUuids6");
     e.printStackTrace();
 }
 ```
@@ -103,7 +110,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -131,6 +138,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CaseControllerApi apiInstance = new CaseControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -154,16 +162,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids6"></a>
-# **getByUuids6**
-> List&lt;CaseDataDto&gt; getByUuids6(body)
+<a name="getByPersonUuids"></a>
+# **getByPersonUuids**
+> List&lt;CaseDataDto&gt; getByPersonUuids(body)
 
 
 
@@ -182,13 +190,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CaseControllerApi apiInstance = new CaseControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<CaseDataDto> result = apiInstance.getByUuids6(body);
+    List<CaseDataDto> result = apiInstance.getByPersonUuids(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CaseControllerApi#getByUuids6");
+    System.err.println("Exception when calling CaseControllerApi#getByPersonUuids");
     e.printStackTrace();
 }
 ```
@@ -205,7 +214,111 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json; charset=UTF-8
+ - **Accept**: application/json; charset=UTF-8
+
+<a name="getByUuid"></a>
+# **getByUuid**
+> CaseDataDto getByUuid(uuid)
+
+
+
+### Example
+```java
+// Import classes:
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.CaseControllerApi;
+
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+// Configure HTTP basic authorization: basicAuth
+HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
+basicAuth.setUsername("YOUR USERNAME");
+basicAuth.setPassword("YOUR PASSWORD");
+
+
+CaseControllerApi apiInstance = new CaseControllerApi();
+String uuid = "uuid_example"; // String | 
+try {
+    CaseDataDto result = apiInstance.getByUuid(uuid);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling CaseControllerApi#getByUuid");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **uuid** | **String**|  |
+
+### Return type
+
+[**CaseDataDto**](CaseDataDto.md)
+
+### Authorization
+
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json; charset=UTF-8
+
+<a name="getByUuids7"></a>
+# **getByUuids7**
+> List&lt;CaseDataDto&gt; getByUuids7(body)
+
+
+
+### Example
+```java
+// Import classes:
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.CaseControllerApi;
+
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+// Configure HTTP basic authorization: basicAuth
+HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
+basicAuth.setUsername("YOUR USERNAME");
+basicAuth.setPassword("YOUR PASSWORD");
+
+
+CaseControllerApi apiInstance = new CaseControllerApi();
+List<String> body = Arrays.asList("body_example"); // List<String> | 
+try {
+    List<CaseDataDto> result = apiInstance.getByUuids7(body);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling CaseControllerApi#getByUuids7");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**List&lt;String&gt;**](String.md)|  | [optional]
+
+### Return type
+
+[**List&lt;CaseDataDto&gt;**](CaseDataDto.md)
+
+### Authorization
+
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -233,6 +346,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CaseControllerApi apiInstance = new CaseControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -256,7 +370,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -284,6 +398,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CaseControllerApi apiInstance = new CaseControllerApi();
 CasePersonDto body = new CasePersonDto(); // CasePersonDto | 
 try {
@@ -307,11 +422,173 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: application/json; charset=UTF-8
+ - **Accept**: application/json; charset=UTF-8
+
+<a name="getDuplicates1"></a>
+# **getDuplicates1**
+> List&lt;CasePersonDto&gt; getDuplicates1(reportDateThreshold, body)
+
+
+
+### Example
+```java
+// Import classes:
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.CaseControllerApi;
+
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+// Configure HTTP basic authorization: basicAuth
+HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
+basicAuth.setUsername("YOUR USERNAME");
+basicAuth.setPassword("YOUR PASSWORD");
+
+
+CaseControllerApi apiInstance = new CaseControllerApi();
+Integer reportDateThreshold = 56; // Integer | 
+CasePersonDto body = new CasePersonDto(); // CasePersonDto | 
+try {
+    List<CasePersonDto> result = apiInstance.getDuplicates1(reportDateThreshold, body);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling CaseControllerApi#getDuplicates1");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **reportDateThreshold** | **Integer**|  |
+ **body** | [**CasePersonDto**](CasePersonDto.md)|  | [optional]
+
+### Return type
+
+[**List&lt;CasePersonDto&gt;**](CasePersonDto.md)
+
+### Authorization
+
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json; charset=UTF-8
+ - **Accept**: application/json; charset=UTF-8
+
+<a name="getIndexDetailedList"></a>
+# **getIndexDetailedList**
+> PageCaseIndexDetailedDto getIndexDetailedList(offset, size)
+
+
+
+### Example
+```java
+// Import classes:
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.CaseControllerApi;
+
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+// Configure HTTP basic authorization: basicAuth
+HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
+basicAuth.setUsername("YOUR USERNAME");
+basicAuth.setPassword("YOUR PASSWORD");
+
+
+CaseControllerApi apiInstance = new CaseControllerApi();
+Integer offset = 56; // Integer | 
+Integer size = 56; // Integer | 
+try {
+    PageCaseIndexDetailedDto result = apiInstance.getIndexDetailedList(offset, size);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling CaseControllerApi#getIndexDetailedList");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **offset** | **Integer**|  | [optional]
+ **size** | **Integer**|  | [optional]
+
+### Return type
+
+[**PageCaseIndexDetailedDto**](PageCaseIndexDetailedDto.md)
+
+### Authorization
+
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json; charset=UTF-8
+
+<a name="getIndexList"></a>
+# **getIndexList**
+> PageCaseIndexDto getIndexList(offset, size)
+
+
+
+### Example
+```java
+// Import classes:
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.CaseControllerApi;
+
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+// Configure HTTP basic authorization: basicAuth
+HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
+basicAuth.setUsername("YOUR USERNAME");
+basicAuth.setPassword("YOUR PASSWORD");
+
+
+CaseControllerApi apiInstance = new CaseControllerApi();
+Integer offset = 56; // Integer | 
+Integer size = 56; // Integer | 
+try {
+    PageCaseIndexDto result = apiInstance.getIndexList(offset, size);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling CaseControllerApi#getIndexList");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **offset** | **Integer**|  | [optional]
+ **size** | **Integer**|  | [optional]
+
+### Return type
+
+[**PageCaseIndexDto**](PageCaseIndexDto.md)
+
+### Authorization
+
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
 <a name="postCases"></a>
@@ -334,6 +611,7 @@ ApiClient defaultClient = Configuration.getDefaultApiClient();
 HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
+
 
 CaseControllerApi apiInstance = new CaseControllerApi();
 List<CaseDataDto> body = Arrays.asList(new CaseDataDto()); // List<CaseDataDto> | 
@@ -358,7 +636,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
