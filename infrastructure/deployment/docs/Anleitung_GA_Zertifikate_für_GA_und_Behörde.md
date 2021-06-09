@@ -15,20 +15,22 @@ Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt s
 
 **TODO: Kontaktmöglichkeit oder Link auf contribution guideline**
 
+
 ## Inhaltsverzeichnis
 * [Zusammenfassung](#zusammenfassung)
-* [Welche Zertifikate gibt es?](#)
-* [Erforderliche Schritte seitens der Landesbehörde]()
-    * [Antragsprozess bei der Bundesdruckerei anstoßen]()
-    * [Ansprechpersonen in den Gesundheitsämtern erfassen]()
-    * [Domains für die Gesundheitsämter bereitstellen]()
-    * [Identitätsprüfung durchlaufen]()
-* [Erforderliche Schritte seitens des GA]()
-    * [Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei beantragen]()
-        * [Ansprechperson benennen]()
-        * [Zertifikate online beantragen]()
-        * [Zertifikate herunterladen]()
-        * [Zertifikate einrichten]()
+* [Welche Zertifikate müssen beantragt werden?](#welche-zertifikate-m-ssen-beantragt-werden-)
+* [Erforderliche Schritte seitens des Landes](#erforderliche-schritte-seitens-des-landes)
+    + [Antragsprozesses bei der Bundesdruckerei anstoßem](#antragsprozesses-bei-der-bundesdruckerei-ansto-em)
+    + [Organisationsvalidierung durchlaufen](#organisationsvalidierung-durchlaufen)
+    + [Zertifikatsverantwortliche Personen in den Gesundheitsämtern erfassen](#zertifikatsverantwortliche-personen-in-den-gesundheits-mtern-erfassen)
+    + [Domains für die Gesundheitsämter bereitstellen](#domains-f-r-die-gesundheits-mter-bereitstellen)
+* [Erforderliche Schritte seitens eines Gesundheitsamts](#erforderliche-schritte-seitens-eines-gesundheitsamts)
+    + [Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei beantragen](#zertifikate-nr-1-und-nr-2-bei-der-bundesdruckerei-beantragen)
+        - [Zertifikatsverantwortliche Person benennen](#zertifikatsverantwortliche-person-benennen)
+        - [Zertifikate online beantragen](#zertifikate-online-beantragen)
+        - [Zertifikate herunterladen](#zertifikate-herunterladen)
+        - [Zertifikate einrichten](#zertifikate-einrichten)
+    
 
 ## Zusammenfassung
 Für die Anbindung an IRIS auf Landesebene ist die Mitwirkung einer Landesbehörde empfohlen. 
@@ -56,7 +58,7 @@ Anwendungsfall: Identität des GA im Internet (TLS/HTTPS).
 2. Ein Signaturzertifikat für Vertreter:in des GA  
 Anwendungsfall: Identität des GA im EPS-Netzwerk.
 
-## Erforderliche Schritte seitens der Landesbehörde
+## Erforderliche Schritte seitens des Landes
 
 > Hinweis: Folgende Schritte beziehen sich auf Bundesländer, in denen eine Landesbehörde im Rahmen der Einführung von IRIS jedem GA eine (Sub-)Domain bereitstellt.
 
@@ -85,13 +87,13 @@ Bei der Kontaktaufnahme liefert die Behörde folgende Daten:
 Daraufhin übersendet die BDr der zeichnungsberechtigten Person ein Vollmacht-Schreiben, mit dem die BDr ermächtigt wird, im Auftrag der Behörde fachlich tätig zu werden und Zertifikate auszustellen. 
 Ein Scan der ausgefüllten und unterschriebene Vollmacht kann dann einfach im Confluence der BDR hochgeladen werden. 
 
-### Identitätsprüfung durchlaufen
-Im nächsten Schritt nimmt die Bundesdruckerei telefonisch Kontakt zur zeichnungsberechtigten Person auf, um die Behörde als Organisation zu validieren (eine sog. Organisationsvalidierung - kurz OV). 
+### Organisationsvalidierung durchlaufen
+Im nächsten Schritt nimmt die Bundesdruckerei telefonisch Kontakt zur zeichnungsberechtigten Person auf, um die Behörde als Organisation zu validieren. 
 Den genauen Ablauf dieses Vorgangs schildert die Bundesdruckerei dann im direkten Kontakt.
 
-<mark>**TODO: Ggf. die Identitätsprüfung skizzieren – dazu brauchen wir noch Infos.**</mark>
+<mark>**TODO: Ggf. die Organisationsvalidierung skizzieren – dazu brauchen wir noch Infos.**</mark>
 
-### Zertifikatsverantwortliche in den Gesundheitsämtern erfassen
+### Zertifikatsverantwortliche Personen in den Gesundheitsämtern erfassen
 Die Landesbehörde muss der Bundesdruckerei eine Liste der GÄ übermitteln, die Zertifikate erhalten sollen. 
 
 Je GA muss dafür eine zertifikatsverantwortliche Person und deren Erreichbarkeit angegeben werden. 
