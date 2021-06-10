@@ -2,6 +2,21 @@
 
 
 ## Vorwort
+Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei, sowie weitere, die im Anschluss selbstständig mit einem Script erstellt werden können, also ohne Zutun der Bundesdruckerei.
+
+Dieses Dokument erklärt die technischen Schritte, die Landesbehörden und Gesundheitsämter gemeinsam unternehmen müssen, um die Zertifikate zu beantragen bzw. zu erstellen und einzurichten.
+
+Allgemeine Erläuterungen zum Prozess bzgl. der Domains und dem Antragsprozess bei der Bundesdruckerei werden zur besseren Übersicht in der [prozessualen Installationsanleitung](Certificate-Process_Prod_organizational.md) erläutert.
+Diese wird an den entsprechenden Stellen verlinkt.
+
+Dieses Dokument nimmt an, dass IRIS über das jeweilige Bundesland gebündelt für alle Gesundheitsämter bezogen wird.
+Die Schritte für GÄ, die sich selbstständig, also unabhängig vom Land, an IRIS anschließen, unterscheiden sich stellenweise.
+
+Beim Rollout von IRIS werden die individuellen Bedürfnisse und Wünsche der Bundesländer berücksichtigt.
+Dadurch können sich von Land zu Land einige Unterschiede im Antragsprozess ergeben, auf die hier eingegangen wird.
+
+Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt sein, bitten wir um kurzen Hinweis.
+
 
 ## Welche Zertifikate müssen beantragt werden?
 Für die Anbindung an IRIS benötigt ein GA zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei (BDr) bzw. deren Vertrauensdiensteanbieter D-Trust:
@@ -16,11 +31,11 @@ Für die Anbindung an IRIS benötigt ein GA zwei Schlüsselpaare bzw. Zertifikat
 Liegen diese vor, müssen drei weitere Zertifikate vom GA oder dessen IT-Dienstleister, je nachdem, wer den IRIS-Client betreibt, erstellt werden. 
 Dafür ist kein Zutun der Bundesdruckerei nötig.
 
-3. Ein mTLS-Zertifikat für den EPS-Server des IRIS-Client-BFF des GA
+3. Ein mTLS-Zertifikat für den EPS-Server des IRIS-Client-BFF des GA  
    Anwendungsfall: Absicherung der Kommunikation zwischen EPS-Servern.
   
 
-4. Ein mTLS-Zertifikat für den EPS-Server des IRIS Private Proxy des GA
+4. Ein mTLS-Zertifikat für den EPS-Server des IRIS Private Proxy des GA  
    Anwendungsfall: Absicherung der Kommunikation zwischen EPS-Servern.
 
 
@@ -28,6 +43,25 @@ Dafür ist kein Zutun der Bundesdruckerei nötig.
    Anwendungsfall: Umsetzung der Datenschutzkonferenz-Anforderung an Betreiber von digitaler Kontaktdatenerfassung,
    wonach zusätzlich zur Transportverschlüsselung (TLS) eine zweite Verschlüsselungsschicht auf Anwendungsebene (Inhaltsverschlüsselung) umzusetzen ist.
 
+
+## Inhaltsverzeichnis
+
+* [Welche Zertifikate müssen beantragt werden?](#welche-zertifikate-m-ssen-beantragt-werden-)
+* [Erforderliche Schritte seitens der Landesbehörde](#erforderliche-schritte-seitens-der-landesbeh-rde)
+   + [Domains für die Gesundheitsämter bereitstellen](#domains-f-r-die-gesundheits-mter-bereitstellen)
+   + [DNS für die Domains konfigurieren](#dns-f-r-die-domains-konfigurieren)
+* [Erforderliche Schritte seitens eines Gesundheitsamts](#erforderliche-schritte-seitens-eines-gesundheitsamts)
+   + [Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei beantragen](#zertifikate-nr-1-und-nr-2-bei-der-bundesdruckerei-beantragen)
+      - [Zertifikate online beantragen](#zertifikate-online-beantragen)
+      - [Zertifikate herunterladen](#zertifikate-herunterladen)
+      - [Zertifikate Nr. 1 und Nr. 2 einrichten](#zertifikate-nr-1-und-nr-2-einrichten)
+* [Zertifikate Nr. 3 bis 5](#zertifikate-nr-3-bis-5)
+   + [Zertifikate erstellen](#zertifikate-erstellen)
+   + [Zertifikate einrichten](#zertifikate-einrichten)
+      - [Zertifikat Nr. 3 einrichten](#zertifikat-nr-3-einrichten)
+      - [Zertifikat Nr. 4 einrichten](#zertifikat-nr-4-einrichten)
+      - [Zertifikat Nr. 5 einrichten](#zertifikat-nr-5-einrichten)
+* [Zertifikate sicher verwahren](#zertifikate-sicher-verwahren)
 
 ## Erforderliche Schritte seitens der Landesbehörde
 ### Domains für die Gesundheitsämter bereitstellen
@@ -37,7 +71,7 @@ Wir empfehlen aber den offiziellen RKI-Namen des Gesundheitsamts zu verwenden (f
 
 <mark>**TODO: RKI-Schema und Normalisierung erklären**</mark>
 
-#### DNS für die Domains konfigurieren
+### DNS für die Domains konfigurieren
 
 Zunächst muss ein A-Record gesetzt werden, damit alle GA-Subdomains uf die IP des IRIS Public Proxy auflösen: 
 
@@ -137,7 +171,7 @@ TODO: Script-Aufrufe
 ```
 
 ### Zertifikate einrichten
-<mark>**TODO: Prozesse ggf. definieren und dokumentieren im IRIS-Client-Repo und copy-paste hierher.**</mark>
+<mark>**TODO: Prozesse ggf. definieren und dokumentieren.**</mark>
 
 #### Zertifikat Nr. 3 einrichten
 

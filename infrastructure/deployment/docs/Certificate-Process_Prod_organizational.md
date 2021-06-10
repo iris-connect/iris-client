@@ -4,7 +4,7 @@ Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) zwei Sc
 
 Dieses Dokument erklärt die organisatorischen Schritte, die Landesbehörden und Gesundheitsämter gemeinsam unternehmen müssen, um die Zertifikate zu beantragen und einzurichten. 
 
-Erläuterungen zu technische Konfigurationsschritten, die ausschließlich für IT-Administratorinnen relevant sind, werden zur besseren Übersicht in einem separaten Anleitung erläutert. 
+Erläuterungen zu technische Konfigurationsschritten, die ausschließlich für IT-Administratorinnen relevant sind, werden zur besseren Übersicht in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) erläutert. 
 Diese wird an den entsprechenden Stellen verlinkt. 
 
 Dieses Dokument nimmt an, dass IRIS über das jeweilige Bundesland gebündelt für alle Gesundheitsämter bezogen wird.
