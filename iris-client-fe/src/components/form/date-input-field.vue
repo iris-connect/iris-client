@@ -25,6 +25,8 @@
       v-model="model"
       no-title
       @input="active = false"
+      :max="max"
+      :min="min"
     ></v-date-picker>
   </v-menu>
   <v-text-field
@@ -49,6 +51,14 @@ const DateInputFieldProps = Vue.extend({
     picker: {
       type: Boolean,
       default: true,
+    },
+    max: {
+      type: String,
+      default: undefined,
+    },
+    min: {
+      type: String,
+      default: undefined,
     },
   },
 });

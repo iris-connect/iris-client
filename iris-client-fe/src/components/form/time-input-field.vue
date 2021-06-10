@@ -27,6 +27,8 @@
       format="24hr"
       @change="active = false"
       @click:minute="$refs.menu.save(model)"
+      :max="max"
+      :min="min"
     ></v-time-picker>
   </v-menu>
   <v-text-field
@@ -50,6 +52,14 @@ const TimeInputFieldProps = Vue.extend({
     picker: {
       type: Boolean,
       default: true,
+    },
+    max: {
+      type: String,
+      default: undefined,
+    },
+    min: {
+      type: String,
+      default: undefined,
     },
   },
 });

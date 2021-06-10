@@ -63,6 +63,7 @@
               v-model="form.model.start"
               :date-props="{
                 label: 'Datum (Beginn)',
+                max: maxDate,
               }"
               :time-props="{
                 label: 'Uhrzeit (Beginn)',
@@ -168,6 +169,10 @@ export default class EventTrackingFormView extends Vue {
   $refs!: {
     form: HTMLFormElement;
   };
+
+  get maxDate(): string {
+    return dayjs().format("YYYY-MM-DD");
+  }
 
   get eventCreationOngoing(): boolean {
     return store.state.eventTrackingForm.eventCreationOngoing;
