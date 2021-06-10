@@ -39,6 +39,6 @@ Bei dem IRIS Backend handelt es sich um eine Java Applikation (min Java 11).
 4. Starten der Java Applikation (Beispiel Version: v1.0.3-alpha)
 
    ```
-   java -jar iris-client-bff-v1.0.3-alpha.jar
+   java -jar iris-client-bff-v1.0.3-alpha.jar -Dlogging.file.name=iris-client-bff.log
    ```
 
