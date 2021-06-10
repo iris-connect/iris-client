@@ -99,7 +99,17 @@ const eventTrackingForm: EventTrackingFormModule = {
           await authClient.searchSearchKeywordGet({ params: query })
         ).data;
       } catch (e) {
-        commit("setEventLocationsError", getErrorMessage(e));
+        const errData = e.response.data;
+        const errorMessage =
+          errData.message +
+          " (" +
+          errData.error +
+          " [" +
+          errData.status +
+          "]" +
+          ")";
+
+        commit("setEventLocationsError", errorMessage);
       } finally {
         commit("setEventLocations", locationList);
         commit("setEventLocationsLoading", false);
