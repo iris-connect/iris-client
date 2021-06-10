@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**creationDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**changeDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**creationDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**changeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **uuid** | **String** |  |  [optional]
 **pointOfEntryType** | [**PointOfEntryType**](PointOfEntryType.md) |  |  [optional]
 **name** | **String** |  |  [optional]
@@ -15,5 +15,5 @@ Name | Type | Description | Notes
 **active** | **Boolean** |  |  [optional]
 **archived** | **Boolean** |  |  [optional]
 **externalID** | **String** |  |  [optional]
-**otherPointOfEntry** | **Boolean** |  |  [optional]
 **nameOtherPointOfEntry** | **Boolean** |  |  [optional]
+**otherPointOfEntry** | **Boolean** |  |  [optional]

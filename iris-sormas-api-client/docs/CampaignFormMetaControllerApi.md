@@ -5,8 +5,8 @@ All URIs are relative to */sormas-rest*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getAllCampaignFormMeta**](CampaignFormMetaControllerApi.md#getAllCampaignFormMeta) | **GET** /campaignFormMeta/all/{since} | 
-[**getAllUuids3**](CampaignFormMetaControllerApi.md#getAllUuids3) | **GET** /campaignFormMeta/uuids | 
-[**getByUuids4**](CampaignFormMetaControllerApi.md#getByUuids4) | **POST** /campaignFormMeta/query | 
+[**getAllUuids4**](CampaignFormMetaControllerApi.md#getAllUuids4) | **GET** /campaignFormMeta/uuids | 
+[**getByUuids5**](CampaignFormMetaControllerApi.md#getByUuids5) | **POST** /campaignFormMeta/query | 
 
 <a name="getAllCampaignFormMeta"></a>
 # **getAllCampaignFormMeta**
@@ -28,6 +28,7 @@ ApiClient defaultClient = Configuration.getDefaultApiClient();
 HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
+
 
 CampaignFormMetaControllerApi apiInstance = new CampaignFormMetaControllerApi();
 Long since = 789L; // Long | 
@@ -52,16 +53,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getAllUuids3"></a>
-# **getAllUuids3**
-> List&lt;String&gt; getAllUuids3()
+<a name="getAllUuids4"></a>
+# **getAllUuids4**
+> List&lt;String&gt; getAllUuids4()
 
 
 
@@ -80,12 +81,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CampaignFormMetaControllerApi apiInstance = new CampaignFormMetaControllerApi();
 try {
-    List<String> result = apiInstance.getAllUuids3();
+    List<String> result = apiInstance.getAllUuids4();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CampaignFormMetaControllerApi#getAllUuids3");
+    System.err.println("Exception when calling CampaignFormMetaControllerApi#getAllUuids4");
     e.printStackTrace();
 }
 ```
@@ -99,16 +101,16 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids4"></a>
-# **getByUuids4**
-> List&lt;CampaignFormMetaDto&gt; getByUuids4(body)
+<a name="getByUuids5"></a>
+# **getByUuids5**
+> List&lt;CampaignFormMetaDto&gt; getByUuids5(body)
 
 
 
@@ -127,13 +129,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CampaignFormMetaControllerApi apiInstance = new CampaignFormMetaControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<CampaignFormMetaDto> result = apiInstance.getByUuids4(body);
+    List<CampaignFormMetaDto> result = apiInstance.getByUuids5(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CampaignFormMetaControllerApi#getByUuids4");
+    System.err.println("Exception when calling CampaignFormMetaControllerApi#getByUuids5");
     e.printStackTrace();
 }
 ```
@@ -150,7 +153,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

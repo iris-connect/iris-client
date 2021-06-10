@@ -6,7 +6,9 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getAllActiveUuids3**](EventParticipantControllerApi.md#getAllActiveUuids3) | **GET** /eventparticipants/uuids | 
 [**getAllEventParticipantsAfter**](EventParticipantControllerApi.md#getAllEventParticipantsAfter) | **GET** /eventparticipants/all/{since} | 
-[**getByUuids13**](EventParticipantControllerApi.md#getByUuids13) | **POST** /eventparticipants/query | 
+[**getByEventUuids**](EventParticipantControllerApi.md#getByEventUuids) | **POST** /eventparticipants/query/events | 
+[**getByPersonUuids2**](EventParticipantControllerApi.md#getByPersonUuids2) | **POST** /eventparticipants/query/persons | 
+[**getByUuids16**](EventParticipantControllerApi.md#getByUuids16) | **POST** /eventparticipants/query | 
 [**getDeletedUuidsSince2**](EventParticipantControllerApi.md#getDeletedUuidsSince2) | **GET** /eventparticipants/deleted/{since} | 
 [**postEventParticipants**](EventParticipantControllerApi.md#postEventParticipants) | **POST** /eventparticipants/push | 
 
@@ -31,6 +33,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 EventParticipantControllerApi apiInstance = new EventParticipantControllerApi();
 try {
     List<String> result = apiInstance.getAllActiveUuids3();
@@ -50,7 +53,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -78,6 +81,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 EventParticipantControllerApi apiInstance = new EventParticipantControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -101,16 +105,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids13"></a>
-# **getByUuids13**
-> List&lt;EventParticipantDto&gt; getByUuids13(body)
+<a name="getByEventUuids"></a>
+# **getByEventUuids**
+> List&lt;EventParticipantDto&gt; getByEventUuids(body)
 
 
 
@@ -129,13 +133,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 EventParticipantControllerApi apiInstance = new EventParticipantControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<EventParticipantDto> result = apiInstance.getByUuids13(body);
+    List<EventParticipantDto> result = apiInstance.getByEventUuids(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling EventParticipantControllerApi#getByUuids13");
+    System.err.println("Exception when calling EventParticipantControllerApi#getByEventUuids");
     e.printStackTrace();
 }
 ```
@@ -152,7 +157,111 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json; charset=UTF-8
+ - **Accept**: application/json; charset=UTF-8
+
+<a name="getByPersonUuids2"></a>
+# **getByPersonUuids2**
+> List&lt;EventParticipantDto&gt; getByPersonUuids2(body)
+
+
+
+### Example
+```java
+// Import classes:
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.EventParticipantControllerApi;
+
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+// Configure HTTP basic authorization: basicAuth
+HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
+basicAuth.setUsername("YOUR USERNAME");
+basicAuth.setPassword("YOUR PASSWORD");
+
+
+EventParticipantControllerApi apiInstance = new EventParticipantControllerApi();
+List<String> body = Arrays.asList("body_example"); // List<String> | 
+try {
+    List<EventParticipantDto> result = apiInstance.getByPersonUuids2(body);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling EventParticipantControllerApi#getByPersonUuids2");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**List&lt;String&gt;**](String.md)|  | [optional]
+
+### Return type
+
+[**List&lt;EventParticipantDto&gt;**](EventParticipantDto.md)
+
+### Authorization
+
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json; charset=UTF-8
+ - **Accept**: application/json; charset=UTF-8
+
+<a name="getByUuids16"></a>
+# **getByUuids16**
+> List&lt;EventParticipantDto&gt; getByUuids16(body)
+
+
+
+### Example
+```java
+// Import classes:
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.EventParticipantControllerApi;
+
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+// Configure HTTP basic authorization: basicAuth
+HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
+basicAuth.setUsername("YOUR USERNAME");
+basicAuth.setPassword("YOUR PASSWORD");
+
+
+EventParticipantControllerApi apiInstance = new EventParticipantControllerApi();
+List<String> body = Arrays.asList("body_example"); // List<String> | 
+try {
+    List<EventParticipantDto> result = apiInstance.getByUuids16(body);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling EventParticipantControllerApi#getByUuids16");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**List&lt;String&gt;**](String.md)|  | [optional]
+
+### Return type
+
+[**List&lt;EventParticipantDto&gt;**](EventParticipantDto.md)
+
+### Authorization
+
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -180,6 +289,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 EventParticipantControllerApi apiInstance = new EventParticipantControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -203,7 +313,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -231,6 +341,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 EventParticipantControllerApi apiInstance = new EventParticipantControllerApi();
 List<EventParticipantDto> body = Arrays.asList(new EventParticipantDto()); // List<EventParticipantDto> | 
 try {
@@ -254,7 +365,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

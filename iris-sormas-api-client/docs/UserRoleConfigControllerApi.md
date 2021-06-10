@@ -4,13 +4,13 @@ All URIs are relative to */sormas-rest*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getAll9**](UserRoleConfigControllerApi.md#getAll9) | **GET** /userroles/all/{since} | 
-[**getAllUuids16**](UserRoleConfigControllerApi.md#getAllUuids16) | **GET** /userroles/uuids | 
+[**getAll12**](UserRoleConfigControllerApi.md#getAll12) | **GET** /userroles/all/{since} | 
+[**getAllUuids20**](UserRoleConfigControllerApi.md#getAllUuids20) | **GET** /userroles/uuids | 
 [**getDeletedUuids1**](UserRoleConfigControllerApi.md#getDeletedUuids1) | **GET** /userroles/deleted/{since} | 
 
-<a name="getAll9"></a>
-# **getAll9**
-> List&lt;UserRoleConfigDto&gt; getAll9(since)
+<a name="getAll12"></a>
+# **getAll12**
+> List&lt;UserRoleConfigDto&gt; getAll12(since)
 
 
 
@@ -29,13 +29,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 UserRoleConfigControllerApi apiInstance = new UserRoleConfigControllerApi();
 Long since = 789L; // Long | 
 try {
-    List<UserRoleConfigDto> result = apiInstance.getAll9(since);
+    List<UserRoleConfigDto> result = apiInstance.getAll12(since);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling UserRoleConfigControllerApi#getAll9");
+    System.err.println("Exception when calling UserRoleConfigControllerApi#getAll12");
     e.printStackTrace();
 }
 ```
@@ -52,16 +53,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getAllUuids16"></a>
-# **getAllUuids16**
-> List&lt;String&gt; getAllUuids16()
+<a name="getAllUuids20"></a>
+# **getAllUuids20**
+> List&lt;String&gt; getAllUuids20()
 
 
 
@@ -80,12 +81,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 UserRoleConfigControllerApi apiInstance = new UserRoleConfigControllerApi();
 try {
-    List<String> result = apiInstance.getAllUuids16();
+    List<String> result = apiInstance.getAllUuids20();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling UserRoleConfigControllerApi#getAllUuids16");
+    System.err.println("Exception when calling UserRoleConfigControllerApi#getAllUuids20");
     e.printStackTrace();
 }
 ```
@@ -99,7 +101,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -127,6 +129,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 UserRoleConfigControllerApi apiInstance = new UserRoleConfigControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -150,7 +153,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

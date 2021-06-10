@@ -12,3 +12,4 @@
 * `BURIAL` (value: `"BURIAL"`)
 * `ANIMAL_CONTACT` (value: `"ANIMAL_CONTACT"`)
 * `OTHER` (value: `"OTHER"`)
+* `UNKNOWN` (value: `"UNKNOWN"`)

@@ -4,7 +4,10 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **initialSyncRequired** | **Boolean** |  |  [optional]
+**continents** | [**List&lt;ContinentDto&gt;**](ContinentDto.md) |  |  [optional]
+**subcontinents** | [**List&lt;SubcontinentDto&gt;**](SubcontinentDto.md) |  |  [optional]
 **countries** | [**List&lt;CountryDto&gt;**](CountryDto.md) |  |  [optional]
+**areas** | [**List&lt;AreaDto&gt;**](AreaDto.md) |  |  [optional]
 **regions** | [**List&lt;RegionDto&gt;**](RegionDto.md) |  |  [optional]
 **districts** | [**List&lt;DistrictDto&gt;**](DistrictDto.md) |  |  [optional]
 **communities** | [**List&lt;CommunityDto&gt;**](CommunityDto.md) |  |  [optional]

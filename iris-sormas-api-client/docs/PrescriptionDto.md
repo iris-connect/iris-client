@@ -3,14 +3,14 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**creationDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**changeDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**creationDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**changeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **uuid** | **String** |  |  [optional]
 **pseudonymized** | **Boolean** |  |  [optional]
 **therapy** | [**TherapyReferenceDto**](TherapyReferenceDto.md) |  |  [optional]
-**prescriptionDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**prescriptionStart** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**prescriptionEnd** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**prescriptionDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**prescriptionStart** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**prescriptionEnd** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **prescribingClinician** | **String** |  |  [optional]
 **prescriptionType** | [**TreatmentType**](TreatmentType.md) |  |  [optional]
 **prescriptionDetails** | **String** |  |  [optional]

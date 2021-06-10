@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**creationDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**changeDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**creationDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**changeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **uuid** | **String** |  |  [optional]
 **pseudonymized** | **Boolean** |  |  [optional]
 **caze** | [**CaseReferenceDto**](CaseReferenceDto.md) |  |  [optional]
@@ -12,7 +12,8 @@ Name | Type | Description | Notes
 **caseOrEventInformation** | **String** |  |  [optional]
 **disease** | [**Disease**](Disease.md) |  |  [optional]
 **diseaseDetails** | **String** |  |  [optional]
-**reportDateTime** | [**OffsetDateTime**](OffsetDateTime.md) |  | 
+**diseaseVariant** | [**DiseaseVariant**](DiseaseVariant.md) |  |  [optional]
+**reportDateTime** | [**Instant**](OffsetDateTime.md) |  | 
 **reportingUser** | [**UserReferenceDto**](UserReferenceDto.md) |  | 
 **reportLat** | **Double** |  |  [optional]
 **reportLon** | **Double** |  |  [optional]
@@ -21,8 +22,8 @@ Name | Type | Description | Notes
 **district** | [**DistrictReferenceDto**](DistrictReferenceDto.md) |  |  [optional]
 **community** | [**CommunityReferenceDto**](CommunityReferenceDto.md) |  |  [optional]
 **multiDayContact** | **Boolean** |  | 
-**firstContactDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**lastContactDate** | [**OffsetDateTime**](OffsetDateTime.md) |  | 
+**firstContactDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**lastContactDate** | [**Instant**](OffsetDateTime.md) |  | 
 **contactIdentificationSource** | [**ContactIdentificationSource**](ContactIdentificationSource.md) |  |  [optional]
 **contactIdentificationSourceDetails** | **String** |  |  [optional]
 **tracingApp** | [**TracingApp**](TracingApp.md) |  |  [optional]
@@ -34,7 +35,7 @@ Name | Type | Description | Notes
 **contactStatus** | [**ContactStatus**](ContactStatus.md) |  |  [optional]
 **followUpStatus** | [**FollowUpStatus**](FollowUpStatus.md) |  |  [optional]
 **followUpComment** | **String** |  |  [optional]
-**followUpUntil** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**followUpUntil** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **overwriteFollowUpUntil** | **Boolean** |  |  [optional]
 **description** | **String** |  |  [optional]
 **relationToCase** | [**ContactRelation**](ContactRelation.md) |  |  [optional]
@@ -47,8 +48,8 @@ Name | Type | Description | Notes
 **careForPeopleOver60** | [**YesNoUnknown**](YesNoUnknown.md) |  |  [optional]
 **quarantine** | [**QuarantineType**](QuarantineType.md) |  |  [optional]
 **quarantineTypeDetails** | **String** |  |  [optional]
-**quarantineFrom** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**quarantineTo** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**quarantineFrom** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**quarantineTo** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **person** | [**PersonReferenceDto**](PersonReferenceDto.md) |  | 
 **contactOfficer** | [**UserReferenceDto**](UserReferenceDto.md) |  |  [optional]
 **resultingCase** | [**CaseReferenceDto**](CaseReferenceDto.md) |  |  [optional]
@@ -56,8 +57,8 @@ Name | Type | Description | Notes
 **quarantineHelpNeeded** | **String** |  |  [optional]
 **quarantineOrderedVerbally** | **Boolean** |  |  [optional]
 **quarantineOrderedOfficialDocument** | **Boolean** |  |  [optional]
-**quarantineOrderedVerballyDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**quarantineOrderedOfficialDocumentDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**quarantineOrderedVerballyDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**quarantineOrderedOfficialDocumentDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **quarantineHomePossible** | [**YesNoUnknown**](YesNoUnknown.md) |  |  [optional]
 **quarantineHomePossibleComment** | **String** |  |  [optional]
 **quarantineHomeSupplyEnsured** | [**YesNoUnknown**](YesNoUnknown.md) |  |  [optional]
@@ -65,7 +66,7 @@ Name | Type | Description | Notes
 **quarantineExtended** | **Boolean** |  |  [optional]
 **quarantineReduced** | **Boolean** |  |  [optional]
 **quarantineOfficialOrderSent** | **Boolean** |  |  [optional]
-**quarantineOfficialOrderSentDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**quarantineOfficialOrderSentDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **additionalDetails** | **String** |  |  [optional]
 **epiData** | [**EpiDataDto**](EpiDataDto.md) |  |  [optional]
 **healthConditions** | [**HealthConditionsDto**](HealthConditionsDto.md) |  |  [optional]
@@ -75,6 +76,9 @@ Name | Type | Description | Notes
 **endOfQuarantineReason** | [**EndOfQuarantineReason**](EndOfQuarantineReason.md) |  |  [optional]
 **endOfQuarantineReasonDetails** | **String** |  |  [optional]
 **prohibitionToWork** | [**YesNoUnknown**](YesNoUnknown.md) |  |  [optional]
-**prohibitionToWorkFrom** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**prohibitionToWorkUntil** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**prohibitionToWorkFrom** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**prohibitionToWorkUntil** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **reportingDistrict** | [**DistrictReferenceDto**](DistrictReferenceDto.md) |  |  [optional]
+**vaccinationInfo** | [**VaccinationInfoDto**](VaccinationInfoDto.md) |  |  [optional]
+**followUpStatusChangeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**followUpStatusChangeUser** | [**UserReferenceDto**](UserReferenceDto.md) |  |  [optional]

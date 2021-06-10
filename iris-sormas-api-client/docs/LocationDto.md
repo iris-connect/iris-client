@@ -3,10 +3,13 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**creationDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**changeDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**creationDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**changeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **uuid** | **String** |  |  [optional]
 **pseudonymized** | **Boolean** |  |  [optional]
+**continent** | [**ContinentReferenceDto**](ContinentReferenceDto.md) |  |  [optional]
+**subcontinent** | [**SubcontinentReferenceDto**](SubcontinentReferenceDto.md) |  |  [optional]
+**country** | [**CountryReferenceDto**](CountryReferenceDto.md) |  |  [optional]
 **region** | [**RegionReferenceDto**](RegionReferenceDto.md) |  |  [optional]
 **district** | [**DistrictReferenceDto**](DistrictReferenceDto.md) |  |  [optional]
 **community** | [**CommunityReferenceDto**](CommunityReferenceDto.md) |  |  [optional]
@@ -25,3 +28,7 @@ Name | Type | Description | Notes
 **facilityType** | [**FacilityType**](FacilityType.md) |  |  [optional]
 **facility** | [**FacilityReferenceDto**](FacilityReferenceDto.md) |  |  [optional]
 **facilityDetails** | **String** |  |  [optional]
+**contactPersonFirstName** | **String** |  |  [optional]
+**contactPersonLastName** | **String** |  |  [optional]
+**contactPersonPhone** | **String** |  |  [optional]
+**contactPersonEmail** | **String** |  |  [optional]

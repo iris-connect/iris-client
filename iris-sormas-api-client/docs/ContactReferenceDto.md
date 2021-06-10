@@ -7,4 +7,3 @@ Name | Type | Description | Notes
 **caption** | **String** |  |  [optional]
 **contactName** | [**PersonName**](PersonName.md) |  |  [optional]
 **caseName** | [**PersonName**](PersonName.md) |  |  [optional]
-**captionAlwaysWithUuid** | **String** |  |  [optional]

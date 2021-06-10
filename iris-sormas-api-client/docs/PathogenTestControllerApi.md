@@ -7,7 +7,7 @@ Method | HTTP request | Description
 [**getAllActiveUuids5**](PathogenTestControllerApi.md#getAllActiveUuids5) | **GET** /pathogentests/uuids | 
 [**getAllPathogenTests**](PathogenTestControllerApi.md#getAllPathogenTests) | **GET** /pathogentests/all/{since} | 
 [**getBySampleUuids**](PathogenTestControllerApi.md#getBySampleUuids) | **POST** /pathogentests/query/samples | 
-[**getByUuids17**](PathogenTestControllerApi.md#getByUuids17) | **POST** /pathogentests/query | 
+[**getByUuids20**](PathogenTestControllerApi.md#getByUuids20) | **POST** /pathogentests/query | 
 [**getDeletedUuidsSince4**](PathogenTestControllerApi.md#getDeletedUuidsSince4) | **GET** /pathogentests/deleted/{since} | 
 [**postPathogenTests**](PathogenTestControllerApi.md#postPathogenTests) | **POST** /pathogentests/push | 
 
@@ -32,6 +32,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PathogenTestControllerApi apiInstance = new PathogenTestControllerApi();
 try {
     List<String> result = apiInstance.getAllActiveUuids5();
@@ -51,7 +52,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -79,6 +80,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PathogenTestControllerApi apiInstance = new PathogenTestControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -102,7 +104,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -130,6 +132,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PathogenTestControllerApi apiInstance = new PathogenTestControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
@@ -153,16 +156,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: application/json; charset=UTF-8
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids17"></a>
-# **getByUuids17**
-> List&lt;PathogenTestDto&gt; getByUuids17(body)
+<a name="getByUuids20"></a>
+# **getByUuids20**
+> List&lt;PathogenTestDto&gt; getByUuids20(body)
 
 
 
@@ -181,13 +184,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PathogenTestControllerApi apiInstance = new PathogenTestControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<PathogenTestDto> result = apiInstance.getByUuids17(body);
+    List<PathogenTestDto> result = apiInstance.getByUuids20(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling PathogenTestControllerApi#getByUuids17");
+    System.err.println("Exception when calling PathogenTestControllerApi#getByUuids20");
     e.printStackTrace();
 }
 ```
@@ -204,7 +208,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -232,6 +236,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PathogenTestControllerApi apiInstance = new PathogenTestControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -255,7 +260,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -283,6 +288,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PathogenTestControllerApi apiInstance = new PathogenTestControllerApi();
 List<PathogenTestDto> body = Arrays.asList(new PathogenTestDto()); // List<PathogenTestDto> | 
 try {
@@ -306,7 +312,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

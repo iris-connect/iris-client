@@ -4,13 +4,13 @@ All URIs are relative to */sormas-rest*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getAll3**](CountryControllerApi.md#getAll3) | **GET** /countries/all/{since} | 
-[**getAllUuids7**](CountryControllerApi.md#getAllUuids7) | **GET** /countries/uuids | 
-[**getByUuids10**](CountryControllerApi.md#getByUuids10) | **POST** /countries/query | 
+[**getAll5**](CountryControllerApi.md#getAll5) | **GET** /countries/all/{since} | 
+[**getAllUuids9**](CountryControllerApi.md#getAllUuids9) | **GET** /countries/uuids | 
+[**getByUuids12**](CountryControllerApi.md#getByUuids12) | **POST** /countries/query | 
 
-<a name="getAll3"></a>
-# **getAll3**
-> List&lt;CountryDto&gt; getAll3(since)
+<a name="getAll5"></a>
+# **getAll5**
+> List&lt;CountryDto&gt; getAll5(since)
 
 
 
@@ -29,13 +29,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CountryControllerApi apiInstance = new CountryControllerApi();
 Long since = 789L; // Long | 
 try {
-    List<CountryDto> result = apiInstance.getAll3(since);
+    List<CountryDto> result = apiInstance.getAll5(since);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CountryControllerApi#getAll3");
+    System.err.println("Exception when calling CountryControllerApi#getAll5");
     e.printStackTrace();
 }
 ```
@@ -52,16 +53,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getAllUuids7"></a>
-# **getAllUuids7**
-> List&lt;String&gt; getAllUuids7()
+<a name="getAllUuids9"></a>
+# **getAllUuids9**
+> List&lt;String&gt; getAllUuids9()
 
 
 
@@ -80,12 +81,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CountryControllerApi apiInstance = new CountryControllerApi();
 try {
-    List<String> result = apiInstance.getAllUuids7();
+    List<String> result = apiInstance.getAllUuids9();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CountryControllerApi#getAllUuids7");
+    System.err.println("Exception when calling CountryControllerApi#getAllUuids9");
     e.printStackTrace();
 }
 ```
@@ -99,16 +101,16 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids10"></a>
-# **getByUuids10**
-> List&lt;CountryDto&gt; getByUuids10(body)
+<a name="getByUuids12"></a>
+# **getByUuids12**
+> List&lt;CountryDto&gt; getByUuids12(body)
 
 
 
@@ -127,13 +129,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CountryControllerApi apiInstance = new CountryControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<CountryDto> result = apiInstance.getByUuids10(body);
+    List<CountryDto> result = apiInstance.getByUuids12(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CountryControllerApi#getByUuids10");
+    System.err.println("Exception when calling CountryControllerApi#getByUuids12");
     e.printStackTrace();
 }
 ```
@@ -150,7 +153,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

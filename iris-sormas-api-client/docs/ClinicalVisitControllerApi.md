@@ -6,7 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getAllActiveUuids1**](ClinicalVisitControllerApi.md#getAllActiveUuids1) | **GET** /clinicalvisits/uuids | 
 [**getAllVisits**](ClinicalVisitControllerApi.md#getAllVisits) | **GET** /clinicalvisits/all/{since} | 
-[**getByUuids7**](ClinicalVisitControllerApi.md#getByUuids7) | **POST** /clinicalvisits/query | 
+[**getByUuids8**](ClinicalVisitControllerApi.md#getByUuids8) | **POST** /clinicalvisits/query | 
 [**postVisits**](ClinicalVisitControllerApi.md#postVisits) | **POST** /clinicalvisits/push | 
 
 <a name="getAllActiveUuids1"></a>
@@ -30,6 +30,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ClinicalVisitControllerApi apiInstance = new ClinicalVisitControllerApi();
 try {
     List<String> result = apiInstance.getAllActiveUuids1();
@@ -49,7 +50,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -77,6 +78,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ClinicalVisitControllerApi apiInstance = new ClinicalVisitControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -100,16 +102,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids7"></a>
-# **getByUuids7**
-> List&lt;ClinicalVisitDto&gt; getByUuids7(body)
+<a name="getByUuids8"></a>
+# **getByUuids8**
+> List&lt;ClinicalVisitDto&gt; getByUuids8(body)
 
 
 
@@ -128,13 +130,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ClinicalVisitControllerApi apiInstance = new ClinicalVisitControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<ClinicalVisitDto> result = apiInstance.getByUuids7(body);
+    List<ClinicalVisitDto> result = apiInstance.getByUuids8(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling ClinicalVisitControllerApi#getByUuids7");
+    System.err.println("Exception when calling ClinicalVisitControllerApi#getByUuids8");
     e.printStackTrace();
 }
 ```
@@ -151,7 +154,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -179,6 +182,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ClinicalVisitControllerApi apiInstance = new ClinicalVisitControllerApi();
 List<ClinicalVisitDto> body = Arrays.asList(new ClinicalVisitDto()); // List<ClinicalVisitDto> | 
 try {
@@ -202,7 +206,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

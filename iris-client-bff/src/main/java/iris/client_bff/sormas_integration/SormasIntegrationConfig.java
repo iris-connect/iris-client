@@ -121,7 +121,7 @@ public class SormasIntegrationConfig {
 	@PostConstruct
 	public void fetchIrisUserId() {
 
-		var users = userControllerApi().getAll8(0l);
+		var users = userControllerApi().getAll11(0l);
 
 		// ToDo: What does it imply if the IRIS user is not unqiue?
 		var irisUserId = users.stream()

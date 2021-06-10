@@ -15,3 +15,6 @@
 * `IT` (value: `"IT"`)
 * `IT_CH` (value: `"IT_CH"`)
 * `FI` (value: `"FI"`)
+* `PS` (value: `"PS"`)
+* `FA` (value: `"FA"`)
+* `CZ` (value: `"CZ"`)
