@@ -97,7 +97,7 @@ export default class DateTimeInputField extends DateTimeInputFieldProps {
       dayjs(date).isSame(now.format("YYYY-MM-DD"), "day")
     ) {
       this.timeProps.max = now.format("HH:mm");
-      if (this.time > this.timeProps.max) {
+      if (!this.time || this.time > this.timeProps.max) {
         this.time = this.timeProps.max;
         this.setDateTime();
       }
