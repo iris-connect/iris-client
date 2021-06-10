@@ -36,7 +36,7 @@ services:
 
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-bff:1.0.0-rc.4
+    image: inoeg/iris-client-bff:1.0
     expose:
       - 8092
     environment:
@@ -53,12 +53,11 @@ services:
       SECURITY_JWT_JWT_SHARED_SECRET:
     restart: unless-stopped
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
 
   # IRIS Client Frontend for users
   iris-frontend:
-    image: inoeg/iris-client-frontend:1.0.0-rc.4
+    image: inoeg/iris-client-frontend:1.0
     expose:
       - 28080
     environment:
@@ -72,7 +71,7 @@ services:
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: inoeg/eps:v0.0.4
+    image: inoeg/eps:v0.1.8
     expose:
       - 4446
       - 5556
@@ -86,13 +85,15 @@ services:
       EPS_CLIENT_CERT:
       EPS_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
-      HTTPS_PROXY:
       TRUSTED_CA_CRT:
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ""
+
     command: ["--level", "debug", "server", "run"]
 
   # Proxy for inbound connections.
   private-proxy:
-    image: inoeg/proxy:v0.0.4
+    image: inoeg/proxy:v0.1.8
     expose:
       - 5545
       - 8877
@@ -104,12 +105,12 @@ services:
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
-      HTTPS_PROXY:
+      HTTPS_PROXY: ${PROXY_URL}
       TRUSTED_CA_CRT:
     command: ["--level", "trace", "run", "private"]
 
   private-proxy-eps:
-    image: inoeg/eps:v0.0.4
+    image: inoeg/eps:v0.1.8
     expose:
       - 7766 # JSON-RPC server for internal connections from iris-client
       - 7776 # gRPC protocol
@@ -121,13 +122,14 @@ services:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
-      HTTPS_PROXY:
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ""
       TRUSTED_CA_CRT:
     command: ["--level", "trace", "server", "run"]
 
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:1.0.0-rc.4
+    image: inoeg/iris-client-nginx:1.0
     ports:
       - 443:443
     environment:
@@ -139,6 +141,21 @@ services:
     depends_on:
       - iris-client
       - iris-frontend
+
+  # Watchtower for auto-updates
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+# for Docker on Windows hosts - untested!
+# https://stackoverflow.com/questions/57466568/how-do-you-mount-the-docker-socket-on-windows
+#      - //var/run/docker.sock://var/run/docker.sock
+    environment:
+      TZ: Europe/Berlin
+      WATCHTOWER_SCHEDULE: 0 0 3 * * *
+      WATCHTOWER_NO_PULL: "true"
+    depends_on:
+      - nginx
 
 volumes:
   psqldata_iris:

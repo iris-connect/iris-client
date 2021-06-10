@@ -19,21 +19,7 @@
 	          		{
 	            		"files": ["infrastructure/deployment/docker-compose-ext-postgres.yml", "infrastructure/deployment/docker-compose.yml"],
 	            		"from": "inoeg/(iris-client.*):.*",
-	            		"to": "inoeg/$1:${nextRelease.version}",
-	            		"results": [
-	              			{
-				                "file": "infrastructure/deployment/docker-compose-ext-postgres.yml",
-				                "hasChanged": true,
-				                "numMatches": 3,
-				                "numReplacements": 3
-		              		},
-		              		{
-				                "file": "infrastructure/deployment/docker-compose.yml",
-				                "hasChanged": true,
-				                "numMatches": 3,
-				                "numReplacements": 3
-		              		}
-	            		],
+	            		"to": "inoeg/$1:${nextRelease.version.split('.').slice(0,2).join('.')}",
 	            		"countMatches": true
 	          		}
 	        	]
@@ -53,29 +39,12 @@
                     "**/pom.xml",
                     "infrastructure/deployment/docker-compose.yml",
                     "infrastructure/deployment/docker-compose-ext-postgres.yml",
-                    "FE-THIRD-PARTY-LICENSES.md",
+                    "FE-THIRD-PARTY-LICENSES-PROD.md",
+                    "FE-THIRD-PARTY-LICENSES-DEV.md",
                     "BFF-THIRD-PARTY-LICENSES.md"
                 ]
             }
         ],
-        [
-        	"semantic-release-docker",
-        	{
-	    		"name": "inoeg/iris-client-nginx"
-	    	}
-    	],
-        [
-        	"semantic-release-docker",
-        	{
-	    		"name": "inoeg/iris-client-frontend"
-	    	}
-    	],
-        [
-        	"semantic-release-docker",
-        	{
-	    		"name": "inoeg/iris-client-bff"
-	    	}
-    	],
         [
             "@semantic-release/github",
             {
