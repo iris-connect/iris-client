@@ -1,5 +1,22 @@
 # Changelog
 
+# [1.0.0-rc.5](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.4...v1.0.0-rc.5) (2021-06-10)
+
+
+### Bug Fixes
+
+* Fixes issue that calls to SD are not using HTTP_PROXY ([#131](https://github.com/iris-connect/iris-client/issues/131)) ([767af86](https://github.com/iris-connect/iris-client/commit/767af866ad0851168f443b46bd6d016047afe0dd))
+* removes the picker-input-field css class to make the field changeable via keyboard after selection via click ([#125](https://github.com/iris-connect/iris-client/issues/125)) ([272e6f9](https://github.com/iris-connect/iris-client/commit/272e6f9b77c1e5f4d993ee94358a62845b550ec7)), closes [iris-gateway/iris-backlog#83](https://github.com/iris-gateway/iris-backlog/issues/83)
+
+
+### Features
+
+* aborted requests handling ([#129](https://github.com/iris-connect/iris-client/issues/129)) ([e449e36](https://github.com/iris-connect/iris-client/commit/e449e368194fc5a0546e7890878835c0c92fd9c4)), closes [iris-connect/iris-backlog#91](https://github.com/iris-connect/iris-backlog/issues/91)
+* Allows querying system information and the health status of the client via the .../actuator endpoint. ([dd38d1f](https://github.com/iris-connect/iris-client/commit/dd38d1f9e40b0a690d50879525a03e8778fa5906)), closes [iris-connect/iris-backlog#105](https://github.com/iris-connect/iris-backlog/issues/105) [#136](https://github.com/iris-connect/iris-client/issues/136)
+* disable index cases views ([0939dac](https://github.com/iris-connect/iris-client/commit/0939dacb4070e9a77c173a9fd11fa9ae8ce7acea)), closes [iris-connect/iris-backlog#102](https://github.com/iris-connect/iris-backlog/issues/102)
+* logo change and logos in 'about' page ([7bd42e3](https://github.com/iris-connect/iris-client/commit/7bd42e31e3963203487b4c2fbdf60f355a404214)), closes [iris-connect/iris-backlog#115](https://github.com/iris-connect/iris-backlog/issues/115) [iris-connect/iris-backlog#112](https://github.com/iris-connect/iris-backlog/issues/112)
+* SORMAS-compatible CSV-Export of guest lists ([#114](https://github.com/iris-connect/iris-client/issues/114)) ([da3e369](https://github.com/iris-connect/iris-client/commit/da3e36980ade9363334517b4d6b470da76d648f1)), closes [iris-gateway/iris-backlog#74](https://github.com/iris-gateway/iris-backlog/issues/74) [iris-gateway/iris-backlog#74](https://github.com/iris-gateway/iris-backlog/issues/74) [iris-gateway/iris-backlog#74](https://github.com/iris-gateway/iris-backlog/issues/74) [iris-gateway/iris-backlog#74](https://github.com/iris-gateway/iris-backlog/issues/74) [iris-gateway/iris-backlog#74](https://github.com/iris-gateway/iris-backlog/issues/74) [iris-gateway/iris-backlog#74](https://github.com/iris-gateway/iris-backlog/issues/74) [iris-gateway/iris-backlog#74](https://github.com/iris-gateway/iris-backlog/issues/74) [iris-gateway/iris-backlog#74](https://github.com/iris-gateway/iris-backlog/issues/74) [iris-gateway/iris-backlog#74](https://github.com/iris-gateway/iris-backlog/issues/74) [iris-gateway/iris-backlog#74](https://github.com/iris-gateway/iris-backlog/issues/74) [iris-gateway/iris-backlog#74](https://github.com/iris-gateway/iris-backlog/issues/74)
+
 # [1.0.0-rc.4](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.3...v1.0.0-rc.4) (2021-05-29)
 
 
