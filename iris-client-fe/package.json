@@ -8,8 +8,8 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "generate-licenses": "license-checker --csv --out licenses.csv --dependencies",
-    "convert-licenses": "csv2md licenses.csv > licenses.md"
+    "generate-licenses": "license-checker --production --csv --out licenses-prod.csv; license-checker --development --csv --out licenses-dev.csv",
+    "convert-licenses": "csv2md licenses-prod.csv > licenses-prod.md; csv2md licenses-dev.csv > licenses-dev.md"
   },
   "dependencies": {
     "@types/lodash": "^4.14.168",

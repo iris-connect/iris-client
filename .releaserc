@@ -53,7 +53,8 @@
                     "**/pom.xml",
                     "infrastructure/deployment/docker-compose.yml",
                     "infrastructure/deployment/docker-compose-ext-postgres.yml",
-                    "FE-THIRD-PARTY-LICENSES.md",
+                    "FE-THIRD-PARTY-LICENSES-PROD.md",
+                    "FE-THIRD-PARTY-LICENSES-DEV.md",
                     "BFF-THIRD-PARTY-LICENSES.md"
                 ]
             }
