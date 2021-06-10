@@ -8,8 +8,8 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "generate-licenses": "npm-license-crawler --dependencies --csv licenses.csv",
-    "convert-licenses": "csv2md licenses.csv > licenses.md"
+    "generate-licenses": "license-checker --production --csv --out licenses-prod.csv; license-checker --development --csv --out licenses-dev.csv",
+    "convert-licenses": "csv2md licenses-prod.csv > licenses-prod.md; csv2md licenses-dev.csv > licenses-dev.md"
   },
   "dependencies": {
     "@types/lodash": "^4.14.168",
@@ -50,7 +50,7 @@
     "lint-staged": "^10.5.4",
     "miragejs": "^0.1.41",
     "node-sass": "^5.0.0",
-    "npm-license-crawler": "^0.2.1",
+    "license-checker": "^25.0.1",
     "prettier": "^2.2.1",
     "sass": "^1.32.0",
     "sass-loader": "^10.1.1",

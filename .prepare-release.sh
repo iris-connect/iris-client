@@ -42,7 +42,8 @@ npm ci
 # File will be uploaded to github by @semantic-release/github
 npm run generate-licenses
 npm run convert-licenses
-mv ./licenses.md ../FE-THIRD-PARTY-LICENSES.md
+mv ./licenses-prod.md ../FE-THIRD-PARTY-LICENSES-PROD.md
+mv ./licenses-dev.md ../FE-THIRD-PARTY-LICENSES-DEV.md
 
 export VUE_APP_BUILD_ID=$COMMIT
 export VUE_APP_VERSION_ID=$VERSION
