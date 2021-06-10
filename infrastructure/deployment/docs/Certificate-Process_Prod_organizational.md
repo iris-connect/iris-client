@@ -1,11 +1,13 @@
-# Anleitung für das Beantragen und Einrichten der Zertifikate der Bundesdruckerei (IRIS Produktivsystem)
-
+# Prozess für das Beantragen der Zertifikate der Bundesdruckerei (Produktivsystem) <br /> – Prozessuale Anleitung – 
 ## Vorwort
 Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei. 
-Dieses Dokument erklärt die organisatorischen Schritte, die Landesbehörden und Gesundheitsämter unternehmen müssen, um die Zertifikate gemeinsam zu beantragen und einzurichten. 
-Für eine Beschreibung technischer Einzelheiten, die nur für IT-Verantwortliche der Landesbehörden und Gesundheitsämter bzw. deren IT-Dienstleister relevant sind, wird an den entsprechenden Stellen auf die Installationsanleitung des IRIS-Clients verwiesen.
 
-Diese Anleitung nimmt an, dass IRIS über das jeweilige Bundesland gebündelt für alle Gesundheitsämter bezogen wird.
+Dieses Dokument erklärt die organisatorischen Schritte, die Landesbehörden und Gesundheitsämter gemeinsam unternehmen müssen, um die Zertifikate zu beantragen und einzurichten. 
+
+Erläuterungen zu technische Konfigurationsschritten, die ausschließlich für IT-Administratorinnen relevant sind, werden zur besseren Übersicht in einem separaten Anleitung erläutert. 
+Diese wird an den entsprechenden Stellen verlinkt. 
+
+Dieses Dokument nimmt an, dass IRIS über das jeweilige Bundesland gebündelt für alle Gesundheitsämter bezogen wird.
 Die Schritte für GÄ, die sich selbstständig, also unabhängig vom Land, an IRIS anschließen, unterscheiden sich stellenweise.
 
 Beim Rollout von IRIS werden die individuellen Bedürfnisse und Wünsche der Bundesländer berücksichtigt. 
@@ -20,7 +22,7 @@ Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt s
 * [Zusammenfassung](#zusammenfassung)
 * [Welche Zertifikate müssen beantragt werden?](#welche-zertifikate-m-ssen-beantragt-werden-)
 * [Erforderliche Schritte seitens des Landes](#erforderliche-schritte-seitens-des-landes)
-    + [Antragsprozesses bei der Bundesdruckerei anstoßem](#antragsprozesses-bei-der-bundesdruckerei-ansto-em)
+    + [Antragsprozess bei der Bundesdruckerei anstoßem](#antragsprozess-bei-der-bundesdruckerei-ansto-em)
     + [Organisationsvalidierung durchlaufen](#organisationsvalidierung-durchlaufen)
     + [Zertifikatsverantwortliche Personen in den Gesundheitsämtern erfassen](#zertifikatsverantwortliche-personen-in-den-gesundheits-mtern-erfassen)
     + [Domains für die Gesundheitsämter bereitstellen](#domains-f-r-die-gesundheits-mter-bereitstellen)
@@ -41,10 +43,10 @@ Die GÄ brauchen den Prüfungsprozess also nicht separat zu durchlaufen.
 Der ganze Prozess kurz gefasst:
 
 1. Behörde stellt den GÄ ggf. eine (Sub-)Domain bereit, die im Kontext von IRIS genutzt werden kann.
-2. Vertreter:in der Behörde nennt der Bundesdruckerei (BDr) auf sicherem Weg eine zertifikatsverantwortliche Person je GA.
-3. BDr prüft einmalig Identität von Vertreter:in der Behörde und deren Vertretungsberechtigung.
+2. Behörde nennt der Bundesdruckerei (BDr) auf sicherem Weg eine zeichnungsberechtigte Person der Behörde und je GA eine zertifikatsverantwortliche Person.
+3. BDr führt einmalig eine Organisationsvalidierung der Behörde und eine Prüfung der Vertretungsberechtigung durch.
 4. BDr übermittelt Zugangsdaten zum Antragsportal auf sicherem Wege an die Zertifikatsverantwortlichen der GÄ.
-5. Zertifikatsverantwortliche erstellen kryptografische Schlüssel und stellen für diese Zertifikatsanfragen online im Antragsportal ein.
+5. Zertifikatsverantwortliche erstellen zwei kryptografische Schlüsselpaare und stellen für sie Zertifikatsanfragen online im Antragsportal ein.
 6. Nach Prüfung und Domain-Validierung der (Sub-)Domain des GA stellt die BDr die Zertifikate zum Download im Antragsportal bereit.
 7. Zertifikatsverantwortliche konfigurieren die Zertifikate und die Domain im Rahmen der Installation des IRIS-Clients gemäß Anleitung.
 
@@ -107,7 +109,7 @@ IRIS erreichen können (z.B. mit einem Webbrowser). Eine beispielhafte Domain w�
 Das sieht für das GA Bonn beispielsweise so aus:
 <table>
 <th rowspan="2">Kommune</th>
-<th colspan="7">Ansprechperson im Gesundheitsamt</th>
+<th colspan="7">Zertifikatsverantwortliche Person für das Gesundheitsamt</th>
 <th rowspan="2">IRIS-Domain des Gesundheitsamts</th>
 <tr>
 <td>Anrede</td>
@@ -159,7 +161,7 @@ sich ```iris-connect.nrw.de```.
 Als Nächstes muss für jedes GA eine weitere Subdomain unterhalb der gerade erzeugten angelegt werden. 
 So ergibt sich für das GA Bonn ```stadt-bonn.iris-connect.nrw.de```. 
 Auch hier gibt es keine feste Vorgabe für die Benennung. Wir empfehlen aber den offiziellen RKI-Namen des Gesundheitsamts zu verwenden. 
-Wo der offizielle RKI-Name (für Bonn bswp. "Stadt Bonn") nachgeschaut werden kann und wie sich die normalisierte (domainfähige) Form daraus ableitet, wird hier <mark>**TODO: Link auf entsprechende IRIS-Client Doku setzen**</mark> beschrieben.
+Wo der offizielle RKI-Name (für Bonn bswp. "Stadt Bonn") nachgeschaut werden kann und wie sich die normalisierte (domainfähige) Form daraus ableitet, wird in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) beschrieben.
 
 **Möglichkeit 2: Die Behörde verwendet eine neue Domain, die sie vorab erwirbt**
 
@@ -171,7 +173,10 @@ Es gibt keine feste Vorgabe für die Benennung der Domain.
 Als Nächstes muss für jedes GA eine Subdomain unterhalb dieser Domain angelegt werden. 
 Für das GA Erfurt ergibt sich bspw. ```landeshauptstadt-erfurt.iris-thueringen.de```. 
 Auch hier gibt es wieder keine feste Vorgabe für die Benennung. Wir empfehlen aber den offiziellen RKI-Namen des Gesundheitsamts zu verwenden.
-Wo der offizielle RKI-Name (für Erfurt bswp. "Landeshauptstadt Erfurt") nachgeschaut werden kann und wie sich die normalisierte Form daraus ableitet, wird hier <mark>**TODO: Link auf entsprechende IRIS-Client Doku setzen**</mark> beschrieben.
+Wo der offizielle RKI-Name (für Erfurt bswp. "Landeshauptstadt Erfurt") nachgeschaut werden kann und wie sich die normalisierte Form daraus ableitet, wird in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) beschrieben.
+
+--- 
+Die technische Konfiguration der (Sub-)Domains und der zugehörigen Einträge im Domain Name System (DNS) ist in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) erläutert. 
 
 ## Erforderliche Schritte seitens eines Gesundheitsamts
 > Hinweis: Folgende Schritte beziehen sich auf Bundesländer, in denen eine Landesbehörde im Rahmen der Einführung von IRIS jedem GA eine Domain bereitstellt.
@@ -246,6 +251,4 @@ Klicken Sie auf "Download", um die zwei Zertifikate herunterzuladen.
 
 
 #### Zertifikate einrichten
-Die Zertifikate werden gemäß Anleitung in der Dokumentation des IRIS-Clients eingerichtet.
-
-<mark>**TODO: Entsprechende Stelle für Prod im IRIS-Client-Repo auf Aktualität prüfen und hier verlinken.**</mark>
+Die Zertifikate werden gemäß der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) eingerichtet.
