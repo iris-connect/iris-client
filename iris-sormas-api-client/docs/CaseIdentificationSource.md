@@ -1,0 +1,11 @@
+# CaseIdentificationSource
+
+## Enum
+
+* `UNKNOWN` (value: `"UNKNOWN"`)
+* `OUTBREAK_INVESTIGATION` (value: `"OUTBREAK_INVESTIGATION"`)
+* `CONTACT_TRACKING_APP` (value: `"CONTACT_TRACKING_APP"`)
+* `SUSPICION_REPORT` (value: `"SUSPICION_REPORT"`)
+* `CONTACT_TRACING` (value: `"CONTACT_TRACING"`)
+* `SCREENING` (value: `"SCREENING"`)
+* `OTHER` (value: `"OTHER"`)

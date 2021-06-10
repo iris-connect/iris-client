@@ -4,13 +4,13 @@ All URIs are relative to */sormas-rest*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getAll5**](PointOfEntryControllerApi.md#getAll5) | **GET** /pointsofentry/all/{since} | 
-[**getAllUuids13**](PointOfEntryControllerApi.md#getAllUuids13) | **GET** /pointsofentry/uuids | 
-[**getByUuids19**](PointOfEntryControllerApi.md#getByUuids19) | **POST** /pointsofentry/query | 
+[**getAll7**](PointOfEntryControllerApi.md#getAll7) | **GET** /pointsofentry/all/{since} | 
+[**getAllUuids16**](PointOfEntryControllerApi.md#getAllUuids16) | **GET** /pointsofentry/uuids | 
+[**getByUuids22**](PointOfEntryControllerApi.md#getByUuids22) | **POST** /pointsofentry/query | 
 
-<a name="getAll5"></a>
-# **getAll5**
-> List&lt;PointOfEntryDto&gt; getAll5(since)
+<a name="getAll7"></a>
+# **getAll7**
+> List&lt;PointOfEntryDto&gt; getAll7(since)
 
 
 
@@ -29,13 +29,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PointOfEntryControllerApi apiInstance = new PointOfEntryControllerApi();
 Long since = 789L; // Long | 
 try {
-    List<PointOfEntryDto> result = apiInstance.getAll5(since);
+    List<PointOfEntryDto> result = apiInstance.getAll7(since);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling PointOfEntryControllerApi#getAll5");
+    System.err.println("Exception when calling PointOfEntryControllerApi#getAll7");
     e.printStackTrace();
 }
 ```
@@ -52,16 +53,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getAllUuids13"></a>
-# **getAllUuids13**
-> List&lt;String&gt; getAllUuids13()
+<a name="getAllUuids16"></a>
+# **getAllUuids16**
+> List&lt;String&gt; getAllUuids16()
 
 
 
@@ -80,12 +81,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PointOfEntryControllerApi apiInstance = new PointOfEntryControllerApi();
 try {
-    List<String> result = apiInstance.getAllUuids13();
+    List<String> result = apiInstance.getAllUuids16();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling PointOfEntryControllerApi#getAllUuids13");
+    System.err.println("Exception when calling PointOfEntryControllerApi#getAllUuids16");
     e.printStackTrace();
 }
 ```
@@ -99,16 +101,16 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids19"></a>
-# **getByUuids19**
-> List&lt;PointOfEntryDto&gt; getByUuids19(body)
+<a name="getByUuids22"></a>
+# **getByUuids22**
+> List&lt;PointOfEntryDto&gt; getByUuids22(body)
 
 
 
@@ -127,13 +129,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PointOfEntryControllerApi apiInstance = new PointOfEntryControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<PointOfEntryDto> result = apiInstance.getByUuids19(body);
+    List<PointOfEntryDto> result = apiInstance.getByUuids22(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling PointOfEntryControllerApi#getByUuids19");
+    System.err.println("Exception when calling PointOfEntryControllerApi#getByUuids22");
     e.printStackTrace();
 }
 ```
@@ -150,7 +153,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

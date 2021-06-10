@@ -5,8 +5,8 @@ All URIs are relative to */sormas-rest*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getAllDiseaseConfigurations**](DiseaseConfigurationControllerApi.md#getAllDiseaseConfigurations) | **GET** /diseaseconfigurations/all/{since} | 
-[**getAllUuids8**](DiseaseConfigurationControllerApi.md#getAllUuids8) | **GET** /diseaseconfigurations/uuids | 
-[**getByUuids11**](DiseaseConfigurationControllerApi.md#getByUuids11) | **POST** /diseaseconfigurations/query | 
+[**getAllUuids11**](DiseaseConfigurationControllerApi.md#getAllUuids11) | **GET** /diseaseconfigurations/uuids | 
+[**getByUuids14**](DiseaseConfigurationControllerApi.md#getByUuids14) | **POST** /diseaseconfigurations/query | 
 
 <a name="getAllDiseaseConfigurations"></a>
 # **getAllDiseaseConfigurations**
@@ -28,6 +28,7 @@ ApiClient defaultClient = Configuration.getDefaultApiClient();
 HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
+
 
 DiseaseConfigurationControllerApi apiInstance = new DiseaseConfigurationControllerApi();
 Long since = 789L; // Long | 
@@ -52,16 +53,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getAllUuids8"></a>
-# **getAllUuids8**
-> List&lt;String&gt; getAllUuids8()
+<a name="getAllUuids11"></a>
+# **getAllUuids11**
+> List&lt;String&gt; getAllUuids11()
 
 
 
@@ -80,12 +81,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 DiseaseConfigurationControllerApi apiInstance = new DiseaseConfigurationControllerApi();
 try {
-    List<String> result = apiInstance.getAllUuids8();
+    List<String> result = apiInstance.getAllUuids11();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling DiseaseConfigurationControllerApi#getAllUuids8");
+    System.err.println("Exception when calling DiseaseConfigurationControllerApi#getAllUuids11");
     e.printStackTrace();
 }
 ```
@@ -99,16 +101,16 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids11"></a>
-# **getByUuids11**
-> List&lt;DiseaseConfigurationDto&gt; getByUuids11(body)
+<a name="getByUuids14"></a>
+# **getByUuids14**
+> List&lt;DiseaseConfigurationDto&gt; getByUuids14(body)
 
 
 
@@ -127,13 +129,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 DiseaseConfigurationControllerApi apiInstance = new DiseaseConfigurationControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<DiseaseConfigurationDto> result = apiInstance.getByUuids11(body);
+    List<DiseaseConfigurationDto> result = apiInstance.getByUuids14(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling DiseaseConfigurationControllerApi#getByUuids11");
+    System.err.println("Exception when calling DiseaseConfigurationControllerApi#getByUuids14");
     e.printStackTrace();
 }
 ```
@@ -150,7 +153,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

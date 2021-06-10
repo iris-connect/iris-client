@@ -5,8 +5,9 @@ All URIs are relative to */sormas-rest*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getAppUrl**](InfoControllerApi.md#getAppUrl) | **GET** /info/appurl | 
+[**getCountryName**](InfoControllerApi.md#getCountryName) | **GET** /info/countryname | 
 [**getLocale**](InfoControllerApi.md#getLocale) | **GET** /info/locale | 
-[**getVersion1**](InfoControllerApi.md#getVersion1) | **GET** /info/version | 
+[**getVersion**](InfoControllerApi.md#getVersion) | **GET** /info/version | 
 [**isCompatibleToApi**](InfoControllerApi.md#isCompatibleToApi) | **GET** /info/checkcompatibility | 
 
 <a name="getAppUrl"></a>
@@ -29,6 +30,7 @@ ApiClient defaultClient = Configuration.getDefaultApiClient();
 HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
+
 
 InfoControllerApi apiInstance = new InfoControllerApi();
 String appVersion = "appVersion_example"; // String | 
@@ -53,7 +55,55 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json; charset=UTF-8
+
+<a name="getCountryName"></a>
+# **getCountryName**
+> String getCountryName()
+
+
+
+### Example
+```java
+// Import classes:
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.InfoControllerApi;
+
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+// Configure HTTP basic authorization: basicAuth
+HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
+basicAuth.setUsername("YOUR USERNAME");
+basicAuth.setPassword("YOUR PASSWORD");
+
+
+InfoControllerApi apiInstance = new InfoControllerApi();
+try {
+    String result = apiInstance.getCountryName();
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling InfoControllerApi#getCountryName");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+**String**
+
+### Authorization
+
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -81,6 +131,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 InfoControllerApi apiInstance = new InfoControllerApi();
 try {
     String result = apiInstance.getLocale();
@@ -100,16 +151,16 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getVersion1"></a>
-# **getVersion1**
-> String getVersion1()
+<a name="getVersion"></a>
+# **getVersion**
+> String getVersion()
 
 
 
@@ -128,12 +179,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 InfoControllerApi apiInstance = new InfoControllerApi();
 try {
-    String result = apiInstance.getVersion1();
+    String result = apiInstance.getVersion();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling InfoControllerApi#getVersion1");
+    System.err.println("Exception when calling InfoControllerApi#getVersion");
     e.printStackTrace();
 }
 ```
@@ -147,7 +199,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -175,6 +227,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 InfoControllerApi apiInstance = new InfoControllerApi();
 String appVersion = "appVersion_example"; // String | 
 try {
@@ -198,7 +251,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

@@ -2,7 +2,7 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 
 group = 'iris-gateway'
-version = '1.55.0-SNAPSHOT'
+version = '1.61.0-SNAPSHOT'
 
 buildscript {
     repositories {
@@ -83,7 +83,7 @@ if(hasProperty('target') && target == 'android') {
 
     install {
         repositories.mavenInstaller {
-            pom.artifactId = 'sormas-api-client'
+            pom.artifactId = 'iris-sormas-api-client'
         }
     }
     

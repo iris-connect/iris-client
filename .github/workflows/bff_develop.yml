@@ -9,6 +9,7 @@ on:
       - develop
     paths:
       - iris-client-bff/**
+      - iris-sormas-api-client/**
       - .github/workflows/bff_develop.yml
 
 defaults:
