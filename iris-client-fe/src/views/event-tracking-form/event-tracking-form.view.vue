@@ -77,6 +77,7 @@
               v-model="form.model.end"
               :date-props="{
                 label: 'Datum (Ende)',
+                min: minDate,
               }"
               :time-props="{
                 label: 'Uhrzeit (Ende)',
@@ -170,6 +171,8 @@ export default class EventTrackingFormView extends Vue {
     form: HTMLFormElement;
   };
 
+  minDate = "";
+
   get maxDate(): string {
     return dayjs().format("YYYY-MM-DD");
   }
@@ -247,9 +250,11 @@ export default class EventTrackingFormView extends Vue {
       });
     }
   }
+
   @Watch("form.model.start")
   onDateChanged(): void {
     this.form.model.end = dayjs(this.form.model.start).endOf("day").toString();
+    this.minDate = dayjs(this.form.model.start).format("YYYY-MM-DD");
     this.validateField("end");
   }
 
