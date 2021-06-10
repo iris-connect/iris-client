@@ -112,8 +112,8 @@ services:
   private-proxy-eps:
     image: inoeg/eps:v0.1.8
     expose:
-      - 7766 # JSON-RPC server for internal connections from iris-client
-      - 7776 # gRPC protocol
+      - 7766
+      - 7776
     volumes:
       - ./conf/proxy:/app/settings
     environment:
