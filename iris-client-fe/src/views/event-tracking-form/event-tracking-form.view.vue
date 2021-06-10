@@ -179,7 +179,7 @@ export default class EventTrackingFormView extends Vue {
   }
 
   get maxStartTime(): string {
-    return this.form.model.start.length > 0 &&
+    return this.form.model.start &&
       dayjs(this.form.model.start).isSame(dayjs(), "day")
       ? dayjs().format("HH:mm")
       : "";
