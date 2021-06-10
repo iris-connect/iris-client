@@ -89,6 +89,21 @@ export default class DateTimeInputField extends DateTimeInputFieldProps {
   time = "";
   error = false;
 
+  @Watch("date")
+  onDateChange(date: string): void {
+    const now = dayjs();
+    if (
+      this.dateProps.max &&
+      dayjs(date).isSame(now.format("YYYY-MM-DD"), "day")
+    ) {
+      this.timeProps.max = now.format("HH:mm");
+      if (this.time > this.timeProps.max) {
+        this.time = this.timeProps.max;
+        this.setDateTime();
+      }
+    }
+  }
+
   @Watch("value")
   onChange(newValue: string): void {
     const date = dayjs(newValue);
