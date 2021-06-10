@@ -23,7 +23,7 @@ Vor der Datenabfrage durch ein Gesundheitsamt liegen diese ausschließlich bei d
 Das folgende Schaubild visualisiert die Architektur und erklärt die zentralen Bestandteile.
 
 *Schaubild der Akteure, Komponenten und typischen Use Cases von IRIS*
-![IRIS C2 Architektur](IRIS-C2-with-EPS.jpg)
+![IRIS C2 Architektur](images/IRIS-C2-with-EPS.jpg)
 
 | Nummer | Bezeichnung | Erklärung |
 | --- | --- | --- |

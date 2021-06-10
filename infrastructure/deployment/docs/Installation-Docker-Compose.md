@@ -256,15 +256,15 @@ LOCAL_CONTACT_PERSON_NAME
 LOCAL_CONTACT_PERSON_MAIL
 LOCAL_CONTACT_PERSON_PHONE
 ```
-## Einrichtung HTTPS Proxy
+## Einrichtung HTTP Connect Proxy
 
 In den meisten GAs werden Verbindungen ins Internet über einen Proxy geleitet. Dafür ist folgender Parameter vorgesehen. 
 
 ```
-HTTPS_PROXY
+PROXY_URL
 ```
 
-Der Proxy Server muss Tunneling über HTTP_CONNECT unterstützen. Weiter Einstellungen bezüglich der Ports und Domains sind weiter oben dokumentiert. 
+Der Proxy Server muss Tunneling über HTTP_CONNECT unterstützen. Weiter Einstellungen bezüglich der Ports und Domains sind [hier](Installation.md) dokumentiert. 
 
 ## Einrichtung Service Directory
 
