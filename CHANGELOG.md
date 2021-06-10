@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.0.0-rc.7](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.6...v1.0.0-rc.7) (2021-06-10)
+
+
+### Bug Fixes
+
+* Fixes problem that PROXY_URL was still not applied. ([dffcb33](https://github.com/iris-connect/iris-client/commit/dffcb3351770a5d423220a880b0876d77666b0c2))
+
 # [1.0.0-rc.6](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.5...v1.0.0-rc.6) (2021-06-10)
 
 
