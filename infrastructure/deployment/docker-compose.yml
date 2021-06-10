@@ -87,7 +87,7 @@ services:
       EPS_SD_ENDPOINT:
       TRUSTED_CA_CRT:
       HTTPS_PROXY: ${PROXY_URL}
-      PROXY_URL: ""
+      PROXY_URL: ${PROXY_URL}
 
     command: ["--level", "debug", "server", "run"]
 
@@ -123,7 +123,7 @@ services:
       PROXY_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
       HTTPS_PROXY: ${PROXY_URL}
-      PROXY_URL: ""
+      PROXY_URL: ${PROXY_URL}
       TRUSTED_CA_CRT:
     command: ["--level", "trace", "server", "run"]
 
