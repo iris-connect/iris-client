@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.0.0-rc.6](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.5...v1.0.0-rc.6) (2021-06-10)
+
+
+### Features
+
+* Integrates an automatic update of the IRIS client. ([1109c34](https://github.com/iris-connect/iris-client/commit/1109c34ba012879b70509b48fcb9b99b0657244e)), closes [iris-connect/iris-backlog#104](https://github.com/iris-connect/iris-backlog/issues/104) [#126](https://github.com/iris-connect/iris-client/issues/126)
+
 # [1.0.0-rc.5](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.4...v1.0.0-rc.5) (2021-06-10)
 
 
