@@ -3,7 +3,10 @@ package iris.client_bff.events.eps;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionService;
+import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.web.dto.GuestList;
+import iris.client_bff.proxy.IRISAnnouncementException;
+import iris.client_bff.proxy.ProxyServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +24,8 @@ public class DataSubmissionRPCImpl implements DataSubmissionRPC {
 
 	private final EventDataRequestService requestService;
 	private final EventDataSubmissionService dataSubmissionService;
+	private final ProxyServiceClient proxyClient;
+	private final DataProviderClient epsDataRequestClient;
 
 	public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
 		log.trace("Start submission {}", dataAuthorizationToken);
@@ -38,6 +43,13 @@ public class DataSubmissionRPCImpl implements DataSubmissionRPC {
 
 			log.trace("Done submission {}", dataAuthorizationToken);
 
+			try {
+				proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
+				epsDataRequestClient.abortGuestListDataRequest(dataRequest);
+			} catch (IRISAnnouncementException | IRISDataRequestException e) {
+				e.printStackTrace();
+				log.trace("Closing proxy announcement failed for {}", dataRequest.getAnnouncementToken());
+			}
 			return "OK";
 
 		}).orElseGet(() -> {
