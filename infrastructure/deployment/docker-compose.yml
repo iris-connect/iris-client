@@ -36,7 +36,7 @@ services:
 
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-bff:1.0.0-rc.4
+    image: inoeg/iris-client-bff:1.0
     expose:
       - 8092
     environment:
@@ -57,7 +57,7 @@ services:
 
   # IRIS Client Frontend for users
   iris-frontend:
-    image: inoeg/iris-client-frontend:1.0.0-rc.4
+    image: inoeg/iris-client-frontend:1.0
     expose:
       - 28080
     environment:
@@ -129,7 +129,7 @@ services:
 
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:1.0.0-rc.4
+    image: inoeg/iris-client-nginx:1.0
     ports:
       - 443:443
     environment:
@@ -141,6 +141,21 @@ services:
     depends_on:
       - iris-client
       - iris-frontend
+
+  # Watchtower for auto-updates
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+# for Docker on Windows hosts - untested!
+# https://stackoverflow.com/questions/57466568/how-do-you-mount-the-docker-socket-on-windows
+#      - //var/run/docker.sock://var/run/docker.sock
+    environment:
+      TZ: Europe/Berlin
+      WATCHTOWER_SCHEDULE: 0 0 3 * * *
+      WATCHTOWER_NO_PULL: "true"
+    depends_on:
+      - nginx
 
 volumes:
   psqldata_iris:

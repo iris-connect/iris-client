@@ -45,6 +45,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PW }}
+      
       - run: chmod +x ./.prepare-release.sh
   
       - name: Build all and create release with semantic-release
@@ -58,8 +64,5 @@ jobs:
             @google/semantic-release-replace-plugin
             @semantic-release/exec
             @semantic-release/git
-            semantic-release-docker
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_HUB_USER }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_PW }}
