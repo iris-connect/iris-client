@@ -28,7 +28,7 @@ Das folgende Schaubild visualisiert die Architektur und erklärt die zentralen B
 
 Personenbezogene Daten werden zwischen den angebundenen Lösungen und den GÄ immer Ende-zu-Ende-verschlüsselt übertragen.
 Dafür wird eine Transportverschlüsselung mit TLS/HTTPS eingesetzt bzw. mTLS bei Kommunikation über das EPS-Netzwerk.
-Entschlüsselt wird erst im IRIS Client Backend des jeweiligen GA. Der IRIS Public Proxy Service leitet TLS-Verbindungen weiter an das jeweilige GA, ohne sie zu terminieren (TLS-Passthrough).
+Entschlüsselt wird erst im IRIS Client Backend des jeweiligen GA. Der IRIS Proxy Service leitet TLS-Verbindungen weiter an das jeweilige GA, ohne sie zu terminieren (TLS-Passthrough).
 Erst im IRIS-Client liegen die Daten dann unverschlüsselt vor.
 Zusätzlich ist eine zusätzliche Inhaltsverschlüsselung gemäß Anforderung der Datenschutzkonferenz möglich.
 
