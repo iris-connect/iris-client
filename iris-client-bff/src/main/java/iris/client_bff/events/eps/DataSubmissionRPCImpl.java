@@ -46,7 +46,7 @@ public class DataSubmissionRPCImpl implements DataSubmissionRPC {
 				log.trace("Submission of data for {} is complete and proxy ancouncement has been closed", dataAuthorizationToken);
 			} catch (IRISAnnouncementException | IRISDataRequestException e) {
 				// Todo: Do I also need to remove the submission ? Possibly remove the saved data again
-				requestService.save(dataRequest);
+				dataSubmissionService.deleteFailedSubmissionAttempt(dataRequest, guestList);
 				e.printStackTrace();
 				log.trace("Submission of data or closing of the proxy announcement failed for {}", dataRequest.getAnnouncementToken());
 			}
