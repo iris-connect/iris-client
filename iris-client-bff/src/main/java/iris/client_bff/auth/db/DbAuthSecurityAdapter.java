@@ -3,9 +3,11 @@ package iris.client_bff.auth.db;
 import iris.client_bff.auth.db.jwt.JWTSigner;
 import iris.client_bff.auth.db.jwt.JWTVerifier;
 import iris.client_bff.users.UserDetailsServiceImpl;
+import iris.client_bff.users.entities.UserRole;
 import lombok.AllArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -53,6 +55,8 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers(SWAGGER_WHITELIST)
 				.permitAll()
+				.requestMatchers(EndpointRequest.toAnyEndpoint())
+				.hasAuthority(UserRole.ADMIN.name())
 				.antMatchers(HttpMethod.POST, "/data-submission-rpc").permitAll()
 				.anyRequest().authenticated()
 				.and()
