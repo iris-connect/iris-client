@@ -80,6 +80,24 @@
         </v-data-table>
       </v-card-text>
     </v-card>
+    <FeedbackDialog>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          class="mr-0 mb-0"
+          large
+          fab
+          dark
+          fixed
+          bottom
+          right
+          :max-height="48"
+          :max-width="48"
+          v-on="on"
+        >
+          <v-icon :size="30"> mdi-chat-alert-outline </v-icon>
+        </v-btn>
+      </template>
+    </FeedbackDialog>
   </div>
 </template>
 
@@ -89,6 +107,7 @@ import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import IndexTrackingFormView from "../index-tracking-form/index-tracking-form.view.vue";
 import StatusColors from "@/constants/StatusColors";
+import FeedbackDialog from "@/components/feedback.view.vue";
 import StatusMessages from "@/constants/StatusMessages";
 
 function getFormattedDate(date?: string): string {
@@ -108,6 +127,7 @@ type TableRow = {
 @Component({
   components: {
     IndexTrackingFormView: IndexTrackingFormView,
+    FeedbackDialog,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();

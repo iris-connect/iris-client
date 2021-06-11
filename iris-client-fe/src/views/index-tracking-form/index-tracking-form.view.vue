@@ -1,75 +1,102 @@
 <template>
-  <v-card class="my-3">
-    <v-form
-      ref="form"
-      v-model="form.valid"
-      lazy-validation
-      :disabled="indexCreationOngoing"
-    >
-      <v-card-title>Indexfall Erfassung</v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col cols="12" sm="6">
-            <v-text-field
-              v-model="form.model.externalId"
-              :rules="validationRules.defined"
-              label="Externe ID"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6">
-            <v-text-field v-model="form.model.name" label="Name"></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="6">
-            <v-textarea
-              v-model="form.model.comment"
-              label="Kommentar"
-            ></v-textarea>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" md="6">
-            <date-time-input-field
-              v-model="form.model.start"
-              :date-props="{
-                label: 'Datum (Beginn)',
-              }"
-              :time-props="{
-                label: 'Uhrzeit (Beginn)',
-              }"
-              :rules="validationRules.start"
-              required
-            />
-          </v-col>
-          <v-col cols="12" md="6">
-            <date-time-input-field
-              v-model="form.model.end"
-              :date-props="{
-                label: 'Datum (Ende)',
-              }"
-              :time-props="{
-                label: 'Uhrzeit (Ende)',
-              }"
-              :rules="validationRules.end"
-            />
-          </v-col>
-        </v-row>
-        <v-alert v-if="indexCreationError" text type="error">{{
-          indexCreationError
-        }}</v-alert>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="secondary" plain @click="$router.back()">
-          Abbrechen
+  <div>
+    <v-card class="my-3">
+      <v-form
+        ref="form"
+        v-model="form.valid"
+        lazy-validation
+        :disabled="indexCreationOngoing"
+      >
+        <v-card-title>Indexfall Erfassung</v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" sm="6">
+              <v-text-field
+                v-model="form.model.externalId"
+                :rules="validationRules.defined"
+                label="Externe ID"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6">
+              <v-text-field
+                v-model="form.model.name"
+                label="Name"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" sm="6">
+              <v-textarea
+                v-model="form.model.comment"
+                label="Kommentar"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" md="6">
+              <date-time-input-field
+                v-model="form.model.start"
+                :date-props="{
+                  label: 'Datum (Beginn)',
+                }"
+                :time-props="{
+                  label: 'Uhrzeit (Beginn)',
+                }"
+                :rules="validationRules.start"
+                required
+              />
+            </v-col>
+            <v-col cols="12" md="6">
+              <date-time-input-field
+                v-model="form.model.end"
+                :date-props="{
+                  label: 'Datum (Ende)',
+                }"
+                :time-props="{
+                  label: 'Uhrzeit (Ende)',
+                }"
+                :rules="validationRules.end"
+              />
+            </v-col>
+          </v-row>
+          <v-alert v-if="indexCreationError" text type="error">{{
+            indexCreationError
+          }}</v-alert>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="secondary" plain @click="$router.back()">
+            Abbrechen
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            :disabled="indexCreationOngoing"
+            color="primary"
+            @click="submit"
+          >
+            Daten senden
+          </v-btn>
+        </v-card-actions>
+      </v-form>
+    </v-card>
+    <FeedbackDialog>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          class="mr-0 mb-0"
+          large
+          fab
+          dark
+          fixed
+          bottom
+          right
+          :max-height="48"
+          :max-width="48"
+          v-on="on"
+        >
+          <v-icon :size="30"> mdi-chat-alert-outline </v-icon>
         </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn :disabled="indexCreationOngoing" color="primary" @click="submit">
-          Daten senden
-        </v-btn>
-      </v-card-actions>
-    </v-form>
-  </v-card>
+      </template>
+    </FeedbackDialog>
+  </div>
 </template>
 
 <script lang="ts">
@@ -80,6 +107,7 @@ import router from "@/router";
 import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
 import DateTimeInputField from "@/components/form/date-time-input-field.vue";
+import FeedbackDialog from "@/components/feedback.view.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
 
 type IndexTrackingForm = {
@@ -103,6 +131,7 @@ type IndexTrackingFormQueryParameters = Partial<
   components: {
     DateTimeInputField,
     IndexTrackingFormView: IndexTrackingFormView,
+    FeedbackDialog,
   },
   beforeRouteLeave(to, from, next) {
     store.commit("indexTrackingForm/reset");

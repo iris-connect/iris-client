@@ -76,22 +76,24 @@
         </v-data-table>
       </v-card-text>
     </v-card>
-    <v-btn
-      class="mr-0 mb-0"
-      large
-      fab
-      dark
-      fixed
-      bottom
-      right
-      :color="black"
-      :max-height="48"
-      :max-width="48"
-      @click="showFeedbackDialog = true"
-    >
-      <v-icon :size="32"> mdi-chat-alert-outline </v-icon>
-    </v-btn>
-    <FeedbackDialog v-model="showFeedbackDialog" />
+    <FeedbackDialog>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          class="mr-0 mb-0"
+          large
+          fab
+          dark
+          fixed
+          bottom
+          right
+          :max-height="48"
+          :max-width="48"
+          v-on="on"
+        >
+          <v-icon :size="30"> mdi-chat-alert-outline </v-icon>
+        </v-btn>
+      </template>
+    </FeedbackDialog>
   </div>
 </template>
 
@@ -244,11 +246,6 @@ export default class EventTrackingListView extends Vue {
     status: ExistingDataRequestClientWithLocationStatusEnum
   ): string {
     return StatusMessages.getMessage(status);
-  }
-  data() {
-    return {
-      showFeedbackDialog: false,
-    };
   }
 }
 </script>
