@@ -41,7 +41,7 @@ services:
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: inoeg/eps:v0.0.4
+    image: inoeg/eps:v0.1.8
     expose:
       - 4446
       - 5556
@@ -55,13 +55,15 @@ services:
       EPS_CLIENT_CERT:
       EPS_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
-      HTTPS_PROXY:
       TRUSTED_CA_CRT:
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ${PROXY_URL}
+
     command: ["--level", "debug", "server", "run"]
 
   # Proxy for inbound connections.
   private-proxy:
-    image: inoeg/proxy:v0.0.4
+    image: inoeg/proxy:v0.1.8
     expose:
       - 5545
       - 8877
@@ -73,15 +75,15 @@ services:
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
-      HTTPS_PROXY:
+      HTTPS_PROXY: ${PROXY_URL}
       TRUSTED_CA_CRT:
     command: ["--level", "trace", "run", "private"]
 
   private-proxy-eps:
-    image: inoeg/eps:v0.0.4
+    image: inoeg/eps:v0.1.8
     expose:
-      - 7766
-      - 7776
+      - 7766 # JSON-RPC server for internal connections from iris-client
+      - 7776 # gRPC protocol
     volumes:
       - ./conf/proxy:/app/settings
     environment:
@@ -90,7 +92,8 @@ services:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
-      HTTPS_PROXY:
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ${PROXY_URL}
       TRUSTED_CA_CRT:
     command: ["--level", "trace", "server", "run"]
 
@@ -114,15 +117,37 @@ services:
     image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-# for Docker on Windows hosts - untested!
-# https://stackoverflow.com/questions/57466568/how-do-you-mount-the-docker-socket-on-windows
-#      - //var/run/docker.sock://var/run/docker.sock
+    # for Docker on Windows hosts - untested!
+    # https://stackoverflow.com/questions/57466568/how-do-you-mount-the-docker-socket-on-windows
+    #      - //var/run/docker.sock://var/run/docker.sock
     environment:
       TZ: Europe/Berlin
       WATCHTOWER_SCHEDULE: 0 0 3 * * *
       WATCHTOWER_NO_PULL: "true"
     depends_on:
       - nginx
+
+  # Log shipper
+  logger:
+    image: umputun/docker-logger
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    environment:
+      - LOG_FILES=true
+      - LOG_SYSLOG=false
+      - EXCLUDE=deployment_logger_1
+      - MAX_FILES=10
+      - MAX_SIZE=50
+      - MAX_AGE=28
+      - DEBUG=false
+#      - TIME_ZONE=Europe/Berlin
+    volumes:
+      - ${LOG_FOLDER}:/srv/logs
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   proxy_db_iris:
