@@ -319,7 +319,15 @@ const exportCsvWithQuote = function (
   separator: string
 ): void {
   new Promise((resolve, reject) => {
-    const fields = headers.filter((v) => v);
+    const fields = headers
+      .map((header) => {
+        if (!header.text) return;
+        return {
+          label: header.text,
+          value: header.value,
+        };
+      })
+      .filter((v) => v);
     try {
       const parser = new Parser({
         fields,
@@ -345,7 +353,15 @@ const exportCsvWithoutQuote = function (
   separator: string
 ): void {
   new Promise((resolve, reject) => {
-    const fields = headers.filter((v) => v);
+    const fields = headers
+      .map((header) => {
+        if (!header.text) return;
+        return {
+          label: header.text,
+          value: header.value,
+        };
+      })
+      .filter((v) => v);
     try {
       const parser = new Parser({
         fields,
