@@ -223,8 +223,8 @@ export default class EventTrackingListView extends Vue {
       page: getPageFromRouteWithDefault(this.$route),
       itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
       loading: eventTrackingListLoading,
-      itemsLength: eventTrackingList.totalElements,
-      data: eventTrackingList.content.map((dataRequest) => {
+      itemsLength: eventTrackingList?.totalElements | 0,
+      data: eventTrackingList?.content.map((dataRequest) => {
         return {
           address: getFormattedAddress(dataRequest),
           endTime: getFormattedDate(dataRequest.end),

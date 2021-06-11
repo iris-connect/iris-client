@@ -19,12 +19,18 @@ vars:
     source: env
     variable: TRUSTED_CA_CRT
     type: string        
+  PROXY_URL:
+   source: env
+   variable: PROXY_URL
+   type: string        
+
 name: "$EPS_OP"
 # IRIS Service directory. It provides information about IRIS participants such as connected Apps and locations of IRIS central services. 
 directory:
   type: api
   settings:
     jsonrpc_client:
+      proxy_url: "$PROXY_URL"
       tls:
         certificate_file: "$DIR/../../certs/$EPS_CLIENT_CERT"
         key_file: "$DIR/../../certs/$EPS_CLIENT_CERT_KEY"  
