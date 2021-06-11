@@ -39,16 +39,16 @@ public class DataSubmissionRPCImpl implements DataSubmissionRPC {
 				return "Error: Submission not allowed for " + dataAuthorizationToken.toString() + ". Request was aborted.";
 			}
 
-			dataSubmissionService.save(dataRequest, guestList);
-
-			log.trace("Done submission {}", dataAuthorizationToken);
-
 			try {
+				dataSubmissionService.save(dataRequest, guestList);
 				proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
 				epsDataRequestClient.abortGuestListDataRequest(dataRequest);
+				log.trace("Submission of data for {} is complete and proxy ancouncement has been closed", dataAuthorizationToken);
 			} catch (IRISAnnouncementException | IRISDataRequestException e) {
+				// Todo: Do I also need to remove the submission ? Possibly remove the saved data again
+				requestService.save(dataRequest);
 				e.printStackTrace();
-				log.trace("Closing proxy announcement failed for {}", dataRequest.getAnnouncementToken());
+				log.trace("Submission of data or closing of the proxy announcement failed for {}", dataRequest.getAnnouncementToken());
 			}
 			return "OK";
 

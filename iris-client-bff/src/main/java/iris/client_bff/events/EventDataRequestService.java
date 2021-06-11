@@ -77,8 +77,7 @@ public class EventDataRequestService {
 		return repository.save(request);
 	}
 
-	public EventDataRequest createDataRequest(DataRequestClient request)
-			throws IRISDataRequestException {
+	public EventDataRequest createDataRequest(DataRequestClient request) throws IRISDataRequestException {
 
 		var providerId = request.getProviderId();
 		var locationId = request.getLocationId();
@@ -104,15 +103,15 @@ public class EventDataRequestService {
 		}
 
 		var dataRequest = new EventDataRequest(
-				request.getExternalRequestId(),
-				request.getName(),
-				request.getStart(),
-				request.getEnd(),
-				request.getComment(),
-				request.getRequestDetails(),
-				null,
-				location,
-				announcementToken);
+			request.getExternalRequestId(),
+			request.getName(),
+			request.getStart(),
+			request.getEnd(),
+			request.getComment(),
+			request.getRequestDetails(),
+			null,
+			location,
+			announcementToken);
 
 		try {
 			dataRequest.setStatus(Status.DATA_REQUESTED);
@@ -143,15 +142,20 @@ public class EventDataRequestService {
 			dataRequest.setName(patch.getName());
 		}
 		if (patch.getStatus() != null) {
-			var status = Status.valueOf(patch.getStatus().name());
-			dataRequest.setStatus(status);
 
-			try {
-				proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
-				epsDataRequestClient.abortGuestListDataRequest(dataRequest);
-			} catch (IRISAnnouncementException | IRISDataRequestException e) {
-				e.printStackTrace();
-				// TODO: Should we do something here?
+			var tempStatus = dataRequest.getStatus();
+			var status = Status.valueOf(patch.getStatus().name());
+			if (dataRequest.getStatus() != status) {
+				dataRequest.setStatus(status);
+
+				try {
+					proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
+					epsDataRequestClient.abortGuestListDataRequest(dataRequest);
+				} catch (IRISAnnouncementException | IRISDataRequestException e) {
+					e.printStackTrace();
+					// TODO: Should we do something here?
+					dataRequest.setStatus(tempStatus);
+				}
 			}
 		}
 
