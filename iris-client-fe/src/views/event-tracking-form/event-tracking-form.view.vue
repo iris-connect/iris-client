@@ -213,7 +213,14 @@ export default class EventTrackingFormView extends Vue {
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      start: [],
+      start: [
+        (v: string): string | boolean => {
+          return (
+            dayjs(v).isSameOrBefore(dayjs(), "minute") ||
+            "Bitte geben Sie einen Zeitpunkt in der Vergangenheit an"
+          );
+        },
+      ],
       end: [
         (v: string): string | boolean => {
           if (!this.form.model.start) return true;
