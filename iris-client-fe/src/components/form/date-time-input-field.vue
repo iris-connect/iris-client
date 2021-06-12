@@ -99,9 +99,9 @@ export default class DateTimeInputField extends DateTimeInputFieldProps {
       this.timeProps.max = now.format("HH:mm");
       if (!this.time || this.time > this.timeProps.max) {
         this.time = this.timeProps.max;
-        this.setDateTime();
       }
     }
+    this.setDateTime();
   }
 
   @Watch("value")
