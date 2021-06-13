@@ -7,7 +7,7 @@
             class="float-right"
             color="primary"
             :to="{ name: 'admin-user-create' }"
-            >Neuen Nutzer anlegen
+            >Neues Konto anlegen
           </v-btn>
         </div>
       </v-col>
@@ -15,7 +15,7 @@
     <v-row>
       <v-col>
         <v-card>
-          <v-card-title>Benutzerverwaltung</v-card-title>
+          <v-card-title>Kontoverwaltung</v-card-title>
           <v-card-text>
             <v-row>
               <v-col>
@@ -93,7 +93,7 @@ type TableRow = {
 };
 
 const UserRoleName = new Map<UserRole, string>([
-  [UserRole.Admin, "Administrator"],
+  [UserRole.Admin, "Administration"],
   [UserRole.User, "Nutzer"],
 ]);
 
@@ -124,7 +124,7 @@ export default class AdminUserListView extends Vue {
         value: "firstName",
       },
       {
-        text: "Benutzername",
+        text: "Anmeldename",
         value: "userName",
       },
       {

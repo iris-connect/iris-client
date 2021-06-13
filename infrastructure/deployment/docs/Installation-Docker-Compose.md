@@ -12,11 +12,11 @@ Bevor man mit der Installation des IRIS connect Clients beginnen kann, muss die 
 
 1. Installation eines »Windows Subsystem für Linux« (WSL), da die Docker Engine ein unix-artiges Betriebssystem verlangt. [hier beschrieben](https://docs.microsoft.com/en-us/windows/wsl/install-win10). Gegenwärtig wurde die Linux-Distribution »Ubuntu 20.04 LTS« erprobt.
 
-2. »Windows Subsystem für Linux« starten. Es gibt dafür eine Desktop-App. Erweitere Rechte (Starten als Administrator) sind nicht erforderlich.
+2. »Windows Subsystem für Linux« starten. Es gibt dafür eine Desktop-App. Erweitere Rechte (Starten als Admin) sind nicht erforderlich.
 
 3. Installation »Docker Desktop für Windows«, Desktop-Applikation, die alle Werkzeuge (Docker Engine, Docker Compose) mitbringt, um Docker auf Windows zu betreiben. [hier beschrieben](https://docs.docker.com/docker-for-windows/install/)
 
-4. »Docker Desktop für Windows« starten - auch OHNE Administrator-Rolle möglich.
+4. »Docker Desktop für Windows« starten - auch OHNE Admin-Rolle möglich.
 
 # Client Installation
 

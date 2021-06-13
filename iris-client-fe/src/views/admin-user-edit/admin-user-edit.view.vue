@@ -1,7 +1,7 @@
 <template>
   <v-card class="my-3">
     <v-form ref="form" v-model="form.valid" lazy-validation :disabled="isBusy">
-      <v-card-title>Benutzer bearbeiten</v-card-title>
+      <v-card-title>Konto bearbeiten</v-card-title>
       <v-card-text>
         <v-row>
           <v-col cols="12" md="6">
@@ -21,7 +21,7 @@
           <v-col cols="12" md="6">
             <v-text-field
               v-model="form.model.userName"
-              label="Benutzername"
+              label="Anmeldename"
             ></v-text-field>
           </v-col>
           <v-col cols="12" md="6">
@@ -133,7 +133,7 @@ export default class AdminUserEditView extends Vue {
         value: UserRole.User,
       },
       {
-        text: "Administrator",
+        text: "Administration",
         value: UserRole.Admin,
       },
     ];
