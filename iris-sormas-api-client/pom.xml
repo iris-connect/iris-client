@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
+	<groupId>iris-gateway</groupId>
 	<artifactId>iris-sormas-api-client</artifactId>
 	<packaging>jar</packaging>
-	<groupId>iris-gateway</groupId>
-	<name>SORMAS-API-Client</name>
-	<version>1.55.0-SNAPSHOT</version>
+	<name>iris-sormas-api-client</name>
+	<version>1.61.0-SNAPSHOT</version>
 	<url>https://github.com/swagger-api/swagger-codegen</url>
 	<description>Swagger Java</description>
 	<scm>
@@ -39,7 +37,7 @@
 
 	<build>
 		<plugins>
-			<plugin>
+ 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>2.4.2</version>
@@ -139,9 +137,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.10.4</version>
-				<configuration>
-					<source>8</source>
-				</configuration>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -195,7 +190,7 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.5.12</version>
+			<version>4.5.13</version>
 		</dependency>
 
 		<dependency>

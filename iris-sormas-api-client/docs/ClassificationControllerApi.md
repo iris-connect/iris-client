@@ -4,11 +4,11 @@ All URIs are relative to */sormas-rest*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getAll1**](ClassificationControllerApi.md#getAll1) | **GET** /classification/all/{since} | 
+[**getAll2**](ClassificationControllerApi.md#getAll2) | **GET** /classification/all/{since} | 
 
-<a name="getAll1"></a>
-# **getAll1**
-> List&lt;DiseaseClassificationCriteriaDto&gt; getAll1(since)
+<a name="getAll2"></a>
+# **getAll2**
+> List&lt;DiseaseClassificationCriteriaDto&gt; getAll2(since)
 
 
 
@@ -27,13 +27,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ClassificationControllerApi apiInstance = new ClassificationControllerApi();
 Long since = 789L; // Long | 
 try {
-    List<DiseaseClassificationCriteriaDto> result = apiInstance.getAll1(since);
+    List<DiseaseClassificationCriteriaDto> result = apiInstance.getAll2(since);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling ClassificationControllerApi#getAll1");
+    System.err.println("Exception when calling ClassificationControllerApi#getAll2");
     e.printStackTrace();
 }
 ```
@@ -50,7 +51,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

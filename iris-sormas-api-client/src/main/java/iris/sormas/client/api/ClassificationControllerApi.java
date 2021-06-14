@@ -1,6 +1,7 @@
 package iris.sormas.client.api;
 
 import iris.sormas.client.invoker.ApiClient;
+
 import iris.sormas.client.model.DiseaseClassificationCriteriaDto;
 
 import java.util.ArrayList;
@@ -22,63 +23,60 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
-		date = "2021-01-28T10:11:24.562208+01:00[Europe/Berlin]")
-@Component("iris.sormas.client.api.ClassificationControllerApi")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-06-08T06:53:38.737461+02:00[Europe/Berlin]")@Component("iris.sormas.client.api.ClassificationControllerApi")
 public class ClassificationControllerApi {
-	private ApiClient apiClient;
+    private ApiClient apiClient;
 
-	public ClassificationControllerApi() {
-		this(new ApiClient());
-	}
+    public ClassificationControllerApi() {
+        this(new ApiClient());
+    }
 
-	@Autowired
-	public ClassificationControllerApi(ApiClient apiClient) {
-		this.apiClient = apiClient;
-	}
+    @Autowired
+    public ClassificationControllerApi(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
-	public ApiClient getApiClient() {
-		return apiClient;
-	}
+    public ApiClient getApiClient() {
+        return apiClient;
+    }
 
-	public void setApiClient(ApiClient apiClient) {
-		this.apiClient = apiClient;
-	}
+    public void setApiClient(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @param since The since parameter
-	 * @return List&lt;DiseaseClassificationCriteriaDto&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<DiseaseClassificationCriteriaDto> getAll1(Long since) throws RestClientException {
-		Object postBody = null;
-		// verify the required parameter 'since' is set
-		if (since == null) {
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
-					"Missing the required parameter 'since' when calling getAll1");
-		}
-		// create path and map variables
-		final Map<String, Object> uriVariables = new HashMap<String, Object>();
-		uriVariables.put("since", since);
-		String path = UriComponentsBuilder.fromPath("/classification/all/{since}").buildAndExpand(uriVariables)
-				.toUriString();
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param since The since parameter
+     * @return List&lt;DiseaseClassificationCriteriaDto&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<DiseaseClassificationCriteriaDto> getAll2(Long since) throws RestClientException {
+        Object postBody = null;
+        // verify the required parameter 'since' is set
+        if (since == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'since' when calling getAll2");
+        }
+        // create path and map variables
+        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        uriVariables.put("since", since);
+        String path = UriComponentsBuilder.fromPath("/classification/all/{since}").buildAndExpand(uriVariables).toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = {  };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = {};
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		String[] authNames = new String[] { "basicAuth" };
-
-		ParameterizedTypeReference<List<DiseaseClassificationCriteriaDto>> returnType = new ParameterizedTypeReference<List<DiseaseClassificationCriteriaDto>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
+        ParameterizedTypeReference<List<DiseaseClassificationCriteriaDto>> returnType = new ParameterizedTypeReference<List<DiseaseClassificationCriteriaDto>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
 }

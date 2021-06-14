@@ -1,7 +1,7 @@
+import store from "@/store";
 import Vue from "vue";
 import VueRouter, { Location, Route, RouteConfig } from "vue-router";
 import Home from "../views/home/Home.vue";
-import store from "@/store";
 
 Vue.use(VueRouter);
 
@@ -80,6 +80,11 @@ export const routes: Array<RouteConfig> = [
   {
     path: "/cases/new",
     name: "index-new",
+    // TODO: Remove redirect line once index cases are activated again
+    // As the "Index-Cases" button is still present on the dashboard,
+    // route entry has to be available. The redirect prevents users
+    // to manually navigate to the view via address bar.
+    redirect: "/",
     meta: {
       menu: false,
     },
@@ -103,9 +108,15 @@ export const routes: Array<RouteConfig> = [
   {
     path: "/cases/list",
     name: "index-list" /* Caution: This acts as an identifier! */,
+    // TODO: Remove redirect and disabled lines once index cases are activated again
+    // As the "Index-Cases" menu entry is still present on the dashboard,
+    // route entry has to be available. The redirect prevents users
+    // to manually navigate to the view via address bar.
+    redirect: "/",
     meta: {
       menu: true,
       menuName: "Indexfälle",
+      disabled: true,
     },
     component: () =>
       import(
@@ -123,17 +134,17 @@ export const routes: Array<RouteConfig> = [
         /* webpackChunkName: "event-tracking-details" */ "../views/event-tracking-details/event-tracking-details.view.vue"
       ),
   },
-  {
-    path: "/cases/details/:caseId",
-    name: "index-details" /* Caution: This acts as an identifier! */,
-    meta: {
-      menu: false,
-    },
-    component: () =>
-      import(
-        /* webpackChunkName: "index-tracking-details" */ "../views/index-tracking-details/index-tracking-details.view.vue"
-      ),
-  },
+  // {
+  //   path: "/cases/details/:caseId",
+  //   name: "index-details" /* Caution: This acts as an identifier! */,
+  //   meta: {
+  //     menu: false,
+  //   },
+  //   component: () =>
+  //     import(
+  //       /* webpackChunkName: "index-tracking-details" */ "../views/index-tracking-details/index-tracking-details.view.vue"
+  //     ),
+  // },
   {
     path: "/about",
     name: "about" /* Caution: This acts as an identifier! */,

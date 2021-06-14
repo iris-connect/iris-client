@@ -65,6 +65,10 @@ import { DataQuery, getSortAttribute } from "@/api/common";
 import { DataOptions } from "node_modules/vuetify/types";
 
 const getFormattedAddress = (address: LocationAddress): string => {
+  if (!address) {
+    return "-";
+  }
+
   const { street, zip, city } = address;
   return join([street, zip, city], ", ");
 };
@@ -123,16 +127,16 @@ export default class EventTrackingFormLocationSelect extends EventTrackingFormLo
     return (this.locationList?.locations || []).map((location) => {
       const { name, contact } = location;
       let combinedName = name;
-      if (contact.officialName) {
+      if (contact && contact.officialName) {
         combinedName += "\n(" + contact.officialName + ")";
       }
 
       return {
         name: combinedName || "-",
-        address: getFormattedAddress(contact.address) || "-",
-        representative: contact.representative || "-",
-        email: contact.email || "-",
-        phone: contact.phone || "-",
+        address: getFormattedAddress(contact?.address) || "-",
+        representative: contact?.representative || "-",
+        email: contact?.email || "-",
+        phone: contact?.phone || "-",
         location,
       };
     });

@@ -1,7 +1,9 @@
 package iris.sormas.client.api;
 
 import iris.sormas.client.invoker.ApiClient;
+
 import iris.sormas.client.model.EventDto;
+import iris.sormas.client.model.PageEventIndexDto;
 import iris.sormas.client.model.PushResult;
 
 import java.util.ArrayList;
@@ -23,217 +25,248 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
-		date = "2021-01-28T10:11:24.562208+01:00[Europe/Berlin]")
-@Component("iris.sormas.client.api.EventControllerApi")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-06-08T06:53:38.737461+02:00[Europe/Berlin]")@Component("iris.sormas.client.api.EventControllerApi")
 public class EventControllerApi {
-	private ApiClient apiClient;
+    private ApiClient apiClient;
 
-	public EventControllerApi() {
-		this(new ApiClient());
-	}
+    public EventControllerApi() {
+        this(new ApiClient());
+    }
 
-	@Autowired
-	public EventControllerApi(ApiClient apiClient) {
-		this.apiClient = apiClient;
-	}
+    @Autowired
+    public EventControllerApi(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
-	public ApiClient getApiClient() {
-		return apiClient;
-	}
+    public ApiClient getApiClient() {
+        return apiClient;
+    }
 
-	public void setApiClient(ApiClient apiClient) {
-		this.apiClient = apiClient;
-	}
+    public void setApiClient(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @return List&lt;String&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<String> getAllActiveUuids4() throws RestClientException {
-		Object postBody = null;
-		String path = UriComponentsBuilder.fromPath("/events/uuids").build().toUriString();
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @return List&lt;String&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<String> getAllActiveUuids4() throws RestClientException {
+        Object postBody = null;
+        String path = UriComponentsBuilder.fromPath("/events/uuids").build().toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = {  };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = {};
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		String[] authNames = new String[] { "basicAuth" };
+        ParameterizedTypeReference<List<String>> returnType = new ParameterizedTypeReference<List<String>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param since The since parameter
+     * @return List&lt;EventDto&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<EventDto> getAllEvents(Long since) throws RestClientException {
+        Object postBody = null;
+        // verify the required parameter 'since' is set
+        if (since == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'since' when calling getAllEvents");
+        }
+        // create path and map variables
+        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        uriVariables.put("since", since);
+        String path = UriComponentsBuilder.fromPath("/events/all/{since}").buildAndExpand(uriVariables).toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		ParameterizedTypeReference<List<String>> returnType = new ParameterizedTypeReference<List<String>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = {  };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @param since The since parameter
-	 * @return List&lt;EventDto&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<EventDto> getAllEvents(Long since) throws RestClientException {
-		Object postBody = null;
-		// verify the required parameter 'since' is set
-		if (since == null) {
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
-					"Missing the required parameter 'since' when calling getAllEvents");
-		}
-		// create path and map variables
-		final Map<String, Object> uriVariables = new HashMap<String, Object>();
-		uriVariables.put("since", since);
-		String path = UriComponentsBuilder.fromPath("/events/all/{since}").buildAndExpand(uriVariables).toUriString();
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        ParameterizedTypeReference<List<EventDto>> returnType = new ParameterizedTypeReference<List<EventDto>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param since The since parameter
+     * @return List&lt;String&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<String> getArchivedUuidsSince1(Long since) throws RestClientException {
+        Object postBody = null;
+        // verify the required parameter 'since' is set
+        if (since == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'since' when calling getArchivedUuidsSince1");
+        }
+        // create path and map variables
+        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        uriVariables.put("since", since);
+        String path = UriComponentsBuilder.fromPath("/events/archived/{since}").buildAndExpand(uriVariables).toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = {};
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = {  };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		String[] authNames = new String[] { "basicAuth" };
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		ParameterizedTypeReference<List<EventDto>> returnType = new ParameterizedTypeReference<List<EventDto>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
+        ParameterizedTypeReference<List<String>> returnType = new ParameterizedTypeReference<List<String>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param body The body parameter
+     * @return List&lt;EventDto&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<EventDto> getByUuids17(List<String> body) throws RestClientException {
+        Object postBody = body;
+        String path = UriComponentsBuilder.fromPath("/events/query").build().toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @param since The since parameter
-	 * @return List&lt;String&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<String> getArchivedUuidsSince1(Long since) throws RestClientException {
-		Object postBody = null;
-		// verify the required parameter 'since' is set
-		if (since == null) {
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
-					"Missing the required parameter 'since' when calling getArchivedUuidsSince1");
-		}
-		// create path and map variables
-		final Map<String, Object> uriVariables = new HashMap<String, Object>();
-		uriVariables.put("since", since);
-		String path = UriComponentsBuilder.fromPath("/events/archived/{since}").buildAndExpand(uriVariables).toUriString();
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = {};
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
+        ParameterizedTypeReference<List<EventDto>> returnType = new ParameterizedTypeReference<List<EventDto>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param since The since parameter
+     * @return List&lt;String&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<String> getDeletedUuidsSince3(Long since) throws RestClientException {
+        Object postBody = null;
+        // verify the required parameter 'since' is set
+        if (since == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'since' when calling getDeletedUuidsSince3");
+        }
+        // create path and map variables
+        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        uriVariables.put("since", since);
+        String path = UriComponentsBuilder.fromPath("/events/deleted/{since}").buildAndExpand(uriVariables).toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		String[] authNames = new String[] { "basicAuth" };
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = {  };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		ParameterizedTypeReference<List<String>> returnType = new ParameterizedTypeReference<List<String>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @param body The body parameter
-	 * @return List&lt;EventDto&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<EventDto> getByUuids14(List<String> body) throws RestClientException {
-		Object postBody = body;
-		String path = UriComponentsBuilder.fromPath("/events/query").build().toUriString();
+        ParameterizedTypeReference<List<String>> returnType = new ParameterizedTypeReference<List<String>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param offset The offset parameter
+     * @param size The size parameter
+     * @return PageEventIndexDto
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public PageEventIndexDto getIndexList2(Integer offset, Integer size) throws RestClientException {
+        Object postBody = null;
+        String path = UriComponentsBuilder.fromPath("/events/indexList").build().toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        queryParams.putAll(apiClient.parameterToMultiValueMap(null, "offset", offset));
+        queryParams.putAll(apiClient.parameterToMultiValueMap(null, "size", size));
 
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = {  };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = { "application/json; charset&#x3D;UTF-8" };
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		String[] authNames = new String[] { "basicAuth" };
+        ParameterizedTypeReference<PageEventIndexDto> returnType = new ParameterizedTypeReference<PageEventIndexDto>() {};
+        return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param body The body parameter
+     * @return List&lt;PushResult&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<PushResult> postEvents(List<EventDto> body) throws RestClientException {
+        Object postBody = body;
+        String path = UriComponentsBuilder.fromPath("/events/push").build().toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		ParameterizedTypeReference<List<EventDto>> returnType = new ParameterizedTypeReference<List<EventDto>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @param since The since parameter
-	 * @return List&lt;String&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<String> getDeletedUuidsSince3(Long since) throws RestClientException {
-		Object postBody = null;
-		// verify the required parameter 'since' is set
-		if (since == null) {
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
-					"Missing the required parameter 'since' when calling getDeletedUuidsSince3");
-		}
-		// create path and map variables
-		final Map<String, Object> uriVariables = new HashMap<String, Object>();
-		uriVariables.put("since", since);
-		String path = UriComponentsBuilder.fromPath("/events/deleted/{since}").buildAndExpand(uriVariables).toUriString();
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
-
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = {};
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
-
-		String[] authNames = new String[] { "basicAuth" };
-
-		ParameterizedTypeReference<List<String>> returnType = new ParameterizedTypeReference<List<String>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
-
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @param body The body parameter
-	 * @return List&lt;PushResult&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<PushResult> postEvents(List<EventDto> body) throws RestClientException {
-		Object postBody = body;
-		String path = UriComponentsBuilder.fromPath("/events/push").build().toUriString();
-
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
-
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = { "application/json; charset&#x3D;UTF-8" };
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
-
-		String[] authNames = new String[] { "basicAuth" };
-
-		ParameterizedTypeReference<List<PushResult>> returnType = new ParameterizedTypeReference<List<PushResult>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
+        ParameterizedTypeReference<List<PushResult>> returnType = new ParameterizedTypeReference<List<PushResult>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
 }

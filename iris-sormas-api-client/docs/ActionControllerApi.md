@@ -30,6 +30,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ActionControllerApi apiInstance = new ActionControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -53,7 +54,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -81,6 +82,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ActionControllerApi apiInstance = new ActionControllerApi();
 try {
     List<String> result = apiInstance.getAllUuids();
@@ -100,7 +102,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -128,6 +130,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ActionControllerApi apiInstance = new ActionControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
@@ -151,7 +154,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -179,6 +182,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ActionControllerApi apiInstance = new ActionControllerApi();
 List<ActionDto> body = Arrays.asList(new ActionDto()); // List<ActionDto> | 
 try {
@@ -202,7 +206,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

@@ -28,6 +28,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 BAGExportControllerApi apiInstance = new BAGExportControllerApi();
 String body = "body_example"; // String | 
 try {
@@ -50,7 +51,7 @@ null (empty response body)
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -78,6 +79,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 BAGExportControllerApi apiInstance = new BAGExportControllerApi();
 String body = "body_example"; // String | 
 try {
@@ -100,7 +102,7 @@ null (empty response body)
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

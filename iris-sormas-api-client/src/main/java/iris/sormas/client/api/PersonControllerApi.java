@@ -1,6 +1,8 @@
 package iris.sormas.client.api;
 
 import iris.sormas.client.invoker.ApiClient;
+
+import iris.sormas.client.model.PagePersonIndexDto;
 import iris.sormas.client.model.PersonDto;
 import iris.sormas.client.model.PushResult;
 
@@ -23,145 +25,243 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen",
-		date = "2021-01-28T10:11:24.562208+01:00[Europe/Berlin]")
-@Component("iris.sormas.client.api.PersonControllerApi")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-06-08T06:53:38.737461+02:00[Europe/Berlin]")@Component("iris.sormas.client.api.PersonControllerApi")
 public class PersonControllerApi {
-	private ApiClient apiClient;
+    private ApiClient apiClient;
 
-	public PersonControllerApi() {
-		this(new ApiClient());
-	}
+    public PersonControllerApi() {
+        this(new ApiClient());
+    }
 
-	@Autowired
-	public PersonControllerApi(ApiClient apiClient) {
-		this.apiClient = apiClient;
-	}
+    @Autowired
+    public PersonControllerApi(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
-	public ApiClient getApiClient() {
-		return apiClient;
-	}
+    public ApiClient getApiClient() {
+        return apiClient;
+    }
 
-	public void setApiClient(ApiClient apiClient) {
-		this.apiClient = apiClient;
-	}
+    public void setApiClient(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @param since The since parameter
-	 * @return List&lt;PersonDto&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<PersonDto> getAllPersons(Long since) throws RestClientException {
-		Object postBody = null;
-		// verify the required parameter 'since' is set
-		if (since == null) {
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
-					"Missing the required parameter 'since' when calling getAllPersons");
-		}
-		// create path and map variables
-		final Map<String, Object> uriVariables = new HashMap<String, Object>();
-		uriVariables.put("since", since);
-		String path = UriComponentsBuilder.fromPath("/persons/all/{since}").buildAndExpand(uriVariables).toUriString();
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param since The since parameter
+     * @return List&lt;PersonDto&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<PersonDto> getAllPersons(Long since) throws RestClientException {
+        Object postBody = null;
+        // verify the required parameter 'since' is set
+        if (since == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'since' when calling getAllPersons");
+        }
+        // create path and map variables
+        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        uriVariables.put("since", since);
+        String path = UriComponentsBuilder.fromPath("/persons/all/{since}").buildAndExpand(uriVariables).toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = {  };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = {};
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		String[] authNames = new String[] { "basicAuth" };
+        ParameterizedTypeReference<List<PersonDto>> returnType = new ParameterizedTypeReference<List<PersonDto>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @return List&lt;String&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<String> getAllUuids15() throws RestClientException {
+        Object postBody = null;
+        String path = UriComponentsBuilder.fromPath("/persons/uuids").build().toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		ParameterizedTypeReference<List<PersonDto>> returnType = new ParameterizedTypeReference<List<PersonDto>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = {  };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @return List&lt;String&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<String> getAllUuids12() throws RestClientException {
-		Object postBody = null;
-		String path = UriComponentsBuilder.fromPath("/persons/uuids").build().toUriString();
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        ParameterizedTypeReference<List<String>> returnType = new ParameterizedTypeReference<List<String>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param body The body parameter
+     * @return List&lt;PersonDto&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<PersonDto> getByExternalIds(List<String> body) throws RestClientException {
+        Object postBody = body;
+        String path = UriComponentsBuilder.fromPath("/persons/query/byExternalIds").build().toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = {};
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		String[] authNames = new String[] { "basicAuth" };
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		ParameterizedTypeReference<List<String>> returnType = new ParameterizedTypeReference<List<String>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
+        ParameterizedTypeReference<List<PersonDto>> returnType = new ParameterizedTypeReference<List<PersonDto>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param uuid The uuid parameter
+     * @return PersonDto
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public PersonDto getByUuid1(String uuid) throws RestClientException {
+        Object postBody = null;
+        // verify the required parameter 'uuid' is set
+        if (uuid == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'uuid' when calling getByUuid1");
+        }
+        // create path and map variables
+        final Map<String, Object> uriVariables = new HashMap<String, Object>();
+        uriVariables.put("uuid", uuid);
+        String path = UriComponentsBuilder.fromPath("/persons/{uuid}").buildAndExpand(uriVariables).toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @param body The body parameter
-	 * @return List&lt;PersonDto&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<PersonDto> getByUuids18(List<String> body) throws RestClientException {
-		Object postBody = body;
-		String path = UriComponentsBuilder.fromPath("/persons/query").build().toUriString();
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = {  };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = { "application/json; charset&#x3D;UTF-8" };
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
+        ParameterizedTypeReference<PersonDto> returnType = new ParameterizedTypeReference<PersonDto>() {};
+        return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param body The body parameter
+     * @return List&lt;PersonDto&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<PersonDto> getByUuids21(List<String> body) throws RestClientException {
+        Object postBody = body;
+        String path = UriComponentsBuilder.fromPath("/persons/query").build().toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		String[] authNames = new String[] { "basicAuth" };
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		ParameterizedTypeReference<List<PersonDto>> returnType = new ParameterizedTypeReference<List<PersonDto>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-	/**
-	 * <p>
-	 * <b>0</b> - default response
-	 * 
-	 * @param body The body parameter
-	 * @return List&lt;PushResult&gt;
-	 * @throws RestClientException if an error occurs while attempting to invoke the API
-	 */
-	public List<PushResult> postPersons(List<PersonDto> body) throws RestClientException {
-		Object postBody = body;
-		String path = UriComponentsBuilder.fromPath("/persons/push").build().toUriString();
+        ParameterizedTypeReference<List<PersonDto>> returnType = new ParameterizedTypeReference<List<PersonDto>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param offset The offset parameter
+     * @param size The size parameter
+     * @return PagePersonIndexDto
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public PagePersonIndexDto getIndexList3(Integer offset, Integer size) throws RestClientException {
+        Object postBody = null;
+        String path = UriComponentsBuilder.fromPath("/persons/indexList").build().toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        queryParams.putAll(apiClient.parameterToMultiValueMap(null, "offset", offset));
+        queryParams.putAll(apiClient.parameterToMultiValueMap(null, "size", size));
 
-		final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
-		final HttpHeaders headerParams = new HttpHeaders();
-		final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = {  };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
 
-		final String[] accepts = { "application/json; charset&#x3D;UTF-8" };
-		final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
-		final String[] contentTypes = { "application/json; charset&#x3D;UTF-8" };
-		final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
 
-		String[] authNames = new String[] { "basicAuth" };
+        ParameterizedTypeReference<PagePersonIndexDto> returnType = new ParameterizedTypeReference<PagePersonIndexDto>() {};
+        return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
+    /**
+     * 
+     * 
+     * <p><b>0</b> - default response
+     * @param body The body parameter
+     * @return List&lt;PushResult&gt;
+     * @throws RestClientException if an error occurs while attempting to invoke the API
+     */
+    public List<PushResult> postPersons(List<PersonDto> body) throws RestClientException {
+        Object postBody = body;
+        String path = UriComponentsBuilder.fromPath("/persons/push").build().toUriString();
+        
+        final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+        final HttpHeaders headerParams = new HttpHeaders();
+        final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
 
-		ParameterizedTypeReference<List<PushResult>> returnType = new ParameterizedTypeReference<List<PushResult>>() {};
-		return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept,
-				contentType, authNames, returnType);
-	}
+        final String[] accepts = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final List<MediaType> accept = apiClient.selectHeaderAccept(accepts);
+        final String[] contentTypes = { 
+            "application/json; charset&#x3D;UTF-8"
+         };
+        final MediaType contentType = apiClient.selectHeaderContentType(contentTypes);
+
+        String[] authNames = new String[] { "basicAuth", "bearerAuth" };
+
+        ParameterizedTypeReference<List<PushResult>> returnType = new ParameterizedTypeReference<List<PushResult>>() {};
+        return apiClient.invokeAPI(path, HttpMethod.POST, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    }
 }

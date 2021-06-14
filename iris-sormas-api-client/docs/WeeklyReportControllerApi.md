@@ -4,14 +4,14 @@ All URIs are relative to */sormas-rest*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getAllUuids17**](WeeklyReportControllerApi.md#getAllUuids17) | **GET** /weeklyreports/uuids | 
+[**getAllUuids21**](WeeklyReportControllerApi.md#getAllUuids21) | **GET** /weeklyreports/uuids | 
 [**getAllWeeklyReports**](WeeklyReportControllerApi.md#getAllWeeklyReports) | **GET** /weeklyreports/all/{since} | 
-[**getByUuids27**](WeeklyReportControllerApi.md#getByUuids27) | **POST** /weeklyreports/query | 
+[**getByUuids31**](WeeklyReportControllerApi.md#getByUuids31) | **POST** /weeklyreports/query | 
 [**postWeeklyReports**](WeeklyReportControllerApi.md#postWeeklyReports) | **POST** /weeklyreports/push | 
 
-<a name="getAllUuids17"></a>
-# **getAllUuids17**
-> List&lt;String&gt; getAllUuids17()
+<a name="getAllUuids21"></a>
+# **getAllUuids21**
+> List&lt;String&gt; getAllUuids21()
 
 
 
@@ -30,12 +30,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 WeeklyReportControllerApi apiInstance = new WeeklyReportControllerApi();
 try {
-    List<String> result = apiInstance.getAllUuids17();
+    List<String> result = apiInstance.getAllUuids21();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling WeeklyReportControllerApi#getAllUuids17");
+    System.err.println("Exception when calling WeeklyReportControllerApi#getAllUuids21");
     e.printStackTrace();
 }
 ```
@@ -49,7 +50,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -77,6 +78,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 WeeklyReportControllerApi apiInstance = new WeeklyReportControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -100,16 +102,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids27"></a>
-# **getByUuids27**
-> List&lt;WeeklyReportDto&gt; getByUuids27(body)
+<a name="getByUuids31"></a>
+# **getByUuids31**
+> List&lt;WeeklyReportDto&gt; getByUuids31(body)
 
 
 
@@ -128,13 +130,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 WeeklyReportControllerApi apiInstance = new WeeklyReportControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<WeeklyReportDto> result = apiInstance.getByUuids27(body);
+    List<WeeklyReportDto> result = apiInstance.getByUuids31(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling WeeklyReportControllerApi#getByUuids27");
+    System.err.println("Exception when calling WeeklyReportControllerApi#getByUuids31");
     e.printStackTrace();
 }
 ```
@@ -151,7 +154,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -179,6 +182,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 WeeklyReportControllerApi apiInstance = new WeeklyReportControllerApi();
 List<WeeklyReportDto> body = Arrays.asList(new WeeklyReportDto()); // List<WeeklyReportDto> | 
 try {
@@ -202,7 +206,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

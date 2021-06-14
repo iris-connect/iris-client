@@ -3,12 +3,12 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**creationDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**changeDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**creationDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**changeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **uuid** | **String** |  |  [optional]
 **pseudonymized** | **Boolean** |  |  [optional]
 **therapy** | [**TherapyReferenceDto**](TherapyReferenceDto.md) |  |  [optional]
-**treatmentDateTime** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**treatmentDateTime** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **executingClinician** | **String** |  |  [optional]
 **treatmentType** | [**TreatmentType**](TreatmentType.md) |  |  [optional]
 **treatmentDetails** | **String** |  |  [optional]

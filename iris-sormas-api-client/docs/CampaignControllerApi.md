@@ -5,8 +5,8 @@ All URIs are relative to */sormas-rest*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getAllCampaignFormData1**](CampaignControllerApi.md#getAllCampaignFormData1) | **GET** /campaigns/all/{since} | 
-[**getAllUuids4**](CampaignControllerApi.md#getAllUuids4) | **GET** /campaigns/uuids | 
-[**getByUuids5**](CampaignControllerApi.md#getByUuids5) | **POST** /campaigns/query | 
+[**getAllUuids5**](CampaignControllerApi.md#getAllUuids5) | **GET** /campaigns/uuids | 
+[**getByUuids6**](CampaignControllerApi.md#getByUuids6) | **POST** /campaigns/query | 
 
 <a name="getAllCampaignFormData1"></a>
 # **getAllCampaignFormData1**
@@ -28,6 +28,7 @@ ApiClient defaultClient = Configuration.getDefaultApiClient();
 HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
+
 
 CampaignControllerApi apiInstance = new CampaignControllerApi();
 Long since = 789L; // Long | 
@@ -52,16 +53,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getAllUuids4"></a>
-# **getAllUuids4**
-> List&lt;String&gt; getAllUuids4()
+<a name="getAllUuids5"></a>
+# **getAllUuids5**
+> List&lt;String&gt; getAllUuids5()
 
 
 
@@ -80,12 +81,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CampaignControllerApi apiInstance = new CampaignControllerApi();
 try {
-    List<String> result = apiInstance.getAllUuids4();
+    List<String> result = apiInstance.getAllUuids5();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CampaignControllerApi#getAllUuids4");
+    System.err.println("Exception when calling CampaignControllerApi#getAllUuids5");
     e.printStackTrace();
 }
 ```
@@ -99,16 +101,16 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids5"></a>
-# **getByUuids5**
-> List&lt;CampaignDto&gt; getByUuids5(body)
+<a name="getByUuids6"></a>
+# **getByUuids6**
+> List&lt;CampaignDto&gt; getByUuids6(body)
 
 
 
@@ -127,13 +129,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CampaignControllerApi apiInstance = new CampaignControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<CampaignDto> result = apiInstance.getByUuids5(body);
+    List<CampaignDto> result = apiInstance.getByUuids6(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CampaignControllerApi#getByUuids5");
+    System.err.println("Exception when calling CampaignControllerApi#getByUuids6");
     e.printStackTrace();
 }
 ```
@@ -150,7 +153,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

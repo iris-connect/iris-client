@@ -500,19 +500,14 @@ export default class IndexTrackingDetailsView extends Vue {
   }
 
   handleContactsExport(): void {
-    dataExport.exportCsv(
-      [
-        ...this.tableDataContacts.headers,
-        ...this.tableDataContacts.expandedHeaders,
-      ],
+    dataExport.exportStandardCsvForIndexTrackingContacts(
       this.tableDataContacts.select,
       [this.indexData.extID, Date.now()].join("_")
     );
   }
 
   handleEventsExport(): void {
-    dataExport.exportCsv(
-      [...this.tableDataEvents.headers],
+    dataExport.exportStandardCsvForIndexTrackingEvents(
       this.tableDataEvents.select,
       [this.indexData.extID, Date.now()].join("_")
     );

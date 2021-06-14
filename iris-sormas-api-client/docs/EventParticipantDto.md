@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**creationDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**changeDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**creationDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**changeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **uuid** | **String** |  |  [optional]
 **pseudonymized** | **Boolean** |  |  [optional]
 **reportingUser** | [**UserReferenceDto**](UserReferenceDto.md) |  |  [optional]
@@ -14,3 +14,6 @@ Name | Type | Description | Notes
 **resultingCase** | [**CaseReferenceDto**](CaseReferenceDto.md) |  |  [optional]
 **region** | [**RegionReferenceDto**](RegionReferenceDto.md) |  |  [optional]
 **district** | [**DistrictReferenceDto**](DistrictReferenceDto.md) |  |  [optional]
+**vaccinationInfo** | [**VaccinationInfoDto**](VaccinationInfoDto.md) |  |  [optional]
+**sormasToSormasOriginInfo** | [**SormasToSormasOriginInfoDto**](SormasToSormasOriginInfoDto.md) |  |  [optional]
+**ownershipHandedOver** | **Boolean** |  |  [optional]

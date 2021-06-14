@@ -69,7 +69,7 @@ services:
       - iris-client
 
   eps:
-    image: inoeg/eps:v0.0.4
+    image: inoeg/eps:v0.1.4
     expose:
       - 4446
       - 5556
@@ -97,19 +97,19 @@ services:
       - iris-frontend
 
   private-proxy:
-    image: inoeg/proxy:v0.0.4
+    image: inoeg/proxy:v0.1.4
     expose:
       - 5545
       - 8877
     volumes:
       - ./settings:/app/settings
-      - ./private-proxy-db:/tmp
+      - ./private-proxy-db:/private-proxy
     environment:
       - PROXY_SETTINGS=settings/roles/private-proxy-1
     command: [ "--level", "trace", "run", "private" ]
 
   private-proxy-1:
-    image: inoeg/eps:v0.0.4
+    image: inoeg/eps:v0.1.4
     expose:
       - 7766
       - 7776
@@ -118,16 +118,6 @@ services:
     environment:
       - EPS_SETTINGS=settings/roles/private-proxy-eps-1
     command: [ "--level", "trace", "server", "run" ]
-
-
-  internal-server:
-    image: luckylusa/iris-eps-internal-server:v0.0.3007
-    volumes:
-      - ./settings:/app/settings
-    expose:
-      - 8888
-    entrypoint: ./internal-server
-    command: [ "--level", "trace" ]
 
 volumes:
   psqldata_iris:
