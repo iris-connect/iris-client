@@ -5,6 +5,7 @@
     :nudge-right="40"
     transition="scale-transition"
     offset-y
+    max-width="290"
   >
     <template v-slot:activator="{ on, attrs }">
       <div class="d-flex align-center">
@@ -25,6 +26,8 @@
       v-model="model"
       no-title
       @input="active = false"
+      :max="max"
+      :min="min"
     ></v-date-picker>
   </v-menu>
   <v-text-field
@@ -49,6 +52,14 @@ const DateInputFieldProps = Vue.extend({
     picker: {
       type: Boolean,
       default: true,
+    },
+    max: {
+      type: String,
+      default: undefined,
+    },
+    min: {
+      type: String,
+      default: undefined,
     },
   },
 });
