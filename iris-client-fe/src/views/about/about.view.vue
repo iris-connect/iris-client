@@ -64,7 +64,7 @@
       <v-row justify="center" align="center">
         <v-col>
           <v-row justify="center" align="center">
-            <router-link to="https://inoeg.de">
+            <a href="https://inoeg.de">
               <v-img
                 alt="InÖG-Logo"
                 class="shrink mt-3 mr-4"
@@ -75,12 +75,12 @@
                 width="300"
                 max-width="600"
               />
-            </router-link>
+            </a>
           </v-row>
         </v-col>
         <v-col>
           <v-row justify="center" align="center">
-            <router-link to="https://steiger-stiftung.de">
+            <a href="https://steiger-stiftung.de">
               <v-img
                 alt="BSS-Logo"
                 class="shrink mt-3 mr-4"
@@ -91,7 +91,7 @@
                 width="300"
                 max-width="600"
               />
-            </router-link>
+            </a>
           </v-row>
         </v-col>
       </v-row>
