@@ -87,6 +87,7 @@ class IndexCaseControllerTest {
 		});
 
 		when(service.create(any())).thenReturn(MOCK_CASE);
+
 	}
 
 	@Test
