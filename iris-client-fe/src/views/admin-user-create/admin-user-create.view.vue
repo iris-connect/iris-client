@@ -6,7 +6,7 @@
       lazy-validation
       :disabled="userCreationOngoing"
     >
-      <v-card-title>Benutzer anlegen</v-card-title>
+      <v-card-title>Konto anlegen</v-card-title>
       <v-card-text>
         <v-row>
           <v-col cols="12" md="6">
@@ -26,7 +26,7 @@
           <v-col cols="12" md="6">
             <v-text-field
               v-model="form.model.userName"
-              label="Benutzername"
+              label="Anmeldename"
               :rules="validationRules.defined"
             ></v-text-field>
           </v-col>
@@ -67,7 +67,7 @@
           color="primary"
           @click="createUser"
         >
-          Benutzer anlegen
+          Konto anlegen
         </v-btn>
       </v-card-actions>
     </v-form>
@@ -116,7 +116,7 @@ export default class AdminUserCreateView extends Vue {
         value: UserRole.User,
       },
       {
-        text: "Administrator",
+        text: "Administration",
         value: UserRole.Admin,
       },
     ];

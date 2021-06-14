@@ -14,7 +14,7 @@
               <v-text-field
                 v-model="formModel.userName"
                 :rules="validationRules.defined"
-                label="Benutzername"
+                label="Anmeldename"
               ></v-text-field>
             </v-col>
             <v-col cols="12">
