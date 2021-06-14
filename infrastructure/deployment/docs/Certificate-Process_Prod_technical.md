@@ -4,6 +4,10 @@
 ## Vorwort
 Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei, sowie weitere, die im Anschluss selbstständig mit einem Script erstellt werden können, also ohne Zutun der Bundesdruckerei.
 
+Im folgenden Schaubild ist der Prozess Top-Level abgebildet.
+
+![alt](images/IRIS-Production-Certs.jpg)
+
 Dieses Dokument erklärt die technischen Schritte, die Landesbehörden und Gesundheitsämter gemeinsam unternehmen müssen, um die Zertifikate zu beantragen bzw. zu erstellen und einzurichten.
 
 Allgemeine Erläuterungen zum Prozess bzgl. der Domains und dem Antragsprozess bei der Bundesdruckerei werden zur besseren Übersicht in der [prozessualen Installationsanleitung](Certificate-Process_Prod_organizational.md) erläutert.
@@ -69,32 +73,38 @@ Das Einrichten der Domains seitens der Landesbehörde erfolgen muss wird in der 
 Es gibt keine feste Vorgabe für die Benennung der Domains. 
 Wir empfehlen aber den offiziellen RKI-Namen des Gesundheitsamts zu verwenden (für Bonn bswp. "Stadt Bonn").
 
-<mark>**TODO: RKI-Schema und Normalisierung erklären**</mark>
+```
+# Beispiel Stadt Bonn
+Offizieller RKI Name:   Stadt Bonn
+sanitized_name:         stadt-bonn
+IRIS Identifier:        ga-stadt-bonn
+Vorschlag Domain:       ga-stadt-bonn.iris-connect.nrw.de
+```
 
 ### DNS für die Domains konfigurieren
 
 Zunächst muss ein A-Record gesetzt werden, damit alle GA-Subdomains uf die IP des IRIS Public Proxy auflösen: 
 
 ```
-*.iris-connect.nrw.de    A [IP des IRIS Public Proxy]
+# Beispiel NRW
+*.iris-connect.nrw.de    A 193.28.249.53   # prod.iris-gateway.de
 ```
 
 Für die IRIS-Stammdomain des Landes muss ein [CAA-Record](https://de.wikipedia.org/wiki/DNS_Certification_Authority_Authorization) (Certificate Authority Authorization) vorgenommen werden.
 Dieser legt fest, welche CAs für die IRIS-Stammdomain Zertifikate ausstellen dürfen: 
 
 ```
-iris.nrw.de    CAA 0 issue "d-trust.net"
+# Beispiel NRW
+iris-connect.nrw.de    CAA 0 issue "d-trust.net"
 ```
 
 
 ## Erforderliche Schritte seitens eines Gesundheitsamts
-### Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei beantragen
-#### Zertifikate online beantragen
+### Zertifikat Nr 1 (TLS-Zertifikat) online beantragen
 Die Bundesdruckerei lädt die jeweils zertifikatsverantwortliche Person per signierter E-Mail zum sog. Certificate Service Manager (CSM) ein, einem Online-Verwaltungsportal für Zertifikate.
 Darin können die Zertifikate anschließend mit wenigen Klicks beantragt werden.
 
 Im Folgenden betrachten wir die Antragsstrecke für Zertifikat Nr. 1.
-Zertifikat Nr. 2 wird anschließend analog beantragt.
 
 Antragsstrecke:
 
@@ -114,27 +124,80 @@ Antragsstrecke:
 
 
 5. In der linken Seitenleiste auf "Neues Zertifikat" klicken. Es öffnet sich die Ansicht "Produkt auswählen – Schritt 1/4".
-   ![Ansicht "Produkt auswählen - Schritt 1 / 4)" im CSM](images/certificate_service_manager/mycsm_Produkt_auswählen.png)
-   Die Produktauswahl ist auf zwei Wahlmöglichkeiten beschränkt: "Advanced SSL ID (RSA)" für Zertifikat Nr. 1 und "Basic Device ID (EC)" für Zertifikat Nr. 2.
+   ![Ansicht "Produkt auswählen - Schritt 1 / 4)" im CSM](images/certificate_service_manager/mycsm_Produkt_auswählen_advanced_ssl.png)
+   
 
 
-6. Wählen Sie als Produkt "Advanced SSL ID (RSA)" für Zertifikat Nr. 1 aus.
-   Klicken Sie anschließend auf weiter. Es öffnet sich die Ansicht "Neues Zertifikat – Schritt 2/4".
-   Hier muss ein Certificate Signing Request (CSR) zu Zertifikat Nr. 1 hochgeladen werden.
-   Diesen können Sie einfach mit einem Script erstellen, das mit dem IRIS-Client zur Verfügung gestellt wird.  
-   <mark>**TODO: Ein Script erstellen, das als Input das Signaturzertifikat und einige Parameter nimmt und CSRs zu Zertifikat Nr. 1 und 2 ausspuckt.**</mark>
-   ```
-   TODO: Script-Aufrufe 
-   ```
+6. Selektieren Sie als Produkt "Advanced SSL ID (RSA)".
+   Klicken Sie anschließend auf weiter. Es öffnet sich die Ansicht "Neues Zertifikat – Schritt 2/4". Klicken Sie auf den Link für die  vereinfachte Beantragung mit Angabe der Zertifikatsdaten. 
+
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
-   Zusätzlich muss ein Sperrpasswort gesetzt werden, dass Sie – wenn nichts schief geht – niemals brauchen werden.
+
+7. Es öffnet sich eine Webform mit deren Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert. 
+
+   | Feld | Wert | Beispiel |
+   | - | - | - |
+   | Common Name (CN) | Die von der Landesbehörde bereitgestellte Domain für Ihr GA | Beispiel Bonn: ga-bonn.iris-connect.nrw.de |
+   | Organisation (O) | Die zuständige Landesbehörde | IT.NRW für Nordrhein Westfalen |
+   | Unter SAN -> Erster DNS Eintrag | Die von der Landesbehörde bereitgestellte Domain für Ihr GA | Beispiel Bonn: ga-bonn.iris-connect.nrw.de |
+   | Unter SAN -> Zweiter DNS Eintrag | Ergänzener Wildcard DNS Eintrag | Beispiel Bonn: *.ga-bonn.iris-connect.nrw.de |   
+
+   ![Ansicht "Neues Zertifikat - Schritt 2 / 4) - Webform" im CSM](images/certificate_service_manager/mycsm_Produkt_auswählen_advanced_ssl_webform.png)
+
+   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/production/generate-rsa-key-pair.sh). 
+
+   ```
+   $ sh generate-rsa-key-pair.sh TLS-Zertifikat
+   $ ls -l
+   -rw-------  1 TLS-Zertifikat.key
+   -rw-r--r--  1 TLS-Zertifikat.pub
+   ```
+
+   Laden Sie das TLS-Zertifikat.pub in das entsprechende Feld hoch.
+
+   Zum Abschluß muss ein Sperrpasswort gesetzt werden, dass Sie – wenn nichts schief geht – niemals brauchen werden.
+
+8. Klicken Sie auf "weiter. Sie landen auf einer Übersichtsseite, die Ihnen eine Zusammenfassung der Informationen anzeigt. Akzeptieren Sie das Subscriber Agreement und klicken Sie auf fertig.
+   
+
+### Zertifikat Nr 2 (Signatur-Zertifikat) online beantragen
+
+Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus. 
 
 
-7. Klicken Sie auf "weiter".  
-   <mark>**TODO: Schritte 3 und 4 anhand eines echten CSR beschreiben.**</mark>
+6. Wählen Sie als Produkt "Basic Device  (RSA)" für Zertifikat Nr. 2 aus.   
+   Klicken Sie anschließend auf weiter. Es öffnet sich die Ansicht "Neues Zertifikat – Schritt 2/4". Klicken Sie auf den Link für die  vereinfachte Beantragung mit Angabe der Zertifikatsdaten. 
+
+   ![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
+
+7. Es öffnet sich eine Webform mit deren Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert. 
+
+   | Feld | Wert | Beispiel |
+   | - | - | - |
+   | Organisation (O) | Die zuständige Landesbehörde | IT.NRW für Nordrhein Westfalen |
+   | Common Name (CN) | iris-connect-signature-cert-${Ihr RKI Identifier} | Beispiel Bonn: iris-connect-signature-cert-ga-stadt-bonn |
+   | Abteilung (OU) | IRIS | IRIS |
 
 
-#### Zertifikate herunterladen
+   ![Ansicht "Neues Zertifikat - Schritt 2 / 4) - Webform" im CSM](images/certificate_service_manager/mycsm_basic_device_id_webform.png)
+
+   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/production/generate-signature-key-pair.sh).  
+
+   ```
+   $ sh generate-signature-key-pair.sh Signatur-Zertifikat
+   $ ls -l
+   -rw-------  1 Signatur-Zertifikat-priv-key.pem
+   -rw-r--r--  1 Signatur-Zertifikat-pub-key.pem   
+   ```
+
+   Laden Sie das Signatur-Zertifikat-pub-key.pem  in das entsprechende Feld hoch.
+
+   Zum Abschluß muss ein Sperrpasswort gesetzt werden, dass Sie – wenn nichts schief geht – niemals brauchen werden.
+
+
+8. Klicken Sie auf "weiter. Sie landen auf einer Übersichtsseite, die Ihnen eine Zusammenfassung der Informationen anzeigt. Akzeptieren Sie das Subscriber Agreement und klicken Sie auf fertig.
+
+### Zertifikate herunterladen
 Sobald die Zertifikate fertig sind erhalten Sie eine Benachrichtigung an die im CSM hinterlegte E-Mail-Adresse.
 Sie können die Zertifikate dann einfach im CSM herunterladen.
 
