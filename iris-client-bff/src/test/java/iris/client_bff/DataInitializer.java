@@ -11,6 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public interface DataInitializer {
 
-  @Transactional
-  void initialize();
+	@Transactional
+	void initialize();
 }

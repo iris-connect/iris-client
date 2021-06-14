@@ -20,10 +20,10 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @Getter
 public class IrisSormasProperties {
 
-  private final InetAddress serverAddress;
-  private final Integer serverPort;
-  private final String user;
-  private final String password;
+	private final InetAddress serverAddress;
+	private final Integer serverPort;
+	private final String user;
+	private final String password;
 
-  private @Setter String irisUserId;
+	private @Setter String irisUserId;
 }

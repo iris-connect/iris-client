@@ -16,7 +16,7 @@ import javax.persistence.Embedded;
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class GuestListDataProvider {
 
-  private String name;
-  @Embedded
-  private Address address;
+	private String name;
+	@Embedded
+	private Address address;
 }

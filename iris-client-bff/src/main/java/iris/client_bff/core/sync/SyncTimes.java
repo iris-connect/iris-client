@@ -23,17 +23,17 @@ import javax.persistence.Table;
 @Getter
 public class SyncTimes {
 
-  @Id
-  // private int id;
-  @Enumerated(EnumType.STRING)
-  private DataTypes dataType;
-  private Instant lastSync;
+	@Id
+	// private int id;
+	@Enumerated(EnumType.STRING)
+	private DataTypes dataType;
+	private Instant lastSync;
 
-  // static SyncTimes of(DataTypes dataType, int lastSync) {
-  // return new SyncTimes(dataType.ordinal(), dataType, lastSync);
-  // }
+	// static SyncTimes of(DataTypes dataType, int lastSync) {
+	// return new SyncTimes(dataType.ordinal(), dataType, lastSync);
+	// }
 
-  public enum DataTypes {
-	Persons, Cases, Contacts, Tasks, Submissions
-  }
+	public enum DataTypes {
+		Persons, Cases, Contacts, Tasks, Submissions
+	}
 }

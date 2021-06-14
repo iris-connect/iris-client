@@ -17,8 +17,8 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class AttendanceInformation {
 
-  private String descriptionOfParticipation;
-  private Instant attendFrom;
-  private Instant attendTo;
-  private String additionalInformation;
+	private String descriptionOfParticipation;
+	private Instant attendFrom;
+	private Instant attendTo;
+	private String additionalInformation;
 }

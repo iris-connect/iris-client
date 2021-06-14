@@ -21,16 +21,16 @@ import org.springframework.stereotype.Component;
 @Order(100)
 class DataInitializerInvoker implements ApplicationRunner {
 
-  private final @NonNull List<DataInitializer> initializers;
+	private final @NonNull List<DataInitializer> initializers;
 
-  /*
-   * (non-Javadoc)
-   * @see org.springframework.boot.ApplicationRunner#run(org.springframework.boot.ApplicationArguments)
-   */
-  @Override
-  public void run(@Nullable ApplicationArguments args) throws Exception {
-	initializers.stream()
-		.peek(it -> log.info("Data initialization for " + AopUtils.getTargetClass(it)))
-		.forEach(DataInitializer::initialize);
-  }
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.boot.ApplicationRunner#run(org.springframework.boot.ApplicationArguments)
+	 */
+	@Override
+	public void run(@Nullable ApplicationArguments args) throws Exception {
+		initializers.stream()
+				.peek(it -> log.info("Data initialization for " + AopUtils.getTargetClass(it)))
+				.forEach(DataInitializer::initialize);
+	}
 }

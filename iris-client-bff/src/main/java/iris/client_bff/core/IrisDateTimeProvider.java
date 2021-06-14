@@ -22,39 +22,39 @@ import org.springframework.stereotype.Component;
 @Component
 public class IrisDateTimeProvider implements DateTimeProvider {
 
-  private DateTimeProperties properties;
-  private @Getter @Setter TemporalAmount delta;
+	private DateTimeProperties properties;
+	private @Getter @Setter TemporalAmount delta;
 
-  public IrisDateTimeProvider(@Nullable DateTimeProperties properties) {
+	public IrisDateTimeProvider(@Nullable DateTimeProperties properties) {
 
-	this.properties = properties;
+		this.properties = properties;
 
-	delta = properties != null ? properties.getDelta() : Period.ZERO;
-  }
-
-  public void reset() {
-	this.delta = properties.getDelta();
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.springframework.data.auditing.DateTimeProvider#getNow()
-   */
-  @Override
-  public Optional<TemporalAccessor> getNow() {
-	return Optional.of(Instant.now().plus(delta));
-  }
-
-  @ConstructorBinding
-  @ConfigurationProperties("date-time")
-  @RequiredArgsConstructor
-  // @Profile("!prod")
-  public static class DateTimeProperties {
-
-	private final Period delta;
-
-	public Period getDelta() {
-	  return delta != null ? delta : Period.ZERO;
+		delta = properties != null ? properties.getDelta() : Period.ZERO;
 	}
-  }
+
+	public void reset() {
+		this.delta = properties.getDelta();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.auditing.DateTimeProvider#getNow()
+	 */
+	@Override
+	public Optional<TemporalAccessor> getNow() {
+		return Optional.of(Instant.now().plus(delta));
+	}
+
+	@ConstructorBinding
+	@ConfigurationProperties("date-time")
+	@RequiredArgsConstructor
+	// @Profile("!prod")
+	public static class DateTimeProperties {
+
+		private final Period delta;
+
+		public Period getDelta() {
+			return delta != null ? delta : Period.ZERO;
+		}
+	}
 }

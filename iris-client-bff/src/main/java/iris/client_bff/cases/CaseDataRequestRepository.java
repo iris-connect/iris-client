@@ -19,11 +19,11 @@ public interface CaseDataRequestRepository extends JpaRepository<CaseDataRequest
 	@Query("select count(1) = 0 from CaseDataRequest r where r.id = :code")
 	boolean isCodeAvailable(UUID code);
 
-  @Query("select count(r) from CaseDataRequest r where r.metadata.created >= :date")
-  int getCountSinceDate(Instant date);
+	@Query("select count(r) from CaseDataRequest r where r.metadata.created >= :date")
+	int getCountSinceDate(Instant date);
 
-  @Query("select count(r) from CaseDataRequest r where r.status = :status")
-  int getCountWithStatus(Status status);
+	@Query("select count(r) from CaseDataRequest r where r.status = :status")
+	int getCountWithStatus(Status status);
 
 	Page<CaseDataRequest> findByStatus(Status status, Pageable pageable);
 

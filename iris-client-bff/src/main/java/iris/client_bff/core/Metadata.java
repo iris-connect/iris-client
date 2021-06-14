@@ -16,8 +16,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Embeddable
 public class Metadata {
 
-  @CreatedDate
-  Instant created;
-  @LastModifiedDate
-  Instant lastModified;
+	@CreatedDate
+	Instant created;
+	@LastModifiedDate
+	Instant lastModified;
 }

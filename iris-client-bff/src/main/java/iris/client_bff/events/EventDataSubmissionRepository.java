@@ -13,6 +13,6 @@ import org.springframework.data.util.Streamable;
  */
 public interface EventDataSubmissionRepository extends CrudRepository<EventDataSubmission, DataSubmissionIdentifier> {
 
-  @Transactional
-  Streamable<EventDataSubmission> findAllByRequest(EventDataRequest request);
+	@Transactional
+	Streamable<EventDataSubmission> findAllByRequest(EventDataRequest request);
 }
