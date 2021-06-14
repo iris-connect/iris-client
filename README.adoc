@@ -154,6 +154,6 @@ Currently this code is licensed under Affero GPL 3.0.
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the <<./LICENSE,LICENSE>> for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the link:LICENSE[] for more details.
 
 Please see the https://api.reuse.software/info/github.com/iris-connect/iris-client[detailed licensing information] via the https://reuse.software/[REUSE Tool] for more details.
