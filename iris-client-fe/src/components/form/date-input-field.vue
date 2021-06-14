@@ -5,6 +5,7 @@
     :nudge-right="40"
     transition="scale-transition"
     offset-y
+    max-width="290"
   >
     <template v-slot:activator="{ on, attrs }">
       <div class="d-flex align-center">

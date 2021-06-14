@@ -7,6 +7,7 @@
     :close-on-content-click="false"
     transition="scale-transition"
     offset-y
+    max-width="290"
   >
     <template v-slot:activator="{ on, attrs }">
       <div class="d-flex align-center">

@@ -17,7 +17,7 @@ However, we plan to join a bug bounty platform like HackerOne in the long-term.
 Also, we can acknowledge your effort publicly in the GitHub project.  
 Thank you for improving the security of the IRIS project!
 
-Report security issues via email at [security@iris-gateway.de](mailto:security@iris-gateway.de?subject=GitHub%20Security%20Issue).
+Report security issues via email at [security@iris-connect.de](mailto:security@iris-connect.de?subject=GitHub%20Security%20Issue).
 
 The IRIS team acknowledges your email within 24 hours and will further respond in detail within 48 hours, explaining the induced actions.  
 Our security team will keep you up to date of the progress towards fixing the vulnerability and may ask you for additional information.
