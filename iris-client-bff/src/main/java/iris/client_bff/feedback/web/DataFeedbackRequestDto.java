@@ -1,21 +1,19 @@
 package iris.client_bff.feedback.web;
 
 import lombok.NonNull;
-import lombok.ToString;
 
 /*
- * This class represents the json structure of a request to Iris-Public-Server.
- * It is also the incoming json of Iris-Client-Frontend uses this structure.
+ * This class represents the json structure of a request to EPS.
+ * It is also the input json of Iris-Client-Frontend uses this structure.
  * @author Ostfalia Gruppe 12
  */
-@ToString
 public class DataFeedbackRequestDto {
 
 	private @NonNull String category;
 
 	private @NonNull String title;
 
-	private @NonNull String commentar;
+	private @NonNull String comment;
 
 	private String name;
 
@@ -43,12 +41,12 @@ public class DataFeedbackRequestDto {
 		this.title = title;
 	}
 
-	public String getCommentar() {
-		return commentar;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setCommentar(String commentar) {
-		this.commentar = commentar;
+	public void setCommentar(String comment) {
+		this.comment = comment;
 	}
 
 	public String getName() {
