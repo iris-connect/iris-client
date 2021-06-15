@@ -29,7 +29,7 @@ We use the specification https://www.conventionalcommits.org[Conventional Commit
 Commits should always refer to an issue (user story, bug or task). Therefore, always include the reference to the issue at the end of the commit message.
 ```
 Refs #{issue number} ⇒ same repository
-Refs iris-gateway/iris-backlog#{issue number} ⇒ other repository
+Refs iris-connect/iris-backlog#{issue number} ⇒ other repository
 ```
 
 === Branches
