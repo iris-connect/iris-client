@@ -69,7 +69,7 @@ services:
       - iris-client
 
   eps:
-    image: inoeg/eps:v0.1.4
+    image: inoeg/eps:v0.1.12
     expose:
       - 4446
       - 5556
@@ -97,7 +97,7 @@ services:
       - iris-frontend
 
   private-proxy:
-    image: inoeg/proxy:v0.1.4
+    image: inoeg/proxy:v0.1.12
     expose:
       - 5545
       - 8877
@@ -109,7 +109,7 @@ services:
     command: [ "--level", "trace", "run", "private" ]
 
   private-proxy-1:
-    image: inoeg/eps:v0.1.4
+    image: inoeg/eps:v0.1.12
     expose:
       - 7766
       - 7776
