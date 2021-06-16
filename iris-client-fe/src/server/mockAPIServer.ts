@@ -157,7 +157,6 @@ export function makeMockAPIServer() {
       });
 
       this.get("/search", (schema, request) => {
-        console.log(request);
         let data;
         if (
           request.queryParams.search.toLowerCase().includes("pizza") ||
