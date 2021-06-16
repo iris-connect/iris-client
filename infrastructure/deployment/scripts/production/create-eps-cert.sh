@@ -14,7 +14,7 @@ openssl x509 -req -in "${cn}-sign.csr" -CA $sign_cert -CAkey $key -CAcreateseria
 
 FINGERPRINT=$(openssl x509 -noout -fingerprint -sha256 -inform pem -in ${cn}.crt | sed -e 's/://g' | sed -r 's/.*=(.*)$/\1/g' | awk '{print tolower($0)}')
 
-echo "Information needed for IRIS Team"
+echo "# Information needed for IRIS Team"
 echo "CN:                      $cn"
 echo "Certificate Fingerprint: $FINGERPRINT"
 

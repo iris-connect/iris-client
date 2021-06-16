@@ -218,29 +218,98 @@ Sie können die Zertifikate dann einfach im CSM herunterladen.
 
 
 #### Zertifikate Nr. 1 und Nr. 2 einrichten
-<mark>**TODO**</mark>
 
-## Zertifikate Nr. 3 bis 5
-Sobald Zertifikat Nr. 2 vorliegt können die Zertifikate Nr. 3 bis 5 vom GA, bzw. dessen IT-Dienstleister,
+Das Zertifikat Nr. 1 wird direkt im IRIS Client konfiguriert. Das Zertifikat Nr. 2 (Signatur Zertifikat) wird benötigt, um die Zertifikate Nr. 3 und Nr 4 zu erstellen (nächster Abschnitt).
+
+## Zertifikate Nr. 3 bis 4
+Sobald Zertifikat Nr. 2 vorliegt können die Zertifikate Nr. 3 bis 4 vom GA, bzw. dessen IT-Dienstleister,
 je nachdem, wer den IRIS-Client betreibt, selbstständig erstellt werden, also ohne Zutun der Bundesdruckerei.
-
 ### Zertifikate erstellen
-Das Erstellen der Zertifikate Nr. 3 bis 5 übernimmt ein Script, das mit dem IRIS-Client zur Verfügung gestellt wird.
+Das Erstellen der Zertifikate Nr. 3 bis 4 übernehmen zwei Scripte, das mit dem IRIS-Client zur Verfügung gestellt wird.
 
-<mark>**TODO: Ein Script erstellen, das als Input das Signaturzertifikat und einige Parameter nimmt und Zertifikate Nr. 3 und 4 ausspuckt.**</mark>
+#### EPS Zertifikat (Nr. 3) erstellen
 
-```
-TODO: Script-Aufrufe 
-```
+1. Bestimmen Sie den CN Namen (Common Name) für Ihre Client Installation. 
+   ```
+   Der allgemeine Aufbau vom CN Feld ist: ga-${sanitized_name(Offizieller RKI Name)}
+
+   sanitized_name bedeutet folgendes: Ersetzung aller Umlaute (z.B. ö -> oe). Sonderzeichen und Leerzeichen (auch aufeinanderfolgend) werden durch ein '-' ersetzt. Alles Lower Case.
+
+   # Beispiel Bonn
+   Offizieller RKI Name:   Stadt Bonn
+   sanitized_name:         stadt-bonn
+   CN Feld:                ga-stadt-bonn
+
+2. Führen Sie [dieses Script](../scripts/production/create-eps-cert.sh) aus.
+
+   ```
+   sh create-eps-cert.sh [Pfad zum Private Key vom Signatur Zertifikat] [Pfad zum Signatur Zertifikat] [common name (aus Schritt 1)]
+   
+   # Als Ergebnis bekommen Sie 1 Datei
+   -rw-------   1 3243 May 26 12:42 ${common name}.crt
+
+   # Als Ergebnis bekommen Sie zudem die Informationen, die sie ans IRIS Team weiterreichen müssen
+   # Beispiel
+   # Information needed for IRIS Team
+   CN:                      ga-stadt-koeln
+   Certificate Fingerprint: 21ff454bb95198a276592d7ca70f610eee2215e351faae4495921f31e80b7d47
+   ```
+   Legen Sie die .crt Datei mit den anderen Schlüsselpaaren an einem Sicheren Ort ab. Diese wird für die weitere Konfiguration im IRIS Client verwendet
+
+4. Senden Sie die notwendigen Informationen an das IRIS Rollout Team
+
+   Senden Sie eine E-Main an [IRIS-Rollout-Team](mailto:rollout@iris-gateway.de) und erhalten von uns eine Bestätigung zurück, dass wir Ihre Anwendung im Service Directory eingetragen haben.
+
+#### PROXY EPS Zertifikat (Nr. 4) erstellen
+
+1. Bestimmen Sie den CN Namen (Common Name) für Ihre Client Installation. 
+   ```
+   Der allgemeine Aufbau vom CN Feld ist: ga-${sanitized_name(Offizieller RKI Name)}-proxy
+
+   sanitized_name bedeutet folgendes: Ersetzung aller Umlaute (z.B. ö -> oe). Sonderzeichen und Leerzeichen (auch aufeinanderfolgend) werden durch ein '-' ersetzt. Alles Lower Case.
+
+   # Beispiel Bonn
+   Offizieller RKI Name:   Stadt Bonn
+   sanitized_name:         stadt-bonn
+   CN Feld:                ga-stadt-bonn-proxy
+
+2. Führen Sie [dieses Script](../scripts/production/create-proxy-eps-cert.sh) aus.
+
+   ```
+   sh create-proxy-eps-cert.sh [Pfad zum Private Key vom Signatur Zertifikat] [Pfad zum Signatur Zertifikat] [common name (aus Schritt 1)]
+   
+   # Als Ergebnis bekommen Sie 1 Datei
+   -rw-------   1 3243 May 26 12:42 ${common name}.crt
+
+   # Als Ergebnis bekommen Sie zudem die Informationen, die sie ans IRIS Team weiterreichen müssen
+   # Beispiel Köln
+   # Information needed for IRIS Team
+   CN:                      ga-stadt-koeln-proxy
+   Certificate Fingerprint: 8049877a38ba2fa3206ce9389b9d101376bb0863e422cf1859194d6afcf1ec39
+   ```
+   Legen Sie die .crt Datei mit den anderen Schlüsselpaaren an einem Sicheren Ort ab. Diese wird für die weitere Konfiguration im IRIS Client verwendet
+
+4. Senden Sie die notwendigen Informationen an das IRIS Rollout Team
+
+   Senden Sie eine E-Main an [IRIS-Rollout-Team](mailto:rollout@iris-gateway.de) und erhalten von uns eine Bestätigung zurück, dass wir Ihre Anwendung im Service Directory eingetragen haben.
+
 
 ### Zertifikate einrichten
-<mark>**TODO: Prozesse ggf. definieren und dokumentieren.**</mark>
 
+Die Zertifikate werden analog zur Staging Umgebung eingerichtet
+
+#### Zertifikat Nr. 1 einrichten
+
+TODO
 #### Zertifikat Nr. 3 einrichten
+
+Analog zu [Einrichtung GA Client Zertifikat für Staging](Installation-Docker-Compose.md)
 
 #### Zertifikat Nr. 4 einrichten
 
-#### Zertifikat Nr. 5 einrichten
+Analog zu [Einrichtung Proxy Client Zertifikat für Staging](Installation-Docker-Compose.md)
 
+#### Zertifikat Nr. 5 einrichten
+TODO
 ## Zertifikate sicher verwahren
-<mark>**TODO: Beschreiben, wie mit den einzelnen Zertifikaten im Anschluss umgegangen werden soll. Z.B. Zertifikat Nr. 2 air-gaped verwahren.**</mark>
+TODO
