@@ -156,17 +156,42 @@ export function makeMockAPIServer() {
         return authResponse(request, data);
       });
 
-      this.get("/search/mio", (schema, request) => {
-        const data = {
-          locations: [dummyLocations[0]],
-        };
-        return authResponse(request, data);
-      });
+      this.get("/search", (schema, request) => {
+        console.log(request);
+        let data;
+        if (
+          request.queryParams.search.toLowerCase().includes("pizza") ||
+          request.queryParams.search.toLowerCase().includes("musterstraße") ||
+          request.queryParams.search.toLowerCase().includes("mio")
+        ) {
+          data = {
+            locations: [dummyLocations[0]],
+          };
+        }
 
-      this.get("/search/august", (schema, request) => {
-        const data = {
-          locations: [dummyLocations[1]],
-        };
+        if (
+          request.queryParams.search.toLowerCase().includes("brau") ||
+          request.queryParams.search.toLowerCase().includes("münchen")
+        ) {
+          data = {
+            locations: [dummyLocations[1]],
+          };
+        }
+
+        if (
+          request.queryParams.search.toLowerCase().includes("bowl") ||
+          request.queryParams.search.toLowerCase().includes("musterstadt")
+        ) {
+          data = {
+            locations: [dummyLocations[2]],
+          };
+        }
+
+        if (request.queryParams.search.toLowerCase().includes("muster")) {
+          data = {
+            locations: [dummyLocations[0], dummyLocations[2]],
+          };
+        }
         return authResponse(request, data);
       });
     },
