@@ -92,6 +92,7 @@ services:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
     volumes:
       - ./conf:/etc/iris
+      - ./nginx:/etc/nginx/templates
     depends_on:
       - iris-client
       - iris-frontend
