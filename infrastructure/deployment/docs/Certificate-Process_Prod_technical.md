@@ -2,7 +2,7 @@
 
 
 ## Vorwort
-Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei, sowie weitere, die im Anschluss selbstständig mit einem Script erstellt werden können, also ohne Zutun der Bundesdruckerei.
+Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei. Zusätzlich werden noch weitere Zertifikate für das lokale Setup benötigt, die im Anschluss selbstständig mit einem Script erstellt werden können, also ohne Zutun der Bundesdruckerei.
 
 Im folgenden Schaubild ist der Prozess Top-Level abgebildet.
 
@@ -20,6 +20,27 @@ Beim Rollout von IRIS werden die individuellen Bedürfnisse und Wünsche der Bun
 Dadurch können sich von Land zu Land einige Unterschiede im Antragsprozess ergeben, auf die hier eingegangen wird.
 
 Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt sein, bitten wir um kurzen Hinweis.
+
+
+## Inhaltsverzeichnis
+
+* [Welche Zertifikate müssen beantragt werden?](#welche-zertifikate-m-ssen-beantragt-werden-)
+* [Erforderliche Schritte seitens der Landesbehörde](#erforderliche-schritte-seitens-der-landesbeh-rde)
+   + [Domains für die Gesundheitsämter bereitstellen](#domains-f-r-die-gesundheits-mter-bereitstellen)
+   + [DNS für die Domains konfigurieren](#dns-f-r-die-domains-konfigurieren)
+* [Erforderliche Schritte seitens eines Gesundheitsamts](#erforderliche-schritte-seitens-eines-gesundheitsamts)
+   + [Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei beantragen](#zertifikate-nr-1-und-nr-2-bei-der-bundesdruckerei-beantragen)
+      - [Zertifikate online beantragen](#zertifikate-online-beantragen)
+      - [Zertifikate herunterladen](#zertifikate-herunterladen)
+      - [Zertifikate Nr. 1 und Nr. 2 einrichten](#zertifikate-nr-1-und-nr-2-einrichten)
+* [Zertifikate Nr. 3 bis 5](#zertifikate-nr-3-bis-5)
+   + [Zertifikate erstellen](#zertifikate-erstellen)
+   + [Zertifikate einrichten](#zertifikate-einrichten)
+      - [Zertifikat Nr. 3 einrichten](#zertifikat-nr-3-einrichten)
+      - [Zertifikat Nr. 4 einrichten](#zertifikat-nr-4-einrichten)
+      - [Zertifikat Nr. 5 einrichten](#zertifikat-nr-5-einrichten)
+* [Zertifikate sicher verwahren](#zertifikate-sicher-verwahren)
+
 
 
 ## Welche Zertifikate müssen beantragt werden?
@@ -48,25 +69,6 @@ Dafür ist kein Zutun der Bundesdruckerei nötig.
    wonach zusätzlich zur Transportverschlüsselung (TLS) eine zweite Verschlüsselungsschicht auf Anwendungsebene (Inhaltsverschlüsselung) umzusetzen ist.
 
 
-## Inhaltsverzeichnis
-
-* [Welche Zertifikate müssen beantragt werden?](#welche-zertifikate-m-ssen-beantragt-werden-)
-* [Erforderliche Schritte seitens der Landesbehörde](#erforderliche-schritte-seitens-der-landesbeh-rde)
-   + [Domains für die Gesundheitsämter bereitstellen](#domains-f-r-die-gesundheits-mter-bereitstellen)
-   + [DNS für die Domains konfigurieren](#dns-f-r-die-domains-konfigurieren)
-* [Erforderliche Schritte seitens eines Gesundheitsamts](#erforderliche-schritte-seitens-eines-gesundheitsamts)
-   + [Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei beantragen](#zertifikate-nr-1-und-nr-2-bei-der-bundesdruckerei-beantragen)
-      - [Zertifikate online beantragen](#zertifikate-online-beantragen)
-      - [Zertifikate herunterladen](#zertifikate-herunterladen)
-      - [Zertifikate Nr. 1 und Nr. 2 einrichten](#zertifikate-nr-1-und-nr-2-einrichten)
-* [Zertifikate Nr. 3 bis 5](#zertifikate-nr-3-bis-5)
-   + [Zertifikate erstellen](#zertifikate-erstellen)
-   + [Zertifikate einrichten](#zertifikate-einrichten)
-      - [Zertifikat Nr. 3 einrichten](#zertifikat-nr-3-einrichten)
-      - [Zertifikat Nr. 4 einrichten](#zertifikat-nr-4-einrichten)
-      - [Zertifikat Nr. 5 einrichten](#zertifikat-nr-5-einrichten)
-* [Zertifikate sicher verwahren](#zertifikate-sicher-verwahren)
-
 ## Erforderliche Schritte seitens der Landesbehörde
 ### Domains für die Gesundheitsämter bereitstellen
 Das Einrichten der Domains seitens der Landesbehörde erfolgen muss wird in der [prozessualen Installationsanleitung](Certificate-Process_Prod_organizational.md/#domains-f-r-die-gesundheits-mter-bereitstellen) beschrieben.
@@ -83,15 +85,14 @@ Vorschlag Domain:       ga-stadt-bonn.iris-connect.nrw.de
 
 ### DNS für die Domains konfigurieren
 
-Zunächst muss ein A-Record gesetzt werden, damit alle GA-Subdomains uf die IP des IRIS Public Proxy auflösen: 
+Zunächst muss ein CNAME-Record gesetzt werden, damit alle GA-Subdomains auf den IRIS Proxy Service auflösen: 
 
 ```
 # Beispiel NRW
-*.iris-connect.nrw.de    A 193.28.249.53   # prod.iris-gateway.de
+*.iris-connect.nrw.de    CNAME prod.iris-gateway.de
 ```
 
-Für die IRIS-Stammdomain des Landes muss ein [CAA-Record](https://de.wikipedia.org/wiki/DNS_Certification_Authority_Authorization) (Certificate Authority Authorization) vorgenommen werden.
-Dieser legt fest, welche CAs für die IRIS-Stammdomain Zertifikate ausstellen dürfen: 
+Als nächstes muss ein [CAA-Record](https://de.wikipedia.org/wiki/DNS_Certification_Authority_Authorization) (Certificate Authority Authorization) vorgenommen werden. Damit wird eingeschränkt, welche CAs Zertifikate für die GA-Domains ausstellen dürfen. Dieser Schritt ist essentziell, um die Sicherheit der späteren Kommunikation sicherzustellen.
 
 ```
 # Beispiel NRW
