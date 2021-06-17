@@ -11,6 +11,7 @@ import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
+import iris.client_bff.events.exceptions.IRISDataRequestException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -61,7 +62,7 @@ class IndexCaseControllerIntegrationTest {
   private final Page<CaseDataRequest> casesPage = new RestResponsePage<>(List.of(MOCK_CASE));
 
   @BeforeEach
-  void setUp() {
+  void setUp() throws IRISDataRequestException {
     when(service.findAll(any(Pageable.class)))
         .thenReturn(casesPage);
 

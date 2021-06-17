@@ -9,6 +9,9 @@ import iris.client_bff.cases.CaseDataRequest.Status;
 
 import java.time.Instant;
 
+import iris.client_bff.config.DwConfig;
+import iris.client_bff.config.HealthDepartmentConfig;
+import iris.client_bff.proxy.ProxyServiceClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,11 +24,17 @@ public class IndexCaseServiceTest {
 	@Mock
 	CaseDataRequestRepository repository;
 
+	@Mock
+	ProxyServiceClient proxyServiceClient;
+
+	DwConfig dwConfig;
+	HealthDepartmentConfig hdConfig;
+
 	IndexCaseService service;
 
 	@BeforeEach
 	void setUp() {
-		service = new IndexCaseService(repository);
+		service = new IndexCaseService(repository, proxyServiceClient, dwConfig, hdConfig);
 	}
 
 	@Test

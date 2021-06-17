@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class IndexCaseMapper {
 
   public static IndexCaseDetailsDTO mapDetailed(CaseDataRequest indexCase) {
-
 	return IndexCaseDetailsDTO.builder()
 		.caseId(indexCase.getId().toString())
 		.comment(indexCase.getComment())
@@ -24,14 +23,15 @@ public class IndexCaseMapper {
 
 		// TODO assign real data submission values
 		.submissionData(null)
+		.submissionUri(indexCase.getDwSubmissionUri())
 		.build();
   }
 
   public static IndexCaseDTO map(CaseDataRequest indexCase) {
 
 	return IndexCaseDTO.builder()
-		.comment(indexCase.getComment())
 		.caseId(indexCase.getId().toString())
+		.comment(indexCase.getComment())
 		.externalCaseId(indexCase.getRefId())
 		.name(indexCase.getName())
 		.status(IndexCaseStatusDTO.valueOf(indexCase.getStatus().name()))

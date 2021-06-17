@@ -42,13 +42,15 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
   private Instant requestStart;
   private Instant requestEnd;
   private @Setter String comment;
+  private String announcementToken;
+  private @Setter String dwSubmissionUri;
 
   @Column(nullable = false) @Enumerated(EnumType.STRING)
   private Status status = Status.DATA_REQUESTED;
 
   @Builder
   public CaseDataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
-	  String hdUserId, String comment) {
+	  String hdUserId, String comment, String announcementToken) {
 
 	super();
 
@@ -60,6 +62,7 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 	this.requestEnd = requestEnd;
 	this.hdUserId = hdUserId;
 	this.comment = comment;
+	this.announcementToken = announcementToken;
   }
 
   public Instant getLastModifiedAt() {

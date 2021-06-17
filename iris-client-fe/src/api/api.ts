@@ -502,6 +502,12 @@ export interface DataRequestCaseData {
    */
   nonce?: string;
   /**
+   * The URI that can be used to submit contact data for this tracing code.
+   * @type {string}
+   * @memberof DataRequestCaseData
+   */
+  submissionUri: string;
+  /**
    *
    * @type {ContactsAndEvents}
    * @memberof DataRequestCaseData

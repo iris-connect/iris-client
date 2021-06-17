@@ -13,6 +13,7 @@ export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
     externalCaseId: "12345",
     start: daysAgo(3),
     comment: "leerer Kommentar",
+    submissionUri: "https://12345.proxy.exampleUrl.de",
     status: DataRequestStatus.DataReceived,
   },
   {
@@ -22,6 +23,7 @@ export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
     start: hoursAgo(3),
     end: hoursAgo(1),
     comment: "das könnte ihr Kommentar sein",
+    submissionUri: "https://1111.proxy.exampleUrl.de",
     status: DataRequestStatus.DataRequested,
   },
   {
@@ -30,6 +32,7 @@ export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
     externalCaseId: "2233",
     start: hoursAgo(2),
     comment: "leer",
+    submissionUri: "https://2233.proxy.exampleUrl.de",
     status: DataRequestStatus.Closed,
   },
 ];
@@ -40,6 +43,7 @@ export const dummyDataCaseDetails: DataRequestCaseData = {
   comment: "leerer Kommentar",
   start: hoursAgo(15),
   end: hoursAgo(1),
+  submissionUri: "https://12345.proxy.exampleUrl.de",
   submissionData: {
     contacts: {
       contactPersons: [
