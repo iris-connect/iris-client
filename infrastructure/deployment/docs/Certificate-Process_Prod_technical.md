@@ -4,10 +4,6 @@
 ## Vorwort
 Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei. Zusätzlich werden noch weitere Zertifikate für das lokale Setup benötigt, die im Anschluss selbstständig mit einem Script erstellt werden können, also ohne Zutun der Bundesdruckerei.
 
-Im folgenden Schaubild ist der Prozess Top-Level abgebildet.
-
-![alt](images/IRIS-Production-Certs.jpg)
-
 Dieses Dokument erklärt die technischen Schritte, die Landesbehörden und Gesundheitsämter gemeinsam unternehmen müssen, um die Zertifikate zu beantragen bzw. zu erstellen und einzurichten.
 
 Allgemeine Erläuterungen zum Prozess bzgl. der Domains und dem Antragsprozess bei der Bundesdruckerei werden zur besseren Übersicht in der [prozessualen Installationsanleitung](Certificate-Process_Prod_organizational.md) erläutert.
@@ -39,7 +35,7 @@ Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt s
       - [Zertifikat Nr. 3 einrichten](#zertifikat-nr-3-einrichten)
       - [Zertifikat Nr. 4 einrichten](#zertifikat-nr-4-einrichten)
       - [Zertifikat Nr. 5 einrichten](#zertifikat-nr-5-einrichten)
-* [Zertifikate sicher verwahren](#zertifikate-sicher-verwahren)
+* [Private Schlüssel sicher verwahren](#private-schlüssel-sicher-verwahren)
 
 
 
@@ -67,6 +63,11 @@ Dafür ist kein Zutun der Bundesdruckerei nötig.
 5. Ein Ende-zu-Ende-Zertifikat für das IRIS-Client-Backend des GA  
    Anwendungsfall: Umsetzung der Datenschutzkonferenz-Anforderung an Betreiber von digitaler Kontaktdatenerfassung,
    wonach zusätzlich zur Transportverschlüsselung (TLS) eine zweite Verschlüsselungsschicht auf Anwendungsebene (Inhaltsverschlüsselung) umzusetzen ist.
+
+
+Das folgenden Schaubild gibt eine Top-Level-Sicht auf den Prozess des Beantragens und Einrichten der Zertifikate.
+
+![alt](images/IRIS-Production-Certs.jpg)
 
 
 ## Erforderliche Schritte seitens der Landesbehörde
