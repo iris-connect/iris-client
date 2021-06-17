@@ -15,13 +15,13 @@ import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 
 @Slf4j
 @Service
-@AutoJsonRpcServiceImpl
 @RequiredArgsConstructor
-public class DataSubmissionRPCImpl implements DataSubmissionRPC {
+public class EventDataControllerImpl implements EventDataController {
 
 	private final EventDataRequestService requestService;
 	private final EventDataSubmissionService dataSubmissionService;
 
+	@Override
 	public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
 		log.trace("Start submission {}", dataAuthorizationToken);
 
