@@ -4,10 +4,6 @@
 ## Vorwort
 Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei. Zusätzlich werden noch weitere Zertifikate für das lokale Setup benötigt, die im Anschluss selbstständig mit einem Script erstellt werden können, also ohne Zutun der Bundesdruckerei.
 
-Im folgenden Schaubild ist der Prozess Top-Level abgebildet.
-
-![alt](images/IRIS-Production-Certs.jpg)
-
 Dieses Dokument erklärt die technischen Schritte, die Landesbehörden und Gesundheitsämter gemeinsam unternehmen müssen, um die Zertifikate zu beantragen bzw. zu erstellen und einzurichten.
 
 Allgemeine Erläuterungen zum Prozess bzgl. der Domains und dem Antragsprozess bei der Bundesdruckerei werden zur besseren Übersicht in der [prozessualen Installationsanleitung](Certificate-Process_Prod_organizational.md) erläutert.
@@ -39,7 +35,7 @@ Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt s
       - [Zertifikat Nr. 3 einrichten](#zertifikat-nr-3-einrichten)
       - [Zertifikat Nr. 4 einrichten](#zertifikat-nr-4-einrichten)
       - [Zertifikat Nr. 5 einrichten](#zertifikat-nr-5-einrichten)
-* [Zertifikate sicher verwahren](#zertifikate-sicher-verwahren)
+* [Private Schlüssel sicher verwahren](#private-schlüssel-sicher-verwahren)
 
 
 
@@ -67,6 +63,11 @@ Dafür ist kein Zutun der Bundesdruckerei nötig.
 5. Ein Ende-zu-Ende-Zertifikat für das IRIS-Client-Backend des GA  
    Anwendungsfall: Umsetzung der Datenschutzkonferenz-Anforderung an Betreiber von digitaler Kontaktdatenerfassung,
    wonach zusätzlich zur Transportverschlüsselung (TLS) eine zweite Verschlüsselungsschicht auf Anwendungsebene (Inhaltsverschlüsselung) umzusetzen ist.
+
+
+Das folgenden Schaubild gibt eine Top-Level-Sicht auf den Prozess des Beantragens und Einrichten der Zertifikate.
+
+![alt](images/IRIS-Production-Certs.jpg)
 
 
 ## Erforderliche Schritte seitens der Landesbehörde
@@ -312,5 +313,14 @@ Analog zu [Einrichtung Proxy Client Zertifikat für Staging](Installation-Docker
 
 #### Zertifikat Nr. 5 einrichten
 TODO
-## Zertifikate sicher verwahren
-TODO
+
+## Private Schlüssel sicher verwahren
+Private Schlüssel sollten aufgrund der hohen Schutzniveaus der Daten, die sie schützen besonders gesichert und redundant verwahrt werden.
+
+Um einem Schlüsselverlust durch Ausfall oder Beschädigung eines einzelnen IT-Systems vorzubeugen sollten alle privaten Schlüssel redundant auf mindestens zwei voneinander unabhängigen Speichermedien verwahrt werden.
+
+Zur sicheren Verwahrung kann ein Schlüssel in einem Trusted Platform Module (TPM) oder ein Hardware Security Module (HSM) abgelegt werden. 
+Falls die genutzte Infrastruktur über kein TPM oder HSM verfügt, können auch für diesen Zweck ausgelegte Standard-Produkte von Herstellern wie Herstellern wie [Nitrokey](https://www.nitrokey.com/de) oder [Yubico](https://www.yubico.com/?lang=de) erworben werden, die es in Form von USB-Sticks gibt. 
+
+Als etwas abgeschwächte Alternative kann ein Schlüssel auf einem herkömmlichen USB-Speichergerät (Stick, Festplatte) in einer verschlüsselten Partition abgelegt werden. 
+Eine verschlüsselte Partition kann auf allen USB-Speichergeräten in wenigen Minuten erstellt werden. Unter Linux kann dafür beispielsweise LUKS mit [dieser Anleitung](https://www.kuketz-blog.de/dm-crypt-luks-daten-unter-linux-sicher-verschluesseln/) benutzt werden.

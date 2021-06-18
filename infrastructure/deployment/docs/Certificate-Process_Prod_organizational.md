@@ -15,9 +15,6 @@ Dadurch können sich von Land zu Land einige Unterschiede im Antragsprozess erge
 
 Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt sein, bitten wir um kurzen Hinweis.
 
-**TODO: Kontaktmöglichkeit oder Link auf contribution guideline**
-
-
 ## Inhaltsverzeichnis
 * [Zusammenfassung](#zusammenfassung)
 * [Welche Zertifikate müssen beantragt werden?](#welche-zertifikate-m-ssen-beantragt-werden-)
@@ -76,13 +73,8 @@ Vorgesehen ist hier eine Kombination aus von zwei Kommunikationswegen:
 1. Sichere E-Mails, die mit S/MIME digital signiert und verschlüsselt sind. Die BDr hat hierfür ein sicheres E-Mail-Postfach eingerichtet, an das verschlüsselt gemailt werden kann.
 2. Ein Wiki-System (Confluence) der BDr, in dem Daten sicher übergeben werden können. Die BDr wird nach Kontaktaufnahme eine signierte E-Mail verschicken, die erklärt wie der Zugang erfolgt.
 
-<mark>**TODO: Einzelheiten des S/MIME-Postfachs (z.B. Adresse, S/MIME-Key) mit BDr abstimmen**</mark>
-
-<mark>**TODO: Beschreibung wie der S/MIME-Key der BDr in Outlook konfiguriert wird**</mark>
-
 Bei der Kontaktaufnahme liefert die Behörde folgende Daten:
 1. Gesetzmäßige Organisatinsdaten 
-   <mark>**TODO: Daten spezifizieren**</mark>
 2. Kontaktdaten einer zeichnungsberechtigten Person
 3. IRIS-Stammdomäne des Bundeslandes (s. unten, z.B. ```www.iris-connect.nrw.de```) 
 
@@ -92,8 +84,6 @@ Ein Scan der ausgefüllten und unterschriebene Vollmacht kann dann einfach im Co
 ### Organisationsvalidierung durchlaufen
 Im nächsten Schritt nimmt die Bundesdruckerei telefonisch Kontakt zur zeichnungsberechtigten Person auf, um die Behörde als Organisation zu validieren. 
 Den genauen Ablauf dieses Vorgangs schildert die Bundesdruckerei dann im direkten Kontakt.
-
-<mark>**TODO: Ggf. die Organisationsvalidierung skizzieren – dazu brauchen wir noch Infos.**</mark>
 
 ### Zertifikatsverantwortliche Personen in den Gesundheitsämtern erfassen
 Die Landesbehörde muss der Bundesdruckerei eine Liste der GÄ übermitteln, die Zertifikate erhalten sollen. 
@@ -192,63 +182,9 @@ Je nachdem, ob jemand vom medizinischen oder technisch-administrativen Fachperso
 Die Bundesdruckerei lädt die jeweils zertifikatsverantwortliche Person per signierter E-Mail zum sog. Certificate Service Manager (CSM) ein, einem Online-Verwaltungsportal für Zertifikate. 
 Darin können die Zertifikate anschließend mit wenigen Klicks beantragt werden.
 
-Im Folgenden betrachten wir die Antragsstrecke für Zertifikat Nr. 1. 
-Zertifikat Nr. 2 wird anschließend analog beantragt.
-
-Antragsstrecke:
-
-1. Navigieren Sie in einem Webbrowser zum CSM. Dieses befindet sich unter [https://mycsm.d-trust.net/csm/](https://mycsm.d-trust.net/csm/).
-![Ansicht "Uebersicht" im CSM](images/certificate_service_manager/mycsm_Anmeldung.png)
-
-
-2. Klicken Sie auf "Login mit Username". 
-   Tragen Sie dann dem Username und das Passwort ein, die Sie nach Erhalt der Einladung für Ihren Antragsteller-Account im CSM gewählt haben. 
-   Klicken Sie dann auf "Login". 
-   Es öffnet sich die "Übersicht".
-![Ansicht "Übersicht" im CSM](images/certificate_service_manager/mycsm_Übersicht.png)
-
-
-4. In der linken Seitenleiste auf "Zertifikatsverwaltung" klicken. Es öffnet sich die "Zertifikatsverwaltung".
-![Ansicht "Zertifikatsverwaltung" im CSM](images/certificate_service_manager/mycsm_Zertifikatsverwaltung.png)
-
-
-5. In der linken Seitenleiste auf "Neues Zertifikat" klicken. Es öffnet sich die Ansicht "Produkt auswählen – Schritt 1/4".
-![Ansicht "Produkt auswählen - Schritt 1 / 4)" im CSM](images/certificate_service_manager/mycsm_Produkt_auswählen.png)
-   Die Produktauswahl ist auf zwei Wahlmöglichkeiten beschränkt: "Advanced SSL ID (RSA)" für Zertifikat Nr. 1 und "Basic Device ID (EC)" für Zertifikat Nr. 2.
-
-
-6. Wählen Sie als Produkt "Advanced SSL ID (RSA)" für Zertifikat Nr. 1 aus. 
-Klicken Sie anschließend auf weiter. Es öffnet sich die Ansicht "Neues Zertifikat – Schritt 2/4". 
-Hier muss ein Certificate Signing Request (CSR) zu Zertifikat Nr. 1 hochgeladen werden. 
-Diesen können Sie einfach mit einem Script erstellen, das mit dem IRIS-Client zur Verfügung gestellt wird.  
-<mark>**TODO: Ein Script erstellen, das als Input das Signaturzertifikat und einige Parameter nimmt und CSRs zu Zertifikat Nr. 1 und 2 ausspuckt.**</mark>
-![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
-Zusätzlich muss ein Sperrpasswort gesetzt werden, dass Sie – wenn nichts schief geht – niemals brauchen werden. 
-
-
-7. Klicken Sie auf "weiter".  
-<mark>**TODO: Schritte 3 und 4 anhand eines echten CSR beschreiben.**</mark>
-
-
-#### Zertifikate herunterladen
-Sobald die Zertifikate fertig sind erhalten Sie eine Benachrichtigung an die im CSM hinterlegte E-Mail-Adresse.
-Sie können die Zertifikate dann einfach im CSM herunterladen.
-
-1. Navigieren Sie wieder im Webbrowser zum CSM unter [https://mycsm.d-trust.net/csm/](https://mycsm.d-trust.net/csm/) und loggen Sie sich dort ein.
-![Ansicht "Uebersicht" im CSM](images/certificate_service_manager/mycsm_Anmeldung.png)
-
-
-2. In der linken Seitenleiste auf "Zertifikatsverwaltung" klicken. Es öffnet sich die "Zertifikatsverwaltung".
-![Ansicht "Zertifikatsverwaltung" im CSM](images/certificate_service_manager/mycsm_Zertifikatsverwaltung.png)
-
-
-3. In der linken Seitenleiste auf "Zertifikate" klicken. Es öffnet sich die Ansicht "Zertifikate". 
-Im unteren Bereich sollten Sie die zwei fertigen Zertifikate Nr. 1 und Nr. 2 sehen können. 
-Falls hier nur ein Zertifikat angezeigt wird, machen Sie sich keine Sorgen; 
-Eine kleine Verzögerung (im Bereich von Minuten bis Stunden) ergibt sich aufgrund des manuellen Freigabeprozesses. 
-Klicken Sie auf "Download", um die zwei Zertifikate herunterzuladen.
-![Ansicht "Zertifikate" im CSM](images/certificate_service_manager/mycsm_Zertifikate.png)
-
+Die Zertifikate werden nun von on der zertifikatsverantwortlichen Person des jeweiligen Gesundheitsamtes ohne weitere Beteiligung der Landesbehörde beantragt.
+Dieser Teil-Prozess wird daher in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md)  der Zertifikate weiter beschrieben.
 
 #### Zertifikate einrichten
-Die Zertifikate werden gemäß der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) eingerichtet.
+Die Zertifikate werden von der zertifikatsverantwortlichen Person des jeweiligen Gesundheitsamtes eingerichtet.
+Dieser Teil-Prozess wird daher in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) der Zertifikate weiter beschrieben.
