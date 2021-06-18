@@ -10,7 +10,7 @@ openssl req -new -sha256 -key "${key}" -subj "/CN=${cn}" -addext "keyUsage=digit
 
 echo "[SANKey]\nsubjectAltName = URI:iris-name://${cn},URI:iris-group://health-departments,DNS:${cn},DNS:*.${cn}.local\nkeyUsage = digitalSignature" > $extFile
 
-openssl x509 -req -in "${cn}-sign.csr" -CA $sign_cert -CAkey $key -CAcreateserial -out "${cn}.crt"  -days 500 -sha256 -extensions SANKey -extfile $extFile;
+openssl x509 -req -in "${cn}-sign.csr" -CA $sign_cert -CAkey $key -CAcreateserial -out "${cn}.crt"  -days 365 -sha256 -extensions SANKey -extfile $extFile;
 
 FINGERPRINT=$(openssl x509 -noout -fingerprint -sha256 -inform pem -in ${cn}.crt | sed -e 's/://g' | sed -r 's/.*=(.*)$/\1/g' | awk '{print tolower($0)}')
 

@@ -42,28 +42,24 @@ Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt s
 ## Welche Zertifikate müssen beantragt werden?
 Für die Anbindung an IRIS benötigt ein GA zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei (BDr) bzw. deren Vertrauensdiensteanbieter D-Trust:
 
-1. Ein TLS-Zertifikat für das IRIS-Client-Backend des GA  
-   Anwendungsfall: Identität des GA im Internet (TLS/HTTPS).
-
-
-2. Ein Signaturzertifikat für Vertreter:in des GA  
-   Anwendungsfall: Identität des GA im EPS-Netzwerk.
+| # Ref| Identifier | Beschreibung | Anwendungsfall |
+| - | - | -| - |
+| 1 | TLS-Zertifikat - Private Proxy | Ein TLS-Zertifikat für den IRIS Private Proxy des GA | Identität des GA im Internet mit dem Ziel, Kontakttagüber und Gästelisten direkt ins GA zu übermitteln (TLS/HTTPS). |
+| 2 | Signaturzertifikat | Ein Signaturzertifikat für Vertreter:in des GA  | Signieren der mTLS-Zertifikate Nr 3 und 4 |
 
 Liegen diese vor, müssen drei weitere Zertifikate vom GA oder dessen IT-Dienstleister, je nachdem, wer den IRIS-Client betreibt, erstellt werden. 
 Dafür ist kein Zutun der Bundesdruckerei nötig.
 
-3. Ein mTLS-Zertifikat für den EPS-Server des IRIS-Client-BFF des GA  
-   Anwendungsfall: Absicherung der Kommunikation zwischen EPS-Servern.
-  
+| # Ref| Identifier | Beschreibung | Anwendungsfall |
+| - | - | -| - |
+| 3 | mTLS-Zertifikat - EPS ( IRIS Client BFF ) | Ein mTLS-Zertifikat für den EPS-Server des IRIS Client Backend for Frontend des GA  | Authentifizierung und Authentisierung der Kommunikation mit anderen zentralen und de-zentralen EPS Teilnehmern |
+| 4 | mTLS-Zertifikat - EPS ( IRIS Private Proxy ) | Ein mTLS-Zertifikat für den EPS-Server des IRIS Private Proxy des GA   | Ankündigung von eingehenden Verbindungen zum private Proxy |
 
-4. Ein mTLS-Zertifikat für den EPS-Server des IRIS Private Proxy des GA  
-   Anwendungsfall: Absicherung der Kommunikation zwischen EPS-Servern.
+Desweiteren ist eingeplant für ein zukünftiges Release:
 
-
-5. Ein Ende-zu-Ende-Zertifikat für das IRIS-Client-Backend des GA  
-   Anwendungsfall: Umsetzung der Datenschutzkonferenz-Anforderung an Betreiber von digitaler Kontaktdatenerfassung,
-   wonach zusätzlich zur Transportverschlüsselung (TLS) eine zweite Verschlüsselungsschicht auf Anwendungsebene (Inhaltsverschlüsselung) umzusetzen ist.
-
+| # Ref| Identifier | Beschreibung | Anwendungsfall |
+| - |- |-|-|
+| 5 | Ende-zu-Ende-Zertifikat | IRIS Client Backend for Frontend des GA     | Umsetzung der Datenschutzkonferenz-Anforderung an Betreiber von digitaler Kontaktdatenerfassung,   wonach zusätzlich zur Transportverschlüsselung (TLS) eine zweite Verschlüsselungsschicht auf Anwendungsebene (Inhaltsverschlüsselung) umzusetzen ist. |
 
 Das folgenden Schaubild gibt eine Top-Level-Sicht auf den Prozess des Beantragens und Einrichten der Zertifikate.
 
@@ -310,9 +306,6 @@ Analog zu [Einrichtung GA Client Zertifikat für Staging](Installation-Docker-Co
 #### Zertifikat Nr. 4 einrichten
 
 Analog zu [Einrichtung Proxy Client Zertifikat für Staging](Installation-Docker-Compose.md)
-
-#### Zertifikat Nr. 5 einrichten
-TODO
 
 ## Private Schlüssel sicher verwahren
 Private Schlüssel sollten aufgrund der hohen Schutzniveaus der Daten, die sie schützen besonders gesichert und redundant verwahrt werden.
