@@ -82,6 +82,8 @@ hs_err_pid*
 *.pub
 *.pem
 *.csr
+*.cer
+*.srl
 !root-staging.crt
 .env*
 !.env.sample
