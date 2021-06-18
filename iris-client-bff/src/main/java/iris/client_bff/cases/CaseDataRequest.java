@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -81,6 +82,7 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 
 	private static final long serialVersionUID = -8254677010830428881L;
 
+	@Getter
 	final UUID requestId;
 
 	/**

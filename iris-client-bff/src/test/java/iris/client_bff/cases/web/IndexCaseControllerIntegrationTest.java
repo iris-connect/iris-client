@@ -6,7 +6,7 @@ import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequest.Status;
-import iris.client_bff.cases.IndexCaseService;
+import iris.client_bff.cases.CaseDataRequestService;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
@@ -52,7 +52,7 @@ class IndexCaseControllerIntegrationTest {
   private ObjectMapper om;
 
   @MockBean
-  IndexCaseService service;
+  CaseDataRequestService service;
 
   // mock responses
   private final CaseDataRequest MOCK_CASE = getCase();

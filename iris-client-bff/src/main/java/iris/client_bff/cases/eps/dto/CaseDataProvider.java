@@ -3,6 +3,7 @@ package iris.client_bff.cases.eps.dto;
 
 import static lombok.AccessLevel.PRIVATE;
 
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +15,8 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
-public class Address {
-	String street;
-	String houseNumber;
-	String zipCode;
-	String city;
+public class CaseDataProvider {
+	String firstName;
+	String lastName;
+	Instant dateOfBirth;
 }

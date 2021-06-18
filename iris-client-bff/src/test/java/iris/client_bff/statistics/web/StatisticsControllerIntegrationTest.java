@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.cases.CaseDataRequest;
-import iris.client_bff.cases.IndexCaseService;
+import iris.client_bff.cases.CaseDataRequestService;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.statistics.web.dto.StatisticsDTO;
@@ -35,7 +35,7 @@ public class StatisticsControllerIntegrationTest {
 	private ObjectMapper om;
 
 	@MockBean
-	IndexCaseService indexCaseService;
+    CaseDataRequestService caseDataRequestService;
 
 	@MockBean
 	EventDataRequestService eventService;
@@ -49,9 +49,9 @@ public class StatisticsControllerIntegrationTest {
 
 	@BeforeEach
 	void setUp() {
-		when(indexCaseService.getCountSinceDate(any(Instant.class))).thenReturn(5);
+		when(caseDataRequestService.getCountSinceDate(any(Instant.class))).thenReturn(5);
 		when(eventService.getCountSinceDate(any(Instant.class))).thenReturn(10);
-		when(indexCaseService.getCountWithStatus(any(CaseDataRequest.Status.class))).thenReturn(20);
+		when(caseDataRequestService.getCountWithStatus(any(CaseDataRequest.Status.class))).thenReturn(20);
 		when(eventService.getCountWithStatus(any(EventDataRequest.Status.class))).thenReturn(25);
 	}
 

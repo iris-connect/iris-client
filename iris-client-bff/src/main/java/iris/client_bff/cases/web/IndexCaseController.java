@@ -4,7 +4,7 @@ import static iris.client_bff.cases.web.IndexCaseMapper.mapDetailed;
 import static org.springframework.http.HttpStatus.OK;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
-import iris.client_bff.cases.IndexCaseService;
+import iris.client_bff.cases.CaseDataRequestService;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
@@ -38,29 +38,29 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/data-requests-client/cases")
 public class IndexCaseController {
 
-	private final IndexCaseService indexCaseService;
+	private final CaseDataRequestService caseDataRequestService;
 
 	@GetMapping
 	@ResponseStatus(OK)
 	public Page<IndexCaseDTO> getAll(@RequestParam(required = false) Status status,
 			@RequestParam(required = false) String search, Pageable pageable) {
 		if (status != null && StringUtils.isNotEmpty(search)) {
-			return indexCaseService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(IndexCaseMapper::map);
+			return caseDataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(IndexCaseMapper::map);
 		}
 		else if (StringUtils.isNotEmpty(search)) {
-			return indexCaseService.searchByRefIdOrName(search, pageable).map(IndexCaseMapper::map);
+			return caseDataRequestService.searchByRefIdOrName(search, pageable).map(IndexCaseMapper::map);
 		}
 		else if (status != null) {
-			return indexCaseService.findByStatus(status, pageable).map(IndexCaseMapper::map);
+			return caseDataRequestService.findByStatus(status, pageable).map(IndexCaseMapper::map);
 		}
-		return indexCaseService.findAll(pageable).map(IndexCaseMapper::map);
+		return caseDataRequestService.findAll(pageable).map(IndexCaseMapper::map);
 	}
 
 	@PostMapping
 	@ResponseStatus(OK)
 	public IndexCaseDetailsDTO create(@RequestBody @Valid IndexCaseInsertDTO insert) {
 		try {
-			return mapDetailed(indexCaseService.create(insert));
+			return mapDetailed(caseDataRequestService.create(insert));
 		} catch (IRISDataRequestException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.CASE_DATA_REQUEST_CREATION); // TODO: use ExceptionMapper?
 		}
@@ -70,7 +70,7 @@ public class IndexCaseController {
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> getDetails(@PathVariable UUID id) {
 
-		return indexCaseService.findDetailed(id)
+		return caseDataRequestService.findDetailed(id)
 				.map(IndexCaseMapper::mapDetailed)
 				.map(ResponseEntity::ok)
 				.orElseGet(ResponseEntity.notFound()::build);
@@ -81,8 +81,8 @@ public class IndexCaseController {
 	public ResponseEntity<IndexCaseDetailsDTO> update(@PathVariable UUID id,
 			@RequestBody @Valid IndexCaseUpdateDTO update) {
 
-		return indexCaseService.findDetailed(id)
-				.map(it -> indexCaseService.update(it, update))
+		return caseDataRequestService.findDetailed(id)
+				.map(it -> caseDataRequestService.update(it, update))
 				.map(IndexCaseMapper::mapDetailed)
 				.map(ResponseEntity::ok)
 				.orElseGet(ResponseEntity.notFound()::build);

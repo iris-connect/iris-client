@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class IndexCaseServiceTest {
+public class CaseDataRequestServiceTest {
 
 	@Mock
 	CaseDataRequestRepository repository;
@@ -30,11 +30,11 @@ public class IndexCaseServiceTest {
 	DwConfig dwConfig;
 	HealthDepartmentConfig hdConfig;
 
-	IndexCaseService service;
+	CaseDataRequestService service;
 
 	@BeforeEach
 	void setUp() {
-		service = new IndexCaseService(repository, proxyServiceClient, dwConfig, hdConfig);
+		service = new CaseDataRequestService(repository, proxyServiceClient, dwConfig, hdConfig);
 	}
 
 	@Test

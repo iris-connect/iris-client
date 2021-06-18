@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class IndexCaseService {
+public class CaseDataRequestService {
 
 	private final CaseDataRequestRepository repository;
 	private final ProxyServiceClient proxyClient;
