@@ -2,23 +2,27 @@ package iris.client_bff.cases;
 
 import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
+import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
+import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class IndexCaseService {
 
 	CaseDataRequestRepository repository;
+	CaseEmailProvider caseEmailProvider;
 
 	public Page<CaseDataRequest> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
@@ -58,14 +62,13 @@ public class IndexCaseService {
 	}
 
 	public CaseDataRequest create(IndexCaseInsertDTO insert) {
-		var dataRequest = CaseDataRequest
-				.builder()
-				.comment(insert.getComment())
-				.refId(insert.getExternalCaseId())
-				.name(insert.getName())
-				.requestStart(insert.getStart())
-				.requestEnd(insert.getEnd())
-				.build();
+		var dataRequest = CaseDataRequest.builder()
+			.comment(insert.getComment())
+			.refId(insert.getExternalCaseId())
+			.name(insert.getName())
+			.requestStart(insert.getStart())
+			.requestEnd(insert.getEnd())
+			.build();
 		return repository.save(dataRequest);
 	}
 
@@ -75,5 +78,11 @@ public class IndexCaseService {
 
 	public int getCountWithStatus(Status status) {
 		return repository.getCountWithStatus(status);
+	}
+
+	public void sendDataRecievedEmail(IndexCaseDetailsDTO indexCaseDetailsDTO, IndexCaseStatusDTO status) {
+		if (status == IndexCaseStatusDTO.DATA_RECEIVED) {
+			caseEmailProvider.sendDataRecievedEmail(indexCaseDetailsDTO);
+		}
 	}
 }

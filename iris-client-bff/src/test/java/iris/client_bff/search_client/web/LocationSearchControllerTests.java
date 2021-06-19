@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 @IrisWebIntegrationTest
 @RequiredArgsConstructor
-class LocationSearchControllerIntegrationTests {
+class LocationSearchControllerTests {
 
 	private final MockMvc mvc;
 
