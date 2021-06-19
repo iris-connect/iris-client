@@ -8,22 +8,39 @@ import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.model.EventDataSubmission;
-import iris.client_bff.events.web.dto.*;
+import iris.client_bff.events.web.dto.DataRequestClient;
+import iris.client_bff.events.web.dto.DataRequestDetails;
+import iris.client_bff.events.web.dto.EventUpdateDTO;
+import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
+import iris.client_bff.events.web.dto.Guest;
+import iris.client_bff.events.web.dto.GuestList;
+import iris.client_bff.events.web.dto.GuestListDataProvider;
+import iris.client_bff.events.web.dto.LocationInformation;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
+
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/data-requests-client/events")
 @RestController
@@ -35,8 +52,7 @@ public class EventDataRequestController {
 
 	private ModelMapper modelMapper;
 
-	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (
-			EventDataRequest request) -> {
+	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (EventDataRequest request) -> {
 		ExistingDataRequestClientWithLocation mapped = EventMapper.map(request);
 		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
 		return mapped;
@@ -55,27 +71,24 @@ public class EventDataRequestController {
 		} catch (IRISDataRequestException e) {
 
 			// TODO this is an interim solution to improve UX and display user friendly error messages
-			return ResponseEntity
-					.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ErrorMessages.EVENT_DATA_REQUEST_CREATION);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorMessages.EVENT_DATA_REQUEST_CREATION);
 		}
 	}
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public Page<ExistingDataRequestClientWithLocation> getDataRequests(
-			@RequestParam(required = false) Status status,
-			@RequestParam(required = false) String search, Pageable pageable) {
+		@RequestParam(required = false) Status status,
+		@RequestParam(required = false) String search,
+		Pageable pageable) {
 		if (status != null && StringUtils.isNotEmpty(search)) {
-			return dataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable)
-					.map(eventMapperFunction);
+			return dataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(eventMapperFunction);
 		} else if (StringUtils.isNotEmpty(search)) {
 			return dataRequestService.searchByRefIdOrName(search, pageable).map(eventMapperFunction);
 		} else if (status != null) {
 			return dataRequestService.findByStatus(status, pageable).map(eventMapperFunction);
 		}
 		return dataRequestService.findAll(pageable).map(eventMapperFunction);
-
 	}
 
 	@GetMapping("/{code}")
@@ -98,7 +111,10 @@ public class EventDataRequestController {
 
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
-			var updated = dataRequestService.update(dataRequest.get(), patch);
+			EventDataRequest updated = dataRequestService.update(dataRequest.get(), patch);
+
+			dataRequestService.sendDataRecievedEmail(updated, patch.getStatus());
+
 			DataRequestDetails requestDetails = mapDataRequestDetails(updated);
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
@@ -121,8 +137,7 @@ public class EventDataRequestController {
 	}
 
 	private ExistingDataRequestClientWithLocation mapExistingDataRequestClientWithLocation(EventDataRequest request) {
-		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request,
-				ExistingDataRequestClientWithLocation.class);
+		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
 		mapped.setCode(request.getId().toString());
 		mapped.setStart(request.getRequestStart());
 		mapped.setEnd(request.getRequestEnd());
@@ -137,24 +152,22 @@ public class EventDataRequestController {
 
 	private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
 
-		submissionRepo.findAllByRequest(request).get().findFirst()
-				.ifPresent(it -> addSubmissionToRequest(requestDetails, it));
+		submissionRepo.findAllByRequest(request).get().findFirst().ifPresent(it -> addSubmissionToRequest(requestDetails, it));
 	}
 
 	private void addSubmissionToRequest(DataRequestDetails requestDetails, EventDataSubmission submission) {
 
 		var dataProvider = modelMapper.map(submission.getDataProvider(), GuestListDataProvider.class);
 
-		var guests = submission.getGuests().stream().map(it -> modelMapper.map(it, Guest.class))
-				.collect(Collectors.toList());
+		var guests = submission.getGuests().stream().map(it -> modelMapper.map(it, Guest.class)).collect(Collectors.toList());
 
 		var guestList = GuestList.builder()
-				.additionalInformation(submission.getAdditionalInformation())
-				.startDate(submission.getStartDate())
-				.endDate(submission.getEndDate())
-				.dataProvider(dataProvider)
-				.guests(guests)
-				.build();
+			.additionalInformation(submission.getAdditionalInformation())
+			.startDate(submission.getStartDate())
+			.endDate(submission.getEndDate())
+			.dataProvider(dataProvider)
+			.guests(guests)
+			.build();
 
 		requestDetails.setSubmissionData(guestList);
 	}

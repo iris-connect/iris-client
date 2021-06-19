@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
-public class StatisticsControllerIntegrationTest {
+public class StatisticsControllerTest {
 	private final String baseUrl = "/data-requests-client/statistics";
 
 	@Autowired

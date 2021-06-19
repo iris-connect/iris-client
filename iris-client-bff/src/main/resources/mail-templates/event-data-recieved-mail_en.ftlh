@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+		<p>Dear Sir or Madam,</p>
+		<p><br /></p>
+		<p>New data is available for the Event $(eventId) in your IRIS Portal.</p>
+		<p>Event:</p>
+		<ul>
+			<li>Event: $(eventId)</li>
+			<li>External Id: $(externalId)</li>
+			<li>Start: $(startTime)</li>
+			<li>End: $(endTime)</li>
+		</ul>
+		<p>
+        	With the provided data the event can be identified online. Alternatively the following link will redirect to it directly: <a href="$(eventUrl)">Event $(eventId)</a>
+		</p>
+		<p><br /></p>
+		<p>
+			With kind regards, <br />
+			IRIS connect<br />
+			Innovationsverbund Öffentliche Gesundheit (InÖG)
+		</p>
+		<p><br /></p>
+		<p style="font-size: 11px;">This is an automated message. Please do not reply.</p>
+    </body>
+</html>
