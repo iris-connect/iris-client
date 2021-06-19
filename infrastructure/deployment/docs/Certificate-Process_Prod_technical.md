@@ -80,6 +80,8 @@ IRIS Identifier:        ga-stadt-bonn
 Vorschlag Domain:       ga-stadt-bonn.iris-connect.nrw.de
 ```
 
+**Hinweis**: Die aktuellen Domains können vom Vorschlag des IRIS Teams abweichen.
+
 ### DNS für die Domains konfigurieren
 
 Zunächst muss ein CNAME-Record gesetzt werden, damit alle GA-Subdomains auf den IRIS Proxy Service auflösen: 
@@ -98,7 +100,7 @@ iris-connect.nrw.de    CAA 0 issue "d-trust.net"
 
 
 ## Erforderliche Schritte seitens eines Gesundheitsamts
-### Zertifikat Nr 1 (TLS-Zertifikat) online beantragen
+### Zertifikat Nr 1 ( TLS-Zertifikat - Private Proxy ) online beantragen
 Die Bundesdruckerei lädt die jeweils zertifikatsverantwortliche Person per signierter E-Mail zum sog. Certificate Service Manager (CSM) ein, einem Online-Verwaltungsportal für Zertifikate.
 Darin können die Zertifikate anschließend mit wenigen Klicks beantragt werden.
 
@@ -158,7 +160,7 @@ Antragsstrecke:
 8. Klicken Sie auf "weiter. Sie landen auf einer Übersichtsseite, die Ihnen eine Zusammenfassung der Informationen anzeigt. Akzeptieren Sie das Subscriber Agreement und klicken Sie auf fertig.
    
 
-### Zertifikat Nr 2 (Signatur-Zertifikat) online beantragen
+### Zertifikat Nr 2 ( Signaturzertifikat ) online beantragen
 
 Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus. 
 
@@ -219,13 +221,11 @@ Sie können die Zertifikate dann einfach im CSM herunterladen.
 
 Das Zertifikat Nr. 1 wird direkt im IRIS Client konfiguriert. Das Zertifikat Nr. 2 (Signatur Zertifikat) wird benötigt, um die Zertifikate Nr. 3 und Nr 4 zu erstellen (nächster Abschnitt).
 
-## Zertifikate Nr. 3 bis 4
-Sobald Zertifikat Nr. 2 vorliegt können die Zertifikate Nr. 3 bis 4 vom GA, bzw. dessen IT-Dienstleister,
+## Zertifikate Nr. 3 und 4
+Sobald Zertifikat Nr. 2 vorliegt können die Zertifikate Nr. 3 mTLS-Zertifikat - EPS ( IRIS Client BFF )  und 4  mTLS-Zertifikat - EPS ( IRIS Private Proxy ) vom GA, bzw. dessen IT-Dienstleister,
 je nachdem, wer den IRIS-Client betreibt, selbstständig erstellt werden, also ohne Zutun der Bundesdruckerei.
-### Zertifikate erstellen
-Das Erstellen der Zertifikate Nr. 3 bis 4 übernehmen zwei Scripte, das mit dem IRIS-Client zur Verfügung gestellt wird.
 
-#### EPS Zertifikat (Nr. 3) erstellen
+### mTLS-Zertifikat - EPS ( IRIS Client BFF ) erstellen
 
 1. Bestimmen Sie den CN Namen (Common Name) für Ihre Client Installation. 
    ```
@@ -258,7 +258,7 @@ Das Erstellen der Zertifikate Nr. 3 bis 4 übernehmen zwei Scripte, das mit dem 
 
    Senden Sie eine E-Main an [IRIS-Rollout-Team](mailto:rollout@iris-gateway.de) und erhalten von uns eine Bestätigung zurück, dass wir Ihre Anwendung im Service Directory eingetragen haben.
 
-#### PROXY EPS Zertifikat (Nr. 4) erstellen
+### mTLS-Zertifikat - EPS ( IRIS Private Proxy ) erstellen
 
 1. Bestimmen Sie den CN Namen (Common Name) für Ihre Client Installation. 
    ```
@@ -294,7 +294,7 @@ Das Erstellen der Zertifikate Nr. 3 bis 4 übernehmen zwei Scripte, das mit dem 
 
 ### Zertifikate einrichten
 
-Die Zertifikate werden analog zur Staging Umgebung eingerichtet
+Die Zertifikate werden analog zur Staging Umgebung eingerichtet. 
 
 #### Zertifikat Nr. 1 einrichten
 

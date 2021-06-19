@@ -18,111 +18,19 @@ Bevor man mit der Installation des IRIS connect Clients beginnen kann, muss die 
 
 4. »Docker Desktop für Windows« starten - auch OHNE Admin-Rolle möglich.
 
-# Client Installation
+# IRIS Client Installation
 
-## Bestellung Zertifikate
+## Ausstellung von Zertifikaten
 
-Wie [hier](./Installation.md) beschrieben werden für den Betrieb des IRIS Clients zwei Zertifikate benötigt. Eins für den Endpunktserver und ein weiteres für den Proxy (siehe auch [Architektur](./Architektur.md)). 
+Wie [hier](./Installation.md) beschrieben werden für den Betrieb des IRIS Clients verschiedene Zertifikate benötigt. Der Prozess der Austellung der Zertifikate unterscheidet sich je nach Umgebung (Staging oder Live).
 
-### Bestimmung vom offiziellen RKI Namen
+### Zertifikate für Staging Umgebung
 
-Bestimmen Sie den offiziellen RKI Namen Ihres Gesundheitsamtes. Gehen Sie dafür auf https://tools.rki.de/PLZTool und suchen Sie nach Ihrem GA. Der offizielle Name ist die obere Zeit im Adressfeld ([Beispiel Bonn](./Beispiel-Bonn.png)). 
+Bitte folgen Sie [dieser Anleitung](./Certificate-Process-Staging.md). 
 
+### Zertifikate für Live Umgebung
 
-### Zertifikat für EPS (Endpunktserver)
-
-1. Bestimmen Sie den CN Namen (Common Name) für Ihre Client Installation. 
-   ```
-   Der allgemeine Aufbau vom CN Feld ist: ga-${sanitized_name(Offizieller RKI Name)}
-
-   sanitized_name bedeutet folgendes: Ersetzung aller Umlaute (z.B. ö -> oe). Sonderzeichen und Leerzeichen (auch aufeinanderfolgend) werden durch ein '-' ersetzt. Alles Lower Case.
-
-   # Beispiel Bonn
-   Offizieller RKI Name:   Stadt Bonn
-   sanitized_name:         stadt-bonn
-   CN Feld:                ga-stadt-bonn
-   ```
-
-2. Erstellen Sie eine CSR Request
-
-   Zunächst müssen Sie einen sog. CSR (Certificate Signing Request) erstellen. Dafür kann folgendes Skript verwendet werden.
-
-   ```
-   ./scripts/create-csr-for-eps.sh
-   ```
-
-   Das Skript muss mit 3 Parameters aufgerufen werden. Passen sie dann die Felder ensprechend an indem sie die Variablen (${}) entsprechend ersetzen. 
-
-   
-   ```
-   sh create-csr-for-eps.sh "${Strasse und Hausnummer Ihres GAs}" "${PLZ und Ort Ihres GAs}" "${CN Ihres GAs (s.o.)}"
-   ```
-
-   Wir haben Aufrufbeispiele Beispiele für [Bonn](./examples/Bonn-example.txt) und [Köln](./examples/Koeln-example.txt) hinterlegt.
-
-3. Führen Sie das Script aus
-
-   ```
-   sh create-csr-for-eps.sh $1 $2 $3 # Mit Ihren Parametern
-   
-   # Als Ergebnis bekommen Sie 3 Dateien
-   -rw-------   1 johnnypark  staff      3243 May 26 12:42 ${CN}.key
-   -rw-r--r--   1 johnnypark  staff       800 May 26 12:42 ${CN}.pub
-   -rw-r--r--   1 johnnypark  staff      1947 May 26 12:42 ${CN}.csr
-   ```
-   Legen Sie die .key Datei an einem Sicheren Ort ab. Diese wird für die weitere Konfiguration im IRIS Client verwendet
-
-4. Senden Sie den CSR an das IRIS Rollout Team
-
-   Senden Sie die .csr Datei an [IRIS-Rollout-Team](mailto:rollout@iris-gateway.de) und erhalten Sie Ihre .crt Datei von uns zurück. Legen Sie die .crt Datei sicher mit dem dazugehörigen .key ab.
-
-### Zertifikat für Proxy
-
-Der Prozess für den Proxy enspricht 1 zu 1 dem o.g. Prozess. Mit 2 Unterschieden, dem CN Namen und das zu verwendene Skript. 
-
-1. Bestimmen Sie den CN Namen (Common Name) für Ihre Client Installation. 
-   ```
-   Der allgemeine Aufbau vom CN Feld ist: ga-${sanitized_name(Offizieller RKI Name)}-proxy
-
-   sanitized_name bedeutet folgendes: Ersetzung aller Umlaute (z.B. ö -> oe). Sonderzeichen und Leerzeichen (auch aufeinanderfolgend) werden durch ein '-' ersetzt. Alles Lower Case.
-
-   # Beispiel Bonn
-   Offizieller RKI Name:   Stadt Bonn
-   sanitized_name:         stadt-bonn
-   CN Feld:                ga-stadt-bonn-proxy
-   ```
-2. Erstellen Sie eine CSR Request
-
-   Zunächst müssen Sie einen sog. CSR (Certificate Signing Request) erstellen. Dafür kann folgendes Skript verwendet werden.
-
-   ```
-   ./scripts/create-csr-for-proxy.sh
-   ```
-
-   Das Skript muss mit 3 Parametern aufgerufen werden. Passen sie dann die Felder ensprechend an indem sie die Variablen (${}) entsprechend ersetzen. 
-
-   ```
-   sh create-csr-for-proxy.sh "${Strasse und Hausnummer Ihres GAs}" "${PLZ und Ort Ihres GAs}" "${CN Ihres GAs (s.o.)}"
-   ```
-
-   Auch hierfür haben wir Aufrufbeispiele Beispiele für [Bonn](./examples/Bonn-example-proxy.txt) und [Köln](./examples/Koeln-example-proxy.txt) hinterlegt.
-
-3. Führen Sie das Script aus
-
-   ```
-   sh create-csr-for-proxy.sh $1 $2 $3 # Mit Ihren Parametern
-   
-   # Als Ergebnis bekommen Sie 3 Dateien
-   -rw-------   1 johnnypark  staff      3243 May 26 12:42 ${CN}.key
-   -rw-r--r--   1 johnnypark  staff       800 May 26 12:42 ${CN}.pub
-   -rw-r--r--   1 johnnypark  staff      1947 May 26 12:42 ${CN}.csr
-   ```
-   Legen Sie die .key Datei an einem Sicheren Ort ab. Diese wird für die weitere Konfiguration im IRIS Client verwendet
-
-4. Senden Sie den CSR an das IRIS Rollout Team
-
-   Senden Sie die .csr Datei an [IRIS-Rollout-Team](mailto:rollout@iris-gateway.de) und erhalten Sie Ihre .crt Datei von uns zurück. Legen Sie die .crt Datei sicher mit dem dazugehörigen .key ab.
-
+Bitte folgen Sie [dieser Anleitung](./Certificate-Process_Prod_technical.md). 
 
 ## Download der Releases
 
@@ -138,22 +46,22 @@ Packen Sie zunächst das Release Archive aus
 unzip `deployment-${version}.zip`
 ```
 
-Die Struktur des Archives ist wie folgt.
+Die Struktur des Archives ist wie nachfolgend beschrieben.
 
 ```
 .
 ├── conf 
 │   ├── eps
 │   │   ├── certs
-│   │   │   └── # hier müssen die GA Client Zertifikate für EPS abgelegt werden.
+│   │   │   └── # hier muss das mTLS-Zertifikat - EPS ( IRIS Client BFF ) und dessen privater Schlüssel abgelegt werden.
 │   │   └── roles
 │   │       └── hd
-│   │           └── 001_default.yml # Die Konfiguration für den EPS service. Diese wird mit Umgebungsvariablen parameterisiert. 
+│   │           └── 001_default.yml # Die Konfiguration für den EPS ( IRIS Client BFF ) service. Diese wird mit Umgebungsvariablen parameterisiert. 
 │   └── nginx
-│       └── # hier müssen die Server Zertifikate für die Interne Domain abgelegt werden. 
+│       └── # hier muss das Zertifikat der internen Web Domain und dessen SChlüssel abgelegt werden. 
 │   └── proxy
 │       ├── certs
-│       │   └── # hier müssen die Proxy Client Zertifikate abgelegt werden.
+│       │   └── # hier muss das mTLS-Zertifikat - EPS ( IRIS Private Proxy ) und dessen privater Schlüssel abgelegt werden.
 │       └── roles
 │           ├── private-proxy
 │           │   └── 001_default.yml # Die Konfiguration für den Proxy service. Diese wird mit Umgebungsvariablen parameterisiert. 
@@ -167,7 +75,7 @@ Die Struktur des Archives ist wie folgt.
 
 ## Anlegen der Konfiguration
 
-Die Anwendung wird über eine `.env` Datei konfiguriert und auf das GA abgestimmt. Eine Beispiel Konfiguration inklusive einer Erklärung der einzelnen Variablen findet man [hier](../.env.sample).
+Die Anwendung wird über eine [`.env`](https://docs.docker.com/compose/environment-variables/#the-env-file)  Datei konfiguriert und auf das GA abgestimmt. Eine Beispiel Konfiguration inklusive einer Erklärung der einzelnen Variablen findet man in der beigelegten [`.env.sample`](../.env.sample)  Datei.
 
 Erstellen Sie Kopie von .env.sample
 
@@ -178,7 +86,7 @@ cp .env.sample .env
 Passen Sie die Konfiguration auf ihr GA an.
 
 ```
-.env öffnen und bearbeiten (siehe nächste Schritte)
+.env öffnen und bearbeiten (siehe nachfolgende Schritte)
 ```
 
 ## Datenbankverbindung einrichten
@@ -201,7 +109,7 @@ POSTGRES_PASSWORD
 POSTGRES_HOST
 POSTGRES_DB
 ```
-Die DB muss vorher von Ihnen angelegt werden. Der User benötigt die Berechtigung Tabellen zu erstellen und zu ändern. Das Datenbank Schema wird von der Applikations gemanaged und eventuelle Änderungen werden für Sie transparent migriert.
+Die DB muss vorher von Ihnen angelegt werden. Der User benötigt die Berechtigung Tabellen zu erstellen und zu ändern. Das Datenbank Schema wird von der Applikation verwaltet und eventuelle Änderungen werden für Sie transparent migriert.
 
 ## Einrichtung der Authentifizierung
 
@@ -264,7 +172,7 @@ In den meisten GAs werden Verbindungen ins Internet über einen Proxy geleitet. 
 PROXY_URL
 ```
 
-Der Proxy Server muss Tunneling über HTTP_CONNECT unterstützen. Weiter Einstellungen bezüglich der Ports und Domains sind [hier](Installation.md) dokumentiert. 
+Der Proxy Server muss Tunneling über HTTP_CONNECT unterstützen. Weiter Einstellungen bezüglich der Ports und Domains welche freigegeben werden müssen finden sie hier sind [hier](Installation.md). 
 
 ## Einrichtung Service Directory
 
@@ -275,7 +183,7 @@ Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client
 EPS_SD_ENDPOINT=https://iris.staging.iris-gateway.de:3322/jsonrpc
 
 # Live: 
-EPS_SD_ENDPOINT=TBD
+EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
 ```
 
 ## Einrichtung Root Zertifikat
@@ -291,9 +199,9 @@ TRUSTED_CA_CRT=root-staging.crt
 # Live: 
 TRUSTED_CA_CRT=root-live.crt
 ```
-## Einrichtung GA Client Zertifikat
+## Einrichtung: mTLS-Zertifikat - EPS ( IRIS Client BFF )
 
-Damit der IRIS Client sich im IRIS Netzwerk anmelden und mit anderen Teilnehmern kommunizieren und Daten austauschen kann, benötigt man ein IRIS GA Client Zertifikat. Der Prozess dafür ist [hier](Certificate-Process-Staging.md) dokumentiert. 
+Damit der IRIS Client sich im IRIS Netzwerk anmelden und mit anderen Teilnehmern kommunizieren und Daten austauschen kann, benötigt man ein IRIS GA Client Zertifikat. Der Prozess dafür ist weiter oben in der Anleitung dokumentiert.
 
 Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüssel im Ordner `./conf/eps/certs` ablegen.
 
@@ -306,7 +214,7 @@ Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüsse
 │   │   │   └── ga-client.key
 ```
 
-Danach muss man die Zertifikate in der Konfiguration hinterlegen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist der selbe wie der CN Name aus dem Zertifikats Prozess.
+Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist der selbe wie der CN Name aus dem Zertifikats-Prozess.
 
 ```
 EPS_OP=${CN aus dem Zertifikat}
@@ -314,9 +222,9 @@ EPS_CLIENT_CERT=ga-client.crt # Beispiel s.o.
 EPS_CLIENT_CERT_KEY=ga-client.key # Beispiel s.o.
 ```
 
-## Einrichtung Proxy Client Zertifikat
+## Einrichtung: mTLS-Zertifikat - EPS ( IRIS Private Proxy ) 
 
-Damit der IRIS Client wie in der [Architektur](./Architektur.md) beschrieben eingehende Verbindungen über das IRIS Proxy Netzwerk erlauben kann, benötigt man ein Proxy Client Zertifikat. Der Prozess dafür ist [hier](Certificate-Process-Staging.md) dokumentiert. 
+Damit der IRIS Client wie in der [Architektur](./Architektur.md) beschrieben eingehende Verbindungen über das IRIS Proxy Netzwerk erlauben kann, benötigt man ein Proxy Client Zertifikat. Der Prozess dafür ist weiter oben in der Anleitung dokumentiert.
 
 Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüssel im Ordner `./conf/proxy/certs` ablegen.
 
@@ -329,7 +237,7 @@ Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüsse
 │       │   ├── ga-client-proxy.crt
 │       │   └── ga-client-proxy.key
 ```
-Danach muss man die Zertifikate in der Konfiguration hinterlegen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist der selbe wie der CN Name aus dem Zertifikats Prozess.
+Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist der selbe wie der CN Name aus dem Zertifikats-Prozess.
 
 ```
 PROXY_OP=${CN aus dem Zertifikat}
@@ -390,5 +298,5 @@ PROXY_CLIENT_CERT_KEY=ga-client-proxy.key
 
 ## Beispiel Konfiguration
 
-Weitere Erläuterungen zu den einzelnen Parametern finden man in der [.env.sample](.env.sample).
+Weitere Erläuterungen zu den einzelnen Parametern finden man in der [`.env.sample`](./.env.sample) Datei.
 

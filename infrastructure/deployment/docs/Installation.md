@@ -46,28 +46,38 @@ IRIS stellt zwei Umgebungen bereit. Staging zum Testen und Live für den Produkt
 | Konfigurations-Abhängigkeit     | Beschreibung                                                                                                                                                                                                                                                                                                            |
 | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Zertifikat der internen Web Domain | Der IRIS Client wird in der Regel unter einer GA internen Domain bereit gestellt. Für diese Domain muss ein valides Zertifikat inklusive privatem Schlüssel konfiguriert werden. |
-| mTLS-Zertifikat für EPS         | Der IRIS-Client benutzt ein für das GA ausgestelltes Client Zertifikat um mit den zentralen IRIS Services zu kommunizieren. Darüber hinaus werden alle Anfragen die vom IRIS-Client ausgehen mit dem Zertifikat signiert. Für die Staging Umgebung ist der Prozess [hier](Certificate-Process-Staging.md) dokumentiert. |
-| mTLS-Zertifikat für EPS (Proxy) | Der Proxy benutzt ein für das GA ausgestelltes Client Zertifikat um mit den public-Proxy zu kommunizieren. Das Proxy Client Zertifikat ist nicht das selbe wie das GA Client Zertifikat. Für die Staging Umgebung ist der Prozess [hier](Certificate-Process-Staging.md) dokumentiert.                                  |
-| TLS-Zertifikat für externe Proxy Domain |  |
+| TLS-Zertifikat - Private Proxy | Ein TLS-Zertifikat für den IRIS Private Proxy des GA. Identität des GA im Internet mit dem Ziel, Kontakttagüber und Gästelisten direkt ins GA zu übermitteln (TLS/HTTPS). |
+| mTLS-Zertifikat - EPS ( IRIS Client BFF )         | Der IRIS-Client benutzt ein für das GA ausgestelltes mTLS Zertifikat um mit den zentralen IRIS Services zu kommunizieren. Darüber hinaus werden alle Anfragen die vom IRIS-Client ausgehen mit dem Zertifikat signiert. Für die Staging Umgebung ist der Prozess [hier](Certificate-Process-Staging.md) dokumentiert. |
+| mTLS-Zertifikat - EPS ( IRIS Private Proxy ) | Der Proxy benutzt ein für das GA ausgestelltes mTLS Zertifikat um mit den public-Proxy zu kommunizieren und eingehende Verbindungen z.B. zum Übertragen von Kontakttagebüchern zuzulassen. Für die Staging Umgebung ist der Prozess [hier](Certificate-Process-Staging.md) dokumentiert.                                  |
+
 
 ### Des Weiteren gibt es folgende infrastrukturelle Anhängigkeiten
 
 | Infrastruktur-Abhängigkeit                            | Beschreibung                                                                                                                         |
 | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | HTTPS Proxy                                           | Proxy server für EPS. Unterstützung für [HTTP_CONNECT](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/CONNECT) notwendig. |
-| Proxy Freischaltung - IRIS Central Services - Staging | Zugriff auf iris.staging.iris-gateway.de (ConnectPorts: 3322, 4445, 5559, 9999)                                                      |
-| Proxy Freischaltung - IRIS App Provider - Staging     | Zugriff auf \*.apps.staging.iris-gateway.de (ConnectPorts: 4444)                                                                     |
-| Proxy Freischaltung - IRIS Central Services - Live    | - (TBD)                                                                                                                              |
-| Proxy Freischaltung - IRIS App Provider - Live        | - (TBD)                                                                                                                              |
+| Proxy Freischaltung - IRIS Central Services - Staging | Zugriff auf iris.staging.iris-gateway.de ( ConnectPorts: 3322, 4445, 5559, 9999 )                                                      |
+| Proxy Freischaltung - IRIS App Provider - Staging     | Zugriff auf \*.apps.staging.iris-gateway.de ( ConnectPorts: 4444 ) |
+| Proxy Freischaltung - IRIS Central Services - Live    | Zugriff auf prod.iris-gateway.de ( ConnectPorts: 32324, 32327, 32323 ) |
+| Proxy Freischaltung - IRIS App Provider - Live        | Zugriff auf \*.apps.iris-gateway.de ( ConnectPorts: 4444, 443 ) |
 
 ## Authentifizierung und Authorisierung
 
 Aktuell bietet der IRIS-Client eine eigene Kontoverwaltung an, die von der IT-Administration betreut werden muss. Das Startpasswort für den Admin Account kann beim erstmaligen Starten gesetzt werden (siehe [.env.sample](../.env.sample)).
 
+## IRIS-Client - Docker Compose Installation
+
+Bei dieser Installationsvariante werden alle Komponenten vom IRIS Client in einem virtuellen Container gestartet. Dieser Container ist vom IRIS Team vorkonfiguriert und muss um GA indivituelle Parametern ergänzt werden. 
+
+Diese Installationsart ist empfohlen.
+
+[Hier geht es weiter. ](./Installation-Docker-Compose.md)
+
+
 ## IRIS-Client - Stand-Alone Installation
+
+Bei dieser Installationsvariante werden alle Komponenten vom IRIS Client von einem lokalen Administrator installiert und um individuelle Parameter konfiguriert werden. Die Komponenten werden vom IRIS Team über Github zum Download bereitgestellt.  
+
 
 [Hier geht es weiter. ](./Installation-Standalone.md)
 
-## IRIS-Client - Docker Compose Installation
-
-[Hier geht es weiter. ](./Installation-Docker-Compose.md)
