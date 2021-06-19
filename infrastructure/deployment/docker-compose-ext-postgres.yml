@@ -41,7 +41,7 @@ services:
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: inoeg/eps:v0.1.8
+    image: inoeg/eps:v0.1.13
     expose:
       - 4446
       - 5556
@@ -63,7 +63,7 @@ services:
 
   # Proxy for inbound connections.
   private-proxy:
-    image: inoeg/proxy:v0.1.8
+    image: inoeg/proxy:v0.1.13
     expose:
       - 5545
       - 8877
@@ -80,7 +80,7 @@ services:
     command: ["--level", "trace", "run", "private"]
 
   private-proxy-eps:
-    image: inoeg/eps:v0.1.8
+    image: inoeg/eps:v0.1.13
     expose:
       - 7766 # JSON-RPC server for internal connections from iris-client
       - 7776 # gRPC protocol
