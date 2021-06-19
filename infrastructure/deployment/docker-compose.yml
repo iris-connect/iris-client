@@ -137,7 +137,7 @@ services:
   nginx:
     image: inoeg/iris-client-nginx:1.0
     ports:
-      - 443:443
+      - ${IRIS_CLIENT_PORT:-443}:443
     environment:
       IRIS_CLIENT_DOMAIN:
       IRIS_CLIENT_DOMAIN_CERT:
@@ -180,7 +180,7 @@ services:
       - MAX_SIZE=50
       - MAX_AGE=28
       - DEBUG=false
-#      - TIME_ZONE=Europe/Berlin
+    #      - TIME_ZONE=Europe/Berlin
     volumes:
       - ${LOG_FOLDER}:/srv/logs
       - /var/run/docker.sock:/var/run/docker.sock
