@@ -144,9 +144,9 @@ services:
       - MAX_SIZE=50
       - MAX_AGE=28
       - DEBUG=false
-#      - TIME_ZONE=Europe/Berlin
+    #      - TIME_ZONE=Europe/Berlin
     volumes:
-      - ${LOG_FOLDER}:/srv/logs
+      - ${LOG_FOLDER:-./logs}:/srv/logs
       - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
