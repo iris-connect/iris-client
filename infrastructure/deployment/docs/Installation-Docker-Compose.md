@@ -143,6 +143,16 @@ IRIS_CLIENT_DOMAIN=<Ihre Domain>
 IRIS_CLIENT_DOMAIN_CERT=iris-ga.crt # Beispiel s.o.
 IRIS_CLIENT_DOMAIN_CERT_KEY=iris-ga.key # Beispiel s.o.
 ```
+
+## Einrichtung des Ports
+
+Standardmäßig wird das Frontend des IRIS Clients über den HTTPS Standard Port 443 ausgeliefert. Dies kann mit dem folgenden optionalen Parameter angepasst werden. 
+
+```
+IRIS_CLIENT_PORT
+```
+
+
 ## Einrichtung Startpasswort Admin Zugang
 
 Wie oben beschrieben erstellt der IRIS Client initial einen Admin account. Folgende Parameter sind dafür vorgesehen.
