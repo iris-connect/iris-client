@@ -69,7 +69,7 @@ services:
       - iris-client
 
   eps:
-    image: inoeg/eps:v0.1.4
+    image: inoeg/eps:v0.1.13
     expose:
       - 4446
       - 5556
@@ -92,12 +92,13 @@ services:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
     volumes:
       - ./conf:/etc/iris
+      - ./nginx:/etc/nginx/templates
     depends_on:
       - iris-client
       - iris-frontend
 
   private-proxy:
-    image: inoeg/proxy:v0.1.4
+    image: inoeg/proxy:v0.1.13
     expose:
       - 5545
       - 8877
@@ -109,7 +110,7 @@ services:
     command: [ "--level", "trace", "run", "private" ]
 
   private-proxy-1:
-    image: inoeg/eps:v0.1.4
+    image: inoeg/eps:v0.1.13
     expose:
       - 7766
       - 7776
