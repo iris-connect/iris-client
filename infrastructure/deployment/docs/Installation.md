@@ -4,7 +4,7 @@ Der IRIS-Client ist der Teil vom IRIS Ecosystem, der auf einem Server im Gesundh
 
 ## Architektur
 
-[Hier geht es weiter](./Architektur.md)
+[Architekturbeschreibung](./Architektur.md)
 
 
 ## Systemvoraussetzungen
