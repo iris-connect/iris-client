@@ -10,13 +10,17 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 @Getter
@@ -30,18 +34,35 @@ public class CaseDataSubmission extends Aggregate<CaseDataSubmission, CaseDataSu
 	@Embedded
 	private CaseDataProvider dataProvider;
 
-	// TODO: add contacts, events
-	// @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //
-	// @JoinColumn(name = "submission_id")
-	// private Set<Guest> guests;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "submission_id")
+	private Set<Contact> contacts;
 
-	public CaseDataSubmission(CaseDataRequest request, CaseDataProvider dataProvider) {// , Set<?> contactPersons, Set<?> events) {
+	private Instant contactsStartDate;
+	private Instant contactsEndDate;
+
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "submission_id")
+	private Set<Event> events;
+
+	private Instant eventsStartDate;
+	private Instant eventsEndDate;
+
+	public CaseDataSubmission(CaseDataRequest request,
+							  Set<Contact> contacts, Instant contactsStartDate, Instant contactsEndDate,
+							  Set<Event> events, Instant eventsStartDate, Instant eventsEndDate,
+							  CaseDataProvider dataProvider) {
 
 		super();
 
 		id = DataSubmissionIdentifier.random();
 		this.request = request;
-		// this.guests = guests;
+		this.contacts = contacts;
+		this.contactsStartDate = contactsStartDate;
+		this.contactsEndDate = contactsEndDate;
+		this.events = events;
+		this.eventsStartDate = eventsStartDate;
+		this.eventsEndDate = eventsEndDate;
 		this.dataProvider = dataProvider;
 	}
 

@@ -4,9 +4,12 @@ import iris.client_bff.cases.eps.dto.Contacts;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
 import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.model.CaseDataSubmission;
+import iris.client_bff.cases.model.Contact;
+import iris.client_bff.cases.model.Event;
 import lombok.AllArgsConstructor;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -52,22 +55,27 @@ public class CaseDataSubmissionService {
 	}
 
 	public void save(CaseDataRequest dataRequest, Contacts contacts, Events events, CaseDataProvider dataProvider) {
-		// TODO: map contacts and events
-//		var guests = guestList.getGuests().stream()
-//				.map(it -> mapper.map(it, Guest.class))
-//				.collect(Collectors.toSet());
-//
-		var dataProviderForRepo = mapper.map(dataProvider, iris.client_bff.cases.model.CaseDataProvider.class);
+		var contactsForDb = contacts.getContactPersons().stream()
+				.map(it -> mapper.map(it, Contact.class))
+				.collect(Collectors.toSet());
 
-		var submission = new CaseDataSubmission(dataRequest, dataProviderForRepo); //TODO: provide contacts, events
-//
-//		guests.forEach(it -> it.setSubmission(submission));// ToDO: set refs in subtables
-//
+		var eventsForDb = events.getEvents().stream()
+				.map(it -> mapper.map(it, Event.class))
+				.collect(Collectors.toSet());
+
+		var dataProviderForDb = mapper.map(dataProvider, iris.client_bff.cases.model.CaseDataProvider.class);
+
+		var submission = new CaseDataSubmission(dataRequest, contactsForDb, contacts.getStartDate(), contacts.getEndDate(),
+				eventsForDb, events.getStartDate(), events.getStartDate(), dataProviderForDb);
+
+		 contactsForDb.forEach(it -> it.setSubmission(submission));
+		 eventsForDb.forEach(it -> it.setSubmission(submission));
+
 		submissionRepo.save(submission);
 
-		//dataRequest.setStatus(Status.DATA_RECEIVED); // TODO: add generic status and save
+		// dataRequest.setStatus(Status.DATA_RECEIVED); // TODO: add generic status and save
 
-		//requestRepo.save(dataRequest);
+		// requestRepo.save(dataRequest);
 	}
 
 }
