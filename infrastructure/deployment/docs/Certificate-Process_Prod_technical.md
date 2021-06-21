@@ -298,7 +298,8 @@ Die Zertifikate werden analog zur Staging Umgebung eingerichtet.
 
 #### Zertifikat Nr. 1 einrichten
 
-TODO
+Hierzu wird es zeitnah ein Update geben.  (Stand: 21.06.2021)
+
 #### Zertifikat Nr. 3 einrichten
 
 Analog zu [Einrichtung GA Client Zertifikat für Staging](Installation-Docker-Compose.md)
