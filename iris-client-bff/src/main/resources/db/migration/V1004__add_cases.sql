@@ -23,8 +23,14 @@ CREATE TABLE  contact (
     email varchar(100) NULL,
     phone varchar(100) NULL,
     mobile_phone varchar(100) NULL,
-    address_id uuid NULL,
-    workplace_address_id uuid NULL,
+    street varchar(256) NULL,
+    house_number varchar(256) NULL,
+    zip_code varchar(10) NULL,
+    city varchar(256) NULL,
+    workplace_street varchar(256) NULL,
+    workplace_house_number varchar(256) NULL,
+    workplace_zip_code varchar(10) NULL,
+    workplace_city varchar(256) NULL,
     workplace_name varchar(256) NULL,
     workplace_point_of_contact varchar(256) NULL,
     first_contact_date date NULL,
@@ -32,17 +38,5 @@ CREATE TABLE  contact (
     contact_category varchar(100) NULL,
     basic_conditions varchar(256) NULL,
     PRIMARY KEY (contact_id),
-    FOREIGN KEY (submission_id) REFERENCES case_data_submission(submission_id),
-    FOREIGN KEY (address_id) REFERENCES address(address_id),
-    FOREIGN KEY (workplace_address_id) REFERENCES address(address_id)
+    FOREIGN KEY (submission_id) REFERENCES case_data_submission(submission_id)
 );
-
-CREATE TABLE address (
-    address_id uuid NOT NULL,
-    street varchar(256) NULL,
-    house_number varchar(256) NULL,
-    zip_code varchar(10) NULL,
-    city varchar(256) NULL,
-    PRIMARY KEY (id)
-);
-
