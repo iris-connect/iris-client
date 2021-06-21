@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @IrisWebIntegrationTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class IndexCaseControllerIntegrationTest {
+class CaseDataRequestControllerIntegrationTest {
 
   private final String baseUrl = "/data-requests-client/cases";
 

@@ -1,6 +1,6 @@
 package iris.client_bff.cases.model;
 
-import iris.client_bff.events.model.Address;
+import iris.client_bff.core.model.Address;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,18 +9,18 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 @Entity
 @Data
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-public class Event {
+public class CaseEvent {
 
 	@Id
 	private UUID eventId = UUID.randomUUID();
@@ -32,8 +32,7 @@ public class Event {
 	private String name;
 	private String phone;
 
-	@OneToOne
-	@JoinColumn(name = "address_id")
+	@Embedded
 	private Address address;
 
 	private String additionalInformation;

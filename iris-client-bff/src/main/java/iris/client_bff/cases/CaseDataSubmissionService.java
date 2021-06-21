@@ -5,7 +5,7 @@ import iris.client_bff.cases.eps.dto.CaseDataProvider;
 import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.model.CaseDataSubmission;
 import iris.client_bff.cases.model.Contact;
-import iris.client_bff.cases.model.Event;
+import iris.client_bff.cases.model.CaseEvent;
 import lombok.AllArgsConstructor;
 
 import java.util.UUID;
@@ -60,7 +60,7 @@ public class CaseDataSubmissionService {
 				.collect(Collectors.toSet());
 
 		var eventsForDb = events.getEvents().stream()
-				.map(it -> mapper.map(it, Event.class))
+				.map(it -> mapper.map(it, CaseEvent.class))
 				.collect(Collectors.toSet());
 
 		var dataProviderForDb = mapper.map(dataProvider, iris.client_bff.cases.model.CaseDataProvider.class);

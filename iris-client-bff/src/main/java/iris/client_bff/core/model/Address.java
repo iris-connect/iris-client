@@ -6,18 +6,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
+import javax.persistence.Embeddable;
 
-import javax.persistence.Id;
-
+@Embeddable
 @Data
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class Address {
-
-	@Id
-	private UUID address_Id = UUID.randomUUID();
 
 	private String street;
 	private String houseNumber;

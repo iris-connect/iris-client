@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
 import javax.persistence.Embeddable;
 
@@ -19,5 +19,5 @@ public class CaseDataProvider {
 
 	private String firstName;
 	private String lastName;
-	private Instant dateOfBirth;
+	private LocalDate dateOfBirth;
 }

@@ -36,7 +36,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/data-requests-client/cases")
-public class IndexCaseController {
+public class CaseDataRequestController {
 
 	private final CaseDataRequestService caseDataRequestService;
 

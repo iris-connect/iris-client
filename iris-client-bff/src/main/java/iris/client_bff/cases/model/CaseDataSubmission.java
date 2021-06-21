@@ -43,14 +43,14 @@ public class CaseDataSubmission extends Aggregate<CaseDataSubmission, CaseDataSu
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "submission_id")
-	private Set<Event> events;
+	private Set<CaseEvent> events;
 
 	private Instant eventsStartDate;
 	private Instant eventsEndDate;
 
 	public CaseDataSubmission(CaseDataRequest request,
 							  Set<Contact> contacts, Instant contactsStartDate, Instant contactsEndDate,
-							  Set<Event> events, Instant eventsStartDate, Instant eventsEndDate,
+							  Set<CaseEvent> events, Instant eventsStartDate, Instant eventsEndDate,
 							  CaseDataProvider dataProvider) {
 
 		super();

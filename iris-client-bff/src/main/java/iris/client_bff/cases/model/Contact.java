@@ -1,7 +1,7 @@
 package iris.client_bff.cases.model;
 
 import iris.client_bff.core.Sex;
-import iris.client_bff.events.model.Address;
+import iris.client_bff.core.model.Address;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,13 +11,16 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 @Entity
 @Data
@@ -44,12 +47,16 @@ public class Contact {
 	private String phone;
 	private String mobilePhone;
 
-	@OneToOne
-	@JoinColumn(name = "address_id")
+	@Embedded
 	private Address address;
 
-	@OneToOne
-	@JoinColumn(name = "address_id")
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name = "street", column = @Column(name = "workplace_street")),
+			@AttributeOverride(name = "houseNumber", column = @Column(name = "workplace_house_number")),
+			@AttributeOverride(name = "zipCode", column = @Column(name = "workplace_zip_code")),
+			@AttributeOverride(name = "city", column = @Column(name = "workplace_city"))
+	})
 	private Address workplaceAddress;
 
 	private String workplaceName;
