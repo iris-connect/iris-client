@@ -165,7 +165,7 @@ Antragsstrecke:
 Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus. 
 
 
-6. Wählen Sie als Produkt "Basic Device  (RSA)" für Zertifikat Nr. 2 aus.   
+6. Wählen Sie als Produkt "Basic Device  (ECC)" für Zertifikat Nr. 2 aus.   
    Klicken Sie anschließend auf weiter. Es öffnet sich die Ansicht "Neues Zertifikat – Schritt 2/4". Klicken Sie auf den Link für die  vereinfachte Beantragung mit Angabe der Zertifikatsdaten. 
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
