@@ -9,14 +9,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.Instant;
+
 @Data
 @Builder
 @ToString
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
 public class ContactInformation {
-	String firstContactDate;
-	String lastContactDate;
+	Instant firstContactDate;
+	Instant lastContactDate;
 	ContactCategory contactCategory;
 	String basicConditions;
 }

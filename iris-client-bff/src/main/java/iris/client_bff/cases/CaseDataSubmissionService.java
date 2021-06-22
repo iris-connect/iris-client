@@ -1,29 +1,27 @@
 package iris.client_bff.cases;
 
-import iris.client_bff.cases.eps.dto.Contacts;
+import static iris.client_bff.cases.web.IndexCaseMapper.mapDataSubmission;
+
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
+import iris.client_bff.cases.eps.dto.ContactInformation;
+import iris.client_bff.cases.eps.dto.Contacts;
 import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.model.CaseDataSubmission;
-import iris.client_bff.cases.model.CaseDataSubmission.DataSubmissionIdentifier;
-import iris.client_bff.cases.model.Contact;
 import iris.client_bff.cases.model.CaseEvent;
+import iris.client_bff.cases.model.Contact;
+import iris.client_bff.cases.web.submission_dto.ContactsAndEvents;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Optional;
-
-import iris.client_bff.cases.web.submission_dto.ContactsAndEvents;
-import lombok.AllArgsConstructor;
-
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static iris.client_bff.cases.web.IndexCaseMapper.mapDataSubmission;
 
 @Slf4j
 @Service
@@ -40,7 +38,7 @@ public class CaseDataSubmissionService {
 	@Transactional
 	public Optional<ContactsAndEvents> findByRequest(CaseDataRequest request) {
 		// TODO clarify which submission to return
-		var submission =  submissionRepo.findAllByRequest(request).stream().findFirst();
+		var submission = submissionRepo.findAllByRequest(request).stream().findFirst();
 		return submission.map(sub -> mapDataSubmission(sub));
 	}
 
@@ -75,7 +73,18 @@ public class CaseDataSubmissionService {
 
 	public void save(CaseDataRequest dataRequest, Contacts contacts, Events events, CaseDataProvider dataProvider) {
 		var contactsForDb = contacts.getContactPersons().stream()
-				.map(it -> mapper.map(it, Contact.class))
+				.map(it -> {
+					var mapped = mapper.map(it, Contact.class);
+
+					Optional.of(it.getContactInformation()).ifPresent(contactInformation -> {
+						mapped.setBasicConditions(contactInformation.getBasicConditions());
+						mapped.setContactCategory(Contact.ContactCategory.valueOf(contactInformation.getContactCategory().name()));
+						mapped.setFirstContactDate(contactInformation.getFirstContactDate());
+						mapped.setLastContactDate(contactInformation.getLastContactDate());
+					});
+
+					return mapped;
+				})
 				.collect(Collectors.toSet());
 
 		var eventsForDb = events.getEvents().stream()
@@ -88,8 +97,8 @@ public class CaseDataSubmissionService {
 		var submission = new CaseDataSubmission(dataRequest, contactsForDb, contacts.getStartDate(), contacts.getEndDate(),
 				eventsForDb, events.getStartDate(), events.getStartDate(), dataProviderForDb);
 
-		 contactsForDb.forEach(it -> it.setSubmission(submission));
-		 eventsForDb.forEach(it -> it.setSubmission(submission));
+		contactsForDb.forEach(it -> it.setSubmission(submission));
+		eventsForDb.forEach(it -> it.setSubmission(submission));
 
 		submissionRepo.save(submission);
 

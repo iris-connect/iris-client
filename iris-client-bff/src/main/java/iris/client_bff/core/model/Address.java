@@ -2,6 +2,7 @@ package iris.client_bff.core.model;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 @Data
+@Builder
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)

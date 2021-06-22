@@ -2,8 +2,10 @@ package iris.client_bff.cases.model;
 
 import iris.client_bff.core.Sex;
 import iris.client_bff.core.model.Address;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -24,6 +26,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @Data
+@Builder
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
@@ -62,8 +65,8 @@ public class Contact {
 	private String workplaceName;
 	private String workplacePhone;
 	private String workplacePointOfContact;
-	private LocalDate firstContactDate;
-	private LocalDate lastContactDate;
+	private Instant firstContactDate;
+	private Instant lastContactDate;
 
 	@Enumerated(EnumType.STRING)
 	private ContactCategory contactCategory;
