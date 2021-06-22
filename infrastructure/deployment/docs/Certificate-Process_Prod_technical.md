@@ -1,3 +1,13 @@
+# Achtung
+
+Aktueller Status: Aktuell befindet sich der prozess noch in der finalen Überarbeitung. Ein aktualisierter Prozess wird schnellstmöglich bereit gestellt. 
+
+<br />
+<br />
+<br />
+
+---
+
 # Prozess für das Beantragen und Einrichten der Zertifikate <br /> – Technische Anleitung – 
 
 
