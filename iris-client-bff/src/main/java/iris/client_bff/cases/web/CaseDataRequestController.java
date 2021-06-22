@@ -79,7 +79,7 @@ public class CaseDataRequestController {
 					var indexCaseDetailsDTO = mapDetailed(dataRequest);
 
 					submissionService.findByRequest(dataRequest).ifPresent(submission -> {
-						indexCaseDetailsDTO.setSubmissionData(mapDataSubmission(submission));
+						indexCaseDetailsDTO.setSubmissionData(submission);
 					});
 
 					return indexCaseDetailsDTO;

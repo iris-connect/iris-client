@@ -68,7 +68,7 @@ class CaseDataControllerIntegrationTest {
 
 		CaseDataProvider dataProvider = CaseDataProvider.builder()
 				.firstName("Max")
-				.firstName("Mustermann")
+				.lastName("Mustermann")
 				.dateOfBirth(Instant.parse("1978-12-12T10:15:30Z"))
 				.build();
 
@@ -84,7 +84,7 @@ class CaseDataControllerIntegrationTest {
 
 		assertEquals(dataProvider.getFirstName(), submissionData.getDataProvider().getFirstName());
 		assertEquals(dataProvider.getLastName(), submissionData.getDataProvider().getLastName());
-		assertEquals(LocalDate.ofInstant(dataProvider.getDateOfBirth(), ZoneId.systemDefault()), submissionData.getDataProvider().getDateOfBirth());
+		assertEquals(LocalDate.ofInstant(dataProvider.getDateOfBirth(), ZoneId.of("CET")), submissionData.getDataProvider().getDateOfBirth());
 	}
 
 }

@@ -55,34 +55,7 @@ public class IndexCaseMapper {
 		var contacts = ContactPersonList.builder()
 				.contactPersons(submission.getContacts().stream().map(contact -> {
 
-					var address = Address.builder()
-							.city(contact.getAddress().getCity())
-							.houseNumber(contact.getAddress().getHouseNumber())
-							.street(contact.getAddress().getStreet())
-							.zipCode(contact.getAddress().getZipCode())
-							.build();
-
-					var contactInformation = ContactPersonAllOfContactInformation
-							.builder()
-							.contactCategory(ContactCategory.valueOf(contact.getContactCategory().name()))
-							.basicConditions(contact.getBasicConditions())
-							.firstContactDate(contact.getFirstContactDate())
-							.lastContactDate(contact.getLastContactDate())
-							.build();
-
-					var workplace = ContactPersonAllOfWorkPlace.builder()
-							.name(contact.getWorkplaceName())
-							.pointOfContact(contact.getWorkplacePointOfContact())
-							.phone(contact.getWorkplacePhone())
-							.address(Address.builder()
-									.zipCode(contact.getWorkplaceAddress().getZipCode())
-									.city(contact.getWorkplaceAddress().getCity())
-									.houseNumber(contact.getWorkplaceAddress().getHouseNumber())
-									.street(contact.getWorkplaceAddress().getStreet())
-									.build())
-							.build();
-
-					return ContactPerson.builder()
+					var contactPerson = ContactPerson.builder()
 							.dateOfBirth(contact.getDateOfBirth())
 							.firstName(contact.getFirstName())
 							.lastName(contact.getLastName())
@@ -90,11 +63,50 @@ public class IndexCaseMapper {
 							.email(contact.getEmail())
 							.mobilePhone(contact.getMobilePhone())
 							.sex(Sex.valueOf(contact.getSex().name()))
-							.contactInformation(contactInformation)
-							.address(address)
-							.workPlace(workplace)
 							.build();
 
+					if (contact.getAddress() != null) {
+						var address = Address.builder()
+								.city(contact.getAddress().getCity())
+								.houseNumber(contact.getAddress().getHouseNumber())
+								.street(contact.getAddress().getStreet())
+								.zipCode(contact.getAddress().getZipCode())
+								.build();
+
+						contactPerson.setAddress(address);
+					}
+
+					var contactInformation = ContactPersonAllOfContactInformation
+							.builder()
+							.basicConditions(contact.getBasicConditions())
+							.firstContactDate(contact.getFirstContactDate())
+							.lastContactDate(contact.getLastContactDate())
+							.build();
+
+					if (contact.getContactCategory() != null) {
+						contactInformation.setContactCategory(ContactCategory.valueOf(contact.getContactCategory().name()));
+					}
+
+					contactPerson.setContactInformation(contactInformation);
+
+					var workplace = ContactPersonAllOfWorkPlace.builder()
+							.name(contact.getWorkplaceName())
+							.pointOfContact(contact.getWorkplacePointOfContact())
+							.phone(contact.getWorkplacePhone())
+							.build();
+
+					if (contact.getWorkplaceAddress() != null) {
+						workplace.setAddress(Address.builder()
+								.zipCode(contact.getWorkplaceAddress().getZipCode())
+								.city(contact.getWorkplaceAddress().getCity())
+								.houseNumber(contact.getWorkplaceAddress().getHouseNumber())
+								.street(contact.getWorkplaceAddress().getStreet())
+								.build());
+					}
+
+					contactPerson.setWorkPlace(workplace);
+
+					return contactPerson;
 				}).collect(Collectors.toList()))
 				.build();
 

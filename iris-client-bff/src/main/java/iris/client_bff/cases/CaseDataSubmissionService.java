@@ -7,7 +7,12 @@ import iris.client_bff.cases.model.CaseDataSubmission;
 import iris.client_bff.cases.model.CaseDataSubmission.DataSubmissionIdentifier;
 import iris.client_bff.cases.model.Contact;
 import iris.client_bff.cases.model.CaseEvent;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
+
+import iris.client_bff.cases.web.submission_dto.ContactsAndEvents;
 import lombok.AllArgsConstructor;
 
 import java.util.UUID;
@@ -16,6 +21,9 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static iris.client_bff.cases.web.IndexCaseMapper.mapDataSubmission;
 
 @Slf4j
 @Service
@@ -27,9 +35,13 @@ public class CaseDataSubmissionService {
 	private final CaseDataSubmissionRepository submissionRepo;
 	private final CaseDataRequestRepository requestRepo;
 
-	public Optional<CaseDataSubmission> findByRequest(CaseDataRequest request) {
+	// NOTE: Necessary to map here and use Transactional annotation, because of
+	// https://stackoverflow.com/a/42206232
+	@Transactional
+	public Optional<ContactsAndEvents> findByRequest(CaseDataRequest request) {
 		// TODO clarify which submission to return
-		return submissionRepo.findAllByRequest(request).stream().findFirst();
+		var submission =  submissionRepo.findAllByRequest(request).stream().findFirst();
+		return submission.map(sub -> mapDataSubmission(sub));
 	}
 
 	public String validateAndSaveData(UUID dataAuthorizationToken, Contacts contacts, Events events,
@@ -71,6 +83,7 @@ public class CaseDataSubmissionService {
 				.collect(Collectors.toSet());
 
 		var dataProviderForDb = mapper.map(dataProvider, iris.client_bff.cases.model.CaseDataProvider.class);
+		dataProviderForDb.setDateOfBirth(LocalDate.ofInstant(dataProvider.getDateOfBirth(), ZoneId.of("CET")));
 
 		var submission = new CaseDataSubmission(dataRequest, contactsForDb, contacts.getStartDate(), contacts.getEndDate(),
 				eventsForDb, events.getStartDate(), events.getStartDate(), dataProviderForDb);
@@ -80,9 +93,9 @@ public class CaseDataSubmissionService {
 
 		submissionRepo.save(submission);
 
-		// dataRequest.setStatus(Status.DATA_RECEIVED); // TODO: add generic status and save
+		dataRequest.setStatus(CaseDataRequest.Status.DATA_RECEIVED); // TODO: add generic status and save
 
-		// requestRepo.save(dataRequest);
+		requestRepo.save(dataRequest);
 	}
 
 }
