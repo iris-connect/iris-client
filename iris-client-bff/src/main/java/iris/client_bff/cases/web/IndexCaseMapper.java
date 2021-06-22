@@ -7,14 +7,7 @@ import iris.client_bff.cases.model.CaseDataSubmission;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
-import iris.client_bff.cases.web.submission_dto.ContactCategory;
-import iris.client_bff.cases.web.submission_dto.ContactPerson;
-import iris.client_bff.cases.web.submission_dto.ContactPersonAllOfContactInformation;
-import iris.client_bff.cases.web.submission_dto.ContactPersonAllOfWorkPlace;
-import iris.client_bff.cases.web.submission_dto.ContactPersonList;
-import iris.client_bff.cases.web.submission_dto.ContactsAndEvents;
-import iris.client_bff.cases.web.submission_dto.ContactsAndEventsDataProvider;
-import iris.client_bff.cases.web.submission_dto.EventList;
+import iris.client_bff.cases.web.submission_dto.*;
 import iris.client_bff.core.Sex;
 import iris.client_bff.core.web.dto.Address;
 import lombok.NoArgsConstructor;
@@ -78,7 +71,7 @@ public class IndexCaseMapper {
 					var workplace = ContactPersonAllOfWorkPlace.builder()
 							.name(contact.getWorkplaceName())
 							.pointOfContact(contact.getWorkplacePointOfContact())
-							.phone("TODO") // TODO
+							.phone(contact.getWorkplacePhone())
 							.address(Address.builder()
 									.zipCode(contact.getWorkplaceAddress().getZipCode())
 									.city(contact.getWorkplaceAddress().getCity())
@@ -102,7 +95,25 @@ public class IndexCaseMapper {
 
 				}).collect(Collectors.toList()))
 				.build();
-		EventList events;
+
+		var events = EventList.builder()
+				.events(submission.getEvents().stream().map(event -> {
+					var address = Address.builder()
+							.city(event.getAddress().getCity())
+							.houseNumber(event.getAddress().getHouseNumber())
+							.street(event.getAddress().getStreet())
+							.zipCode(event.getAddress().getZipCode())
+							.build();
+
+					return Event.builder()
+							.address(address)
+							.name(event.getName())
+							.phone(event.getPhone())
+							.additionalInformation(event.getAdditionalInformation())
+							.build();
+				}).collect(Collectors.toList()))
+				.build();
+
 		return ContactsAndEvents.builder()
 				.dataProvider(contactsAndEventsDataProvider)
 				.contacts(contacts)
