@@ -108,6 +108,8 @@ public class IndexCaseMapper {
 
 					return contactPerson;
 				}).collect(Collectors.toList()))
+				.startDate(LocalDate.ofInstant(submission.getContactsStartDate(), ZoneId.of("CET")))
+				.endDate(LocalDate.ofInstant(submission.getContactsEndDate(), ZoneId.of("CET")))
 				.build();
 
 		var events = EventList.builder()
