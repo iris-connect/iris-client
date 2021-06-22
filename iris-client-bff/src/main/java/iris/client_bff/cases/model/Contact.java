@@ -62,7 +62,6 @@ public class Contact {
 	private String workplaceName;
 	private String workplacePhone;
 	private String workplacePointOfContact;
-	private String workplacePhone;
 	private LocalDate firstContactDate;
 	private LocalDate lastContactDate;
 
