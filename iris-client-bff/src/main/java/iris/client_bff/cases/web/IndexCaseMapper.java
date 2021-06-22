@@ -7,25 +7,13 @@ import iris.client_bff.cases.model.CaseDataSubmission;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
-<<<<<<< Updated upstream
 import iris.client_bff.cases.web.submission_dto.*;
-=======
-import iris.client_bff.cases.web.submission_dto.ContactCategory;
-import iris.client_bff.cases.web.submission_dto.ContactPerson;
-import iris.client_bff.cases.web.submission_dto.ContactPersonAllOfContactInformation;
-import iris.client_bff.cases.web.submission_dto.ContactPersonAllOfWorkPlace;
-import iris.client_bff.cases.web.submission_dto.ContactPersonList;
-import iris.client_bff.cases.web.submission_dto.ContactsAndEvents;
-import iris.client_bff.cases.web.submission_dto.ContactsAndEventsDataProvider;
-import iris.client_bff.cases.web.submission_dto.Event;
-import iris.client_bff.cases.web.submission_dto.EventList;
->>>>>>> Stashed changes
 import iris.client_bff.core.Sex;
 import iris.client_bff.core.web.dto.Address;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -111,7 +99,6 @@ public class IndexCaseMapper {
 				.build();
 
 		var events = EventList.builder()
-<<<<<<< Updated upstream
 				.events(submission.getEvents().stream().map(event -> {
 					var address = Address.builder()
 							.city(event.getAddress().getCity())
@@ -125,24 +112,10 @@ public class IndexCaseMapper {
 							.name(event.getName())
 							.phone(event.getPhone())
 							.additionalInformation(event.getAdditionalInformation())
-=======
-				.endDate(LocalDate.ofInstant(submission.getEventsEndDate(), ZoneId.of("CET")))
-				.startDate(LocalDate.ofInstant(submission.getEventsStartDate(), ZoneId.of("CET")))
-				.events(submission.getEvents().stream().map(event -> {
-					var eventAddress = event.getAddress();
-					return Event.builder()
-							.name(event.getName())
-							.phone(event.getPhone())
-							.additionalInformation(event.getAdditionalInformation())
-							.address(Address.builder()
-									.street(eventAddress.getStreet())
-									.zipCode(eventAddress.getZipCode())
-									.houseNumber(eventAddress.getHouseNumber())
-									.city(eventAddress.getCity())
-									.build())
->>>>>>> Stashed changes
 							.build();
 				}).collect(Collectors.toList()))
+				.endDate(LocalDate.ofInstant(submission.getEventsEndDate(), ZoneId.of("CET")))
+				.startDate(LocalDate.ofInstant(submission.getEventsStartDate(), ZoneId.of("CET")))
 				.build();
 
 		return ContactsAndEvents.builder()
