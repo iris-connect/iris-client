@@ -59,8 +59,8 @@ public class EventDataControllerIntegrationTest {
         var submissionList = submissionRepo.findAllByRequest(dataRequest).toList();
         assertEquals(1, submissionList.size());
         var submission = submissionList.get(0);
-        assertEquals(requestStart, submission.getStartDate());
-        assertEquals(requestEnd, submission.getEndDate());
+        assertEquals(requestStart.truncatedTo(ChronoUnit.MILLIS), submission.getStartDate().truncatedTo(ChronoUnit.MILLIS));
+        assertEquals(requestEnd.truncatedTo(ChronoUnit.MILLIS), submission.getEndDate().truncatedTo(ChronoUnit.MILLIS));
         assertEquals(providerName, submission.getDataProvider().getName());
     }
 }
