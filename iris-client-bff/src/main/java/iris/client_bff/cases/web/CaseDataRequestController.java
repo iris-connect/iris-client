@@ -1,21 +1,18 @@
 package iris.client_bff.cases.web;
 
+import static iris.client_bff.cases.web.IndexCaseMapper.mapDataSubmission;
 import static iris.client_bff.cases.web.IndexCaseMapper.mapDetailed;
 import static org.springframework.http.HttpStatus.OK;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.CaseDataRequestService;
 import iris.client_bff.cases.CaseDataSubmissionService;
-import iris.client_bff.cases.model.CaseDataSubmission;
-import iris.client_bff.cases.model.CaseDataSubmission.DataSubmissionIdentifier;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
-import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.ui.messages.ErrorMessages;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 
 import java.util.UUID;
@@ -52,12 +49,11 @@ public class CaseDataRequestController {
 	public Page<IndexCaseDTO> getAll(@RequestParam(required = false) Status status,
 			@RequestParam(required = false) String search, Pageable pageable) {
 		if (status != null && StringUtils.isNotEmpty(search)) {
-			return caseDataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(IndexCaseMapper::map);
-		}
-		else if (StringUtils.isNotEmpty(search)) {
+			return caseDataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable)
+					.map(IndexCaseMapper::map);
+		} else if (StringUtils.isNotEmpty(search)) {
 			return caseDataRequestService.searchByRefIdOrName(search, pageable).map(IndexCaseMapper::map);
-		}
-		else if (status != null) {
+		} else if (status != null) {
 			return caseDataRequestService.findByStatus(status, pageable).map(IndexCaseMapper::map);
 		}
 		return caseDataRequestService.findAll(pageable).map(IndexCaseMapper::map);
@@ -69,7 +65,8 @@ public class CaseDataRequestController {
 		try {
 			return mapDetailed(caseDataRequestService.create(insert));
 		} catch (IRISDataRequestException e) {
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.CASE_DATA_REQUEST_CREATION); // TODO: use ExceptionMapper?
+			// TODO: use ExceptionMapper?
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.CASE_DATA_REQUEST_CREATION);
 		}
 	}
 
@@ -77,16 +74,18 @@ public class CaseDataRequestController {
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> getDetails(@PathVariable UUID id) {
 
-		var request = caseDataRequestService.findDetailed(id)
-				.map(IndexCaseMapper::mapDetailed)
+		return caseDataRequestService.findDetailed(id)
+				.map((dataRequest -> {
+					var indexCaseDetailsDTO = mapDetailed(dataRequest);
+
+					submissionService.findByRequest(dataRequest).ifPresent(submission -> {
+						indexCaseDetailsDTO.setSubmissionData(mapDataSubmission(submission));
+					});
+
+					return indexCaseDetailsDTO;
+				}))
 				.map(ResponseEntity::ok)
 				.orElseGet(ResponseEntity.notFound()::build);
-
-		submissionService.findById(DataSubmissionIdentifier.of(id)).ifPresent(submission -> {
-			IndexCaseMapper.mapDataSubmission(submission);
-		});
-
-		return request;
 	}
 
 	@PatchMapping("/{id}")

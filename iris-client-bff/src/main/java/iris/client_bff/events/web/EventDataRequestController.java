@@ -126,6 +126,7 @@ public class EventDataRequestController {
 		mapped.setCode(request.getId().toString());
 		mapped.setStart(request.getRequestStart());
 		mapped.setEnd(request.getRequestEnd());
+		mapped.setEnd(request.getRequestEnd());
 		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
 		mapped.setLastUpdatedAt(request.getLastModifiedAt());
 		mapped.setRequestedAt(request.getCreatedAt());

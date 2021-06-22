@@ -37,6 +37,11 @@ CREATE TABLE  contact (
     workplace_house_number varchar(256) NULL,
     workplace_zip_code varchar(10) NULL,
     workplace_city varchar(256) NULL,
+<<<<<<< Updated upstream
+=======
+    workplace_name varchar(256) NULL,
+    workplace_phone varchar(100) NULL,
+>>>>>>> Stashed changes
     workplace_point_of_contact varchar(256) NULL,
     first_contact_date date NULL,
     last_contact_date date NULL,

@@ -62,8 +62,16 @@ public class Contact {
 	private String workplaceName;
 	private String workplacePhone;
 	private String workplacePointOfContact;
+	private String workplacePhone;
 	private LocalDate firstContactDate;
 	private LocalDate lastContactDate;
-	private String contactCategory; // TODO should be enum
+
+	@Enumerated(EnumType.STRING)
+	private ContactCategory contactCategory;
+
 	private String basicConditions;
+
+	public enum ContactCategory {
+		HIGH_RISK, HIGH_RISK_MED, MEDIUM_RISK_MED, LOW_RISK, NO_RISK
+	}
 }

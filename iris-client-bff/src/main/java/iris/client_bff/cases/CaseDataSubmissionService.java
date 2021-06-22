@@ -27,8 +27,9 @@ public class CaseDataSubmissionService {
 	private final CaseDataSubmissionRepository submissionRepo;
 	private final CaseDataRequestRepository requestRepo;
 
-	public Optional<CaseDataSubmission> findById(DataSubmissionIdentifier id) {
-		return submissionRepo.findById(id);
+	public Optional<CaseDataSubmission> findByRequest(CaseDataRequest request) {
+		// TODO clarify which submission to return
+		return submissionRepo.findAllByRequest(request).stream().findFirst();
 	}
 
 	public String validateAndSaveData(UUID dataAuthorizationToken, Contacts contacts, Events events,
