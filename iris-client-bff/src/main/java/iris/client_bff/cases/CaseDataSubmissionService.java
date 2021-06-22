@@ -76,7 +76,7 @@ public class CaseDataSubmissionService {
 				.map(it -> {
 					var mapped = mapper.map(it, Contact.class);
 
-					Optional.of(it.getContactInformation()).ifPresent(contactInformation -> {
+					Optional.ofNullable(it.getContactInformation()).ifPresent(contactInformation -> {
 						mapped.setBasicConditions(contactInformation.getBasicConditions());
 						mapped.setContactCategory(Contact.ContactCategory.valueOf(contactInformation.getContactCategory().name()));
 						mapped.setFirstContactDate(contactInformation.getFirstContactDate());
