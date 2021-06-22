@@ -5,12 +5,17 @@ import static org.springframework.http.HttpStatus.OK;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.CaseDataRequestService;
+import iris.client_bff.cases.CaseDataSubmissionService;
+import iris.client_bff.cases.model.CaseDataSubmission;
+import iris.client_bff.cases.model.CaseDataSubmission.DataSubmissionIdentifier;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
+import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.ui.messages.ErrorMessages;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 
 import java.util.UUID;
@@ -39,6 +44,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class CaseDataRequestController {
 
 	private final CaseDataRequestService caseDataRequestService;
+
+	private final CaseDataSubmissionService submissionService;
 
 	@GetMapping
 	@ResponseStatus(OK)
@@ -70,10 +77,16 @@ public class CaseDataRequestController {
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> getDetails(@PathVariable UUID id) {
 
-		return caseDataRequestService.findDetailed(id)
+		var request = caseDataRequestService.findDetailed(id)
 				.map(IndexCaseMapper::mapDetailed)
 				.map(ResponseEntity::ok)
 				.orElseGet(ResponseEntity.notFound()::build);
+
+		submissionService.findById(DataSubmissionIdentifier.of(id)).ifPresent(submission -> {
+			IndexCaseMapper.mapDataSubmission(submission);
+		});
+
+		return request;
 	}
 
 	@PatchMapping("/{id}")

@@ -63,6 +63,6 @@ public class Contact {
 	private String workplacePointOfContact;
 	private LocalDate firstContactDate;
 	private LocalDate lastContactDate;
-	private String contactCategory;
+	private String contactCategory; // TODO should be enum
 	private String basicConditions;
 }

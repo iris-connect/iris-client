@@ -1,8 +1,8 @@
 package iris.client_bff.cases;
 
 import iris.client_bff.cases.model.CaseDataSubmission;
-import iris.client_bff.events.model.EventDataSubmission.DataSubmissionIdentifier;
 
+import iris.client_bff.cases.model.CaseDataSubmission.DataSubmissionIdentifier;
 import javax.transaction.Transactional;
 
 import org.springframework.data.repository.CrudRepository;

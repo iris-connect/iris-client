@@ -4,8 +4,10 @@ import iris.client_bff.cases.eps.dto.Contacts;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
 import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.model.CaseDataSubmission;
+import iris.client_bff.cases.model.CaseDataSubmission.DataSubmissionIdentifier;
 import iris.client_bff.cases.model.Contact;
 import iris.client_bff.cases.model.CaseEvent;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 
 import java.util.UUID;
@@ -24,6 +26,10 @@ public class CaseDataSubmissionService {
 
 	private final CaseDataSubmissionRepository submissionRepo;
 	private final CaseDataRequestRepository requestRepo;
+
+	public Optional<CaseDataSubmission> findById(DataSubmissionIdentifier id) {
+		return submissionRepo.findById(id);
+	}
 
 	public String validateAndSaveData(UUID dataAuthorizationToken, Contacts contacts, Events events,
 			CaseDataProvider dataProvider) {
