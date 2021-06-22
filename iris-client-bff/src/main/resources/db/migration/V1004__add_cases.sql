@@ -37,7 +37,7 @@ CREATE TABLE  contact (
     workplace_house_number varchar(256) NULL,
     workplace_zip_code varchar(10) NULL,
     workplace_city varchar(256) NULL,
-    workplace_additional_information varchar(256) NULL,
+    workplace_point_of_contact varchar(256) NULL,
     first_contact_date date NULL,
     last_contact_date date NULL,
     contact_category varchar(100) NULL,
