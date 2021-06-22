@@ -35,12 +35,12 @@ public class DtoSupplier {
     }
 
     public List<ContactPerson> getContactPersonList(int size) {
-        int toIndex = size > contactPersonList.size() ? contactPersonList.size()-1 : size-1;
+        int toIndex = size > contactPersonList.size() ? contactPersonList.size() : size;
         return contactPersonList.subList(0, toIndex);
     }
 
     public List<Event> getEventList(int size) {
-        int toIndex = size > eventList.size() ? eventList.size()-1 : size-1;
+        int toIndex = size > eventList.size() ? eventList.size() : size;
         return eventList.subList(0, toIndex);
     }
 }
