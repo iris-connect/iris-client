@@ -52,28 +52,15 @@ Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt s
 ## Welche Zertifikate müssen beantragt werden?
 Für die Anbindung an IRIS benötigt ein GA zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei (BDr) bzw. deren Vertrauensdiensteanbieter D-Trust:
 
-| # Ref| Identifier | Beschreibung | Anwendungsfall |
-| - | - | -| - |
-| 1 | TLS-Zertifikat - Private Proxy | Ein TLS-Zertifikat für den IRIS Private Proxy des GA | Identität des GA im Internet mit dem Ziel, Kontakttagüber und Gästelisten direkt ins GA zu übermitteln (TLS/HTTPS). |
-| 2 | Signaturzertifikat | Ein Signaturzertifikat für Vertreter:in des GA  | Signieren der mTLS-Zertifikate Nr 3 und 4 |
-
-Liegen diese vor, müssen drei weitere Zertifikate vom GA oder dessen IT-Dienstleister, je nachdem, wer den IRIS-Client betreibt, erstellt werden. 
-Dafür ist kein Zutun der Bundesdruckerei nötig.
-
-| # Ref| Identifier | Beschreibung | Anwendungsfall |
-| - | - | -| - |
-| 3 | mTLS-Zertifikat - EPS ( IRIS Client BFF ) | Ein mTLS-Zertifikat für den EPS-Server des IRIS Client Backend for Frontend des GA  | Authentifizierung und Authentisierung der Kommunikation mit anderen zentralen und de-zentralen EPS Teilnehmern |
-| 4 | mTLS-Zertifikat - EPS ( IRIS Private Proxy ) | Ein mTLS-Zertifikat für den EPS-Server des IRIS Private Proxy des GA   | Ankündigung von eingehenden Verbindungen zum private Proxy |
-
-Desweiteren ist eingeplant für ein zukünftiges Release:
-
-| # Ref| Identifier | Beschreibung | Anwendungsfall |
-| - |- |-|-|
-| 5 | Ende-zu-Ende-Zertifikat | IRIS Client Backend for Frontend des GA     | Umsetzung der Datenschutzkonferenz-Anforderung an Betreiber von digitaler Kontaktdatenerfassung,   wonach zusätzlich zur Transportverschlüsselung (TLS) eine zweite Verschlüsselungsschicht auf Anwendungsebene (Inhaltsverschlüsselung) umzusetzen ist. |
+| # Ref| Identifier | Beschreibung | D-Trust Produkt | Anwendungsfall |
+| - | - | -| - | - |
+| 1 | TLS-Zertifikat - Private Proxy | Ein TLS-Zertifikat für den IRIS Private Proxy des GA | Advanced SSL ID (RSA) | Identität des GA im Internet mit dem Ziel, Kontakttagüber und Gästelisten direkt ins GA zu übermitteln (TLS/HTTPS). |
+| 2 | Signaturzertifikat | Ein Signaturzertifikat für Vertreter:in des GA  |Basic Device ID (ECC) | Signieren von Einträgen im Service Directory ( zukünftiges Feature ) |
+| 3 (*Neu) | mTLS-Zertifikat - EPS | Ein mTLS Zertifikat welches sowohl für EPS ( IRIS Client BFF ) als auch für EPS ( IRIS Private Proxy ) benutzt werden kann. | Basic SSL ID (RSA) | Authentifizierung und Authentisierung der Kommunikation mit anderen zentralen und de-zentralen EPS Teilnehmern|
 
 Das folgenden Schaubild gibt eine Top-Level-Sicht auf den Prozess des Beantragens und Einrichten der Zertifikate.
 
-![alt](images/IRIS-Production-Certs.jpg)
+![alt](images/IRIS-Production-Certs-v2.jpg)
 
 
 ## Erforderliche Schritte seitens der Landesbehörde
@@ -90,7 +77,7 @@ IRIS Identifier:        ga-stadt-bonn
 Vorschlag Domain:       ga-stadt-bonn.iris-connect.nrw.de
 ```
 
-**Hinweis**: Die aktuellen Domains können vom Vorschlag des IRIS Teams abweichen.
+**Hinweis**: Die aktuellen Domains können vom Vorschlag des IRIS Teams abweichen. 
 
 ### DNS für die Domains konfigurieren
 
@@ -175,7 +162,7 @@ Antragsstrecke:
 Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus. 
 
 
-6. Wählen Sie als Produkt "Basic Device  (ECC)" für Zertifikat Nr. 2 aus.   
+6. Wählen Sie als Produkt "Basic Device ID (ECC)" für Zertifikat Nr. 2 aus.   
    Klicken Sie anschließend auf weiter. Es öffnet sich die Ansicht "Neues Zertifikat – Schritt 2/4". Klicken Sie auf den Link für die  vereinfachte Beantragung mit Angabe der Zertifikatsdaten. 
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
@@ -201,6 +188,41 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
    ```
 
    Laden Sie das Signatur-Zertifikat-pub-key.pem  in das entsprechende Feld hoch.
+
+   Zum Abschluß muss ein Sperrpasswort gesetzt werden, dass Sie – wenn nichts schief geht – niemals brauchen werden.
+
+### Zertifikat Nr. 3 ( mTLS-Zertifikat - EPS ) online beantragen
+
+Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus. 
+
+
+6. Wählen Sie als Produkt "Basic SSL ID (RSA)" für Zertifikat Nr. 3 aus.   
+   Klicken Sie anschließend auf weiter. Es öffnet sich die Ansicht "Neues Zertifikat – Schritt 2/4". Klicken Sie auf den Link für die  vereinfachte Beantragung mit Angabe der Zertifikatsdaten. 
+
+   ![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
+
+7. Es öffnet sich eine Webform mit deren Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert. 
+
+   | Feld | Wert | Beispiel |
+   | - | - | - |
+   | Common Name (CN) | eps.${Domain aus Zertifikat Nr. 1} | Beispiel Bonn: eps.ga-bonn.iris-connect.nrw.de |
+   | Organisation (O) | Die zuständige Landesbehörde | IT.NRW für Nordrhein Westfalen |
+   | Unter SAN -> Erster DNS Eintrag | Den selben Wert die bei CN | Beispiel Bonn: eps.ga-bonn.iris-connect.nrw.de |
+   | Unter SAN -> Zweiter DNS Eintrag | eps-proxy.${Domain aus Zertifikat Nr. 1} | Beispiel Bonn: eps-proxy.ga-bonn.iris-connect.nrw.de |   
+
+
+   ![Ansicht "Neues Zertifikat - Schritt 2 / 4) - Webform" im CSM](images/certificate_service_manager/mycsm_basic_device_id_webform.png)
+
+   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/production/generate-rsa-key-pair.sh). 
+
+   ```
+   $ sh generate-rsa-key-pair.sh mTLS-Zertifikat-EPS
+   $ ls -l
+   -rw-------  1 mTLS-Zertifikat-EPS.key
+   -rw-r--r--  1 mTLS-Zertifikat-EPS.pub
+   ```
+
+   Laden Sie das mTLS-Zertifikat-EPS.pub in das entsprechende Feld hoch.
 
    Zum Abschluß muss ein Sperrpasswort gesetzt werden, dass Sie – wenn nichts schief geht – niemals brauchen werden.
 

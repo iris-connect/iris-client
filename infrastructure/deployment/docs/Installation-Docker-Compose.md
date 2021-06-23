@@ -50,27 +50,33 @@ Die Struktur des Archives ist wie nachfolgend beschrieben.
 
 ```
 .
-├── conf 
+├── ca # hier liegen die CA Root Zertifikate für beide Umgebungen
+│   ├── live
+│   └── staging
+├── conf
 │   ├── eps
 │   │   ├── certs
-│   │   │   └── # hier muss das mTLS-Zertifikat - EPS ( IRIS Client BFF ) und dessen privater Schlüssel abgelegt werden.
-│   │   └── roles
-│   │       └── hd
-│   │           └── 001_default.yml # Die Konfiguration für den EPS ( IRIS Client BFF ) service. Diese wird mit Umgebungsvariablen parameterisiert. 
-│   └── nginx
-│       └── # hier muss das Zertifikat der internen Web Domain und dessen SChlüssel abgelegt werden. 
+│   │   └── roles # Die Konfiguration für den EPS ( IRIS Client BFF ) service aufgeteilt nach Umgebung. Diese wird mit Umgebungsvariablen parameterisiert. 
+│   │       ├── live
+│   │       │   └── hd
+│   │       └── staging
+│   │           └── hd
+│   ├── nginx # hier muss das Zertifikat der internen Web Domain und dessen Schlüssel abgelegt werden. 
 │   └── proxy
 │       ├── certs
-│       │   └── # hier muss das mTLS-Zertifikat - EPS ( IRIS Private Proxy ) und dessen privater Schlüssel abgelegt werden.
-│       └── roles
-│           ├── private-proxy
-│           │   └── 001_default.yml # Die Konfiguration für den Proxy service. Diese wird mit Umgebungsvariablen parameterisiert. 
-│           └── private-proxy-eps
-│               └── 001_default.yml # Die Konfiguration für den Proxy EPS service. Diese wird mit Umgebungsvariablen parameterisiert. 
+│       └── roles 
+│           ├── live
+│           │   ├── private-proxy # Die live Konfiguration für den Proxy service. Diese wird mit Umgebungsvariablen parameterisiert. 
+│           │   └── private-proxy-eps # Die live Konfiguration für den Proxy EPS service. Diese wird mit Umgebungsvariablen parameterisiert. 
+│           └── staging
+│               ├── private-proxy # Die staging Konfiguration für den Proxy service. Diese wird mit Umgebungsvariablen parameterisiert. 
+│               └── private-proxy-eps # Die staging Konfiguration für den Proxy service. Diese wird mit Umgebungsvariablen parameterisiert. 
+├── docs # Die Dokumentation
+└── scripts # Hilfs-Skripte für die Zertifikatsbestellung und -verwaltung.
+    ├── live
+    └── staging
 ├── docker-compose-ext-postgres.yml # Die Docker Compose Konfiguration mit einer externen Postgres DB.
 ├── docker-compose.yml # Die Docker Compose Konfiguration mit einer embedded Postgres DB.
-└── docs
-    └── # Die Dokumentation
 ```
 
 ## Anlegen der Konfiguration
@@ -111,7 +117,7 @@ POSTGRES_DB
 ```
 Die DB muss vorher von Ihnen angelegt werden. Der User benötigt die Berechtigung Tabellen zu erstellen und zu ändern. Das Datenbank Schema wird von der Applikation verwaltet und eventuelle Änderungen werden für Sie transparent migriert.
 
-## Einrichtung der Authentifizierung
+## Einrichtung der Benutzer-Authentifizierung
 
 Der IRIS Client stellt die Benutzer [JSON Webtokens](https://de.wikipedia.org/wiki/JSON_Web_Token) aus. Dafür wird ein HMAC512 Algorithmus benutzt. Dieser Algorithmus verlangt ein starkes *Shared Secret*. Das kann wie folgt konfiguriert werden.
 
@@ -144,7 +150,7 @@ IRIS_CLIENT_DOMAIN_CERT=iris-ga.crt # Beispiel s.o.
 IRIS_CLIENT_DOMAIN_CERT_KEY=iris-ga.key # Beispiel s.o.
 ```
 
-## Einrichtung des Ports
+## Einrichtung des Ports ( Optional )
 
 Standardmäßig wird das Frontend des IRIS Clients über den HTTPS Standard Port 443 ausgeliefert. Dies kann mit dem folgenden optionalen Parameter angepasst werden. 
 
@@ -184,7 +190,31 @@ PROXY_URL
 
 Der Proxy Server muss Tunneling über HTTP_CONNECT unterstützen. Weiter Einstellungen bezüglich der Ports und Domains welche freigegeben werden müssen finden sie hier sind [hier](Installation.md). 
 
-## Einrichtung Service Directory
+## Logdateien
+
+Die Logausgaben aller Services werden vom IRIS CLient in Dateien persistiert. Standardmäßig wird dafür im aktuellen Verzeichnis ein Order `logs` erstellt. Der Pfad dieses Ordners kann über den folgenden optionalen Parameter angepasst werden. 
+
+```
+LOG_FOLDER
+```
+
+## Einrichtung Root Zertifikat ( veraltet )
+
+Bitte nicht mehr konfigurieren. Verwenden Sie statt dessen `Einrichtung IRIS Umgebung`.
+
+## Einrichtung IRIS Umgebung
+
+IRIS bietet 2 Umgebungen an (staging und live). Mit diesem Parameter können Sie konfigurieren, zu welcher der beiden Umgebungen sich der IRIS Client verbinden soll. Es gibt 2 vordefinierte Werte für diesen Parameter. 
+
+```
+# Staging: IRIS_ENV=staging
+# Live: IRIS_ENV=live
+IRIS_ENV=
+```
+
+Von dieser Einstellung hänger unter anderen ab, zu welchem Service Directory sich Ihr IRIS Client verbindet und welche ROOT Zertifikate vertraut wird. 
+
+## Einrichtung vom Service Directory Endpunkt
 
 Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf das IRIS Service Directory, damit es weiß welche Services unter welcher Adresse zu erreichen sind. Die richtige Service Directory URL hängt von der Umgebung (Staging oder Live ab). 
 
@@ -195,20 +225,38 @@ EPS_SD_ENDPOINT=https://iris.staging.iris-gateway.de:3322/jsonrpc
 # Live: 
 EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
 ```
+## Einrichtung vom IRIS Locations Service
 
-## Einrichtung Root Zertifikat
-
-Wie in der [Architektur](./Architektur.md) beschrieben besteht das IRIS Netzwerk aus viele Akteuren die sich untereinander vertrauen. Dafür muss je nach Umgebung ein Zertifikat konfiguriert werden, welchem der IRIS Client vertraut. Die Zertifikate liegen dem IRIS Client bei und müssen je nach Umgebung konfiguriert werden.
-
-Dafür muss folgender Parameter gesetzt werden.
+Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf den IRIS Locations Service, damit die Mitarbeiter im GA u.a. nach Betrieben und Gastronomien suchen können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
 
 ```
-# Staging: 
-TRUSTED_CA_CRT=root-staging.crt
-
-# Live: 
-TRUSTED_CA_CRT=root-live.crt
+# staging: ls-1
+# live: locations-production-1
+EPS_LS_NAME=
 ```
+
+## Einrichtung vom IRIS Public Proxy
+
+Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf den IRIS Public Proxy Service, damit eingehende Daten wie z.B. Kontakttagebücher empfangen werden können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
+
+```
+# staging: public-proxy-1
+# live: public-proxy-production-1
+EPS_PP_NAME=
+```
+
+
+## Einrichtung: TLS-Zertifikat ( Private Proxy )
+
+bla bla 
+
+```
+PROXY_SUBDOMAIN=
+PROXY_TLS_CERT
+PROXY_TLS_CERT_KEY
+```
+
+
 ## Einrichtung: mTLS-Zertifikat - EPS ( IRIS Client BFF )
 
 Damit der IRIS Client sich im IRIS Netzwerk anmelden und mit anderen Teilnehmern kommunizieren und Daten austauschen kann, benötigt man ein IRIS GA Client Zertifikat. Der Prozess dafür ist weiter oben in der Anleitung dokumentiert.
