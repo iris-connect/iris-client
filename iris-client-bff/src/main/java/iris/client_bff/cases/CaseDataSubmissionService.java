@@ -1,9 +1,11 @@
 package iris.client_bff.cases;
 
+import static iris.client_bff.cases.CaseDataRequest.Status.ABORTED;
+import static iris.client_bff.cases.CaseDataRequest.Status.CLOSED;
 import static iris.client_bff.cases.web.IndexCaseMapper.mapDataSubmission;
 
+import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
-import iris.client_bff.cases.eps.dto.ContactInformation;
 import iris.client_bff.cases.eps.dto.Contacts;
 import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.model.CaseDataSubmission;
@@ -44,13 +46,20 @@ public class CaseDataSubmissionService {
 
 	public String validateAndSaveData(UUID dataAuthorizationToken, Contacts contacts, Events events,
 			CaseDataProvider dataProvider) {
-		// Todo check client.getName() vs. providerId
+		// Todo check client.getName() vs. providerIdø
 
 		return requestRepo.findById(CaseDataRequest.DataRequestIdentifier.of(dataAuthorizationToken)).map(dataRequest -> {
 
-			if (dataRequest.getStatus().equals(CaseDataRequest.Status.ABORTED)) {
+			var requestStatus = dataRequest.getStatus();
+			if (requestStatus.equals(ABORTED)) {
 				log.trace("Submission {} for aborted case {}", dataAuthorizationToken, dataRequest.getId());
-				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString() + ". Request aborted.";
+				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString() + ". Request was aborted.";
+			}
+
+			if (requestStatus.equals(CLOSED)) {
+				log.trace("Submission {} for closed case {}", dataAuthorizationToken, dataRequest.getId());
+				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString()
+						+ ". Request already closed.";
 			}
 
 			save(dataRequest, contacts, events, dataProvider);
@@ -102,7 +111,7 @@ public class CaseDataSubmissionService {
 
 		submissionRepo.save(submission);
 
-		dataRequest.setStatus(CaseDataRequest.Status.DATA_RECEIVED); // TODO: add generic status and save
+		dataRequest.setStatus(Status.DATA_RECEIVED); // TODO: add generic status and save
 
 		requestRepo.save(dataRequest);
 	}
