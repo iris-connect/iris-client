@@ -39,12 +39,6 @@ Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt s
       - [Zertifikate online beantragen](#zertifikate-online-beantragen)
       - [Zertifikate herunterladen](#zertifikate-herunterladen)
       - [Zertifikate Nr. 1 und Nr. 2 einrichten](#zertifikate-nr-1-und-nr-2-einrichten)
-* [Zertifikate Nr. 3 bis 5](#zertifikate-nr-3-bis-5)
-   + [Zertifikate erstellen](#zertifikate-erstellen)
-   + [Zertifikate einrichten](#zertifikate-einrichten)
-      - [Zertifikat Nr. 3 einrichten](#zertifikat-nr-3-einrichten)
-      - [Zertifikat Nr. 4 einrichten](#zertifikat-nr-4-einrichten)
-      - [Zertifikat Nr. 5 einrichten](#zertifikat-nr-5-einrichten)
 * [Private Schlüssel sicher verwahren](#private-schlüssel-sicher-verwahren)
 
 
@@ -249,80 +243,6 @@ Sie können die Zertifikate dann einfach im CSM herunterladen.
    ![Ansicht "Zertifikate" im CSM](images/certificate_service_manager/mycsm_Zertifikate.png)
 
 
-#### Zertifikate Nr. 1 und Nr. 2 einrichten
-
-Das Zertifikat Nr. 1 wird direkt im IRIS Client konfiguriert. Das Zertifikat Nr. 2 (Signatur Zertifikat) wird benötigt, um die Zertifikate Nr. 3 und Nr 4 zu erstellen (nächster Abschnitt).
-
-## Zertifikate Nr. 3 und 4
-Sobald Zertifikat Nr. 2 vorliegt können die Zertifikate Nr. 3 mTLS-Zertifikat - EPS ( IRIS Client BFF )  und 4  mTLS-Zertifikat - EPS ( IRIS Private Proxy ) vom GA, bzw. dessen IT-Dienstleister,
-je nachdem, wer den IRIS-Client betreibt, selbstständig erstellt werden, also ohne Zutun der Bundesdruckerei.
-
-### mTLS-Zertifikat - EPS ( IRIS Client BFF ) erstellen
-
-1. Bestimmen Sie den CN Namen (Common Name) für Ihre Client Installation. 
-   ```
-   Der allgemeine Aufbau vom CN Feld ist: ga-${sanitized_name(Offizieller RKI Name)}
-
-   sanitized_name bedeutet folgendes: Ersetzung aller Umlaute (z.B. ö -> oe). Sonderzeichen und Leerzeichen (auch aufeinanderfolgend) werden durch ein '-' ersetzt. Alles Lower Case.
-
-   # Beispiel Bonn
-   Offizieller RKI Name:   Stadt Bonn
-   sanitized_name:         stadt-bonn
-   CN Feld:                ga-stadt-bonn
-
-2. Führen Sie [dieses Script](../scripts/production/create-eps-cert.sh) aus.
-
-   ```
-   sh create-eps-cert.sh [Pfad zum Private Key vom Signatur Zertifikat] [Pfad zum Signatur Zertifikat] [common name (aus Schritt 1)]
-   
-   # Als Ergebnis bekommen Sie 1 Datei
-   -rw-------   1 3243 May 26 12:42 ${common name}.crt
-
-   # Als Ergebnis bekommen Sie zudem die Informationen, die sie ans IRIS Team weiterreichen müssen
-   # Beispiel
-   # Information needed for IRIS Team
-   CN:                      ga-stadt-koeln
-   Certificate Fingerprint: 21ff454bb95198a276592d7ca70f610eee2215e351faae4495921f31e80b7d47
-   ```
-   Legen Sie die .crt Datei mit den anderen Schlüsselpaaren an einem Sicheren Ort ab. Diese wird für die weitere Konfiguration im IRIS Client verwendet
-
-4. Senden Sie die notwendigen Informationen an das IRIS Rollout Team
-
-   Senden Sie eine E-Main an [IRIS-Rollout-Team](mailto:rollout@iris-gateway.de) und erhalten von uns eine Bestätigung zurück, dass wir Ihre Anwendung im Service Directory eingetragen haben.
-
-### mTLS-Zertifikat - EPS ( IRIS Private Proxy ) erstellen
-
-1. Bestimmen Sie den CN Namen (Common Name) für Ihre Client Installation. 
-   ```
-   Der allgemeine Aufbau vom CN Feld ist: ga-${sanitized_name(Offizieller RKI Name)}-proxy
-
-   sanitized_name bedeutet folgendes: Ersetzung aller Umlaute (z.B. ö -> oe). Sonderzeichen und Leerzeichen (auch aufeinanderfolgend) werden durch ein '-' ersetzt. Alles Lower Case.
-
-   # Beispiel Bonn
-   Offizieller RKI Name:   Stadt Bonn
-   sanitized_name:         stadt-bonn
-   CN Feld:                ga-stadt-bonn-proxy
-
-2. Führen Sie [dieses Script](../scripts/production/create-proxy-eps-cert.sh) aus.
-
-   ```
-   sh create-proxy-eps-cert.sh [Pfad zum Private Key vom Signatur Zertifikat] [Pfad zum Signatur Zertifikat] [common name (aus Schritt 1)]
-   
-   # Als Ergebnis bekommen Sie 1 Datei
-   -rw-------   1 3243 May 26 12:42 ${common name}.crt
-
-   # Als Ergebnis bekommen Sie zudem die Informationen, die sie ans IRIS Team weiterreichen müssen
-   # Beispiel Köln
-   # Information needed for IRIS Team
-   CN:                      ga-stadt-koeln-proxy
-   Certificate Fingerprint: 8049877a38ba2fa3206ce9389b9d101376bb0863e422cf1859194d6afcf1ec39
-   ```
-   Legen Sie die .crt Datei mit den anderen Schlüsselpaaren an einem Sicheren Ort ab. Diese wird für die weitere Konfiguration im IRIS Client verwendet
-
-4. Senden Sie die notwendigen Informationen an das IRIS Rollout Team
-
-   Senden Sie eine E-Main an [IRIS-Rollout-Team](mailto:rollout@iris-gateway.de) und erhalten von uns eine Bestätigung zurück, dass wir Ihre Anwendung im Service Directory eingetragen haben.
-
 
 ### Zertifikate einrichten
 
@@ -330,7 +250,7 @@ Die Zertifikate werden analog zur Staging Umgebung eingerichtet.
 
 #### Zertifikat Nr. 1 einrichten
 
-Hierzu wird es zeitnah ein Update geben.  (Stand: 21.06.2021)
+Analog zu [Einrichtung: TLS-Zertifikat ( Private Proxy )](Installation-Docker-Compose.md)
 
 #### Zertifikat Nr. 3 einrichten
 
