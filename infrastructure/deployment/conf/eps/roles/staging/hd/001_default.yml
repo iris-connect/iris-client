@@ -15,10 +15,10 @@ vars:
     source: env
     variable: EPS_SD_ENDPOINT
     type: string       
-  TRUSTED_CA_CRT:
+  EPS_SD_NAME:
     source: env
-    variable: TRUSTED_CA_CRT
-    type: string        
+    variable: EPS_SD_NAME
+    type: string      
   PROXY_URL:
    source: env
    variable: PROXY_URL
@@ -32,12 +32,16 @@ directory:
     jsonrpc_client:
       proxy_url: "$PROXY_URL"
       tls:
-        certificate_file: "$DIR/../../certs/$EPS_CLIENT_CERT"
-        key_file: "$DIR/../../certs/$EPS_CLIENT_CERT_KEY"  
-        ca_certificate_files: ["$DIR/../../certs/$TRUSTED_CA_CRT"]
-    ca_certificate_files: ["$DIR/../../certs/$TRUSTED_CA_CRT"]
+        certificate_file: "$DIR/../../../certs/$EPS_CLIENT_CERT"
+        key_file: "$DIR/../../../certs/$EPS_CLIENT_CERT_KEY"          
+        ca_certificate_files: 
+          - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
+          - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+    ca_certificate_files: 
+      - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
+      - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
     endpoints: [ "$EPS_SD_ENDPOINT" ]
-    server_names: [ "sd-1" ]
+    server_names: [ "$EPS_SD_NAME" ]
 channels: # defines all the channels that we want to open when starting the server
   - name: Stdout channel
     type: stdout
@@ -50,19 +54,19 @@ channels: # defines all the channels that we want to open when starting the serv
     type: grpc_client
     settings:
       tls:
-        ca_certificate_files: ["$DIR/../../certs/$TRUSTED_CA_CRT"]
-        certificate_file: "$DIR/../../certs/$EPS_CLIENT_CERT"
-        key_file: "$DIR/../../certs/$EPS_CLIENT_CERT_KEY"
+        ca_certificate_files: 
+          - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
+          - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+        certificate_file: "$DIR/../../../certs/$EPS_CLIENT_CERT"
+        key_file: "$DIR/../../../certs/$EPS_CLIENT_CERT_KEY"
   - name: main JSON-RPC server # accepts incoming JSONRPC connections to deliver and receive messages
     type: jsonrpc_server
     settings:
       bind_address: "0.0.0.0:5556"
       tls:
-        ca_certificate_files: ["$DIR/../../certs/$TRUSTED_CA_CRT"]
-        certificate_file: "$DIR/../../certs/$EPS_CLIENT_CERT"
-        key_file: "$DIR/../../certs/$EPS_CLIENT_CERT_KEY"
+        ca_certificate_files: 
+          - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
+          - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+        certificate_file: "$DIR/../../../certs/$EPS_CLIENT_CERT"
+        key_file: "$DIR/../../../certs/$EPS_CLIENT_CERT_KEY"
         verify_client: false
-#signing:
-#  certificate_file: "$DIR/../../certs/hd-1-sign.crt"
-#  key_file: "$DIR/../../certs/hd-1-sign.key"
-#  ca_certificate_file: "$DIR/../../certs/$TRUSTED_CA_CRT"

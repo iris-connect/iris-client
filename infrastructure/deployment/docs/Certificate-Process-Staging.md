@@ -1,87 +1,106 @@
-# Prozess zur Zertifikatsausstellung für Gesundheitsämter
+# Bestellung von Zertifikaten - Staging Umgebung
 
-## Staging Umgebung
+Folgen Sie dieser Anleitung für die Austellung von Zertifikaten für die Staging Umgebung.
 
-### GA Client Zertifikat
+## Bestimmung vom offiziellen RKI Namen
 
-Auf der Staging Umgebung werden Zertifikate vom IRIS Team bereit gestellt. Dazu erzeugen Sie bitte zunächste Ihre Zertifikatsignierungsanforderung.
+Bestimmen Sie den offiziellen RKI Namen Ihres Gesundheitsamtes. Gehen Sie dafür auf https://tools.rki.de/PLZTool und suchen Sie nach Ihrem GA. Der offizielle Name ist die obere Zeit im Adressfeld ([Beispiel Bonn](./Beispiel-Bonn.png)). 
 
-Die Struktur des CN Feldes ist wie folgt:
+### Austellung: TLS-Zertifikat - Private Proxy
 
-```
-# RKI: https://tools.rki.de/PLZTool
-ga-${sanitized_name(Offizieller RKI Name)}
+ToDo
 
-# sanitized_name = Ersetzung aller Umlaute (z.B. ö -> oe). Sonderzeichen und Leerzeichen (auch aufeinanderfolgend) werden durch ein '-' ersetzt. Alles Lower Case.
 
-# Beispiele
-#
-# RKI Name: Stadt Köln
-# Link: https://tools.rki.de/PLZTool/?q=K%C3%B6ln#1.05.3.15.
-# -> CN: ga-stadt-koeln
-#
-# RKI Name: Landkreis Südliche Weinstraße / Landau
-# Link: https://tools.rki.de/PLZTool/?q=Landau#1.07.0.69.
-# -> CN: ga-landkreis-suedliche-weinstrasse-landau
-```
+### Austellung: mTLS-Zertifikat - EPS ( IRIS Client BFF )
 
-Beispiel CSR Request für GA Köln:
+1. Bestimmen Sie den CN Namen (Common Name) für Ihre Client Installation. 
+   ```
+   Der allgemeine Aufbau vom CN Feld ist: ga-${sanitized_name(Offizieller RKI Name)}
 
-```
-O="Gesundheitsamt"
-ST="Neumarkt 15-21"
-L="50667 Köln"
-C="DE"
-OU="IT"
-CN="ga-stadt-koeln"
-LEN="4096"
+   sanitized_name bedeutet folgendes: Ersetzung aller Umlaute (z.B. ö -> oe). Sonderzeichen und Leerzeichen (auch aufeinanderfolgend) werden durch ein '-' ersetzt. Alles Lower Case.
 
-openssl genrsa -out "${CN}.key" ${LEN};
-openssl rsa -in "${CN}.key" -pubout -out "${CN}.pub";
+   # Beispiel Bonn
+   Offizieller RKI Name:   Stadt Bonn
+   sanitized_name:         stadt-bonn
+   CN Feld:                ga-stadt-bonn
+   ```
 
-openssl req -new -sha256 -key "${CN}.key" -subj "/C=${C}/ST=${ST}/L=${L}/O=${O}/OU=${OU}/CN=${CN}" -addext "keyUsage=digitalSignature" -addext "subjectAltName = URI:iris-name://${CN},URI:iris-group://health-departments,DNS:${CN},DNS:*.${CN}.local"  -out "${CN}.csr";
-```
+2. Erstellen Sie eine CSR Request
 
-Senden Sie die .csr und Ihre Domain an [IRIS-Rollout-Team](mailto:rollout@iris-gateway.de) und erhalten Sie Ihre .crt-Datei von uns zurück.
+   Zunächst müssen Sie einen sog. CSR (Certificate Signing Request) erstellen. Dafür kann folgendes Skript verwendet werden.
 
-### Proxy Client Zertifikat
+   ```
+   ./scripts/create-csr-for-eps.sh
+   ```
 
-Auf der Staging Umgebung werden Zertifikate vom IRIS Team bereit gestellt. Dazu erzeugen Sie bitte zunächste Ihre Zertifikatsignierungsanforderung.
+   Das Skript muss mit 3 Parameters aufgerufen werden. Passen sie dann die Felder ensprechend an indem sie die Variablen (${}) entsprechend ersetzen. 
 
-Die Struktur des CN Feldes ist wie folgt:
+   ```
+   sh create-csr-for-eps.sh "${Strasse und Hausnummer Ihres GAs}" "${PLZ und Ort Ihres GAs}" "${CN Ihres GAs (s.o.)}"
+   ```
 
-```
-# RKI: https://tools.rki.de/PLZTool
-ga-${sanitized_name(Offizieller RKI Name)}-proxy
+   Wir haben Aufrufbeispiele Beispiele für [Bonn](./examples/Bonn-example.txt) und [Köln](./examples/Koeln-example.txt) hinterlegt.
 
-# sanitized_name = Ersetzung aller Umlaute (z.B. ö -> oe). Sonderzeichen und Leerzeichen (auch aufeinanderfolgend) werden durch ein '-' ersetzt. Alles Lower Case.
+3. Führen Sie das Script aus
 
-# Beispiele
-#
-# RKI Name: Stadt Köln
-# Link: https://tools.rki.de/PLZTool/?q=K%C3%B6ln#1.05.3.15.
-# -> CN: ga-stadt-koeln-proxy
-#
-# RKI Name: Landkreis Südliche Weinstraße / Landau
-# Link: https://tools.rki.de/PLZTool/?q=Landau#1.07.0.69.
-# -> CN: ga-landkreis-suedliche-weinstrasse-landau-proxy
-```
+   ```
+   sh create-csr-for-eps.sh $1 $2 $3 # Mit Ihren Parametern
+   
+   # Als Ergebnis bekommen Sie 3 Dateien
+   -rw-------   1 johnnypark  staff      3243 May 26 12:42 ${CN}.key
+   -rw-r--r--   1 johnnypark  staff       800 May 26 12:42 ${CN}.pub
+   -rw-r--r--   1 johnnypark  staff      1947 May 26 12:42 ${CN}.csr
+   ```
+   Legen Sie die .key Datei an einem Sicheren Ort ab. Diese wird für die weitere Konfiguration im IRIS Client verwendet
 
-Beispiel CSR Request für GA Köln:
+4. Senden Sie den CSR an das IRIS Rollout Team
 
-```
-O="Gesundheitsamt"
-ST="Neumarkt 15-21"
-L="50667 Köln"
-C="DE"
-OU="IT"
-CN="ga-stadt-koeln-proxy"
-LEN="4096"
+   Senden Sie die .csr Datei an [IRIS-Rollout-Team](mailto:rollout@iris-gateway.de) und erhalten Sie Ihre .crt Datei von uns zurück. Legen Sie die .crt Datei sicher mit dem dazugehörigen .key ab.
 
-openssl genrsa -out "${CN}.key" ${LEN};
-openssl rsa -in "${CN}.key" -pubout -out "${CN}.pub";
+### Ausstellung: mTLS-Zertifikat - EPS ( IRIS Private Proxy )
 
-openssl req -new -sha256 -key "${CN}.key" -subj "/C=${C}/ST=${ST}/L=${L}/O=${O}/OU=${OU}/CN=${CN}" -addext "keyUsage=digitalSignature" -addext "subjectAltName = URI:iris-name://${CN},URI:iris-group://private-proxies,DNS:${CN},DNS:*.${CN}.local"  -out "${CN}.csr";
-```
+Der Prozess für den Proxy enspricht 1 zu 1 dem o.g. Prozess. Mit 2 Unterschieden, dem CN Namen und das zu verwendene Skript. 
 
-Senden Sie die .csr und Ihre Domain an [IRIS-Rollout-Team](mailto:rollout@iris-gateway.de) und erhalten Sie Ihre .crt-Datei von uns zurück.
+1. Bestimmen Sie den CN Namen (Common Name) für Ihre Client Installation. 
+   ```
+   Der allgemeine Aufbau vom CN Feld ist: ga-${sanitized_name(Offizieller RKI Name)}-proxy
+
+   sanitized_name bedeutet folgendes: Ersetzung aller Umlaute (z.B. ö -> oe). Sonderzeichen und Leerzeichen (auch aufeinanderfolgend) werden durch ein '-' ersetzt. Alles Lower Case.
+
+   # Beispiel Bonn
+   Offizieller RKI Name:   Stadt Bonn
+   sanitized_name:         stadt-bonn
+   CN Feld:                ga-stadt-bonn-proxy
+   ```
+2. Erstellen Sie eine CSR Request
+
+   Zunächst müssen Sie einen sog. CSR (Certificate Signing Request) erstellen. Dafür kann folgendes Skript verwendet werden.
+
+   ```
+   ./scripts/create-csr-for-proxy.sh
+   ```
+
+   Das Skript muss mit 3 Parametern aufgerufen werden. Passen sie dann die Felder ensprechend an indem sie die Variablen (${}) entsprechend ersetzen. 
+
+   ```
+   sh create-csr-for-proxy.sh "${Strasse und Hausnummer Ihres GAs}" "${PLZ und Ort Ihres GAs}" "${CN Ihres GAs (s.o.)}"
+   ```
+
+   Auch hierfür haben wir Aufrufbeispiele Beispiele für [Bonn](./examples/Bonn-example-proxy.txt) und [Köln](./examples/Koeln-example-proxy.txt) hinterlegt.
+
+3. Führen Sie das Script aus
+
+   ```
+   sh create-csr-for-proxy.sh $1 $2 $3 # Mit Ihren Parametern
+   
+   # Als Ergebnis bekommen Sie 3 Dateien
+   -rw-------   1 johnnypark  staff      3243 May 26 12:42 ${CN}.key
+   -rw-r--r--   1 johnnypark  staff       800 May 26 12:42 ${CN}.pub
+   -rw-r--r--   1 johnnypark  staff      1947 May 26 12:42 ${CN}.csr
+   ```
+   Legen Sie die .key Datei an einem Sicheren Ort ab. Diese wird für die weitere Konfiguration im IRIS Client verwendet
+
+4. Senden Sie den CSR an das IRIS Rollout Team
+
+   Senden Sie die .csr Datei an [IRIS-Rollout-Team](mailto:rollout@iris-gateway.de) und erhalten Sie Ihre .crt Datei von uns zurück. Legen Sie die .crt Datei sicher mit dem dazugehörigen .key ab.
+
