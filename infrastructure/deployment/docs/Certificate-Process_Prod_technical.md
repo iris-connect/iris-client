@@ -1,18 +1,8 @@
-# Achtung
-
-Aktueller Status: Aktuell befindet sich der prozess noch in der finalen Überarbeitung. Ein aktualisierter Prozess wird schnellstmöglich bereit gestellt. 
-
-<br />
-<br />
-<br />
-
----
-
 # Prozess für das Beantragen und Einrichten der Zertifikate <br /> – Technische Anleitung – 
 
 
 ## Vorwort
-Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei. Zusätzlich werden noch weitere Zertifikate für das lokale Setup benötigt, die im Anschluss selbstständig mit einem Script erstellt werden können, also ohne Zutun der Bundesdruckerei.
+Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) **drei** Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei.
 
 Dieses Dokument erklärt die technischen Schritte, die Landesbehörden und Gesundheitsämter gemeinsam unternehmen müssen, um die Zertifikate zu beantragen bzw. zu erstellen und einzurichten.
 
@@ -35,11 +25,11 @@ Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt s
    + [Domains für die Gesundheitsämter bereitstellen](#domains-f-r-die-gesundheits-mter-bereitstellen)
    + [DNS für die Domains konfigurieren](#dns-f-r-die-domains-konfigurieren)
 * [Erforderliche Schritte seitens eines Gesundheitsamts](#erforderliche-schritte-seitens-eines-gesundheitsamts)
-   + [Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei beantragen](#zertifikate-nr-1-und-nr-2-bei-der-bundesdruckerei-beantragen)
-      - [Zertifikate online beantragen](#zertifikate-online-beantragen)
-      - [Zertifikate herunterladen](#zertifikate-herunterladen)
-      - [Zertifikate Nr. 1 und Nr. 2 einrichten](#zertifikate-nr-1-und-nr-2-einrichten)
+   + [Zertifikate online beantragen](#zertifikate-online-beantragen)
+   + [Zertifikate herunterladen](#zertifikate-herunterladen)
+   + [Zertifikate einrichten](#zertifikate-einrichten)
 * [Private Schlüssel sicher verwahren](#private-schlüssel-sicher-verwahren)
+
 
 
 
@@ -49,8 +39,8 @@ Für die Anbindung an IRIS benötigt ein GA zwei Schlüsselpaare bzw. Zertifikat
 | # Ref| Identifier | Beschreibung | D-Trust Produkt | Anwendungsfall |
 | - | - | -| - | - |
 | 1 | TLS-Zertifikat - Private Proxy | Ein TLS-Zertifikat für den IRIS Private Proxy des GA | Advanced SSL ID (RSA) | Identität des GA im Internet mit dem Ziel, Kontakttagüber und Gästelisten direkt ins GA zu übermitteln (TLS/HTTPS). |
-| 2 | Signaturzertifikat | Ein Signaturzertifikat für Vertreter:in des GA  |Basic Device ID (ECC) | Signieren von Einträgen im Service Directory ( zukünftiges Feature ) |
-| 3 (*Neu) | mTLS-Zertifikat - EPS | Ein mTLS Zertifikat welches sowohl für EPS ( IRIS Client BFF ) als auch für EPS ( IRIS Private Proxy ) benutzt werden kann. | Basic SSL ID (RSA) | Authentifizierung und Authentisierung der Kommunikation mit anderen zentralen und de-zentralen EPS Teilnehmern|
+| 2 | Signaturzertifikat | Ein Signaturzertifikat für Vertreter:in des GA. **Dieses Zertifikat wird in einem späteren Release vom IRIS Client benötigt.**  |Basic Device ID (ECC) | Signieren von Einträgen im Service Directory.  |
+| 3 (*Neu) | mTLS-Zertifikat - EPS | Ein mTLS Zertifikat welches auf der Live Umgebung sowohl für EPS ( IRIS Client BFF ) als auch für EPS ( IRIS Private Proxy ) benutzt wird. | Basic SSL ID (RSA) | Authentifizierung und Authentisierung der Kommunikation mit anderen zentralen und de-zentralen EPS Teilnehmern|
 
 Das folgenden Schaubild gibt eine Top-Level-Sicht auf den Prozess des Beantragens und Einrichten der Zertifikate.
 
@@ -91,6 +81,8 @@ iris-connect.nrw.de    CAA 0 issue "d-trust.net"
 
 
 ## Erforderliche Schritte seitens eines Gesundheitsamts
+
+## Zertifikate Online beantragen
 ### Zertifikat Nr 1 ( TLS-Zertifikat - Private Proxy ) online beantragen
 Die Bundesdruckerei lädt die jeweils zertifikatsverantwortliche Person per signierter E-Mail zum sog. Certificate Service Manager (CSM) ein, einem Online-Verwaltungsportal für Zertifikate.
 Darin können die Zertifikate anschließend mit wenigen Klicks beantragt werden.
@@ -254,11 +246,12 @@ Analog zu [Einrichtung: TLS-Zertifikat ( Private Proxy )](Installation-Docker-Co
 
 #### Zertifikat Nr. 3 einrichten
 
-Analog zu [Einrichtung GA Client Zertifikat für Staging](Installation-Docker-Compose.md)
+> Für die Live Umgebung wird das Zertifikat #3 für beide EPS services konfiguriert. 
 
-#### Zertifikat Nr. 4 einrichten
+Analog zu [Einrichtung: mTLS-Zertifikat - EPS ( IRIS Client BFF )](Installation-Docker-Compose.md)
 
-Analog zu [Einrichtung Proxy Client Zertifikat für Staging](Installation-Docker-Compose.md)
+Analog zu [Einrichtung: mTLS-Zertifikat - EPS ( IRIS Private Proxy )](Installation-Docker-Compose.md)
+
 
 ## Private Schlüssel sicher verwahren
 Private Schlüssel sollten aufgrund der hohen Schutzniveaus der Daten, die sie schützen besonders gesichert und redundant verwahrt werden.

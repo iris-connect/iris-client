@@ -220,7 +220,7 @@ Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client
 
 ```
 # Staging: 
-EPS_SD_ENDPOINT=https://iris.staging.iris-gateway.de:3322/jsonrpc
+EPS_SD_ENDPOINT=https://test.iris-gateway.de:32324/jsonrpc
 
 # Live: 
 EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
@@ -230,8 +230,8 @@ EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
 Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf den IRIS Locations Service, damit die Mitarbeiter im GA u.a. nach Betrieben und Gastronomien suchen können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
 
 ```
-# staging: ls-1
-# live: locations-production-1
+# staging:  ls-1
+# live:     locations-production-1
 EPS_LS_NAME=
 ```
 
@@ -240,18 +240,24 @@ EPS_LS_NAME=
 Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf den IRIS Public Proxy Service, damit eingehende Daten wie z.B. Kontakttagebücher empfangen werden können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
 
 ```
-# staging: public-proxy-1
-# live: public-proxy-production-1
+# staging:  public-proxy-1
+# live:     public-proxy-production-1
 EPS_PP_NAME=
 ```
 
 
 ## Einrichtung: TLS-Zertifikat ( Private Proxy )
 
-bla bla 
+Wie in der [Architektur](./Architektur.md) beschrieben kann der IRIS Client über das Proxy Netzwerk Kontakttagebücher entgegennehmen. Dafür muss ein TLS Zertifikat konfiguriert werden. 
+
+Die Domain unterscheidet sich je nach Umgebung. 
+
+Für Staging gibt es eine vom IRIS Team zur Verfügung gestellte Domain namens `proxy.test-gesundheitsamt.de`. 
+
+Für die Live-Umgebung wurde Ihnen die Domain vom Land zentral bereit gestellt.
 
 ```
-PROXY_SUBDOMAIN=
+PROXY_SUBDOMAIN
 PROXY_TLS_CERT
 PROXY_TLS_CERT_KEY
 ```
@@ -286,6 +292,10 @@ Damit der IRIS Client wie in der [Architektur](./Architektur.md) beschrieben ein
 
 Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüssel im Ordner `./conf/proxy/certs` ablegen.
 
+> Für die Live Umgebung ist sind das Zertifikat und der Schlüssel für den `IRIS Private Proxy` die gleichen wie für den `IRIS Client BFF`. 
+> 
+> Es unterscheidet sich der Parameter `PROXY_OP`. Dieser Wert muss auf den 2 SAN Eintrag gesetzt werden (eps-proxy.*).
+ 
 ```
 # Beispiel
 .
@@ -298,7 +308,7 @@ Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüsse
 Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist der selbe wie der CN Name aus dem Zertifikats-Prozess.
 
 ```
-PROXY_OP=${CN aus dem Zertifikat}
+PROXY_OP=${CN oder ein SAN Eintrag}
 PROXY_CLIENT_CERT=ga-client-proxy.crt
 PROXY_CLIENT_CERT_KEY=ga-client-proxy.key
 ```

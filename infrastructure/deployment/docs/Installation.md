@@ -50,6 +50,8 @@ IRIS stellt zwei Umgebungen bereit. Staging zum Testen und Live für den Produkt
 | mTLS-Zertifikat - EPS ( IRIS Client BFF )         | Der IRIS-Client benutzt ein für das GA ausgestelltes mTLS Zertifikat um mit den zentralen IRIS Services zu kommunizieren. Darüber hinaus werden alle Anfragen die vom IRIS-Client ausgehen mit dem Zertifikat signiert. Der Austellungs-Prozess für die **Staging Umgebung** ist [hier](Certificate-Process-Staging.md) dokumentiert. Der Austellungs-Prozess für die **Live Umgebung** ist [hier](Certificate-Process_Prod_technical.md) dokumentiert. |
 | mTLS-Zertifikat - EPS ( IRIS Private Proxy ) | Der Proxy benutzt ein für das GA ausgestelltes mTLS Zertifikat um mit den public-Proxy zu kommunizieren und eingehende Verbindungen z.B. zum Übertragen von Kontakttagebüchern zuzulassen. Der Austellungs-Prozess für die **Staging Umgebung** ist [hier](Certificate-Process-Staging.md) dokumentiert. Der Austellungs-Prozess für die **Live Umgebung** ist [hier](Certificate-Process_Prod_technical.md) dokumentiert.                                   |
 
+> Für die Live Umgebung werden die beiden EPS Zertifikate durch eins abgebildet. 
+
 
 ### Des Weiteren gibt es folgende infrastrukturelle Anhängigkeiten
 
@@ -69,7 +71,7 @@ Aktuell bietet der IRIS-Client eine eigene Kontoverwaltung an, die von der IT-Ad
 
 Bei dieser Installationsvariante werden alle Komponenten vom IRIS Client in einem virtuellen Container gestartet. Dieser Container ist vom IRIS Team vorkonfiguriert und muss um GA indivituelle Parametern ergänzt werden. 
 
-Diese Installationsart ist empfohlen.
+> Diese Installationsart ist empfohlen.
 
 [Hier geht es weiter. ](./Installation-Docker-Compose.md)
 
@@ -78,6 +80,7 @@ Diese Installationsart ist empfohlen.
 
 Bei dieser Installationsvariante werden alle Komponenten vom IRIS Client von einem lokalen Administrator installiert und um individuelle Parameter konfiguriert werden. Die Komponenten werden vom IRIS Team über Github zum Download bereitgestellt.  
 
+> Diese Installationsart ist aufgrund der komplexen Konfiguration NICHT empfohlen.
 
 [Hier geht es weiter. ](./Installation-Standalone.md)
 
