@@ -1,14 +1,14 @@
 # Prozess für das Beantragen der Zertifikate der Bundesdruckerei (Produktivsystem) <br /> – Prozessuale Anleitung – 
 ## Vorwort
-Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei. 
+Für die Anbindung an IRIS benötigt ein Gesundheitsamt (GA, Plural GÄ) drei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei. 
 
 Dieses Dokument erklärt die organisatorischen Schritte, die Landesbehörden und Gesundheitsämter gemeinsam unternehmen müssen, um die Zertifikate zu beantragen und einzurichten. 
 
-Erläuterungen zu technische Konfigurationsschritten, die ausschließlich für IT-Administratorinnen relevant sind, werden zur besseren Übersicht in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) erläutert. 
+Erläuterungen zu technischen Konfigurationsschritten, die ausschließlich für IT-Administratorinnen relevant sind, werden zur besseren Übersicht in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) erläutert. 
 Diese wird an den entsprechenden Stellen verlinkt. 
 
 Dieses Dokument nimmt an, dass IRIS über das jeweilige Bundesland gebündelt für alle Gesundheitsämter bezogen wird.
-Die Schritte für GÄ, die sich selbstständig, also unabhängig vom Land, an IRIS anschließen, unterscheiden sich stellenweise.
+Die Schritte für GÄ, die sich selbstständig – also unabhängig vom Land – an IRIS anschließen, unterscheiden sich stellenweise.
 
 Beim Rollout von IRIS werden die individuellen Bedürfnisse und Wünsche der Bundesländer berücksichtigt. 
 Dadurch können sich von Land zu Land einige Unterschiede im Antragsprozess ergeben, auf die hier eingegangen wird.
@@ -24,7 +24,7 @@ Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt s
     + [Zertifikatsverantwortliche Personen in den Gesundheitsämtern erfassen](#zertifikatsverantwortliche-personen-in-den-gesundheits-mtern-erfassen)
     + [Domains für die Gesundheitsämter bereitstellen](#domains-f-r-die-gesundheits-mter-bereitstellen)
 * [Erforderliche Schritte seitens eines Gesundheitsamts](#erforderliche-schritte-seitens-eines-gesundheitsamts)
-    + [Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei beantragen](#zertifikate-nr-1-und-nr-2-bei-der-bundesdruckerei-beantragen)
+    + [Zertifikate bei der Bundesdruckerei beantragen](#zertifikate-bei-der-bundesdruckerei-beantragen)
         - [Zertifikatsverantwortliche Person benennen](#zertifikatsverantwortliche-person-benennen)
         - [Zertifikate online beantragen](#zertifikate-online-beantragen)
         - [Zertifikate herunterladen](#zertifikate-herunterladen)
@@ -43,25 +43,28 @@ Der ganze Prozess kurz gefasst:
 2. Behörde nennt der Bundesdruckerei (BDr) auf sicherem Weg eine zeichnungsberechtigte Person der Behörde und je GA eine zertifikatsverantwortliche Person.
 3. BDr führt einmalig eine Organisationsvalidierung der Behörde und eine Prüfung der Vertretungsberechtigung durch.
 4. BDr übermittelt Zugangsdaten zum Antragsportal auf sicherem Wege an die Zertifikatsverantwortlichen der GÄ.
-5. Zertifikatsverantwortliche erstellen zwei kryptografische Schlüsselpaare und stellen für sie Zertifikatsanfragen online im Antragsportal ein.
+5. Zertifikatsverantwortliche erstellen drei kryptografische Schlüsselpaare und stellen für sie Zertifikatsanfragen online im Antragsportal ein.
 6. Nach Prüfung und Domain-Validierung der (Sub-)Domain des GA stellt die BDr die Zertifikate zum Download im Antragsportal bereit.
 7. Zertifikatsverantwortliche konfigurieren die Zertifikate und die Domain im Rahmen der Installation des IRIS-Clients gemäß Anleitung.
 
 ## Welche Zertifikate müssen beantragt werden?
-Für die Anbindung an IRIS benötigt ein GA zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei (BDr) bzw. deren Vertrauensdiensteanbieter D-Trust: 
+Für die Anbindung an IRIS benötigt ein GA drei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei (BDr) bzw. deren Vertrauensdiensteanbieter D-Trust: 
 
 1. Ein TLS-Zertifikat für den IRIS-Client des GA  
 Anwendungsfall: Identität des GA im Internet (TLS/HTTPS).
 
 
 2. Ein Signaturzertifikat für Vertreter:in des GA  
-Anwendungsfall: Identität des GA im EPS-Netzwerk.
+Anwendungsfall: Signieren von Einträgen im Service Directory.
+
+3. Ein mTLS-Zertifikat für die Kommunikation im EPS-Netzwerk
+Anwendungsfall: Authentifizierung und Authentisierung der Kommunikation mit anderen zentralen und de-zentralen EPS Teilnehmern.
 
 ## Erforderliche Schritte seitens des Landes
 
 > Hinweis: Folgende Schritte beziehen sich auf Bundesländer, in denen eine Landesbehörde im Rahmen der Einführung von IRIS jedem GA eine (Sub-)Domain bereitstellt.
 
-### Antragsprozesses bei der Bundesdruckerei anstoßem
+### Antragsprozesses bei der Bundesdruckerei anstoßen
 Der Antragsprozess wird dadurch angestoßen, dass ein vertretungsberechtigtes Mitglied der Landesbehörde auf sicherem Weg Kontakt zur Bundesdruckerei aufnimmt.
 Die Identität dieser Person, sowie ihre Vertretungsberechtigung werden von der BDr zu gegebenem Zeitpunkt geprüft.
 
@@ -93,7 +96,7 @@ Dazu gehören Anrede, Titel, Vorname, Nachname, Funktion, Telefonnummer, E-Mail-
 Die benannte Person sollte diejenige sein, die später auch die technisch-administrativen Schritte der Zertifikatseinrichtung durchführen wird. 
 In der Regel sind das IT-Administrator:innen des GA bzw. dessen IT-Dienstleisters.
 
-Zusätzlich muss je GA auch ein Domain (Internetadresse) angegeben werden, unter der Bürger:innen das GA im Kontext von
+Zusätzlich muss je GA auch eine Domain (Internetadresse) angegeben werden, unter der Bürger:innen das GA im Kontext von
 IRIS erreichen können (z.B. mit einem Webbrowser). Eine beispielhafte Domain wäre ```beispiel.de```. 
 
 Das sieht für das GA Bonn beispielsweise so aus:
@@ -119,7 +122,7 @@ Das sieht für das GA Bonn beispielsweise so aus:
 <td>IT-Administratorin für das Gesundheitsamt Bonn</td>
 <td>+49 (0) 228 / 234 567 - 8</td>
 <td>alisha.riedel@it.nrw.de</td>
-<td>stadt-bonn.iris-conncet.nrw.de</td>
+<td>stadt-bonn.iris-connect.nrw.de</td>
 </tr>
 <tr>
 <td>Aachen</td>
@@ -145,7 +148,7 @@ Bei den Domains gibt es zwei frei wählbare Gestaltungsmöglichkeiten:
 Im folgenden Beispiel gehen wir davon aus, dass die Behörde bereits eine Domain besitzt, hier ```www.nrw.de```.
 
 In diesem Fall muss zunächst eine Subdomain angelegt werden, die im Kontext von IRIS angesprochen werden kann (sog. IRIS-Stammdomain für das Bundesland). 
-Es gibt keine feste Vorgabe für die Benennung dieser Subdomain, wir empfehlen aber ```iris-connct```. Damit ergibt
+Es gibt keine feste Vorgabe für die Benennung dieser Subdomain, wir empfehlen aber ```iris-connect```. Damit ergibt
 sich ```iris-connect.nrw.de```.
 
 Als Nächstes muss für jedes GA eine weitere Subdomain unterhalb der gerade erzeugten angelegt werden. 
@@ -171,7 +174,7 @@ Die technische Konfiguration der (Sub-)Domains und der zugehörigen Einträge im
 ## Erforderliche Schritte seitens eines Gesundheitsamts
 > Hinweis: Folgende Schritte beziehen sich auf Bundesländer, in denen eine Landesbehörde im Rahmen der Einführung von IRIS jedem GA eine Domain bereitstellt.
 
-### Zertifikate Nr. 1 und Nr. 2 bei der Bundesdruckerei beantragen
+### Zertifikate bei der Bundesdruckerei beantragen
 #### Zertifikatsverantwortliche Person benennen
 Der Antragsprozess bei der Bundesdruckerei wird von der jeweils zuständigen Landesbehörde angestoßen.
 Diese wird zu gegebenem Zeitpunkt auf jedes GA zugehen und um die Benennung einer Ansprechperson bitten, welche später die technisch-administrativen Schritte der Zertifikatseinrichtung für das GA durchführen wird.
@@ -183,7 +186,7 @@ Die Bundesdruckerei lädt die jeweils zertifikatsverantwortliche Person per sign
 Darin können die Zertifikate anschließend mit wenigen Klicks beantragt werden.
 
 Die Zertifikate werden nun von on der zertifikatsverantwortlichen Person des jeweiligen Gesundheitsamtes ohne weitere Beteiligung der Landesbehörde beantragt.
-Dieser Teil-Prozess wird daher in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md)  der Zertifikate weiter beschrieben.
+Dieser Teil-Prozess wird daher in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) der Zertifikate weiter beschrieben.
 
 #### Zertifikate einrichten
 Die Zertifikate werden von der zertifikatsverantwortlichen Person des jeweiligen Gesundheitsamtes eingerichtet.
