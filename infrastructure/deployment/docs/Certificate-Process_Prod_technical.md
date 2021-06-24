@@ -34,11 +34,11 @@ Sollten die Gegebenheiten eines Bundeslandes nicht ausreichend berücksichtigt s
 
 
 ## Welche Zertifikate müssen beantragt werden?
-Für die Anbindung an IRIS benötigt ein GA zwei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei (BDr) bzw. deren Vertrauensdiensteanbieter D-Trust:
+Für die Anbindung an IRIS benötigt ein GA drei Schlüsselpaare bzw. Zertifikate von der Bundesdruckerei (BDr) bzw. deren Vertrauensdiensteanbieter D-Trust:
 
 | # Ref| Identifier | Beschreibung | D-Trust Produkt | Anwendungsfall |
 | - | - | -| - | - |
-| 1 | TLS-Zertifikat - Private Proxy | Ein TLS-Zertifikat für den IRIS Private Proxy des GA | Advanced SSL ID (RSA) | Identität des GA im Internet mit dem Ziel, Kontakttagüber und Gästelisten direkt ins GA zu übermitteln (TLS/HTTPS). |
+| 1 | TLS-Zertifikat - Private Proxy | Ein TLS-Zertifikat für den IRIS Private Proxy des GA | Advanced SSL ID (RSA) | Identität des GA im Internet mit dem Ziel, Kontakttagebücher und Gästelisten direkt ins GA zu übermitteln (TLS/HTTPS). |
 | 2 | Signaturzertifikat | Ein Signaturzertifikat für Vertreter:in des GA. **Dieses Zertifikat wird in einem späteren Release vom IRIS Client benötigt.**  |Basic Device ID (ECC) | Signieren von Einträgen im Service Directory.  |
 | 3 (*Neu) | mTLS-Zertifikat - EPS | Ein mTLS Zertifikat welches auf der Live Umgebung sowohl für EPS ( IRIS Client BFF ) als auch für EPS ( IRIS Private Proxy ) benutzt wird. | Basic SSL ID (RSA) | Authentifizierung und Authentisierung der Kommunikation mit anderen zentralen und de-zentralen EPS Teilnehmern|
 
@@ -49,7 +49,7 @@ Das folgenden Schaubild gibt eine Top-Level-Sicht auf den Prozess des Beantragen
 
 ## Erforderliche Schritte seitens der Landesbehörde
 ### Domains für die Gesundheitsämter bereitstellen
-Das Einrichten der Domains seitens der Landesbehörde erfolgen muss wird in der [prozessualen Installationsanleitung](Certificate-Process_Prod_organizational.md/#domains-f-r-die-gesundheits-mter-bereitstellen) beschrieben.
+Das Einrichten der Domains muss seitens der Landesbehörde erfolgen und wird in der [prozessualen Installationsanleitung](Certificate-Process_Prod_organizational.md/#domains-f-r-die-gesundheits-mter-bereitstellen) beschrieben.
 Es gibt keine feste Vorgabe für die Benennung der Domains. 
 Wir empfehlen aber den offiziellen RKI-Namen des Gesundheitsamts zu verwenden (für Bonn bswp. "Stadt Bonn").
 
@@ -72,7 +72,7 @@ Zunächst muss ein CNAME-Record gesetzt werden, damit alle GA-Subdomains auf den
 *.iris-connect.nrw.de    CNAME prod.iris-gateway.de
 ```
 
-Als nächstes muss ein [CAA-Record](https://de.wikipedia.org/wiki/DNS_Certification_Authority_Authorization) (Certificate Authority Authorization) vorgenommen werden. Damit wird eingeschränkt, welche CAs Zertifikate für die GA-Domains ausstellen dürfen. Dieser Schritt ist essentziell, um die Sicherheit der späteren Kommunikation sicherzustellen.
+Als nächstes muss ein [CAA-Record](https://de.wikipedia.org/wiki/DNS_Certification_Authority_Authorization) (Certificate Authority Authorization) vorgenommen werden. Damit wird eingeschränkt, welche CAs Zertifikate für die GA-Domains ausstellen dürfen. Dieser Schritt ist essentiell, um die Sicherheit der späteren Kommunikation sicherzustellen.
 
 ```
 # Beispiel NRW
@@ -112,11 +112,11 @@ Antragsstrecke:
 
 
 6. Selektieren Sie als Produkt "Advanced SSL ID (RSA)".
-   Klicken Sie anschließend auf weiter. Es öffnet sich die Ansicht "Neues Zertifikat – Schritt 2/4". Klicken Sie auf den Link für die  vereinfachte Beantragung mit Angabe der Zertifikatsdaten. 
+   Klicken Sie anschließend auf weiter. Es öffnet sich die Ansicht "Neues Zertifikat – Schritt 2/4". Klicken Sie auf den Link für die vereinfachte Beantragung mit Angabe der Zertifikatsdaten. 
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
 
-7. Es öffnet sich eine Webform mit deren Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert. 
+7. Es öffnet sich ein Webformular mit dessen Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder, die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. auf dem vorausgefüllten Wert. 
 
    | Feld | Wert | Beispiel |
    | - | - | - |
@@ -138,7 +138,7 @@ Antragsstrecke:
 
    Laden Sie das TLS-Zertifikat.pub in das entsprechende Feld hoch.
 
-   Zum Abschluß muss ein Sperrpasswort gesetzt werden, dass Sie – wenn nichts schief geht – niemals brauchen werden.
+   Zum Abschluss muss ein Sperrpasswort gesetzt werden, dass Sie – wenn nichts schief geht – niemals brauchen werden.
 
 8. Klicken Sie auf "weiter. Sie landen auf einer Übersichtsseite, die Ihnen eine Zusammenfassung der Informationen anzeigt. Akzeptieren Sie das Subscriber Agreement und klicken Sie auf fertig.
    
@@ -149,11 +149,11 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
 
 
 6. Wählen Sie als Produkt "Basic Device ID (ECC)" für Zertifikat Nr. 2 aus.   
-   Klicken Sie anschließend auf weiter. Es öffnet sich die Ansicht "Neues Zertifikat – Schritt 2/4". Klicken Sie auf den Link für die  vereinfachte Beantragung mit Angabe der Zertifikatsdaten. 
+   Klicken Sie anschließend auf weiter. Es öffnet sich die Ansicht "Neues Zertifikat – Schritt 2/4". Klicken Sie auf den Link für die vereinfachte Beantragung mit Angabe der Zertifikatsdaten. 
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
 
-7. Es öffnet sich eine Webform mit deren Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert. 
+7. Es öffnet sich ein Webformular mit dessen Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder, die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. auf dem vorausgefüllten Wert. 
 
    | Feld | Wert | Beispiel |
    | - | - | - |
@@ -173,9 +173,9 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
    -rw-r--r--  1 Signatur-Zertifikat-pub-key.pem   
    ```
 
-   Laden Sie das Signatur-Zertifikat-pub-key.pem  in das entsprechende Feld hoch.
+   Laden Sie das Signatur-Zertifikat-pub-key.pem in das entsprechende Feld hoch.
 
-   Zum Abschluß muss ein Sperrpasswort gesetzt werden, dass Sie – wenn nichts schief geht – niemals brauchen werden.
+   Zum Abschluss muss ein Sperrpasswort gesetzt werden, dass Sie – wenn nichts schief geht – niemals brauchen werden.
 
 ### Zertifikat Nr. 3 ( mTLS-Zertifikat - EPS ) online beantragen
 
@@ -187,7 +187,7 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
 
-7. Es öffnet sich eine Webform mit deren Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert. 
+7. Es öffnet sich ein Webformular mit dessen Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder, die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert. 
 
    | Feld | Wert | Beispiel |
    | - | - | - |
@@ -210,7 +210,7 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
 
    Laden Sie das mTLS-Zertifikat-EPS.pub in das entsprechende Feld hoch.
 
-   Zum Abschluß muss ein Sperrpasswort gesetzt werden, dass Sie – wenn nichts schief geht – niemals brauchen werden.
+   Zum Abschluss muss ein Sperrpasswort gesetzt werden, dass Sie – wenn nichts schief geht – niemals brauchen werden.
 
 
 8. Klicken Sie auf "weiter. Sie landen auf einer Übersichtsseite, die Ihnen eine Zusammenfassung der Informationen anzeigt. Akzeptieren Sie das Subscriber Agreement und klicken Sie auf fertig.
