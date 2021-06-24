@@ -38,7 +38,7 @@ services:
 
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-bff:develop
+    image: inoeg/iris-client-bff:1.0
     expose:
       - 8092
     environment:
@@ -62,7 +62,7 @@ services:
 
   # IRIS Client Frontend for users
   iris-frontend:
-    image: inoeg/iris-client-frontend:develop
+    image: inoeg/iris-client-frontend:1.0
     expose:
       - 28080
     environment:
@@ -76,7 +76,7 @@ services:
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: inoeg/eps:v0.1.19
+    image: inoeg/eps:v0.1.21
     expose:
       - 4446
       - 5556
@@ -99,7 +99,7 @@ services:
 
   # Proxy for inbound connections.
   private-proxy:
-    image: inoeg/proxy:v0.1.19
+    image: inoeg/proxy:v0.1.21
     expose:
       - 5545
       - 8877
@@ -113,7 +113,7 @@ services:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
       HTTPS_PROXY: ${PROXY_URL}
-      PROXY_DOMAIN: proxy.test-gesundheitsamt.de
+      PROXY_DOMAIN: ${PROXY_SUBDOMAIN}
       PROXY_TLS_CERT:
       PROXY_TLS_CERT_KEY:
     command: ["--level", "trace", "run", "private"]
@@ -121,7 +121,7 @@ services:
       - logger
 
   private-proxy-eps:
-    image: inoeg/eps:v0.1.19
+    image: inoeg/eps:v0.1.21
     expose:
       - 7766
       - 7776
@@ -143,7 +143,7 @@ services:
 
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:develop
+    image: inoeg/iris-client-nginx:1.0
     ports:
       - ${IRIS_CLIENT_PORT:-443}:443
     environment:
