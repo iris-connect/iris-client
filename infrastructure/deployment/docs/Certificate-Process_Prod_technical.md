@@ -234,7 +234,20 @@ Sie können die Zertifikate dann einfach im CSM herunterladen.
    Klicken Sie auf "Download", um die zwei Zertifikate herunterzuladen.
    ![Ansicht "Zertifikate" im CSM](images/certificate_service_manager/mycsm_Zertifikate.png)
 
+### Fingerprints von Zertifikat Nr. 3 an das IRIS Team übermitteln.
 
+Damit Ihr GA mit den im IRIS System befindlichen Akteuren kommunizieren kann, muss Ihr GA im IRIS Service Directory eingetragen werden. Führen Sie dafür die folgenden Schritte durch. 
+
+1. Fingerprint ermitteln
+
+   Benutzen sie [dieses Skript](../scripts/live/create-fingerprint-from-cert.sh) 
+
+   ``` 
+   # Information needed for IRIS Team
+   CN:                      ga-test-local.d-trust.net
+   Certificate Fingerprint: dbb0b9e735bbeac7cf9f81f1309536cdcf5aded026c152531a370684d4a00980
+   ```
+2. Schicken Sie das Ergebnis an rollout@iris-gateway.de. 
 
 ### Zertifikate einrichten
 
