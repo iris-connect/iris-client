@@ -28,19 +28,18 @@ public class DtoSupplier {
 
         eventList.add(Event.builder().name("Restaurantbesuch Hirsch").address(addressList.get(0)).phone("12345678").additionalInformation("Draußen").build());
         eventList.add(Event.builder().name("Museumsbesuch Staatsgalerie").address(addressList.get(1)).build());
+        eventList.add(Event.builder().name("Biergartenbesuch Burgschänke").address(addressList.get(2)).build());
     }
 
     public Address getAddress(int index) {
         return addressList.get(index);
     }
 
-    public List<ContactPerson> getContactPersonList(int size) {
-        int toIndex = size > contactPersonList.size() ? contactPersonList.size() : size;
-        return contactPersonList.subList(0, toIndex);
+    public List<ContactPerson> getContactPersonList(int fromIndex, int toIndex) {
+        return contactPersonList.subList(fromIndex, toIndex);
     }
 
-    public List<Event> getEventList(int size) {
-        int toIndex = size > eventList.size() ? eventList.size() : size;
-        return eventList.subList(0, toIndex);
+    public List<Event> getEventList(int fromIndex, int toIndex) {
+        return eventList.subList(fromIndex, toIndex);
     }
 }

@@ -1,8 +1,5 @@
 package iris.client_bff.cases.rpc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequestRepository;
@@ -12,15 +9,15 @@ import iris.client_bff.cases.eps.dto.Contacts;
 import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.web.CaseDataRequestController;
 import iris.client_bff.utils.DtoSupplier;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.junit.jupiter.api.Assertions.*;
 
 @IrisWebIntegrationTest
 class CaseDataControllerIntegrationTest {
@@ -37,9 +34,6 @@ class CaseDataControllerIntegrationTest {
 	@Autowired
 	DtoSupplier dtoSupplier;
 
-	@BeforeEach
-	void setUp() {}
-
 	@Test
 	void submit_ok() {
 		// prepare conditions
@@ -52,14 +46,14 @@ class CaseDataControllerIntegrationTest {
 		requestRepo.save(dataRequest);
 
 		// prepare data
-		var contactPersonList = dtoSupplier.getContactPersonList(2);
+		var contactPersonList = dtoSupplier.getContactPersonList(0, 2);
 		Contacts contacts = Contacts.builder()
 				.contactPersons(contactPersonList)
 				.startDate(requestStart)
 				.endDate(requestEnd)
 				.build();
 
-		var eventList = dtoSupplier.getEventList(2);
+		var eventList = dtoSupplier.getEventList(0, 2);
 		Events events = Events.builder()
 				.events(eventList)
 				.startDate(requestStart)
@@ -85,6 +79,15 @@ class CaseDataControllerIntegrationTest {
 		assertEquals(dataProvider.getFirstName(), submissionData.getDataProvider().getFirstName());
 		assertEquals(dataProvider.getLastName(), submissionData.getDataProvider().getLastName());
 		assertEquals(LocalDate.ofInstant(dataProvider.getDateOfBirth(), ZoneId.of("CET")), submissionData.getDataProvider().getDateOfBirth());
+
+		assertEquals(2, submissionData.getContacts().getContactPersons().size());
+		assertEquals(2, submissionData.getEvents().getEvents().size());
+
+		// test repeated data submission is rejected
+		contacts.setContactPersons(dtoSupplier.getContactPersonList(2,3));
+		events.setEvents(dtoSupplier.getEventList(2,3));
+		result = controller.submitContactAndEventData(dataRequest.getId().getRequestId(), contacts, events, dataProvider);
+		assertNotEquals("OK", result);
 	}
 
 }

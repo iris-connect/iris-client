@@ -1,7 +1,6 @@
 package iris.client_bff.cases;
 
-import static iris.client_bff.cases.CaseDataRequest.Status.ABORTED;
-import static iris.client_bff.cases.CaseDataRequest.Status.CLOSED;
+import static iris.client_bff.cases.CaseDataRequest.Status.*;
 import static iris.client_bff.cases.web.IndexCaseMapper.mapDataSubmission;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
@@ -11,7 +10,10 @@ import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.model.CaseDataSubmission;
 import iris.client_bff.cases.model.CaseEvent;
 import iris.client_bff.cases.model.Contact;
+import iris.client_bff.cases.web.IndexCaseMapper;
 import iris.client_bff.cases.web.submission_dto.ContactsAndEvents;
+import iris.client_bff.proxy.IRISAnnouncementException;
+import iris.client_bff.proxy.ProxyServiceClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,6 +36,7 @@ public class CaseDataSubmissionService {
 
 	private final CaseDataSubmissionRepository submissionRepo;
 	private final CaseDataRequestRepository requestRepo;
+	private final ProxyServiceClient proxyClient;
 
 	// NOTE: Necessary to map here and use Transactional annotation, because of
 	// https://stackoverflow.com/a/42206232
@@ -41,7 +44,7 @@ public class CaseDataSubmissionService {
 	public Optional<ContactsAndEvents> findByRequest(CaseDataRequest request) {
 		// TODO clarify which submission to return
 		var submission = submissionRepo.findAllByRequest(request).stream().findFirst();
-		return submission.map(sub -> mapDataSubmission(sub));
+		return submission.map(IndexCaseMapper::mapDataSubmission);
 	}
 
 	public String validateAndSaveData(UUID dataAuthorizationToken, Contacts contacts, Events events,
@@ -54,15 +57,23 @@ public class CaseDataSubmissionService {
 			if (requestStatus.equals(ABORTED)) {
 				log.trace("Submission {} for aborted case {}", dataAuthorizationToken, dataRequest.getId());
 				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString() + ". Request was aborted.";
-			}
-
-			if (requestStatus.equals(CLOSED)) {
+			} else if (requestStatus.equals(CLOSED)) {
 				log.trace("Submission {} for closed case {}", dataAuthorizationToken, dataRequest.getId());
 				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString()
 						+ ". Request already closed.";
+			} else if (requestStatus.equals(DATA_RECEIVED)) {
+				log.trace("Submission {} for received case {}", dataAuthorizationToken, dataRequest.getId());
+				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString()
+						+ ". Data already received.";
 			}
 
+
 			save(dataRequest, contacts, events, dataProvider);
+			try {
+				proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
+			} catch (IRISAnnouncementException e) {
+				log.error("Abort announcement for token {} failed", dataRequest.getAnnouncementToken(), e);
+			}
 
 			log.trace("Done case submission {}", dataAuthorizationToken);
 
@@ -111,7 +122,7 @@ public class CaseDataSubmissionService {
 
 		submissionRepo.save(submission);
 
-		dataRequest.setStatus(Status.DATA_RECEIVED); // TODO: add generic status and save
+		dataRequest.setStatus(Status.DATA_RECEIVED);
 
 		requestRepo.save(dataRequest);
 	}

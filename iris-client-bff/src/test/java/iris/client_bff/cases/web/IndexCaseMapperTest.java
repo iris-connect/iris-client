@@ -128,7 +128,7 @@ class IndexCaseMapperTest {
 	}
 
 	private CaseDataSubmission getSubmission() {
-		List<ContactPerson> contactPeople = dtoSupplier.getContactPersonList(1);
+		List<ContactPerson> contactPeople = dtoSupplier.getContactPersonList(0, 1);
 
 		contactPeople.get(0).setAddress(dtoSupplier.getAddress(0));
 		contactPeople.get(0).setContactInformation(ContactInformation.builder()
@@ -164,7 +164,7 @@ class IndexCaseMapperTest {
 				.collect(Collectors.toSet());
 
 		Events events = Events.builder()
-				.events(dtoSupplier.getEventList(1))
+				.events(dtoSupplier.getEventList(0, 1))
 				.startDate(START)
 				.endDate(END)
 				.build();
