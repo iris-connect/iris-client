@@ -17,7 +17,8 @@
             <v-divider class="theme--light primary" />
           </div>
           <v-container class="mt-1 px-sm-15">
-            <v-autocomplete
+            <v-autocomplete 
+              v-model="category"
               :items="['Verbesserungsvorschlag', 'Problem']"
               label="Katergorie auswählen*"
               required
@@ -25,6 +26,7 @@
             ></v-autocomplete>
 
             <v-text-field
+              v-model="title"
               label="Titel*"
               required
               :rules="titelRules"
@@ -32,6 +34,7 @@
             ></v-text-field>
 
             <v-textarea
+              v-model="feedback"
               class="justify-center"
               label="Ihr Platz für Feedback*"
               no-resize
@@ -42,7 +45,8 @@
               maxlength="1000"
             ></v-textarea>
 
-            <v-text-field
+            <v-text-field 
+              v-model="organisation"
               class="justify-center"
               label="Organisation"
               required
@@ -50,6 +54,7 @@
             ></v-text-field>
 
             <v-text-field
+              v-model="email"
               class="justify-center"
               label="E-Mail"
               required
@@ -152,13 +157,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 //TODO useage of class
 
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class FeedbackDialog extends Vue {
+  category = "";
+  title = "";
+  feedback = "";
+  organisation = "";
+  email = "";
+  name = "userLogin/userDisplayName";
   show = false;
   showCancelDialog = false;
   showConfirmDialog = false;
@@ -186,5 +197,16 @@ export default class FeedbackDialog extends Vue {
     this.showConfirmDialog = false;
     this.show = false;
   }
+
+  exportData() {
+    return {"category":this.category, 
+                    "title":this.title, 
+                    "comment":this.feedback,
+                    "name":"nutzername", 
+                    "email":this.email, 
+                    "organisation":this.organisation
+    } 
+  }
+
 }
 </script>
