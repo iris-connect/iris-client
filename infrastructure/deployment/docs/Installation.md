@@ -61,7 +61,7 @@ IRIS stellt zwei Umgebungen bereit. Staging zum Testen und Live für den Produkt
 | Proxy Freischaltung - IRIS Central Services - Staging | Zugriff auf iris.staging.iris-gateway.de ( ConnectPorts: 3322, 4445, 5559, 9999 )                                                      |
 | Proxy Freischaltung - IRIS App Provider - Staging     | Zugriff auf \*.apps.staging.iris-gateway.de ( ConnectPorts: 4444 ) |
 | Proxy Freischaltung - IRIS Central Services - Live    | Zugriff auf prod.iris-gateway.de ( ConnectPorts: 32324, 32327, 32323 ) |
-| Proxy Freischaltung - IRIS App Provider - Live        | Zugriff auf \*.apps.iris-gateway.de ( ConnectPorts: 4444, 443 ) |
+| Proxy Freischaltung - IRIS App Provider - Live        | Zugriff auf \*.apps.prod.iris-gateway.de ( ConnectPorts: 4444, 443 ) |
 
 ## Authentifizierung und Authorisierung
 
