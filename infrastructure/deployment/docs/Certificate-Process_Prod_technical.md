@@ -189,6 +189,8 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
 
 7. Es öffnet sich eine Webform mit deren Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert. 
 
+   ### Achtung: CN und SAN unterscheiden sich zu Zertifikat #1
+
    | Feld | Wert | Beispiel |
    | - | - | - |
    | Common Name (CN) | eps.${Domain aus Zertifikat Nr. 1} | Beispiel Bonn: eps.ga-bonn.iris-connect.nrw.de |
