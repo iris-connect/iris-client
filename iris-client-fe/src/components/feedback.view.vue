@@ -15,7 +15,7 @@
           :max-height="48"
           :max-width="48"
           v-on="on"
-          @click="name = userDisplayName()"
+          @click="form.model.name = userDisplayName()"
         >
           <v-icon :size="30"> mdi-chat-alert-outline </v-icon>
           <slot />
@@ -35,7 +35,7 @@
           </div>
           <v-container class="mt-1 px-sm-15">
             <v-autocomplete
-              v-model="category"
+              v-model="form.model.category"
               :items="['Verbesserungsvorschlag', 'Problem']"
               label="Kategorie auswählen*"
               required
@@ -43,7 +43,7 @@
             ></v-autocomplete>
 
             <v-text-field
-              v-model="title"
+              v-model="form.model.title"
               label="Titel*"
               required
               :rules="titelRules"
@@ -51,7 +51,7 @@
             ></v-text-field>
 
             <v-textarea
-              v-model="feedback"
+              v-model="form.model.comment"
               class="justify-center"
               label="Ihr Platz für Feedback*"
               no-resize
@@ -63,14 +63,14 @@
             ></v-textarea>
 
             <v-text-field
-              v-model="name"
+              v-model="form.model.name"
               class="justify-center"
               label="Name"
               maxlength="100"
             ></v-text-field>
 
             <v-text-field
-              v-model="organisation"
+              v-model="form.model.organisation"
               class="justify-center"
               label="Organisation"
               required
@@ -78,9 +78,10 @@
             ></v-text-field>
 
             <v-text-field
-              v-model="email"
+              v-model="form.model.email"
               class="justify-center"
               label="E-Mail"
+              :rules="emailPatternRules"
               required
               maxlength="80"
             ></v-text-field>
@@ -183,19 +184,30 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Configuration, IrisClientFrontendApiFactory } from "@/api";
+import {
+  Configuration,
+  IrisClientFrontendApiFactory,
+  FeedbackInsert,
+} from "@/api";
 import axios, { AxiosResponse } from "axios";
 import config from "@/config";
 
+type FeedbackForm = {
+  model: FeedbackInsert;
+};
+
 @Component
 export default class FeedbackDialog extends Vue {
-  category = null;
-  title = null;
-  feedback = null;
-  organisation = null;
-  email = null;
-  name = null;
-
+  form: FeedbackForm = {
+    model: {
+      category: "",
+      title: "",
+      comment: "",
+      organisation: "",
+      email: "",
+      name: "",
+    },
+  };
   show = false;
   showCancelDialog = false;
   showConfirmDialog = false;
@@ -213,7 +225,12 @@ export default class FeedbackDialog extends Vue {
       (content && content.length <= 1000) ||
       "Das Feedback darf nicht mehr als 1000 Zeichen beinhalten.",
   ];
-
+  emailPatternRules = [
+    (content: string) =>
+      !content ||
+      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(content) ||
+      "E-mail muss gültig oder leer sein.",
+  ];
   cancel() {
     this.showCancelDialog = false;
     this.show = false;
@@ -242,23 +259,12 @@ export default class FeedbackDialog extends Vue {
       authAxiosInstance
     );
     try {
-      feedbackClient.feedbackPost("hi");
+      feedbackClient.feedbackPost(this.form.model);
       console.log("Post succeded");
     } catch (e) {
       console.log("Post failed");
       throw e;
     }
-  }
-
-  exportData() {
-    return {
-      category: this.category,
-      title: this.title,
-      comment: this.feedback,
-      name: this.name,
-      email: this.email,
-      organisation: this.organisation,
-    };
   }
 }
 </script>
