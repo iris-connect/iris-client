@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * IRIS-Gateway API
- * ### Encryption of the data to be transmitted (contact data) In order to be not limited in the amount of data, a hybrid encryption with symmetric encryption of the data and asymmetric encryption of the symmetric key is used for the encryption of the contact data.    1. The apps and applications get the public key of the health department as a 4096-bit RSA key from the IRIS+ server. This key is base64-encoded similar to the Private Enhanced Mail (PEM) format but without key markers (-----BEGIN PUBLIC KEY----- / -----END PUBLIC KEY-----).   2. The app generates a 256-bit AES key.   3. The data is encrypted with this key (algorithm: AES/CBC/PKCS5Padding and 16 byte IV)   4. IV bytes are prepended to the cipher text. Those merged bytes represent the encrypted content.   5. The AES key must be encrypted with the public RSA key of the health department. (algorithm: RSA with Optimal Asymmetric Encryption Padding (OAEP) \"RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING\")   6. The encrypted AES key and the encrypted content must be transmitted base64 encoded.    #### Schematic sequence    ```   pubKeyEncryption = publicKeyFromBase64(givenPublicKey);   contentKey = generateAESKey();   iv = generateRandomBytes(16);    encrypted = contentKey.encrypt(content, \"AES/CBC/PKCS5Padding\", iv);   keyEncrypted = pubKeyEncryption.encrypt(contentKey, \"RSA/NONE/OAEPWithSHA3-256AndMGF1Padding\");    submissionDto.encryptedData = base64Encode(concat(iv,encrypted));   submissionDto.secret = base64Encode(keyEncrypted);   ``` 
+ * ### Encryption of the data to be transmitted (contact data) In order to be not limited in the amount of data, a hybrid encryption with symmetric encryption of the data and asymmetric encryption of the symmetric key is used for the encryption of the contact data.    1. The apps and applications get the public key of the health department as a 4096-bit RSA key from the IRIS+ server. This key is base64-encoded similar to the Private Enhanced Mail (PEM) format but without key markers (-----BEGIN PUBLIC KEY----- / -----END PUBLIC KEY-----).   2. The app generates a 256-bit AES key.   3. The data is encrypted with this key (algorithm: AES/CBC/PKCS5Padding and 16 byte IV)   4. IV bytes are prepended to the cipher text. Those merged bytes represent the encrypted content.   5. The AES key must be encrypted with the public RSA key of the health department. (algorithm: RSA with Optimal Asymmetric Encryption Padding (OAEP) \"RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING\")   6. The encrypted AES key and the encrypted content must be transmitted base64 encoded.    #### Schematic sequence    ```   pubKeyEncryption = publicKeyFromBase64(givenPublicKey);   contentKey = generateAESKey();   iv = generateRandomBytes(16);    encrypted = contentKey.encrypt(content, \"AES/CBC/PKCS5Padding\", iv);   keyEncrypted = pubKeyEncryption.encrypt(contentKey, \"RSA/NONE/OAEPWithSHA3-256AndMGF1Padding\");    submissionDto.encryptedData = base64Encode(concat(iv,encrypted));   submissionDto.secret = base64Encode(keyEncrypted);   ```
  *
  * The version of the OpenAPI document: 0.2.0
  * Contact: jens.kutzsche@gebea.de
@@ -12,45 +12,61 @@
  * Do not edit the class manually.
  */
 
-
-import { Configuration } from './configuration';
-import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+import { Configuration } from "./configuration";
+import globalAxios, { AxiosPromise, AxiosInstance } from "axios";
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import {
+  DUMMY_BASE_URL,
+  assertParamExists,
+  setApiKeyToObject,
+  setBasicAuthToObject,
+  setBearerAuthToObject,
+  setOAuthToObject,
+  setSearchParams,
+  serializeDataIfNeeded,
+  toPathString,
+  createRequestFunction,
+} from "./common";
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
+import {
+  BASE_PATH,
+  COLLECTION_FORMATS,
+  RequestArgs,
+  BaseAPI,
+  RequiredError,
+} from "./base";
 
 /**
- * 
+ *
  * @export
  * @interface Address
  */
 export interface Address {
-    /**
-     * 
-     * @type {string}
-     * @memberof Address
-     */
-    street?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Address
-     */
-    houseNumber?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Address
-     */
-    zipCode?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Address
-     */
-    city?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Address
+   */
+  street?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Address
+   */
+  houseNumber?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Address
+   */
+  zipCode?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Address
+   */
+  city?: string;
 }
 /**
  * Category of contact that describes the intensity and thus the risk of infection of the contact.
@@ -58,11 +74,11 @@ export interface Address {
  * @enum {string}
  */
 export enum ContactCategory {
-    HighRisk = 'HIGH_RISK',
-    HighRiskMed = 'HIGH_RISK_MED',
-    MediumRiskMed = 'MEDIUM_RISK_MED',
-    LowRisk = 'LOW_RISK',
-    NoRisk = 'NO_RISK'
+  HighRisk = "HIGH_RISK",
+  HighRiskMed = "HIGH_RISK_MED",
+  MediumRiskMed = "MEDIUM_RISK_MED",
+  LowRisk = "LOW_RISK",
+  NoRisk = "NO_RISK",
 }
 
 /**
@@ -71,85 +87,85 @@ export enum ContactCategory {
  * @interface ContactPerson
  */
 export interface ContactPerson {
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactPerson
-     */
-    firstName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactPerson
-     */
-    lastName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactPerson
-     */
-    dateOfBirth?: string;
-    /**
-     * 
-     * @type {Sex}
-     * @memberof ContactPerson
-     */
-    sex?: Sex;
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactPerson
-     */
-    email?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactPerson
-     */
-    phone?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactPerson
-     */
-    mobilePhone?: string;
-    /**
-     * 
-     * @type {Address}
-     * @memberof ContactPerson
-     */
-    address?: Address | null;
-    /**
-     * 
-     * @type {ContactPersonAllOfWorkPlace}
-     * @memberof ContactPerson
-     */
-    workPlace?: ContactPersonAllOfWorkPlace;
-    /**
-     * 
-     * @type {ContactPersonAllOfContactInformation}
-     * @memberof ContactPerson
-     */
-    contactInformation?: ContactPersonAllOfContactInformation;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactPerson
+   */
+  firstName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactPerson
+   */
+  lastName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactPerson
+   */
+  dateOfBirth?: string;
+  /**
+   *
+   * @type {Sex}
+   * @memberof ContactPerson
+   */
+  sex?: Sex;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactPerson
+   */
+  email?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactPerson
+   */
+  phone?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactPerson
+   */
+  mobilePhone?: string;
+  /**
+   *
+   * @type {Address}
+   * @memberof ContactPerson
+   */
+  address?: Address | null;
+  /**
+   *
+   * @type {ContactPersonAllOfWorkPlace}
+   * @memberof ContactPerson
+   */
+  workPlace?: ContactPersonAllOfWorkPlace;
+  /**
+   *
+   * @type {ContactPersonAllOfContactInformation}
+   * @memberof ContactPerson
+   */
+  contactInformation?: ContactPersonAllOfContactInformation;
 }
 /**
- * 
+ *
  * @export
  * @interface ContactPersonAllOf
  */
 export interface ContactPersonAllOf {
-    /**
-     * 
-     * @type {ContactPersonAllOfWorkPlace}
-     * @memberof ContactPersonAllOf
-     */
-    workPlace?: ContactPersonAllOfWorkPlace;
-    /**
-     * 
-     * @type {ContactPersonAllOfContactInformation}
-     * @memberof ContactPersonAllOf
-     */
-    contactInformation?: ContactPersonAllOfContactInformation;
+  /**
+   *
+   * @type {ContactPersonAllOfWorkPlace}
+   * @memberof ContactPersonAllOf
+   */
+  workPlace?: ContactPersonAllOfWorkPlace;
+  /**
+   *
+   * @type {ContactPersonAllOfContactInformation}
+   * @memberof ContactPersonAllOf
+   */
+  contactInformation?: ContactPersonAllOfContactInformation;
 }
 /**
  * Additional informations about the contact(s) with the queried person.
@@ -157,30 +173,30 @@ export interface ContactPersonAllOf {
  * @interface ContactPersonAllOfContactInformation
  */
 export interface ContactPersonAllOfContactInformation {
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactPersonAllOfContactInformation
-     */
-    firstContactDate?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactPersonAllOfContactInformation
-     */
-    lastContactDate?: string;
-    /**
-     * 
-     * @type {ContactCategory}
-     * @memberof ContactPersonAllOfContactInformation
-     */
-    contactCategory?: ContactCategory | null;
-    /**
-     * Informations about the basic conditions such as: from, to, place, inside|outside, mask yes|no, distance >=|< 1,5m, ventilated yes|no, remarks.
-     * @type {string}
-     * @memberof ContactPersonAllOfContactInformation
-     */
-    basicConditions?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactPersonAllOfContactInformation
+   */
+  firstContactDate?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactPersonAllOfContactInformation
+   */
+  lastContactDate?: string;
+  /**
+   *
+   * @type {ContactCategory}
+   * @memberof ContactPersonAllOfContactInformation
+   */
+  contactCategory?: ContactCategory | null;
+  /**
+   * Informations about the basic conditions such as: from, to, place, inside|outside, mask yes|no, distance >=|< 1,5m, ventilated yes|no, remarks.
+   * @type {string}
+   * @memberof ContactPersonAllOfContactInformation
+   */
+  basicConditions?: string;
 }
 /**
  * Additional informations about the work place of the contact person.
@@ -188,30 +204,30 @@ export interface ContactPersonAllOfContactInformation {
  * @interface ContactPersonAllOfWorkPlace
  */
 export interface ContactPersonAllOfWorkPlace {
-    /**
-     * Name of work place
-     * @type {string}
-     * @memberof ContactPersonAllOfWorkPlace
-     */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactPersonAllOfWorkPlace
-     */
-    pointOfContact?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactPersonAllOfWorkPlace
-     */
-    phone?: string;
-    /**
-     * 
-     * @type {Address}
-     * @memberof ContactPersonAllOfWorkPlace
-     */
-    address?: Address | null;
+  /**
+   * Name of work place
+   * @type {string}
+   * @memberof ContactPersonAllOfWorkPlace
+   */
+  name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactPersonAllOfWorkPlace
+   */
+  pointOfContact?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactPersonAllOfWorkPlace
+   */
+  phone?: string;
+  /**
+   *
+   * @type {Address}
+   * @memberof ContactPersonAllOfWorkPlace
+   */
+  address?: Address | null;
 }
 /**
  * A collection of contact persons who had contact with the queried person during the queried time. This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64!
@@ -219,24 +235,24 @@ export interface ContactPersonAllOfWorkPlace {
  * @interface ContactPersonList
  */
 export interface ContactPersonList {
-    /**
-     * 
-     * @type {Array<ContactPerson>}
-     * @memberof ContactPersonList
-     */
-    contactPersons: Array<ContactPerson>;
-    /**
-     * Start date of contacts for this list.
-     * @type {string}
-     * @memberof ContactPersonList
-     */
-    startDate?: string;
-    /**
-     * End date of contacts for this list.
-     * @type {string}
-     * @memberof ContactPersonList
-     */
-    endDate?: string;
+  /**
+   *
+   * @type {Array<ContactPerson>}
+   * @memberof ContactPersonList
+   */
+  contactPersons: Array<ContactPerson>;
+  /**
+   * Start date of contacts for this list.
+   * @type {string}
+   * @memberof ContactPersonList
+   */
+  startDate?: string;
+  /**
+   * End date of contacts for this list.
+   * @type {string}
+   * @memberof ContactPersonList
+   */
+  endDate?: string;
 }
 /**
  * This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64!(`dataToTransport` in the general description of the API.)
@@ -244,106 +260,106 @@ export interface ContactPersonList {
  * @interface ContactsAndEvents
  */
 export interface ContactsAndEvents {
-    /**
-     * 
-     * @type {ContactPersonList}
-     * @memberof ContactsAndEvents
-     */
-    contacts: ContactPersonList;
-    /**
-     * 
-     * @type {EventList}
-     * @memberof ContactsAndEvents
-     */
-    events: EventList;
-    /**
-     * 
-     * @type {ContactsAndEventsDataProvider}
-     * @memberof ContactsAndEvents
-     */
-    dataProvider: ContactsAndEventsDataProvider;
+  /**
+   *
+   * @type {ContactPersonList}
+   * @memberof ContactsAndEvents
+   */
+  contacts: ContactPersonList;
+  /**
+   *
+   * @type {EventList}
+   * @memberof ContactsAndEvents
+   */
+  events: EventList;
+  /**
+   *
+   * @type {ContactsAndEventsDataProvider}
+   * @memberof ContactsAndEvents
+   */
+  dataProvider: ContactsAndEventsDataProvider;
 }
 /**
- * 
+ *
  * @export
  * @interface ContactsAndEventsDataProvider
  */
 export interface ContactsAndEventsDataProvider {
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactsAndEventsDataProvider
-     */
-    firstName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactsAndEventsDataProvider
-     */
-    lastName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ContactsAndEventsDataProvider
-     */
-    dateOfBirth: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactsAndEventsDataProvider
+   */
+  firstName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactsAndEventsDataProvider
+   */
+  lastName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactsAndEventsDataProvider
+   */
+  dateOfBirth: string;
 }
 /**
- * 
+ *
  * @export
  * @interface ContactsEventsSubmission
  */
 export interface ContactsEventsSubmission {
-    /**
-     * The encrypted secret key for encryption. (`keyToTransport` in the general description of the API.)
-     * @type {string}
-     * @memberof ContactsEventsSubmission
-     */
-    secret: string;
-    /**
-     * Reference to the used encryption key. This must be the value from keyReference of the DataRequest as this matches the passed and thus used key.
-     * @type {string}
-     * @memberof ContactsEventsSubmission
-     */
-    keyReference: string;
-    /**
-     * 
-     * @type {ContactsAndEvents}
-     * @memberof ContactsEventsSubmission
-     */
-    encryptedData: ContactsAndEvents;
+  /**
+   * The encrypted secret key for encryption. (`keyToTransport` in the general description of the API.)
+   * @type {string}
+   * @memberof ContactsEventsSubmission
+   */
+  secret: string;
+  /**
+   * Reference to the used encryption key. This must be the value from keyReference of the DataRequest as this matches the passed and thus used key.
+   * @type {string}
+   * @memberof ContactsEventsSubmission
+   */
+  keyReference: string;
+  /**
+   *
+   * @type {ContactsAndEvents}
+   * @memberof ContactsEventsSubmission
+   */
+  encryptedData: ContactsAndEvents;
 }
 /**
- * 
+ *
  * @export
  * @interface ContactsEventsSubmissionAllOf
  */
 export interface ContactsEventsSubmissionAllOf {
-    /**
-     * 
-     * @type {ContactsAndEvents}
-     * @memberof ContactsEventsSubmissionAllOf
-     */
-    encryptedData: ContactsAndEvents;
+  /**
+   *
+   * @type {ContactsAndEvents}
+   * @memberof ContactsEventsSubmissionAllOf
+   */
+  encryptedData: ContactsAndEvents;
 }
 /**
- * 
+ *
  * @export
  * @interface Credentials
  */
 export interface Credentials {
-    /**
-     * 
-     * @type {string}
-     * @memberof Credentials
-     */
-    userName?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Credentials
-     */
-    password?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Credentials
+   */
+  userName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Credentials
+   */
+  password?: string;
 }
 /**
  * A data request with all parameters relevant for the data submission.
@@ -351,42 +367,42 @@ export interface Credentials {
  * @interface DataRequest
  */
 export interface DataRequest {
-    /**
-     * Name of the requesting health department.
-     * @type {string}
-     * @memberof DataRequest
-     */
-    healthDepartment: string;
-    /**
-     * The key of the requesting health department that must be used for encryption. The key is encoded with Base64.
-     * @type {string}
-     * @memberof DataRequest
-     */
-    keyOfHealthDepartment: string;
-    /**
-     * Reference id of the given key. This reference must be included in the submission in order to identify the correct private key for decryption at the health department.
-     * @type {string}
-     * @memberof DataRequest
-     */
-    keyReference: string;
-    /**
-     * The start time for which data should be submitted with this request.
-     * @type {string}
-     * @memberof DataRequest
-     */
-    start: string;
-    /**
-     * The end time for which data should be submitted with this request.
-     * @type {string}
-     * @memberof DataRequest
-     */
-    end?: string;
-    /**
-     * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
-     * @type {string}
-     * @memberof DataRequest
-     */
-    requestDetails?: string;
+  /**
+   * Name of the requesting health department.
+   * @type {string}
+   * @memberof DataRequest
+   */
+  healthDepartment: string;
+  /**
+   * The key of the requesting health department that must be used for encryption. The key is encoded with Base64.
+   * @type {string}
+   * @memberof DataRequest
+   */
+  keyOfHealthDepartment: string;
+  /**
+   * Reference id of the given key. This reference must be included in the submission in order to identify the correct private key for decryption at the health department.
+   * @type {string}
+   * @memberof DataRequest
+   */
+  keyReference: string;
+  /**
+   * The start time for which data should be submitted with this request.
+   * @type {string}
+   * @memberof DataRequest
+   */
+  start: string;
+  /**
+   * The end time for which data should be submitted with this request.
+   * @type {string}
+   * @memberof DataRequest
+   */
+  end?: string;
+  /**
+   * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
+   * @type {string}
+   * @memberof DataRequest
+   */
+  requestDetails?: string;
 }
 /**
  * Creates a new index case data request from FE - persistent data has to be refined. Starting with contact persons name.
@@ -394,121 +410,121 @@ export interface DataRequest {
  * @interface DataRequestCaseClient
  */
 export interface DataRequestCaseClient {
-    /**
-     * External case identifier. E.g. CaseID in Sormas.
-     * @type {string}
-     * @memberof DataRequestCaseClient
-     */
-    externalCaseId: string;
-    /**
-     * Friendly name for given case
-     * @type {string}
-     * @memberof DataRequestCaseClient
-     */
-    name?: string;
-    /**
-     * Comments on given case
-     * @type {string}
-     * @memberof DataRequestCaseClient
-     */
-    comment?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseClient
-     */
-    start: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseClient
-     */
-    end?: string;
+  /**
+   * External case identifier. E.g. CaseID in Sormas.
+   * @type {string}
+   * @memberof DataRequestCaseClient
+   */
+  externalCaseId: string;
+  /**
+   * Friendly name for given case
+   * @type {string}
+   * @memberof DataRequestCaseClient
+   */
+  name?: string;
+  /**
+   * Comments on given case
+   * @type {string}
+   * @memberof DataRequestCaseClient
+   */
+  comment?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestCaseClient
+   */
+  start: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestCaseClient
+   */
+  end?: string;
 }
 /**
- * 
+ *
  * @export
  * @interface DataRequestCaseData
  */
 export interface DataRequestCaseData {
-    /**
-     * External case identifier. E.g. CaseID in Sormas.
-     * @type {string}
-     * @memberof DataRequestCaseData
-     */
-    externalCaseId: string;
-    /**
-     * Friendly name for given case
-     * @type {string}
-     * @memberof DataRequestCaseData
-     */
-    name?: string;
-    /**
-     * Comments on given case
-     * @type {string}
-     * @memberof DataRequestCaseData
-     */
-    comment?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseData
-     */
-    start: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseData
-     */
-    end?: string;
-    /**
-     * Internal case identifier. Used in listings etc.
-     * @type {string}
-     * @memberof DataRequestCaseData
-     */
-    caseId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseData
-     */
-    status?: DataRequestCaseDataStatusEnum;
-    /**
-     * Nonce used in provider app to authorize data upload
-     * @type {string}
-     * @memberof DataRequestCaseData
-     */
-    nonce?: string;
-    /**
-     * 
-     * @type {ContactsAndEvents}
-     * @memberof DataRequestCaseData
-     */
-    submissionData?: ContactsAndEvents;
+  /**
+   * External case identifier. E.g. CaseID in Sormas.
+   * @type {string}
+   * @memberof DataRequestCaseData
+   */
+  externalCaseId: string;
+  /**
+   * Friendly name for given case
+   * @type {string}
+   * @memberof DataRequestCaseData
+   */
+  name?: string;
+  /**
+   * Comments on given case
+   * @type {string}
+   * @memberof DataRequestCaseData
+   */
+  comment?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestCaseData
+   */
+  start: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestCaseData
+   */
+  end?: string;
+  /**
+   * Internal case identifier. Used in listings etc.
+   * @type {string}
+   * @memberof DataRequestCaseData
+   */
+  caseId?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestCaseData
+   */
+  status?: DataRequestCaseDataStatusEnum;
+  /**
+   * Nonce used in provider app to authorize data upload
+   * @type {string}
+   * @memberof DataRequestCaseData
+   */
+  nonce?: string;
+  /**
+   *
+   * @type {ContactsAndEvents}
+   * @memberof DataRequestCaseData
+   */
+  submissionData?: ContactsAndEvents;
 }
 
 /**
-    * @export
-    * @enum {string}
-    */
+ * @export
+ * @enum {string}
+ */
 export enum DataRequestCaseDataStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
+  DataRequested = "DATA_REQUESTED",
+  DataReceived = "DATA_RECEIVED",
+  Closed = "CLOSED",
 }
 
 /**
- * 
+ *
  * @export
  * @interface DataRequestCaseDataAllOf
  */
 export interface DataRequestCaseDataAllOf {
-    /**
-     * 
-     * @type {ContactsAndEvents}
-     * @memberof DataRequestCaseDataAllOf
-     */
-    submissionData?: ContactsAndEvents;
+  /**
+   *
+   * @type {ContactsAndEvents}
+   * @memberof DataRequestCaseDataAllOf
+   */
+  submissionData?: ContactsAndEvents;
 }
 /**
  * Details for index case
@@ -516,88 +532,88 @@ export interface DataRequestCaseDataAllOf {
  * @interface DataRequestCaseDetails
  */
 export interface DataRequestCaseDetails {
-    /**
-     * External case identifier. E.g. CaseID in Sormas.
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    externalCaseId: string;
-    /**
-     * Friendly name for given case
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    name?: string;
-    /**
-     * Comments on given case
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    comment?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    start: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    end?: string;
-    /**
-     * Internal case identifier. Used in listings etc.
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    caseId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseDetails
-     */
-    status?: DataRequestCaseDetailsStatusEnum;
+  /**
+   * External case identifier. E.g. CaseID in Sormas.
+   * @type {string}
+   * @memberof DataRequestCaseDetails
+   */
+  externalCaseId: string;
+  /**
+   * Friendly name for given case
+   * @type {string}
+   * @memberof DataRequestCaseDetails
+   */
+  name?: string;
+  /**
+   * Comments on given case
+   * @type {string}
+   * @memberof DataRequestCaseDetails
+   */
+  comment?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestCaseDetails
+   */
+  start: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestCaseDetails
+   */
+  end?: string;
+  /**
+   * Internal case identifier. Used in listings etc.
+   * @type {string}
+   * @memberof DataRequestCaseDetails
+   */
+  caseId?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestCaseDetails
+   */
+  status?: DataRequestCaseDetailsStatusEnum;
 }
 
 /**
-    * @export
-    * @enum {string}
-    */
+ * @export
+ * @enum {string}
+ */
 export enum DataRequestCaseDetailsStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
+  DataRequested = "DATA_REQUESTED",
+  DataReceived = "DATA_RECEIVED",
+  Closed = "CLOSED",
 }
 
 /**
- * 
+ *
  * @export
  * @interface DataRequestCaseDetailsAllOf
  */
 export interface DataRequestCaseDetailsAllOf {
-    /**
-     * Internal case identifier. Used in listings etc.
-     * @type {string}
-     * @memberof DataRequestCaseDetailsAllOf
-     */
-    caseId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseDetailsAllOf
-     */
-    status?: DataRequestCaseDetailsAllOfStatusEnum;
+  /**
+   * Internal case identifier. Used in listings etc.
+   * @type {string}
+   * @memberof DataRequestCaseDetailsAllOf
+   */
+  caseId?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestCaseDetailsAllOf
+   */
+  status?: DataRequestCaseDetailsAllOfStatusEnum;
 }
 
 /**
-    * @export
-    * @enum {string}
-    */
+ * @export
+ * @enum {string}
+ */
 export enum DataRequestCaseDetailsAllOfStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
+  DataRequested = "DATA_REQUESTED",
+  DataReceived = "DATA_RECEIVED",
+  Closed = "CLOSED",
 }
 
 /**
@@ -606,78 +622,78 @@ export enum DataRequestCaseDetailsAllOfStatusEnum {
  * @interface DataRequestCaseExtendedDetails
  */
 export interface DataRequestCaseExtendedDetails {
-    /**
-     * External case identifier. E.g. CaseID in Sormas.
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetails
-     */
-    externalCaseId: string;
-    /**
-     * Friendly name for given case
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetails
-     */
-    name?: string;
-    /**
-     * Comments on given case
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetails
-     */
-    comment?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetails
-     */
-    start: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetails
-     */
-    end?: string;
-    /**
-     * Internal case identifier. Used in listings etc.
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetails
-     */
-    caseId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetails
-     */
-    status?: DataRequestCaseExtendedDetailsStatusEnum;
-    /**
-     * Nonce used in provider app to authorize data upload
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetails
-     */
-    nonce?: string;
+  /**
+   * External case identifier. E.g. CaseID in Sormas.
+   * @type {string}
+   * @memberof DataRequestCaseExtendedDetails
+   */
+  externalCaseId: string;
+  /**
+   * Friendly name for given case
+   * @type {string}
+   * @memberof DataRequestCaseExtendedDetails
+   */
+  name?: string;
+  /**
+   * Comments on given case
+   * @type {string}
+   * @memberof DataRequestCaseExtendedDetails
+   */
+  comment?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestCaseExtendedDetails
+   */
+  start: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestCaseExtendedDetails
+   */
+  end?: string;
+  /**
+   * Internal case identifier. Used in listings etc.
+   * @type {string}
+   * @memberof DataRequestCaseExtendedDetails
+   */
+  caseId?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestCaseExtendedDetails
+   */
+  status?: DataRequestCaseExtendedDetailsStatusEnum;
+  /**
+   * Nonce used in provider app to authorize data upload
+   * @type {string}
+   * @memberof DataRequestCaseExtendedDetails
+   */
+  nonce?: string;
 }
 
 /**
-    * @export
-    * @enum {string}
-    */
+ * @export
+ * @enum {string}
+ */
 export enum DataRequestCaseExtendedDetailsStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
+  DataRequested = "DATA_REQUESTED",
+  DataReceived = "DATA_RECEIVED",
+  Closed = "CLOSED",
 }
 
 /**
- * 
+ *
  * @export
  * @interface DataRequestCaseExtendedDetailsAllOf
  */
 export interface DataRequestCaseExtendedDetailsAllOf {
-    /**
-     * Nonce used in provider app to authorize data upload
-     * @type {string}
-     * @memberof DataRequestCaseExtendedDetailsAllOf
-     */
-    nonce?: string;
+  /**
+   * Nonce used in provider app to authorize data upload
+   * @type {string}
+   * @memberof DataRequestCaseExtendedDetailsAllOf
+   */
+  nonce?: string;
 }
 /**
  * The data request that will be sent by the FE.
@@ -685,131 +701,131 @@ export interface DataRequestCaseExtendedDetailsAllOf {
  * @interface DataRequestClient
  */
 export interface DataRequestClient {
-    /**
-     * Id of the location to request the data from.
-     * @type {string}
-     * @memberof DataRequestClient
-     */
-    locationId: string;
-    /**
-     * ID of the App provider serving the location.
-     * @type {string}
-     * @memberof DataRequestClient
-     */
-    providerId: string;
-    /**
-     * Friendly name of the request to be identified easily by GA
-     * @type {string}
-     * @memberof DataRequestClient
-     */
-    name?: string;
-    /**
-     * External ID outside of IRIS
-     * @type {string}
-     * @memberof DataRequestClient
-     */
-    externalRequestId: string;
-    /**
-     * The start time for which data should be submitted with this request.
-     * @type {string}
-     * @memberof DataRequestClient
-     */
-    start: string;
-    /**
-     * The end time for which data should be submitted with this request.
-     * @type {string}
-     * @memberof DataRequestClient
-     */
-    end: string;
-    /**
-     * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
-     * @type {string}
-     * @memberof DataRequestClient
-     */
-    requestDetails?: string;
+  /**
+   * Id of the location to request the data from.
+   * @type {string}
+   * @memberof DataRequestClient
+   */
+  locationId: string;
+  /**
+   * ID of the App provider serving the location.
+   * @type {string}
+   * @memberof DataRequestClient
+   */
+  providerId: string;
+  /**
+   * Friendly name of the request to be identified easily by GA
+   * @type {string}
+   * @memberof DataRequestClient
+   */
+  name?: string;
+  /**
+   * External ID outside of IRIS
+   * @type {string}
+   * @memberof DataRequestClient
+   */
+  externalRequestId: string;
+  /**
+   * The start time for which data should be submitted with this request.
+   * @type {string}
+   * @memberof DataRequestClient
+   */
+  start: string;
+  /**
+   * The end time for which data should be submitted with this request.
+   * @type {string}
+   * @memberof DataRequestClient
+   */
+  end: string;
+  /**
+   * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
+   * @type {string}
+   * @memberof DataRequestClient
+   */
+  requestDetails?: string;
 }
 /**
- * 
+ *
  * @export
  * @interface DataRequestDetails
  */
 export interface DataRequestDetails {
-    /**
-     * 
-     * @type {GuestList}
-     * @memberof DataRequestDetails
-     */
-    submissionData?: GuestList;
-    /**
-     * 
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    status?: DataRequestDetailsStatusEnum;
-    /**
-     * Code for DataRequest
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    code?: string;
-    /**
-     * Friendly name of the request to be identified easily by GA
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    name?: string;
-    /**
-     * External ID outside of IRIS
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    externalRequestId?: string;
-    /**
-     * The start time for which data should be submitted with this request.
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    start?: string;
-    /**
-     * The end time for which data should be submitted with this request.
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    end?: string;
-    /**
-     * Timestamp when the data request was created.
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    requestedAt?: string;
-    /**
-     * Timestamp when the data request was last updated.
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    lastUpdatedAt?: string;
-    /**
-     * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
-     * @type {string}
-     * @memberof DataRequestDetails
-     */
-    requestDetails?: string;
-    /**
-     * 
-     * @type {LocationInformation}
-     * @memberof DataRequestDetails
-     */
-    locationInformation?: LocationInformation;
+  /**
+   *
+   * @type {GuestList}
+   * @memberof DataRequestDetails
+   */
+  submissionData?: GuestList;
+  /**
+   *
+   * @type {string}
+   * @memberof DataRequestDetails
+   */
+  status?: DataRequestDetailsStatusEnum;
+  /**
+   * Code for DataRequest
+   * @type {string}
+   * @memberof DataRequestDetails
+   */
+  code?: string;
+  /**
+   * Friendly name of the request to be identified easily by GA
+   * @type {string}
+   * @memberof DataRequestDetails
+   */
+  name?: string;
+  /**
+   * External ID outside of IRIS
+   * @type {string}
+   * @memberof DataRequestDetails
+   */
+  externalRequestId?: string;
+  /**
+   * The start time for which data should be submitted with this request.
+   * @type {string}
+   * @memberof DataRequestDetails
+   */
+  start?: string;
+  /**
+   * The end time for which data should be submitted with this request.
+   * @type {string}
+   * @memberof DataRequestDetails
+   */
+  end?: string;
+  /**
+   * Timestamp when the data request was created.
+   * @type {string}
+   * @memberof DataRequestDetails
+   */
+  requestedAt?: string;
+  /**
+   * Timestamp when the data request was last updated.
+   * @type {string}
+   * @memberof DataRequestDetails
+   */
+  lastUpdatedAt?: string;
+  /**
+   * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
+   * @type {string}
+   * @memberof DataRequestDetails
+   */
+  requestDetails?: string;
+  /**
+   *
+   * @type {LocationInformation}
+   * @memberof DataRequestDetails
+   */
+  locationInformation?: LocationInformation;
 }
 
 /**
-    * @export
-    * @enum {string}
-    */
+ * @export
+ * @enum {string}
+ */
 export enum DataRequestDetailsStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
+  DataRequested = "DATA_REQUESTED",
+  DataReceived = "DATA_RECEIVED",
+  Closed = "CLOSED",
 }
 
 /**
@@ -818,18 +834,18 @@ export enum DataRequestDetailsStatusEnum {
  * @interface DataSubmission
  */
 export interface DataSubmission {
-    /**
-     * The encrypted secret key for encryption. (`keyToTransport` in the general description of the API.)
-     * @type {string}
-     * @memberof DataSubmission
-     */
-    secret: string;
-    /**
-     * Reference to the used encryption key. This must be the value from keyReference of the DataRequest as this matches the passed and thus used key.
-     * @type {string}
-     * @memberof DataSubmission
-     */
-    keyReference: string;
+  /**
+   * The encrypted secret key for encryption. (`keyToTransport` in the general description of the API.)
+   * @type {string}
+   * @memberof DataSubmission
+   */
+  secret: string;
+  /**
+   * Reference to the used encryption key. This must be the value from keyReference of the DataRequest as this matches the passed and thus used key.
+   * @type {string}
+   * @memberof DataSubmission
+   */
+  keyReference: string;
 }
 /**
  * An event, location or occasion visited by the queried person during the queried time.
@@ -837,30 +853,30 @@ export interface DataSubmission {
  * @interface Event
  */
 export interface Event {
-    /**
-     * Name of the event
-     * @type {string}
-     * @memberof Event
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Event
-     */
-    phone?: string;
-    /**
-     * 
-     * @type {Address}
-     * @memberof Event
-     */
-    address?: Address | null;
-    /**
-     * Additional informations about the event.
-     * @type {string}
-     * @memberof Event
-     */
-    additionalInformation?: string;
+  /**
+   * Name of the event
+   * @type {string}
+   * @memberof Event
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Event
+   */
+  phone?: string;
+  /**
+   *
+   * @type {Address}
+   * @memberof Event
+   */
+  address?: Address | null;
+  /**
+   * Additional informations about the event.
+   * @type {string}
+   * @memberof Event
+   */
+  additionalInformation?: string;
 }
 /**
  * A collection of events visited by the queried person during the queried time. This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64!
@@ -868,115 +884,115 @@ export interface Event {
  * @interface EventList
  */
 export interface EventList {
-    /**
-     * 
-     * @type {Array<Event>}
-     * @memberof EventList
-     */
-    events: Array<Event>;
-    /**
-     * Start date of visits for this list.
-     * @type {string}
-     * @memberof EventList
-     */
-    startDate?: string;
-    /**
-     * End date of visits for this list.
-     * @type {string}
-     * @memberof EventList
-     */
-    endDate?: string;
+  /**
+   *
+   * @type {Array<Event>}
+   * @memberof EventList
+   */
+  events: Array<Event>;
+  /**
+   * Start date of visits for this list.
+   * @type {string}
+   * @memberof EventList
+   */
+  startDate?: string;
+  /**
+   * End date of visits for this list.
+   * @type {string}
+   * @memberof EventList
+   */
+  endDate?: string;
 }
 /**
- * 
+ *
  * @export
  * @interface ExistingDataRequestClientWithLocation
  */
 export interface ExistingDataRequestClientWithLocation {
-    /**
-     * 
-     * @type {string}
-     * @memberof ExistingDataRequestClientWithLocation
-     */
-    status?: ExistingDataRequestClientWithLocationStatusEnum;
-    /**
-     * Code for DataRequest
-     * @type {string}
-     * @memberof ExistingDataRequestClientWithLocation
-     */
-    code?: string;
-    /**
-     * Friendly name of the request to be identified easily by GA
-     * @type {string}
-     * @memberof ExistingDataRequestClientWithLocation
-     */
-    name?: string;
-    /**
-     * External ID outside of IRIS
-     * @type {string}
-     * @memberof ExistingDataRequestClientWithLocation
-     */
-    externalRequestId?: string;
-    /**
-     * The start time for which data should be submitted with this request.
-     * @type {string}
-     * @memberof ExistingDataRequestClientWithLocation
-     */
-    start?: string;
-    /**
-     * The end time for which data should be submitted with this request.
-     * @type {string}
-     * @memberof ExistingDataRequestClientWithLocation
-     */
-    end?: string;
-    /**
-     * Timestamp when the data request was created.
-     * @type {string}
-     * @memberof ExistingDataRequestClientWithLocation
-     */
-    requestedAt?: string;
-    /**
-     * Timestamp when the data request was last updated.
-     * @type {string}
-     * @memberof ExistingDataRequestClientWithLocation
-     */
-    lastUpdatedAt?: string;
-    /**
-     * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
-     * @type {string}
-     * @memberof ExistingDataRequestClientWithLocation
-     */
-    requestDetails?: string;
-    /**
-     * 
-     * @type {LocationInformation}
-     * @memberof ExistingDataRequestClientWithLocation
-     */
-    locationInformation?: LocationInformation;
+  /**
+   *
+   * @type {string}
+   * @memberof ExistingDataRequestClientWithLocation
+   */
+  status?: ExistingDataRequestClientWithLocationStatusEnum;
+  /**
+   * Code for DataRequest
+   * @type {string}
+   * @memberof ExistingDataRequestClientWithLocation
+   */
+  code?: string;
+  /**
+   * Friendly name of the request to be identified easily by GA
+   * @type {string}
+   * @memberof ExistingDataRequestClientWithLocation
+   */
+  name?: string;
+  /**
+   * External ID outside of IRIS
+   * @type {string}
+   * @memberof ExistingDataRequestClientWithLocation
+   */
+  externalRequestId?: string;
+  /**
+   * The start time for which data should be submitted with this request.
+   * @type {string}
+   * @memberof ExistingDataRequestClientWithLocation
+   */
+  start?: string;
+  /**
+   * The end time for which data should be submitted with this request.
+   * @type {string}
+   * @memberof ExistingDataRequestClientWithLocation
+   */
+  end?: string;
+  /**
+   * Timestamp when the data request was created.
+   * @type {string}
+   * @memberof ExistingDataRequestClientWithLocation
+   */
+  requestedAt?: string;
+  /**
+   * Timestamp when the data request was last updated.
+   * @type {string}
+   * @memberof ExistingDataRequestClientWithLocation
+   */
+  lastUpdatedAt?: string;
+  /**
+   * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
+   * @type {string}
+   * @memberof ExistingDataRequestClientWithLocation
+   */
+  requestDetails?: string;
+  /**
+   *
+   * @type {LocationInformation}
+   * @memberof ExistingDataRequestClientWithLocation
+   */
+  locationInformation?: LocationInformation;
 }
 
 /**
-    * @export
-    * @enum {string}
-    */
+ * @export
+ * @enum {string}
+ */
 export enum ExistingDataRequestClientWithLocationStatusEnum {
-    DataRequested = 'DATA_REQUESTED',
-    DataReceived = 'DATA_RECEIVED',
-    Closed = 'CLOSED'
+  DataRequested = "DATA_REQUESTED",
+  DataReceived = "DATA_RECEIVED",
+  Closed = "CLOSED",
 }
 
 /**
- * 
+ *
  * @export
  * @interface ExistingDataRequestClientWithLocationList
  */
 export interface ExistingDataRequestClientWithLocationList {
-    /**
-     * 
-     * @type {Array<ExistingDataRequestClientWithLocation>}
-     * @memberof ExistingDataRequestClientWithLocationList
-     */
-    dataRequests?: Array<ExistingDataRequestClientWithLocation>;
+  /**
+   *
+   * @type {Array<ExistingDataRequestClientWithLocation>}
+   * @memberof ExistingDataRequestClientWithLocationList
+   */
+  dataRequests?: Array<ExistingDataRequestClientWithLocation>;
 }
 /**
  * Extended person data type for a guest who attended a queried event or location in the queried time.
@@ -984,116 +1000,116 @@ export interface ExistingDataRequestClientWithLocationList {
  * @interface Guest
  */
 export interface Guest {
-    /**
-     * 
-     * @type {string}
-     * @memberof Guest
-     */
-    firstName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Guest
-     */
-    lastName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Guest
-     */
-    dateOfBirth?: string;
-    /**
-     * 
-     * @type {Sex}
-     * @memberof Guest
-     */
-    sex?: Sex;
-    /**
-     * 
-     * @type {string}
-     * @memberof Guest
-     */
-    email?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Guest
-     */
-    phone?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Guest
-     */
-    mobilePhone?: string;
-    /**
-     * 
-     * @type {Address}
-     * @memberof Guest
-     */
-    address?: Address | null;
-    /**
-     * 
-     * @type {GuestAllOfAttendanceInformation}
-     * @memberof Guest
-     */
-    attendanceInformation: GuestAllOfAttendanceInformation;
-    /**
-     * The app indicates whether the data are verified with respect to identity (e.g. by phone number) = TRUE or whether they are unverified form inputs = FALSE.
-     * @type {boolean}
-     * @memberof Guest
-     */
-    identityChecked?: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof Guest
+   */
+  firstName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Guest
+   */
+  lastName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Guest
+   */
+  dateOfBirth?: string;
+  /**
+   *
+   * @type {Sex}
+   * @memberof Guest
+   */
+  sex?: Sex;
+  /**
+   *
+   * @type {string}
+   * @memberof Guest
+   */
+  email?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Guest
+   */
+  phone?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Guest
+   */
+  mobilePhone?: string;
+  /**
+   *
+   * @type {Address}
+   * @memberof Guest
+   */
+  address?: Address | null;
+  /**
+   *
+   * @type {GuestAllOfAttendanceInformation}
+   * @memberof Guest
+   */
+  attendanceInformation: GuestAllOfAttendanceInformation;
+  /**
+   * The app indicates whether the data are verified with respect to identity (e.g. by phone number) = TRUE or whether they are unverified form inputs = FALSE.
+   * @type {boolean}
+   * @memberof Guest
+   */
+  identityChecked?: boolean;
 }
 /**
- * 
+ *
  * @export
  * @interface GuestAllOf
  */
 export interface GuestAllOf {
-    /**
-     * 
-     * @type {GuestAllOfAttendanceInformation}
-     * @memberof GuestAllOf
-     */
-    attendanceInformation: GuestAllOfAttendanceInformation;
-    /**
-     * The app indicates whether the data are verified with respect to identity (e.g. by phone number) = TRUE or whether they are unverified form inputs = FALSE.
-     * @type {boolean}
-     * @memberof GuestAllOf
-     */
-    identityChecked?: boolean;
+  /**
+   *
+   * @type {GuestAllOfAttendanceInformation}
+   * @memberof GuestAllOf
+   */
+  attendanceInformation: GuestAllOfAttendanceInformation;
+  /**
+   * The app indicates whether the data are verified with respect to identity (e.g. by phone number) = TRUE or whether they are unverified form inputs = FALSE.
+   * @type {boolean}
+   * @memberof GuestAllOf
+   */
+  identityChecked?: boolean;
 }
 /**
- * 
+ *
  * @export
  * @interface GuestAllOfAttendanceInformation
  */
 export interface GuestAllOfAttendanceInformation {
-    /**
-     * Description of the type of participation.
-     * @type {string}
-     * @memberof GuestAllOfAttendanceInformation
-     */
-    descriptionOfParticipation?: string;
-    /**
-     * Start date/time of attendance of this guest.
-     * @type {string}
-     * @memberof GuestAllOfAttendanceInformation
-     */
-    attendFrom: string;
-    /**
-     * End date/time of attendance of this guest.
-     * @type {string}
-     * @memberof GuestAllOfAttendanceInformation
-     */
-    attendTo: string;
-    /**
-     * Additional informations about the attendance.
-     * @type {string}
-     * @memberof GuestAllOfAttendanceInformation
-     */
-    additionalInformation?: string;
+  /**
+   * Description of the type of participation.
+   * @type {string}
+   * @memberof GuestAllOfAttendanceInformation
+   */
+  descriptionOfParticipation?: string;
+  /**
+   * Start date/time of attendance of this guest.
+   * @type {string}
+   * @memberof GuestAllOfAttendanceInformation
+   */
+  attendFrom: string;
+  /**
+   * End date/time of attendance of this guest.
+   * @type {string}
+   * @memberof GuestAllOfAttendanceInformation
+   */
+  attendTo: string;
+  /**
+   * Additional informations about the attendance.
+   * @type {string}
+   * @memberof GuestAllOfAttendanceInformation
+   */
+  additionalInformation?: string;
 }
 /**
  * A collection of guests who attended a queried event or location in the queried time. This data must be encrypted with the key of health department from DataRequest.keyOfHealthDepartment and must be encoded with Base64! (`dataToTransport` in the general description of the API.)
@@ -1101,93 +1117,93 @@ export interface GuestAllOfAttendanceInformation {
  * @interface GuestList
  */
 export interface GuestList {
-    /**
-     * 
-     * @type {Array<Guest>}
-     * @memberof GuestList
-     */
-    guests: Array<Guest>;
-    /**
-     * 
-     * @type {GuestListDataProvider}
-     * @memberof GuestList
-     */
-    dataProvider: GuestListDataProvider;
-    /**
-     * Additional informations about the guest list and the event or location.
-     * @type {string}
-     * @memberof GuestList
-     */
-    additionalInformation?: string;
-    /**
-     * Start date/time of attendance for this guest list.
-     * @type {string}
-     * @memberof GuestList
-     */
-    startDate?: string;
-    /**
-     * End date/time of attendance for this guest list.
-     * @type {string}
-     * @memberof GuestList
-     */
-    endDate?: string;
+  /**
+   *
+   * @type {Array<Guest>}
+   * @memberof GuestList
+   */
+  guests: Array<Guest>;
+  /**
+   *
+   * @type {GuestListDataProvider}
+   * @memberof GuestList
+   */
+  dataProvider: GuestListDataProvider;
+  /**
+   * Additional informations about the guest list and the event or location.
+   * @type {string}
+   * @memberof GuestList
+   */
+  additionalInformation?: string;
+  /**
+   * Start date/time of attendance for this guest list.
+   * @type {string}
+   * @memberof GuestList
+   */
+  startDate?: string;
+  /**
+   * End date/time of attendance for this guest list.
+   * @type {string}
+   * @memberof GuestList
+   */
+  endDate?: string;
 }
 /**
- * 
+ *
  * @export
  * @interface GuestListDataProvider
  */
 export interface GuestListDataProvider {
-    /**
-     * Name of Location, Institution or Organizer
-     * @type {string}
-     * @memberof GuestListDataProvider
-     */
-    name: string;
-    /**
-     * 
-     * @type {Address}
-     * @memberof GuestListDataProvider
-     */
-    address: Address;
+  /**
+   * Name of Location, Institution or Organizer
+   * @type {string}
+   * @memberof GuestListDataProvider
+   */
+  name: string;
+  /**
+   *
+   * @type {Address}
+   * @memberof GuestListDataProvider
+   */
+  address: Address;
 }
 /**
- * 
+ *
  * @export
  * @interface GuestsSubmission
  */
 export interface GuestsSubmission {
-    /**
-     * The encrypted secret key for encryption. (`keyToTransport` in the general description of the API.)
-     * @type {string}
-     * @memberof GuestsSubmission
-     */
-    secret: string;
-    /**
-     * Reference to the used encryption key. This must be the value from keyReference of the DataRequest as this matches the passed and thus used key.
-     * @type {string}
-     * @memberof GuestsSubmission
-     */
-    keyReference: string;
-    /**
-     * 
-     * @type {GuestList}
-     * @memberof GuestsSubmission
-     */
-    encryptedData: GuestList;
+  /**
+   * The encrypted secret key for encryption. (`keyToTransport` in the general description of the API.)
+   * @type {string}
+   * @memberof GuestsSubmission
+   */
+  secret: string;
+  /**
+   * Reference to the used encryption key. This must be the value from keyReference of the DataRequest as this matches the passed and thus used key.
+   * @type {string}
+   * @memberof GuestsSubmission
+   */
+  keyReference: string;
+  /**
+   *
+   * @type {GuestList}
+   * @memberof GuestsSubmission
+   */
+  encryptedData: GuestList;
 }
 /**
- * 
+ *
  * @export
  * @interface GuestsSubmissionAllOf
  */
 export interface GuestsSubmissionAllOf {
-    /**
-     * 
-     * @type {GuestList}
-     * @memberof GuestsSubmissionAllOf
-     */
-    encryptedData: GuestList;
+  /**
+   *
+   * @type {GuestList}
+   * @memberof GuestsSubmissionAllOf
+   */
+  encryptedData: GuestList;
 }
 /**
  * Anschrift des Standorts
@@ -1195,24 +1211,24 @@ export interface GuestsSubmissionAllOf {
  * @interface LocationAddress
  */
 export interface LocationAddress {
-    /**
-     * street + number
-     * @type {string}
-     * @memberof LocationAddress
-     */
-    street: string;
-    /**
-     * Stadt
-     * @type {string}
-     * @memberof LocationAddress
-     */
-    city: string;
-    /**
-     * Postleitzahl
-     * @type {string}
-     * @memberof LocationAddress
-     */
-    zip: string;
+  /**
+   * street + number
+   * @type {string}
+   * @memberof LocationAddress
+   */
+  street: string;
+  /**
+   * Stadt
+   * @type {string}
+   * @memberof LocationAddress
+   */
+  city: string;
+  /**
+   * Postleitzahl
+   * @type {string}
+   * @memberof LocationAddress
+   */
+  zip: string;
 }
 /**
  * Kontaktperson des Standorts
@@ -1220,42 +1236,42 @@ export interface LocationAddress {
  * @interface LocationContact
  */
 export interface LocationContact {
-    /**
-     * Offizieller Unternehmensname
-     * @type {string}
-     * @memberof LocationContact
-     */
-    officialName?: string;
-    /**
-     * Ansprechpartner für dieses Unternehmen
-     * @type {string}
-     * @memberof LocationContact
-     */
-    representative?: string;
-    /**
-     * 
-     * @type {LocationAddress}
-     * @memberof LocationContact
-     */
-    address: LocationAddress;
-    /**
-     * E-Mail des Inhabers
-     * @type {string}
-     * @memberof LocationContact
-     */
-    ownerEmail?: string;
-    /**
-     * ggf. E-Mail einer weiteren Kontaktperson
-     * @type {string}
-     * @memberof LocationContact
-     */
-    email?: string;
-    /**
-     * Telefonnummer eines Ansprechpartners
-     * @type {string}
-     * @memberof LocationContact
-     */
-    phone?: string;
+  /**
+   * Offizieller Unternehmensname
+   * @type {string}
+   * @memberof LocationContact
+   */
+  officialName?: string;
+  /**
+   * Ansprechpartner für dieses Unternehmen
+   * @type {string}
+   * @memberof LocationContact
+   */
+  representative?: string;
+  /**
+   *
+   * @type {LocationAddress}
+   * @memberof LocationContact
+   */
+  address: LocationAddress;
+  /**
+   * E-Mail des Inhabers
+   * @type {string}
+   * @memberof LocationContact
+   */
+  ownerEmail?: string;
+  /**
+   * ggf. E-Mail einer weiteren Kontaktperson
+   * @type {string}
+   * @memberof LocationContact
+   */
+  email?: string;
+  /**
+   * Telefonnummer eines Ansprechpartners
+   * @type {string}
+   * @memberof LocationContact
+   */
+  phone?: string;
 }
 /**
  * Ein Standort hat ggf. weitere Informationen wie Tische/Räume, etc.
@@ -1263,18 +1279,18 @@ export interface LocationContact {
  * @interface LocationContext
  */
 export interface LocationContext {
-    /**
-     * Interne ID des Kontext
-     * @type {string}
-     * @memberof LocationContext
-     */
-    id: string;
-    /**
-     * Bezeichnung
-     * @type {string}
-     * @memberof LocationContext
-     */
-    name: string;
+  /**
+   * Interne ID des Kontext
+   * @type {string}
+   * @memberof LocationContext
+   */
+  id: string;
+  /**
+   * Bezeichnung
+   * @type {string}
+   * @memberof LocationContext
+   */
+  name: string;
 }
 /**
  * All information needed to create a new TracingTicket
@@ -1282,129 +1298,129 @@ export interface LocationContext {
  * @interface LocationDataRequest
  */
 export interface LocationDataRequest {
-    /**
-     * Name of the requesting health department.
-     * @type {string}
-     * @memberof LocationDataRequest
-     */
-    healthDepartment: string;
-    /**
-     * The key of the requesting health department that must be used for encryption. The key is encoded with Base64.
-     * @type {string}
-     * @memberof LocationDataRequest
-     */
-    keyOfHealthDepartment: string;
-    /**
-     * Reference id of the given key. This reference must be included in the submission in order to identify the correct private key for decryption at the health department.
-     * @type {string}
-     * @memberof LocationDataRequest
-     */
-    keyReference: string;
-    /**
-     * The start time for which data should be submitted with this request.
-     * @type {string}
-     * @memberof LocationDataRequest
-     */
-    start: string;
-    /**
-     * The end time for which data should be submitted with this request.
-     * @type {string}
-     * @memberof LocationDataRequest
-     */
-    end: string;
-    /**
-     * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
-     * @type {string}
-     * @memberof LocationDataRequest
-     */
-    requestDetails?: string;
-    /**
-     * The URI that can be used to submit contact data for this tracing code.
-     * @type {string}
-     * @memberof LocationDataRequest
-     */
-    submissionUri: string;
-    /**
-     * The id of the location.
-     * @type {string}
-     * @memberof LocationDataRequest
-     */
-    locationId: string;
+  /**
+   * Name of the requesting health department.
+   * @type {string}
+   * @memberof LocationDataRequest
+   */
+  healthDepartment: string;
+  /**
+   * The key of the requesting health department that must be used for encryption. The key is encoded with Base64.
+   * @type {string}
+   * @memberof LocationDataRequest
+   */
+  keyOfHealthDepartment: string;
+  /**
+   * Reference id of the given key. This reference must be included in the submission in order to identify the correct private key for decryption at the health department.
+   * @type {string}
+   * @memberof LocationDataRequest
+   */
+  keyReference: string;
+  /**
+   * The start time for which data should be submitted with this request.
+   * @type {string}
+   * @memberof LocationDataRequest
+   */
+  start: string;
+  /**
+   * The end time for which data should be submitted with this request.
+   * @type {string}
+   * @memberof LocationDataRequest
+   */
+  end: string;
+  /**
+   * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
+   * @type {string}
+   * @memberof LocationDataRequest
+   */
+  requestDetails?: string;
+  /**
+   * The URI that can be used to submit contact data for this tracing code.
+   * @type {string}
+   * @memberof LocationDataRequest
+   */
+  submissionUri: string;
+  /**
+   * The id of the location.
+   * @type {string}
+   * @memberof LocationDataRequest
+   */
+  locationId: string;
 }
 /**
- * 
+ *
  * @export
  * @interface LocationDataRequestAllOf
  */
 export interface LocationDataRequestAllOf {
-    /**
-     * The URI that can be used to submit contact data for this tracing code.
-     * @type {string}
-     * @memberof LocationDataRequestAllOf
-     */
-    submissionUri: string;
-    /**
-     * The id of the location.
-     * @type {string}
-     * @memberof LocationDataRequestAllOf
-     */
-    locationId: string;
+  /**
+   * The URI that can be used to submit contact data for this tracing code.
+   * @type {string}
+   * @memberof LocationDataRequestAllOf
+   */
+  submissionUri: string;
+  /**
+   * The id of the location.
+   * @type {string}
+   * @memberof LocationDataRequestAllOf
+   */
+  locationId: string;
 }
 /**
- * 
+ *
  * @export
  * @interface LocationInformation
  */
 export interface LocationInformation {
-    /**
-     * Interne ID (beim Provider)
-     * @type {string}
-     * @memberof LocationInformation
-     */
-    id: string;
-    /**
-     * ID des App providers
-     * @type {string}
-     * @memberof LocationInformation
-     */
-    providerId: string;
-    /**
-     * Name des Standorts
-     * @type {string}
-     * @memberof LocationInformation
-     */
-    name: string;
-    /**
-     * Öffentlicher Schlüssel, ggf. für Nachrichtenaustausch
-     * @type {string}
-     * @memberof LocationInformation
-     */
-    publicKey?: string;
-    /**
-     * 
-     * @type {LocationContact}
-     * @memberof LocationInformation
-     */
-    contact: LocationContact;
-    /**
-     * 
-     * @type {Array<LocationContext>}
-     * @memberof LocationInformation
-     */
-    contexts?: Array<LocationContext>;
+  /**
+   * Interne ID (beim Provider)
+   * @type {string}
+   * @memberof LocationInformation
+   */
+  id: string;
+  /**
+   * ID des App providers
+   * @type {string}
+   * @memberof LocationInformation
+   */
+  providerId: string;
+  /**
+   * Name des Standorts
+   * @type {string}
+   * @memberof LocationInformation
+   */
+  name: string;
+  /**
+   * Öffentlicher Schlüssel, ggf. für Nachrichtenaustausch
+   * @type {string}
+   * @memberof LocationInformation
+   */
+  publicKey?: string;
+  /**
+   *
+   * @type {LocationContact}
+   * @memberof LocationInformation
+   */
+  contact: LocationContact;
+  /**
+   *
+   * @type {Array<LocationContext>}
+   * @memberof LocationInformation
+   */
+  contexts?: Array<LocationContext>;
 }
 /**
- * 
+ *
  * @export
  * @interface LocationList
  */
 export interface LocationList {
-    /**
-     * 
-     * @type {Array<LocationInformation>}
-     * @memberof LocationList
-     */
-    locations: Array<LocationInformation>;
+  /**
+   *
+   * @type {Array<LocationInformation>}
+   * @memberof LocationList
+   */
+  locations: Array<LocationInformation>;
 }
 /**
  * Basic data type of a person.
@@ -1412,1024 +1428,1576 @@ export interface LocationList {
  * @interface Person
  */
 export interface Person {
-    /**
-     * 
-     * @type {string}
-     * @memberof Person
-     */
-    firstName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Person
-     */
-    lastName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Person
-     */
-    dateOfBirth?: string;
-    /**
-     * 
-     * @type {Sex}
-     * @memberof Person
-     */
-    sex?: Sex;
-    /**
-     * 
-     * @type {string}
-     * @memberof Person
-     */
-    email?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Person
-     */
-    phone?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Person
-     */
-    mobilePhone?: string;
-    /**
-     * 
-     * @type {Address}
-     * @memberof Person
-     */
-    address?: Address | null;
+  /**
+   *
+   * @type {string}
+   * @memberof Person
+   */
+  firstName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Person
+   */
+  lastName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Person
+   */
+  dateOfBirth?: string;
+  /**
+   *
+   * @type {Sex}
+   * @memberof Person
+   */
+  sex?: Sex;
+  /**
+   *
+   * @type {string}
+   * @memberof Person
+   */
+  email?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Person
+   */
+  phone?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Person
+   */
+  mobilePhone?: string;
+  /**
+   *
+   * @type {Address}
+   * @memberof Person
+   */
+  address?: Address | null;
 }
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum Sex {
-    Male = 'MALE',
-    Female = 'FEMALE',
-    Other = 'OTHER',
-    Unknown = 'UNKNOWN'
+  Male = "MALE",
+  Female = "FEMALE",
+  Other = "OTHER",
+  Unknown = "UNKNOWN",
 }
 
 /**
- * 
+ *
  * @export
  * @interface User
  */
 export interface User {
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    firstName?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    lastName?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    userName: string;
-    /**
-     * 
-     * @type {UserRole}
-     * @memberof User
-     */
-    role: UserRole;
+  /**
+   *
+   * @type {string}
+   * @memberof User
+   */
+  id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof User
+   */
+  firstName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof User
+   */
+  lastName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof User
+   */
+  userName: string;
+  /**
+   *
+   * @type {UserRole}
+   * @memberof User
+   */
+  role: UserRole;
 }
 /**
- * 
+ *
  * @export
  * @interface UserInsert
  */
 export interface UserInsert {
-    /**
-     * 
-     * @type {string}
-     * @memberof UserInsert
-     */
-    firstName?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserInsert
-     */
-    lastName?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserInsert
-     */
-    userName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserInsert
-     */
-    password: string;
-    /**
-     * 
-     * @type {UserRole}
-     * @memberof UserInsert
-     */
-    role: UserRole;
+  /**
+   *
+   * @type {string}
+   * @memberof UserInsert
+   */
+  firstName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserInsert
+   */
+  lastName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserInsert
+   */
+  userName: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserInsert
+   */
+  password: string;
+  /**
+   *
+   * @type {UserRole}
+   * @memberof UserInsert
+   */
+  role: UserRole;
 }
 /**
- * 
+ *
  * @export
  * @interface UserList
  */
 export interface UserList {
-    /**
-     * 
-     * @type {Array<User>}
-     * @memberof UserList
-     */
-    users?: Array<User>;
+  /**
+   *
+   * @type {Array<User>}
+   * @memberof UserList
+   */
+  users?: Array<User>;
 }
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum UserRole {
-    Admin = 'ADMIN',
-    User = 'USER'
+  Admin = "ADMIN",
+  User = "USER",
 }
 
 /**
- * 
+ *
  * @export
  * @interface UserUpdate
  */
 export interface UserUpdate {
-    /**
-     * 
-     * @type {string}
-     * @memberof UserUpdate
-     */
-    firstName?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserUpdate
-     */
-    lastName?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserUpdate
-     */
-    userName?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserUpdate
-     */
-    password?: string;
-    /**
-     * 
-     * @type {UserRole}
-     * @memberof UserUpdate
-     */
-    role?: UserRole;
+  /**
+   *
+   * @type {string}
+   * @memberof UserUpdate
+   */
+  firstName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserUpdate
+   */
+  lastName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserUpdate
+   */
+  userName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserUpdate
+   */
+  password?: string;
+  /**
+   *
+   * @type {UserRole}
+   * @memberof UserUpdate
+   */
+  role?: UserRole;
 }
 
 /**
  * IrisClientFrontendApi - axios parameter creator
  * @export
  */
-export const IrisClientFrontendApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Detail view for index data request with the data submissions already received
-         * @param {string} caseId The internal unique CaseId of a index case in format.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dataRequestClientCasesCaseIdGet: async (caseId: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'caseId' is not null or undefined
-            assertParamExists('dataRequestClientCasesCaseIdGet', 'caseId', caseId)
-            const localVarPath = `/data-requests-client/cases/{caseId}`
-                .replace(`{${"caseId"}}`, encodeURIComponent(String(caseId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Fetches index cases
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dataRequestClientCasesGet: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/data-requests-client/cases`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Creates a new tracing case for index case data
-         * @param {DataRequestCaseClient} dataRequestCaseClient 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dataRequestClientCasesPost: async (dataRequestCaseClient: DataRequestCaseClient, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'dataRequestCaseClient' is not null or undefined
-            assertParamExists('dataRequestClientCasesPost', 'dataRequestCaseClient', dataRequestCaseClient)
-            const localVarPath = `/data-requests-client/cases`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json; charset=UTF-8';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(dataRequestCaseClient, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Fetches data requests
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dataRequestsClientLocationsGet: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/data-requests-client/locations`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Submits a new data request
-         * @param {DataRequestClient} dataRequestClient 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dataRequestsClientLocationsPost: async (dataRequestClient: DataRequestClient, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'dataRequestClient' is not null or undefined
-            assertParamExists('dataRequestsClientLocationsPost', 'dataRequestClient', dataRequestClient)
-            const localVarPath = `/data-requests-client/locations`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(dataRequestClient, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Detail view for Data Request with the data submissions already received
-         * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLocationDetails: async (code: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'code' is not null or undefined
-            assertParamExists('getLocationDetails', 'code', code)
-            const localVarPath = `/data-requests-client/locations/{code}`
-                .replace(`{${"code"}}`, encodeURIComponent(String(code)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Authenticates a user against IRIS client
-         * @param {Credentials} credentials 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        login: async (credentials: Credentials, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'credentials' is not null or undefined
-            assertParamExists('login', 'credentials', credentials)
-            const localVarPath = `/login`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(credentials, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} searchKeyword The search keyword
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        searchSearchKeywordGet: async (searchKeyword: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'searchKeyword' is not null or undefined
-            assertParamExists('searchSearchKeywordGet', 'searchKeyword', searchKeyword)
-            const localVarPath = `/search/{search_keyword}`
-                .replace(`{${"search_keyword"}}`, encodeURIComponent(String(searchKeyword)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Get authenticated IRIS user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        userProfileGet: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/user-profile`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Get all IRIS users
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        usersGet: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/users`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Delete IRIS user
-         * @param {string} id The ID of an IRIS Client user.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        usersIdDelete: async (id: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('usersIdDelete', 'id', id)
-            const localVarPath = `/users/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Update IRIS user
-         * @param {string} id The ID of an IRIS Client user.
-         * @param {UserUpdate} userUpdate 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        usersIdPatch: async (id: string, userUpdate: UserUpdate, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('usersIdPatch', 'id', id)
-            // verify required parameter 'userUpdate' is not null or undefined
-            assertParamExists('usersIdPatch', 'userUpdate', userUpdate)
-            const localVarPath = `/users/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userUpdate, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Create IRIS user
-         * @param {UserInsert} userInsert 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        usersPost: async (userInsert: UserInsert, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userInsert' is not null or undefined
-            assertParamExists('usersPost', 'userInsert', userInsert)
-            const localVarPath = `/users`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "X-IRIS-API-KEY", configuration)
-
-            // authentication BearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userInsert, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+export const IrisClientFrontendApiAxiosParamCreator = function (
+  configuration?: Configuration
+) {
+  return {
+    /**
+     *
+     * @summary Detail view for index data request with the data submissions already received
+     * @param {string} caseId The internal unique CaseId of a index case in format.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    dataRequestClientCasesCaseIdGet: async (
+      caseId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'caseId' is not null or undefined
+      assertParamExists("dataRequestClientCasesCaseIdGet", "caseId", caseId);
+      const localVarPath = `/data-requests-client/cases/{caseId}`.replace(
+        `{${"caseId"}}`,
+        encodeURIComponent(String(caseId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Fetches index cases
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    dataRequestClientCasesGet: async (
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/data-requests-client/cases`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Creates a new tracing case for index case data
+     * @param {DataRequestCaseClient} dataRequestCaseClient
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    dataRequestClientCasesPost: async (
+      dataRequestCaseClient: DataRequestCaseClient,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'dataRequestCaseClient' is not null or undefined
+      assertParamExists(
+        "dataRequestClientCasesPost",
+        "dataRequestCaseClient",
+        dataRequestCaseClient
+      );
+      const localVarPath = `/data-requests-client/cases`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter["Content-Type"] =
+        "application/json; charset=UTF-8";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        dataRequestCaseClient,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Fetches data requests
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    dataRequestsClientLocationsGet: async (
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/data-requests-client/locations`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Submits a new data request
+     * @param {DataRequestClient} dataRequestClient
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    dataRequestsClientLocationsPost: async (
+      dataRequestClient: DataRequestClient,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'dataRequestClient' is not null or undefined
+      assertParamExists(
+        "dataRequestsClientLocationsPost",
+        "dataRequestClient",
+        dataRequestClient
+      );
+      const localVarPath = `/data-requests-client/locations`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        dataRequestClient,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Detail view for Data Request with the data submissions already received
+     * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLocationDetails: async (
+      code: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'code' is not null or undefined
+      assertParamExists("getLocationDetails", "code", code);
+      const localVarPath = `/data-requests-client/locations/{code}`.replace(
+        `{${"code"}}`,
+        encodeURIComponent(String(code))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Authenticates a user against IRIS client
+     * @param {Credentials} credentials
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    login: async (
+      credentials: Credentials,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'credentials' is not null or undefined
+      assertParamExists("login", "credentials", credentials);
+      const localVarPath = `/login`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        credentials,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} searchKeyword The search keyword
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    searchSearchKeywordGet: async (
+      searchKeyword: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'searchKeyword' is not null or undefined
+      assertParamExists(
+        "searchSearchKeywordGet",
+        "searchKeyword",
+        searchKeyword
+      );
+      const localVarPath = `/search/{search_keyword}`.replace(
+        `{${"search_keyword"}}`,
+        encodeURIComponent(String(searchKeyword))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Get authenticated IRIS user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    userProfileGet: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/user-profile`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Get all IRIS users
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersGet: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/users`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Delete IRIS user
+     * @param {string} id The ID of an IRIS Client user.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersIdDelete: async (
+      id: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("usersIdDelete", "id", id);
+      const localVarPath = `/users/{id}`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Update IRIS user
+     * @param {string} id The ID of an IRIS Client user.
+     * @param {UserUpdate} userUpdate
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersIdPatch: async (
+      id: string,
+      userUpdate: UserUpdate,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("usersIdPatch", "id", id);
+      // verify required parameter 'userUpdate' is not null or undefined
+      assertParamExists("usersIdPatch", "userUpdate", userUpdate);
+      const localVarPath = `/users/{id}`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "PATCH",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        userUpdate,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Create IRIS user
+     * @param {UserInsert} userInsert
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersPost: async (
+      userInsert: UserInsert,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'userInsert' is not null or undefined
+      assertParamExists("usersPost", "userInsert", userInsert);
+      const localVarPath = `/users`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        userInsert,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Create IRIS user
+     * @param {UserInsert} userInsert
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    feedbackPost: async (
+      feedbackObject: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'userInsert' is not null or undefined
+      assertParamExists("feedbackPost", "feedbackObject", feedbackObject);
+      const localVarPath = `/feedback`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+      console.log("second async called");
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        feedbackObject,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * IrisClientFrontendApi - functional programming interface
  * @export
  */
-export const IrisClientFrontendApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = IrisClientFrontendApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @summary Detail view for index data request with the data submissions already received
-         * @param {string} caseId The internal unique CaseId of a index case in format.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async dataRequestClientCasesCaseIdGet(caseId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DataRequestCaseData>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestClientCasesCaseIdGet(caseId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Fetches index cases
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async dataRequestClientCasesGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<DataRequestCaseDetails>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestClientCasesGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Creates a new tracing case for index case data
-         * @param {DataRequestCaseClient} dataRequestCaseClient 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async dataRequestClientCasesPost(dataRequestCaseClient: DataRequestCaseClient, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DataRequestCaseExtendedDetails>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestClientCasesPost(dataRequestCaseClient, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Fetches data requests
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async dataRequestsClientLocationsGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExistingDataRequestClientWithLocationList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestsClientLocationsGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Submits a new data request
-         * @param {DataRequestClient} dataRequestClient 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async dataRequestsClientLocationsPost(dataRequestClient: DataRequestClient, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DataRequestDetails>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestsClientLocationsPost(dataRequestClient, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Detail view for Data Request with the data submissions already received
-         * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getLocationDetails(code: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DataRequestDetails>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getLocationDetails(code, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Authenticates a user against IRIS client
-         * @param {Credentials} credentials 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async login(credentials: Credentials, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.login(credentials, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} searchKeyword The search keyword
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async searchSearchKeywordGet(searchKeyword: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LocationList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.searchSearchKeywordGet(searchKeyword, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Get authenticated IRIS user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async userProfileGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.userProfileGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Get all IRIS users
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async usersGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.usersGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Delete IRIS user
-         * @param {string} id The ID of an IRIS Client user.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async usersIdDelete(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.usersIdDelete(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Update IRIS user
-         * @param {string} id The ID of an IRIS Client user.
-         * @param {UserUpdate} userUpdate 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async usersIdPatch(id: string, userUpdate: UserUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.usersIdPatch(id, userUpdate, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Create IRIS user
-         * @param {UserInsert} userInsert 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async usersPost(userInsert: UserInsert, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.usersPost(userInsert, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
+export const IrisClientFrontendApiFp = function (
+  configuration?: Configuration
+) {
+  const localVarAxiosParamCreator = IrisClientFrontendApiAxiosParamCreator(
+    configuration
+  );
+  return {
+    /**
+     *
+     * @summary Detail view for index data request with the data submissions already received
+     * @param {string} caseId The internal unique CaseId of a index case in format.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async dataRequestClientCasesCaseIdGet(
+      caseId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<DataRequestCaseData>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestClientCasesCaseIdGet(
+        caseId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @summary Fetches index cases
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async dataRequestClientCasesGet(
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<DataRequestCaseDetails>>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestClientCasesGet(
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @summary Creates a new tracing case for index case data
+     * @param {DataRequestCaseClient} dataRequestCaseClient
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async dataRequestClientCasesPost(
+      dataRequestCaseClient: DataRequestCaseClient,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<DataRequestCaseExtendedDetails>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestClientCasesPost(
+        dataRequestCaseClient,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @summary Fetches data requests
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async dataRequestsClientLocationsGet(
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<ExistingDataRequestClientWithLocationList>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestsClientLocationsGet(
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @summary Submits a new data request
+     * @param {DataRequestClient} dataRequestClient
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async dataRequestsClientLocationsPost(
+      dataRequestClient: DataRequestClient,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<DataRequestDetails>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestsClientLocationsPost(
+        dataRequestClient,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @summary Detail view for Data Request with the data submissions already received
+     * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getLocationDetails(
+      code: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<DataRequestDetails>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getLocationDetails(
+        code,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @summary Authenticates a user against IRIS client
+     * @param {Credentials} credentials
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async login(
+      credentials: Credentials,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.login(
+        credentials,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} searchKeyword The search keyword
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async searchSearchKeywordGet(
+      searchKeyword: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<LocationList>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.searchSearchKeywordGet(
+        searchKeyword,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @summary Get authenticated IRIS user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async userProfileGet(
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.userProfileGet(
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @summary Get all IRIS users
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async usersGet(
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserList>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.usersGet(
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @summary Delete IRIS user
+     * @param {string} id The ID of an IRIS Client user.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async usersIdDelete(
+      id: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.usersIdDelete(
+        id,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @summary Update IRIS user
+     * @param {string} id The ID of an IRIS Client user.
+     * @param {UserUpdate} userUpdate
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async usersIdPatch(
+      id: string,
+      userUpdate: UserUpdate,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.usersIdPatch(
+        id,
+        userUpdate,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @summary Create IRIS user
+     * @param {UserInsert} userInsert
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async usersPost(
+      userInsert: UserInsert,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.usersPost(
+        userInsert,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    async feedbackPost(
+      feedbackObject: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.feedbackPost(
+        feedbackObject,
+        options
+      );
+      console.log("first async worked");
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+  };
 };
 
 /**
  * IrisClientFrontendApi - factory interface
  * @export
  */
-export const IrisClientFrontendApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = IrisClientFrontendApiFp(configuration)
-    return {
-        /**
-         * 
-         * @summary Detail view for index data request with the data submissions already received
-         * @param {string} caseId The internal unique CaseId of a index case in format.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dataRequestClientCasesCaseIdGet(caseId: string, options?: any): AxiosPromise<DataRequestCaseData> {
-            return localVarFp.dataRequestClientCasesCaseIdGet(caseId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Fetches index cases
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dataRequestClientCasesGet(options?: any): AxiosPromise<Array<DataRequestCaseDetails>> {
-            return localVarFp.dataRequestClientCasesGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Creates a new tracing case for index case data
-         * @param {DataRequestCaseClient} dataRequestCaseClient 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dataRequestClientCasesPost(dataRequestCaseClient: DataRequestCaseClient, options?: any): AxiosPromise<DataRequestCaseExtendedDetails> {
-            return localVarFp.dataRequestClientCasesPost(dataRequestCaseClient, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Fetches data requests
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dataRequestsClientLocationsGet(options?: any): AxiosPromise<ExistingDataRequestClientWithLocationList> {
-            return localVarFp.dataRequestsClientLocationsGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Submits a new data request
-         * @param {DataRequestClient} dataRequestClient 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        dataRequestsClientLocationsPost(dataRequestClient: DataRequestClient, options?: any): AxiosPromise<DataRequestDetails> {
-            return localVarFp.dataRequestsClientLocationsPost(dataRequestClient, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Detail view for Data Request with the data submissions already received
-         * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLocationDetails(code: string, options?: any): AxiosPromise<DataRequestDetails> {
-            return localVarFp.getLocationDetails(code, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Authenticates a user against IRIS client
-         * @param {Credentials} credentials 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        login(credentials: Credentials, options?: any): AxiosPromise<void> {
-            return localVarFp.login(credentials, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} searchKeyword The search keyword
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        searchSearchKeywordGet(searchKeyword: string, options?: any): AxiosPromise<LocationList> {
-            return localVarFp.searchSearchKeywordGet(searchKeyword, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Get authenticated IRIS user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        userProfileGet(options?: any): AxiosPromise<User> {
-            return localVarFp.userProfileGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Get all IRIS users
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        usersGet(options?: any): AxiosPromise<UserList> {
-            return localVarFp.usersGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Delete IRIS user
-         * @param {string} id The ID of an IRIS Client user.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        usersIdDelete(id: string, options?: any): AxiosPromise<void> {
-            return localVarFp.usersIdDelete(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Update IRIS user
-         * @param {string} id The ID of an IRIS Client user.
-         * @param {UserUpdate} userUpdate 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        usersIdPatch(id: string, userUpdate: UserUpdate, options?: any): AxiosPromise<User> {
-            return localVarFp.usersIdPatch(id, userUpdate, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Create IRIS user
-         * @param {UserInsert} userInsert 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        usersPost(userInsert: UserInsert, options?: any): AxiosPromise<User> {
-            return localVarFp.usersPost(userInsert, options).then((request) => request(axios, basePath));
-        },
-    };
+export const IrisClientFrontendApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance
+) {
+  const localVarFp = IrisClientFrontendApiFp(configuration);
+  return {
+    /**
+     *
+     * @summary Detail view for index data request with the data submissions already received
+     * @param {string} caseId The internal unique CaseId of a index case in format.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    dataRequestClientCasesCaseIdGet(
+      caseId: string,
+      options?: any
+    ): AxiosPromise<DataRequestCaseData> {
+      return localVarFp
+        .dataRequestClientCasesCaseIdGet(caseId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Fetches index cases
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    dataRequestClientCasesGet(
+      options?: any
+    ): AxiosPromise<Array<DataRequestCaseDetails>> {
+      return localVarFp
+        .dataRequestClientCasesGet(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Creates a new tracing case for index case data
+     * @param {DataRequestCaseClient} dataRequestCaseClient
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    dataRequestClientCasesPost(
+      dataRequestCaseClient: DataRequestCaseClient,
+      options?: any
+    ): AxiosPromise<DataRequestCaseExtendedDetails> {
+      return localVarFp
+        .dataRequestClientCasesPost(dataRequestCaseClient, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Fetches data requests
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    dataRequestsClientLocationsGet(
+      options?: any
+    ): AxiosPromise<ExistingDataRequestClientWithLocationList> {
+      return localVarFp
+        .dataRequestsClientLocationsGet(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Submits a new data request
+     * @param {DataRequestClient} dataRequestClient
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    dataRequestsClientLocationsPost(
+      dataRequestClient: DataRequestClient,
+      options?: any
+    ): AxiosPromise<DataRequestDetails> {
+      return localVarFp
+        .dataRequestsClientLocationsPost(dataRequestClient, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Detail view for Data Request with the data submissions already received
+     * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLocationDetails(
+      code: string,
+      options?: any
+    ): AxiosPromise<DataRequestDetails> {
+      return localVarFp
+        .getLocationDetails(code, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Authenticates a user against IRIS client
+     * @param {Credentials} credentials
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    login(credentials: Credentials, options?: any): AxiosPromise<void> {
+      return localVarFp
+        .login(credentials, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} searchKeyword The search keyword
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    searchSearchKeywordGet(
+      searchKeyword: string,
+      options?: any
+    ): AxiosPromise<LocationList> {
+      return localVarFp
+        .searchSearchKeywordGet(searchKeyword, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Get authenticated IRIS user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    userProfileGet(options?: any): AxiosPromise<User> {
+      return localVarFp
+        .userProfileGet(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Get all IRIS users
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersGet(options?: any): AxiosPromise<UserList> {
+      return localVarFp
+        .usersGet(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Delete IRIS user
+     * @param {string} id The ID of an IRIS Client user.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersIdDelete(id: string, options?: any): AxiosPromise<void> {
+      return localVarFp
+        .usersIdDelete(id, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Update IRIS user
+     * @param {string} id The ID of an IRIS Client user.
+     * @param {UserUpdate} userUpdate
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersIdPatch(
+      id: string,
+      userUpdate: UserUpdate,
+      options?: any
+    ): AxiosPromise<User> {
+      return localVarFp
+        .usersIdPatch(id, userUpdate, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Create IRIS user
+     * @param {UserInsert} userInsert
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersPost(userInsert: UserInsert, options?: any): AxiosPromise<User> {
+      return localVarFp
+        .usersPost(userInsert, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Create IRIS user
+     * @param {UserInsert} userInsert
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    feedbackPost(feedbackObject: string, options?: any): AxiosPromise<any> {
+      //TODO any to whatever we need
+      console.log("Factory call succesfull");
+      return localVarFp
+        .feedbackPost(feedbackObject, options)
+        .then((request) => request(axios, basePath));
+    },
+  };
 };
 
 /**
@@ -2439,157 +3007,187 @@ export const IrisClientFrontendApiFactory = function (configuration?: Configurat
  * @extends {BaseAPI}
  */
 export class IrisClientFrontendApi extends BaseAPI {
-    /**
-     * 
-     * @summary Detail view for index data request with the data submissions already received
-     * @param {string} caseId The internal unique CaseId of a index case in format.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public dataRequestClientCasesCaseIdGet(caseId: string, options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).dataRequestClientCasesCaseIdGet(caseId, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @summary Detail view for index data request with the data submissions already received
+   * @param {string} caseId The internal unique CaseId of a index case in format.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public dataRequestClientCasesCaseIdGet(caseId: string, options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .dataRequestClientCasesCaseIdGet(caseId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * 
-     * @summary Fetches index cases
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public dataRequestClientCasesGet(options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).dataRequestClientCasesGet(options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @summary Fetches index cases
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public dataRequestClientCasesGet(options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .dataRequestClientCasesGet(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * 
-     * @summary Creates a new tracing case for index case data
-     * @param {DataRequestCaseClient} dataRequestCaseClient 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public dataRequestClientCasesPost(dataRequestCaseClient: DataRequestCaseClient, options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).dataRequestClientCasesPost(dataRequestCaseClient, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @summary Creates a new tracing case for index case data
+   * @param {DataRequestCaseClient} dataRequestCaseClient
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public dataRequestClientCasesPost(
+    dataRequestCaseClient: DataRequestCaseClient,
+    options?: any
+  ) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .dataRequestClientCasesPost(dataRequestCaseClient, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * 
-     * @summary Fetches data requests
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public dataRequestsClientLocationsGet(options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).dataRequestsClientLocationsGet(options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @summary Fetches data requests
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public dataRequestsClientLocationsGet(options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .dataRequestsClientLocationsGet(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * 
-     * @summary Submits a new data request
-     * @param {DataRequestClient} dataRequestClient 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public dataRequestsClientLocationsPost(dataRequestClient: DataRequestClient, options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).dataRequestsClientLocationsPost(dataRequestClient, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @summary Submits a new data request
+   * @param {DataRequestClient} dataRequestClient
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public dataRequestsClientLocationsPost(
+    dataRequestClient: DataRequestClient,
+    options?: any
+  ) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .dataRequestsClientLocationsPost(dataRequestClient, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * 
-     * @summary Detail view for Data Request with the data submissions already received
-     * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public getLocationDetails(code: string, options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).getLocationDetails(code, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @summary Detail view for Data Request with the data submissions already received
+   * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public getLocationDetails(code: string, options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .getLocationDetails(code, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * 
-     * @summary Authenticates a user against IRIS client
-     * @param {Credentials} credentials 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public login(credentials: Credentials, options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).login(credentials, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @summary Authenticates a user against IRIS client
+   * @param {Credentials} credentials
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public login(credentials: Credentials, options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .login(credentials, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * 
-     * @param {string} searchKeyword The search keyword
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public searchSearchKeywordGet(searchKeyword: string, options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).searchSearchKeywordGet(searchKeyword, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @param {string} searchKeyword The search keyword
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public searchSearchKeywordGet(searchKeyword: string, options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .searchSearchKeywordGet(searchKeyword, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * 
-     * @summary Get authenticated IRIS user
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public userProfileGet(options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).userProfileGet(options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @summary Get authenticated IRIS user
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public userProfileGet(options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .userProfileGet(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * 
-     * @summary Get all IRIS users
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public usersGet(options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).usersGet(options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @summary Get all IRIS users
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public usersGet(options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .usersGet(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * 
-     * @summary Delete IRIS user
-     * @param {string} id The ID of an IRIS Client user.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public usersIdDelete(id: string, options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).usersIdDelete(id, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @summary Delete IRIS user
+   * @param {string} id The ID of an IRIS Client user.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public usersIdDelete(id: string, options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .usersIdDelete(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * 
-     * @summary Update IRIS user
-     * @param {string} id The ID of an IRIS Client user.
-     * @param {UserUpdate} userUpdate 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public usersIdPatch(id: string, userUpdate: UserUpdate, options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).usersIdPatch(id, userUpdate, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @summary Update IRIS user
+   * @param {string} id The ID of an IRIS Client user.
+   * @param {UserUpdate} userUpdate
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public usersIdPatch(id: string, userUpdate: UserUpdate, options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .usersIdPatch(id, userUpdate, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * 
-     * @summary Create IRIS user
-     * @param {UserInsert} userInsert 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IrisClientFrontendApi
-     */
-    public usersPost(userInsert: UserInsert, options?: any) {
-        return IrisClientFrontendApiFp(this.configuration).usersPost(userInsert, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   *
+   * @summary Create IRIS user
+   * @param {UserInsert} userInsert
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public usersPost(userInsert: UserInsert, options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .usersPost(userInsert, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 }
-
-

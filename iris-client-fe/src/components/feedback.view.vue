@@ -183,6 +183,9 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { Configuration, IrisClientFrontendApiFactory } from "@/api";
+import axios, { AxiosResponse } from "axios";
+import config from "@/config";
 
 @Component
 export default class FeedbackDialog extends Vue {
@@ -223,6 +226,28 @@ export default class FeedbackDialog extends Vue {
   confirm() {
     this.showConfirmDialog = false;
     this.show = false;
+    this.sendStuff();
+  }
+
+  sendStuff() {
+    const authAxiosInstance = axios.create();
+    const { apiBaseURL } = config;
+    const clientConfig = new Configuration({
+      basePath: apiBaseURL,
+    });
+
+    const feedbackClient = IrisClientFrontendApiFactory(
+      clientConfig,
+      undefined,
+      authAxiosInstance
+    );
+    try {
+      feedbackClient.feedbackPost("hi");
+      console.log("Post succeded");
+    } catch (e) {
+      console.log("Post failed");
+      throw e;
+    }
   }
 
   exportData() {
