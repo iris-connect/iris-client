@@ -2442,8 +2442,6 @@ export const IrisClientFrontendApiAxiosParamCreator = function (
       if (configuration) {
         baseOptions = configuration.baseOptions;
       }
-      console.log("second async called");
-      console.log(feedbackObject);
       const localVarRequestOptions = {
         method: "POST",
         ...baseOptions,
@@ -2828,7 +2826,6 @@ export const IrisClientFrontendApiFp = function (
         feedbackObject,
         options
       );
-      console.log("first async worked");
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -3037,7 +3034,6 @@ export const IrisClientFrontendApiFactory = function (
       options?: any
     ): AxiosPromise<any> {
       //TODO any to whatever we need
-      console.log("Factory call succesfull");
       return localVarFp
         .feedbackPost(feedbackObject, options)
         .then((request) => request(axios, basePath));

@@ -260,9 +260,7 @@ export default class FeedbackDialog extends Vue {
     );
     try {
       feedbackClient.feedbackPost(this.form.model);
-      console.log("Post succeded");
     } catch (e) {
-      console.log("Post failed");
       throw e;
     }
   }
