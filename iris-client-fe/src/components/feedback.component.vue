@@ -305,10 +305,9 @@ export default class FeedbackDialog extends Vue {
    */
   confirm() {
     this.showConfirmDialog = false;
-    this.showFinishedDialog = true;
     this.show = false;
-    this.showFinishedDialog = true;
     this.sendFeedback();
+    this.showFinishedDialog = true;
   }
 
   /**
