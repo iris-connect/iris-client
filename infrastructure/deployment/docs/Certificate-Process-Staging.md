@@ -8,7 +8,21 @@ Bestimmen Sie den offiziellen RKI Namen Ihres Gesundheitsamtes. Gehen Sie dafür
 
 ### Austellung: TLS-Zertifikat - Private Proxy
 
-ToDo
+Für die Staging Umgebung wird die Test-Domain `proxy.test-gesundheitsamt.de` vom IRIS Team bereit gestellt. Sie können sich dafür ein selbst signiertes Zertifikat ausstellen.
+
+```
+→ openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout proxy.test-gesundheitsamt.de.key -out proxy.test-gesundheitsamt.de.crt
+Generating a RSA private key
+writing new private key to 'proxy.test-gesundheitsamt.de.key'
+-----
+Country Name (2 letter code) [AU]: <leer>
+State or Province Name (full name) [Some-State]: <leer>
+Locality Name (eg, city) []: <leer>
+Organization Name (eg, company) [Internet Widgits Pty Ltd]: <leer>
+Organizational Unit Name (eg, section) []: <leer>
+Common Name (e.g. server FQDN or YOUR name) []: proxy.test-gesundheitsamt.de.crt**
+Email Address []: <leer>
+```
 
 
 ### Austellung: mTLS-Zertifikat - EPS ( IRIS Client BFF )
