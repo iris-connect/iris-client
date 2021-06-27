@@ -103,10 +103,6 @@ cd ../../
 
 printf "\n  Push images and tags to docker registry  \n\n"
 
-printf "\n  Sleep  \n\n"
-exit
-sleep 10000
-
 docker push $BFF_IMAGE_NAME:$VERSION
 docker push $BFF_IMAGE_NAME:latest
 docker push $BFF_IMAGE_NAME:$MAJOR
