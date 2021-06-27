@@ -179,6 +179,23 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="showFinishedDialog" max-width="20%">
+      <v-card style="height: fit-content">
+        <v-card-title class="justify-center">
+          <span>Danke!</span>
+        </v-card-title>
+        <v-divider class="theme--light primary" />
+        <v-card-text class="mt-3" style="text-align: center">
+          Ihr Feedback wurde erfolgreich versendet.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" @click="showFinishedDialog = false">
+            OK
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -192,10 +209,17 @@ import {
 import axios, { AxiosResponse } from "axios";
 import config from "@/config";
 
+/**
+ * The data transfer object
+ */
 type FeedbackForm = {
   model: FeedbackInsert;
 };
 
+/**
+ * The Feedbackdialog is a view, only visible if the connected button is pressed. It follows the rules of the dialog and has form rules for being able to be send.
+ * The fields categorie, titel and text has to be filled and within letter limit.
+ */
 @Component
 export default class FeedbackDialog extends Vue {
   form: FeedbackForm = {
@@ -211,6 +235,7 @@ export default class FeedbackDialog extends Vue {
   show = false;
   showCancelDialog = false;
   showConfirmDialog = false;
+  showFinishedDialog = false;
   isFormValid = false;
   kategoryRules = [(content: any) => !!content || "Pflichtfeld"];
   titelRules = [
@@ -231,22 +256,36 @@ export default class FeedbackDialog extends Vue {
       /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(content) ||
       "E-mail muss gültig oder leer sein.",
   ];
-  cancel() {
+
+  /**
+   * privately used function to close the feedback dialog
+   */
+  cancel(): void {
     this.showCancelDialog = false;
     this.show = false;
   }
 
+  /**
+   * privately used function to get the user name to display in the name text field.
+   */
   userDisplayName(): string {
     return this.$store.getters["userLogin/userDisplayName"];
   }
 
+  /**
+   * privately used function to close the feedback dialog and call the sendFeedback function
+   */
   confirm() {
     this.showConfirmDialog = false;
     this.show = false;
-    this.sendStuff();
+    this.showFinishedDialog = true;
+    this.sendFeedback();
   }
 
-  sendStuff() {
+  /**
+   * makes a instance of the api class and attempts to send the feedback to the Server.
+   */
+  sendFeedback() {
     const authAxiosInstance = axios.create();
     const { apiBaseURL } = config;
     const clientConfig = new Configuration({
@@ -260,7 +299,9 @@ export default class FeedbackDialog extends Vue {
     );
     try {
       feedbackClient.feedbackPost(this.form.model);
+      console.log("test");
     } catch (e) {
+      console.log("test");
       throw e;
     }
   }
