@@ -1623,7 +1623,49 @@ export interface UserUpdate {
    */
   role?: UserRole;
 }
-
+/**
+ *
+ * @export
+ * @interface FeedbackInsert
+ */
+export interface FeedbackInsert {
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  category: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  title: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  comment: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  organisation: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  email: string;
+}
 /**
  * IrisClientFrontendApi - axios parameter creator
  * @export
@@ -2388,7 +2430,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (
      * @throws {RequiredError}
      */
     feedbackPost: async (
-      feedbackObject: string,
+      feedbackObject: FeedbackInsert,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'userInsert' is not null or undefined
@@ -2401,7 +2443,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (
         baseOptions = configuration.baseOptions;
       }
       console.log("second async called");
-
+      console.log(feedbackObject);
       const localVarRequestOptions = {
         method: "POST",
         ...baseOptions,
@@ -2777,7 +2819,7 @@ export const IrisClientFrontendApiFp = function (
       );
     },
     async feedbackPost(
-      feedbackObject: string,
+      feedbackObject: FeedbackInsert,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
@@ -2990,7 +3032,10 @@ export const IrisClientFrontendApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    feedbackPost(feedbackObject: string, options?: any): AxiosPromise<any> {
+    feedbackPost(
+      feedbackObject: FeedbackInsert,
+      options?: any
+    ): AxiosPromise<any> {
       //TODO any to whatever we need
       console.log("Factory call succesfull");
       return localVarFp

@@ -175,6 +175,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+    <FeedbackDialog> </FeedbackDialog>
   </div>
 </template>
 <style></style>
@@ -194,6 +195,7 @@ import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import dayjs from "@/utils/date";
 import ContactCategories from "@/constants/ContactCategories";
+import FeedbackDialog from "@/components/feedback.view.vue";
 
 type IndexData = {
   extID: string;
@@ -259,6 +261,7 @@ function getFormattedAddress(address?: Address | null): string {
 @Component({
   components: {
     IndexTrackingDetailsView: IndexTrackingDetailsView,
+    FeedbackDialog,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();

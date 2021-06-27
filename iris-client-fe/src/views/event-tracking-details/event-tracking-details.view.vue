@@ -110,24 +110,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-    <FeedbackDialog>
-      <template v-slot:activator="{ on }">
-        <v-btn
-          class="mr-0 mb-0"
-          large
-          fab
-          dark
-          fixed
-          bottom
-          right
-          :max-height="48"
-          :max-width="48"
-          v-on="on"
-        >
-          <v-icon :size="30"> mdi-chat-alert-outline </v-icon>
-        </v-btn>
-      </template>
-    </FeedbackDialog>
+    <FeedbackDialog> </FeedbackDialog>
   </div>
 </template>
 <style></style>
