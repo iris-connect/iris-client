@@ -6,7 +6,6 @@
 ########################################################
 version: "3.4"
 services:
-  # IRIS Client backend for frontend
   iris-client:
     image: inoeg/iris-client-bff:1.0
     expose:
@@ -44,15 +43,14 @@ services:
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: inoeg/eps:v0.1.21
+    image: inoeg/iris-client-eps:1.0
     expose:
       - 4446
       - 5556
     depends_on:
       - iris-client
     volumes:
-      - ./conf/eps:/app/settings
-      - ./ca:/app/settings/ca
+      - ./certs:/app/settings/certs
     environment:
       EPS_SETTINGS: "settings/roles/${IRIS_ENV}/hd"
       EPS_OP:
@@ -63,17 +61,14 @@ services:
       HTTPS_PROXY: ${PROXY_URL}
       PROXY_URL: ${PROXY_URL}
 
-    command: ["--level", "trace", "server", "run"]
-
   # Proxy for inbound connections.
   private-proxy:
-    image: inoeg/proxy:v0.1.21
+    image: inoeg/iris-client-proxy:1.0
     expose:
       - 5545
       - 8877
     volumes:
-      - ./conf/proxy:/app/settings
-      - ./ca:/app/settings/ca
+      - ./certs:/app/settings/certs
       - proxy_db_iris:/app/db
     environment:
       PROXY_SETTINGS: "settings/roles/${IRIS_ENV}/private-proxy"
@@ -87,15 +82,15 @@ services:
     command: ["--level", "trace", "run", "private"]
     depends_on:
       - logger
+      - private-proxy-eps
 
   private-proxy-eps:
-    image: inoeg/eps:v0.1.21
+    image: inoeg/iris-client-eps:1.0
     expose:
       - 7766
       - 7776
     volumes:
-      - ./conf/proxy:/app/settings
-      - ./ca:/app/settings/ca
+      - ./certs:/app/settings/certs
     environment:
       EPS_SETTINGS: settings/roles/${IRIS_ENV}/private-proxy-eps
       PROXY_OP:
@@ -105,7 +100,6 @@ services:
       EPS_SD_NAME:
       HTTPS_PROXY: ${PROXY_URL}
       PROXY_URL: ${PROXY_URL}
-    command: ["--level", "trace", "server", "run"]
     depends_on:
       - logger
 
