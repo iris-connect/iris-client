@@ -50,7 +50,7 @@ IRIS stellt zwei Umgebungen bereit. Staging zum Testen und Live für den Produkt
 | mTLS-Zertifikat - EPS ( IRIS Client BFF )         | Der IRIS-Client benutzt ein für das GA ausgestelltes mTLS Zertifikat um mit den zentralen IRIS Services zu kommunizieren. Darüber hinaus werden alle Anfragen die vom IRIS-Client ausgehen mit dem Zertifikat signiert. Der Austellungs-Prozess für die **Staging Umgebung** ist [hier](Certificate-Process-Staging.md) dokumentiert. Der Austellungs-Prozess für die **Live Umgebung** ist [hier](Certificate-Process_Prod_technical.md) dokumentiert. |
 | mTLS-Zertifikat - EPS ( IRIS Private Proxy ) | Der Proxy benutzt ein für das GA ausgestelltes mTLS Zertifikat um mit den public-Proxy zu kommunizieren und eingehende Verbindungen z.B. zum Übertragen von Kontakttagebüchern zuzulassen. Der Austellungs-Prozess für die **Staging Umgebung** ist [hier](Certificate-Process-Staging.md) dokumentiert. Der Austellungs-Prozess für die **Live Umgebung** ist [hier](Certificate-Process_Prod_technical.md) dokumentiert.                                   |
 
-> Für die Live Umgebung werden die beiden EPS Zertifikate durch eins abgebildet. 
+> In der Live Umgebung handelt es sich bei den beiden EPS Zertifikate um das gleiche Zertifikat.
 
 
 ### Des Weiteren gibt es folgende infrastrukturelle Anhängigkeiten
