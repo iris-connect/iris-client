@@ -38,7 +38,7 @@ services:
 
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-bff:1.0
+    image: inoeg/iris-client-bff:develop
     expose:
       - 8092
     environment:
@@ -62,7 +62,7 @@ services:
 
   # IRIS Client Frontend for users
   iris-frontend:
-    image: inoeg/iris-client-frontend:1.0
+    image: inoeg/iris-client-frontend:develop
     expose:
       - 28080
     environment:
@@ -76,14 +76,14 @@ services:
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: inoeg/iris-client-eps:1.0
+    image: inoeg/iris-client-eps:develop
     expose:
       - 4446
       - 5556
     depends_on:
       - iris-client
     volumes:
-      - ./certs:/app/settings/certs
+      - ./certs/eps:/app/settings/certs
     environment:
       EPS_SETTINGS: "settings/roles/${IRIS_ENV}/hd"
       EPS_OP:
@@ -96,12 +96,12 @@ services:
 
   # Proxy for inbound connections.
   private-proxy:
-    image: inoeg/iris-client-proxy:1.0
+    image: inoeg/iris-client-proxy:develop
     expose:
       - 5545
       - 8877
     volumes:
-      - ./certs:/app/settings/certs
+      - ./certs/eps:/app/settings/certs
       - proxy_db_iris:/app/db
     environment:
       PROXY_SETTINGS: "settings/roles/${IRIS_ENV}/private-proxy"
@@ -118,12 +118,12 @@ services:
       - private-proxy-eps
 
   private-proxy-eps:
-    image: inoeg/iris-client-eps:1.0
+    image: inoeg/iris-client-eps:develop
     expose:
       - 7766
       - 7776
     volumes:
-      - ./certs:/app/settings/certs
+      - ./certs/eps:/app/settings/certs
     environment:
       EPS_SETTINGS: settings/roles/${IRIS_ENV}/private-proxy-eps
       PROXY_OP:
@@ -138,7 +138,7 @@ services:
 
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:1.0
+    image: inoeg/iris-client-nginx:develop
     ports:
       - ${IRIS_CLIENT_PORT:-443}:443
     environment:
@@ -146,7 +146,7 @@ services:
       IRIS_CLIENT_DOMAIN_CERT:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
     volumes:
-      - ./conf/nginx:/etc/iris
+      - ./certs/nginx:/etc/iris
     depends_on:
       - iris-client
       - iris-frontend
