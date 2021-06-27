@@ -103,7 +103,7 @@ import {
   ExistingDataRequestClientWithLocation,
 } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
-import FeedbackDialog from "@/components/feedback.view.vue";
+import FeedbackDialog from "@/components/feedback.component.vue";
 import { ErrorMessage } from "@/utils/axios";
 
 function getStatusColor(

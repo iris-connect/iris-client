@@ -90,7 +90,7 @@ import router from "@/router";
 import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
 import DateTimeInputField from "@/components/form/date-time-input-field.vue";
-import FeedbackDialog from "@/components/feedback.view.vue";
+import FeedbackDialog from "@/components/feedback.component.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
 
 type IndexTrackingForm = {

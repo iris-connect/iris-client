@@ -90,7 +90,7 @@ import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import IndexTrackingFormView from "../index-tracking-form/index-tracking-form.view.vue";
 import StatusColors from "@/constants/StatusColors";
-import FeedbackDialog from "@/components/feedback.view.vue";
+import FeedbackDialog from "@/components/feedback.component.vue";
 import StatusMessages from "@/constants/StatusMessages";
 
 function getFormattedDate(date?: string): string {

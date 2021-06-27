@@ -92,7 +92,7 @@ import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
 import { orderBy } from "lodash";
 import dayjs from "@/utils/date";
-import FeedbackDialog from "@/components/feedback.view.vue";
+import FeedbackDialog from "@/components/feedback.component.vue";
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation

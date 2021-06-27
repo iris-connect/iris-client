@@ -140,7 +140,7 @@ import DateTimeInputField from "@/components/form/date-time-input-field.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
 import EventTrackingFormLocationInfo from "@/views/event-tracking-form/components/event-tracking-form-location-info.vue";
 import rules from "@/common/validation-rules";
-import FeedbackDialog from "@/components/feedback.view.vue";
+import FeedbackDialog from "@/components/feedback.component.vue";
 
 type EventTrackingForm = {
   model: EventTrackingFormModel;

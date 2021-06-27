@@ -130,7 +130,7 @@ import dayjs from "@/utils/date";
 import Genders from "@/constants/Genders";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
-import FeedbackDialog from "@/components/feedback.view.vue";
+import FeedbackDialog from "@/components/feedback.component.vue";
 
 type EventData = {
   extID: string;
