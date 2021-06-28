@@ -31,11 +31,11 @@ public class EPSSearchClient implements SearchClient {
 		var payload = IdSearch.builder().providerId(providerId).locationId(locationId).build();
 
 		LocationInformation locationInformation;
+		var methodName = config.getEndpoint() + ".getLocationDetails";
 		try {
-			var methodName = config.getEndpoint() + ".getLocationDetails";
 			locationInformation = epsRpcClient.invoke(methodName, payload, LocationInformation.class);
 		} catch (Throwable t) {
-			throw new IRISSearchException(t);
+			throw new IRISSearchException(methodName, t);
 		}
 
 		// TODO check: why do we need to do this?
@@ -66,11 +66,11 @@ public class EPSSearchClient implements SearchClient {
 		}
 
 		KeywordSearch search = KeywordSearch.builder().searchKeyword(keyword).pageable(pageableDto).build();
+		var methodName = config.getEndpoint() + ".searchForLocation";
 		try {
-			var methodName = config.getEndpoint() + ".searchForLocation";
 			return epsRpcClient.invoke(methodName, search, LocationQueryResult.class);
 		} catch (Throwable t) {
-			throw new IRISSearchException(t);
+			throw new IRISSearchException(methodName, t);
 		}
 	}
 }

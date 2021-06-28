@@ -16,7 +16,10 @@ public class ResponseStatusExceptionMapper {
         // defaults
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         String reason;
-        String internalMsg = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+        String internalMsg = ex.getMessage() != null ? ex.getMessage() : "";
+        if(ex.getCause() != null) {
+            internalMsg += ": " + ex.getCause().getMessage();
+        }
 
         if(ex instanceof IRISSearchException) {
 
