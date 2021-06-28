@@ -2,10 +2,13 @@ package iris.client_bff.cases;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
+import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
+import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 
 import java.time.Instant;
 
@@ -25,6 +28,9 @@ public class CaseDataRequestServiceTest {
 	CaseDataRequestRepository repository;
 
 	@Mock
+	CaseEmailProvider emailProvider;
+
+	@Mock
 	ProxyServiceClient proxyServiceClient;
 
 	DwConfig dwConfig;
@@ -34,7 +40,7 @@ public class CaseDataRequestServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		service = new CaseDataRequestService(repository, proxyServiceClient, dwConfig, hdConfig);
+		service = new CaseDataRequestService(repository, emailProvider, proxyServiceClient, dwConfig, hdConfig);
 	}
 
 	@Test
@@ -57,5 +63,25 @@ public class CaseDataRequestServiceTest {
 
 		verify(repository).getCountWithStatus(status);
 		assertEquals(value, 20);
+	}
+
+	@Test
+	void sendDataRecievedEmailWithStatusUpdated() {
+		IndexCaseDetailsDTO updated = IndexCaseDetailsDTO.builder().build();
+		IndexCaseStatusDTO status = IndexCaseStatusDTO.DATA_RECEIVED;
+
+		service.sendDataRecievedEmail(updated, status);
+
+		verify(emailProvider, times(1)).sendDataRecievedEmail(any());
+	}
+
+	@Test
+	void sendDataRecievedEmailWithStatusNotUpdated() {
+		IndexCaseDetailsDTO updated = IndexCaseDetailsDTO.builder().build();
+		IndexCaseStatusDTO status = IndexCaseStatusDTO.DATA_REQUESTED;
+
+		service.sendDataRecievedEmail(updated, status);
+
+		verify(emailProvider, times(0)).sendDataRecievedEmail(any());
 	}
 }

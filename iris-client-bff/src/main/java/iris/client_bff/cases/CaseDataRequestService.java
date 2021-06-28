@@ -3,7 +3,9 @@ package iris.client_bff.cases;
 import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.dto.DwUrlParamDto;
+import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
+import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.config.DwConfig;
 import iris.client_bff.config.HealthDepartmentConfig;
@@ -30,7 +32,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AllArgsConstructor
 public class CaseDataRequestService {
 
-	private final CaseDataRequestRepository repository;
+	CaseDataRequestRepository repository;
+	CaseEmailProvider caseEmailProvider;
 	private final ProxyServiceClient proxyClient;
 	private final DwConfig dwConfig;
 	private final HealthDepartmentConfig hdConfig;
@@ -81,18 +84,16 @@ public class CaseDataRequestService {
 			throw new IRISDataRequestException(e);
 		}
 
-		var dataRequest = CaseDataRequest
-				.builder()
-				.comment(insert.getComment())
-				.refId(insert.getExternalCaseId())
-				.name(insert.getName())
-				.requestStart(insert.getStart())
-				.requestEnd(insert.getEnd())
-				.announcementToken(announcementToken)
-				.build();
+		var dataRequest = CaseDataRequest.builder()
+			.comment(insert.getComment())
+			.refId(insert.getExternalCaseId())
+			.name(insert.getName())
+			.requestStart(insert.getStart())
+			.requestEnd(insert.getEnd())
+			.announcementToken(announcementToken)
+			.build();
 
 		dataRequest.setDwSubmissionUri(generateDwUrl(dataRequest));
-
 		return repository.save(dataRequest);
 	}
 
@@ -102,6 +103,12 @@ public class CaseDataRequestService {
 
 	public int getCountWithStatus(Status status) {
 		return repository.getCountWithStatus(status);
+	}
+
+	public void sendDataRecievedEmail(IndexCaseDetailsDTO indexCaseDetailsDTO, IndexCaseStatusDTO status) {
+		if (status == IndexCaseStatusDTO.DATA_RECEIVED) {
+			caseEmailProvider.sendDataRecievedEmail(indexCaseDetailsDTO);
+		}
 	}
 
 	private String generateDwUrl(CaseDataRequest dataRequest) throws IRISDataRequestException {

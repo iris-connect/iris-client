@@ -78,9 +78,7 @@ public class CaseDataRequestController {
 				.map((dataRequest -> {
 					var indexCaseDetailsDTO = mapDetailed(dataRequest);
 
-					submissionService.findByRequest(dataRequest).ifPresent(submission -> {
-						indexCaseDetailsDTO.setSubmissionData(submission);
-					});
+					submissionService.findByRequest(dataRequest).ifPresent(indexCaseDetailsDTO::setSubmissionData);
 
 					return indexCaseDetailsDTO;
 				}))
@@ -90,13 +88,15 @@ public class CaseDataRequestController {
 
 	@PatchMapping("/{id}")
 	@ResponseStatus(OK)
-	public ResponseEntity<IndexCaseDetailsDTO> update(@PathVariable UUID id,
-			@RequestBody @Valid IndexCaseUpdateDTO update) {
+	public ResponseEntity<IndexCaseDetailsDTO> update(@PathVariable UUID id, @RequestBody @Valid IndexCaseUpdateDTO update) {
+		ResponseEntity<IndexCaseDetailsDTO> responseEntity = caseDataRequestService.findDetailed(id)
+			.map(it -> caseDataRequestService.update(it, update))
+			.map(IndexCaseMapper::mapDetailed)
+			.map(ResponseEntity::ok)
+			.orElseGet(ResponseEntity.notFound()::build);
 
-		return caseDataRequestService.findDetailed(id)
-				.map(it -> caseDataRequestService.update(it, update))
-				.map(IndexCaseMapper::mapDetailed)
-				.map(ResponseEntity::ok)
-				.orElseGet(ResponseEntity.notFound()::build);
+		caseDataRequestService.sendDataRecievedEmail(responseEntity.getBody(), update.getStatus());
+
+		return responseEntity;
 	}
 }
