@@ -1,0 +1,72 @@
+vars:
+  APP_CN:
+    source: env
+    variable: APP_CN
+    type: string
+  APP_EPS_CERT:
+    source: env
+    variable: APP_EPS_CERT
+    type: string
+  APP_EPS_KEY:
+    source: env
+    variable: APP_EPS_KEY
+    type: string
+  APP_BACKEND_ENDPOINT:
+    source: env
+    variable: APP_BACKEND_ENDPOINT
+    type: string
+
+name: "$APP_CN"
+directory:
+  type: api
+  settings:
+    jsonrpc_client:
+      tls:
+        certificate_file: "$DIR/../../../certs/$APP_CN.crt"
+        key_file: "$DIR/../../../certs/$APP_CN.key"
+        ca_certificate_files:
+          - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+          - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
+    ca_certificate_files:
+      - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+      - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
+    endpoints: [ "https://test.iris-gateway.de:32324/jsonrpc" ]
+    server_names: [ "sd-1" ]
+channels: # defines all the channels that we want to open when starting the server
+  - name: Stdout channel
+    type: stdout
+    settings: {}
+  - name: main gRPC server # accepts incoming gRPC connections to deliver and receive messages
+    type: grpc_server
+    settings:
+      bind_address: "0.0.0.0:4444" # do not change port.
+      tls:
+        ca_certificate_files:
+          - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+          - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
+        certificate_file: "$DIR/../../../certs/$APP_CN.crt"
+        key_file: "$DIR/../../../certs/$APP_CN.key"
+  - name: main JSON-RPC server # accepts incoming JSONRPC connections to deliver and receive messages
+    type: jsonrpc_server
+    settings:
+      bind_address: "0.0.0.0:5556"
+      tls:
+        ca_certificate_files:
+          - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+          - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
+        certificate_file: "$DIR/../../../certs/$APP_CN.crt"
+        key_file: "$DIR/../../../certs/$APP_CN.key"
+        verify_client: false
+  - name: main JSON-RPC client # creates outgoing JSONRPC connections to deliver and receive messages
+    type: jsonrpc_client
+    settings:
+      endpoint: "$APP_BACKEND_ENDPOINT"
+  - name: main gRPC client
+    type: grpc_client
+    settings:
+      tls:
+        ca_certificate_files:
+          - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+          - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
+        certificate_file: "$DIR/../../../certs/$APP_CN.crt"
+        key_file: "$DIR/../../../certs/$APP_CN.key"
