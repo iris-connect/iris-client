@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -62,7 +63,7 @@ public class IndexCaseMapper {
 							.phone(contact.getPhone())
 							.email(contact.getEmail())
 							.mobilePhone(contact.getMobilePhone())
-							.sex(Sex.valueOf(contact.getSex().name()))
+							.sex(Sex.valueOf(Optional.ofNullable(contact.getSex()).orElse(Sex.UNKNOWN).name()))
 							.build();
 
 					if (contact.getAddress() != null) {
@@ -114,19 +115,25 @@ public class IndexCaseMapper {
 
 		var events = EventList.builder()
 				.events(submission.getEvents().stream().map(event -> {
-					var address = Address.builder()
-							.city(event.getAddress().getCity())
-							.houseNumber(event.getAddress().getHouseNumber())
-							.street(event.getAddress().getStreet())
-							.zipCode(event.getAddress().getZipCode())
-							.build();
 
-					return Event.builder()
-							.address(address)
+					var eventResult = Event.builder()
 							.name(event.getName())
 							.phone(event.getPhone())
 							.additionalInformation(event.getAdditionalInformation())
 							.build();
+
+					iris.client_bff.core.model.Address addressDB = event.getAddress();
+					if(addressDB != null) {
+						var address = Address.builder()
+								.city(addressDB.getCity())
+								.houseNumber(addressDB.getHouseNumber())
+								.street(addressDB.getStreet())
+								.zipCode(addressDB.getZipCode())
+								.build();
+						eventResult.setAddress(address);
+					}
+
+					return eventResult;
 				}).collect(Collectors.toList()))
 				.endDate(LocalDate.ofInstant(submission.getEventsEndDate(), ZoneId.of("CET")))
 				.startDate(LocalDate.ofInstant(submission.getEventsStartDate(), ZoneId.of("CET")))

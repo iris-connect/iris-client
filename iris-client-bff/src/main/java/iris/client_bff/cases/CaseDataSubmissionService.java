@@ -98,7 +98,9 @@ public class CaseDataSubmissionService {
 
 					Optional.ofNullable(it.getContactInformation()).ifPresent(contactInformation -> {
 						mapped.setBasicConditions(contactInformation.getBasicConditions());
-						mapped.setContactCategory(Contact.ContactCategory.valueOf(contactInformation.getContactCategory().name()));
+						if(contactInformation.getContactCategory() != null) {
+							mapped.setContactCategory(Contact.ContactCategory.valueOf(contactInformation.getContactCategory().name()));
+						}
 						mapped.setFirstContactDate(contactInformation.getFirstContactDate());
 						mapped.setLastContactDate(contactInformation.getLastContactDate());
 					});

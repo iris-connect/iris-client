@@ -112,7 +112,7 @@ public class CaseDataRequestService {
 					dataRequest.getAnnouncementToken(),	hdConfig.getZipCode());
 			String paramsAsJson = new ObjectMapper().writeValueAsString(dwUrlParamDto);
 			paramsAsJsonBase64 = Base64.getEncoder().encodeToString(paramsAsJson.getBytes());
-			log.info("Generated Base64 encoded params: {}", dwUrlParamDto);
+			log.debug("Generated Base64 encoded params: {}", dwUrlParamDto);
 		} catch(Exception e) {
 			log.error("Generating DW URL failed", e);
 			throw new IRISDataRequestException(e);
