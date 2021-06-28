@@ -233,7 +233,7 @@ Wie in der [Architektur](./Architektur.md) beschrieben kann der IRIS Client übe
 
 Die Domain unterscheidet sich je nach Umgebung. 
 
-Für Staging gibt es eine vom IRIS Team zur Verfügung gestellte Domain namens `proxy.test-gesundheitsamt.de`. 
+Für Staging gibt es eine vom IRIS Team zur Verfügung gestellte Domain namens `staging.test-gesundheitsamt.de`. 
 
 Für die Live-Umgebung wurde Ihnen die Domain vom Land zentral bereit gestellt. Sie sollten dazu Informationen erhalten haben.
 
