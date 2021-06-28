@@ -6,7 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getAllActiveUuids6**](PrescriptionControllerApi.md#getAllActiveUuids6) | **GET** /prescriptions/uuids | 
 [**getAllPrescriptions**](PrescriptionControllerApi.md#getAllPrescriptions) | **GET** /prescriptions/all/{since} | 
-[**getByUuids20**](PrescriptionControllerApi.md#getByUuids20) | **POST** /prescriptions/query | 
+[**getByUuids23**](PrescriptionControllerApi.md#getByUuids23) | **POST** /prescriptions/query | 
 [**postPrescriptions**](PrescriptionControllerApi.md#postPrescriptions) | **POST** /prescriptions/push | 
 
 <a name="getAllActiveUuids6"></a>
@@ -30,6 +30,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PrescriptionControllerApi apiInstance = new PrescriptionControllerApi();
 try {
     List<String> result = apiInstance.getAllActiveUuids6();
@@ -49,7 +50,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -77,6 +78,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PrescriptionControllerApi apiInstance = new PrescriptionControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -100,16 +102,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids20"></a>
-# **getByUuids20**
-> List&lt;PrescriptionDto&gt; getByUuids20(body)
+<a name="getByUuids23"></a>
+# **getByUuids23**
+> List&lt;PrescriptionDto&gt; getByUuids23(body)
 
 
 
@@ -128,13 +130,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PrescriptionControllerApi apiInstance = new PrescriptionControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<PrescriptionDto> result = apiInstance.getByUuids20(body);
+    List<PrescriptionDto> result = apiInstance.getByUuids23(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling PrescriptionControllerApi#getByUuids20");
+    System.err.println("Exception when calling PrescriptionControllerApi#getByUuids23");
     e.printStackTrace();
 }
 ```
@@ -151,7 +154,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -179,6 +182,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 PrescriptionControllerApi apiInstance = new PrescriptionControllerApi();
 List<PrescriptionDto> body = Arrays.asList(new PrescriptionDto()); // List<PrescriptionDto> | 
 try {
@@ -202,7 +206,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**creationDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**changeDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**creationDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**changeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **uuid** | **String** |  |  [optional]
 **pseudonymized** | **Boolean** |  |  [optional]
 **abdominalPain** | [**SymptomState**](SymptomState.md) |  |  [optional]
@@ -56,7 +56,7 @@ Name | Type | Description | Notes
 **lesionsFace** | **Boolean** |  |  [optional]
 **lesionsGenitals** | **Boolean** |  |  [optional]
 **lesionsLegs** | **Boolean** |  |  [optional]
-**lesionsOnsetDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**lesionsOnsetDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **lesionsPalmsHands** | **Boolean** |  |  [optional]
 **lesionsResembleImg1** | [**SymptomState**](SymptomState.md) |  |  [optional]
 **lesionsResembleImg2** | [**SymptomState**](SymptomState.md) |  |  [optional]
@@ -80,7 +80,7 @@ Name | Type | Description | Notes
 **noseBleeding** | [**SymptomState**](SymptomState.md) |  |  [optional]
 **oedemaFaceNeck** | [**SymptomState**](SymptomState.md) |  |  [optional]
 **oedemaLowerExtremity** | [**SymptomState**](SymptomState.md) |  |  [optional]
-**onsetDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**onsetDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **onsetSymptom** | **String** |  |  [optional]
 **oralUlcers** | [**SymptomState**](SymptomState.md) |  |  [optional]
 **otherHemorrhagicSymptoms** | [**SymptomState**](SymptomState.md) |  |  [optional]

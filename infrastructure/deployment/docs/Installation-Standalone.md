@@ -1,4 +1,15 @@
+# Achtung
+
+Aktueller Status: Aktuell befindet ist dieser Installationsprozess nocht nicht finalisiert. Hier wird es bald Updates geben. Stand: ( 24.06.2021 )
+
+<br />
+<br />
+<br />
+
+---
+
 # IRIS Client - Stand-Alone Installation
+
 
 Für diese Installationsart werden alle Komponenten des IRIS Clients separat auf einem Server installiert. Das folgende Schaubild visualisiert das Setup.
 
@@ -39,6 +50,6 @@ Bei dem IRIS Backend handelt es sich um eine Java Applikation (min Java 11).
 4. Starten der Java Applikation (Beispiel Version: v1.0.3-alpha)
 
    ```
-   java -jar iris-client-bff-v1.0.3-alpha.jar
+   java -jar iris-client-bff-v1.0.3-alpha.jar -Dlogging.file.name=iris-client-bff.log
    ```
 

@@ -6,7 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getAllActiveUuids9**](TreatmentControllerApi.md#getAllActiveUuids9) | **GET** /treatments/uuids | 
 [**getAllTreatments**](TreatmentControllerApi.md#getAllTreatments) | **GET** /treatments/all/{since} | 
-[**getByUuids24**](TreatmentControllerApi.md#getByUuids24) | **POST** /treatments/query | 
+[**getByUuids28**](TreatmentControllerApi.md#getByUuids28) | **POST** /treatments/query | 
 [**postTreatments**](TreatmentControllerApi.md#postTreatments) | **POST** /treatments/push | 
 
 <a name="getAllActiveUuids9"></a>
@@ -30,6 +30,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 TreatmentControllerApi apiInstance = new TreatmentControllerApi();
 try {
     List<String> result = apiInstance.getAllActiveUuids9();
@@ -49,7 +50,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -77,6 +78,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 TreatmentControllerApi apiInstance = new TreatmentControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -100,16 +102,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids24"></a>
-# **getByUuids24**
-> List&lt;TreatmentDto&gt; getByUuids24(body)
+<a name="getByUuids28"></a>
+# **getByUuids28**
+> List&lt;TreatmentDto&gt; getByUuids28(body)
 
 
 
@@ -128,13 +130,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 TreatmentControllerApi apiInstance = new TreatmentControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<TreatmentDto> result = apiInstance.getByUuids24(body);
+    List<TreatmentDto> result = apiInstance.getByUuids28(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling TreatmentControllerApi#getByUuids24");
+    System.err.println("Exception when calling TreatmentControllerApi#getByUuids28");
     e.printStackTrace();
 }
 ```
@@ -151,7 +154,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -179,6 +182,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 TreatmentControllerApi apiInstance = new TreatmentControllerApi();
 List<TreatmentDto> body = Arrays.asList(new TreatmentDto()); // List<TreatmentDto> | 
 try {
@@ -202,7 +206,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

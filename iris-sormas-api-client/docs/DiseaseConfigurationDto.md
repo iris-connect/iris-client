@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**creationDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**changeDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**creationDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**changeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **uuid** | **String** |  |  [optional]
 **disease** | [**Disease**](Disease.md) |  |  [optional]
 **active** | **Boolean** |  |  [optional]
@@ -14,3 +14,5 @@ Name | Type | Description | Notes
 **followUpDuration** | **Integer** |  |  [optional]
 **caseFollowUpDuration** | **Integer** |  |  [optional]
 **eventParticipantFollowUpDuration** | **Integer** |  |  [optional]
+**extendedClassification** | **Boolean** |  |  [optional]
+**extendedClassificationMulti** | **Boolean** |  |  [optional]

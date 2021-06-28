@@ -3,11 +3,11 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**creationDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**changeDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**creationDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**changeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **uuid** | **String** |  |  [optional]
 **sample** | [**SampleReferenceDto**](SampleReferenceDto.md) |  |  [optional]
-**testDateTime** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**testDateTime** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **haemoglobinuria** | [**SimpleTestResultType**](SimpleTestResultType.md) |  |  [optional]
 **proteinuria** | [**SimpleTestResultType**](SimpleTestResultType.md) |  |  [optional]
 **hematuria** | [**SimpleTestResultType**](SimpleTestResultType.md) |  |  [optional]

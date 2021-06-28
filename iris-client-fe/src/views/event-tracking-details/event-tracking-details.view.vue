@@ -13,7 +13,17 @@
       :errors="errorMessages"
       @field-edit="handleEditableField"
       @status-update="updateRequestStatus"
-      @data-export="handleExport"
+      @data-export="handleStandardCsvExport"
+      @handle-standard-csv-export="handleStandardCsvExport"
+      @handle-alternative-standard-csv-export="
+        handleAlternativeStandardCsvExport
+      "
+      @handle-sormas-csv-event-participants-export="
+        handleSormasCsvEventParticipantsExport
+      "
+      @handle-sormas-csv-contact-person-export="
+        handleSormasCsvContactPersonExport
+      "
     />
   </div>
 </template>
@@ -24,6 +34,7 @@ import {
   DataRequestDetails,
   DataRequestStatus,
   DataRequestStatusUpdateByUser,
+  Guest,
   LocationInformation,
 } from "@/api";
 import router from "@/router";
@@ -69,14 +80,34 @@ export type TableRow = {
   phone: string;
   mobilePhone: string;
   address: string;
+  raw: Guest;
 };
 
-export type ExportData = {
-  headers: Array<{
-    text: string;
-    value: string;
-  }>;
-  rows: string[][];
+export type EventParticipantData = {
+  involvementDescription: string;
+  firstName: string;
+  lastName: string;
+  sex: string;
+  phone: string;
+  email: string;
+  postalCode: string;
+  city: string;
+  street: string;
+  houseNumber: string;
+};
+
+export type ContactCaseData = {
+  description: string;
+
+  firstName: string;
+  lastName: string;
+  sex: string;
+  phone: string;
+  email: string;
+  postalCode: string;
+  city: string;
+  street: string;
+  houseNumber: string;
 };
 
 function getFormattedDate(date?: string | Date): string {
@@ -88,9 +119,19 @@ function getFormattedDate(date?: string | Date): string {
 
 function getFormattedAddress(address?: Address | null): string {
   if (address) {
-    return `${address.street} ${address.houseNumber} \n${address.zipCode} ${address.city}`;
+    return `${sanitiseFieldForDisplay(
+      address.street
+    )} ${sanitiseFieldForDisplay(
+      address.houseNumber
+    )} \n${sanitiseFieldForDisplay(address.zipCode)} ${sanitiseFieldForDisplay(
+      address.city
+    )}`;
   }
   return "-";
+}
+function sanitiseFieldForDisplay(text = ""): string {
+  const RE = RegExp(/\s+/, "g");
+  return text.replace(RE, " ");
 }
 
 @Component({
@@ -255,27 +296,150 @@ export default class EventTrackingDetailsView extends Vue {
       }
       return {
         id: index,
-        lastName: guest.lastName || "-",
-        firstName: guest.firstName || "-",
+        lastName: sanitiseFieldForDisplay(guest.lastName) || "-",
+        firstName: sanitiseFieldForDisplay(guest.firstName) || "-",
         checkInTime,
         checkOutTime,
         maxDuration: maxDuration,
-        comment: guest.attendanceInformation.additionalInformation || "-", // TODO: Line Breaks
+        comment:
+          sanitiseFieldForDisplay(
+            guest.attendanceInformation.additionalInformation
+          ) || "-",
         sex: guest.sex ? Genders.getName(guest.sex) : "-",
-        email: guest.email || "-",
-        phone: guest.phone || "-",
-        mobilePhone: guest.mobilePhone || "-",
+        email: sanitiseFieldForDisplay(guest.email) || "-",
+        phone: sanitiseFieldForDisplay(guest.phone) || "-",
+        mobilePhone: sanitiseFieldForDisplay(guest.mobilePhone) || "-",
         address: getFormattedAddress(guest.address),
+        raw: guest,
       };
     });
   }
 
-  handleExport(payload: ExportData): void {
-    dataExport.exportCsv(
-      payload.headers,
-      payload.rows,
-      [this.eventTrackingDetails?.externalRequestId, Date.now()].join("_")
+  handleStandardCsvExport(payload: Array<Array<string>>): void {
+    dataExport.exportStandardCsvForEventTracking(
+      payload,
+      [
+        this.eventTrackingDetails?.externalRequestId || "Export",
+        Date.now(),
+      ].join("_")
     );
+  }
+
+  handleAlternativeStandardCsvExport(payload: Array<Array<string>>): void {
+    dataExport.exportAlternativeStandardCsvForEventTracking(
+      payload,
+      [
+        this.eventTrackingDetails?.externalRequestId || "Export",
+        Date.now(),
+      ].join("_")
+    );
+  }
+
+  handleSormasCsvEventParticipantsExport(payload: TableRow[]): void {
+    dataExport.exportSormasEventParticipantsCsv(
+      this.convertTableRowToEventParticipationData(payload),
+      [
+        this.eventTrackingDetails?.externalRequestId || "Export",
+        Date.now(),
+      ].join("_")
+    );
+  }
+
+  handleSormasCsvContactPersonExport(payload: TableRow[]): void {
+    dataExport.exportSormasContactPersonCsv(
+      this.convertTableRowToContactCaseData(
+        payload,
+        this.eventTrackingDetails?.externalRequestId || "-"
+      ),
+      [
+        this.eventTrackingDetails?.externalRequestId || "Export",
+        Date.now(),
+      ].join("_")
+    );
+  }
+
+  convertTableRowToContactCaseData(
+    tableRows: TableRow[],
+    externalId: string
+  ): ContactCaseData[] {
+    const data: ContactCaseData[] = [];
+
+    tableRows.forEach((element) => {
+      const description =
+        "Aus Ereignis " +
+        externalId +
+        ": " +
+        element.comment +
+        " // " +
+        element.checkInTime +
+        " Uhr bis " +
+        element.checkOutTime +
+        " Uhr (Maximale Kontaktdauer " +
+        element.maxDuration +
+        ")";
+
+      const dataInstance: ContactCaseData = {
+        description: description,
+        firstName: element.firstName,
+        lastName: element.lastName,
+        sex: element.raw.sex || "",
+        phone: element.phone,
+        email: element.email,
+        postalCode: element.raw.address?.zipCode || "",
+        city: element.raw.address?.city || "",
+        street: element.raw.address?.street || "",
+        houseNumber: element.raw.address?.houseNumber || "",
+      };
+      data.push(dataInstance);
+    });
+    return data;
+  }
+
+  convertTableRowToEventParticipationData(
+    tableRows: TableRow[]
+  ): EventParticipantData[] {
+    const data: EventParticipantData[] = [];
+
+    const headerInstance: EventParticipantData = {
+      involvementDescription: "involvementDescription",
+      firstName: "person.firstName",
+      lastName: "person.lastName",
+      sex: "person.sex",
+      phone: "person.phone",
+      email: "person.emailAddress",
+      postalCode: "person.address.postalCode",
+      city: "person.address.city",
+      street: "person.address.street",
+      houseNumber: "person.address.houseNumber",
+    };
+    data.push(headerInstance);
+
+    tableRows.forEach((element) => {
+      const involvementDescription =
+        element.comment +
+        " // " +
+        element.checkInTime +
+        " Uhr bis " +
+        element.checkOutTime +
+        " Uhr (Maximale Kontaktdauer " +
+        element.maxDuration +
+        ")";
+
+      const dataInstance: EventParticipantData = {
+        involvementDescription: involvementDescription,
+        firstName: element.firstName,
+        lastName: element.lastName,
+        sex: element.raw.sex || "",
+        phone: element.phone,
+        email: element.email,
+        postalCode: element.raw.address?.zipCode || "",
+        city: element.raw.address?.city || "",
+        street: element.raw.address?.street || "",
+        houseNumber: element.raw.address?.houseNumber || "",
+      };
+      data.push(dataInstance);
+    });
+    return data;
   }
 }
 </script>

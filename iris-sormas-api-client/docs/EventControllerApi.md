@@ -7,8 +7,9 @@ Method | HTTP request | Description
 [**getAllActiveUuids4**](EventControllerApi.md#getAllActiveUuids4) | **GET** /events/uuids | 
 [**getAllEvents**](EventControllerApi.md#getAllEvents) | **GET** /events/all/{since} | 
 [**getArchivedUuidsSince1**](EventControllerApi.md#getArchivedUuidsSince1) | **GET** /events/archived/{since} | 
-[**getByUuids14**](EventControllerApi.md#getByUuids14) | **POST** /events/query | 
+[**getByUuids17**](EventControllerApi.md#getByUuids17) | **POST** /events/query | 
 [**getDeletedUuidsSince3**](EventControllerApi.md#getDeletedUuidsSince3) | **GET** /events/deleted/{since} | 
+[**getIndexList2**](EventControllerApi.md#getIndexList2) | **POST** /events/indexList | 
 [**postEvents**](EventControllerApi.md#postEvents) | **POST** /events/push | 
 
 <a name="getAllActiveUuids4"></a>
@@ -32,6 +33,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 EventControllerApi apiInstance = new EventControllerApi();
 try {
     List<String> result = apiInstance.getAllActiveUuids4();
@@ -51,7 +53,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -79,6 +81,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 EventControllerApi apiInstance = new EventControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -102,7 +105,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -130,6 +133,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 EventControllerApi apiInstance = new EventControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -153,16 +157,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids14"></a>
-# **getByUuids14**
-> List&lt;EventDto&gt; getByUuids14(body)
+<a name="getByUuids17"></a>
+# **getByUuids17**
+> List&lt;EventDto&gt; getByUuids17(body)
 
 
 
@@ -181,13 +185,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 EventControllerApi apiInstance = new EventControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<EventDto> result = apiInstance.getByUuids14(body);
+    List<EventDto> result = apiInstance.getByUuids17(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling EventControllerApi#getByUuids14");
+    System.err.println("Exception when calling EventControllerApi#getByUuids17");
     e.printStackTrace();
 }
 ```
@@ -204,7 +209,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -232,6 +237,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 EventControllerApi apiInstance = new EventControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -255,7 +261,61 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json; charset=UTF-8
+
+<a name="getIndexList2"></a>
+# **getIndexList2**
+> PageEventIndexDto getIndexList2(offset, size)
+
+
+
+### Example
+```java
+// Import classes:
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.EventControllerApi;
+
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+// Configure HTTP basic authorization: basicAuth
+HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
+basicAuth.setUsername("YOUR USERNAME");
+basicAuth.setPassword("YOUR PASSWORD");
+
+
+EventControllerApi apiInstance = new EventControllerApi();
+Integer offset = 56; // Integer | 
+Integer size = 56; // Integer | 
+try {
+    PageEventIndexDto result = apiInstance.getIndexList2(offset, size);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling EventControllerApi#getIndexList2");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **offset** | **Integer**|  | [optional]
+ **size** | **Integer**|  | [optional]
+
+### Return type
+
+[**PageEventIndexDto**](PageEventIndexDto.md)
+
+### Authorization
+
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -283,6 +343,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 EventControllerApi apiInstance = new EventControllerApi();
 List<EventDto> body = Arrays.asList(new EventDto()); // List<EventDto> | 
 try {
@@ -306,7 +367,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

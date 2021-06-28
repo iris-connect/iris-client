@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**creationDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
-**changeDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**creationDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
+**changeDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **uuid** | **String** |  |  [optional]
 **pseudonymized** | **Boolean** |  |  [optional]
 **associatedCase** | [**CaseReferenceDto**](CaseReferenceDto.md) |  |  [optional]
@@ -12,8 +12,8 @@ Name | Type | Description | Notes
 **associatedEventParticipant** | [**EventParticipantReferenceDto**](EventParticipantReferenceDto.md) |  |  [optional]
 **labSampleID** | **String** |  |  [optional]
 **fieldSampleID** | **String** |  |  [optional]
-**sampleDateTime** | [**OffsetDateTime**](OffsetDateTime.md) |  | 
-**reportDateTime** | [**OffsetDateTime**](OffsetDateTime.md) |  | 
+**sampleDateTime** | [**Instant**](OffsetDateTime.md) |  | 
+**reportDateTime** | [**Instant**](OffsetDateTime.md) |  | 
 **reportingUser** | [**UserReferenceDto**](UserReferenceDto.md) |  | 
 **reportLat** | **Double** |  |  [optional]
 **reportLon** | **Double** |  |  [optional]
@@ -21,11 +21,11 @@ Name | Type | Description | Notes
 **sampleMaterial** | [**SampleMaterial**](SampleMaterial.md) |  | 
 **sampleMaterialText** | **String** |  |  [optional]
 **samplePurpose** | [**SamplePurpose**](SamplePurpose.md) |  | 
-**lab** | [**FacilityReferenceDto**](FacilityReferenceDto.md) |  | 
+**lab** | [**FacilityReferenceDto**](FacilityReferenceDto.md) |  |  [optional]
 **labDetails** | **String** |  |  [optional]
-**shipmentDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**shipmentDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **shipmentDetails** | **String** |  |  [optional]
-**receivedDate** | [**OffsetDateTime**](OffsetDateTime.md) |  |  [optional]
+**receivedDate** | [**Instant**](OffsetDateTime.md) |  |  [optional]
 **specimenCondition** | [**SpecimenCondition**](SpecimenCondition.md) |  |  [optional]
 **noTestPossibleReason** | **String** |  |  [optional]
 **comment** | **String** |  |  [optional]
@@ -40,5 +40,7 @@ Name | Type | Description | Notes
 **requestedAdditionalTests** | [**List&lt;AdditionalTestType&gt;**](AdditionalTestType.md) |  |  [optional]
 **requestedOtherPathogenTests** | **String** |  |  [optional]
 **requestedOtherAdditionalTests** | **String** |  |  [optional]
+**samplingReason** | [**SamplingReason**](SamplingReason.md) |  |  [optional]
+**samplingReasonDetails** | **String** |  |  [optional]
 **sormasToSormasOriginInfo** | [**SormasToSormasOriginInfoDto**](SormasToSormasOriginInfoDto.md) |  |  [optional]
 **ownershipHandedOver** | **Boolean** |  |  [optional]

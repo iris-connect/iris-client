@@ -6,8 +6,10 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getAllActiveUuids2**](ContactControllerApi.md#getAllActiveUuids2) | **GET** /contacts/uuids | 
 [**getAllContacts**](ContactControllerApi.md#getAllContacts) | **GET** /contacts/all/{since} | 
-[**getByUuids9**](ContactControllerApi.md#getByUuids9) | **POST** /contacts/query | 
+[**getByPersonUuids1**](ContactControllerApi.md#getByPersonUuids1) | **POST** /contacts/query/persons | 
+[**getByUuids10**](ContactControllerApi.md#getByUuids10) | **POST** /contacts/query | 
 [**getDeletedUuidsSince1**](ContactControllerApi.md#getDeletedUuidsSince1) | **GET** /contacts/deleted/{since} | 
+[**getIndexList1**](ContactControllerApi.md#getIndexList1) | **POST** /contacts/indexList | 
 [**postContacts**](ContactControllerApi.md#postContacts) | **POST** /contacts/push | 
 
 <a name="getAllActiveUuids2"></a>
@@ -31,6 +33,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ContactControllerApi apiInstance = new ContactControllerApi();
 try {
     List<String> result = apiInstance.getAllActiveUuids2();
@@ -50,7 +53,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -78,6 +81,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ContactControllerApi apiInstance = new ContactControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -101,16 +105,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids9"></a>
-# **getByUuids9**
-> List&lt;ContactDto&gt; getByUuids9(body)
+<a name="getByPersonUuids1"></a>
+# **getByPersonUuids1**
+> List&lt;ContactDto&gt; getByPersonUuids1(body)
 
 
 
@@ -129,13 +133,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ContactControllerApi apiInstance = new ContactControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<ContactDto> result = apiInstance.getByUuids9(body);
+    List<ContactDto> result = apiInstance.getByPersonUuids1(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling ContactControllerApi#getByUuids9");
+    System.err.println("Exception when calling ContactControllerApi#getByPersonUuids1");
     e.printStackTrace();
 }
 ```
@@ -152,7 +157,59 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json; charset=UTF-8
+ - **Accept**: application/json; charset=UTF-8
+
+<a name="getByUuids10"></a>
+# **getByUuids10**
+> List&lt;ContactDto&gt; getByUuids10(body)
+
+
+
+### Example
+```java
+// Import classes:
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.ContactControllerApi;
+
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+// Configure HTTP basic authorization: basicAuth
+HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
+basicAuth.setUsername("YOUR USERNAME");
+basicAuth.setPassword("YOUR PASSWORD");
+
+
+ContactControllerApi apiInstance = new ContactControllerApi();
+List<String> body = Arrays.asList("body_example"); // List<String> | 
+try {
+    List<ContactDto> result = apiInstance.getByUuids10(body);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling ContactControllerApi#getByUuids10");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**List&lt;String&gt;**](String.md)|  | [optional]
+
+### Return type
+
+[**List&lt;ContactDto&gt;**](ContactDto.md)
+
+### Authorization
+
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -180,6 +237,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ContactControllerApi apiInstance = new ContactControllerApi();
 Long since = 789L; // Long | 
 try {
@@ -203,7 +261,61 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json; charset=UTF-8
+
+<a name="getIndexList1"></a>
+# **getIndexList1**
+> PageContactIndexDto getIndexList1(offset, size)
+
+
+
+### Example
+```java
+// Import classes:
+//import iris.sormas.client.invoker.ApiClient;
+//import iris.sormas.client.invoker.ApiException;
+//import iris.sormas.client.invoker.Configuration;
+//import iris.sormas.client.invoker.auth.*;
+//import iris.sormas.client.api.ContactControllerApi;
+
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+// Configure HTTP basic authorization: basicAuth
+HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
+basicAuth.setUsername("YOUR USERNAME");
+basicAuth.setPassword("YOUR PASSWORD");
+
+
+ContactControllerApi apiInstance = new ContactControllerApi();
+Integer offset = 56; // Integer | 
+Integer size = 56; // Integer | 
+try {
+    PageContactIndexDto result = apiInstance.getIndexList1(offset, size);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling ContactControllerApi#getIndexList1");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **offset** | **Integer**|  | [optional]
+ **size** | **Integer**|  | [optional]
+
+### Return type
+
+[**PageContactIndexDto**](PageContactIndexDto.md)
+
+### Authorization
+
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -231,6 +343,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 ContactControllerApi apiInstance = new ContactControllerApi();
 List<ContactDto> body = Arrays.asList(new ContactDto()); // List<ContactDto> | 
 try {
@@ -254,7 +367,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

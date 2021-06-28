@@ -4,13 +4,13 @@ All URIs are relative to */sormas-rest*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getAll2**](CommunityControllerApi.md#getAll2) | **GET** /communities/all/{since} | 
-[**getAllUuids6**](CommunityControllerApi.md#getAllUuids6) | **GET** /communities/uuids | 
-[**getByUuids8**](CommunityControllerApi.md#getByUuids8) | **POST** /communities/query | 
+[**getAll3**](CommunityControllerApi.md#getAll3) | **GET** /communities/all/{since} | 
+[**getAllUuids7**](CommunityControllerApi.md#getAllUuids7) | **GET** /communities/uuids | 
+[**getByUuids9**](CommunityControllerApi.md#getByUuids9) | **POST** /communities/query | 
 
-<a name="getAll2"></a>
-# **getAll2**
-> List&lt;CommunityDto&gt; getAll2(since)
+<a name="getAll3"></a>
+# **getAll3**
+> List&lt;CommunityDto&gt; getAll3(since)
 
 
 
@@ -29,13 +29,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CommunityControllerApi apiInstance = new CommunityControllerApi();
 Long since = 789L; // Long | 
 try {
-    List<CommunityDto> result = apiInstance.getAll2(since);
+    List<CommunityDto> result = apiInstance.getAll3(since);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CommunityControllerApi#getAll2");
+    System.err.println("Exception when calling CommunityControllerApi#getAll3");
     e.printStackTrace();
 }
 ```
@@ -52,16 +53,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getAllUuids6"></a>
-# **getAllUuids6**
-> List&lt;String&gt; getAllUuids6()
+<a name="getAllUuids7"></a>
+# **getAllUuids7**
+> List&lt;String&gt; getAllUuids7()
 
 
 
@@ -80,12 +81,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CommunityControllerApi apiInstance = new CommunityControllerApi();
 try {
-    List<String> result = apiInstance.getAllUuids6();
+    List<String> result = apiInstance.getAllUuids7();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CommunityControllerApi#getAllUuids6");
+    System.err.println("Exception when calling CommunityControllerApi#getAllUuids7");
     e.printStackTrace();
 }
 ```
@@ -99,16 +101,16 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids8"></a>
-# **getByUuids8**
-> List&lt;CommunityDto&gt; getByUuids8(body)
+<a name="getByUuids9"></a>
+# **getByUuids9**
+> List&lt;CommunityDto&gt; getByUuids9(body)
 
 
 
@@ -127,13 +129,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CommunityControllerApi apiInstance = new CommunityControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<CommunityDto> result = apiInstance.getByUuids8(body);
+    List<CommunityDto> result = apiInstance.getByUuids9(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CommunityControllerApi#getByUuids8");
+    System.err.println("Exception when calling CommunityControllerApi#getByUuids9");
     e.printStackTrace();
 }
 ```
@@ -150,7 +153,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

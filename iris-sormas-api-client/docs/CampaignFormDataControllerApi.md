@@ -5,8 +5,8 @@ All URIs are relative to */sormas-rest*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getAllCampaignFormData**](CampaignFormDataControllerApi.md#getAllCampaignFormData) | **GET** /campaignFormData/all/{since} | 
-[**getAllUuids2**](CampaignFormDataControllerApi.md#getAllUuids2) | **GET** /campaignFormData/uuids | 
-[**getByUuids3**](CampaignFormDataControllerApi.md#getByUuids3) | **POST** /campaignFormData/query | 
+[**getAllUuids3**](CampaignFormDataControllerApi.md#getAllUuids3) | **GET** /campaignFormData/uuids | 
+[**getByUuids4**](CampaignFormDataControllerApi.md#getByUuids4) | **POST** /campaignFormData/query | 
 [**postCampaignFormData**](CampaignFormDataControllerApi.md#postCampaignFormData) | **POST** /campaignFormData/push | 
 
 <a name="getAllCampaignFormData"></a>
@@ -29,6 +29,7 @@ ApiClient defaultClient = Configuration.getDefaultApiClient();
 HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
+
 
 CampaignFormDataControllerApi apiInstance = new CampaignFormDataControllerApi();
 Long since = 789L; // Long | 
@@ -53,16 +54,16 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getAllUuids2"></a>
-# **getAllUuids2**
-> List&lt;String&gt; getAllUuids2()
+<a name="getAllUuids3"></a>
+# **getAllUuids3**
+> List&lt;String&gt; getAllUuids3()
 
 
 
@@ -81,12 +82,13 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CampaignFormDataControllerApi apiInstance = new CampaignFormDataControllerApi();
 try {
-    List<String> result = apiInstance.getAllUuids2();
+    List<String> result = apiInstance.getAllUuids3();
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CampaignFormDataControllerApi#getAllUuids2");
+    System.err.println("Exception when calling CampaignFormDataControllerApi#getAllUuids3");
     e.printStackTrace();
 }
 ```
@@ -100,16 +102,16 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json; charset=UTF-8
 
-<a name="getByUuids3"></a>
-# **getByUuids3**
-> List&lt;CampaignFormDataDto&gt; getByUuids3(body)
+<a name="getByUuids4"></a>
+# **getByUuids4**
+> List&lt;CampaignFormDataDto&gt; getByUuids4(body)
 
 
 
@@ -128,13 +130,14 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CampaignFormDataControllerApi apiInstance = new CampaignFormDataControllerApi();
 List<String> body = Arrays.asList("body_example"); // List<String> | 
 try {
-    List<CampaignFormDataDto> result = apiInstance.getByUuids3(body);
+    List<CampaignFormDataDto> result = apiInstance.getByUuids4(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling CampaignFormDataControllerApi#getByUuids3");
+    System.err.println("Exception when calling CampaignFormDataControllerApi#getByUuids4");
     e.printStackTrace();
 }
 ```
@@ -151,7 +154,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -179,6 +182,7 @@ HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basic
 basicAuth.setUsername("YOUR USERNAME");
 basicAuth.setPassword("YOUR PASSWORD");
 
+
 CampaignFormDataControllerApi apiInstance = new CampaignFormDataControllerApi();
 List<CampaignFormDataDto> body = Arrays.asList(new CampaignFormDataDto()); // List<CampaignFormDataDto> | 
 try {
@@ -202,7 +206,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](../README.md#basicAuth)
+[basicAuth](../README.md#basicAuth)[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

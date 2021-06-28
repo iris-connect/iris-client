@@ -7,12 +7,12 @@
     :close-on-content-click="false"
     transition="scale-transition"
     offset-y
+    max-width="290"
   >
     <template v-slot:activator="{ on, attrs }">
       <div class="d-flex align-center">
         <div class="w-100" v-on="on" v-bind="attrs">
           <v-text-field
-            class="picker-input-field"
             v-model="model"
             prepend-icon="mdi-clock"
             v-bind="$attrs"
@@ -28,6 +28,8 @@
       format="24hr"
       @change="active = false"
       @click:minute="$refs.menu.save(model)"
+      :max="max"
+      :min="min"
     ></v-time-picker>
   </v-menu>
   <v-text-field
@@ -51,6 +53,14 @@ const TimeInputFieldProps = Vue.extend({
     picker: {
       type: Boolean,
       default: true,
+    },
+    max: {
+      type: String,
+      default: undefined,
+    },
+    min: {
+      type: String,
+      default: undefined,
     },
   },
 });

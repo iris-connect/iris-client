@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 **type** | **String** |  |  [optional]
 **id** | **String** |  |  [optional]
 **caption** | **String** |  |  [optional]
+**expression** | **String** |  |  [optional]
 **styles** | **List&lt;String&gt;** |  |  [optional]
 **dependingOn** | **String** |  |  [optional]
 **dependingOnValues** | **List&lt;String&gt;** |  |  [optional]

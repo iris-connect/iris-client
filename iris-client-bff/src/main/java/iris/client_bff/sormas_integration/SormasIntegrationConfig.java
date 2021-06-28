@@ -1,17 +1,3 @@
-/*******************************************************************************
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *******************************************************************************/
 package iris.client_bff.sormas_integration;
 
 import iris.sormas.client.api.CaseControllerApi;
@@ -121,7 +107,7 @@ public class SormasIntegrationConfig {
 	@PostConstruct
 	public void fetchIrisUserId() {
 
-		var users = userControllerApi().getAll8(0l);
+		var users = userControllerApi().getAll11(0l);
 
 		// ToDo: What does it imply if the IRIS user is not unqiue?
 		var irisUserId = users.stream()
