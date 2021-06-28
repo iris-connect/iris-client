@@ -40,7 +40,7 @@
             </div>
             <div>
               <strong> Übermittlungs-URL: </strong>
-              {{ indexData.submissionUri }}
+              <index-tracking-submission-url :url="indexData.submissionUri" />
             </div>
           </v-col>
         </v-row>
@@ -205,6 +205,7 @@ import StatusColors from "@/constants/StatusColors";
 import dayjs from "@/utils/date";
 import ContactCategories from "@/constants/ContactCategories";
 import AlertComponent from "@/components/alerts/alert.component.vue";
+import IndexTrackingSubmissionUrl from "@/views/index-tracking-details/components/index-tracking-submission-url.vue";
 
 type IndexData = {
   extID: string;
@@ -270,6 +271,7 @@ function getFormattedAddress(address?: Address | null): string {
 
 @Component({
   components: {
+    IndexTrackingSubmissionUrl,
     IndexTrackingDetailsView: IndexTrackingDetailsView,
     AlertComponent,
   },
