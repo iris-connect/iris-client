@@ -208,9 +208,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="showFinishedDialog = false">
-            OK
-          </v-btn>
+          <v-btn color="primary" @click="clearEntries()"> OK </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -322,6 +320,19 @@ export default class FeedbackDialog extends Vue {
       console.log("Fehler beim Post");
       throw e;
     }
+  }
+
+  /**
+   * this method clears all entrys
+   */
+  clearEntries() {
+    this.showFinishedDialog = false;
+    this.form.model.category = "";
+    this.form.model.title = "";
+    this.form.model.comment = "";
+    this.form.model.email = "";
+    this.form.model.organisation = "";
+    this.form.model.name = "";
   }
 }
 </script>
