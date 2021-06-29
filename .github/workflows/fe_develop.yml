@@ -4,6 +4,7 @@ on:
   push:
     branches: 
       - develop
+      - feature/129-index-case-data
     paths:
       - iris-client-fe/**
       - .github/workflows/fe_develop.yml
