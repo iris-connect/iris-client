@@ -127,7 +127,7 @@ Antragsstrecke:
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4) - Webform" im CSM](images/certificate_service_manager/mycsm_Produkt_auswählen_advanced_ssl_webform.png)
 
-   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/production/generate-rsa-key-pair.sh). 
+   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/live/generate-rsa-key-pair.sh). 
 
    ```
    $ sh generate-rsa-key-pair.sh TLS-Zertifikat
@@ -164,7 +164,7 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4) - Webform" im CSM](images/certificate_service_manager/mycsm_basic_device_id_webform.png)
 
-   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/production/generate-signature-key-pair.sh).  
+   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/live/generate-signature-key-pair.sh).  
 
    ```
    $ sh generate-signature-key-pair.sh Signatur-Zertifikat
@@ -189,6 +189,8 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
 
 7. Es öffnet sich eine Webform mit deren Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert. 
 
+   ### Achtung: CN und SAN unterscheiden sich zu Zertifikat #1
+
    | Feld | Wert | Beispiel |
    | - | - | - |
    | Common Name (CN) | eps.${Domain aus Zertifikat Nr. 1} | Beispiel Bonn: eps.ga-bonn.iris-connect.nrw.de |
@@ -199,7 +201,7 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4) - Webform" im CSM](images/certificate_service_manager/mycsm_basic_device_id_webform.png)
 
-   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/production/generate-rsa-key-pair.sh). 
+   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/live/generate-rsa-key-pair.sh). 
 
    ```
    $ sh generate-rsa-key-pair.sh mTLS-Zertifikat-EPS
@@ -234,7 +236,20 @@ Sie können die Zertifikate dann einfach im CSM herunterladen.
    Klicken Sie auf "Download", um die zwei Zertifikate herunterzuladen.
    ![Ansicht "Zertifikate" im CSM](images/certificate_service_manager/mycsm_Zertifikate.png)
 
+### Fingerprints von Zertifikat Nr. 3 an das IRIS Team übermitteln.
 
+Damit Ihr GA mit den im IRIS System befindlichen Akteuren kommunizieren kann, muss Ihr GA im IRIS Service Directory eingetragen werden. Führen Sie dafür die folgenden Schritte durch. 
+
+1. Fingerprint ermitteln
+
+   Benutzen sie [dieses Skript](../scripts/live/create-fingerprint-from-cert.sh) 
+
+   ``` 
+   # Information needed for IRIS Team
+   CN:                      ga-test-local.d-trust.net
+   Certificate Fingerprint: dbb0b9e735bbeac7cf9f81f1309536cdcf5aded026c152531a370684d4a00980
+   ```
+2. Schicken Sie das Ergebnis an rollout@iris-gateway.de. 
 
 ### Zertifikate einrichten
 
