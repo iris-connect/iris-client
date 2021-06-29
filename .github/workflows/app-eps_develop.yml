@@ -1,0 +1,27 @@
+# Build and Publish Docker Image for App EPS Develop
+
+name: app-eps Develop
+
+on:
+  push:
+    branches:
+      - develop
+    paths:    
+      - infrastructure/docker/app-eps/**
+      - .github/workflows/app-eps_develop.yml
+
+jobs:
+  push_to_registry:
+    name: Build and push Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2.3.4
+      - name: Build and push to docker.io
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PW }}
+          repository: inoeg/app-eps
+          tag_with_ref: true
+          path: ./infrastructure/docker/app-eps/
