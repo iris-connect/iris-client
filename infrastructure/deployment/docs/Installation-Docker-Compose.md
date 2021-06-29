@@ -50,33 +50,14 @@ Die Struktur des Archives ist wie nachfolgend beschrieben.
 
 ```
 .
-├── ca # hier liegen die CA Root Zertifikate für beide Umgebungen
-│   ├── live
-│   └── staging
-├── conf
-│   ├── eps
-│   │   ├── certs
-│   │   └── roles # Die Konfiguration für den EPS ( IRIS Client BFF ) service aufgeteilt nach Umgebung. Diese wird mit Umgebungsvariablen parameterisiert. 
-│   │       ├── live
-│   │       │   └── hd
-│   │       └── staging
-│   │           └── hd
-│   ├── nginx # hier muss das Zertifikat der internen Web Domain und dessen Schlüssel abgelegt werden. 
-│   └── proxy
-│       ├── certs
-│       └── roles 
-│           ├── live
-│           │   ├── private-proxy # Die live Konfiguration für den Proxy service. Diese wird mit Umgebungsvariablen parameterisiert. 
-│           │   └── private-proxy-eps # Die live Konfiguration für den Proxy EPS service. Diese wird mit Umgebungsvariablen parameterisiert. 
-│           └── staging
-│               ├── private-proxy # Die staging Konfiguration für den Proxy service. Diese wird mit Umgebungsvariablen parameterisiert. 
-│               └── private-proxy-eps # Die staging Konfiguration für den Proxy service. Diese wird mit Umgebungsvariablen parameterisiert. 
-├── docs # Die Dokumentation
-└── scripts # Hilfs-Skripte für die Zertifikatsbestellung und -verwaltung.
-    ├── live
-    └── staging
-├── docker-compose-ext-postgres.yml # Die Docker Compose Konfiguration mit einer externen Postgres DB.
-├── docker-compose.yml # Die Docker Compose Konfiguration mit einer embedded Postgres DB.
+├── certs
+│   ├── eps      # Zertifikate für EPS ( IRIS Client BFF ), Private Proxy und EPS ( Private Proxy ).
+│   └── nginx    # Zertifikat und Schlüssel der internen Web Domain. 
+├── docs         # Die Dokumentation
+├── scripts      # Hilfs-Skripte für die Zertifikatsbestellung und -verwaltung.
+├── docker-compose-ext-postgres.yml    # Die Docker Compose Konfiguration mit einer externen Postgres DB.
+├── docker-compose.yml                 # Die Docker Compose Konfiguration mit einer embedded Postgres DB.
+└─ .env.sample                         # Konfigurations-Template
 ```
 
 ## Anlegen der Konfiguration
@@ -131,15 +112,15 @@ Wir empfehlen, einen Passwort Generator zu benutzen (z.B. https://passwordsgener
 
 Der IRIS Client ist eine HTTPS basierte Webanwendung die unter einer Domain betrieben wird. Diese Domain ist für sie frei wählbar. Sie müssen für Ihre Domain ein validates Zertifikat unt den entsprechenden Schlüssel konfigurieren. 
 
-Das Zertifikat und der Key müssen im Order `./conf/nginx` abgelegt werden. 
+Das Zertifikat und der Key müssen im Order `./certs/nginx` abgelegt werden. 
 
 ```
 # Beispiel
 .
-├── conf 
-│   └── nginx
-│       ├── iris-ga.crt
-│       └── iris-ga.key
+├── certs
+    └── nginx
+        ├── iris-ga.crt
+        └── iris-ga.key
 ```
 
 Danach müssen folgende Parameter in der Konfiguration gesetzt werden.
@@ -248,26 +229,43 @@ EPS_PP_NAME=
 
 ## Einrichtung: TLS-Zertifikat ( Private Proxy )
 
-Wie in der [Architektur](./Architektur.md) beschrieben kann der IRIS Client über das Proxy Netzwerk Kontakttagebücher entgegennehmen. Dafür muss ein TLS Zertifikat konfiguriert werden. 
+Wie in der [Architektur](./Architektur.md) beschrieben kann der IRIS Client über das Proxy Netzwerk Kontakttagebücher entgegennehmen. Dafür muss ein TLS Zertifikat und dessen privater Schlüssel konfiguriert werden. 
 
 Die Domain unterscheidet sich je nach Umgebung. 
 
-Für Staging gibt es eine vom IRIS Team zur Verfügung gestellte Domain namens `proxy.test-gesundheitsamt.de`. 
+Für Staging gibt es eine vom IRIS Team zur Verfügung gestellte Domain namens `staging.test-gesundheitsamt.de`. 
 
-Für die Live-Umgebung wurde Ihnen die Domain vom Land zentral bereit gestellt.
+Für die Live-Umgebung wurde Ihnen die Domain vom Land zentral bereit gestellt. Sie sollten dazu Informationen erhalten haben.
 
 ```
-PROXY_SUBDOMAIN
-PROXY_TLS_CERT
-PROXY_TLS_CERT_KEY
+PROXY_SUBDOMAIN=<Ihre zugewiesene Domain>
 ```
+
+Kopieren Sie dann das Zertifikat und den privaten Schlüssel in der Verzeichnis `./certs/eps`. 
+
+```
+.
+├── certs
+    └── eps
+        ├── <Ihr Zertifikat>
+        └── <Der dazugehörige private Schlüssel>
+
+```
+
+Tragen Sie dann die beiden Dateien in die Konfiguration ein.
+
+```
+PROXY_TLS_CERT=<Ihr Zertifikat>
+PROXY_TLS_CERT_KEY=<Der dazugehörige private Schlüssel>
+```
+
 
 
 ## Einrichtung: mTLS-Zertifikat - EPS ( IRIS Client BFF )
 
 Damit der IRIS Client sich im IRIS Netzwerk anmelden und mit anderen Teilnehmern kommunizieren und Daten austauschen kann, benötigt man ein IRIS GA Client Zertifikat. Der Prozess dafür ist weiter oben in der Anleitung dokumentiert.
 
-Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüssel im Ordner `./conf/eps/certs` ablegen.
+Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüssel im Ordner `./certs/eps` ablegen.
 
 ```
 # Beispiel
@@ -290,11 +288,11 @@ EPS_CLIENT_CERT_KEY=ga-client.key # Beispiel s.o.
 
 Damit der IRIS Client wie in der [Architektur](./Architektur.md) beschrieben eingehende Verbindungen über das IRIS Proxy Netzwerk erlauben kann, benötigt man ein Proxy Client Zertifikat. Der Prozess dafür ist weiter oben in der Anleitung dokumentiert.
 
-Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüssel im Ordner `./conf/proxy/certs` ablegen.
+Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüssel im Ordner `./certs/eps` ablegen.
 
 > Für die Live Umgebung ist sind das Zertifikat und der Schlüssel für den `IRIS Private Proxy` die gleichen wie für den `IRIS Client BFF`. 
 > 
-> Es unterscheidet sich der Parameter `PROXY_OP`. Dieser Wert muss auf den 2 SAN Eintrag gesetzt werden (eps-proxy.*).
+> Es unterscheidet sich der Parameter `PROXY_OP`. Dieser Wert muss auf den 2. SAN Eintrag gesetzt werden (eps-proxy.\<Ihr zugewiesene Domain\>).
  
 ```
 # Beispiel
