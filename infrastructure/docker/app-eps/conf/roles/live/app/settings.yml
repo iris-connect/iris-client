@@ -3,14 +3,6 @@ vars:
     source: env
     variable: APP_CN
     type: string
-  APP_EPS_CERT:
-    source: env
-    variable: APP_EPS_CERT
-    type: string
-  APP_EPS_KEY:
-    source: env
-    variable: APP_EPS_KEY
-    type: string
   APP_BACKEND_ENDPOINT:
     source: env
     variable: APP_BACKEND_ENDPOINT
