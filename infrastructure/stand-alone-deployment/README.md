@@ -7,11 +7,9 @@ Bei dieser Installationsvariante werden die einzelnen Paket des IRIS Clients her
 ```
 .
 ├── bin # Hier wird das JAR vom IRIS Client BFF abgelegt
+├── ca # Root CA Dateien für staging und live Umgebung.
 ├── conf # Konfigurationsdateien für die Komponenten
 │   ├── eps
-│   │   ├── ca # Root CA Dateien für staging und live Umgebung.
-│   │   │   ├── live
-│   │   │   └── staging
 │   │   ├── certs # Hier werden die Zertifikate und Schlüssel von mTLS-Zertifikat - EPS ( IRIS Client BFF )	 und mTLS-Zertifikat - EPS ( IRIS Private Proxy ) abgelegt 
 │   │   └── roles
 │   │       ├── live
@@ -22,16 +20,13 @@ Bei dieser Installationsvariante werden die einzelnen Paket des IRIS Clients her
 │   │           └── private-proxy-eps
 │   ├── nginx
 │   └── proxy
-│       ├── ca # Root CA Dateien für staging und live Umgebung.
-│       │   ├── live
-│       │   └── staging
 │       ├── certs # Hier wird das Zertifikat und der Schlüssel vom TLS-Zertifikat - Private Proxy abgelegt.
 │       └── roles
 │           ├── live
 │           │   └── private-proxy
 │           └── staging
 │               └── private-proxy
-├── db # Hier speichert der private-proxy seine Announcments.
+├── db # Hier speichert der private-proxy seine Announcements.
 ├── public  # Hier müssen die Dateien vom IRIS Client Frontend abgelegt werden.
 └── scripts # Start Skripte der Komponenten
 ```
