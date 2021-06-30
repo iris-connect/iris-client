@@ -1,3 +1,4 @@
+
 ## IRIS connect Architektur
 
 IRIS connect verfolgt nach den Prinzipien Security und Privacy by Design einen **dezentralen Ansatz** bei der Architektur. Der Austausch von personenbezogenen Daten (z.B. Gästelisten oder Kontakttagebüchern) findet dabei **Peer-to-Peer** und **Ende-zu-Ende-verschlüsselt** direkt zwischen den Lösungsanbietern bzw. Einzelpersonen und dem jeweiligen Gesundheitsamt statt. 
@@ -24,7 +25,7 @@ Das folgende Schaubild visualisiert die Architektur und erklärt die zentralen B
 |3| Suchregister <br /> (Locations Service) | Damit Einrichtungen, bei denen eine digitale Kontaktdatenerfassung im Einsatz ist vom Gesundheitsamt gefunden werden können, stellt IRIS connect ein zentrales Suchregister zur Verfügung. Die Daten im Suchregister werden von den Kontaktdatenerfassungs-Lösungen bereitgestellt. |
 |4| Service Directory | Das vom IRIS connect Team verwaltete Service Directory enthält Einträge für alle teilnehmenden Akteure um IRIS connect. Zudem werden die Berechtigungen der Kommunikationsbeziehungen hier hinterlegt. |
 |5| IRIS Proxy Service | Der IRIS Proxy Service ermöglicht es Einzelpersonen und Lösungsanbietern, Daten aktiv in ein Gesundheitsamt zu schicken. Dafür stellt der Proxy eine autorisierte Verbindung zwischen einer App bzw. einem Browser und einer Proxy-Komponente im Gesundheitsamt her. Der IRIS-Client im Gesundheitsamt muss dafür keine eingehenden Verbindungen zulassen. |
-|6| Endpunktserver (EPS)| Herzstück der Punkt-zu-Punkt Kommunikation ist der IRIS [Endpunktserver (EPS)](https://github.com/iris-connect/eps/blob/master/README.md). Dabei handelt es sich um eine Komponente, die dezentral bei allen Akteure des IRIS connect Systems installiert wird. Die Kommunikation erfolgt gesichert über mTLS. |
+|6| Endpunktserver (EPS)| Herzstück der Punkt-zu-Punkt Kommunikation ist der IRIS [Endpunktserver (EPS)](https://github.com/iris-connect/eps/blob/master/README.md). Dabei handelt es sich um eine Komponente, die dezentral bei allen Akteuren des IRIS connect Systems installiert wird. Die Kommunikation erfolgt gesichert über mTLS. |
 
 Personenbezogene Daten werden zwischen den angebundenen Lösungen und den Gesundheitsämtern immer Ende-zu-Ende-verschlüsselt übertragen.
 Dafür wird eine Transportverschlüsselung mit TLS/HTTPS eingesetzt bzw. mTLS bei Kommunikation über das EPS-Netzwerk.
@@ -36,5 +37,5 @@ Vor der Datenabfrage durch ein Gesundheitsamt liegen Daten ausschließlich bei d
 Es erfolgt insbesondere keine zentrale Speicherung der übermittelten Daten.
 
 Die Kommunikation im EPS-Netzwerk findet immer authentifiziert und verschlüsselt mit mTLS statt. 
-Kommunikation zwischen den IRIS Services und Clients (Browser oder Apps), die von Einzelpersonen oder Einrichtungsbetreibenden genutzt werden ist mit HTTPS gesichert.
+Kommunikation zwischen den IRIS Services und Clients (Browser oder Apps), die von Einzelpersonen oder Einrichtungsbetreibenden genutzt werden, ist mit HTTPS gesichert.
 Das IRIS-Client Frontend im GA (oder genauer gesagt der Browser, in dem die Webanwendung läuft) und das Backend des IRIS-Clients kommunizieren über ebenfalls HTTPS miteinander.

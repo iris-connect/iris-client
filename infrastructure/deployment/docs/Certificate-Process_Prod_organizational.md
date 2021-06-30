@@ -74,7 +74,7 @@ Spätestens die Übergabe der fertig befüllten Liste der GÄ (siehe unten) muss
 
 Vorgesehen ist hier eine Kombination aus von zwei Kommunikationswegen: 
 1. Sichere E-Mails, die mit S/MIME digital signiert und verschlüsselt sind. Die BDr hat hierfür ein sicheres E-Mail-Postfach eingerichtet, an das verschlüsselt gemailt werden kann.
-2. Ein Wiki-System (Confluence) der BDr, in dem Daten sicher übergeben werden können. Die BDr wird nach Kontaktaufnahme eine signierte E-Mail verschicken, die erklärt wie der Zugang erfolgt.
+2. Ein Wiki-System (Confluence) der BDr, in dem Daten sicher übergeben werden können. Die BDr wird nach Kontaktaufnahme eine signierte E-Mail verschicken, die erklärt, wie der Zugang erfolgt.
 
 Bei der Kontaktaufnahme liefert die Behörde folgende Daten:
 1. Gesetzmäßige Organisatinsdaten 
@@ -138,7 +138,7 @@ Das sieht für das GA Bonn beispielsweise so aus:
 </table>
 
 Als Sammelstelle für diese Informationen stellt die BDr eine Vorlage im eigenen Wiki-System (Confluence) bereit. 
-Die Behörde kann die Datensätze dort nach Zulieferung zusammengetragen und iterativ vervollständigt.
+Die Behörde kann die Datensätze dort nach Zulieferung zusammentragen und iterativ vervollständigen.
 
 ### Domains für die Gesundheitsämter bereitstellen
 Bei den Domains gibt es zwei frei wählbare Gestaltungsmöglichkeiten:
@@ -154,7 +154,7 @@ sich ```iris-connect.nrw.de```.
 Als Nächstes muss für jedes GA eine weitere Subdomain unterhalb der gerade erzeugten angelegt werden. 
 So ergibt sich für das GA Bonn ```stadt-bonn.iris-connect.nrw.de```. 
 Auch hier gibt es keine feste Vorgabe für die Benennung. Wir empfehlen aber den offiziellen RKI-Namen des Gesundheitsamts zu verwenden. 
-Wo der offizielle RKI-Name (für Bonn bswp. "Stadt Bonn") nachgeschaut werden kann und wie sich die normalisierte (domainfähige) Form daraus ableitet, wird in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) beschrieben.
+Wo der offizielle RKI-Name (für Bonn bspw. "Stadt Bonn") nachgeschaut werden kann und wie sich die normalisierte (domainfähige) Form daraus ableitet, wird in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) beschrieben.
 
 **Möglichkeit 2: Die Behörde verwendet eine neue Domain, die sie vorab erwirbt**
 
@@ -166,7 +166,7 @@ Es gibt keine feste Vorgabe für die Benennung der Domain.
 Als Nächstes muss für jedes GA eine Subdomain unterhalb dieser Domain angelegt werden. 
 Für das GA Erfurt ergibt sich bspw. ```landeshauptstadt-erfurt.iris-thueringen.de```. 
 Auch hier gibt es wieder keine feste Vorgabe für die Benennung. Wir empfehlen aber den offiziellen RKI-Namen des Gesundheitsamts zu verwenden.
-Wo der offizielle RKI-Name (für Erfurt bswp. "Landeshauptstadt Erfurt") nachgeschaut werden kann und wie sich die normalisierte Form daraus ableitet, wird in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) beschrieben.
+Wo der offizielle RKI-Name (für Erfurt bspw. "Landeshauptstadt Erfurt") nachgeschaut werden kann und wie sich die normalisierte Form daraus ableitet, wird in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) beschrieben.
 
 --- 
 Die technische Konfiguration der (Sub-)Domains und der zugehörigen Einträge im Domain Name System (DNS) ist in der [technischen Installationsanleitung](Certificate-Process_Prod_technical.md) erläutert. 

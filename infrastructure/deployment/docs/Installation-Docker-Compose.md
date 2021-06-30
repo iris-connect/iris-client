@@ -1,6 +1,6 @@
 # IRIS Client - Docker und Docker Compose Installation
 
-Bevor man mit der Installation des IRIS connect Clients beginnen kann, muss die Docker Umgebung intalliert werden. Die Art der Installation ist abhängig vom jeweiligen Betriebssystem des Servers.
+Bevor man mit der Installation des IRIS connect Clients beginnen kann, muss die Docker Umgebung installiert werden. Die Art der Installation ist abhängig vom jeweiligen Betriebssystem des Servers.
 
 ## Linux Ubuntu
 
@@ -10,11 +10,11 @@ Bevor man mit der Installation des IRIS connect Clients beginnen kann, muss die 
 
 ## Microsoft Windows 10
 
-1. Installation eines »Windows Subsystem für Linux« (WSL), da die Docker Engine ein unix-artiges Betriebssystem verlangt. [hier beschrieben](https://docs.microsoft.com/en-us/windows/wsl/install-win10). Gegenwärtig wurde die Linux-Distribution »Ubuntu 20.04 LTS« erprobt.
+1. Installation eines »Windows Subsystem für Linux« (WSL), da die Docker Engine ein unix-artiges Betriebssystem verlangt. [Hier beschrieben](https://docs.microsoft.com/en-us/windows/wsl/install-win10). Gegenwärtig wurde die Linux-Distribution »Ubuntu 20.04 LTS« erprobt.
 
 2. »Windows Subsystem für Linux« starten. Es gibt dafür eine Desktop-App. Erweitere Rechte (Starten als Admin) sind nicht erforderlich.
 
-3. Installation »Docker Desktop für Windows«, Desktop-Applikation, die alle Werkzeuge (Docker Engine, Docker Compose) mitbringt, um Docker auf Windows zu betreiben. [hier beschrieben](https://docs.docker.com/docker-for-windows/install/)
+3. Installation »Docker Desktop für Windows«, Desktop-Applikation, die alle Werkzeuge (Docker Engine, Docker Compose) mitbringt, um Docker auf Windows zu betreiben. [Hier beschrieben](https://docs.docker.com/docker-for-windows/install/)
 
 4. »Docker Desktop für Windows« starten - auch OHNE Admin-Rolle möglich.
 
@@ -22,7 +22,7 @@ Bevor man mit der Installation des IRIS connect Clients beginnen kann, muss die 
 
 ## Ausstellung von Zertifikaten
 
-Wie [hier](./Installation.md) beschrieben werden für den Betrieb des IRIS Clients verschiedene Zertifikate benötigt. Der Prozess der Austellung der Zertifikate unterscheidet sich je nach Umgebung (Staging oder Live).
+Wie [hier](./Installation.md) beschrieben, werden für den Betrieb des IRIS Clients verschiedene Zertifikate benötigt. Der Prozess der Ausstellung der Zertifikate unterscheidet sich je nach Umgebung (Staging oder Live).
 
 ### Zertifikate für Staging Umgebung
 
@@ -34,9 +34,9 @@ Bitte folgen Sie [dieser Anleitung](./Certificate-Process_Prod_technical.md).
 
 ## Download der Releases
 
-Die Releases werden [über Github bereitgestellt](https://github.com/iris-connect/iris-client/releases). Dort finden Sie zudem alle Informationen bezüglich neuen Features und sonstigen Änderungen, die das Release mit sich bringt. 
+Die Releases werden über [Github bereitgestellt](https://github.com/iris-connect/iris-client/releases). Dort finden Sie zudem alle Informationen bezüglich neuer Features und sonstigen Änderungen, die das Release mit sich bringt. 
 
-Unterhalb vom Release befinden sich verschiedene Installations Artefakte (Assets). Für Docker Compose laden sie sich bitte das Asset `deployment-${version}.zip` herunter. 
+Unterhalb vom Release befinden sich verschiedene Installations-Artefakte (Assets). Für Docker Compose laden Sie sich bitte das Asset `deployment-${version}.zip` herunter. 
 
 ## Struktur des Release Archives
 
@@ -64,7 +64,7 @@ Die Struktur des Archives ist wie nachfolgend beschrieben.
 
 Die Anwendung wird über eine [`.env`](https://docs.docker.com/compose/environment-variables/#the-env-file)  Datei konfiguriert und auf das GA abgestimmt. Eine Beispiel Konfiguration inklusive einer Erklärung der einzelnen Variablen findet man in der beigelegten [`.env.sample`](../.env.sample)  Datei.
 
-Erstellen Sie Kopie von .env.sample
+Erstellen Sie eine Kopie von .env.sample
 
 ```
 cp .env.sample .env
@@ -96,21 +96,21 @@ POSTGRES_PASSWORD
 POSTGRES_HOST
 POSTGRES_DB
 ```
-Die DB muss vorher von Ihnen angelegt werden. Der User benötigt die Berechtigung Tabellen zu erstellen und zu ändern. Das Datenbank Schema wird von der Applikation verwaltet und eventuelle Änderungen werden für Sie transparent migriert.
+Die DB muss vorher von Ihnen angelegt werden. Der User benötigt die Berechtigung, Tabellen zu erstellen und zu ändern. Das Datenbank-Schema wird von der Applikation verwaltet und eventuelle Änderungen werden für Sie transparent migriert.
 
 ## Einrichtung der Benutzer-Authentifizierung
 
-Der IRIS Client stellt die Benutzer [JSON Webtokens](https://de.wikipedia.org/wiki/JSON_Web_Token) aus. Dafür wird ein HMAC512 Algorithmus benutzt. Dieser Algorithmus verlangt ein starkes *Shared Secret*. Das kann wie folgt konfiguriert werden.
+Der IRIS Client stellt für die Benutzer [JSON Webtokens](https://de.wikipedia.org/wiki/JSON_Web_Token) aus. Dafür wird ein HMAC512 Algorithmus benutzt. Dieser Algorithmus verlangt ein starkes *Shared Secret*. Das kann wie folgt konfiguriert werden.
 
 ```
 SECURITY_JWT_JWT_SHARED_SECRET
 ```
 
-Wir empfehlen, einen Passwort Generator zu benutzen (z.B. https://passwordsgenerator.net). 
+Wir empfehlen, einen Passwort-Generator zu benutzen (z.B. https://passwordsgenerator.net). 
 
 ## Einrichtung Ihrer lokalen Domain
 
-Der IRIS Client ist eine HTTPS basierte Webanwendung die unter einer Domain betrieben wird. Diese Domain ist für sie frei wählbar. Sie müssen für Ihre Domain ein validates Zertifikat unt den entsprechenden Schlüssel konfigurieren. 
+Der IRIS Client ist eine HTTPS basierte Webanwendung, die unter einer Domain betrieben wird. Diese Domain ist frei wählbar. Sie müssen für Ihre Domain ein validiertes Zertifikat und den entsprechenden Schlüssel konfigurieren. 
 
 Das Zertifikat und der Key müssen im Order `./certs/nginx` abgelegt werden. 
 
@@ -142,18 +142,18 @@ IRIS_CLIENT_PORT
 
 ## Einrichtung Startpasswort Admin Zugang
 
-Wie oben beschrieben erstellt der IRIS Client initial einen Admin account. Folgende Parameter sind dafür vorgesehen.
+Wie oben beschrieben erstellt der IRIS Client initial einen Admin Account. Folgende Parameter sind dafür vorgesehen.
 
 ```
 SECURITY_AUTH_DB_ADMIN_USER_NAME
 SECURITY_AUTH_DB_ADMIN_USER_PASSWORD
 ```
 
-Sobald der Account beim ersten Starten angelegt wurde. Werden die Parameter ignoriert. 
+Sobald der Account beim ersten Starten angelegt wurde, werden die Parameter ignoriert. 
 
 ## Lokale Kontaktinformationen
 
-Sie können für Ihre lokalen Benutzer:innen Informationen zum Support bereit stellen. Diese Informationen werden dann im Web-Interface angezeigt (Beispiel [hier](./images/support-information.png)). 
+Sie können für Ihre lokalen Benutzer:innen Informationen zum Support bereitstellen. Diese Informationen werden dann im Web-Interface angezeigt (Beispiel [hier](./images/support-information.png)). 
 
 Folgende Parameter müssen dafür gesetzt sein.
 ```
@@ -169,11 +169,11 @@ In den meisten GAs werden Verbindungen ins Internet über einen Proxy geleitet. 
 PROXY_URL
 ```
 
-Der Proxy Server muss Tunneling über HTTP_CONNECT unterstützen. Weiter Einstellungen bezüglich der Ports und Domains welche freigegeben werden müssen finden sie hier sind [hier](Installation.md). 
+Der Proxy Server muss Tunneling über HTTP_CONNECT unterstützen. Weitere Einstellungen bezüglich der Ports und Domains, welche freigegeben werden müssen, finden Sie [hier](Installation.md). 
 
 ## Logdateien
 
-Die Logausgaben aller Services werden vom IRIS CLient in Dateien persistiert. Standardmäßig wird dafür im aktuellen Verzeichnis ein Order `logs` erstellt. Der Pfad dieses Ordners kann über den folgenden optionalen Parameter angepasst werden. 
+Die Logausgaben aller Services werden vom IRIS Client in Dateien persistiert. Standardmäßig wird dafür im aktuellen Verzeichnis ein Order `logs` erstellt. Der Pfad dieses Ordners kann über den folgenden optionalen Parameter angepasst werden. 
 
 ```
 LOG_FOLDER
@@ -181,7 +181,7 @@ LOG_FOLDER
 
 ## Einrichtung Root Zertifikat ( veraltet )
 
-Bitte nicht mehr konfigurieren. Verwenden Sie statt dessen `Einrichtung IRIS Umgebung`.
+Bitte nicht mehr konfigurieren. Verwenden Sie stattdessen `Einrichtung IRIS Umgebung`.
 
 ## Einrichtung IRIS Umgebung
 
@@ -193,11 +193,11 @@ IRIS bietet 2 Umgebungen an (staging und live). Mit diesem Parameter können Sie
 IRIS_ENV=
 ```
 
-Von dieser Einstellung hänger unter anderen ab, zu welchem Service Directory sich Ihr IRIS Client verbindet und welche ROOT Zertifikate vertraut wird. 
+Von dieser Einstellung hängt unter anderen ab, zu welchem Service Directory sich Ihr IRIS Client verbindet und welchem ROOT Zertifikat vertraut wird. 
 
 ## Einrichtung vom Service Directory Endpunkt
 
-Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf das IRIS Service Directory, damit es weiß welche Services unter welcher Adresse zu erreichen sind. Die richtige Service Directory URL hängt von der Umgebung (Staging oder Live ab). 
+Wie in der [Architektur](./Architektur.md) beschrieben, benötigt der IRIS Client Zugriff auf das IRIS Service Directory, damit es weiß, welche Services unter welcher Adresse zu erreichen sind. Die richtige Service Directory URL hängt von der Umgebung (Staging oder Live ab). 
 
 ```
 # Staging: 
@@ -208,7 +208,7 @@ EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
 ```
 ## Einrichtung vom IRIS Locations Service
 
-Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf den IRIS Locations Service, damit die Mitarbeiter im GA u.a. nach Betrieben und Gastronomien suchen können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
+Wie in der [Architektur](./Architektur.md) beschrieben, benötigt der IRIS Client Zugriff auf den IRIS Locations Service, damit die Mitarbeiter im GA u.a. nach Betrieben und Gastronomien suchen können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
 
 ```
 # staging:  ls-1
@@ -218,7 +218,7 @@ EPS_LS_NAME=
 
 ## Einrichtung vom IRIS Public Proxy
 
-Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf den IRIS Public Proxy Service, damit eingehende Daten wie z.B. Kontakttagebücher empfangen werden können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
+Wie in der [Architektur](./Architektur.md) beschrieben, benötigt der IRIS Client Zugriff auf den IRIS Public Proxy Service, damit eingehende Daten wie z.B. Kontakttagebücher empfangen werden können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
 
 ```
 # staging:  public-proxy-1
@@ -229,19 +229,19 @@ EPS_PP_NAME=
 
 ## Einrichtung: TLS-Zertifikat ( Private Proxy )
 
-Wie in der [Architektur](./Architektur.md) beschrieben kann der IRIS Client über das Proxy Netzwerk Kontakttagebücher entgegennehmen. Dafür muss ein TLS Zertifikat und dessen privater Schlüssel konfiguriert werden. 
+Wie in der [Architektur](./Architektur.md) beschrieben, kann der IRIS Client über das Proxy Netzwerk Kontakttagebücher entgegennehmen. Dafür muss ein TLS Zertifikat und dessen privater Schlüssel konfiguriert werden. 
 
 Die Domain unterscheidet sich je nach Umgebung. 
 
 Für Staging gibt es eine vom IRIS Team zur Verfügung gestellte Domain namens `proxy.test-gesundheitsamt.de`. 
 
-Für die Live-Umgebung wurde Ihnen die Domain vom Land zentral bereit gestellt. Sie sollten dazu Informationen erhalten haben.
+Für die Live-Umgebung wurde Ihnen die Domain vom Land zentral bereitgestellt. Sie sollten dazu Informationen erhalten haben.
 
 ```
 PROXY_SUBDOMAIN=<Ihre zugewiesene Domain>
 ```
 
-Kopieren Sie dann das Zertifikat und den privaten Schlüssel in der Verzeichnis `./certs/eps`. 
+Kopieren Sie dann das Zertifikat und den privaten Schlüssel in das Verzeichnis `./certs/eps`. 
 
 ```
 .
@@ -263,7 +263,7 @@ PROXY_TLS_CERT_KEY=<Der dazugehörige private Schlüssel>
 
 ## Einrichtung: mTLS-Zertifikat - EPS ( IRIS Client BFF )
 
-Damit der IRIS Client sich im IRIS Netzwerk anmelden und mit anderen Teilnehmern kommunizieren und Daten austauschen kann, benötigt man ein IRIS GA Client Zertifikat. Der Prozess dafür ist weiter oben in der Anleitung dokumentiert.
+Damit der IRIS Client sich im IRIS Netzwerk anmelden und mit anderen Teilnehmern kommunizieren sowie Daten austauschen kann, benötigt man ein IRIS GA Client Zertifikat. Der Prozess dafür ist weiter oben in der Anleitung dokumentiert.
 
 Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüssel im Ordner `./certs/eps` ablegen.
 
@@ -276,7 +276,7 @@ Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüsse
 │   │   │   └── ga-client.key
 ```
 
-Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist der selbe wie der CN Name aus dem Zertifikats-Prozess.
+Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist derselbe wie der CN Name aus dem Zertifikats-Prozess.
 
 ```
 EPS_OP=${CN aus dem Zertifikat}
@@ -290,7 +290,7 @@ Damit der IRIS Client wie in der [Architektur](./Architektur.md) beschrieben ein
 
 Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüssel im Ordner `./certs/eps` ablegen.
 
-> Für die Live Umgebung ist sind das Zertifikat und der Schlüssel für den `IRIS Private Proxy` die gleichen wie für den `IRIS Client BFF`. 
+> Für die Live Umgebung sind das Zertifikat und der Schlüssel für den `IRIS Private Proxy` die gleichen wie für den `IRIS Client BFF`. 
 > 
 > Es unterscheidet sich der Parameter `PROXY_OP`. Dieser Wert muss auf den 2. SAN Eintrag gesetzt werden (eps-proxy.\<Ihr zugewiesene Domain\>).
  
@@ -303,7 +303,7 @@ Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüsse
 │       │   ├── ga-client-proxy.crt
 │       │   └── ga-client-proxy.key
 ```
-Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist der selbe wie der CN Name aus dem Zertifikats-Prozess.
+Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist derselbe wie der CN Name aus dem Zertifikats-Prozess.
 
 ```
 PROXY_OP=${CN oder ein SAN Eintrag}
@@ -319,13 +319,13 @@ PROXY_CLIENT_CERT_KEY=ga-client-proxy.key
    docker-compose up -d
    ```
 
-1. IRIS Client mit Docker Compose und externer Postgres starten.
+2. IRIS Client mit Docker Compose und externer Postgres starten.
 
    ```
    docker-compose -f docker-compose-ext-postgres.yml up -d
    ```
 
-1. Überprüfen ob alle Services laufen
+3. Überprüfen, ob alle Services laufen
 
    ```
    # embedded Postgres
@@ -335,7 +335,7 @@ PROXY_CLIENT_CERT_KEY=ga-client-proxy.key
    docker-compose -f docker-compose-ext-postgres.yml ps
    ```
 
-1. Die Logfiles aller Services einsehen
+4. Die Logfiles aller Services einsehen
 
    ```
    # embedded Postgres
@@ -345,7 +345,7 @@ PROXY_CLIENT_CERT_KEY=ga-client-proxy.key
    docker-compose -f docker-compose-ext-postgres.yml logs -f
    ```
 
-1. Die Logfiles eines bestimmten Services einsehen
+5. Die Logfiles eines bestimmten Services einsehen
 
    ```
    # embedded Postgres
@@ -356,7 +356,7 @@ PROXY_CLIENT_CERT_KEY=ga-client-proxy.key
    ```
 
 
-1. Überprüfen ob der Webserver eine gültige Antwort liefert
+6. Überprüfen, ob der Webserver eine gültige Antwort liefert
 
    ```
    curl -k -v https://{IRIS_CLIENT_DOMAIN}
@@ -364,5 +364,5 @@ PROXY_CLIENT_CERT_KEY=ga-client-proxy.key
 
 ## Beispiel Konfiguration
 
-Weitere Erläuterungen zu den einzelnen Parametern finden man in der [`.env.sample`](./.env.sample) Datei.
+Weitere Erläuterungen zu den einzelnen Parametern finden Sie in der [`.env.sample`](./.env.sample) Datei.
 
