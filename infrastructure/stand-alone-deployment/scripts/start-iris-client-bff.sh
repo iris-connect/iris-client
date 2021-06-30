@@ -24,7 +24,7 @@ export IRIS_CLIENT_BASEPATH=https://localhost
 ## Run application
 
 # First we find the jar file with the latest version 
-JAR=$(ls -Art bin |sort | tail -n 1)
+JAR=$(ls -Art bin |sort|grep jar| tail -n 1)
 
 echo "Running IRIS Client BFF with Jar file $JAR \n"
 

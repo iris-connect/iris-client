@@ -33,9 +33,23 @@ Bei dieser Installationsvariante werden die einzelnen Paket des IRIS Clients her
 
 Die Ordnerstruktur kann wie sie ist von Github übernommen werden und wird im weiteren Verlauf als Installationspfad referenziert.
 
+## Ausstellung von Zertifikaten
+
+Wie [hier](../deployment/docs/Installation.md) beschrieben werden für den Betrieb des IRIS Clients verschiedene Zertifikate benötigt. Der Prozess der Austellung der Zertifikate unterscheidet sich je nach Umgebung (Staging oder Live).
+
+### Zertifikate für Staging Umgebung
+
+Bitte folgen Sie [dieser Anleitung](../deployment/docs/Certificate-Process-Staging.md). 
+
+### Zertifikate für Live Umgebung
+
+Bitte folgen Sie [dieser Anleitung](../deployment/docs/Certificate-Process_Prod_technical.md). 
+
+
+
 ## Vorbereitung
 
-1. Auf dem System muss die letzte Version vom **eps** und **proxy** installiert sein. Diese kann über das öffentliche Repository heruntergeladen werden.
+1. Auf dem System muss die letzte Version vom **eps** und **proxy** installiert sein. Diese kann über das [öffentliche Repository](https://github.com/iris-connect/eps/releases) heruntergeladen werden.
     ```
     # Test ob die Komponenten installiert sind
 
@@ -72,12 +86,273 @@ Die Ordnerstruktur kann wie sie ist von Github übernommen werden und wird im we
     Beim Frontend handelt es sich um statisches HTML. Es kann über das [öffentliche Repository](https://github.com/iris-connect/iris-client/releases) heruntergeladen werden. Danach muss der Inhalt des Archives in das `public` Verzeichnis kopiert werden.
 
     ```
-    
+    # Beispiel: 1.0.0-rc.8
+    unzip -d <Installationspfad>/public iris-client-fe-1.0.0-rc.8.zip
     ```
+    Aufgrund eines aktuellen Bugs müssen Sie die index.html bearbeiten und folgende Änderung vornehmen.
+    ```
+    vi <Installationspfad>/public/index.html
+    # IST
+    localContactPerson: {
+        name:
+        "{{env "LOCAL_CONTACT_PERSON_NAME"}}",
+        phone:
+        "{{env "LOCAL_CONTACT_PERSON_PHONE"}}",
+        mail:
+        "{{env "LOCAL_CONTACT_PERSON_MAIL"}}",
+    }
+
+    # SOLL
+    localContactPerson: {
+        name:
+        "",
+        phone:
+        "",
+        mail:
+        "",
+    }
+    ```
+    Dieses Problem ist bekannt und wird unter diesem [Ticket](https://github.com/iris-connect/iris-client/issues/182) bearbeitet.
+1. Zertifikate an der richtigen Stelle hinterlegen.
+
+    a) Kopieren Sie das Zertifikat und den Schlüssel vom `TLS-Zertifikat - Private Proxy` in den Ordner `conf/proxy/certs`.
+
+    ```
+    cp <Ihr Pfad zum TLS-Zertifikat - Private Proxy> conf/proxy/certs
+    cp <Ihr Pfad zum Schlüssel vom TLS-Zertifikat - Private Proxy> conf/proxy/certs
+    ```
+
+    b) Kopieren Sie das Zertifikat und den Schlüssel vom `mTLS-Zertifikat - EPS ( IRIS Client BFF )` in den Ordner `conf/eps/certs`.
+
+    ```
+    cp <Ihr Pfad zum mTLS-Zertifikat - EPS ( IRIS Client BFF )> conf/eps/certs
+    cp <Ihr Pfad zum Schlüssel vom mTLS-Zertifikat - EPS ( IRIS Client BFF )> conf/eps/certs
+    ```
+
+    c) Kopieren Sie das Zertifikat und den Schlüssel vom `mTLS-Zertifikat - EPS ( IRIS Private Proxy )` in den Ordner `conf/eps/certs`.
+
+    > Für die Live Umgebung wird nur ein Zertifikat und Schlüssel für `IRIS Private Proxy` und `IRIS Client BFF` benutzt. 
+
+    ```
+    cp <Ihr Pfad zum mTLS-Zertifikat - EPS ( IRIS Private Proxy )> conf/eps/certs
+    cp <Ihr Pfad zum Schlüssel vom mTLS-Zertifikat - EPS ( IRIS Private Proxy )> conf/eps/certs
+    ```
+
+
 
 # Konfiguration
 
-[Link zur config]
+## Anlegen der Konfiguration
+
+Die Anwendung wird über eine [`.env`](https://docs.docker.com/compose/environment-variables/#the-env-file)  Datei konfiguriert und auf das GA abgestimmt. Eine Beispiel Konfiguration inklusive einer Erklärung der einzelnen Variablen findet man in der beigelegten [`.env.sample`](../.env.sample)  Datei.
+
+Erstellen Sie Kopie von .env.sample
+
+```
+cp .env.sample .env
+```
+
+Passen Sie die Konfiguration auf ihr GA an.
+
+```
+.env öffnen und bearbeiten (siehe nachfolgende Schritte)
+```
+
+## Datenbankverbindung einrichten
+
+Hier können Sie die Verbindung zu Ihrer Postgres DB einrichten.
+```
+POSTGRES_USER 
+POSTGRES_PASSWORD
+POSTGRES_HOST
+POSTGRES_DB
+```
+Die DB muss vorher von Ihnen angelegt werden. Der User benötigt die Berechtigung Tabellen zu erstellen und zu ändern. Das Datenbank Schema wird von der Applikation verwaltet und eventuelle Änderungen werden für Sie transparent migriert.
+
+## Einrichtung der Benutzer-Authentifizierung
+
+Der IRIS Client stellt die Benutzer [JSON Webtokens](https://de.wikipedia.org/wiki/JSON_Web_Token) aus. Dafür wird ein HMAC512 Algorithmus benutzt. Dieser Algorithmus verlangt ein starkes *Shared Secret*. Das kann wie folgt konfiguriert werden.
+
+```
+SECURITY_JWT_JWT_SHARED_SECRET
+```
+
+Wir empfehlen, einen Passwort Generator zu benutzen (z.B. https://passwordsgenerator.net). 
+
+## Einrichtung Ihrer lokalen Domain
+
+> Diese Anleitung geht davon aus, dass Sie NGINX benutzen
+
+Der IRIS Client ist eine HTTPS basierte Webanwendung die unter einer Domain betrieben wird. Diese Domain ist für sie frei wählbar. Sie müssen für Ihre Domain ein validates Zertifikat unt den entsprechenden Schlüssel konfigurieren. 
+
+Das Zertifikat und der Key müssen im Order `./conf/nginx` abgelegt werden. 
+
+```
+# Beispiel
+.
+├── conf
+    └── nginx
+        ├── iris-ga.crt
+        └── iris-ga.key
+```
+
+Danach müssen folgende Parameter in der Konfiguration gesetzt werden.
+
+```
+IRIS_CLIENT_DOMAIN=<Ihre Domain>
+IRIS_CLIENT_DOMAIN_CERT=iris-ga.crt # Beispiel s.o.
+IRIS_CLIENT_DOMAIN_CERT_KEY=iris-ga.key # Beispiel s.o.
+```
+
+## Einrichtung Startpasswort Admin Zugang
+
+Wie oben beschrieben erstellt der IRIS Client initial einen Admin account. Folgende Parameter sind dafür vorgesehen.
+
+```
+SECURITY_AUTH_DB_ADMIN_USER_NAME
+SECURITY_AUTH_DB_ADMIN_USER_PASSWORD
+```
+
+Sobald der Account beim ersten Starten angelegt wurde. Werden die Parameter ignoriert. 
+
+## Einrichtung HTTP Connect Proxy
+
+In den meisten GAs werden Verbindungen ins Internet über einen Proxy geleitet. Dafür ist folgender Parameter vorgesehen. 
+
+```
+PROXY_URL
+```
+
+Der Proxy Server muss Tunneling über HTTP_CONNECT unterstützen. Weiter Einstellungen bezüglich der Ports und Domains welche freigegeben werden müssen finden sie hier sind [hier](Installation.md). 
+
+## Einrichtung IRIS Umgebung
+
+IRIS bietet 2 Umgebungen an (staging und live). Mit diesem Parameter können Sie konfigurieren, zu welcher der beiden Umgebungen sich der IRIS Client verbinden soll. Es gibt 2 vordefinierte Werte für diesen Parameter. 
+
+```
+# Staging: IRIS_ENV=staging
+# Live: IRIS_ENV=live
+IRIS_ENV=
+```
+
+Von dieser Einstellung hänger unter anderen ab, zu welchem Service Directory sich Ihr IRIS Client verbindet und welche ROOT Zertifikate vertraut wird. 
+
+## Einrichtung vom Service Directory Endpunkt
+
+Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf das IRIS Service Directory, damit es weiß welche Services unter welcher Adresse zu erreichen sind. Die richtige Service Directory URL hängt von der Umgebung (Staging oder Live ab). 
+
+```
+# Staging: 
+EPS_SD_ENDPOINT=https://test.iris-gateway.de:32324/jsonrpc
+
+# Live: 
+EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
+```
+## Einrichtung vom IRIS Locations Service
+
+Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf den IRIS Locations Service, damit die Mitarbeiter im GA u.a. nach Betrieben und Gastronomien suchen können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
+
+```
+# staging:  ls-1
+# live:     locations-production-1
+EPS_LS_NAME=
+```
+
+## Einrichtung vom IRIS Public Proxy
+
+Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf den IRIS Public Proxy Service, damit eingehende Daten wie z.B. Kontakttagebücher empfangen werden können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
+
+```
+# staging:  public-proxy-1
+# live:     public-proxy-production-1
+EPS_PP_NAME=
+```
+
+
+## Einrichtung: TLS-Zertifikat ( Private Proxy )
+
+Wie in der [Architektur](./Architektur.md) beschrieben kann der IRIS Client über das Proxy Netzwerk Kontakttagebücher entgegennehmen. Dafür muss ein TLS Zertifikat und dessen privater Schlüssel konfiguriert werden. 
+
+Die Domain unterscheidet sich je nach Umgebung. 
+
+Für Staging gibt es eine vom IRIS Team zur Verfügung gestellte Domain namens `proxy.test-gesundheitsamt.de`. 
+
+Für die Live-Umgebung wurde Ihnen die Domain vom Land zentral bereit gestellt. Sie sollten dazu Informationen erhalten haben.
+
+```
+PROXY_SUBDOMAIN=<Ihre zugewiesene Domain>
+```
+
+Wie oben beschrieben sollte das Zertifikat und der private Schlüssel im Verzeichnis `./conf/proxy/certs`. 
+
+```
+.
+├── conf
+    └── proxy
+       └── certs 
+           ├── <TLS-Zertifikat - Private Proxy>
+           └── <Der dazugehörige private Schlüssel>
+
+```
+
+Tragen Sie dann die beiden Dateien in die Konfiguration ein.
+
+```
+PROXY_TLS_CERT=<TLS-Zertifikat - Private Proxy>
+PROXY_TLS_CERT_KEY=<Der dazugehörige private Schlüssel>
+```
+
+
+
+## Einrichtung: mTLS-Zertifikat - EPS ( IRIS Client BFF )
+
+Damit der IRIS Client sich im IRIS Netzwerk anmelden und mit anderen Teilnehmern kommunizieren und Daten austauschen kann, benötigt man ein IRIS GA Client Zertifikat. Der Prozess dafür ist weiter oben in der Anleitung dokumentiert.
+
+Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüssel im Ordner `./conf/eps/certs` ablegen.
+
+```
+# Beispiel
+├── conf
+│   ├── eps
+│   │   ├── certs
+│   │   │   ├── <mTLS-Zertifikat - EPS ( IRIS Client BFF )>
+│   │   │   └── <Der dazugehörige private Schlüssel>
+```
+
+Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist der selbe wie der CN Name aus dem Zertifikats-Prozess.
+
+```
+EPS_OP=${CN aus dem Zertifikat}
+EPS_CLIENT_CERT=<mTLS-Zertifikat - EPS ( IRIS Client BFF )> # Beispiel s.o.
+EPS_CLIENT_CERT_KEY=<Der dazugehörige private Schlüssel> # Beispiel s.o.
+```
+
+## Einrichtung: mTLS-Zertifikat - EPS ( IRIS Private Proxy ) 
+
+Damit der IRIS Client wie in der [Architektur](./Architektur.md) beschrieben eingehende Verbindungen über das IRIS Proxy Netzwerk erlauben kann, benötigt man ein Proxy Client Zertifikat. Der Prozess dafür ist weiter oben in der Anleitung dokumentiert.
+
+Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüssel im Ordner `./conf/eps/certs` ablegen.
+
+> Für die Live Umgebung wird nur ein Zertifikat und Schlüssel für `IRIS Private Proxy` und `IRIS Client BFF` benutzt. 
+> 
+> Es unterscheidet sich der Parameter `PROXY_OP`. Dieser Wert muss auf den 2. SAN Eintrag gesetzt werden (eps-proxy.\<Ihre zugewiesene Domain\>).
+ 
+```
+# Beispiel
+├── conf
+│   ├── eps
+│   │   ├── certs
+│   │   │   ├── <mTLS-Zertifikat - EPS ( IRIS Private Proxy ) >
+│   │   │   └── <Der dazugehörige private Schlüssel>
+```
+Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist der selbe wie der CN Name aus dem Zertifikats-Prozess.
+
+```
+PROXY_OP=${CN oder ein SAN Eintrag}
+PROXY_CLIENT_CERT=<mTLS-Zertifikat - EPS ( IRIS Private Proxy ) >
+PROXY_CLIENT_CERT_KEY=<Der dazugehörige private Schlüssel>
+```
+
 
 # Starten der Anwendung
 
