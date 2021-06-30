@@ -100,6 +100,9 @@ mv ./licenses-dev.md ../FE-THIRD-PARTY-LICENSES-DEV.md
 export VUE_APP_BUILD_ID=$COMMIT
 export VUE_APP_VERSION_ID=$VERSION
 export VUE_APP_API_BASE_URL="/api"
+export VUE_APP_LOCAL_CONTACT_PERSON_NAME=""
+export VUE_APP_LOCAL_CONTACT_PERSON_MAIL=""
+export VUE_APP_LOCAL_CONTACT_PERSON_PHONE=""
 npm run build
 cd dist && zip -qq -r ../../release/iris-client-fe-$VERSION.zip *
 
