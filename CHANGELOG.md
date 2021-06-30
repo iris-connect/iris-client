@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.0.0-rc.9](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.8...v1.0.0-rc.9) (2021-06-30)
+
+
+### Bug Fixes
+
+* Triggers new release 1.0.0-rc.9 ([8b690e3](https://github.com/iris-connect/iris-client/commit/8b690e35e60799711d7dc76605d60d8712ce27e1))
+
 # [1.0.0-rc.8](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.7...v1.0.0-rc.8) (2021-06-30)
 
 
