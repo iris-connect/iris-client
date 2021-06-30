@@ -30,6 +30,30 @@ docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$VERSION
 docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MAJOR
 docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MAJOR.$MINOR
 
+printf "\n  Build IRIS Client EPS image  \n\n"
+IRIS_CLIENT_EPS_IMAGE_NAME="$NAMESPACE/iris-client-eps"
+docker build -t $IRIS_CLIENT_EPS_IMAGE_NAME ./infrastructure/docker/iris-client-eps/
+
+docker tag $IRIS_CLIENT_EPS_IMAGE_NAME $IRIS_CLIENT_EPS_IMAGE_NAME:$VERSION
+docker tag $IRIS_CLIENT_EPS_IMAGE_NAME $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR
+docker tag $IRIS_CLIENT_EPS_IMAGE_NAME $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR.$MINOR
+
+printf "\n  Build IRIS Client PROXY image  \n\n"
+IRIS_CLIENT_PROXY_IMAGE_NAME="$NAMESPACE/iris-client-proxy"
+docker build -t $IRIS_CLIENT_PROXY_IMAGE_NAME ./infrastructure/docker/iris-client-proxy/
+
+docker tag $IRIS_CLIENT_PROXY_IMAGE_NAME $IRIS_CLIENT_PROXY_IMAGE_NAME:$VERSION
+docker tag $IRIS_CLIENT_PROXY_IMAGE_NAME $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR
+docker tag $IRIS_CLIENT_PROXY_IMAGE_NAME $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR.$MINOR
+
+printf "\n  Build App EPS image  \n\n"
+APP_EPS_IMAGE_NAME="$NAMESPACE/app-eps"
+docker build -t $APP_EPS_IMAGE_NAME ./infrastructure/docker/app-eps/
+
+docker tag $APP_EPS_IMAGE_NAME $APP_EPS_IMAGE_NAME:$VERSION
+docker tag $APP_EPS_IMAGE_NAME $APP_EPS_IMAGE_NAME:$MAJOR
+docker tag $APP_EPS_IMAGE_NAME $APP_EPS_IMAGE_NAME:$MAJOR.$MINOR
+
 printf "\n  Build FE image  \n\n"
 FE_IMAGE_NAME="$NAMESPACE/iris-client-frontend"
 docker build -t $FE_IMAGE_NAME ./iris-client-fe/
@@ -100,6 +124,21 @@ docker push $NGINX_IMAGE_NAME:$VERSION
 docker push $NGINX_IMAGE_NAME:latest
 docker push $NGINX_IMAGE_NAME:$MAJOR
 docker push $NGINX_IMAGE_NAME:$MAJOR.$MINOR
+
+docker push $IRIS_CLIENT_EPS_IMAGE_NAME:$VERSION
+docker push $IRIS_CLIENT_EPS_IMAGE_NAME:latest
+docker push $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR
+docker push $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR.$MINOR
+
+docker push $IRIS_CLIENT_PROXY_IMAGE_NAME:$VERSION
+docker push $IRIS_CLIENT_PROXY_IMAGE_NAME:latest
+docker push $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR
+docker push $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR.$MINOR
+
+docker push $APP_EPS_IMAGE_NAME:$VERSION
+docker push $APP_EPS_IMAGE_NAME:latest
+docker push $APP_EPS_IMAGE_NAME:$MAJOR
+docker push $APP_EPS_IMAGE_NAME:$MAJOR.$MINOR
 
 printf "\n  COMPLETED: Build components and prepare release  \n\n"
 
