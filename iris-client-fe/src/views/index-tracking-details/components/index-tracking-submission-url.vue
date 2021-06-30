@@ -5,7 +5,7 @@
         v-on:dblclick="toggleUrl"
         :class="['toggle-url', expanded ? '' : 'text-truncate']"
       >
-        <v-tooltip bottom>
+        <v-tooltip left>
           <span v-if="expanded">URL minimieren per Doppelklick</span>
           <span v-else>Vollständige URL anzeigen per Doppelklick</span>
           <template v-slot:activator="{ on, attrs }">
@@ -85,5 +85,6 @@ export default class IndexTrackingSubmissionUrl extends IndexTrackingSubmissionU
 }
 .toggle-url {
   cursor: pointer;
+  max-width: 400px;
 }
 </style>
