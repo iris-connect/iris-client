@@ -87,5 +87,5 @@ Bei dieser Installationsvariante werden alle Komponenten vom IRIS Client von ein
 
 > Diese Installationsart ist aufgrund der komplexen Konfiguration NICHT empfohlen.
 
-[Hier geht es weiter. ](./Installation-Standalone.md)
+[Hier geht es weiter. ](../../stand-alone-deployment/README.md)
 

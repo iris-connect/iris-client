@@ -109,6 +109,11 @@ cd dist && zip -qq -r ../../release/iris-client-fe-$VERSION.zip *
 printf "\n  Create ZIP of deployment scripts and instructions  \n\n"
 cd ../../infrastructure/deployment && zip -qq -r ../../release/deployment-$VERSION.zip * .*
 
+printf "\n  Create ZIP of stand-alone-deployment  \n\n"
+
+cd ../../infrastructure/stand-alone-deployment && zip -qq -r ../../release/stand-alone-deployment-$VERSION.zip * .*
+
+
 cd ../../
 
 printf "\n  Push images and tags to docker registry  \n\n"
