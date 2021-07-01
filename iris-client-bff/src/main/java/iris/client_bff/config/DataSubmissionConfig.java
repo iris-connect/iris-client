@@ -13,11 +13,13 @@ import com.googlecode.jsonrpc4j.spring.CompositeJsonServiceExporter;
 @AllArgsConstructor
 public class DataSubmissionConfig {
 
+	public static final String DATA_SUBMISSION_ENDPOINT = "/data-submission-rpc";
+
 	CaseDataController caseDataController;
 
 	EventDataController eventDataController;
 
-	@Bean(name = "/data-submission-rpc")
+	@Bean(name = DATA_SUBMISSION_ENDPOINT)
 	public CompositeJsonServiceExporter jsonRpcServiceImplExporter() {
 
 		CompositeJsonServiceExporter compositeJsonServiceExporter = new CompositeJsonServiceExporter();
