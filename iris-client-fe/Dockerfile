@@ -16,6 +16,9 @@ RUN npm ci
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
 
+ARG VUE_APP_VERSION_ID=production
+ARG VUE_APP_BUILD_ID=local
+
 # build app for production with minification
 RUN npm run build
 
