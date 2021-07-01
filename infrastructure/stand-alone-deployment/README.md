@@ -73,7 +73,7 @@ Auf dem System _muss_ die letzte Version von **eps** und **Proxy** installiert s
     --level value  The desired log level (default: "info")
     --help, -h     show help
     ```
-1. Einrichtung IRIS-CLient BFF
+1. Einrichtung IRIS-Client BFF
     
     Das IRIS-Client BFF kann aus dem [öffentlichen Repository](https://github.com/iris-connect/iris-client/releases) heruntergeladen werden. Danach muss das Jahr in den Ordner `./bin` kopiert werden.
 
