@@ -1,4 +1,15 @@
+# Achtung
+
+Aktueller Status: Aktuell befindet ist dieser Installationsprozess nocht nicht finalisiert. Hier wird es bald Updates geben. Stand: ( 24.06.2021 )
+
+<br />
+<br />
+<br />
+
+---
+
 # IRIS Client - Stand-Alone Installation
+
 
 Für diese Installationsart werden alle Komponenten des IRIS Clients separat auf einem Server installiert. Das folgende Schaubild visualisiert das Setup.
 

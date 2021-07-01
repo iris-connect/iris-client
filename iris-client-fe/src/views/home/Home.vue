@@ -17,7 +17,6 @@
           actionlabel="Zur Indexübersicht"
           image="sketch_medicine.svg"
           actionlink="cases/list"
-          :linkDisabled="true"
         ></counter-widget>
       </v-col>
       <v-col>
@@ -51,12 +50,8 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn
-                  color="primary"
-                  :to="{ name: 'index-new' }"
-                  class="mb-5"
-                  :disabled="true"
-                  >Indexfall-Daten anfordern
+                <v-btn color="primary" :to="{ name: 'index-new' }" class="mb-5">
+                  Indexfall-Daten anfordern
                 </v-btn>
               </v-col>
             </v-row>

@@ -13,12 +13,13 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
 public class IndexCaseDetailsDTO {
-  private String caseId;
-  private String comment;
-  private String externalCaseId;
-  private String name;
-  private Instant start;
-  private Instant end;
-  private IndexCaseStatusDTO status;
-  private ContactsAndEvents submissionData;
+	private String caseId;
+	private String comment;
+	private String externalCaseId;
+	private String name;
+	private Instant start;
+	private Instant end;
+	private IndexCaseStatusDTO status;
+	private ContactsAndEvents submissionData;
+	private String submissionUri;
 }

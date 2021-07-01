@@ -51,6 +51,9 @@ export default Vue.extend({
   components: {
     UserMenu,
   },
+  created() {
+    document.title = "IRIS connect";
+  },
   data: () => ({
     links: routes,
   }),

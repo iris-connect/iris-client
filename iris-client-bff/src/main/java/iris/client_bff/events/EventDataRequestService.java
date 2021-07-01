@@ -1,21 +1,7 @@
-/*******************************************************************************
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *******************************************************************************/
 package iris.client_bff.events;
 
-import static iris.client_bff.search_client.eps.LocationMapper.map;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static iris.client_bff.search_client.eps.LocationMapper.*;
+import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
@@ -23,6 +9,7 @@ import iris.client_bff.events.eps.DataProviderClient;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.model.Location;
 import iris.client_bff.events.web.dto.DataRequestClient;
+import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
@@ -52,6 +39,7 @@ public class EventDataRequestService {
 	private final SearchClient searchClient;
 	private final ProxyServiceClient proxyClient;
 	private final DataProviderClient epsDataRequestClient;
+	private final EventEmailProvider eventEmailProvider;
 
 	public Page<EventDataRequest> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
@@ -168,5 +156,11 @@ public class EventDataRequestService {
 
 	public int getCountWithStatus(Status status) {
 		return repository.getCountWithStatus(status);
+	}
+
+	public void sendDataRecievedEmail(EventDataRequest updated, EventStatusDTO status) {
+		if (status == EventStatusDTO.DATA_RECEIVED) {
+			eventEmailProvider.sendDataRecievedEmail(updated);
+		}
 	}
 }

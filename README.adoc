@@ -4,6 +4,14 @@
 
 toc::[]
 
+image:https://img.shields.io/github/v/release/iris-connect/iris-client?include_prereleases&sort=semver[Release,link=https://github.com/iris-connect/iris-client/releases]
+image:https://img.shields.io/github/release-date-pre/iris-connect/iris-client[Release Date,link=https://github.com/iris-connect/iris-client/releases]
+image:https://img.shields.io/badge/-Release_Notes-blue[Release Notes,link=https://github.com/iris-connect/iris-client/releases]
+image:https://img.shields.io/github/license/iris-connect/iris-client?color=green[License,link=./LICENSE]
+image:https://img.shields.io/github/last-commit/iris-connect/iris-client[Last Commit,link=https://github.com/iris-connect/iris-client/commits/]
+image:https://img.shields.io/github/issues/iris-connect/iris-client[Open Issues,link=https://github.com/iris-connect/iris-client/issues/]
+image:https://api.reuse.software/badge/github.com/iris-connect/iris-client[REUSE Status,link=https://api.reuse.software/info/github.com/iris-connect/iris-client]
+
 == Feedback
 
 If you have any feedback or questions mailto:iris@steiger-stiftung.de[just contact us].
@@ -21,7 +29,7 @@ We use the specification https://www.conventionalcommits.org[Conventional Commit
 Commits should always refer to an issue (user story, bug or task). Therefore, always include the reference to the issue at the end of the commit message.
 ```
 Refs #{issue number} ⇒ same repository
-Refs iris-gateway/iris-backlog#{issue number} ⇒ other repository
+Refs iris-connect/iris-backlog#{issue number} ⇒ other repository
 ```
 
 === Branches
@@ -143,3 +151,9 @@ As further support, use https://www.sonarlint.org/[SonarLint] to avoid code smel
 == License
 
 Currently this code is licensed under Affero GPL 3.0.
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the link:LICENSE[] for more details.
+
+Please see the https://api.reuse.software/info/github.com/iris-connect/iris-client[detailed licensing information] via the https://reuse.software/[REUSE Tool] for more details.

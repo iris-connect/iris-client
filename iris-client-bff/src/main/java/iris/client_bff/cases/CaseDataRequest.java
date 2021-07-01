@@ -1,27 +1,26 @@
-/*******************************************************************************
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *******************************************************************************/
 package iris.client_bff.cases;
 
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
 
 /**
  * @author Jens Kutzsche
@@ -44,13 +43,15 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
   private Instant requestStart;
   private Instant requestEnd;
   private @Setter String comment;
+  private String announcementToken;
+  private @Setter String dwSubmissionUri;
 
   @Column(nullable = false) @Enumerated(EnumType.STRING)
   private Status status = Status.DATA_REQUESTED;
 
   @Builder
   public CaseDataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
-	  String hdUserId, String comment) {
+	  String hdUserId, String comment, String announcementToken) {
 
 	super();
 
@@ -62,6 +63,7 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 	this.requestEnd = requestEnd;
 	this.hdUserId = hdUserId;
 	this.comment = comment;
+	this.announcementToken = announcementToken;
   }
 
   public Instant getLastModifiedAt() {
@@ -80,6 +82,7 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 
 	private static final long serialVersionUID = -8254677010830428881L;
 
+	@Getter
 	final UUID requestId;
 
 	/**

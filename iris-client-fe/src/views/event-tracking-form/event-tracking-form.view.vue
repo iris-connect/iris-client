@@ -63,9 +63,11 @@
               v-model="form.model.start"
               :date-props="{
                 label: 'Datum (Beginn)',
+                max: maxStartDate,
               }"
               :time-props="{
                 label: 'Uhrzeit (Beginn)',
+                max: maxStartTime,
               }"
               :rules="validationRules.start"
               required
@@ -76,6 +78,7 @@
               v-model="form.model.end"
               :date-props="{
                 label: 'Datum (Ende)',
+                min: minEndDate,
               }"
               :time-props="{
                 label: 'Uhrzeit (Ende)',
@@ -169,6 +172,19 @@ export default class EventTrackingFormView extends Vue {
     form: HTMLFormElement;
   };
 
+  minEndDate = "";
+
+  get maxStartDate(): string {
+    return dayjs().format("YYYY-MM-DD");
+  }
+
+  get maxStartTime(): string {
+    return this.form.model.start &&
+      dayjs(this.form.model.start).isSame(dayjs(), "day")
+      ? dayjs().format("HH:mm")
+      : "";
+  }
+
   get eventCreationOngoing(): boolean {
     return store.state.eventTrackingForm.eventCreationOngoing;
   }
@@ -197,7 +213,14 @@ export default class EventTrackingFormView extends Vue {
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      start: [],
+      start: [
+        (v: string): string | boolean => {
+          return (
+            dayjs(v).isSameOrBefore(dayjs(), "minute") ||
+            "Bitte geben Sie einen Zeitpunkt in der Vergangenheit an"
+          );
+        },
+      ],
       end: [
         (v: string): string | boolean => {
           if (!this.form.model.start) return true;
@@ -242,8 +265,11 @@ export default class EventTrackingFormView extends Vue {
       });
     }
   }
+
   @Watch("form.model.start")
   onDateChanged(): void {
+    this.form.model.end = dayjs(this.form.model.start).endOf("day").toString();
+    this.minEndDate = dayjs(this.form.model.start).format("YYYY-MM-DD");
     this.validateField("end");
   }
 
