@@ -1,6 +1,6 @@
 # Achtung
 
-Aktueller Status: Aktuell befindet ist dieser Installationsprozess nocht nicht finalisiert. Hier wird es bald Updates geben. Stand: ( 24.06.2021 )
+Aktueller Status: Aktuell ist dieser Installationsprozess nocht nicht finalisiert. Hier wird es bald Updates geben. Stand: ( 24.06.2021 )
 
 <br />
 <br />
@@ -8,24 +8,24 @@ Aktueller Status: Aktuell befindet ist dieser Installationsprozess nocht nicht f
 
 ---
 
-# IRIS Client - Stand-Alone Installation
+# IRIS connect Client - Stand-Alone Installation
 
 
-Für diese Installationsart werden alle Komponenten des IRIS Clients separat auf einem Server installiert. Das folgende Schaubild visualisiert das Setup.
+Für diese Installationsart werden alle Komponenten des IRIS-Clients separat auf einem Server installiert. Das folgende Schaubild visualisiert das Setup.
 
-![IRIS Lokale Installation](iris-local-installation.jpg)
+![IRIS Stand-Alone Installation](iris-local-installation.jpg)
 
 ## Installation IRIS Backend (IRIS BE)
 
 Bei dem IRIS Backend handelt es sich um eine Java Applikation (min Java 11).
 
-1. Download Jar Datei
+### 1. Download Jar-Datei
 
-   ```
-   https://github.com/iris-gateway/iris-client/releases
-   ```
+Die Datei finden Sie hier:    
+   https://github.com/iris-connect/iris-client/releases
+   
 
-2. Anlegen einer Konfigurations Datei (Beispielwerte)
+### 2. Anlegen einer Konfigurations Datei (Beispielwerte)
 
    ```
    > touch conf.env
@@ -41,13 +41,13 @@ Bei dem IRIS Backend handelt es sich um eine Java Applikation (min Java 11).
    export SECURITY_AUTH_DB_ADMIN_USER_PASSWORD=admin
    ```
 
-3. Konfigurations Parameter als Umgebungsvariablen exportieren
+### 3. Konfigurations Parameter als Umgebungsvariablen exportieren
 
    ```
    source conf.env
    ```
 
-4. Starten der Java Applikation (Beispiel Version: v1.0.3-alpha)
+### 4. Starten der Java Applikation (Beispiel Version: v1.0.3-alpha)
 
    ```
    java -jar iris-client-bff-v1.0.3-alpha.jar -Dlogging.file.name=iris-client-bff.log
