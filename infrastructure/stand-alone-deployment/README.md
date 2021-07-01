@@ -2,7 +2,7 @@
 
 > Die Anleitung wurde auf Linux und macOS getestet.
 
-Bei dieser Installationsvariante werden die einzelnen Pakete des IRIS-Clients heruntergeladen und über Skripte gestartet. Dafür gibt es folgende vordefinierte Ordnerstruktur.
+Bei dieser Installationsvariante werden die einzelnen Pakete des IRIS-Clients heruntergeladen und über Skripte gestartet. Dafür gibt es folgende vordefinierte Ordnerstruktur. Das Template dafür kann aus dem [öffentlichen Repository](https://github.com/iris-connect/iris-client/releases) heruntergeladen werden ( das Dropwdown **Assets** aufklappen ). 
 
 ```
 .
