@@ -26,7 +26,7 @@ public class CaseDataRequestDataInitializer implements DataInitializer {
 			.of(UUID.fromString("7bf1eb00-3d84-45c7-8b08-f0e4719ee762"));
 
 	public static final CaseDataRequest DATA_REQUEST_1 = new CaseDataRequest(REQ_ID_1.toString(), "Anfrage 1",
-			Instant.now().minus(2, DAYS), null, null, null);
+			Instant.now().minus(2, DAYS), null, null, null, null);
 
 	private final CaseDataRequestRepository requests;
 
@@ -40,10 +40,10 @@ public class CaseDataRequestDataInitializer implements DataInitializer {
 		list.add(DATA_REQUEST_1);
 
 		list.add(new CaseDataRequest(REQ_ID_2.toString(), "Anfrage 2", Instant.now().minus(4, DAYS),
-				Instant.now().minus(2, DAYS), null, null));
+				Instant.now().minus(2, DAYS), null, null, null));
 
 		list.add(new CaseDataRequest(REQ_ID_3.toString(), "Anfrage 3", Instant.now().minus(4, DAYS),
-				Instant.now().minus(2, DAYS), null, null));
+				Instant.now().minus(2, DAYS), null, null, null));
 
 		requests.saveAll(list);
 	}

@@ -3,7 +3,7 @@ package iris.client_bff.statistics.web;
 import static org.springframework.http.HttpStatus.OK;
 
 import iris.client_bff.cases.CaseDataRequest;
-import iris.client_bff.cases.IndexCaseService;
+import iris.client_bff.cases.CaseDataRequestService;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.statistics.web.dto.StatisticsDTO;
@@ -22,16 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/data-requests-client/statistics")
 public class StatisticsController {
 
-	private IndexCaseService indexCaseService;
+	private CaseDataRequestService caseDataRequestService;
 	private EventDataRequestService eventService;
 
 	@GetMapping
 	@ResponseStatus(OK)
 	public StatisticsDTO getWeeklyData() {
 		Instant oneWeekAgo = Instant.now().minus(7, ChronoUnit.DAYS);
-		int indexCasesCount = indexCaseService.getCountSinceDate(oneWeekAgo);
+		int indexCasesCount = caseDataRequestService.getCountSinceDate(oneWeekAgo);
 		int eventsCount = eventService.getCountSinceDate(oneWeekAgo);
-		int sumStatus = indexCaseService.getCountWithStatus(CaseDataRequest.Status.DATA_RECEIVED)
+		int sumStatus = caseDataRequestService.getCountWithStatus(CaseDataRequest.Status.DATA_RECEIVED)
 				+ eventService.getCountWithStatus(EventDataRequest.Status.DATA_RECEIVED);
 
 		return StatisticsDTO.builder()

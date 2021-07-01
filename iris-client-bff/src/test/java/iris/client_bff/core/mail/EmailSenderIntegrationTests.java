@@ -25,7 +25,7 @@ import com.icegreen.greenmail.util.GreenMailUtil;
 
 @RequiredArgsConstructor
 @IrisWebIntegrationTest
-@ActiveProfiles("dev")
+@ActiveProfiles({"dev", "test"})
 class EmailSenderIntegrationTests {
 
 	final EmailSender sender;

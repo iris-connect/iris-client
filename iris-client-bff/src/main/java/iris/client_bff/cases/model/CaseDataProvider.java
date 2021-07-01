@@ -1,23 +1,23 @@
-package iris.client_bff.events.model;
+package iris.client_bff.cases.model;
 
-import iris.client_bff.core.model.Address;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
 
 @Embeddable
 @Data
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-public class GuestListDataProvider {
+public class CaseDataProvider {
 
-	private String name;
-	@Embedded
-	private Address address;
+	private String firstName;
+	private String lastName;
+	private LocalDate dateOfBirth;
 }

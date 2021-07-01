@@ -1,4 +1,5 @@
-package iris.client_bff.cases.web.submission_dto;
+
+package iris.client_bff.cases.eps.dto;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -15,10 +16,9 @@ import java.time.Instant;
 @ToString
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
-public class ContactPersonAllOfContactInformation {
-
-	private Instant firstContactDate;
-	private Instant lastContactDate;
-	private ContactCategory contactCategory;
-	private String basicConditions;
+public class ContactInformation {
+	Instant firstContactDate;
+	Instant lastContactDate;
+	ContactCategory contactCategory;
+	String basicConditions;
 }

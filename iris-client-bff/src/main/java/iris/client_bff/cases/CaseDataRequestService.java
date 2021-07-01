@@ -2,13 +2,21 @@ package iris.client_bff.cases;
 
 import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
+import iris.client_bff.cases.dto.DwUrlParamDto;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
+import iris.client_bff.config.DwConfig;
+import iris.client_bff.config.HealthDepartmentConfig;
+import iris.client_bff.events.exceptions.IRISDataRequestException;
+import iris.client_bff.proxy.IRISAnnouncementException;
+import iris.client_bff.proxy.ProxyServiceClient;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,12 +25,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Slf4j
 @Service
 @AllArgsConstructor
-public class IndexCaseService {
+public class CaseDataRequestService {
 
 	CaseDataRequestRepository repository;
 	CaseEmailProvider caseEmailProvider;
+	private final ProxyServiceClient proxyClient;
+	private final DwConfig dwConfig;
+	private final HealthDepartmentConfig hdConfig;
 
 	public Page<CaseDataRequest> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
@@ -61,14 +75,25 @@ public class IndexCaseService {
 		return repository.save(indexCase);
 	}
 
-	public CaseDataRequest create(IndexCaseInsertDTO insert) {
+	public CaseDataRequest create(IndexCaseInsertDTO insert) throws IRISDataRequestException {
+		String announcementToken;
+		try {
+			announcementToken = proxyClient.announce();
+		} catch (IRISAnnouncementException e) {
+			log.error("Announcement failed: ", e);
+			throw new IRISDataRequestException(e);
+		}
+
 		var dataRequest = CaseDataRequest.builder()
 			.comment(insert.getComment())
 			.refId(insert.getExternalCaseId())
 			.name(insert.getName())
 			.requestStart(insert.getStart())
 			.requestEnd(insert.getEnd())
+			.announcementToken(announcementToken)
 			.build();
+
+		dataRequest.setDwSubmissionUri(generateDwUrl(dataRequest));
 		return repository.save(dataRequest);
 	}
 
@@ -84,5 +109,22 @@ public class IndexCaseService {
 		if (status == IndexCaseStatusDTO.DATA_RECEIVED) {
 			caseEmailProvider.sendDataRecievedEmail(indexCaseDetailsDTO);
 		}
+	}
+
+	private String generateDwUrl(CaseDataRequest dataRequest) throws IRISDataRequestException {
+		String paramsAsJsonBase64;
+
+		try {
+			DwUrlParamDto dwUrlParamDto = new DwUrlParamDto(dataRequest.getId().toString(),
+					dataRequest.getAnnouncementToken(),	hdConfig.getZipCode());
+			String paramsAsJson = new ObjectMapper().writeValueAsString(dwUrlParamDto);
+			paramsAsJsonBase64 = Base64.getEncoder().encodeToString(paramsAsJson.getBytes());
+			log.debug("Generated Base64 encoded params: {}", dwUrlParamDto);
+		} catch(Exception e) {
+			log.error("Generating DW URL failed", e);
+			throw new IRISDataRequestException(e);
+		}
+
+		return dwConfig.getBaseurl() + dwConfig.getSuburlNewcase() + "?iris=" + paramsAsJsonBase64;
 	}
 }
