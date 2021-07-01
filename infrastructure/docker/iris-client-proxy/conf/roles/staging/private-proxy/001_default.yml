@@ -23,6 +23,15 @@ vars:
     source: env
     variable: PROXY_TLS_CERT_KEY
     type: string
+  IRIS_CLIENT_BFF_DATA_SUBMISSION_ENDPOINT:
+   source: env
+   variable: IRIS_CLIENT_BFF_DATA_SUBMISSION_ENDPOINT
+   type: string
+  PRIVATE_PROXY_EPS_JSON_RPC_ENDPOINT:
+   source: env
+   variable: PRIVATE_PROXY_EPS_JSON_RPC_ENDPOINT
+   type: string
+
 
 private:
   name: "$PROXY_OP"
@@ -31,7 +40,8 @@ private:
   internal_endpoint: 
     jsonrpc_path: /data-submission-rpc
     jsonrpc_client:
-      endpoint: http://iris-client:8092/data-submission-rpc    
+      endpoint: "$IRIS_CLIENT_BFF_DATA_SUBMISSION_ENDPOINT"
+
     tls:
       verify_client: false
       server_name: "$PROXY_DOMAIN"
@@ -42,7 +52,8 @@ private:
       key_file: "$DIR/../../../certs/$PROXY_TLS_CERT_KEY"
 
   jsonrpc_client:
-    endpoint: https://private-proxy-eps:7766/jsonrpc
+    endpoint: "$PRIVATE_PROXY_EPS_JSON_RPC_ENDPOINT"
+
     tls:
       server_name: "$PROXY_OP"
       ca_certificate_files: 

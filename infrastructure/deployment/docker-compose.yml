@@ -85,14 +85,15 @@ services:
     volumes:
       - ./certs/eps:/app/settings/certs
     environment:
+      IRIS_CLIENT_BFF_DATA_SUBMISSION_ENDPOINT: http://iris-client:8092/data-submission-rpc
       EPS_SETTINGS: "settings/roles/${IRIS_ENV}/hd"
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ${PROXY_URL}
       EPS_OP:
       EPS_CLIENT_CERT:
       EPS_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
       EPS_SD_NAME:
-      HTTPS_PROXY: ${PROXY_URL}
-      PROXY_URL: ${PROXY_URL}
 
   # Proxy for inbound connections.
   private-proxy:
@@ -105,11 +106,13 @@ services:
       - proxy_db_iris:/app/db
     environment:
       PROXY_SETTINGS: "settings/roles/${IRIS_ENV}/private-proxy"
+      IRIS_CLIENT_BFF_DATA_SUBMISSION_ENDPOINT: http://iris-client:8092/data-submission-rpc
+      PRIVATE_PROXY_EPS_JSON_RPC_ENDPOINT: https://private-proxy-eps:7766/jsonrpc
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_DOMAIN: ${PROXY_SUBDOMAIN}
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
-      HTTPS_PROXY: ${PROXY_URL}
-      PROXY_DOMAIN: ${PROXY_SUBDOMAIN}
       PROXY_TLS_CERT:
       PROXY_TLS_CERT_KEY:
     command: ["--level", "trace", "run", "private"]
@@ -133,6 +136,7 @@ services:
       EPS_SD_NAME:
       HTTPS_PROXY: ${PROXY_URL}
       PROXY_URL: ${PROXY_URL}
+      PRIVATE_PROXY_JSON_RPC_ENDPOINT: http://private-proxy:8877/jsonrpc
     depends_on:
       - logger
 
