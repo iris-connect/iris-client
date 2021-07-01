@@ -38,6 +38,7 @@ IRIS stellt zwei Umgebungen bereit. Staging zum Testen und Live für den Produkt
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Postgres DB           | Das IRIS-Client Backend benutzt eine Postgres Datenbank für die a) Verwaltung der Konten und b) für die Speicherung der offenen Indexfall-Anfragen und Ereignis-Anfragen                                                                             |
 | Webserver             | Für die Bereistellung vom IRIS-Client Frontend über eine sichere HTTPS Verbindung wird ein Webserver benötigt. Dieser muss in der Lage sein a) Die statische Webanwendung auszuliefern und b) API Anfragen an das IRIS-Client Backend weiterzuleiten |
+| HTTPS Proxy ( Optional ) | Proxy server für EPS Kommunikation. Unterstützung für [HTTP_CONNECT](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/CONNECT) notwendig. Dies ist nicht notwendig, sollte Ihr Server direkte Firewall Freischaltungen ins Internet besitzen. |
 
 > Die Standard-Installationsvariante mit Docker Compose bringt bereits ein vorkonfiguriertes Setup inklusive der Postgres DB, dem Webserver (nginx) und EPS mit.
 
@@ -50,19 +51,23 @@ IRIS stellt zwei Umgebungen bereit. Staging zum Testen und Live für den Produkt
 | mTLS-Zertifikat - EPS ( IRIS Client BFF )         | Der IRIS-Client benutzt ein für das GA ausgestelltes mTLS Zertifikat um mit den zentralen IRIS Services zu kommunizieren. Darüber hinaus werden alle Anfragen die vom IRIS-Client ausgehen mit dem Zertifikat signiert. Der Austellungs-Prozess für die **Staging Umgebung** ist [hier](Certificate-Process-Staging.md) dokumentiert. Der Austellungs-Prozess für die **Live Umgebung** ist [hier](Certificate-Process_Prod_technical.md) dokumentiert. |
 | mTLS-Zertifikat - EPS ( IRIS Private Proxy ) | Der Proxy benutzt ein für das GA ausgestelltes mTLS Zertifikat um mit den public-Proxy zu kommunizieren und eingehende Verbindungen z.B. zum Übertragen von Kontakttagebüchern zuzulassen. Der Austellungs-Prozess für die **Staging Umgebung** ist [hier](Certificate-Process-Staging.md) dokumentiert. Der Austellungs-Prozess für die **Live Umgebung** ist [hier](Certificate-Process_Prod_technical.md) dokumentiert.                                   |
 
-> Für die Live Umgebung werden die beiden EPS Zertifikate durch eins abgebildet. 
+> In der Live Umgebung handelt es sich bei den beiden EPS Zertifikate um das gleiche Zertifikat.
 
 
-### Des Weiteren gibt es folgende infrastrukturelle Anhängigkeiten
+### Des Weiteren gibt es folgende Kommunikationsverbindungen
 
-| Infrastruktur-Abhängigkeit                            | Beschreibung                                                                                                                         |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| HTTPS Proxy                                           | Proxy server für EPS. Unterstützung für [HTTP_CONNECT](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/CONNECT) notwendig. |
-| Proxy Freischaltung - IRIS Central Services - Staging | Zugriff auf iris.staging.iris-gateway.de ( ConnectPorts: 3322, 4445, 5559, 9999 )                                                      |
-| Proxy Freischaltung - IRIS App Provider - Staging     | Zugriff auf \*.apps.staging.iris-gateway.de ( ConnectPorts: 4444 ) |
-| Proxy Freischaltung - IRIS Central Services - Live    | Zugriff auf prod.iris-gateway.de ( ConnectPorts: 32324, 32327, 32323 ) |
-| Proxy Freischaltung - IRIS App Provider - Live        | Zugriff auf \*.apps.prod.iris-gateway.de ( ConnectPorts: 4444, 443 ) |
+> Diese Verbindungen müssen sowohl bei direkter als auch bei indirekter Kommunkation ( via Proxy ) erlaubt werden. 
 
+|     Service                |     Umgebung |     Ziel-Host                   |     Ziel-Ports          |
+|----------------------------|--------------|---------------------------------|------------------------|
+|     IRIS Service Directory |     staging  |     test.iris-gateway.de        |     32324              |
+|     IRIS Locations Service |     staging  |     test.iris-gateway.de        |     32323              |
+|     IRIS Public Proxy      |     staging  |     test.iris-gateway.de        |     32327              |
+|     IRIS Connected Apps    |     staging  |     *.apps.test.iris-gateway.de |     4443, 4444, 443    |
+|     IRIS Service Directory |     live     |     prod.iris-gateway.de        |     32324              |
+|     IRIS Locations Service |     live     |     prod.iris-gateway.de        |     32323              |
+|     IRIS Public Proxy      |     live     |     prod.iris-gateway.de        |     32327              |
+|     IRIS Connected Apps    |     live     |     *.apps.prod.iris-gateway.de |     4444, 443          |
 ## Authentifizierung und Authorisierung
 
 Aktuell bietet der IRIS-Client eine eigene Kontoverwaltung an, die von der IT-Administration betreut werden muss. Das Startpasswort für den Admin Account kann beim erstmaligen Starten gesetzt werden (siehe [.env.sample](../.env.sample)).

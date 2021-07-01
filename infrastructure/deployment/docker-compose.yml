@@ -83,7 +83,7 @@ services:
     depends_on:
       - iris-client
     volumes:
-      - ./certs:/app/settings/certs
+      - ./certs/eps:/app/settings/certs
     environment:
       EPS_SETTINGS: "settings/roles/${IRIS_ENV}/hd"
       EPS_OP:
@@ -101,7 +101,7 @@ services:
       - 5545
       - 8877
     volumes:
-      - ./certs:/app/settings/certs
+      - ./certs/eps:/app/settings/certs
       - proxy_db_iris:/app/db
     environment:
       PROXY_SETTINGS: "settings/roles/${IRIS_ENV}/private-proxy"
@@ -123,7 +123,7 @@ services:
       - 7766
       - 7776
     volumes:
-      - ./certs:/app/settings/certs
+      - ./certs/eps:/app/settings/certs
     environment:
       EPS_SETTINGS: settings/roles/${IRIS_ENV}/private-proxy-eps
       PROXY_OP:
@@ -146,7 +146,7 @@ services:
       IRIS_CLIENT_DOMAIN_CERT:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
     volumes:
-      - ./conf/nginx:/etc/iris
+      - ./certs/nginx:/etc/iris
     depends_on:
       - iris-client
       - iris-frontend
