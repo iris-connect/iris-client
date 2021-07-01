@@ -51,7 +51,7 @@ Bitte folgen Sie [dieser Anleitung für die Produktions-Umgebung](../deployment/
 
 1. eps und Proxy installieren
 
-Auf dem System _muss_ die letzte Version von **eps** und **Proxy** installiert sein. Diese kann aus dem [öffentlichen Repository](https://github.com/iris-connect/eps/releases) heruntergeladen werden.
+    Auf dem System _muss_ die letzte Version von **eps** und **Proxy** installiert sein. Diese kann aus dem [öffentlichen Repository](https://github.com/iris-connect/eps/releases) heruntergeladen werden.
     ```
     # Test ob die Komponenten installiert sind
 
@@ -75,7 +75,7 @@ Auf dem System _muss_ die letzte Version von **eps** und **Proxy** installiert s
     ```
 1. Einrichtung IRIS-Client BFF
     
-    Das IRIS-Client BFF kann aus dem [öffentlichen Repository](https://github.com/iris-connect/iris-client/releases) heruntergeladen werden. Danach muss das Jahr in den Ordner `./bin` kopiert werden.
+    Das IRIS-Client BFF kann aus dem [öffentlichen Repository](https://github.com/iris-connect/iris-client/releases) heruntergeladen werden. Danach muss das Jar in den Ordner `./bin` kopiert werden.
 
     ```
     # Beispiel am Release 1.0.0-rc.8 
@@ -83,39 +83,14 @@ Auf dem System _muss_ die letzte Version von **eps** und **Proxy** installiert s
     ```
 1. Einrichtung IRIS-Client Frontend	
 
-    > Diese Anleitung funktioniert wenn Sie NGINX benutzen
+    > Diese Anleitung funktioniert, wenn Sie NGINX benutzen
 
     Beim Frontend handelt es sich um statisches HTML. Es kann aus dem [öffentlichen Repository](https://github.com/iris-connect/iris-client/releases) heruntergeladen werden. Danach muss der Inhalt des Archives in das `public` Verzeichnis kopiert werden.
 
     ```
     # Beispiel: 1.0.0-rc.8
     unzip -d <Installationspfad>/public iris-client-fe-1.0.0-rc.8.zip
-    ```
-    Aufgrund eines aktuellen Bugs müssen Sie die index.html bearbeiten und folgende Änderung vornehmen.
-    ```
-    vi <Installationspfad>/public/index.html
-    # IST
-    localContactPerson: {
-        name:
-        "{{env "LOCAL_CONTACT_PERSON_NAME"}}",
-        phone:
-        "{{env "LOCAL_CONTACT_PERSON_PHONE"}}",
-        mail:
-        "{{env "LOCAL_CONTACT_PERSON_MAIL"}}",
-    }
-
-    # SOLL
-    localContactPerson: {
-        name:
-        "",
-        phone:
-        "",
-        mail:
-        "",
-    }
-    ```
-    Dieses Problem ist bekannt und wird unter diesem [Ticket](https://github.com/iris-connect/iris-client/issues/182) bearbeitet.
-    
+    ```    
 1. Zertifikate an der richtigen Stelle hinterlegen.
 
     a) Kopieren Sie das Zertifikat und den Schlüssel vom `TLS-Zertifikat - Private Proxy` in den Ordner `conf/proxy/certs`.
@@ -372,7 +347,7 @@ sh scripts/start-private-proxy.sh
 # IRIS-Client Backend for Frontend starten
 sh scripts/start-iris-client-bff.sh 
 
-# NGINX starten (kann in ihrem Fall auch ein anderer Webserver sein. Dient hier nur als Beispiel)
+# NGINX starten (kann in Ihrem Fall auch ein anderer Webserver sein. Dient hier nur als Beispiel)
 nginx -p $(pwd) -c conf/nginx/nginx.conf
 ```
 
