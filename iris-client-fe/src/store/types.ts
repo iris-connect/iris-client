@@ -9,6 +9,8 @@ import { UserLoginState } from "@/views/user-login/user-login.store";
 import { AdminUserListState } from "@/views/admin-user-list/admin-user-list.store";
 import { AdminUserCreateState } from "@/views/admin-user-create/admin-user-create.store";
 import { AdminUserEditState } from "@/views/admin-user-edit/admin-user-edit.store";
+// @todo - indexTracking: optional remove next line once index cases are permanently activated again
+import { IndexTrackingSettingsState } from "@/views/index-tracking-settings/index-tracking-settings.store";
 
 export type RootState = {
   home: HomeState;
@@ -22,4 +24,6 @@ export type RootState = {
   adminUserList: AdminUserListState;
   adminUserCreate: AdminUserCreateState;
   adminUserEdit: AdminUserEditState;
+  // @todo - indexTracking: optional remove next line once index cases are permanently activated again
+  indexTrackingSettings: IndexTrackingSettingsState;
 };

@@ -1,21 +1,22 @@
 <template>
   <div class="d-inline-block index-tracking-submission-url">
     <v-row class="align-center">
-      <v-col
-        v-on:dblclick="toggleUrl"
-        :class="['toggle-url', expanded ? '' : 'text-truncate']"
-      >
-        <v-tooltip left>
+      <v-col v-on:dblclick="toggleUrl" class="toggle-url overflow-hidden py-0">
+        <v-tooltip bottom>
           <span v-if="expanded">URL minimieren per Doppelklick</span>
           <span v-else>Vollständige URL anzeigen per Doppelklick</span>
           <template v-slot:activator="{ on, attrs }">
-            <span v-on="on" v-bind="attrs">
+            <span
+              v-on="on"
+              v-bind="attrs"
+              :class="['d-block', expanded ? '' : 'text-truncate']"
+            >
               {{ url }}
             </span>
           </template>
         </v-tooltip>
       </v-col>
-      <v-col class="d-flex flex-nowrap flex-grow-0 flex-shrink-0">
+      <v-col class="d-flex flex-nowrap flex-grow-0 flex-shrink-0 py-0">
         <v-tooltip bottom>
           <span>URL in Zwischenablage kopieren</span>
           <template v-slot:activator="{ on, attrs }">
