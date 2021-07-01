@@ -3,7 +3,6 @@ package iris.client_bff.events.eps;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionService;
-import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
@@ -13,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
-
-import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 
 @Slf4j
 @Service
@@ -42,9 +39,8 @@ public class EventDataControllerImpl implements EventDataController {
 			try {
 				dataSubmissionService.save(dataRequest, guestList);
 				proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
-				epsDataRequestClient.abortGuestListDataRequest(dataRequest);
 				log.trace("Submission of data for {} is complete and proxy ancouncement has been closed", dataAuthorizationToken);
-			} catch (IRISAnnouncementException | IRISDataRequestException e) {
+			} catch (IRISAnnouncementException e) {
 				// Todo: Do I also need to remove the submission ? Possibly remove the saved data again
 				dataSubmissionService.deleteFailedSubmissionAttempt(dataRequest, guestList);
 				e.printStackTrace();
