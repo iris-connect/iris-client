@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 
 @Profile("test")
 @Configuration
-public class RPCClientConfig {
+public class RPCClientConfigTest {
 
 	@Bean
 	public JsonRpcHttpClient epsRpcClient() {
