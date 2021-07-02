@@ -76,7 +76,7 @@ services:
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: iris-client-eps-local-test
+    image: inoeg/iris-client-eps:1.0
     expose:
       - 4446
       - 5556
@@ -97,7 +97,7 @@ services:
 
   # Proxy for inbound connections.
   private-proxy:
-    image: iris-client-proxy-local-test
+    image: inoeg/iris-client-proxy:1.0
     expose:
       - 5545
       - 8877
@@ -121,7 +121,7 @@ services:
       - private-proxy-eps
 
   private-proxy-eps:
-    image: iris-client-eps-local-test
+    image: inoeg/iris-client-eps:1.0
     expose:
       - 7766
       - 7776
