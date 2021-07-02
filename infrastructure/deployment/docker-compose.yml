@@ -85,14 +85,15 @@ services:
     volumes:
       - ./certs/eps:/app/settings/certs
     environment:
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
       EPS_SETTINGS: "settings/roles/${IRIS_ENV}/hd"
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ${PROXY_URL}
       EPS_OP:
       EPS_CLIENT_CERT:
       EPS_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
       EPS_SD_NAME:
-      HTTPS_PROXY: ${PROXY_URL}
-      PROXY_URL: ${PROXY_URL}
 
   # Proxy for inbound connections.
   private-proxy:
@@ -105,11 +106,13 @@ services:
       - proxy_db_iris:/app/db
     environment:
       PROXY_SETTINGS: "settings/roles/${IRIS_ENV}/private-proxy"
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
+      PRIVATE_PROXY_EPS_HOSTNAME: private-proxy-eps
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_DOMAIN: ${PROXY_SUBDOMAIN}
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
-      HTTPS_PROXY: ${PROXY_URL}
-      PROXY_DOMAIN: ${PROXY_SUBDOMAIN}
       PROXY_TLS_CERT:
       PROXY_TLS_CERT_KEY:
     command: ["--level", "trace", "run", "private"]
@@ -126,6 +129,7 @@ services:
       - ./certs/eps:/app/settings/certs
     environment:
       EPS_SETTINGS: settings/roles/${IRIS_ENV}/private-proxy-eps
+      PRIVATE_PROXY_HOSTNAME: private-proxy
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
