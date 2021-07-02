@@ -1,5 +1,13 @@
 # Changelog
 
+# [1.0.0-rc.11](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.10...v1.0.0-rc.11) (2021-07-02)
+
+
+### Bug Fixes
+
+* enable cross origin POST for data submission endpoint ([389a08d](https://github.com/iris-connect/iris-client/commit/389a08d034db361568e1fa34732593eac1ab3536))
+* Fixes problem stand alone release did not contain the ca folder. ([#201](https://github.com/iris-connect/iris-client/issues/201)) ([6c5fba5](https://github.com/iris-connect/iris-client/commit/6c5fba54287127c0b7d88b2b4ef410f7018cc3e6))
+
 # [1.0.0-rc.10](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.9...v1.0.0-rc.10) (2021-07-02)
 
 
