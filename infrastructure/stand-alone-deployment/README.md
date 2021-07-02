@@ -1,4 +1,4 @@
-# IRIS-Client - Stand-Alone Installation
+# IRIS-Client – Stand-Alone Installation
 
 > Die Anleitung wurde auf Linux und macOS getestet.
 
@@ -307,7 +307,7 @@ EPS_CLIENT_CERT_KEY=<Der dazugehörige private Schlüssel> # Beispiel s.o.
 
 ## Einrichtung: mTLS-Zertifikat - EPS ( IRIS Private Proxy ) 
 
-Damit der IRIS Client wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben eingehende Verbindungen über das IRIS Proxy Netzwerk erlauben kann, benötigt man ein Proxy Client Zertifikat. Der Prozess dafür ist weiter oben in der Anleitung dokumentiert.
+Damit der IRIS-Client wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben eingehende Verbindungen über das IRIS Proxy Netzwerk erlauben kann, benötigt man ein Proxy Client Zertifikat. Der Prozess dafür ist weiter oben in der Anleitung dokumentiert.
 
 Das Zertifikat muss es zusammen mit dem Schlüssel im Ordner `./conf/eps/certs` abgelegt werden.
 
