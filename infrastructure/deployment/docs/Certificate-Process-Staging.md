@@ -20,7 +20,7 @@ State or Province Name (full name) [Some-State]: <leer>
 Locality Name (eg, city) []: <leer>
 Organization Name (eg, company) [Internet Widgits Pty Ltd]: <leer>
 Organizational Unit Name (eg, section) []: <leer>
-Common Name (e.g. server FQDN or YOUR name) []: proxy.test-gesundheitsamt.de.crt**
+Common Name (e.g. server FQDN or YOUR name) []: *.proxy.test-gesundheitsamt.de.crt
 Email Address []: <leer>
 ```
 

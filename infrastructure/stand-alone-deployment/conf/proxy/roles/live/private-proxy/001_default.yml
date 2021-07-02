@@ -36,8 +36,9 @@ private:
       verify_client: false
       server_name: "$PROXY_DOMAIN"
       ca_certificate_files: 
-        - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
-        - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+        - "$DIR/../../../../../ca/live/root-x1.crt"
+        - "$DIR/../../../../../ca/live/root-x2.crt"
+        - "$DIR/../../../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
       certificate_file: "$DIR/../../../certs/$PROXY_TLS_CERT"
       key_file: "$DIR/../../../certs/$PROXY_TLS_CERT_KEY"
 
@@ -46,8 +47,9 @@ private:
     tls:
       server_name: "$PROXY_OP"
       ca_certificate_files: 
-        - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
-        - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+        - "$DIR/../../../../../ca/live/root-x1.crt"
+        - "$DIR/../../../../../ca/live/root-x2.crt"
+        - "$DIR/../../../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
       certificate_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT"
       key_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
   jsonrpc_server: # the JSON-RPC server that the EPS server uses for communication

@@ -24,10 +24,11 @@ vars:
    source: env
    variable: PROXY_URL
    type: string
-  PRIVATE_PROXY_HOSTNAME:
+  PRIVATE_PROXY_ENDPOINT:
    source: env
-   variable: PRIVATE_PROXY_HOSTNAME
+   variable: PRIVATE_PROXY_ENDPOINT
    type: string
+
 
 
 name: "$PROXY_OP"
@@ -40,11 +41,11 @@ directory:
         certificate_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT"
         key_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
         ca_certificate_files: 
-          - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
-          - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+          - "$DIR/../../../../../ca/staging/IRIS-CA-Staging.crt"
+          - "$DIR/../../../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
     ca_certificate_files: 
-      - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
-      - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+      - "$DIR/../../../../../ca/staging/IRIS-CA-Staging.crt"
+      - "$DIR/../../../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
     endpoints: [ "$EPS_SD_ENDPOINT" ]
     server_names: [ "$EPS_SD_NAME" ]
 channels: # defines all the channels that we want to open when starting the server
@@ -54,21 +55,21 @@ channels: # defines all the channels that we want to open when starting the serv
       bind_address: "0.0.0.0:7776"
       tls:
         ca_certificate_files: 
-          - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
-          - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+          - "$DIR/../../../../../ca/staging/IRIS-CA-Staging.crt"
+          - "$DIR/../../../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
         certificate_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT"
         key_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
   - name: main JSON-RPC client # creates outgoing JSONRPC connections to deliver and receive messages
     type: jsonrpc_client
-    settings:   
-      endpoint: "http://$PRIVATE_PROXY_HOSTNAME:8877/jsonrpc"
+    settings:
+      endpoint: "$PRIVATE_PROXY_ENDPOINT"
   - name: main gRPC client # creates outgoing gRPC connections to deliver and receive messages
     type: grpc_client
     settings:
       tls:
         ca_certificate_files: 
-          - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
-          - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+          - "$DIR/../../../../../ca/staging/IRIS-CA-Staging.crt"
+          - "$DIR/../../../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
         certificate_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT"
         key_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
         server_name: "$PROXY_OP"
@@ -78,8 +79,8 @@ channels: # defines all the channels that we want to open when starting the serv
       bind_address: "0.0.0.0:7766"
       tls:
         ca_certificate_files: 
-          - "$DIR/../../../ca/staging/IRIS-CA-Staging.crt"
-          - "$DIR/../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+          - "$DIR/../../../../../ca/staging/IRIS-CA-Staging.crt"
+          - "$DIR/../../../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
         certificate_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT"
         key_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
         verify_client: false

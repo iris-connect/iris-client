@@ -56,7 +56,7 @@ docker tag $APP_EPS_IMAGE_NAME $APP_EPS_IMAGE_NAME:$MAJOR.$MINOR
 
 printf "\n  Build FE image  \n\n"
 FE_IMAGE_NAME="$NAMESPACE/iris-client-frontend"
-docker build -t $FE_IMAGE_NAME ./iris-client-fe/
+docker build --build-arg VUE_APP_VERSION_ID=$VERSION --build-arg VUE_APP_BUILD_ID=$COMMIT -t $FE_IMAGE_NAME ./iris-client-fe/
 
 docker tag $FE_IMAGE_NAME $FE_IMAGE_NAME:$VERSION
 docker tag $FE_IMAGE_NAME $FE_IMAGE_NAME:$MAJOR
@@ -108,6 +108,11 @@ cd dist && zip -qq -r ../../release/iris-client-fe-$VERSION.zip *
 
 printf "\n  Create ZIP of deployment scripts and instructions  \n\n"
 cd ../../infrastructure/deployment && zip -qq -r ../../release/deployment-$VERSION.zip * .*
+
+printf "\n  Create ZIP of stand-alone-deployment  \n\n"
+
+cd ../../infrastructure/stand-alone-deployment && zip -qq -r ../../release/stand-alone-deployment-$VERSION.zip * .*
+
 
 cd ../../
 
