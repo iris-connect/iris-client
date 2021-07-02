@@ -1,5 +1,20 @@
 # Changelog
 
+# [1.0.0-rc.10](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.9...v1.0.0-rc.10) (2021-07-02)
+
+
+### Bug Fixes
+
+* Fixes problem that incorrect version and build were shown. ([fe917ec](https://github.com/iris-connect/iris-client/commit/fe917ec0504427e994f9b3e95394a269f76b534e))
+
+
+### Features
+
+* disable access to index-case feature in FE ([#193](https://github.com/iris-connect/iris-client/issues/193)) ([5b77fbd](https://github.com/iris-connect/iris-client/commit/5b77fbdb085d87b3f88bba63b9d8ce04676a7212))
+* index case data ([611d4f0](https://github.com/iris-connect/iris-client/commit/611d4f03f893245f90cca593f03ffbff54e032d9)), closes [iris-connect/iris-backlog/issues#129](https://github.com/iris-connect/iris-backlog/issues/issues/129) [iris-connect/iris-backlog/issues#129](https://github.com/iris-connect/iris-backlog/issues/issues/129) [iris-connect/iris-backlog/issues#129](https://github.com/iris-connect/iris-backlog/issues/issues/129) [iris-connect/iris-backlog/issues#129](https://github.com/iris-connect/iris-backlog/issues/issues/129)
+* Stand Alone Documentation for Health Departments without Docker environment. ([2af2c1f](https://github.com/iris-connect/iris-client/commit/2af2c1f48f624655b5770c6ced357132d580cf45)), closes [#182](https://github.com/iris-connect/iris-client/issues/182)
+* use env vars for hostnames in eps roles ([#199](https://github.com/iris-connect/iris-client/issues/199)) ([34a3df4](https://github.com/iris-connect/iris-client/commit/34a3df458f5f59e1fdb7f994bd29c9a33560f62c))
+
 # [1.0.0-rc.9](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.8...v1.0.0-rc.9) (2021-06-30)
 
 
