@@ -15,7 +15,7 @@ services:
       POSTGRES_USER:
       POSTGRES_PASSWORD:
     volumes:
-      - psqldata_iris:/var/lib/postgresql/datae
+      - psqldata_iris:/var/lib/postgresql/data
 
     restart: unless-stopped
     healthcheck:
@@ -76,7 +76,7 @@ services:
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: inoeg/iris-client-eps:1.0
+    image: iris-client-eps-local-test
     expose:
       - 4446
       - 5556
@@ -97,7 +97,7 @@ services:
 
   # Proxy for inbound connections.
   private-proxy:
-    image: inoeg/iris-client-proxy:1.0
+    image: iris-client-proxy-local-test
     expose:
       - 5545
       - 8877
@@ -121,7 +121,7 @@ services:
       - private-proxy-eps
 
   private-proxy-eps:
-    image: inoeg/iris-client-eps:1.0
+    image: iris-client-eps-local-test
     expose:
       - 7766
       - 7776
