@@ -24,9 +24,9 @@ vars:
    source: env
    variable: PROXY_URL
    type: string
-  PRIVATE_PROXY_JSON_RPC_ENDPOINT:
+  PRIVATE_PROXY_HOSTNAME:
    source: env
-   variable: PRIVATE_PROXY_JSON_RPC_ENDPOINT
+   variable: PRIVATE_PROXY_HOSTNAME
    type: string
 
 
@@ -61,7 +61,7 @@ channels: # defines all the channels that we want to open when starting the serv
   - name: main JSON-RPC client # creates outgoing JSONRPC connections to deliver and receive messages
     type: jsonrpc_client
     settings:   
-      endpoint: "$PRIVATE_PROXY_JSON_RPC_ENDPOINT"
+      endpoint: "http://$PRIVATE_PROXY_HOSTNAME:8877/jsonrpc"
   - name: main gRPC client # creates outgoing gRPC connections to deliver and receive messages
     type: grpc_client
     settings:

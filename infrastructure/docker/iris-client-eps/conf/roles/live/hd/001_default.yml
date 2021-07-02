@@ -23,9 +23,9 @@ vars:
    source: env
    variable: PROXY_URL
    type: string        
-  IRIS_CLIENT_BFF_DATA_SUBMISSION_ENDPOINT:
+  IRIS_CLIENT_BFF_HOSTNAME:
    source: env
-   variable: IRIS_CLIENT_BFF_DATA_SUBMISSION_ENDPOINT
+   variable: IRIS_CLIENT_BFF_HOSTNAME
    type: string        
 
 name: "$EPS_OP"
@@ -59,7 +59,7 @@ channels: # defines all the channels that we want to open when starting the serv
   - name: main JSON-RPC client # creates outgoing JSONRPC connections to deliver and receive messages
     type: jsonrpc_client
     settings:
-      endpoint: "$IRIS_CLIENT_BFF_DATA_SUBMISSION_ENDPOINT"
+      endpoint: "http://$IRIS_CLIENT_BFF_HOSTNAME:8092/data-submission-rpc"
   - name: main gRPC client # creates outgoing gRPC connections to deliver and receive messages
     type: grpc_client
     settings:

@@ -15,7 +15,7 @@ services:
       POSTGRES_USER:
       POSTGRES_PASSWORD:
     volumes:
-      - psqldata_iris:/var/lib/postgresql/data
+      - psqldata_iris:/var/lib/postgresql/datae
 
     restart: unless-stopped
     healthcheck:
@@ -85,7 +85,7 @@ services:
     volumes:
       - ./certs/eps:/app/settings/certs
     environment:
-      IRIS_CLIENT_BFF_DATA_SUBMISSION_ENDPOINT: http://iris-client:8092/data-submission-rpc
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
       EPS_SETTINGS: "settings/roles/${IRIS_ENV}/hd"
       HTTPS_PROXY: ${PROXY_URL}
       PROXY_URL: ${PROXY_URL}
@@ -106,8 +106,8 @@ services:
       - proxy_db_iris:/app/db
     environment:
       PROXY_SETTINGS: "settings/roles/${IRIS_ENV}/private-proxy"
-      IRIS_CLIENT_BFF_DATA_SUBMISSION_ENDPOINT: http://iris-client:8092/data-submission-rpc
-      PRIVATE_PROXY_EPS_JSON_RPC_ENDPOINT: https://private-proxy-eps:7766/jsonrpc
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
+      PRIVATE_PROXY_EPS_HOSTNAME: private-proxy-eps
       HTTPS_PROXY: ${PROXY_URL}
       PROXY_DOMAIN: ${PROXY_SUBDOMAIN}
       PROXY_OP:
@@ -129,6 +129,7 @@ services:
       - ./certs/eps:/app/settings/certs
     environment:
       EPS_SETTINGS: settings/roles/${IRIS_ENV}/private-proxy-eps
+      PRIVATE_PROXY_HOSTNAME: private-proxy
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
@@ -136,7 +137,6 @@ services:
       EPS_SD_NAME:
       HTTPS_PROXY: ${PROXY_URL}
       PROXY_URL: ${PROXY_URL}
-      PRIVATE_PROXY_JSON_RPC_ENDPOINT: http://private-proxy:8877/jsonrpc
     depends_on:
       - logger
 
