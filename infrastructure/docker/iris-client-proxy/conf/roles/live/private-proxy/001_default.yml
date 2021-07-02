@@ -52,7 +52,7 @@ private:
       key_file: "$DIR/../../../certs/$PROXY_TLS_CERT_KEY"
 
   jsonrpc_client:
-    endpoint: https://$PRIVATE_PROXY_EPS_HOSTNAME:7766/jsonrpc
+    endpoint: "https://$PRIVATE_PROXY_EPS_HOSTNAME:7766/jsonrpc"
     tls:
       server_name: "$PROXY_OP"
       ca_certificate_files: 
