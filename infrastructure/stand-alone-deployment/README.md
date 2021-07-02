@@ -7,24 +7,24 @@ Bei dieser Installationsvariante werden die einzelnen Pakete des IRIS-Clients he
 ```
 .
 ├── bin # Hier wird das JAR vom IRIS-Client BFF abgelegt
-├── ca # Root CA Dateien für staging und Live-Umgebung.
+├── ca # Root CA Dateien für TEST und PROD-Umgebung.
 ├── conf # Konfigurationsdateien für die Komponenten
 │   ├── eps
 │   │   ├── certs # Hier werden die Zertifikate und Schlüssel von mTLS-Zertifikat - EPS (IRIS-Client BFF)	 und mTLS-Zertifikat - EPS (IRIS Private-Proxy) abgelegt 
 │   │   └── roles
-│   │       ├── live
+│   │       ├── prod
 │   │       │   ├── hd
 │   │       │   └── private-proxy-eps
-│   │       └── staging
+│   │       └── test
 │   │           ├── hd
 │   │           └── private-proxy-eps
 │   ├── nginx
 │   └── proxy
 │       ├── certs # Hier wird das Zertifikat und der Schlüssel vom TLS-Zertifikat - Private-Proxy abgelegt.
 │       └── roles
-│           ├── live
+│           ├── prod
 │           │   └── private-proxy
-│           └── staging
+│           └── test
 │               └── private-proxy
 ├── db # Hier speichert der private-proxy seine Announcements.
 ├── public  # Hier müssen die Dateien vom IRIS-Client Frontend abgelegt werden.
@@ -35,11 +35,11 @@ Die Ordnerstruktur kann wie sie ist von Github übernommen werden und wird im we
 
 ## Ausstellung von Zertifikaten
 
-Wie [hier](../deployment/docs/Installation.md#folgende-zertifikate-werden-f%C3%BCr-die-externe-kommunikation-ben%C3%B6tigt) beschrieben werden für den Betrieb des IRIS-Clients verschiedene Zertifikate benötigt. Der Prozess der Austellung der Zertifikate unterscheidet sich je nach Umgebung (Staging oder Live).
+Wie [hier](../deployment/docs/Installation.md#folgende-zertifikate-werden-f%C3%BCr-die-externe-kommunikation-ben%C3%B6tigt) beschrieben werden für den Betrieb des IRIS-Clients verschiedene Zertifikate benötigt. Der Prozess der Austellung der Zertifikate unterscheidet sich je nach Umgebung (TEST oder PROD).
 
-### Zertifikate für Staging-Umgebung
+### Zertifikate für TEST-Umgebung
 
-Bitte folgen Sie [dieser Anleitung für die Staging-Umgebung](../deployment/docs/Certificate-Process-Staging.md). 
+Bitte folgen Sie [dieser Anleitung für die TEST-Umgebung](../deployment/docs/Certificate-Process-TEST.md). 
 
 ### Zertifikate für Produktions-Umgebung
 
@@ -122,7 +122,7 @@ Bitte folgen Sie [dieser Anleitung für die Produktions-Umgebung](../deployment/
 
 ## Anlegen der Konfiguration
 
-Die Anwendung wird über eine [`.env`-Datei](https://docs.docker.com/compose/environment-variables/#the-env-file) konfiguriert und auf das Gesundheitsamt abgestimmt. Eine Beispielkonfiguration inklusive einer Erklärung der einzelnen Variablen findet man in der beigelegten [`.env.sample`-Datei](../.env.sample).
+Die Anwendung wird über eine [`.env`-Datei](https://docs.docker.com/compose/environment-variables/#the-env-file) konfiguriert und auf das Gesundheitsamt abgestimmt. Eine Beispielkonfiguration inklusive einer Erklärung der einzelnen Variablen findet man in der beigelegten [`.env.sample`-Datei](./.env.sample).
 
 Erstellen Sie Kopie von `.env.sample`
 
@@ -205,11 +205,11 @@ Der Proxy-Server muss Tunneling über HTTP_CONNECT unterstützen. Weitere Einste
 
 ## Einrichtung IRIS Umgebung
 
-IRIS bietet zwei Umgebungen an (Staging und Produktion). Mit diesem Parameter können Sie konfigurieren, zu welcher der beiden Umgebungen sich der IRIS-Client verbinden soll. Es gibt zwei vordefinierte Werte für diesen Parameter. 
+IRIS bietet zwei Umgebungen an (TEST und Produktion). Mit diesem Parameter können Sie konfigurieren, zu welcher der beiden Umgebungen sich der IRIS-Client verbinden soll. Es gibt zwei vordefinierte Werte für diesen Parameter. 
 
 ```
-# Staging: IRIS_ENV=staging
-# Live: IRIS_ENV=live
+# TEST: IRIS_ENV=test
+# PROD: IRIS_ENV=prod
 IRIS_ENV=
 ```
 
@@ -217,13 +217,13 @@ Von dieser Einstellung hänger unter anderem ab, zu welchem Service Directory si
 
 ## Einrichtung des Service-Directory Endpunkts
 
-Wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben, benötigt der IRIS-Client Zugriff auf das IRIS Service-Directory, damit es weiß welche Services unter welcher Adresse zu erreichen sind. Die richtige Service-Directory-URL hängt von der Umgebung (Staging oder Live ab). 
+Wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben, benötigt der IRIS-Client Zugriff auf das IRIS Service-Directory, damit es weiß welche Services unter welcher Adresse zu erreichen sind. Die richtige Service-Directory-URL hängt von der Umgebung (TEST oder PROD) ab. 
 
 ```
-# Staging: 
+# TEST: 
 EPS_SD_ENDPOINT=https://test.iris-gateway.de:32324/jsonrpc
 
-# Live: 
+# PROD: 
 EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
 ```
 ## Einrichtung vom IRIS Locations Service
@@ -231,8 +231,8 @@ EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
 Wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben, benötigt der IRIS-Client Zugriff auf den IRIS Locations Service, damit die Mitarbeiter im GA u.a. nach Betrieben und Gastronomien suchen können. Es gibt zwei vordefinierte Werte für diesen Parameter. 
 
 ```
-# staging:  ls-1
-# live:     locations-production-1
+# TEST:  ls-1
+# PROD:  locations-production-1
 EPS_LS_NAME=
 ```
 
@@ -241,8 +241,8 @@ EPS_LS_NAME=
 Wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben, benötigt der IRIS-Client Zugriff auf den IRIS Public-Proxy-Service, damit eingehende Daten wie z.B. Kontakttagebücher empfangen werden können. Es gibt zwei vordefinierte Werte für diesen Parameter. 
 
 ```
-# staging:  public-proxy-1
-# live:     public-proxy-production-1
+# TEST:  public-proxy-1
+# PROD:  public-proxy-production-1
 EPS_PP_NAME=
 ```
 
@@ -253,7 +253,7 @@ Wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben, kann de
 
 Die Domain unterscheidet sich je nach Umgebung. 
 
-Für Staging gibt es eine vom IRIS-Team zur Verfügung gestellte Domain namens `proxy.test-gesundheitsamt.de`. 
+Für die TEST-Umgebung gibt es eine vom IRIS-Team zur Verfügung gestellte Domain namens `proxy.test-gesundheitsamt.de`. 
 
 Für die Produktions-Umgebung wurde Ihnen die Domain vom Land zentral bereit gestellt. Sie sollten dazu Informationen erhalten haben.
 

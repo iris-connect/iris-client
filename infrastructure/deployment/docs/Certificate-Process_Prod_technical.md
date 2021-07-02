@@ -40,7 +40,7 @@ Für die Anbindung an IRIS benötigt ein GA zwei Schlüsselpaare bzw. Zertifikat
 | - | - | -| - | - |
 | 1 | TLS-Zertifikat - Private Proxy | Ein TLS-Zertifikat für den IRIS Private Proxy des GA | Advanced SSL ID (RSA) | Identität des GA im Internet mit dem Ziel, Kontakttagüber und Gästelisten direkt ins GA zu übermitteln (TLS/HTTPS). |
 | 2 | Signaturzertifikat | Ein Signaturzertifikat für Vertreter:in des GA. **Dieses Zertifikat wird in einem späteren Release vom IRIS Client benötigt.**  |Basic Device ID (ECC) | Signieren von Einträgen im Service Directory.  |
-| 3 (*Neu) | mTLS-Zertifikat - EPS | Ein mTLS Zertifikat welches auf der Live Umgebung sowohl für EPS ( IRIS Client BFF ) als auch für EPS ( IRIS Private Proxy ) benutzt wird. | Basic SSL ID (RSA) | Authentifizierung und Authentisierung der Kommunikation mit anderen zentralen und de-zentralen EPS Teilnehmern|
+| 3 (*Neu) | mTLS-Zertifikat - EPS | Ein mTLS Zertifikat welches auf der PROD Umgebung sowohl für EPS ( IRIS Client BFF ) als auch für EPS ( IRIS Private Proxy ) benutzt wird. | Basic SSL ID (RSA) | Authentifizierung und Authentisierung der Kommunikation mit anderen zentralen und de-zentralen EPS Teilnehmern|
 
 Das folgenden Schaubild gibt eine Top-Level-Sicht auf den Prozess des Beantragens und Einrichten der Zertifikate.
 
@@ -127,7 +127,7 @@ Antragsstrecke:
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4) - Webform" im CSM](images/certificate_service_manager/mycsm_Produkt_auswählen_advanced_ssl_webform.png)
 
-   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/live/generate-rsa-key-pair.sh). 
+   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/prod/generate-rsa-key-pair.sh). 
 
    ```
    $ sh generate-rsa-key-pair.sh TLS-Zertifikat
@@ -164,7 +164,7 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4) - Webform" im CSM](images/certificate_service_manager/mycsm_basic_device_id_webform.png)
 
-   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/live/generate-signature-key-pair.sh).  
+   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/prod/generate-signature-key-pair.sh).  
 
    ```
    $ sh generate-signature-key-pair.sh Signatur-Zertifikat
@@ -201,7 +201,7 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4) - Webform" im CSM](images/certificate_service_manager/mycsm_basic_device_id_webform.png)
 
-   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/live/generate-rsa-key-pair.sh). 
+   Im nächsten Abschnitt müssen sie einen öffentlichen Schlüssel hochladen. Erstellen Sie sich dafür zunächste ein Private-Public Schlüsselpaar mit [diesem Skript](../scripts/prod/generate-rsa-key-pair.sh). 
 
    ```
    $ sh generate-rsa-key-pair.sh mTLS-Zertifikat-EPS
@@ -242,7 +242,7 @@ Damit Ihr GA mit den im IRIS System befindlichen Akteuren kommunizieren kann, mu
 
 1. Fingerprint ermitteln
 
-   Benutzen sie [dieses Skript](../scripts/live/create-fingerprint-from-cert.sh) 
+   Benutzen sie [dieses Skript](../scripts/prod/create-fingerprint-from-cert.sh) 
 
    ``` 
    # Information needed for IRIS Team
@@ -253,7 +253,7 @@ Damit Ihr GA mit den im IRIS System befindlichen Akteuren kommunizieren kann, mu
 
 ### Zertifikate einrichten
 
-Die Zertifikate werden analog zur Staging Umgebung eingerichtet. 
+Die Zertifikate werden analog zur TEST Umgebung eingerichtet. 
 
 #### Zertifikat Nr. 1 einrichten
 
@@ -261,7 +261,7 @@ Analog zu [Einrichtung: TLS-Zertifikat ( Private Proxy )](Installation-Docker-Co
 
 #### Zertifikat Nr. 3 einrichten
 
-> Für die Live Umgebung wird das Zertifikat #3 für beide EPS services konfiguriert. 
+> Für die PROD Umgebung wird das Zertifikat #3 für beide EPS services konfiguriert. 
 
 Analog zu [Einrichtung: mTLS-Zertifikat - EPS ( IRIS Client BFF )](Installation-Docker-Compose.md)
 

@@ -18,7 +18,7 @@ Aus technischer Perspektive können alle IRIS-Komponenten auf dem selben Server 
 
 ## Umgebungen
 
-IRIS stellt zwei Umgebungen bereit. Staging zum Testen und Live für den Produktionsbetrieb mit echten Daten.
+IRIS stellt zwei Umgebungen bereit: "TEST" zum Testen und "PROD" für den Produktionsbetrieb mit echten Daten.
 
 ## IRIS-Client Komponenten und Abhängigkeiten
 
@@ -47,11 +47,11 @@ IRIS stellt zwei Umgebungen bereit. Staging zum Testen und Live für den Produkt
 | Konfigurations-Abhängigkeit     | Beschreibung                                                                                                                                                                                                                                                                                                            |
 | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Zertifikat der internen Web Domain | Der IRIS Client wird in der Regel unter einer GA internen Domain bereit gestellt. Für diese Domain muss ein valides Zertifikat inklusive privatem Schlüssel konfiguriert werden. |
-| TLS-Zertifikat - Private Proxy | Ein TLS-Zertifikat für den IRIS Private Proxy des GA. Identität des GA im Internet mit dem Ziel, Kontakttagüber und Gästelisten direkt ins GA zu übermitteln (TLS/HTTPS). Der Austellungs-Prozess für die **Staging Umgebung** ist [hier](Certificate-Process-Staging.md) dokumentiert. Der Austellungs-Prozess für die **Live Umgebung** ist [hier](Certificate-Process_Prod_technical.md) dokumentiert.|
-| mTLS-Zertifikat - EPS ( IRIS Client BFF )         | Der IRIS-Client benutzt ein für das GA ausgestelltes mTLS Zertifikat um mit den zentralen IRIS Services zu kommunizieren. Darüber hinaus werden alle Anfragen die vom IRIS-Client ausgehen mit dem Zertifikat signiert. Der Austellungs-Prozess für die **Staging Umgebung** ist [hier](Certificate-Process-Staging.md) dokumentiert. Der Austellungs-Prozess für die **Live Umgebung** ist [hier](Certificate-Process_Prod_technical.md) dokumentiert. |
-| mTLS-Zertifikat - EPS ( IRIS Private Proxy ) | Der Proxy benutzt ein für das GA ausgestelltes mTLS Zertifikat um mit den public-Proxy zu kommunizieren und eingehende Verbindungen z.B. zum Übertragen von Kontakttagebüchern zuzulassen. Der Austellungs-Prozess für die **Staging Umgebung** ist [hier](Certificate-Process-Staging.md) dokumentiert. Der Austellungs-Prozess für die **Live Umgebung** ist [hier](Certificate-Process_Prod_technical.md) dokumentiert.                                   |
+| TLS-Zertifikat - Private Proxy | Ein TLS-Zertifikat für den IRIS Private Proxy des GA. Identität des GA im Internet mit dem Ziel, Kontakttagüber und Gästelisten direkt ins GA zu übermitteln (TLS/HTTPS). Der Austellungs-Prozess für die **TEST Umgebung** ist [hier](Certificate-Process-TEST.md) dokumentiert. Der Austellungs-Prozess für die **PROD Umgebung** ist [hier](Certificate-Process_Prod_technical.md) dokumentiert.|
+| mTLS-Zertifikat - EPS ( IRIS Client BFF )         | Der IRIS-Client benutzt ein für das GA ausgestelltes mTLS Zertifikat um mit den zentralen IRIS Services zu kommunizieren. Darüber hinaus werden alle Anfragen die vom IRIS-Client ausgehen mit dem Zertifikat signiert. Der Austellungs-Prozess für die **TEST Umgebung** ist [hier](Certificate-Process-TEST.md) dokumentiert. Der Austellungs-Prozess für die **PROD Umgebung** ist [hier](Certificate-Process_Prod_technical.md) dokumentiert. |
+| mTLS-Zertifikat - EPS ( IRIS Private Proxy ) | Der Proxy benutzt ein für das GA ausgestelltes mTLS Zertifikat um mit den public-Proxy zu kommunizieren und eingehende Verbindungen z.B. zum Übertragen von Kontakttagebüchern zuzulassen. Der Austellungs-Prozess für die **TEST Umgebung** ist [hier](Certificate-Process-TEST.md) dokumentiert. Der Austellungs-Prozess für die **PROD Umgebung** ist [hier](Certificate-Process_Prod_technical.md) dokumentiert.                                   |
 
-> In der Live Umgebung handelt es sich bei den beiden EPS Zertifikate um das gleiche Zertifikat.
+> In der PROD Umgebung handelt es sich bei den beiden EPS Zertifikate um das gleiche Zertifikat.
 
 
 ### Des Weiteren gibt es folgende Kommunikationsverbindungen
@@ -60,14 +60,14 @@ IRIS stellt zwei Umgebungen bereit. Staging zum Testen und Live für den Produkt
 
 |     Service                |     Umgebung |     Ziel-Host                   |     Ziel-Ports          |
 |----------------------------|--------------|---------------------------------|------------------------|
-|     IRIS Service Directory |     staging  |     test.iris-gateway.de        |     32324              |
-|     IRIS Locations Service |     staging  |     test.iris-gateway.de        |     32323              |
-|     IRIS Public Proxy      |     staging  |     test.iris-gateway.de        |     32327              |
-|     IRIS Connected Apps    |     staging  |     *.apps.test.iris-gateway.de |     4443, 4444, 443    |
-|     IRIS Service Directory |     live     |     prod.iris-gateway.de        |     32324              |
-|     IRIS Locations Service |     live     |     prod.iris-gateway.de        |     32323              |
-|     IRIS Public Proxy      |     live     |     prod.iris-gateway.de        |     32327              |
-|     IRIS Connected Apps    |     live     |     *.apps.prod.iris-gateway.de |     4444, 443          |
+|     IRIS Service Directory |     TEST     |     test.iris-gateway.de        |     32324              |
+|     IRIS Locations Service |     TEST     |     test.iris-gateway.de        |     32323              |
+|     IRIS Public Proxy      |     TEST     |     test.iris-gateway.de        |     32327              |
+|     IRIS Connected Apps    |     TEST     |     *.apps.test.iris-gateway.de |     4443, 4444, 443    |
+|     IRIS Service Directory |     PROD     |     prod.iris-gateway.de        |     32324              |
+|     IRIS Locations Service |     PROD     |     prod.iris-gateway.de        |     32323              |
+|     IRIS Public Proxy      |     PROD     |     prod.iris-gateway.de        |     32327              |
+|     IRIS Connected Apps    |     PROD     |     *.apps.prod.iris-gateway.de |     4444, 443          |
 ## Authentifizierung und Authorisierung
 
 Aktuell bietet der IRIS-Client eine eigene Kontoverwaltung an, die von der IT-Administration betreut werden muss. Das Startpasswort für den Admin Account kann beim erstmaligen Starten gesetzt werden (siehe [.env.sample](../.env.sample)).

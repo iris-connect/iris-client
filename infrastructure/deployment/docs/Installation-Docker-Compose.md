@@ -22,13 +22,13 @@ Bevor man mit der Installation des IRIS connect Clients beginnen kann, muss die 
 
 ## Ausstellung von Zertifikaten
 
-Wie [hier](./Installation.md) beschrieben werden für den Betrieb des IRIS Clients verschiedene Zertifikate benötigt. Der Prozess der Austellung der Zertifikate unterscheidet sich je nach Umgebung (Staging oder Live).
+Wie [hier](./Installation.md) beschrieben werden für den Betrieb des IRIS Clients verschiedene Zertifikate benötigt. Der Prozess der Austellung der Zertifikate unterscheidet sich je nach Umgebung (TEST oder PROD).
 
-### Zertifikate für Staging Umgebung
+### Zertifikate für TEST Umgebung
 
-Bitte folgen Sie [dieser Anleitung](./Certificate-Process-Staging.md). 
+Bitte folgen Sie [dieser Anleitung](Certificate-Process-TEST.md). 
 
-### Zertifikate für Live Umgebung
+### Zertifikate für PROD Umgebung
 
 Bitte folgen Sie [dieser Anleitung](./Certificate-Process_Prod_technical.md). 
 
@@ -185,11 +185,11 @@ Bitte nicht mehr konfigurieren. Verwenden Sie statt dessen `Einrichtung IRIS Umg
 
 ## Einrichtung IRIS Umgebung
 
-IRIS bietet 2 Umgebungen an (staging und live). Mit diesem Parameter können Sie konfigurieren, zu welcher der beiden Umgebungen sich der IRIS Client verbinden soll. Es gibt 2 vordefinierte Werte für diesen Parameter. 
+IRIS bietet 2 Umgebungen an (TEST und PROD). Mit diesem Parameter können Sie konfigurieren, zu welcher der beiden Umgebungen sich der IRIS Client verbinden soll. Es gibt 2 vordefinierte Werte für diesen Parameter. 
 
 ```
-# Staging: IRIS_ENV=staging
-# Live: IRIS_ENV=live
+# TEST: IRIS_ENV=test
+# PROD: IRIS_ENV=prod
 IRIS_ENV=
 ```
 
@@ -197,13 +197,13 @@ Von dieser Einstellung hänger unter anderen ab, zu welchem Service Directory si
 
 ## Einrichtung vom Service Directory Endpunkt
 
-Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf das IRIS Service Directory, damit es weiß welche Services unter welcher Adresse zu erreichen sind. Die richtige Service Directory URL hängt von der Umgebung (Staging oder Live ab). 
+Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf das IRIS Service Directory, damit es weiß welche Services unter welcher Adresse zu erreichen sind. Die richtige Service Directory URL hängt von der Umgebung (TEST oder PROD) ab. 
 
 ```
-# Staging: 
+# TEST: 
 EPS_SD_ENDPOINT=https://test.iris-gateway.de:32324/jsonrpc
 
-# Live: 
+# PROD: 
 EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
 ```
 ## Einrichtung vom IRIS Locations Service
@@ -211,8 +211,8 @@ EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
 Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf den IRIS Locations Service, damit die Mitarbeiter im GA u.a. nach Betrieben und Gastronomien suchen können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
 
 ```
-# staging:  ls-1
-# live:     locations-production-1
+# TEST:  ls-1
+# PROD:  locations-production-1
 EPS_LS_NAME=
 ```
 
@@ -221,8 +221,8 @@ EPS_LS_NAME=
 Wie in der [Architektur](./Architektur.md) beschrieben benötigt der IRIS Client Zugriff auf den IRIS Public Proxy Service, damit eingehende Daten wie z.B. Kontakttagebücher empfangen werden können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
 
 ```
-# staging:  public-proxy-1
-# live:     public-proxy-production-1
+# TEST:  public-proxy-1
+# PROD:  public-proxy-production-1
 EPS_PP_NAME=
 ```
 
@@ -233,9 +233,9 @@ Wie in der [Architektur](./Architektur.md) beschrieben kann der IRIS Client übe
 
 Die Domain unterscheidet sich je nach Umgebung. 
 
-Für Staging gibt es eine vom IRIS Team zur Verfügung gestellte Domain namens `proxy.test-gesundheitsamt.de`. 
+Für die TEST-Umgebung gibt es eine vom IRIS Team zur Verfügung gestellte Domain namens `proxy.test-gesundheitsamt.de`. 
 
-Für die Live-Umgebung wurde Ihnen die Domain vom Land zentral bereit gestellt. Sie sollten dazu Informationen erhalten haben.
+Für die PROD-Umgebung wurde Ihnen die Domain vom Land zentral bereit gestellt. Sie sollten dazu Informationen erhalten haben.
 
 ```
 PROXY_SUBDOMAIN=<Ihre zugewiesene Domain>
@@ -290,7 +290,7 @@ Damit der IRIS Client wie in der [Architektur](./Architektur.md) beschrieben ein
 
 Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüssel im Ordner `./certs/eps` ablegen.
 
-> Für die Live Umgebung ist sind das Zertifikat und der Schlüssel für den `IRIS Private Proxy` die gleichen wie für den `IRIS Client BFF`. 
+> Für die PROD Umgebung ist sind das Zertifikat und der Schlüssel für den `IRIS Private Proxy` die gleichen wie für den `IRIS Client BFF`. 
 > 
 > Es unterscheidet sich der Parameter `PROXY_OP`. Dieser Wert muss auf den 2. SAN Eintrag gesetzt werden (eps-proxy.\<Ihr zugewiesene Domain\>).
  
