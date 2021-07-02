@@ -1,4 +1,4 @@
 *.db
 public/**
 !public/.keep
-!conf/**/ca/**
+!ca/**
