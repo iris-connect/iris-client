@@ -18,11 +18,14 @@ services:
       SPRING_PROFILES_ACTIVE: prod
       EPS_CLIENT_EPS_CLIENT_URL: https://eps:5556/jsonrpc
       EPS_CLIENT_PROXY_CLIENT_URL: https://private-proxy-eps:7766/jsonrpc
-      PROXY_SERVICE_EPS_NAME: ${PROXY_OP}
-      PROXY_SERVICE_TARGET_SUBDOMAIN: proxy.test-gesundheitsamt.de
+      PROXY_SERVICE_EPS_NAME: "${PROXY_OP}"
+      PROXY_SERVICE_TARGET_SUBDOMAIN: ${PROXY_SUBDOMAIN}
+      PROXY_SERVICE_TARGET_PROXY: ${EPS_PP_NAME}
       SECURITY_AUTH_DB_ADMIN_USER_NAME:
       SECURITY_AUTH_DB_ADMIN_USER_PASSWORD:
       SECURITY_JWT_JWT_SHARED_SECRET:
+      IRIS_LOCATION_SERVICE_ENDPOINT: ${EPS_LS_NAME}
+      IRIS_CLIENT_BASEPATH: "https://${IRIS_CLIENT_DOMAIN}"
     restart: unless-stopped
 
   # IRIS Client Frontend for users
@@ -41,73 +44,81 @@ services:
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: inoeg/eps:v0.1.8
+    image: inoeg/iris-client-eps:1.0
     expose:
       - 4446
       - 5556
     depends_on:
       - iris-client
     volumes:
-      - ./conf/eps:/app/settings
+      - ./certs/eps:/app/settings/certs
     environment:
-      EPS_SETTINGS: "settings/roles/hd"
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
+      EPS_SETTINGS: "settings/roles/${IRIS_ENV}/hd"
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ${PROXY_URL}
       EPS_OP:
       EPS_CLIENT_CERT:
       EPS_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
-      TRUSTED_CA_CRT:
-      HTTPS_PROXY: ${PROXY_URL}
-      PROXY_URL: ${PROXY_URL}
-
-    command: ["--level", "debug", "server", "run"]
+      EPS_SD_NAME:
 
   # Proxy for inbound connections.
   private-proxy:
-    image: inoeg/proxy:v0.1.8
+    image: inoeg/iris-client-proxy:1.0
     expose:
       - 5545
       - 8877
     volumes:
-      - ./conf/proxy:/app/settings
+      - ./certs/eps:/app/settings/certs
       - proxy_db_iris:/app/db
     environment:
-      PROXY_SETTINGS: settings/roles/private-proxy
+      PROXY_SETTINGS: "settings/roles/${IRIS_ENV}/private-proxy"
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
+      PRIVATE_PROXY_EPS_HOSTNAME: private-proxy-eps
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_DOMAIN: ${PROXY_SUBDOMAIN}
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
-      HTTPS_PROXY: ${PROXY_URL}
-      TRUSTED_CA_CRT:
+      PROXY_TLS_CERT:
+      PROXY_TLS_CERT_KEY:
     command: ["--level", "trace", "run", "private"]
+    depends_on:
+      - logger
+      - private-proxy-eps
 
   private-proxy-eps:
-    image: inoeg/eps:v0.1.8
+    image: inoeg/iris-client-eps:1.0
     expose:
-      - 7766 # JSON-RPC server for internal connections from iris-client
-      - 7776 # gRPC protocol
+      - 7766
+      - 7776
     volumes:
-      - ./conf/proxy:/app/settings
+      - ./certs/eps:/app/settings/certs
     environment:
-      EPS_SETTINGS: settings/roles/private-proxy-eps
+      EPS_SETTINGS: settings/roles/${IRIS_ENV}/private-proxy-eps
+      PRIVATE_PROXY_HOSTNAME: private-proxy
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
+      EPS_SD_NAME:
       HTTPS_PROXY: ${PROXY_URL}
       PROXY_URL: ${PROXY_URL}
-      TRUSTED_CA_CRT:
-    command: ["--level", "trace", "server", "run"]
+    depends_on:
+      - logger
 
   # Reverse Proxy
   nginx:
     image: inoeg/iris-client-nginx:1.0
     ports:
-      - 443:443
+      - ${IRIS_CLIENT_PORT:-443}:443
     environment:
       IRIS_CLIENT_DOMAIN:
       IRIS_CLIENT_DOMAIN_CERT:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
     volumes:
-      - ./conf/nginx:/etc/iris
+      - ./certs/nginx:/etc/iris
     depends_on:
       - iris-client
       - iris-frontend
@@ -144,9 +155,8 @@ services:
       - MAX_SIZE=50
       - MAX_AGE=28
       - DEBUG=false
-#      - TIME_ZONE=Europe/Berlin
     volumes:
-      - ${LOG_FOLDER}:/srv/logs
+      - ${LOG_FOLDER:-./logs}:/srv/logs
       - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:

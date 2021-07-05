@@ -2,10 +2,5 @@
 *Das entsprechende Dokument wurde verschoben, dieses hier Dokument existiert nur, um entsprechende Verlinkungen aufrecht zu erhalten.*    
 Änderungen bitte nur in den entsprechenden Dokumenten vornehmen.
 
-Die Installationsanleitung für eine Installation mit Docker **(empfohlen!)** liegt unter:   
-[IRIS-Client-Installation mit Docker](./docs/Installation-Docker-Compose.md)
+Hier geht es weiter zur [Installations-Anleitung](./docs/Installation.md).
 
-Die Installationsanleitung für eine Installation ohne Verwendung von Docker liegt unter:    
-[IRIS-Client-Installation *ohne* Docker](./docs/Installation-Standalone.md)
-
-Dies wird demnächst auch Teil unserer GitHub-Page.

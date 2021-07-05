@@ -1,5 +1,6 @@
 package iris.client_bff.events.model;
 
+import iris.client_bff.core.model.Address;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

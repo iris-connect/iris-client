@@ -1,0 +1,27 @@
+# Build and Publish Docker Image for IRIS Client EPS Develop
+
+name: iris-client-proxy Develop
+
+on:
+  push:
+    branches:
+      - develop
+    paths:    
+      - infrastructure/docker/iris-client-proxy/**
+      - .github/workflows/iris-client-proxy_develop.yml
+
+jobs:
+  push_to_registry:
+    name: Build and push Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2.3.4
+      - name: Build and push to docker.io
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PW }}
+          repository: inoeg/iris-client-proxy
+          tag_with_ref: true
+          path: ./infrastructure/docker/iris-client-proxy/

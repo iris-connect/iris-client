@@ -13,6 +13,8 @@ export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
     externalCaseId: "12345",
     start: daysAgo(3),
     comment: "leerer Kommentar",
+    submissionUri:
+      "https://digitales-wartezimmer.org/index-case?iris=eyJkIjoiYTIyZGQ3MWMtNzlkNy00YTBhLWFlMjItMzAxMzRlZTFhNzgwIiwiYyI6ImVjYmMzMjFiLWM2MTctNDYxNi1hZWY3LWYwNjFmZTFkZjBiZC5wcm94eS50ZXN0LWdlc3VuZGhlaXRzYW10LmRlIiwicCI6IjcwMTc2In0=",
     status: DataRequestStatus.DataReceived,
   },
   {
@@ -22,6 +24,8 @@ export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
     start: hoursAgo(3),
     end: hoursAgo(1),
     comment: "das könnte ihr Kommentar sein",
+    submissionUri:
+      "https://digitales-wartezimmer.org/index-case?iris=eyJkIjoiYTIyZGQ3MWMtNzlkNy00YTBhLWFlMjItMzAxMzRlZTFhNzgwIiwiYyI6ImVjYmMzMjFiLWM2MTctNDYxNi1hZWY3LWYwNjFmZTFkZjBiZC5wcm94eS50ZXN0LWdlc3VuZGhlaXRzYW10LmRlIiwicCI6IjcwMTc2In0=",
     status: DataRequestStatus.DataRequested,
   },
   {
@@ -30,6 +34,8 @@ export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
     externalCaseId: "2233",
     start: hoursAgo(2),
     comment: "leer",
+    submissionUri:
+      "https://digitales-wartezimmer.org/index-case?iris=eyJkIjoiYTIyZGQ3MWMtNzlkNy00YTBhLWFlMjItMzAxMzRlZTFhNzgwIiwiYyI6ImVjYmMzMjFiLWM2MTctNDYxNi1hZWY3LWYwNjFmZTFkZjBiZC5wcm94eS50ZXN0LWdlc3VuZGhlaXRzYW10LmRlIiwicCI6IjcwMTc2In0=",
     status: DataRequestStatus.Closed,
   },
 ];
@@ -40,6 +46,7 @@ export const dummyDataCaseDetails: DataRequestCaseData = {
   comment: "leerer Kommentar",
   start: hoursAgo(15),
   end: hoursAgo(1),
+  submissionUri: "https://12345.proxy.exampleUrl.de",
   submissionData: {
     contacts: {
       contactPersons: [
