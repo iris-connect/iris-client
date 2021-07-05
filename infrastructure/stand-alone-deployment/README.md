@@ -331,6 +331,14 @@ PROXY_CLIENT_CERT=<mTLS-Zertifikat - EPS ( IRIS Private Proxy ) >
 PROXY_CLIENT_CERT_KEY=<Der dazugehörige private Schlüssel>
 ```
 
+## Einrichtung: Postleitzahl des Gesundheitsamts
+
+Für die Kommunikation mit externen Applikationen (z.B. Kontakttagebüchern) wird die PLZ benötigt. Dafür ist folgender Parameter vorgesehen:
+
+```
+HD_ZIP_CODE=<Postleitzahl Ihres Gesundheitsamts>
+```
+
 
 # Starten der Anwendung
 

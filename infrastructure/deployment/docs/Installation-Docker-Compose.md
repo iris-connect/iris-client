@@ -311,6 +311,14 @@ PROXY_CLIENT_CERT=ga-client-proxy.crt
 PROXY_CLIENT_CERT_KEY=ga-client-proxy.key
 ```
 
+## Einrichtung: Postleitzahl des Gesundheitsamts
+
+Für die Kommunikation mit externen Applikationen (z.B. Kontakttagebüchern) wird die PLZ benötigt. Dafür ist folgender Parameter vorgesehen:
+
+```
+HD_ZIP_CODE=<Postleitzahl Ihres Gesundheitsamts>
+```
+
 ## IRIS Client starten und testen
 
 1. IRIS Client mit Docker Compose und interner Postgres starten.
