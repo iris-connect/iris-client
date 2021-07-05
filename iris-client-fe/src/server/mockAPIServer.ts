@@ -19,7 +19,7 @@ import {
   dummyUserList,
   getDummyUserFromRequest,
 } from "@/server/data/dummy-userlist";
-import { remove, findIndex } from "lodash";
+import { remove, findIndex, some } from "lodash";
 import { paginated } from "@/server/utils/pagination";
 
 // @todo: find better solution for data type
@@ -158,35 +158,28 @@ export function makeMockAPIServer() {
 
       this.get("/search", (schema, request) => {
         let data;
-        if (
-          request.queryParams.search.toLowerCase().includes("pizza") ||
-          request.queryParams.search.toLowerCase().includes("musterstraße") ||
-          request.queryParams.search.toLowerCase().includes("mio")
-        ) {
+
+        const searchQuery = request.queryParams.search.toLowerCase();
+
+        if (searchMatches(searchQuery, ["pizza", "musterstraße", "mio"])) {
           data = {
             locations: [dummyLocations[0]],
           };
         }
 
-        if (
-          request.queryParams.search.toLowerCase().includes("brau") ||
-          request.queryParams.search.toLowerCase().includes("münchen")
-        ) {
+        if (searchMatches(searchQuery, ["brau", "münchen"])) {
           data = {
             locations: [dummyLocations[1]],
           };
         }
 
-        if (request.queryParams.search.toLowerCase().includes("muster")) {
+        if (searchMatches(searchQuery, ["muster"])) {
           data = {
             locations: [dummyLocations[0], dummyLocations[2]],
           };
         }
 
-        if (
-          request.queryParams.search.toLowerCase().includes("bowl") ||
-          request.queryParams.search.toLowerCase().includes("musterstadt")
-        ) {
+        if (searchMatches(searchQuery, ["bowl", "musterstadt"])) {
           data = {
             locations: [dummyLocations[2]],
           };
@@ -199,3 +192,7 @@ export function makeMockAPIServer() {
 
   return server;
 }
+
+const searchMatches = (query: string, match: string[]): boolean => {
+  return some(match, (item) => query.includes(item));
+};
