@@ -177,6 +177,12 @@ export function makeMockAPIServer() {
           };
         }
 
+        if (request.queryParams.search.toLowerCase().includes("muster")) {
+          data = {
+            locations: [dummyLocations[0], dummyLocations[2]],
+          };
+        }
+
         if (
           request.queryParams.search.toLowerCase().includes("bowl") ||
           request.queryParams.search.toLowerCase().includes("musterstadt")
@@ -186,11 +192,6 @@ export function makeMockAPIServer() {
           };
         }
 
-        if (request.queryParams.search.toLowerCase().includes("muster")) {
-          data = {
-            locations: [dummyLocations[0], dummyLocations[2]],
-          };
-        }
         return authResponse(request, data);
       });
     },
