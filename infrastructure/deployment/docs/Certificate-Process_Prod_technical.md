@@ -159,7 +159,6 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
    | - | - | - |
    | Organisation (O) | Die zuständige Landesbehörde | IT.NRW für Nordrhein Westfalen |
    | Common Name (CN) | iris-connect-signature-cert-${Ihr RKI Identifier} | Beispiel Bonn: iris-connect-signature-cert-ga-stadt-bonn |
-   | Abteilung (OU) | IRIS | IRIS |
 
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4) - Webform" im CSM](images/certificate_service_manager/mycsm_basic_device_id_webform.png)
