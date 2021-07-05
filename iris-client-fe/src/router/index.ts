@@ -79,12 +79,7 @@ export const routes: Array<RouteConfig> = [
   },
   {
     path: "/cases/new",
-    name: "index-new",
-    // TODO: Remove redirect line once index cases are activated again
-    // As the "Index-Cases" button is still present on the dashboard,
-    // route entry has to be available. The redirect prevents users
-    // to manually navigate to the view via address bar.
-    redirect: "/",
+    name: "index-new" /* Caution: This acts as an identifier! */,
     meta: {
       menu: false,
     },
@@ -108,15 +103,9 @@ export const routes: Array<RouteConfig> = [
   {
     path: "/cases/list",
     name: "index-list" /* Caution: This acts as an identifier! */,
-    // TODO: Remove redirect and disabled lines once index cases are activated again
-    // As the "Index-Cases" menu entry is still present on the dashboard,
-    // route entry has to be available. The redirect prevents users
-    // to manually navigate to the view via address bar.
-    redirect: "/",
     meta: {
       menu: true,
       menuName: "Indexfälle",
-      disabled: true,
     },
     component: () =>
       import(
@@ -134,17 +123,17 @@ export const routes: Array<RouteConfig> = [
         /* webpackChunkName: "event-tracking-details" */ "../views/event-tracking-details/event-tracking-details.view.vue"
       ),
   },
-  // {
-  //   path: "/cases/details/:caseId",
-  //   name: "index-details" /* Caution: This acts as an identifier! */,
-  //   meta: {
-  //     menu: false,
-  //   },
-  //   component: () =>
-  //     import(
-  //       /* webpackChunkName: "index-tracking-details" */ "../views/index-tracking-details/index-tracking-details.view.vue"
-  //     ),
-  // },
+  {
+    path: "/cases/details/:caseId",
+    name: "index-details" /* Caution: This acts as an identifier! */,
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "index-tracking-details" */ "../views/index-tracking-details/index-tracking-details.view.vue"
+      ),
+  },
   {
     path: "/about",
     name: "about" /* Caution: This acts as an identifier! */,
@@ -163,19 +152,44 @@ const router = new VueRouter({
   routes,
 });
 
-export const setInterceptRoute = (route: Route): void => {
+const locationFromRoute = (route: Route): Location => {
   const { name, path, hash, query, params } = route;
-  const location: Location = {
+  return {
     ...(name ? { name } : {}),
     path,
     hash,
     query,
     params,
   };
-  store.commit("userLogin/setInterceptedRoute", location);
+};
+
+export const setInterceptRoute = (route: Route): void => {
+  store.commit("userLogin/setInterceptedRoute", locationFromRoute(route));
 };
 
 router.beforeEach((to, from, next) => {
+  // @todo: remove indexTracking enabled / disabled query functionality once index cases are permanently activated again
+  if (to.query.indexTracking) {
+    const indexTrackingQuery = to.query.indexTracking;
+    if (indexTrackingQuery === "enabled") {
+      store.commit("indexTrackingSettings/setIndexTrackingEnabled", true);
+    } else if (indexTrackingQuery === "disabled") {
+      store.commit("indexTrackingSettings/setIndexTrackingEnabled", false);
+    }
+    // remove query String "indexTracking" & reload page
+    delete to.query.indexTracking;
+    return next(locationFromRoute(to));
+  }
+  // @todo - indexTracking: remove redirect once index cases are permanently activated again
+  if (
+    to.name === "index-new" ||
+    to.name === "index-list" ||
+    to.name === "index-details"
+  ) {
+    if (!store.state.indexTrackingSettings.indexTrackingEnabled) {
+      return next("/");
+    }
+  }
   if (to.meta.auth !== false && !store.getters["userLogin/isAuthenticated"]) {
     // this is triggered if a user is not logged in and tries to deep link into the application
     setInterceptRoute(to);

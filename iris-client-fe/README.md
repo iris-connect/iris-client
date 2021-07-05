@@ -59,6 +59,20 @@ See `public/index.html`.
 Later on these values are picked up at runtime in the Vue app.
 See `src/config.ts`.
 
+### Enabling / Disabling index tracking features
+
+To enable index tracking features:
+`[[URL]]?indexTracking=enabled`
+
+To disable index tracking features:
+`[[URL]]?indexTracking=disabled`
+
+Please note:
+- The default setting is "disabled"
+- Enabling / disabling the feature reloads the page and removes the query-string automatically
+- The feature can be triggered on every page (even on index tracking pages)
+- The enabled / disabled state is stored in localStorage
+
 ### Routes/views and params
 
 In this section you find all deeplinks for our SPA.
