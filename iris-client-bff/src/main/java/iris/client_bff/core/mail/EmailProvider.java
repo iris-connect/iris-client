@@ -20,6 +20,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 
 /**
@@ -28,6 +29,9 @@ import org.springframework.context.support.MessageSourceAccessor;
 @Slf4j
 @RequiredArgsConstructor
 public class EmailProvider {
+
+	@Value("${spring.mail.properties.limit.resending.attempts}")
+	private Integer limitResendingAttempts;
 
 	private final @NonNull EmailSender emailSender;
 	final @NonNull protected MessageSourceAccessor messages;
@@ -38,9 +42,20 @@ public class EmailProvider {
 			email.getTemplate(),
 			"" };
 
+		return sendTillSuccessOrLimitReached(email, logArgs, 0);
+	}
+
+	private Try<Void> sendTillSuccessOrLimitReached(TemplatedEmail email, Object[] logArgs, int attempts) {
 		return emailSender.sendMail(email).onSuccess(__ -> log.info("Mail {} sent to {{}; {}; Case-ID {}}", logArgs)).onFailure(e -> {
-			log.info("Can't send mail {} to {{}; {}; Case-ID {}}", logArgs);
-			log.info("Exception", e);
+			if (attempts < limitResendingAttempts) {
+				int count = attempts + 1;
+				log.info("Attempt " + count + "to send mail {} to {{}; {}; Case-ID {}} failed. Retry will follow.", logArgs);
+				sendTillSuccessOrLimitReached(email, logArgs, count);
+			} else {
+				log.warn("Can't send mail {} to {{}; {}; Case-ID {}}", logArgs);
+				log.warn("Exception", e);
+			}
 		});
 	}
+
 }
