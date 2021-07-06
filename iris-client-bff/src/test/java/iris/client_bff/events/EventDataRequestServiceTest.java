@@ -78,7 +78,7 @@ public class EventDataRequestServiceTest {
 
 		service.sendDataRecievedEmail(updated, status);
 
-		verify(emailProvider, times(1)).sendDataRecievedEmail(any());
+		verify(emailProvider, times(1)).sendDataRecievedEmailAsynchroniously(any());
 	}
 
 	@Test
@@ -88,6 +88,6 @@ public class EventDataRequestServiceTest {
 
 		service.sendDataRecievedEmail(updated, status);
 
-		verify(emailProvider, times(0)).sendDataRecievedEmail(any());
+		verify(emailProvider, times(0)).sendDataRecievedEmailAsynchroniously(any());
 	}
 }

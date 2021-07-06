@@ -24,9 +24,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
 /**
@@ -50,7 +53,8 @@ public class EventEmailProvider extends EmailProvider {
 		super(emailSender, messages);
 	}
 
-	public Try<Void> sendDataRecievedEmail(EventDataRequest eventData) {
+	@Async
+	public Future<Try<Void>> sendDataRecievedEmailAsynchroniously(EventDataRequest eventData) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("eventId", eventData.getName());
 		parameters.put("externalId", eventData.getRefId());
@@ -71,6 +75,6 @@ public class EventEmailProvider extends EmailProvider {
 			email = new EventEmail(null, subject, EmailTemplates.Keys.EVENT_DATA_RECIEVED_MAIL_FTLH, parameters);
 		}
 
-		return sendMail(email);
+		return new AsyncResult<Try<Void>>(sendMail(email));
 	}
 }

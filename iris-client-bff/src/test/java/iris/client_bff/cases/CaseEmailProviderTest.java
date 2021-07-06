@@ -54,7 +54,7 @@ public class CaseEmailProviderTest {
 
 		when(emailSender.sendMail(any())).thenReturn(Try.success(null));
 
-		systemUnderTest.sendDataRecievedEmail(caseData);
+		systemUnderTest.sendDataRecievedEmailAsynchroniously(caseData);
 
 		ArgumentCaptor<CaseEmail> argument = ArgumentCaptor.forClass(CaseEmail.class);
 		verify(emailSender, times(1)).sendMail(any());

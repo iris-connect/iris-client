@@ -155,7 +155,7 @@ public class EventDataRequestService {
 
 	public void sendDataRecievedEmail(EventDataRequest updated, EventStatusDTO status) {
 		if (status == EventStatusDTO.DATA_RECEIVED) {
-			eventEmailProvider.sendDataRecievedEmail(updated);
+			eventEmailProvider.sendDataRecievedEmailAsynchroniously(updated);
 		}
 	}
 }

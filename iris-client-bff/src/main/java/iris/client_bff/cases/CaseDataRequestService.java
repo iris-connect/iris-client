@@ -107,7 +107,7 @@ public class CaseDataRequestService {
 
 	public void sendDataRecievedEmail(IndexCaseDetailsDTO indexCaseDetailsDTO, IndexCaseStatusDTO status) {
 		if (status == IndexCaseStatusDTO.DATA_RECEIVED) {
-			caseEmailProvider.sendDataRecievedEmail(indexCaseDetailsDTO);
+			caseEmailProvider.sendDataRecievedEmailAsynchroniously(indexCaseDetailsDTO);
 		}
 	}
 

@@ -34,13 +34,13 @@ public class EmailProvider {
 
 	protected Try<Void> sendMail(TemplatedEmail email) {
 
-		var logArgs = new Object[] { email.getTemplate(), "" };
+		var logArgs = new Object[] {
+			email.getTemplate(),
+			"" };
 
-		return emailSender.sendMail(email)
-				.onSuccess(__ -> log.info("Mail {} sent to {{}; {}; Case-ID {}}", logArgs))
-				.onFailure(e -> {
-					log.info("Can't send mail {} to {{}; {}; Case-ID {}}", logArgs);
-					log.info("Exception", e);
-				});
+		return emailSender.sendMail(email).onSuccess(__ -> log.info("Mail {} sent to {{}; {}; Case-ID {}}", logArgs)).onFailure(e -> {
+			log.info("Can't send mail {} to {{}; {}; Case-ID {}}", logArgs);
+			log.info("Exception", e);
+		});
 	}
 }

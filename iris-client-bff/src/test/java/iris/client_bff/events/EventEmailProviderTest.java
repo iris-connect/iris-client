@@ -52,7 +52,7 @@ public class EventEmailProviderTest {
 
 		when(emailSender.sendMail(any())).thenReturn(Try.success(null));
 
-		systemUnderTest.sendDataRecievedEmail(eventData);
+		systemUnderTest.sendDataRecievedEmailAsynchroniously(eventData);
 
 		ArgumentCaptor<EventEmail> argument = ArgumentCaptor.forClass(EventEmail.class);
 		verify(emailSender, times(1)).sendMail(any());

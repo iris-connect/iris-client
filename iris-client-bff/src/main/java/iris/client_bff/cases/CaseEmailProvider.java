@@ -25,9 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
 /**
@@ -51,7 +54,8 @@ public class CaseEmailProvider extends EmailProvider {
 		super(emailSender, messages);
 	}
 
-	public Try<Void> sendDataRecievedEmail(IndexCaseDetailsDTO caseData) {
+	@Async
+	public Future<Try<Void>> sendDataRecievedEmailAsynchroniously(IndexCaseDetailsDTO caseData) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("caseId", caseData.getName());
 		parameters.put("externalId", caseData.getExternalCaseId());
@@ -72,6 +76,6 @@ public class CaseEmailProvider extends EmailProvider {
 			email = new CaseEmail(null, subject, EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, parameters);
 		}
 
-		return sendMail(email);
+		return new AsyncResult<Try<Void>>(sendMail(email));
 	}
 }
