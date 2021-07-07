@@ -1,5 +1,63 @@
 # Changelog
 
+# [1.0.0-rc.11](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.10...v1.0.0-rc.11) (2021-07-02)
+
+
+### Bug Fixes
+
+* enable cross origin POST for data submission endpoint ([389a08d](https://github.com/iris-connect/iris-client/commit/389a08d034db361568e1fa34732593eac1ab3536))
+* Fixes problem stand alone release did not contain the ca folder. ([#201](https://github.com/iris-connect/iris-client/issues/201)) ([6c5fba5](https://github.com/iris-connect/iris-client/commit/6c5fba54287127c0b7d88b2b4ef410f7018cc3e6))
+
+# [1.0.0-rc.10](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.9...v1.0.0-rc.10) (2021-07-02)
+
+
+### Bug Fixes
+
+* Fixes problem that incorrect version and build were shown. ([fe917ec](https://github.com/iris-connect/iris-client/commit/fe917ec0504427e994f9b3e95394a269f76b534e))
+
+
+### Features
+
+* disable access to index-case feature in FE ([#193](https://github.com/iris-connect/iris-client/issues/193)) ([5b77fbd](https://github.com/iris-connect/iris-client/commit/5b77fbdb085d87b3f88bba63b9d8ce04676a7212))
+* index case data ([611d4f0](https://github.com/iris-connect/iris-client/commit/611d4f03f893245f90cca593f03ffbff54e032d9)), closes [iris-connect/iris-backlog/issues#129](https://github.com/iris-connect/iris-backlog/issues/issues/129) [iris-connect/iris-backlog/issues#129](https://github.com/iris-connect/iris-backlog/issues/issues/129) [iris-connect/iris-backlog/issues#129](https://github.com/iris-connect/iris-backlog/issues/issues/129) [iris-connect/iris-backlog/issues#129](https://github.com/iris-connect/iris-backlog/issues/issues/129)
+* Stand Alone Documentation for Health Departments without Docker environment. ([2af2c1f](https://github.com/iris-connect/iris-client/commit/2af2c1f48f624655b5770c6ced357132d580cf45)), closes [#182](https://github.com/iris-connect/iris-client/issues/182)
+* use env vars for hostnames in eps roles ([#199](https://github.com/iris-connect/iris-client/issues/199)) ([34a3df4](https://github.com/iris-connect/iris-client/commit/34a3df458f5f59e1fdb7f994bd29c9a33560f62c))
+
+# [1.0.0-rc.9](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.8...v1.0.0-rc.9) (2021-06-30)
+
+
+### Bug Fixes
+
+* Triggers new release 1.0.0-rc.9 ([8b690e3](https://github.com/iris-connect/iris-client/commit/8b690e35e60799711d7dc76605d60d8712ce27e1))
+
+# [1.0.0-rc.8](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.7...v1.0.0-rc.8) (2021-06-30)
+
+
+### Bug Fixes
+
+* date-picker visual bug when resizing page ([#152](https://github.com/iris-connect/iris-client/issues/152)) ([06fbb45](https://github.com/iris-connect/iris-client/commit/06fbb45058e52fba85434ab568432b6133abc477))
+* fixes pipeline build problem ([#168](https://github.com/iris-connect/iris-client/issues/168)) ([9a5bd58](https://github.com/iris-connect/iris-client/commit/9a5bd586ac596bf5acaf49451ccab290c87757ed))
+* Handle missing contact property in location object, avoid null Error. ([#149](https://github.com/iris-connect/iris-client/issues/149)) ([ce2a686](https://github.com/iris-connect/iris-client/commit/ce2a6862ee9cb7baede0fffcc83db1589e01026a)), closes [iris-gateway/iris-backlog#119](https://github.com/iris-gateway/iris-backlog/issues/119)
+* restore the header mapping function ([#146](https://github.com/iris-connect/iris-client/issues/146)) ([27e79a0](https://github.com/iris-connect/iris-client/commit/27e79a04fa8e0f7798bee56b1e5d3137cff3b10c)), closes [iris-gateway/iris-backlog#74](https://github.com/iris-gateway/iris-backlog/issues/74)
+* too many connections from EPS. ([#165](https://github.com/iris-connect/iris-client/issues/165)) ([8710ba1](https://github.com/iris-connect/iris-client/commit/8710ba1a9d0c98cc81a0dfc9ab7accf22ecdaa12))
+* Updates Spring Boot. Fixes https://github.com/iris-connect/iris-client/issues/155 ([342e220](https://github.com/iris-connect/iris-client/commit/342e2206577f4bd6fc43351863d7ec9897047bcc)), closes [#155](https://github.com/iris-connect/iris-client/issues/155)
+
+
+### Features
+
+* add links to about page ([387b1d9](https://github.com/iris-connect/iris-client/commit/387b1d9619b7943c11b86d03ca87e3e0decf6df1))
+* Adds possibility to override standard SSL port ([#167](https://github.com/iris-connect/iris-client/issues/167)) ([d923b6e](https://github.com/iris-connect/iris-client/commit/d923b6e6b311f42912135481858822f734244732))
+* e-mail deliviery ([#135](https://github.com/iris-connect/iris-client/issues/135)) ([31c6140](https://github.com/iris-connect/iris-client/commit/31c6140ef43da38b685352137f0fa3ccea06588b)), closes [iris-connect/iris-backlog#85](https://github.com/iris-connect/iris-backlog/issues/85) [iris-connect/iris-backlog#85](https://github.com/iris-connect/iris-backlog/issues/85) [iris-connect/iris-backlog#85](https://github.com/iris-connect/iris-backlog/issues/85) [iris-connect/iris-backlog#85](https://github.com/iris-connect/iris-backlog/issues/85) [iris-connect/iris-backlog#85](https://github.com/iris-connect/iris-backlog/issues/85) [iris-gateway/iris-backlog#85](https://github.com/iris-gateway/iris-backlog/issues/85) [iris-gateway/iris-backlog#85](https://github.com/iris-gateway/iris-backlog/issues/85) [iris-gateway/iris-backlog#85](https://github.com/iris-gateway/iris-backlog/issues/85) [iris-gateway/iris-backlog#85](https://github.com/iris-gateway/iris-backlog/issues/85) [iris-connect/iris-backlog#85](https://github.com/iris-connect/iris-backlog/issues/85) [iris-connect/iris-backlog#85](https://github.com/iris-connect/iris-backlog/issues/85) [iris-gateway/iris-backlog#85](https://github.com/iris-gateway/iris-backlog/issues/85) [iris-gateway/iris-backlog#85](https://github.com/iris-gateway/iris-backlog/issues/85) [iris-gateway/iris-backlog#85](https://github.com/iris-gateway/iris-backlog/issues/85) [iris-gateway/iris-backlog#85](https://github.com/iris-gateway/iris-backlog/issues/85) [iris-gateway/iris-backlog#85](https://github.com/iris-gateway/iris-backlog/issues/85)
+* improved dates configuration for new events ([ec8cbbc](https://github.com/iris-connect/iris-client/commit/ec8cbbc045046a8e3034eba5f4751bc7ff8a899b)), closes [iris-connect/iris-backlog#117](https://github.com/iris-connect/iris-backlog/issues/117) [iris-connect/iris-backlog#118](https://github.com/iris-connect/iris-backlog/issues/118)
+* Move eps config to containers ([#175](https://github.com/iris-connect/iris-client/issues/175)) ([9484983](https://github.com/iris-connect/iris-client/commit/9484983f31c911ab9ef97774e79262873e80e542))
+* setting page title globally ([#151](https://github.com/iris-connect/iris-client/issues/151)) ([5785820](https://github.com/iris-connect/iris-client/commit/57858202d84c18734d2822396d52c0245ddff27b))
+* updated favicon to match new logo ([8f5b5ed](https://github.com/iris-connect/iris-client/commit/8f5b5ed5d11f27a152f582347117d55adfe28960))
+
+
+### Reverts
+
+* Revert "feat: updated favicon to match new logo" (#159) ([36a3298](https://github.com/iris-connect/iris-client/commit/36a3298cba899ad9ed268a6ae067bdd83dcb08ed)), closes [#159](https://github.com/iris-connect/iris-client/issues/159)
+
 # [1.0.0-rc.8](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.7...v1.0.0-rc.8) (2021-06-24)
 
 

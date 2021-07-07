@@ -19,7 +19,7 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 @AutoConfigureMockMvc
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @TestInstance(Lifecycle.PER_CLASS)
-@ActiveProfiles({ "dev", "inttest" })
+@ActiveProfiles({ "dev", "inttest", "test" })
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

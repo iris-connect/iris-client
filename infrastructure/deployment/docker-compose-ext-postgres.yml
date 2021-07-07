@@ -6,6 +6,7 @@
 ########################################################
 version: "3.4"
 services:
+  # IRIS Client backend for frontend
   iris-client:
     image: inoeg/iris-client-bff:1.0
     expose:
@@ -50,16 +51,17 @@ services:
     depends_on:
       - iris-client
     volumes:
-      - ./certs:/app/settings/certs
+      - ./certs/eps:/app/settings/certs
     environment:
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
       EPS_SETTINGS: "settings/roles/${IRIS_ENV}/hd"
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ${PROXY_URL}
       EPS_OP:
       EPS_CLIENT_CERT:
       EPS_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
       EPS_SD_NAME:
-      HTTPS_PROXY: ${PROXY_URL}
-      PROXY_URL: ${PROXY_URL}
 
   # Proxy for inbound connections.
   private-proxy:
@@ -68,15 +70,17 @@ services:
       - 5545
       - 8877
     volumes:
-      - ./certs:/app/settings/certs
+      - ./certs/eps:/app/settings/certs
       - proxy_db_iris:/app/db
     environment:
       PROXY_SETTINGS: "settings/roles/${IRIS_ENV}/private-proxy"
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
+      PRIVATE_PROXY_EPS_HOSTNAME: private-proxy-eps
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_DOMAIN: ${PROXY_SUBDOMAIN}
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
-      HTTPS_PROXY: ${PROXY_URL}
-      PROXY_DOMAIN: ${PROXY_SUBDOMAIN}
       PROXY_TLS_CERT:
       PROXY_TLS_CERT_KEY:
     command: ["--level", "trace", "run", "private"]
@@ -90,9 +94,10 @@ services:
       - 7766
       - 7776
     volumes:
-      - ./certs:/app/settings/certs
+      - ./certs/eps:/app/settings/certs
     environment:
       EPS_SETTINGS: settings/roles/${IRIS_ENV}/private-proxy-eps
+      PRIVATE_PROXY_HOSTNAME: private-proxy
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
@@ -113,7 +118,7 @@ services:
       IRIS_CLIENT_DOMAIN_CERT:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
     volumes:
-      - ./conf/nginx:/etc/iris
+      - ./certs/nginx:/etc/iris
     depends_on:
       - iris-client
       - iris-frontend

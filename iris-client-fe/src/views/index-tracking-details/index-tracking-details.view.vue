@@ -38,6 +38,10 @@
               <strong> TAN: </strong>
               {{ indexData.tan }}
             </div>
+            <div>
+              <strong> Übermittlungs-URL: </strong>
+              <index-tracking-submission-url :url="indexData.submissionUri" />
+            </div>
           </v-col>
         </v-row>
         <v-tabs @change="handleTabsChange">
@@ -201,6 +205,7 @@ import StatusColors from "@/constants/StatusColors";
 import dayjs from "@/utils/date";
 import ContactCategories from "@/constants/ContactCategories";
 import AlertComponent from "@/components/alerts/alert.component.vue";
+import IndexTrackingSubmissionUrl from "@/views/index-tracking-details/components/index-tracking-submission-url.vue";
 
 type IndexData = {
   extID: string;
@@ -211,6 +216,7 @@ type IndexData = {
   eventCount: number;
   contactCount: number;
   tan: string;
+  submissionUri: string;
   status: string;
 };
 
@@ -265,6 +271,7 @@ function getFormattedAddress(address?: Address | null): string {
 
 @Component({
   components: {
+    IndexTrackingSubmissionUrl,
     IndexTrackingDetailsView: IndexTrackingDetailsView,
     AlertComponent,
   },
@@ -389,6 +396,7 @@ export default class IndexTrackingDetailsView extends Vue {
       eventCount: events.length,
       comment: dataRequest?.comment || "-",
       tan: "-", // TODO: TAN needed
+      submissionUri: dataRequest?.submissionUri || "-",
       status: dataRequest?.status || "",
     };
   }

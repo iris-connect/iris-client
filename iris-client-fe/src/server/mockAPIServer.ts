@@ -19,7 +19,7 @@ import {
   dummyUserList,
   getDummyUserFromRequest,
 } from "@/server/data/dummy-userlist";
-import { remove, findIndex } from "lodash";
+import { remove, findIndex, some } from "lodash";
 import { paginated } from "@/server/utils/pagination";
 
 // @todo: find better solution for data type
@@ -156,17 +156,35 @@ export function makeMockAPIServer() {
         return authResponse(request, data);
       });
 
-      this.get("/search/mio", (schema, request) => {
-        const data = {
-          locations: [dummyLocations[0]],
-        };
-        return authResponse(request, data);
-      });
+      this.get("/search", (schema, request) => {
+        let data;
 
-      this.get("/search/august", (schema, request) => {
-        const data = {
-          locations: [dummyLocations[1]],
-        };
+        const searchQuery = request.queryParams.search.toLowerCase();
+
+        if (searchMatches(searchQuery, ["pizza", "musterstraße", "mio"])) {
+          data = {
+            locations: [dummyLocations[0]],
+          };
+        }
+
+        if (searchMatches(searchQuery, ["brau", "münchen"])) {
+          data = {
+            locations: [dummyLocations[1]],
+          };
+        }
+
+        if (searchMatches(searchQuery, ["muster"])) {
+          data = {
+            locations: [dummyLocations[0], dummyLocations[2]],
+          };
+        }
+
+        if (searchMatches(searchQuery, ["bowl", "musterstadt"])) {
+          data = {
+            locations: [dummyLocations[2]],
+          };
+        }
+
         return authResponse(request, data);
       });
     },
@@ -174,3 +192,7 @@ export function makeMockAPIServer() {
 
   return server;
 }
+
+const searchMatches = (query: string, match: string[]): boolean => {
+  return some(match, (item) => query.includes(item));
+};

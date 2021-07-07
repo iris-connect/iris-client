@@ -13,7 +13,7 @@ import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequest.Status;
-import iris.client_bff.cases.IndexCaseService;
+import iris.client_bff.cases.CaseDataRequestService;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import iris.client_bff.events.exceptions.IRISDataRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -57,8 +58,8 @@ class IndexCaseControllerTest {
 	@Autowired
 	private ObjectMapper om;
 
-	@MockBean
-	IndexCaseService service;
+  @MockBean
+  CaseDataRequestService service;
 
 	// mock responses
 	private final CaseDataRequest MOCK_CASE = getCase();
@@ -68,7 +69,7 @@ class IndexCaseControllerTest {
 	private final Page<CaseDataRequest> casesPage = new RestResponsePage<>(List.of(MOCK_CASE));
 
 	@BeforeEach
-	void setUp() {
+	void setUp() throws IRISDataRequestException {
 		when(service.findAll(any(Pageable.class))).thenReturn(casesPage);
 
 		when(service.findByStatus(any(Status.class), any(Pageable.class))).thenReturn(casesPage);

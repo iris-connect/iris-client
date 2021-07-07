@@ -17,7 +17,10 @@
           actionlabel="Zur Indexübersicht"
           image="sketch_medicine.svg"
           actionlink="cases/list"
-          :linkDisabled="true"
+          :linkDisabled="
+            // @todo indexTracking: remove linkDisabled once index cases are permanently activated again
+            !$store.state.indexTrackingSettings.indexTrackingEnabled
+          "
         ></counter-widget>
       </v-col>
       <v-col>
@@ -55,8 +58,12 @@
                   color="primary"
                   :to="{ name: 'index-new' }"
                   class="mb-5"
-                  :disabled="true"
-                  >Indexfall-Daten anfordern
+                  :disabled="
+                    // @todo indexTracking: remove disabled once index cases are permanently activated again
+                    !$store.state.indexTrackingSettings.indexTrackingEnabled
+                  "
+                >
+                  Indexfall-Daten anfordern
                 </v-btn>
               </v-col>
             </v-row>
