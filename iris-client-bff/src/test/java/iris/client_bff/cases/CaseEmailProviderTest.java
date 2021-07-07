@@ -14,6 +14,7 @@ import iris.client_bff.core.mail.EmailTemplates;
 
 import java.time.Instant;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,5 +68,54 @@ public class CaseEmailProviderTest {
 		assertEquals(caseData.getEnd(), argument.getValue().getPlaceholders().get("endTime"));
 		assertTrue(argument.getValue().getPlaceholders().get("caseUrl").toString().contains(caseData.getCaseId().toString()));
 		assertEquals(EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, argument.getValue().getTemplate());
+	}
+
+	@Test
+	void sendDataRecievedEmailAndTriggerEmailSenderFailuresBeforeSuccess() {
+		String subject = "Neue Index Case Daten sind verfügbar auf dem IRIS Portal";
+		String caseName = "CaseName";
+		String caseExternalCaseId = "externalCaseId";
+		String caseId = "caseId";
+		Instant caseStart = Instant.now();
+		Instant caseEnd = Instant.now();
+
+		IndexCaseDetailsDTO caseData =
+			IndexCaseDetailsDTO.builder().name(caseName).externalCaseId(caseExternalCaseId).start(caseStart).end(caseEnd).caseId(caseId).build();
+
+		when(messageSourceAccessor.getMessage("CaseDataRecievedEmail.subject")).thenReturn(subject);
+
+		when(emailSender.sendMail(any())).thenReturn(Try.failure(new Exception()), Try.failure(new Exception()), Try.success(null));
+
+		systemUnderTest.sendDataRecievedEmailAsynchroniously(caseData);
+
+		verify(emailSender, times(3)).sendMail(any());
+	}
+
+	@Test
+	void sendDataRecievedEmailAndTriggerEmailSenderFailuresTillLimitIsReached() {
+		String subject = "Neue Index Case Daten sind verfügbar auf dem IRIS Portal";
+		String caseName = "CaseName";
+		String caseExternalCaseId = "externalCaseId";
+		String caseId = "caseId";
+		Instant caseStart = Instant.now();
+		Instant caseEnd = Instant.now();
+
+		IndexCaseDetailsDTO caseData =
+			IndexCaseDetailsDTO.builder().name(caseName).externalCaseId(caseExternalCaseId).start(caseStart).end(caseEnd).caseId(caseId).build();
+
+		when(messageSourceAccessor.getMessage("CaseDataRecievedEmail.subject")).thenReturn(subject);
+
+		when(emailSender.sendMail(any())).thenReturn(
+			Try.failure(new Exception()),
+			Try.failure(new Exception()),
+			Try.failure(new Exception()),
+			Try.failure(new Exception()),
+			Try.failure(new Exception()),
+			Try.failure(new Exception()));
+
+		systemUnderTest.sendDataRecievedEmailAsynchroniously(caseData);
+
+		verify(emailSender, times(6)).sendMail(any());
+		Assertions.assertThrows(Exception.class, null);
 	}
 }

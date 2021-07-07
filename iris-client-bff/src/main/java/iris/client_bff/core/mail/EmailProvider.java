@@ -47,9 +47,12 @@ public class EmailProvider {
 
 	private Try<Void> sendTillSuccessOrLimitReached(TemplatedEmail email, Object[] logArgs, int attempts) {
 		return emailSender.sendMail(email).onSuccess(__ -> log.info("Mail {} sent to {{}; {}; Case-ID {}}", logArgs)).onFailure(e -> {
+			if (limitResendingAttempts == null) {
+				limitResendingAttempts = 5;
+			}
 			if (attempts < limitResendingAttempts) {
 				int count = attempts + 1;
-				log.info("Attempt " + count + "to send mail {} to {{}; {}; Case-ID {}} failed. Retry will follow.", logArgs);
+				log.info("Attempt " + count + " to send mail {} to {{}; {}; Case-ID {}} failed. Retry will follow.", logArgs);
 				sendTillSuccessOrLimitReached(email, logArgs, count);
 			} else {
 				log.warn("Can't send mail {} to {{}; {}; Case-ID {}}", logArgs);
