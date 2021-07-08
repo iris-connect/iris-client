@@ -72,10 +72,12 @@ public class CaseEmailProvider extends EmailProvider {
 			ConfiguredRecipient recipient = new ConfiguredRecipient(dataRecievedRecipientName, emailAddress);
 
 			email = new CaseEmail(recipient, subject, EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, parameters);
+			return new AsyncResult<Try<Void>>(sendMail(email, recipient, parameters.get("caseId").toString()));
 		} else {
 			email = new CaseEmail(null, subject, EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, parameters);
+			ConfiguredRecipient standardRecipientForLogEntries = new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
+			return new AsyncResult<Try<Void>>(sendMail(email, standardRecipientForLogEntries, parameters.get("caseId").toString()));
 		}
 
-		return new AsyncResult<Try<Void>>(sendMail(email));
 	}
 }

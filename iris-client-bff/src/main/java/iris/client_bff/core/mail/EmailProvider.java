@@ -15,6 +15,7 @@
 package iris.client_bff.core.mail;
 
 import io.vavr.control.Try;
+import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail.ConfiguredRecipient;
 import iris.client_bff.core.mail.EmailSender.TemplatedEmail;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -36,29 +37,36 @@ public class EmailProvider {
 	private final @NonNull EmailSender emailSender;
 	final @NonNull protected MessageSourceAccessor messages;
 
-	protected Try<Void> sendMail(TemplatedEmail email) {
+	protected Try<Void> sendMail(TemplatedEmail email, ConfiguredRecipient recipient, String id) {
 
 		var logArgs = new Object[] {
 			email.getTemplate(),
-			"" };
+			recipient.getFullName(),
+			recipient.getEmailAddress(),
+			id };
 
 		return sendTillSuccessOrLimitReached(email, logArgs, 0);
 	}
 
 	private Try<Void> sendTillSuccessOrLimitReached(TemplatedEmail email, Object[] logArgs, int attempts) {
-		return emailSender.sendMail(email).onSuccess(__ -> log.info("Mail {} sent to {{}; {}; Case-ID {}}", logArgs)).onFailure(e -> {
-			if (limitResendingAttempts == null) {
-				limitResendingAttempts = 5;
-			}
-			if (attempts < limitResendingAttempts) {
-				int count = attempts + 1;
-				log.info("Attempt " + count + " to send mail {} to {{}; {}; Case-ID {}} failed. Retry will follow.", logArgs);
-				sendTillSuccessOrLimitReached(email, logArgs, count);
-			} else {
-				log.warn("Can't send mail {} to {{}; {}; Case-ID {}}", logArgs);
-				log.warn("Exception", e);
-			}
-		});
+		return emailSender.sendMail(email)
+			.onSuccess(__ -> log.info("Mail of the template {} sent to {} ({}) for Event-Id/Case-ID {}", logArgs))
+			.onFailure(e -> {
+				if (limitResendingAttempts == null) {
+					limitResendingAttempts = 5;
+				}
+				if (attempts < limitResendingAttempts) {
+					int count = attempts + 1;
+					log.info(
+						"The attempt number " + count
+							+ " to send a mail of the template {} to {} ({}) for Event-Id/Case-ID {} failed. Retry will follow.",
+						logArgs);
+					sendTillSuccessOrLimitReached(email, logArgs, count);
+				} else {
+					log.warn("Can't send a mail of the template {} to {} ({}) for Event-Id/Case-ID {}", logArgs);
+					log.warn("Exception", e);
+				}
+			});
 	}
 
 }

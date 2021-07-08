@@ -71,10 +71,12 @@ public class EventEmailProvider extends EmailProvider {
 			ConfiguredRecipient recipient = new ConfiguredRecipient(dataRecievedRecipientName, emailAddress);
 
 			email = new EventEmail(recipient, subject, EmailTemplates.Keys.EVENT_DATA_RECIEVED_MAIL_FTLH, parameters);
+			return new AsyncResult<Try<Void>>(sendMail(email, recipient, parameters.get("caseId").toString()));
 		} else {
 			email = new EventEmail(null, subject, EmailTemplates.Keys.EVENT_DATA_RECIEVED_MAIL_FTLH, parameters);
+			ConfiguredRecipient standardRecipientForLogEntries =
+				new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
+			return new AsyncResult<Try<Void>>(sendMail(email, standardRecipientForLogEntries, parameters.get("eventId").toString()));
 		}
-
-		return new AsyncResult<Try<Void>>(sendMail(email));
 	}
 }

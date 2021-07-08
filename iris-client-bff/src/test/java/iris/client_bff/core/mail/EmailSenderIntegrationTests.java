@@ -1,11 +1,12 @@
 package iris.client_bff.core.mail;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import io.vavr.control.Try;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.core.EmailAddress;
 import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail;
+import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail.ConfiguredRecipient;
 import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail.Recipient;
 import iris.client_bff.core.mail.EmailTemplates.Key;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,9 @@ import com.icegreen.greenmail.util.GreenMailUtil;
 
 @RequiredArgsConstructor
 @IrisWebIntegrationTest
-@ActiveProfiles({"dev", "test"})
+@ActiveProfiles({
+	"dev",
+	"test" })
 class EmailSenderIntegrationTests {
 
 	final EmailSender sender;
@@ -50,8 +53,7 @@ class EmailSenderIntegrationTests {
 
 			assertThat(message.getSubject()).isEqualTo("This is a test mail");
 			assertThat(GreenMailUtil.getBody(message)).startsWith("Hi Name");
-			assertThat(message.getRecipients(RecipientType.TO)[0])
-					.hasToString("\"Test Person - test {at} test.de\" <testmailbox@iris-gateway.de>");
+			assertThat(message.getRecipients(RecipientType.TO)[0]).hasToString("\"Test Person - test {at} test.de\" <testmailbox@iris-gateway.de>");
 			assertThat(message.getFrom()[0]).hasToString("Gesundheitsamt Entenhausen <mail-ga@entenhausen.de>");
 		});
 	}
@@ -66,8 +68,7 @@ class EmailSenderIntegrationTests {
 			assertThat(message.getContentType()).contains("text/plain");
 			assertThat(message.getSubject()).isEqualTo("Das ist eine Test-Mail");
 			assertThat(GreenMailUtil.getBody(message)).startsWith("Hallo Name");
-			assertThat(message.getRecipients(RecipientType.TO)[0])
-					.hasToString("\"Test Person - test {at} test.de\" <testmailbox@iris-gateway.de>");
+			assertThat(message.getRecipients(RecipientType.TO)[0]).hasToString("\"Test Person - test {at} test.de\" <testmailbox@iris-gateway.de>");
 			assertThat(message.getFrom()[0]).hasToString("Gesundheitsamt Entenhausen <mail-ga@entenhausen.de>");
 		});
 	}
@@ -82,8 +83,7 @@ class EmailSenderIntegrationTests {
 			assertThat(message.getContentType()).contains("multipart/mixed");
 			assertThat(message.getSubject()).isEqualTo("Das ist eine Test-Mail");
 			assertThat(GreenMailUtil.getBody(message)).contains("Hallo Name");
-			assertThat(message.getRecipients(RecipientType.TO)[0])
-					.hasToString("\"Test Person - test {at} test.de\" <testmailbox@iris-gateway.de>");
+			assertThat(message.getRecipients(RecipientType.TO)[0]).hasToString("\"Test Person - test {at} test.de\" <testmailbox@iris-gateway.de>");
 			assertThat(message.getFrom()[0]).hasToString("Gesundheitsamt Entenhausen <mail-ga@entenhausen.de>");
 		});
 	}
@@ -101,7 +101,8 @@ class EmailSenderIntegrationTests {
 
 			var email = new TestEmail(subject, TestKeys.TEST_MAIL_FTL, getParameters(), english);
 
-			return sendMail(email);
+			ConfiguredRecipient standardRecipient = new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
+			return sendMail(email, standardRecipient, getParameters().get("caseId"));
 		}
 
 		Try<Void> sendTestEmailDe() {
@@ -111,7 +112,8 @@ class EmailSenderIntegrationTests {
 
 			var email = new TestEmail(subject, TestKeys.TEST_MAIL_FTL, getParameters(), locale);
 
-			return sendMail(email);
+			ConfiguredRecipient standardRecipient = new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
+			return sendMail(email, standardRecipient, getParameters().get("caseId"));
 		}
 
 		Try<Void> sendTestHtmlEmailDe() {
@@ -121,7 +123,8 @@ class EmailSenderIntegrationTests {
 
 			var email = new TestEmail(subject, TestKeys.TEST_HTML_MAIL_FTLH, getParameters(), locale);
 
-			return sendMail(email);
+			ConfiguredRecipient standardRecipient = new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
+			return sendMail(email, standardRecipient, getParameters().get("caseId"));
 		}
 
 		private Map<String, String> getParameters() {
@@ -138,9 +141,12 @@ class EmailSenderIntegrationTests {
 		}
 	}
 
-	enum TestKeys implements Key {
+	enum TestKeys
+		implements
+		Key {
 
-		TEST_MAIL_FTL, TEST_HTML_MAIL_FTLH;
+		TEST_MAIL_FTL,
+		TEST_HTML_MAIL_FTLH;
 
 		@Override
 		public String getKey() {
