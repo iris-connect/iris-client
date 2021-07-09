@@ -85,7 +85,7 @@ services:
   nginx:
     image: inoeg/iris-client-nginx:develop
     ports:
-      - 443:443
+      - 7443:443
     environment:
       IRIS_CLIENT_DOMAIN:
       IRIS_CLIENT_DOMAIN_CERT:
