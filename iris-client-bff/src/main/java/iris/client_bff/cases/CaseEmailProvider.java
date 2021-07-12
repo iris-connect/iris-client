@@ -45,17 +45,17 @@ public class CaseEmailProvider extends EmailProvider {
 	@Value("${iris.client.basePath}")
 	private String basePath;
 
-	@Value("${spring.mail.properties.recipient.case.data-recieved.name}")
-	private String dataRecievedRecipientName;
-	@Value("${spring.mail.properties.recipient.case.data-recieved.email}")
-	private String dataRecievedRecipientEmail;
+	@Value("${spring.mail.properties.recipient.case.data-received.name}")
+	private String dataReceivedRecipientName;
+	@Value("${spring.mail.properties.recipient.case.data-received.email}")
+	private String dataReceivedRecipientEmail;
 
 	public CaseEmailProvider(EmailSender emailSender, MessageSourceAccessor messages) {
 		super(emailSender, messages);
 	}
 
 	@Async
-	public Future<Try<Void>> sendDataRecievedEmailAsynchroniously(IndexCaseDetailsDTO caseData) {
+	public Future<Try<Void>> sendDataReceivedEmailAsynchronously(IndexCaseDetailsDTO caseData) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("caseId", caseData.getName());
 		parameters.put("externalId", caseData.getExternalCaseId());
@@ -63,18 +63,18 @@ public class CaseEmailProvider extends EmailProvider {
 		parameters.put("endTime", caseData.getEnd());
 		parameters.put("caseUrl", basePath + "/cases/details/" + caseData.getCaseId());
 
-		var subject = messages.getMessage("CaseDataRecievedEmail.subject");
+		var subject = messages.getMessage("CaseDataReceivedEmail.subject");
 
 		CaseEmail email;
 
-		if (dataRecievedRecipientName != null && dataRecievedRecipientEmail != null) {
-			EmailAddress emailAddress = EmailAddress.of(dataRecievedRecipientEmail);
-			ConfiguredRecipient recipient = new ConfiguredRecipient(dataRecievedRecipientName, emailAddress);
+		if (dataReceivedRecipientName != null && dataReceivedRecipientEmail != null) {
+			EmailAddress emailAddress = EmailAddress.of(dataReceivedRecipientEmail);
+			ConfiguredRecipient recipient = new ConfiguredRecipient(dataReceivedRecipientName, emailAddress);
 
-			email = new CaseEmail(recipient, subject, EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, parameters);
+			email = new CaseEmail(recipient, subject, EmailTemplates.Keys.CASE_DATA_RECEIVED_MAIL_FTLH, parameters);
 			return new AsyncResult<Try<Void>>(sendMail(email, recipient, parameters.get("caseId").toString()));
 		} else {
-			email = new CaseEmail(null, subject, EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, parameters);
+			email = new CaseEmail(null, subject, EmailTemplates.Keys.CASE_DATA_RECEIVED_MAIL_FTLH, parameters);
 			ConfiguredRecipient standardRecipientForLogEntries = new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
 			return new AsyncResult<Try<Void>>(sendMail(email, standardRecipientForLogEntries, parameters.get("caseId").toString()));
 		}

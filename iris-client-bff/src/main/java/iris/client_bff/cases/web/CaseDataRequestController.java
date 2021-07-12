@@ -1,6 +1,5 @@
 package iris.client_bff.cases.web;
 
-import static iris.client_bff.cases.web.IndexCaseMapper.mapDataSubmission;
 import static iris.client_bff.cases.web.IndexCaseMapper.mapDetailed;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -95,7 +94,7 @@ public class CaseDataRequestController {
 			.map(ResponseEntity::ok)
 			.orElseGet(ResponseEntity.notFound()::build);
 
-		caseDataRequestService.sendDataRecievedEmail(responseEntity.getBody(), update.getStatus());
+		caseDataRequestService.sendDataReceivedEmail(responseEntity.getBody(), update.getStatus());
 
 		return responseEntity;
 	}

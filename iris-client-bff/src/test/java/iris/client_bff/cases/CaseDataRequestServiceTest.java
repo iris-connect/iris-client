@@ -66,22 +66,22 @@ public class CaseDataRequestServiceTest {
 	}
 
 	@Test
-	void sendDataRecievedEmailWithStatusUpdated() {
+	void sendDataReceivedEmailWithStatusUpdated() {
 		IndexCaseDetailsDTO updated = IndexCaseDetailsDTO.builder().build();
 		IndexCaseStatusDTO status = IndexCaseStatusDTO.DATA_RECEIVED;
 
-		service.sendDataRecievedEmail(updated, status);
+		service.sendDataReceivedEmail(updated, status);
 
-		verify(emailProvider, times(1)).sendDataRecievedEmailAsynchroniously(any());
+		verify(emailProvider, times(1)).sendDataReceivedEmailAsynchronously(any());
 	}
 
 	@Test
-	void sendDataRecievedEmailWithStatusNotUpdated() {
+	void sendDataReceivedEmailWithStatusNotUpdated() {
 		IndexCaseDetailsDTO updated = IndexCaseDetailsDTO.builder().build();
 		IndexCaseStatusDTO status = IndexCaseStatusDTO.DATA_REQUESTED;
 
-		service.sendDataRecievedEmail(updated, status);
+		service.sendDataReceivedEmail(updated, status);
 
-		verify(emailProvider, times(0)).sendDataRecievedEmailAsynchroniously(any());
+		verify(emailProvider, times(0)).sendDataReceivedEmailAsynchronously(any());
 	}
 }

@@ -44,17 +44,17 @@ public class EventEmailProvider extends EmailProvider {
 	@Value("${iris.client.basePath}")
 	private String basePath;
 
-	@Value("${spring.mail.properties.recipient.event.data-recieved.name}")
-	private String dataRecievedRecipientName;
-	@Value("${spring.mail.properties.recipient.event.data-recieved.email}")
-	private String dataRecievedRecipientEmail;
+	@Value("${spring.mail.properties.recipient.event.data-received.name}")
+	private String dataReceivedRecipientName;
+	@Value("${spring.mail.properties.recipient.event.data-received.email}")
+	private String dataReceivedRecipientEmail;
 
 	public EventEmailProvider(EmailSender emailSender, MessageSourceAccessor messages) {
 		super(emailSender, messages);
 	}
 
 	@Async
-	public Future<Try<Void>> sendDataRecievedEmailAsynchroniously(EventDataRequest eventData) {
+	public Future<Try<Void>> sendDataReceivedEmailAsynchronously(EventDataRequest eventData) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("eventId", eventData.getName());
 		parameters.put("externalId", eventData.getRefId());
@@ -62,18 +62,18 @@ public class EventEmailProvider extends EmailProvider {
 		parameters.put("endTime", eventData.getRequestEnd());
 		parameters.put("eventUrl", basePath + "/events/details/" + eventData.getId());
 
-		var subject = messages.getMessage("EventDataRecievedEmail.subject");
+		var subject = messages.getMessage("EventDataReceivedEmail.subject");
 
 		EventEmail email;
 
-		if (dataRecievedRecipientName != null && dataRecievedRecipientEmail != null) {
-			EmailAddress emailAddress = EmailAddress.of(dataRecievedRecipientEmail);
-			ConfiguredRecipient recipient = new ConfiguredRecipient(dataRecievedRecipientName, emailAddress);
+		if (dataReceivedRecipientName != null && dataReceivedRecipientEmail != null) {
+			EmailAddress emailAddress = EmailAddress.of(dataReceivedRecipientEmail);
+			ConfiguredRecipient recipient = new ConfiguredRecipient(dataReceivedRecipientName, emailAddress);
 
-			email = new EventEmail(recipient, subject, EmailTemplates.Keys.EVENT_DATA_RECIEVED_MAIL_FTLH, parameters);
+			email = new EventEmail(recipient, subject, EmailTemplates.Keys.EVENT_DATA_RECEIVED_MAIL_FTLH, parameters);
 			return new AsyncResult<Try<Void>>(sendMail(email, recipient, parameters.get("caseId").toString()));
 		} else {
-			email = new EventEmail(null, subject, EmailTemplates.Keys.EVENT_DATA_RECIEVED_MAIL_FTLH, parameters);
+			email = new EventEmail(null, subject, EmailTemplates.Keys.EVENT_DATA_RECEIVED_MAIL_FTLH, parameters);
 			ConfiguredRecipient standardRecipientForLogEntries =
 				new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
 			return new AsyncResult<Try<Void>>(sendMail(email, standardRecipientForLogEntries, parameters.get("eventId").toString()));

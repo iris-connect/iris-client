@@ -38,7 +38,7 @@ public class EventEmailProviderTest {
 	}
 
 	@Test
-	void sendDataRecievedEmailWithCorrectData() {
+	void sendDataReceivedEmailWithCorrectData() {
 		String subject = "Neue Event Daten sind verfügbar auf dem IRIS Portal";
 		String eventName = "EventName";
 		String eventRefId = "RefId";
@@ -48,11 +48,11 @@ public class EventEmailProviderTest {
 		EventDataRequest eventData =
 			EventDataRequest.builder().name(eventName).refId(eventRefId).requestStart(eventStart).requestEnd(eventEnd).build();
 
-		when(messageSourceAccessor.getMessage("EventDataRecievedEmail.subject")).thenReturn(subject);
+		when(messageSourceAccessor.getMessage("EventDataReceivedEmail.subject")).thenReturn(subject);
 
 		when(emailSender.sendMail(any())).thenReturn(Try.success(null));
 
-		systemUnderTest.sendDataRecievedEmailAsynchroniously(eventData);
+		systemUnderTest.sendDataReceivedEmailAsynchronously(eventData);
 
 		ArgumentCaptor<EventEmail> argument = ArgumentCaptor.forClass(EventEmail.class);
 		verify(emailSender, times(1)).sendMail(any());
@@ -64,6 +64,6 @@ public class EventEmailProviderTest {
 		assertEquals(eventData.getRequestStart(), argument.getValue().getPlaceholders().get("startTime"));
 		assertEquals(eventData.getRequestEnd(), argument.getValue().getPlaceholders().get("endTime"));
 		assertTrue(argument.getValue().getPlaceholders().get("eventUrl").toString().contains(eventData.getId().toString()));
-		assertEquals(EmailTemplates.Keys.EVENT_DATA_RECIEVED_MAIL_FTLH, argument.getValue().getTemplate());
+		assertEquals(EmailTemplates.Keys.EVENT_DATA_RECEIVED_MAIL_FTLH, argument.getValue().getTemplate());
 	}
 }

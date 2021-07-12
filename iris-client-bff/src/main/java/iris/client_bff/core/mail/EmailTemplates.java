@@ -61,8 +61,8 @@ public interface EmailTemplates {
 		implements
 		Key {
 
-		CASE_DATA_RECIEVED_MAIL_FTLH,
-		EVENT_DATA_RECIEVED_MAIL_FTLH;
+		CASE_DATA_RECEIVED_MAIL_FTLH,
+		EVENT_DATA_RECEIVED_MAIL_FTLH;
 
 		@Override
 		public String getKey() {

@@ -105,9 +105,9 @@ public class CaseDataRequestService {
 		return repository.getCountWithStatus(status);
 	}
 
-	public void sendDataRecievedEmail(IndexCaseDetailsDTO indexCaseDetailsDTO, IndexCaseStatusDTO status) {
+	public void sendDataReceivedEmail(IndexCaseDetailsDTO indexCaseDetailsDTO, IndexCaseStatusDTO status) {
 		if (status == IndexCaseStatusDTO.DATA_RECEIVED) {
-			caseEmailProvider.sendDataRecievedEmailAsynchroniously(indexCaseDetailsDTO);
+			caseEmailProvider.sendDataReceivedEmailAsynchronously(indexCaseDetailsDTO);
 		}
 	}
 

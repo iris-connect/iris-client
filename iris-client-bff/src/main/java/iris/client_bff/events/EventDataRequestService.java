@@ -153,9 +153,9 @@ public class EventDataRequestService {
 		return repository.getCountWithStatus(status);
 	}
 
-	public void sendDataRecievedEmail(EventDataRequest updated, EventStatusDTO status) {
+	public void sendDataReceivedEmail(EventDataRequest updated, EventStatusDTO status) {
 		if (status == EventStatusDTO.DATA_RECEIVED) {
-			eventEmailProvider.sendDataRecievedEmailAsynchroniously(updated);
+			eventEmailProvider.sendDataReceivedEmailAsynchronously(updated);
 		}
 	}
 }

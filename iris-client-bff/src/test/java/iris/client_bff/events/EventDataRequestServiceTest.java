@@ -72,22 +72,22 @@ public class EventDataRequestServiceTest {
 	}
 
 	@Test
-	void sendDataRecievedEmailWithStatusUpdated() {
+	void sendDataReceivedEmailWithStatusUpdated() {
 		EventDataRequest updated = new EventDataRequest();
 		EventStatusDTO status = EventStatusDTO.DATA_RECEIVED;
 
-		service.sendDataRecievedEmail(updated, status);
+		service.sendDataReceivedEmail(updated, status);
 
-		verify(emailProvider, times(1)).sendDataRecievedEmailAsynchroniously(any());
+		verify(emailProvider, times(1)).sendDataReceivedEmailAsynchronously(any());
 	}
 
 	@Test
-	void sendDataRecievedEmailWithStatusNotUpdated() {
+	void sendDataReceivedEmailWithStatusNotUpdated() {
 		EventDataRequest updated = new EventDataRequest();
 		EventStatusDTO status = EventStatusDTO.DATA_REQUESTED;
 
-		service.sendDataRecievedEmail(updated, status);
+		service.sendDataReceivedEmail(updated, status);
 
-		verify(emailProvider, times(0)).sendDataRecievedEmailAsynchroniously(any());
+		verify(emailProvider, times(0)).sendDataReceivedEmailAsynchronously(any());
 	}
 }

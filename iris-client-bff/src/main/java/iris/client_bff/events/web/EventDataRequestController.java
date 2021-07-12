@@ -104,7 +104,7 @@ public class EventDataRequestController {
 		if (dataRequest.isPresent()) {
 			EventDataRequest updated = dataRequestService.update(dataRequest.get(), patch);
 
-			dataRequestService.sendDataRecievedEmail(updated, patch.getStatus());
+			dataRequestService.sendDataReceivedEmail(updated, patch.getStatus());
 
 			DataRequestDetails requestDetails = mapDataRequestDetails(updated);
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);

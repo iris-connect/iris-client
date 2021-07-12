@@ -40,7 +40,7 @@ public class CaseEmailProviderTest {
 	}
 
 	@Test
-	void sendDataRecievedEmailWithCorrectData() {
+	void sendDataReceivedEmailWithCorrectData() {
 		String subject = "Neue Index Case Daten sind verfügbar auf dem IRIS Portal";
 		String caseName = "CaseName";
 		String caseExternalCaseId = "externalCaseId";
@@ -51,11 +51,11 @@ public class CaseEmailProviderTest {
 		IndexCaseDetailsDTO caseData =
 			IndexCaseDetailsDTO.builder().name(caseName).externalCaseId(caseExternalCaseId).start(caseStart).end(caseEnd).caseId(caseId).build();
 
-		when(messageSourceAccessor.getMessage("CaseDataRecievedEmail.subject")).thenReturn(subject);
+		when(messageSourceAccessor.getMessage("CaseDataReceivedEmail.subject")).thenReturn(subject);
 
 		when(emailSender.sendMail(any())).thenReturn(Try.success(null));
 
-		systemUnderTest.sendDataRecievedEmailAsynchroniously(caseData);
+		systemUnderTest.sendDataReceivedEmailAsynchronously(caseData);
 
 		ArgumentCaptor<CaseEmail> argument = ArgumentCaptor.forClass(CaseEmail.class);
 		verify(emailSender, times(1)).sendMail(any());
@@ -67,11 +67,11 @@ public class CaseEmailProviderTest {
 		assertEquals(caseData.getStart(), argument.getValue().getPlaceholders().get("startTime"));
 		assertEquals(caseData.getEnd(), argument.getValue().getPlaceholders().get("endTime"));
 		assertTrue(argument.getValue().getPlaceholders().get("caseUrl").toString().contains(caseData.getCaseId().toString()));
-		assertEquals(EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, argument.getValue().getTemplate());
+		assertEquals(EmailTemplates.Keys.CASE_DATA_RECEIVED_MAIL_FTLH, argument.getValue().getTemplate());
 	}
 
 	@Test
-	void sendDataRecievedEmailAndTriggerEmailSenderFailuresBeforeSuccess() {
+	void sendDataReceivedEmailAndTriggerEmailSenderFailuresBeforeSuccess() {
 		String subject = "Neue Index Case Daten sind verfügbar auf dem IRIS Portal";
 		String caseName = "CaseName";
 		String caseExternalCaseId = "externalCaseId";
@@ -82,17 +82,17 @@ public class CaseEmailProviderTest {
 		IndexCaseDetailsDTO caseData =
 			IndexCaseDetailsDTO.builder().name(caseName).externalCaseId(caseExternalCaseId).start(caseStart).end(caseEnd).caseId(caseId).build();
 
-		when(messageSourceAccessor.getMessage("CaseDataRecievedEmail.subject")).thenReturn(subject);
+		when(messageSourceAccessor.getMessage("CaseDataReceivedEmail.subject")).thenReturn(subject);
 
 		when(emailSender.sendMail(any())).thenReturn(Try.failure(new Exception()), Try.failure(new Exception()), Try.success(null));
 
-		systemUnderTest.sendDataRecievedEmailAsynchroniously(caseData);
+		systemUnderTest.sendDataReceivedEmailAsynchronously(caseData);
 
 		verify(emailSender, times(3)).sendMail(any());
 	}
 
 	@Test
-	void sendDataRecievedEmailAndTriggerEmailSenderFailuresTillLimitIsReached() {
+	void sendDataReceivedEmailAndTriggerEmailSenderFailuresTillLimitIsReached() {
 		String subject = "Neue Index Case Daten sind verfügbar auf dem IRIS Portal";
 		String caseName = "CaseName";
 		String caseExternalCaseId = "externalCaseId";
@@ -103,7 +103,7 @@ public class CaseEmailProviderTest {
 		IndexCaseDetailsDTO caseData =
 			IndexCaseDetailsDTO.builder().name(caseName).externalCaseId(caseExternalCaseId).start(caseStart).end(caseEnd).caseId(caseId).build();
 
-		when(messageSourceAccessor.getMessage("CaseDataRecievedEmail.subject")).thenReturn(subject);
+		when(messageSourceAccessor.getMessage("CaseDataReceivedEmail.subject")).thenReturn(subject);
 
 		when(emailSender.sendMail(any())).thenReturn(
 			Try.failure(new Exception()),
@@ -113,7 +113,7 @@ public class CaseEmailProviderTest {
 			Try.failure(new Exception()),
 			Try.failure(new Exception()));
 
-		systemUnderTest.sendDataRecievedEmailAsynchroniously(caseData);
+		systemUnderTest.sendDataReceivedEmailAsynchronously(caseData);
 
 		verify(emailSender, times(6)).sendMail(any());
 		Assertions.assertThrows(Exception.class, null);
