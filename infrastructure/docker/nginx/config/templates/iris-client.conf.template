@@ -1,3 +1,7 @@
+# IP-based rate limits, see https://www.nginx.com/blog/rate-limiting-nginx/
+limit_req_zone $binary_remote_addr zone=frontend:10m rate=15r/s;
+limit_req_zone $binary_remote_addr zone=api:10m rate=5r/s;
+
 server {
     server_name ${IRIS_CLIENT_DOMAIN};
     listen 443 ssl;
@@ -22,12 +26,15 @@ server {
     proxy_send_timeout                 10s;
     proxy_read_timeout                 10s;
 
-
     location / {
-        proxy_pass                         http://iris-frontend:28080;
+        # Two-stage limiting at a high rate, since mostly static assets are served here
+        limit_req   zone=frontend burst=25 delay=12;
+        proxy_pass  http://iris-frontend:28080;
     }
 
     location /api/ {
+        # Two-stage limiting at a low rate, since critical features such as login reside here
+        limit_req   zone=api burst=12 delay=8;
         proxy_pass  http://iris-client:8092/;
     }
 }
