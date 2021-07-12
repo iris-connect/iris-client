@@ -4,7 +4,9 @@ import static iris.client_bff.auth.db.SecurityConstants.*;
 
 import iris.client_bff.auth.db.dto.LoginRequestDTO;
 import iris.client_bff.auth.db.jwt.JWTSigner;
+import iris.client_bff.users.LoggingHelper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AllArgsConstructor
+@Slf4j
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private AuthenticationManager authenticationManager;
@@ -35,6 +38,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
 			throws AuthenticationException {
+
+		log.debug("Login request from remote address: " + LoggingHelper.obfuscate(req.getRemoteAddr()));
+
 		try {
 
 			LoginRequestDTO loginRequest = new ObjectMapper()
