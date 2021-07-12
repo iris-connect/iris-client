@@ -205,6 +205,7 @@ import { DataRequestStatus, DataRequestStatusUpdateByUser } from "@/api";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import { ErrorMessage } from "@/utils/axios";
+import { sanitiseAndCheckRecordWithNoRestrictionToInput } from "@/utils/sanitisation";
 
 const EventTrackingDetailsComponentProps = Vue.extend({
   props: {
@@ -321,7 +322,12 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
     resolve: () => void,
     reject: (error: string | undefined) => void
   ): void {
-    this.$emit("field-edit", data, resolve, reject);
+    this.$emit(
+      "field-edit",
+      sanitiseAndCheckRecordWithNoRestrictionToInput(data),
+      resolve,
+      reject
+    );
   }
 
   handleStatusUpdate(status: DataRequestStatusUpdateByUser): void {

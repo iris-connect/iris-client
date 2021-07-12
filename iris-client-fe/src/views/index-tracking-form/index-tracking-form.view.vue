@@ -81,6 +81,7 @@ import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
 import DateTimeInputField from "@/components/form/date-time-input-field.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
+import { sanitiseAndCheckUIInputWithNoRestrictionToInput } from "@/utils/sanitisation";
 
 type IndexTrackingForm = {
   model: IndexTrackingFormModel;
@@ -186,9 +187,15 @@ export default class IndexTrackingFormView extends Vue {
       const payload: DataRequestCaseClient = {
         start: this.form.model.start,
         end: this.form.model.end,
-        name: this.form.model.name,
-        externalCaseId: this.form.model.externalId,
-        comment: this.form.model.comment,
+        name: sanitiseAndCheckUIInputWithNoRestrictionToInput(
+          this.form.model.name
+        ),
+        externalCaseId: sanitiseAndCheckUIInputWithNoRestrictionToInput(
+          this.form.model.externalId
+        ),
+        comment: sanitiseAndCheckUIInputWithNoRestrictionToInput(
+          this.form.model.comment
+        ),
       };
       const created: DataRequestCaseDetails = await store.dispatch(
         "indexTrackingForm/createIndexTracking",

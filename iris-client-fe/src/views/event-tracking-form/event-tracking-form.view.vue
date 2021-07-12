@@ -136,6 +136,7 @@ import { get as _get, set as _set, has as _has } from "lodash";
 import EventTrackingFormLocationInfo from "@/views/event-tracking-form/components/event-tracking-form-location-info.vue";
 import rules from "@/common/validation-rules";
 import { DataQuery } from "@/api/common";
+import { sanitiseAndCheckUIInputWithNoRestrictionToInput } from "@/utils/sanitisation";
 
 type EventTrackingForm = {
   model: EventTrackingFormModel;
@@ -288,11 +289,17 @@ export default class EventTrackingFormView extends Vue {
       const payload: DataRequestClient = {
         start: this.form.model.start,
         end: this.form.model.end,
-        name: this.form.model.name,
+        name: sanitiseAndCheckUIInputWithNoRestrictionToInput(
+          this.form.model.name
+        ),
         locationId: location.id,
         providerId: location.providerId,
-        externalRequestId: this.form.model.externalId,
-        requestDetails: this.form.model.requestDetails,
+        externalRequestId: sanitiseAndCheckUIInputWithNoRestrictionToInput(
+          this.form.model.externalId
+        ),
+        requestDetails: sanitiseAndCheckUIInputWithNoRestrictionToInput(
+          this.form.model.requestDetails
+        ),
       };
 
       const created: DataRequestDetails = await store.dispatch(
