@@ -33,11 +33,13 @@ services:
       retries: 4
       start_period: 30s
 
-  # IRIS Client backend for frontend
+  # IRIS Client backend for frontend (autoupdated by watchtower)
   iris-client:
     image: inoeg/iris-client-bff:develop
     expose:
       - 8092
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_USER}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
@@ -57,11 +59,13 @@ services:
       postgres:
         condition: service_healthy
 
-  # IRIS Client Frontend
+  # IRIS Client Frontend (autoupdated by watchtower)
   iris-frontend:
     image: inoeg/iris-client-frontend:develop
     expose:
       - 28080
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     environment:
       SORMAS_SIDECAR_BASE_URL: /api
     restart: unless-stopped
@@ -119,6 +123,18 @@ services:
     environment:
       - EPS_SETTINGS=settings/roles/private-proxy-eps-1
     command: [ "--level", "trace", "server", "run" ]
+
+  # Watchtower managing auto-updates (polling all 60s)
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      TZ: Europe/Berlin
+      WATCHTOWER_LABEL_ENABLE: "true"
+      WATCHTOWER_POLL_INTERVAL: 60
+    depends_on:
+      - nginx
 
 volumes:
   psqldata_iris:
