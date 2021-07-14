@@ -54,6 +54,7 @@ services:
       EPS_CLIENT_EPS_CLIENT_URL: https://eps:5556/jsonrpc
       EPS_CLIENT_PROXY_CLIENT_URL: https://private-proxy-1:7766/jsonrpc
       PROXY_SERVICE_TARGET_SUBDOMAIN: proxy.test-gesundheitsamt.de
+      IRIS_CLIENT_BASEPATH: https://iris-frontend:28080
     restart: unless-stopped
     depends_on:
       postgres:
