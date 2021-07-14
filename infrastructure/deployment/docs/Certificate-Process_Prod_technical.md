@@ -245,11 +245,12 @@ Damit Ihr GA mit den im IRIS System befindlichen Akteuren kommunizieren kann, mu
    Benutzen sie [dieses Skript](../scripts/live/create-fingerprint-from-cert.sh) 
 
    ``` 
+   # Beispiel:
    # Information needed for IRIS Team
    CN:                      ga-test-local.d-trust.net
    Certificate Fingerprint: dbb0b9e735bbeac7cf9f81f1309536cdcf5aded026c152531a370684d4a00980
    ```
-2. Schicken Sie das Ergebnis an rollout@iris-gateway.de. 
+2. Schicken Sie das Ergebnis an `rollout@iris-connect.de`. 
 
 ### Zertifikate einrichten
 
