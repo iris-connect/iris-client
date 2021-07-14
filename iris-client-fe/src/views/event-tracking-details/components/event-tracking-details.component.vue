@@ -19,7 +19,7 @@
         <editable-field
           :value="formData.externalRequestId"
           name="externalRequestId"
-          :rules="validationRules.defined"
+          :rules="validationRules.sanitisedAndDefined"
           label="Details für Ereignis ID"
           v-slot="{ entry }"
           @submit="handleEditableField"
@@ -35,7 +35,7 @@
             <editable-field
               :value="formData.name"
               name="name"
-              :rules="validationRules.defined"
+              :rules="validationRules.sanitisedAndDefined"
               label="Name"
               v-slot="{ entry }"
               @submit="handleEditableField"
@@ -49,6 +49,7 @@
             <editable-field
               :value="formData.comment"
               name="comment"
+              :rules="validationRules.sanitised"
               label="Kommentar"
               v-slot="{ entry }"
               @submit="handleEditableField"
@@ -205,7 +206,6 @@ import { DataRequestStatus, DataRequestStatusUpdateByUser } from "@/api";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import { ErrorMessage } from "@/utils/axios";
-import { sanitiseAndCheckRecordWithNoRestrictionToInput } from "@/utils/sanitisation";
 
 const EventTrackingDetailsComponentProps = Vue.extend({
   props: {
@@ -303,6 +303,8 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
 
   validationRules = {
     defined: [rules.defined],
+    sanitisedAndDefined: [rules.defined, rules.sanitised],
+    sanitised: [rules.sanitised],
   };
 
   get isStatusRequested(): boolean {
@@ -322,12 +324,7 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
     resolve: () => void,
     reject: (error: string | undefined) => void
   ): void {
-    this.$emit(
-      "field-edit",
-      sanitiseAndCheckRecordWithNoRestrictionToInput(data),
-      resolve,
-      reject
-    );
+    this.$emit("field-edit", data, resolve, reject);
   }
 
   handleStatusUpdate(status: DataRequestStatusUpdateByUser): void {

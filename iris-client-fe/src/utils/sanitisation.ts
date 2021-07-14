@@ -1,8 +1,5 @@
 // Utility for sanitisation, input validation and type checks
 
-import { UserUpdate } from "@/api";
-import { omitBy } from "lodash";
-
 export const sanitiseAndCheckRecordWithNoRestrictionToInput = function (
   input: Record<string, unknown>
 ): Record<string, unknown> {
