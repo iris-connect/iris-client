@@ -8,10 +8,12 @@ import iris.client_bff.users.web.dto.UserUpdateDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,8 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
-		UserAccount userAccount = userAccountsRepository.findByUserName(username)
-				.orElseThrow(() -> new UsernameNotFoundException(username));
+		UserAccount userAccount = userAccountsRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException(username));
 
 		// By convention we expect that there exists only one authority and it represents the role
 		var role = userAccount.getRole().name();
@@ -51,9 +52,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	public List<UserAccount> loadAll() {
-		return StreamSupport
-				.stream(userAccountsRepository.findAll().spliterator(), false)
-				.collect(Collectors.toList());
+		return StreamSupport.stream(userAccountsRepository.findAll().spliterator(), false).collect(Collectors.toList());
 	}
 
 	public UserAccount create(UserInsertDTO userInsertDTO) {
@@ -96,12 +95,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	public void deleteById(UUID id) {
-		log.info("Delete user: {}", id);
-		var optional = userAccountsRepository.findById(id);
-		if (optional.isPresent()) {
-			jwtService.invalidateTokensOfUser(optional.get().getUserName());
+		log.info("Delete User: {}", id);
+
+		if (checkInputUUID(id.toString())) {
+			var optional = userAccountsRepository.findById(id);
+			if (optional.isPresent()) {
+				jwtService.invalidateTokensOfUser(optional.get().getUserName());
+			}
+			userAccountsRepository.deleteById(id);
+		} else {
+			log.info("Input data was not valid");
 		}
-		userAccountsRepository.deleteById(id);
 	}
 
 	private UserAccount map(UserInsertDTO userInsertDTO) {
@@ -113,4 +117,162 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		user.setFirstName(userInsertDTO.getFirstName());
 		return user;
 	}
+
+	private Boolean checkInputUserUpdateDTO(UserUpdateDTO userUpdateDTO) {
+		return true;
+	}
+
+	private Boolean checkInputUserInsertDTO(UserInsertDTO userInsertDTO) {
+		return true;
+	}
+
+	private Boolean checkInputForAttacks(String input) {
+		if (input == null)
+			return false;
+
+		if (input.length() <= 0)
+			return false;
+
+		if (input.contains("<script"))
+			return false;
+
+		String[] forbiddenSymbolsArray = {
+			"=",
+			"<",
+			">",
+			"!",
+			"\"",
+			"§",
+			"$",
+			"%",
+			"&",
+			"/",
+			"(",
+			")",
+			"?",
+			"´",
+			"`",
+			"¿",
+			"≠",
+			"¯",
+			"}",
+			"·",
+			"{",
+			"˜",
+			"\\",
+			"]",
+			"^",
+			"ﬁ",
+			"[",
+			"¢",
+			"¶",
+			"“",
+			"¡",
+			"¬",
+			"”",
+			"#",
+			"£",
+			"+",
+			"*",
+			"±",
+			"",
+			"‘",
+			"’",
+			"'",
+			"-",
+			"_",
+			".",
+			":",
+			"…",
+			"÷",
+			"∞",
+			";",
+			"˛",
+			"æ",
+			"Æ",
+			"œ",
+			"Œ",
+			"@",
+			"•",
+			"°",
+			"„" };
+		Stream<String> forbiddenSymbolsStream = Arrays.stream(forbiddenSymbolsArray);
+		int forbiddenSymbolCounter = (int) forbiddenSymbolsStream.filter(symbol -> input.startsWith(symbol) == true).count();
+
+		if (forbiddenSymbolCounter > 0)
+			return false;
+
+		return true;
+	}
+
+	private Boolean checkInputNameConventions(String input) {
+		String[] forbiddenSymbolsArray = {
+			"=",
+			"<",
+			">",
+			"!",
+			"\"",
+			"§",
+			"$",
+			"%",
+			"&",
+			"/",
+			"(",
+			")",
+			"?",
+			"´",
+			"`",
+			"¿",
+			"≠",
+			"¯",
+			"}",
+			"·",
+			"{",
+			"˜",
+			"\\",
+			"]",
+			"^",
+			"ﬁ",
+			"[",
+			"¢",
+			"¶",
+			"“",
+			"¡",
+			"¬",
+			"”",
+			"#",
+			"£",
+			"+",
+			"*",
+			"±",
+			"",
+			"_",
+			":",
+			"…",
+			"÷",
+			"∞",
+			";",
+			"˛",
+			"æ",
+			"Æ",
+			"œ",
+			"Œ",
+			"@",
+			"•",
+			"°",
+			"„" };
+		Stream<String> forbiddenSymbolsStream = Arrays.stream(forbiddenSymbolsArray);
+		int forbiddenSymbolCounter = (int) forbiddenSymbolsStream.filter(symbol -> input.contains(symbol) == true).count();
+
+		if (forbiddenSymbolCounter > 0)
+			return false;
+
+		return true;
+	}
+
+	private Boolean checkInputUUID(String id) {
+		String uuidRegex = "([0123456789abcdef]{8})-([0123456789abcdef]{4})-([0123456789abcdef]{4})-([0123456789abcdef]{4})-([0123456789abcdef]{12})";
+		return id.matches(uuidRegex);
+	}
+
 }
