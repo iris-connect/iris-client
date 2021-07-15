@@ -134,8 +134,6 @@ services:
       TZ: Europe/Berlin
       WATCHTOWER_LABEL_ENABLE: "true"
       WATCHTOWER_POLL_INTERVAL: 60
-    ports:
-      - 8090:8080
     depends_on:
       - nginx
 
