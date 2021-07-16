@@ -42,7 +42,9 @@ jobs:
           images: inoeg/iris-client-bff
 
       - name: build, package and publish the image
-        run: mvn -B clean package spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=${{ steps.meta.outputs.tags }}
+        run: |
+          VER_TAG=$(echo ${{ steps.meta.outputs.tags }} | cut --delimiter=: --fields=2-3)
+          mvn -B clean package spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=$VER_TAG
         env:
           DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
           DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
