@@ -1,6 +1,6 @@
 # IRIS Client BFF
 
-"Backend for frontend" service for [IRIS client frontend](https://github.com/iris-gateway/iris-client-frontend).
+"Backend for frontend" service for [IRIS client frontend](https://github.com/iris-connect/iris-client/tree/develop/iris-client-fe).
 
 ## Authentication
 
