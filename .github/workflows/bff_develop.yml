@@ -11,6 +11,9 @@ on:
       - iris-client-bff/**
       - iris-sormas-api-client/**
       - .github/workflows/bff_develop.yml
+  pull_request:
+    branches:
+      - develop
 
 defaults:
   run:
@@ -22,31 +25,24 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2
     
       - name: Cache local Maven repository
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v2
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-    
-      - name: Get version from GITHUB_REF
-        id: get_version
-        run: |
-          VERSION=edge
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION=pr-${{ github.event.number }}
-          fi
-          echo ::set-output name=version::${VERSION}
-    
+
+      - name: Create image tag
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: inoeg/iris-client-bff
+
       - name: build, package and publish the image
-        run: mvn -B clean package spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=${{ steps.get_version.outputs.version }}
+        run: mvn -B clean package spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=${{ steps.meta.outputs.tags }}
         env:
           DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
           DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
