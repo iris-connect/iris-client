@@ -256,7 +256,9 @@ export default class EventTrackingFormView extends Vue {
 
   @Watch("form.model.start")
   onDateChanged(): void {
-    this.form.model.end = dayjs(this.form.model.start).endOf("day").toString();
+    this.form.model.end = dayjs(this.form.model.start)
+      .endOf("day")
+      .toISOString();
     this.minEndDate = dayjs(this.form.model.start).format("YYYY-MM-DD");
     this.validateField("end");
   }

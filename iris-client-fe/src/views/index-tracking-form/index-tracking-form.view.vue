@@ -166,6 +166,8 @@ export default class IndexTrackingFormView extends Vue {
   }
   @Watch("form.model.start")
   onDateChanged(): void {
+    // please note: backend expects date-strings as ISO Strings.
+    // If you want to set the end date based on the start date (like event-tracking-form), please make sure that you format is as ISO string
     this.validateField("end");
   }
 

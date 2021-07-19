@@ -16,8 +16,6 @@ services:
       POSTGRES_PASSWORD:
     volumes:
       - psqldata_iris:/var/lib/postgresql/data
-
-    restart: unless-stopped
     healthcheck:
       test:
         [
@@ -35,6 +33,7 @@ services:
       start_period: 30s
     depends_on:
       - logger
+    restart: unless-stopped
 
   # IRIS Client backend for frontend
   iris-client:
@@ -56,9 +55,9 @@ services:
       SECURITY_JWT_JWT_SHARED_SECRET:
       IRIS_LOCATION_SERVICE_ENDPOINT: ${EPS_LS_NAME}
       IRIS_CLIENT_BASEPATH: "https://${IRIS_CLIENT_DOMAIN}"
-    restart: unless-stopped
     depends_on:
       - postgres
+    restart: unless-stopped
 
   # IRIS Client Frontend for users
   iris-frontend:
@@ -70,9 +69,9 @@ services:
       LOCAL_CONTACT_PERSON_NAME:
       LOCAL_CONTACT_PERSON_MAIL:
       LOCAL_CONTACT_PERSON_PHONE:
-    restart: unless-stopped
     depends_on:
       - iris-client
+    restart: unless-stopped
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
@@ -94,6 +93,7 @@ services:
       EPS_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
       EPS_SD_NAME:
+    restart: unless-stopped
 
   # Proxy for inbound connections.
   private-proxy:
@@ -119,6 +119,7 @@ services:
     depends_on:
       - logger
       - private-proxy-eps
+    restart: unless-stopped
 
   private-proxy-eps:
     image: inoeg/iris-client-eps:1.0
@@ -139,6 +140,7 @@ services:
       PROXY_URL: ${PROXY_URL}
     depends_on:
       - logger
+    restart: unless-stopped
 
   # Reverse Proxy
   nginx:
@@ -154,6 +156,7 @@ services:
     depends_on:
       - iris-client
       - iris-frontend
+    restart: unless-stopped
 
   # Watchtower for auto-updates
   watchtower:
@@ -169,11 +172,11 @@ services:
       WATCHTOWER_NO_PULL: "true"
     depends_on:
       - nginx
+    restart: unless-stopped
 
   # Log shipper
   logger:
     image: umputun/docker-logger
-    restart: always
     logging:
       driver: json-file
       options:
@@ -190,6 +193,7 @@ services:
     volumes:
       - ${LOG_FOLDER:-./logs}:/srv/logs
       - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
 
 volumes:
   psqldata_iris:
