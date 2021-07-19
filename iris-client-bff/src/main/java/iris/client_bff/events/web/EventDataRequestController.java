@@ -1,7 +1,8 @@
 package iris.client_bff.events.web;
 
-import static org.springframework.http.ResponseEntity.*;
+import static org.springframework.http.ResponseEntity.ok;
 
+import iris.client_bff.core.security.InputValidationUtility;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.EventDataRequestService;
@@ -15,7 +16,9 @@ import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.events.web.dto.GuestListDataProvider;
 import iris.client_bff.events.web.dto.LocationInformation;
+import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -39,19 +42,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+@Slf4j
 @RequestMapping("/data-requests-client/events")
 @RestController
 @AllArgsConstructor
 public class EventDataRequestController {
 
+	private final InputValidationUtility inputValidationUtility;
 	private EventDataRequestService dataRequestService;
 	private EventDataSubmissionRepository submissionRepo;
 
 	private ModelMapper modelMapper;
 
-	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (
-			EventDataRequest request) -> {
+	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (EventDataRequest request) -> {
 		ExistingDataRequestClientWithLocation mapped = EventMapper.map(request);
 		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
 		return mapped;
@@ -60,59 +65,150 @@ public class EventDataRequestController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> createDataRequest(@Valid @RequestBody DataRequestClient request) {
+		if (isDataRequestClientInputValid(request)) {
+			var result = dataRequestService.createDataRequest(request);
 
-		var result = dataRequestService.createDataRequest(request);
-
-		return ok(mapDataRequestDetails(result));
+			return ok(mapDataRequestDetails(result));
+		} else {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + request);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public Page<ExistingDataRequestClientWithLocation> getDataRequests(
-			@RequestParam(required = false) Status status,
-			@RequestParam(required = false) String search,
-			Pageable pageable) {
-		if (status != null && StringUtils.isNotEmpty(search)) {
-			return dataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(eventMapperFunction);
-		} else if (StringUtils.isNotEmpty(search)) {
-			return dataRequestService.searchByRefIdOrName(search, pageable).map(eventMapperFunction);
-		} else if (status != null) {
-			return dataRequestService.findByStatus(status, pageable).map(eventMapperFunction);
+		@RequestParam(required = false) Status status,
+		@RequestParam(required = false) String search,
+		Pageable pageable) {
+		if (isSearchInputValid(search)) {
+			if (status != null && StringUtils.isNotEmpty(search)) {
+				return dataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(eventMapperFunction);
+			} else if (StringUtils.isNotEmpty(search)) {
+				return dataRequestService.searchByRefIdOrName(search, pageable).map(eventMapperFunction);
+			} else if (status != null) {
+				return dataRequestService.findByStatus(status, pageable).map(eventMapperFunction);
+			}
+			return dataRequestService.findAll(pageable).map(eventMapperFunction);
+		} else {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + search);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
-		return dataRequestService.findAll(pageable).map(eventMapperFunction);
 	}
 
 	@GetMapping("/{code}")
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable UUID code) {
-		var dataRequest = dataRequestService.findById(code);
-		if (dataRequest.isPresent()) {
-			DataRequestDetails requestDetails = mapDataRequestDetails(dataRequest.get());
-			addSubmissionsToRequest(dataRequest.get(), requestDetails);
+		if (inputValidationUtility.isUUIDInputValid(code.toString())) {
+			var dataRequest = dataRequestService.findById(code);
+			if (dataRequest.isPresent()) {
+				DataRequestDetails requestDetails = mapDataRequestDetails(dataRequest.get());
+				addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
-			return ResponseEntity.of(Optional.of(requestDetails));
+				return ResponseEntity.of(Optional.of(requestDetails));
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + code);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PatchMapping("/{code}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> update(@PathVariable UUID code, @RequestBody EventUpdateDTO patch) {
+		if (isEventUpdateDTOInputValid(patch) && inputValidationUtility.isUUIDInputValid(code.toString())) {
+			var dataRequest = dataRequestService.findById(code);
+			if (dataRequest.isPresent()) {
+				EventDataRequest updated = dataRequestService.update(dataRequest.get(), patch);
 
-		var dataRequest = dataRequestService.findById(code);
-		if (dataRequest.isPresent()) {
-			EventDataRequest updated = dataRequestService.update(dataRequest.get(), patch);
+				dataRequestService.sendDataRecievedEmail(updated, patch.getStatus());
 
-			dataRequestService.sendDataRecievedEmail(updated, patch.getStatus());
+				DataRequestDetails requestDetails = mapDataRequestDetails(updated);
+				addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
-			DataRequestDetails requestDetails = mapDataRequestDetails(updated);
-			addSubmissionsToRequest(dataRequest.get(), requestDetails);
-
-			return ResponseEntity.of(Optional.of(requestDetails));
+				return ResponseEntity.of(Optional.of(requestDetails));
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + code + ", " + patch);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	private boolean isEventUpdateDTOInputValid(EventUpdateDTO patch) {
+		if (patch == null) {
+			return false;
+		}
+
+		if (patch.getComment() != null) {
+			if (!inputValidationUtility.checkInputForAttacks(patch.getComment())) {
+				return false;
+			}
+		}
+
+		if (patch.getName() != null) {
+			if (!inputValidationUtility.checkInputForAttacks(patch.getName())) {
+				return false;
+			}
+		}
+
+		if (patch.getExternalRequestId() != null) {
+			if (!inputValidationUtility.checkInputForAttacks(patch.getExternalRequestId())) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private boolean isDataRequestClientInputValid(DataRequestClient request) {
+		if (request == null
+			|| request.getLocationId() == null
+			|| request.getProviderId() == null
+			|| request.getExternalRequestId() == null
+			|| request.getStart() == null
+			|| request.getEnd() == null) {
+			return false;
+		}
+
+		if (request.getComment() != null) {
+			if (!inputValidationUtility.checkInputForAttacks(request.getComment())) {
+				return false;
+			}
+		}
+
+		if (request.getName() != null) {
+			if (!inputValidationUtility.checkInputForAttacks(request.getName())) {
+				return false;
+			}
+		}
+
+		if (request.getRequestDetails() != null) {
+			if (!inputValidationUtility.checkInputForAttacks(request.getRequestDetails())) {
+				return false;
+			}
+		}
+
+		if (!inputValidationUtility.checkInputForAttacks(request.getLocationId())
+			|| !inputValidationUtility.checkInputForAttacks(request.getExternalRequestId())
+			|| !inputValidationUtility.checkInputForAttacks(request.getProviderId())) {
+			return false;
+		}
+
+		// What to do for start and end parameter
+
+		return true;
+	}
+
+	private boolean isSearchInputValid(String search) {
+		if (search == null || inputValidationUtility.checkInputForAttacks(search)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private DataRequestDetails mapDataRequestDetails(EventDataRequest request) {
@@ -128,8 +224,7 @@ public class EventDataRequestController {
 	}
 
 	private ExistingDataRequestClientWithLocation mapExistingDataRequestClientWithLocation(EventDataRequest request) {
-		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request,
-				ExistingDataRequestClientWithLocation.class);
+		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
 		mapped.setCode(request.getId().toString());
 		mapped.setStart(request.getRequestStart());
 		mapped.setEnd(request.getRequestEnd());
@@ -144,27 +239,22 @@ public class EventDataRequestController {
 
 	private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
 
-		submissionRepo.findAllByRequest(request)
-				.get()
-				.findFirst()
-				.ifPresent(it -> addSubmissionToRequest(requestDetails, it));
+		submissionRepo.findAllByRequest(request).get().findFirst().ifPresent(it -> addSubmissionToRequest(requestDetails, it));
 	}
 
 	private void addSubmissionToRequest(DataRequestDetails requestDetails, EventDataSubmission submission) {
 
 		var dataProvider = modelMapper.map(submission.getDataProvider(), GuestListDataProvider.class);
 
-		var guests = submission.getGuests().stream()
-				.map(it -> modelMapper.map(it, Guest.class))
-				.collect(Collectors.toList());
+		var guests = submission.getGuests().stream().map(it -> modelMapper.map(it, Guest.class)).collect(Collectors.toList());
 
 		var guestList = GuestList.builder()
-				.additionalInformation(submission.getAdditionalInformation())
-				.startDate(submission.getStartDate())
-				.endDate(submission.getEndDate())
-				.dataProvider(dataProvider)
-				.guests(guests)
-				.build();
+			.additionalInformation(submission.getAdditionalInformation())
+			.startDate(submission.getStartDate())
+			.endDate(submission.getEndDate())
+			.dataProvider(dataProvider)
+			.guests(guests)
+			.build();
 
 		requestDetails.setSubmissionData(guestList);
 	}
