@@ -78,6 +78,8 @@ services:
     expose:
       - 4446
       - 5556
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
       - iris-client
     volumes:
@@ -91,6 +93,8 @@ services:
     image: inoeg/iris-client-nginx:develop
     ports:
       - ${NGINX_PORT}:443
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     environment:
       IRIS_CLIENT_DOMAIN:
       IRIS_CLIENT_DOMAIN_CERT:
@@ -107,9 +111,11 @@ services:
     expose:
       - 5545
       - 8877
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
-      - ${LOCAL_MOUNT_DIR}/settings:/app/settings
-      - ${LOCAL_MOUNT_DIR}/private-proxy-db:/private-proxy
+      - ${LOCAL_MOUNT_DIR}settings:/app/settings
+      - ${LOCAL_MOUNT_DIR}private-proxy-db:/private-proxy
     environment:
       - PROXY_SETTINGS=settings/roles/private-proxy-1
     command: [ "--level", "trace", "run", "private" ]
@@ -119,6 +125,8 @@ services:
     expose:
       - 7766
       - 7776
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
       - ${LOCAL_MOUNT_DIR}settings:/app/settings
     environment:
