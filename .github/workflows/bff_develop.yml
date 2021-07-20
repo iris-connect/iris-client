@@ -14,10 +14,6 @@ on:
   pull_request:
     branches:
       - develop
-    paths:
-      - iris-client-bff/**
-      - iris-sormas-api-client/**
-      - .github/workflows/bff_develop.yml
 
 defaults:
   run:

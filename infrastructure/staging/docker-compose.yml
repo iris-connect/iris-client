@@ -83,7 +83,7 @@ services:
     depends_on:
       - iris-client
     volumes:
-      - ${LOCAL_MOUNT_DIR}settings:/app/settings
+      - ${LOCAL_MOUNT_DIR}/settings:/app/settings
     environment:
       - EPS_SETTINGS=settings/roles/hd-1
     command: ["--level", "debug", "server", "run"]
@@ -100,8 +100,8 @@ services:
       IRIS_CLIENT_DOMAIN_CERT:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
     volumes:
-      - ${LOCAL_MOUNT_DIR}conf:/etc/iris
-      - ${LOCAL_MOUNT_DIR}nginx:/etc/nginx/templates
+      - ${LOCAL_MOUNT_DIR}/conf:/etc/iris
+      - ${LOCAL_MOUNT_DIR}/nginx:/etc/nginx/templates
     depends_on:
       - iris-client
       - iris-frontend
@@ -114,8 +114,8 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     volumes:
-      - ${LOCAL_MOUNT_DIR}settings:/app/settings
-      - ${LOCAL_MOUNT_DIR}private-proxy-db:/private-proxy
+      - ${LOCAL_MOUNT_DIR}/settings:/app/settings
+      - ${LOCAL_MOUNT_DIR}/private-proxy-db:/private-proxy
     environment:
       - PROXY_SETTINGS=settings/roles/private-proxy-1
     command: [ "--level", "trace", "run", "private" ]
@@ -128,7 +128,7 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     volumes:
-      - ${LOCAL_MOUNT_DIR}settings:/app/settings
+      - ${LOCAL_MOUNT_DIR}/settings:/app/settings
     environment:
       - EPS_SETTINGS=settings/roles/private-proxy-eps-1
     command: [ "--level", "trace", "server", "run" ]
