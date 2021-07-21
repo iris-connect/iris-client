@@ -20,6 +20,10 @@ const sanitised = (v?: string): string | boolean => {
     return "Aus Sicherheitsgründen ist die Sequenz <script nicht erlaubt. Bitte modifiziere deine Eingabe.";
   }
 
+  if (v.includes("SELECT") && v.includes("FROM")) {
+    return "Aus Sicherheitsgründen ist die Sequenz SELECT .... FROM ... nicht erlaubt. Bitte modifiziere deine Eingabe.";
+  }
+
   if (
     startMatches(v, [
       "=",

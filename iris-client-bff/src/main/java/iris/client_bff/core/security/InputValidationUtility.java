@@ -20,6 +20,9 @@ public class InputValidationUtility {
 		if (input.contains("<script"))
 			return false;
 
+		if (input.contains("SELECT") && input.contains("FROM"))
+			return false;
+
 		String[] forbiddenSymbolsArray = {
 			"=",
 			"<",

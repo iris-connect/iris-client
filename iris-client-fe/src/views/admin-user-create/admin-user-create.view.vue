@@ -127,7 +127,7 @@ export default class AdminUserCreateView extends Vue {
   get validationRules(): Record<string, Array<unknown>> {
     return {
       defined: [rules.defined],
-      password: [rules.defined, rules.password],
+      password: [rules.defined, rules.password, rules.sanitised],
       sanitisedAndDefined: [rules.defined, rules.sanitised],
       sanitised: [rules.sanitised],
       names: [rules.sanitised, rules.nameConventions],

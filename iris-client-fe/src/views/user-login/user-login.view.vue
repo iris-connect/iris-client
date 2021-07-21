@@ -73,7 +73,7 @@ export default class UserLoginView extends Vue {
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      defined: [rules.defined],
+      defined: [rules.defined, rules.sanitised],
     };
   }
 
