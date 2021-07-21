@@ -10,6 +10,7 @@ import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.DataRequestClient;
 import iris.client_bff.events.web.dto.DataRequestDetails;
+import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
 import iris.client_bff.events.web.dto.Guest;
@@ -65,14 +66,12 @@ public class EventDataRequestController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> createDataRequest(@Valid @RequestBody DataRequestClient request) {
-		if (isDataRequestClientInputValid(request)) {
-			var result = dataRequestService.createDataRequest(request);
 
-			return ok(mapDataRequestDetails(result));
-		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + request);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+		DataRequestClient requestValidated = dataRequestClientInputValidated(request);
+
+		var result = dataRequestService.createDataRequest(requestValidated);
+
+		return ok(mapDataRequestDetails(result));
 	}
 
 	@GetMapping
@@ -91,7 +90,7 @@ public class EventDataRequestController {
 			}
 			return dataRequestService.findAll(pageable).map(eventMapperFunction);
 		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + search);
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - search: " + search);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 	}
@@ -110,7 +109,7 @@ public class EventDataRequestController {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + code);
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - code: " + code.toString());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -118,89 +117,129 @@ public class EventDataRequestController {
 	@PatchMapping("/{code}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> update(@PathVariable UUID code, @RequestBody EventUpdateDTO patch) {
-		if (isEventUpdateDTOInputValid(patch) && inputValidationUtility.isUUIDInputValid(code.toString())) {
-			var dataRequest = dataRequestService.findById(code);
-			if (dataRequest.isPresent()) {
-				EventDataRequest updated = dataRequestService.update(dataRequest.get(), patch);
-
-				dataRequestService.sendDataRecievedEmail(updated, patch.getStatus());
-
-				DataRequestDetails requestDetails = mapDataRequestDetails(updated);
-				addSubmissionsToRequest(dataRequest.get(), requestDetails);
-
-				return ResponseEntity.of(Optional.of(requestDetails));
-			} else {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + code + ", " + patch);
+		if (inputValidationUtility.isUUIDInputValid(code.toString())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - code: " + code.toString());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		EventUpdateDTO patchValidated = eventUpdateDTOInputValidated(patch);
+
+		var dataRequest = dataRequestService.findById(code);
+		if (dataRequest.isPresent()) {
+			EventDataRequest updated = dataRequestService.update(dataRequest.get(), patchValidated);
+
+			dataRequestService.sendDataRecievedEmail(updated, patchValidated.getStatus());
+
+			DataRequestDetails requestDetails = mapDataRequestDetails(updated);
+			addSubmissionsToRequest(dataRequest.get(), requestDetails);
+
+			return ResponseEntity.of(Optional.of(requestDetails));
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
-	private boolean isEventUpdateDTOInputValid(EventUpdateDTO patch) {
+	private EventUpdateDTO eventUpdateDTOInputValidated(EventUpdateDTO patch) {
+		boolean isInvalid = false;
+
 		if (patch == null) {
-			return false;
+			isInvalid = true;
 		}
 
 		if (patch.getComment() != null) {
 			if (!inputValidationUtility.checkInputForAttacks(patch.getComment())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - comment: " + patch.getComment());
+				patch.setComment(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (patch.getName() != null) {
 			if (!inputValidationUtility.checkInputForAttacks(patch.getName())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - name: " + patch.getName());
+				patch.setName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (patch.getExternalRequestId() != null) {
 			if (!inputValidationUtility.checkInputForAttacks(patch.getExternalRequestId())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - externalRequestId: " + patch.getExternalRequestId());
+				patch.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
-		return true;
+		if (!(patch.getStatus() == EventStatusDTO.DATA_RECEIVED
+			|| patch.getStatus() == EventStatusDTO.DATA_REQUESTED
+			|| patch.getStatus() == EventStatusDTO.ABORTED
+			|| patch.getStatus() == EventStatusDTO.CLOSED)) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - status: " + patch.getStatus());
+			isInvalid = true;
+		}
+
+		if (isInvalid) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		}
+
+		return patch;
 	}
 
-	private boolean isDataRequestClientInputValid(DataRequestClient request) {
-		if (request == null
-			|| request.getLocationId() == null
-			|| request.getProviderId() == null
-			|| request.getExternalRequestId() == null
-			|| request.getStart() == null
-			|| request.getEnd() == null) {
-			return false;
+	private DataRequestClient dataRequestClientInputValidated(DataRequestClient request) {
+		boolean isInvalid = false;
+
+		if (request == null) {
+			isInvalid = true;
 		}
 
 		if (request.getComment() != null) {
 			if (!inputValidationUtility.checkInputForAttacks(request.getComment())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - comment: " + request.getComment());
+				request.setComment(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (request.getName() != null) {
 			if (!inputValidationUtility.checkInputForAttacks(request.getName())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - name: " + request.getName());
+				request.setName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (request.getRequestDetails() != null) {
 			if (!inputValidationUtility.checkInputForAttacks(request.getRequestDetails())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - requestDetails: " + request.getRequestDetails());
+				request.setRequestDetails(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
-		if (!inputValidationUtility.checkInputForAttacks(request.getLocationId())
-			|| !inputValidationUtility.checkInputForAttacks(request.getExternalRequestId())
-			|| !inputValidationUtility.checkInputForAttacks(request.getProviderId())) {
-			return false;
+		if (request.getExternalRequestId() == null || !inputValidationUtility.checkInputForAttacks(request.getExternalRequestId())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - externalRequestId: " + request.getExternalRequestId());
+			request.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		// What to do for start and end parameter
+		if (request.getProviderId() == null || !inputValidationUtility.checkInputForAttacks(request.getProviderId())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - providerId: " + request.getProviderId());
+			request.setProviderId(ErrorMessages.INVALID_INPUT_STRING);
+		}
 
-		return true;
+		if (request.getLocationId() == null || !inputValidationUtility.checkInputForAttacks(request.getLocationId())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - locationId: " + request.getLocationId());
+			request.setLocationId(ErrorMessages.INVALID_INPUT_STRING);
+		}
+
+		if (request.getStart() == null) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - start: null");
+			isInvalid = true;
+		}
+
+		if (request.getEnd() == null) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - end: null");
+			isInvalid = true;
+		}
+
+		if (isInvalid) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		}
+
+		return request;
 	}
 
 	private boolean isSearchInputValid(String search) {

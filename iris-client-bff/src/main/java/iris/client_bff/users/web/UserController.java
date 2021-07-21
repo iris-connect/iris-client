@@ -8,6 +8,7 @@ import iris.client_bff.users.UserDetailsServiceImpl;
 import iris.client_bff.users.web.dto.UserDTO;
 import iris.client_bff.users.web.dto.UserInsertDTO;
 import iris.client_bff.users.web.dto.UserListDTO;
+import iris.client_bff.users.web.dto.UserRoleDTO;
 import iris.client_bff.users.web.dto.UserUpdateDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,24 +51,22 @@ public class UserController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserDTO createUser(@RequestBody @Valid UserInsertDTO userInsert) {
-		if (isUserInsertDTOInputValid(userInsert)) {
-			return map(userService.create(userInsert));
-		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + userInsert);
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
-		}
+		UserInsertDTO userInsertValidated = userInsertDTOInputValidated(userInsert);
+		return map(userService.create(userInsertValidated));
 	}
 
 	@PatchMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
-		if (isUserUpdateDTOInputValid(userUpdateDTO)) {
-			return map(userService.update(id, userUpdateDTO));
-		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + userUpdateDTO);
+		if (inputValidationUtility.isUUIDInputValid(id.toString())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - id: " + userUpdateDTO);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
+
+		UserUpdateDTO userUpdateDTOValidated = userUpdateDTOInputValidated(userUpdateDTO);
+
+		return map(userService.update(id, userUpdateDTOValidated));
 	}
 
 	@DeleteMapping("/{id}")
@@ -77,57 +76,99 @@ public class UserController {
 		if (inputValidationUtility.isUUIDInputValid(id.toString())) {
 			this.userService.deleteById(id);
 		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + id);
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - id: " + id);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 	}
 
-	private boolean isUserUpdateDTOInputValid(UserUpdateDTO userUpdateDTO) {
+	private UserUpdateDTO userUpdateDTOInputValidated(UserUpdateDTO userUpdateDTO) {
+		boolean isInvalid = false;
+
+		if (userUpdateDTO == null) {
+			isInvalid = true;
+		}
+
 		if (userUpdateDTO != null && userUpdateDTO.getFirstName() != null) {
-			if (!inputValidationUtility.checkInputNameConventions(userUpdateDTO.getFirstName())
-				|| !inputValidationUtility.checkInputForAttacks(userUpdateDTO.getFirstName())) {
-				return false;
+			if (!inputValidationUtility.checkInputForAttacks(userUpdateDTO.getFirstName())) {
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - firstName: " + userUpdateDTO.getFirstName());
+				userUpdateDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (userUpdateDTO != null && userUpdateDTO.getLastName() != null) {
-			if (!inputValidationUtility.checkInputNameConventions(userUpdateDTO.getLastName())
-				|| !inputValidationUtility.checkInputForAttacks(userUpdateDTO.getLastName())) {
-				return false;
+			if (!inputValidationUtility.checkInputForAttacks(userUpdateDTO.getLastName())) {
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - lastName: " + userUpdateDTO.getFirstName());
+				userUpdateDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (userUpdateDTO != null) {
 			if (!inputValidationUtility.checkInputForAttacks(userUpdateDTO.getUserName())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - userName: " + userUpdateDTO.getFirstName());
+				userUpdateDTO.setUserName(ErrorMessages.INVALID_INPUT_STRING);
+			}
+
+			if (!inputValidationUtility.checkInputForAttacks(userUpdateDTO.getPassword())) {
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - password");
+				isInvalid = true;
+			}
+
+			if ((userUpdateDTO.getRole() == UserRoleDTO.ADMIN || userUpdateDTO.getRole() == UserRoleDTO.USER)) {
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - role: " + userUpdateDTO.getRole());
+				isInvalid = true;
 			}
 		}
 
-		return true;
+		if (isInvalid) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		}
+
+		return userUpdateDTO;
 	}
 
-	private boolean isUserInsertDTOInputValid(UserInsertDTO userInsertDTO) {
+	private UserInsertDTO userInsertDTOInputValidated(UserInsertDTO userInsertDTO) {
+		boolean isInvalid = false;
+
+		if (userInsertDTO == null) {
+			isInvalid = true;
+		}
+
 		if (userInsertDTO != null && userInsertDTO.getFirstName() != null) {
-			if (!inputValidationUtility.checkInputNameConventions(userInsertDTO.getFirstName())
-				|| !inputValidationUtility.checkInputForAttacks(userInsertDTO.getFirstName())) {
-				return false;
+			if (!inputValidationUtility.checkInputForAttacks(userInsertDTO.getFirstName())) {
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - firstName: " + userInsertDTO.getFirstName());
+				userInsertDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (userInsertDTO != null && userInsertDTO.getLastName() != null) {
-			if (!inputValidationUtility.checkInputNameConventions(userInsertDTO.getLastName())
-				|| !inputValidationUtility.checkInputForAttacks(userInsertDTO.getLastName())) {
-				return false;
+			if (!inputValidationUtility.checkInputForAttacks(userInsertDTO.getLastName())) {
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - lastName: " + userInsertDTO.getFirstName());
+				userInsertDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (userInsertDTO != null) {
 			if (!inputValidationUtility.checkInputForAttacks(userInsertDTO.getUserName())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - userName: " + userInsertDTO.getFirstName());
+				userInsertDTO.setUserName(ErrorMessages.INVALID_INPUT_STRING);
+			}
+
+			if (!inputValidationUtility.checkInputForAttacks(userInsertDTO.getPassword())) {
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - password");
+				isInvalid = true;
+			}
+
+			if ((userInsertDTO.getRole() == UserRoleDTO.ADMIN || userInsertDTO.getRole() == UserRoleDTO.USER)) {
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - role: " + userInsertDTO.getRole());
+				isInvalid = true;
 			}
 		}
 
-		return true;
+		if (isInvalid) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		}
+
+		return userInsertDTO;
 	}
 
 }

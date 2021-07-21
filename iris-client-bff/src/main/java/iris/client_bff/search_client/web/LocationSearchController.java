@@ -33,7 +33,7 @@ public class LocationSearchController {
 		if (isSearchInputValid(search)) {
 			return searchClient.search(search, pageable);
 		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + search);
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - search: " + search);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 	}

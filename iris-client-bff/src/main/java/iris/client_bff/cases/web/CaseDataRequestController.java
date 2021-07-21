@@ -9,6 +9,7 @@ import iris.client_bff.cases.CaseDataSubmissionService;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
+import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.core.security.InputValidationUtility;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
@@ -67,16 +68,13 @@ public class CaseDataRequestController {
 	@PostMapping
 	@ResponseStatus(OK)
 	public IndexCaseDetailsDTO create(@RequestBody @Valid IndexCaseInsertDTO insert) {
-		if (isIndexCaseInsertDTOInputValid(insert)) {
-			try {
-				return mapDetailed(caseDataRequestService.create(insert));
-			} catch (IRISDataRequestException e) {
-				// TODO: use ExceptionMapper?
-				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.CASE_DATA_REQUEST_CREATION);
-			}
-		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + insert);
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		IndexCaseInsertDTO insertValidated = indexCaseInsertDTOInputValidated(insert);
+
+		try {
+			return mapDetailed(caseDataRequestService.create(insertValidated));
+		} catch (IRISDataRequestException e) {
+			// TODO: use ExceptionMapper?
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.CASE_DATA_REQUEST_CREATION);
 		}
 	}
 
@@ -92,7 +90,7 @@ public class CaseDataRequestController {
 				return indexCaseDetailsDTO;
 			})).map(ResponseEntity::ok).orElseGet(ResponseEntity.notFound()::build);
 		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + id);
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - id: " + id.toString());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -100,71 +98,106 @@ public class CaseDataRequestController {
 	@PatchMapping("/{id}")
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> update(@PathVariable UUID id, @RequestBody @Valid IndexCaseUpdateDTO update) {
-		if (inputValidationUtility.isUUIDInputValid(id.toString()) || isIndexCaseUpdateDTOInputValid(update)) {
-			ResponseEntity<IndexCaseDetailsDTO> responseEntity = caseDataRequestService.findDetailed(id)
-				.map(it -> caseDataRequestService.update(it, update))
-				.map(IndexCaseMapper::mapDetailed)
-				.map(ResponseEntity::ok)
-				.orElseGet(ResponseEntity.notFound()::build);
-
-			caseDataRequestService.sendDataRecievedEmail(responseEntity.getBody(), update.getStatus());
-
-			return responseEntity;
-		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + ": " + id + ", " + update);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		if (inputValidationUtility.isUUIDInputValid(id.toString())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - id: " + id.toString());
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
+
+		IndexCaseUpdateDTO updateValidated = indexCaseUpdateDTOInputValidated(update);
+
+		ResponseEntity<IndexCaseDetailsDTO> responseEntity = caseDataRequestService.findDetailed(id)
+			.map(it -> caseDataRequestService.update(it, updateValidated))
+			.map(IndexCaseMapper::mapDetailed)
+			.map(ResponseEntity::ok)
+			.orElseGet(ResponseEntity.notFound()::build);
+
+		caseDataRequestService.sendDataRecievedEmail(responseEntity.getBody(), updateValidated.getStatus());
+
+		return responseEntity;
 	}
 
-	private boolean isIndexCaseUpdateDTOInputValid(IndexCaseUpdateDTO update) {
+	private IndexCaseUpdateDTO indexCaseUpdateDTOInputValidated(IndexCaseUpdateDTO update) {
+
+		boolean isInvalid = false;
+
 		if (update == null) {
-			return false;
+			isInvalid = true;
 		}
 
 		if (update.getComment() != null) {
 			if (!inputValidationUtility.checkInputForAttacks(update.getComment())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - comment: " + update.getComment());
+				update.setComment(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (update.getName() != null) {
 			if (!inputValidationUtility.checkInputForAttacks(update.getName())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - name: " + update.getName());
+				update.setName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (update.getExternalCaseId() != null) {
 			if (!inputValidationUtility.checkInputForAttacks(update.getExternalCaseId())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - externalCaseId: " + update.getExternalCaseId());
+				update.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
-		return true;
+		if (!(update.getStatus() == IndexCaseStatusDTO.DATA_RECEIVED
+			|| update.getStatus() == IndexCaseStatusDTO.DATA_REQUESTED
+			|| update.getStatus() == IndexCaseStatusDTO.ABORTED
+			|| update.getStatus() == IndexCaseStatusDTO.CLOSED)) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - status: " + update.getStatus());
+			isInvalid = true;
+		}
+
+		if (isInvalid) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		}
+
+		return update;
 	}
 
-	private boolean isIndexCaseInsertDTOInputValid(IndexCaseInsertDTO insert) {
-		if (insert == null || insert.getStart() == null) {
-			return false;
+	private IndexCaseInsertDTO indexCaseInsertDTOInputValidated(IndexCaseInsertDTO insert) {
+
+		boolean isInvalid = false;
+
+		if (insert == null) {
+			isInvalid = true;
 		}
 
 		if (insert.getComment() != null) {
 			if (!inputValidationUtility.checkInputForAttacks(insert.getComment())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - comment: " + insert.getComment());
+				insert.setComment(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (insert.getName() != null) {
 			if (!inputValidationUtility.checkInputForAttacks(insert.getName())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - name: " + insert.getName());
+				insert.setName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (insert.getExternalCaseId() != null) {
 			if (!inputValidationUtility.checkInputForAttacks(insert.getExternalCaseId())) {
-				return false;
+				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - externalCaseId: " + insert.getExternalCaseId());
+				insert.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
-		return true;
+		if (insert.getStart() == null) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - start: null");
+			isInvalid = true;
+		}
+
+		if (isInvalid) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		}
+
+		return insert;
 	}
 }
