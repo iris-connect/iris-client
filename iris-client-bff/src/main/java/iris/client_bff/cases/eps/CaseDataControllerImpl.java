@@ -4,7 +4,7 @@ import iris.client_bff.cases.CaseDataSubmissionService;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
 import iris.client_bff.cases.eps.dto.Contacts;
 import iris.client_bff.cases.eps.dto.Events;
-import iris.client_bff.core.security.InputValidationUtility;
+import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +25,6 @@ import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 @RequiredArgsConstructor
 public class CaseDataControllerImpl implements CaseDataController {
 
-	private final InputValidationUtility inputValidationUtility;
-
 	private final CaseDataSubmissionService submissionService;
 
 	@Override
@@ -36,7 +34,7 @@ public class CaseDataControllerImpl implements CaseDataController {
 		@Valid Events events,
 		@Valid CaseDataProvider dataProvider) {
 
-		if (inputValidationUtility.isUUIDInputValid(dataAuthorizationToken.toString())
+		if (ValidationHelper.isUUIDInputValid(dataAuthorizationToken.toString())
 			&& isEventsInputValid(events)
 			&& isContactsInputValid(contacts)
 			&& isCaseDataProviderInputValid(dataProvider)) {

@@ -1,6 +1,6 @@
 package iris.client_bff.search_client.web;
 
-import iris.client_bff.core.security.InputValidationUtility;
+import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.web.dto.LocationQueryResult;
 import iris.client_bff.ui.messages.ErrorMessages;
@@ -24,7 +24,6 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class LocationSearchController {
 
-	private final InputValidationUtility inputValidationUtility;
 	private final SearchClient searchClient;
 
 	@GetMapping("/search")
@@ -39,7 +38,7 @@ public class LocationSearchController {
 	}
 
 	private boolean isSearchInputValid(String search) {
-		if (search == null || search.length() < 4 || inputValidationUtility.checkInputForAttacks(search)) {
+		if (search == null || search.length() < 4 || ValidationHelper.checkInputForAttacks(search)) {
 			return false;
 		}
 

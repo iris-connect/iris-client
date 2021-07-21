@@ -2,7 +2,7 @@ package iris.client_bff.users.web;
 
 import static iris.client_bff.users.web.UserMappers.map;
 
-import iris.client_bff.core.security.InputValidationUtility;
+import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.ui.messages.ErrorMessages;
 import iris.client_bff.users.UserDetailsServiceImpl;
 import iris.client_bff.users.web.dto.UserDTO;
@@ -37,7 +37,6 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/users")
 public class UserController {
 
-	private final InputValidationUtility inputValidationUtility;
 	private final UserDetailsServiceImpl userService;
 
 	@GetMapping
@@ -59,7 +58,7 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
-		if (inputValidationUtility.isUUIDInputValid(id.toString())) {
+		if (ValidationHelper.isUUIDInputValid(id.toString())) {
 			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - id: " + userUpdateDTO);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
@@ -73,7 +72,7 @@ public class UserController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public void deleteUser(@PathVariable UUID id) {
-		if (inputValidationUtility.isUUIDInputValid(id.toString())) {
+		if (ValidationHelper.isUUIDInputValid(id.toString())) {
 			this.userService.deleteById(id);
 		} else {
 			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - id: " + id);
@@ -89,26 +88,26 @@ public class UserController {
 		}
 
 		if (userUpdateDTO != null && userUpdateDTO.getFirstName() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(userUpdateDTO.getFirstName())) {
+			if (!ValidationHelper.checkInputForAttacks(userUpdateDTO.getFirstName())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - firstName: " + userUpdateDTO.getFirstName());
 				userUpdateDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (userUpdateDTO != null && userUpdateDTO.getLastName() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(userUpdateDTO.getLastName())) {
+			if (!ValidationHelper.checkInputForAttacks(userUpdateDTO.getLastName())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - lastName: " + userUpdateDTO.getFirstName());
 				userUpdateDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (userUpdateDTO != null) {
-			if (!inputValidationUtility.checkInputForAttacks(userUpdateDTO.getUserName())) {
+			if (!ValidationHelper.checkInputForAttacks(userUpdateDTO.getUserName())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - userName: " + userUpdateDTO.getFirstName());
 				userUpdateDTO.setUserName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 
-			if (!inputValidationUtility.checkInputForAttacks(userUpdateDTO.getPassword())) {
+			if (!ValidationHelper.checkInputForAttacks(userUpdateDTO.getPassword())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - password");
 				isInvalid = true;
 			}
@@ -134,26 +133,26 @@ public class UserController {
 		}
 
 		if (userInsertDTO != null && userInsertDTO.getFirstName() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(userInsertDTO.getFirstName())) {
+			if (!ValidationHelper.checkInputForAttacks(userInsertDTO.getFirstName())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - firstName: " + userInsertDTO.getFirstName());
 				userInsertDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (userInsertDTO != null && userInsertDTO.getLastName() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(userInsertDTO.getLastName())) {
+			if (!ValidationHelper.checkInputForAttacks(userInsertDTO.getLastName())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - lastName: " + userInsertDTO.getFirstName());
 				userInsertDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (userInsertDTO != null) {
-			if (!inputValidationUtility.checkInputForAttacks(userInsertDTO.getUserName())) {
+			if (!ValidationHelper.checkInputForAttacks(userInsertDTO.getUserName())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - userName: " + userInsertDTO.getFirstName());
 				userInsertDTO.setUserName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 
-			if (!inputValidationUtility.checkInputForAttacks(userInsertDTO.getPassword())) {
+			if (!ValidationHelper.checkInputForAttacks(userInsertDTO.getPassword())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - password");
 				isInvalid = true;
 			}

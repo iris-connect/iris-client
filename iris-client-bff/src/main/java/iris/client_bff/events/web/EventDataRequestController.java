@@ -2,7 +2,7 @@ package iris.client_bff.events.web;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-import iris.client_bff.core.security.InputValidationUtility;
+import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.EventDataRequestService;
@@ -51,7 +51,6 @@ import org.springframework.web.server.ResponseStatusException;
 @AllArgsConstructor
 public class EventDataRequestController {
 
-	private final InputValidationUtility inputValidationUtility;
 	private EventDataRequestService dataRequestService;
 	private EventDataSubmissionRepository submissionRepo;
 
@@ -98,7 +97,7 @@ public class EventDataRequestController {
 	@GetMapping("/{code}")
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable UUID code) {
-		if (inputValidationUtility.isUUIDInputValid(code.toString())) {
+		if (ValidationHelper.isUUIDInputValid(code.toString())) {
 			var dataRequest = dataRequestService.findById(code);
 			if (dataRequest.isPresent()) {
 				DataRequestDetails requestDetails = mapDataRequestDetails(dataRequest.get());
@@ -117,7 +116,7 @@ public class EventDataRequestController {
 	@PatchMapping("/{code}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> update(@PathVariable UUID code, @RequestBody EventUpdateDTO patch) {
-		if (inputValidationUtility.isUUIDInputValid(code.toString())) {
+		if (ValidationHelper.isUUIDInputValid(code.toString())) {
 			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - code: " + code.toString());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -147,21 +146,21 @@ public class EventDataRequestController {
 		}
 
 		if (patch.getComment() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(patch.getComment())) {
+			if (!ValidationHelper.checkInputForAttacks(patch.getComment())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - comment: " + patch.getComment());
 				patch.setComment(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (patch.getName() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(patch.getName())) {
+			if (!ValidationHelper.checkInputForAttacks(patch.getName())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - name: " + patch.getName());
 				patch.setName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (patch.getExternalRequestId() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(patch.getExternalRequestId())) {
+			if (!ValidationHelper.checkInputForAttacks(patch.getExternalRequestId())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - externalRequestId: " + patch.getExternalRequestId());
 				patch.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
 			}
@@ -190,37 +189,37 @@ public class EventDataRequestController {
 		}
 
 		if (request.getComment() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(request.getComment())) {
+			if (!ValidationHelper.checkInputForAttacks(request.getComment())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - comment: " + request.getComment());
 				request.setComment(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (request.getName() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(request.getName())) {
+			if (!ValidationHelper.checkInputForAttacks(request.getName())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - name: " + request.getName());
 				request.setName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (request.getRequestDetails() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(request.getRequestDetails())) {
+			if (!ValidationHelper.checkInputForAttacks(request.getRequestDetails())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - requestDetails: " + request.getRequestDetails());
 				request.setRequestDetails(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
-		if (request.getExternalRequestId() == null || !inputValidationUtility.checkInputForAttacks(request.getExternalRequestId())) {
+		if (request.getExternalRequestId() == null || !ValidationHelper.checkInputForAttacks(request.getExternalRequestId())) {
 			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - externalRequestId: " + request.getExternalRequestId());
 			request.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (request.getProviderId() == null || !inputValidationUtility.checkInputForAttacks(request.getProviderId())) {
+		if (request.getProviderId() == null || !ValidationHelper.checkInputForAttacks(request.getProviderId())) {
 			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - providerId: " + request.getProviderId());
 			request.setProviderId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (request.getLocationId() == null || !inputValidationUtility.checkInputForAttacks(request.getLocationId())) {
+		if (request.getLocationId() == null || !ValidationHelper.checkInputForAttacks(request.getLocationId())) {
 			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - locationId: " + request.getLocationId());
 			request.setLocationId(ErrorMessages.INVALID_INPUT_STRING);
 		}
@@ -243,7 +242,7 @@ public class EventDataRequestController {
 	}
 
 	private boolean isSearchInputValid(String search) {
-		if (search == null || inputValidationUtility.checkInputForAttacks(search)) {
+		if (search == null || ValidationHelper.checkInputForAttacks(search)) {
 			return false;
 		}
 

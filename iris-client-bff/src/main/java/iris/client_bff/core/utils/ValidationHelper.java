@@ -1,16 +1,16 @@
-package iris.client_bff.core.security;
+package iris.client_bff.core.utils;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-public class InputValidationUtility {
+public class ValidationHelper {
 
-	public boolean isUUIDInputValid(String id) {
+	public static boolean isUUIDInputValid(String id) {
 		String uuidRegex = "([0123456789abcdef]{8})-([0123456789abcdef]{4})-([0123456789abcdef]{4})-([0123456789abcdef]{4})-([0123456789abcdef]{12})";
 		return id.matches(uuidRegex);
 	}
 
-	public boolean checkInputForAttacks(String input) {
+	public static boolean checkInputForAttacks(String input) {
 		if (input == null)
 			return false;
 
@@ -92,7 +92,7 @@ public class InputValidationUtility {
 		return true;
 	}
 
-	public boolean checkInputNameConventions(String input) {
+	public static boolean checkInputNameConventions(String input) {
 		String[] forbiddenSymbolsArray = {
 			"=",
 			"<",

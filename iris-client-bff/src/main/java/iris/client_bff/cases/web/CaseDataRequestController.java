@@ -11,7 +11,7 @@ import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
-import iris.client_bff.core.security.InputValidationUtility;
+import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
@@ -42,8 +42,6 @@ import org.springframework.web.server.ResponseStatusException;
 @AllArgsConstructor
 @RequestMapping("/data-requests-client/cases")
 public class CaseDataRequestController {
-
-	private final InputValidationUtility inputValidationUtility;
 
 	private final CaseDataRequestService caseDataRequestService;
 
@@ -81,7 +79,7 @@ public class CaseDataRequestController {
 	@GetMapping("/{id}")
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> getDetails(@PathVariable UUID id) {
-		if (inputValidationUtility.isUUIDInputValid(id.toString())) {
+		if (ValidationHelper.isUUIDInputValid(id.toString())) {
 			return caseDataRequestService.findDetailed(id).map((dataRequest -> {
 				var indexCaseDetailsDTO = mapDetailed(dataRequest);
 
@@ -98,7 +96,7 @@ public class CaseDataRequestController {
 	@PatchMapping("/{id}")
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> update(@PathVariable UUID id, @RequestBody @Valid IndexCaseUpdateDTO update) {
-		if (inputValidationUtility.isUUIDInputValid(id.toString())) {
+		if (ValidationHelper.isUUIDInputValid(id.toString())) {
 			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - id: " + id.toString());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
@@ -125,21 +123,21 @@ public class CaseDataRequestController {
 		}
 
 		if (update.getComment() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(update.getComment())) {
+			if (!ValidationHelper.checkInputForAttacks(update.getComment())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - comment: " + update.getComment());
 				update.setComment(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (update.getName() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(update.getName())) {
+			if (!ValidationHelper.checkInputForAttacks(update.getName())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - name: " + update.getName());
 				update.setName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (update.getExternalCaseId() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(update.getExternalCaseId())) {
+			if (!ValidationHelper.checkInputForAttacks(update.getExternalCaseId())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - externalCaseId: " + update.getExternalCaseId());
 				update.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
 			}
@@ -169,21 +167,21 @@ public class CaseDataRequestController {
 		}
 
 		if (insert.getComment() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(insert.getComment())) {
+			if (!ValidationHelper.checkInputForAttacks(insert.getComment())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - comment: " + insert.getComment());
 				insert.setComment(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (insert.getName() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(insert.getName())) {
+			if (!ValidationHelper.checkInputForAttacks(insert.getName())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - name: " + insert.getName());
 				insert.setName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 		}
 
 		if (insert.getExternalCaseId() != null) {
-			if (!inputValidationUtility.checkInputForAttacks(insert.getExternalCaseId())) {
+			if (!ValidationHelper.checkInputForAttacks(insert.getExternalCaseId())) {
 				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - externalCaseId: " + insert.getExternalCaseId());
 				insert.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
 			}
