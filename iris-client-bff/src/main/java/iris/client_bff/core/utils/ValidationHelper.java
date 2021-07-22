@@ -1,8 +1,12 @@
 package iris.client_bff.core.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ValidationHelper {
 
 	public static boolean isUUIDInputValid(String id) {
