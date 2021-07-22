@@ -6,6 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import iris.client_bff.core.util.BusinessProcessInfo;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.eps.DataProviderClient;
 import iris.client_bff.events.web.dto.EventStatusDTO;
@@ -28,7 +29,7 @@ public class EventDataRequestServiceTest {
 	EventDataRequestRepository repository;
 
 	@Mock
-	ModelMapper modelMapper;
+	BusinessProcessInfo bpInfo;
 
 	@Mock
 	SearchClient searchClient;
@@ -46,7 +47,7 @@ public class EventDataRequestServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		service = new EventDataRequestService(repository, searchClient, proxyServiceClient, epsDataRequestClient, emailProvider);
+		service = new EventDataRequestService(repository, bpInfo, searchClient, proxyServiceClient, epsDataRequestClient, emailProvider);
 	}
 
 	@Test

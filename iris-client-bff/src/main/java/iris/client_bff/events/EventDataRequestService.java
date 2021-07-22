@@ -3,6 +3,7 @@ package iris.client_bff.events;
 import static iris.client_bff.search_client.eps.LocationMapper.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
+import iris.client_bff.core.util.BusinessProcessInfo;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.eps.DataProviderClient;
@@ -35,7 +36,7 @@ import org.springframework.stereotype.Service;
 public class EventDataRequestService {
 
 	private final EventDataRequestRepository repository;
-
+	private final BusinessProcessInfo bpInfo;
 	private final SearchClient searchClient;
 	private final ProxyServiceClient proxyClient;
 	private final DataProviderClient epsDataRequestClient;
@@ -104,10 +105,8 @@ public class EventDataRequestService {
 		try {
 			dataRequest.setStatus(Status.DATA_REQUESTED);
 			dataRequest = repository.save(dataRequest);
+			bpInfo.logProcessWithConnToken(log, "Event data request", dataRequest.getId().toString(), announcementToken);
 			epsDataRequestClient.requestGuestListData(dataRequest);
-
-			log.info("Event Data Request submit success: {}", dataRequest.getId().toString());
-
 		} catch (IRISDataRequestException e) {
 			log.error("Event Data Request {} could not be submitted: {}", dataRequest.getId(), e);
 
