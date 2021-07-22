@@ -51,6 +51,16 @@ import org.springframework.web.server.ResponseStatusException;
 @AllArgsConstructor
 public class EventDataRequestController {
 
+	private static final String EXCEPTION_MESSAGE_PROVIDER_ID = " - providerId: ";
+	private static final String EXCEPTION_MESSAGE_LOCATION_ID = " - locationId: ";
+	private static final String EXCEPTION_MESSAGE_REQUEST_DETAILS = " - requestDetails: ";
+	private static final String EXCEPTION_MESSAGE_STATUS = " - status: ";
+	private static final String EXCEPTION_MESSAGE_EXTERNAL_REQUEST_ID = " - externalRequestId: ";
+	private static final String EXCEPTION_MESSAGE_NAME = " - name: ";
+	private static final String EXCEPTION_MESSAGE_COMMENT = " - comment: ";
+	private static final String EXCEPTION_MESSAGE_CODE = " - code: ";
+	private static final String EXCEPTION_MESSAGE_SEARCH = " - search: ";
+
 	private EventDataRequestService dataRequestService;
 	private EventDataSubmissionRepository submissionRepo;
 
@@ -89,13 +99,13 @@ public class EventDataRequestController {
 			}
 			return dataRequestService.findAll(pageable).map(eventMapperFunction);
 		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - search: " + search);
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_SEARCH + search);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 	}
 
 	@GetMapping("/{code}")
-	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable UUID code) {
 		if (ValidationHelper.isUUIDInputValid(code.toString())) {
 			var dataRequest = dataRequestService.findById(code);
@@ -108,7 +118,7 @@ public class EventDataRequestController {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - code: " + code.toString());
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_CODE + code.toString());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -116,8 +126,8 @@ public class EventDataRequestController {
 	@PatchMapping("/{code}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> update(@PathVariable UUID code, @RequestBody EventUpdateDTO patch) {
-		if (ValidationHelper.isUUIDInputValid(code.toString())) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - code: " + code.toString());
+		if (!ValidationHelper.isUUIDInputValid(code.toString())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_CODE + code.toString());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
@@ -139,42 +149,30 @@ public class EventDataRequestController {
 	}
 
 	private EventUpdateDTO eventUpdateDTOInputValidated(EventUpdateDTO patch) {
-		boolean isInvalid = false;
-
 		if (patch == null) {
-			isInvalid = true;
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
-		if (patch.getComment() != null) {
-			if (!ValidationHelper.checkInputForAttacks(patch.getComment())) {
-				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - comment: " + patch.getComment());
-				patch.setComment(ErrorMessages.INVALID_INPUT_STRING);
-			}
+		if (patch.getComment() != null && !ValidationHelper.checkInputForAttacks(patch.getComment())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_COMMENT + patch.getComment());
+			patch.setComment(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (patch.getName() != null) {
-			if (!ValidationHelper.checkInputForAttacks(patch.getName())) {
-				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - name: " + patch.getName());
-				patch.setName(ErrorMessages.INVALID_INPUT_STRING);
-			}
+		if (patch.getName() != null && !ValidationHelper.checkInputForAttacks(patch.getName())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_NAME + patch.getName());
+			patch.setName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (patch.getExternalRequestId() != null) {
-			if (!ValidationHelper.checkInputForAttacks(patch.getExternalRequestId())) {
-				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - externalRequestId: " + patch.getExternalRequestId());
-				patch.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
-			}
+		if (patch.getExternalRequestId() != null && !ValidationHelper.checkInputForAttacks(patch.getExternalRequestId())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_EXTERNAL_REQUEST_ID + patch.getExternalRequestId());
+			patch.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		if (!(patch.getStatus() == EventStatusDTO.DATA_RECEIVED
 			|| patch.getStatus() == EventStatusDTO.DATA_REQUESTED
 			|| patch.getStatus() == EventStatusDTO.ABORTED
 			|| patch.getStatus() == EventStatusDTO.CLOSED)) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - status: " + patch.getStatus());
-			isInvalid = true;
-		}
-
-		if (isInvalid) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_STATUS + patch.getStatus());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
@@ -182,47 +180,41 @@ public class EventDataRequestController {
 	}
 
 	private DataRequestClient dataRequestClientInputValidated(DataRequestClient request) {
-		boolean isInvalid = false;
-
 		if (request == null) {
-			isInvalid = true;
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
-		if (request.getComment() != null) {
-			if (!ValidationHelper.checkInputForAttacks(request.getComment())) {
-				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - comment: " + request.getComment());
-				request.setComment(ErrorMessages.INVALID_INPUT_STRING);
-			}
+		if (request.getComment() != null && !ValidationHelper.checkInputForAttacks(request.getComment())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_COMMENT + request.getComment());
+			request.setComment(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (request.getName() != null) {
-			if (!ValidationHelper.checkInputForAttacks(request.getName())) {
-				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - name: " + request.getName());
-				request.setName(ErrorMessages.INVALID_INPUT_STRING);
-			}
+		if (request.getName() != null && !ValidationHelper.checkInputForAttacks(request.getName())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_NAME + request.getName());
+			request.setName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (request.getRequestDetails() != null) {
-			if (!ValidationHelper.checkInputForAttacks(request.getRequestDetails())) {
-				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - requestDetails: " + request.getRequestDetails());
-				request.setRequestDetails(ErrorMessages.INVALID_INPUT_STRING);
-			}
+		if (request.getRequestDetails() != null && !ValidationHelper.checkInputForAttacks(request.getRequestDetails())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_REQUEST_DETAILS + request.getRequestDetails());
+			request.setRequestDetails(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		if (request.getExternalRequestId() == null || !ValidationHelper.checkInputForAttacks(request.getExternalRequestId())) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - externalRequestId: " + request.getExternalRequestId());
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_EXTERNAL_REQUEST_ID + request.getExternalRequestId());
 			request.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		if (request.getProviderId() == null || !ValidationHelper.checkInputForAttacks(request.getProviderId())) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - providerId: " + request.getProviderId());
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_PROVIDER_ID + request.getProviderId());
 			request.setProviderId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		if (request.getLocationId() == null || !ValidationHelper.checkInputForAttacks(request.getLocationId())) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - locationId: " + request.getLocationId());
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_LOCATION_ID + request.getLocationId());
 			request.setLocationId(ErrorMessages.INVALID_INPUT_STRING);
 		}
+
+		boolean isInvalid = false;
 
 		if (request.getStart() == null) {
 			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - start: null");
@@ -242,11 +234,7 @@ public class EventDataRequestController {
 	}
 
 	private boolean isSearchInputValid(String search) {
-		if (search == null || ValidationHelper.checkInputForAttacks(search)) {
-			return false;
-		}
-
-		return true;
+		return (search == null || ValidationHelper.checkInputForAttacks(search));
 	}
 
 	private DataRequestDetails mapDataRequestDetails(EventDataRequest request) {
@@ -276,7 +264,6 @@ public class EventDataRequestController {
 	}
 
 	private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
-
 		submissionRepo.findAllByRequest(request).get().findFirst().ifPresent(it -> addSubmissionToRequest(requestDetails, it));
 	}
 

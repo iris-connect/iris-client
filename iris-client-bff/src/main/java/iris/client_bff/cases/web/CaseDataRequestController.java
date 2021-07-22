@@ -43,6 +43,12 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/data-requests-client/cases")
 public class CaseDataRequestController {
 
+	private static final String EXCEPTION_MESSAGE_ID = " - id: ";
+	private static final String EXCEPTION_MESSAGE_STATUS = " - status: ";
+	private static final String EXCEPTION_MESSAGE_COMMENT = " - comment: ";
+	private static final String EXCEPTION_MESSAGE_NAME = " - name: ";
+	private static final String EXCEPTION_MESSAGE_EXTERNAL_CASE_ID = " - externalCaseId: ";
+
 	private final CaseDataRequestService caseDataRequestService;
 
 	private final CaseDataSubmissionService submissionService;
@@ -88,7 +94,7 @@ public class CaseDataRequestController {
 				return indexCaseDetailsDTO;
 			})).map(ResponseEntity::ok).orElseGet(ResponseEntity.notFound()::build);
 		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - id: " + id.toString());
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_ID + id.toString());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -96,8 +102,8 @@ public class CaseDataRequestController {
 	@PatchMapping("/{id}")
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> update(@PathVariable UUID id, @RequestBody @Valid IndexCaseUpdateDTO update) {
-		if (ValidationHelper.isUUIDInputValid(id.toString())) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - id: " + id.toString());
+		if (!ValidationHelper.isUUIDInputValid(id.toString())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_ID + id.toString());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
@@ -115,43 +121,30 @@ public class CaseDataRequestController {
 	}
 
 	private IndexCaseUpdateDTO indexCaseUpdateDTOInputValidated(IndexCaseUpdateDTO update) {
-
-		boolean isInvalid = false;
-
 		if (update == null) {
-			isInvalid = true;
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
-		if (update.getComment() != null) {
-			if (!ValidationHelper.checkInputForAttacks(update.getComment())) {
-				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - comment: " + update.getComment());
-				update.setComment(ErrorMessages.INVALID_INPUT_STRING);
-			}
+		if (update.getComment() != null && !ValidationHelper.checkInputForAttacks(update.getComment())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_COMMENT + update.getComment());
+			update.setComment(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (update.getName() != null) {
-			if (!ValidationHelper.checkInputForAttacks(update.getName())) {
-				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - name: " + update.getName());
-				update.setName(ErrorMessages.INVALID_INPUT_STRING);
-			}
+		if (update.getName() != null && !ValidationHelper.checkInputForAttacks(update.getName())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_NAME + update.getName());
+			update.setName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (update.getExternalCaseId() != null) {
-			if (!ValidationHelper.checkInputForAttacks(update.getExternalCaseId())) {
-				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - externalCaseId: " + update.getExternalCaseId());
-				update.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
-			}
+		if (update.getExternalCaseId() != null && !ValidationHelper.checkInputForAttacks(update.getExternalCaseId())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_EXTERNAL_CASE_ID + update.getExternalCaseId());
+			update.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		if (!(update.getStatus() == IndexCaseStatusDTO.DATA_RECEIVED
 			|| update.getStatus() == IndexCaseStatusDTO.DATA_REQUESTED
 			|| update.getStatus() == IndexCaseStatusDTO.ABORTED
 			|| update.getStatus() == IndexCaseStatusDTO.CLOSED)) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - status: " + update.getStatus());
-			isInvalid = true;
-		}
-
-		if (isInvalid) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_STATUS + update.getStatus());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
@@ -159,40 +152,27 @@ public class CaseDataRequestController {
 	}
 
 	private IndexCaseInsertDTO indexCaseInsertDTOInputValidated(IndexCaseInsertDTO insert) {
-
-		boolean isInvalid = false;
-
 		if (insert == null) {
-			isInvalid = true;
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
-		if (insert.getComment() != null) {
-			if (!ValidationHelper.checkInputForAttacks(insert.getComment())) {
-				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - comment: " + insert.getComment());
-				insert.setComment(ErrorMessages.INVALID_INPUT_STRING);
-			}
+		if (insert.getComment() != null && !ValidationHelper.checkInputForAttacks(insert.getComment())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_COMMENT + insert.getComment());
+			insert.setComment(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (insert.getName() != null) {
-			if (!ValidationHelper.checkInputForAttacks(insert.getName())) {
-				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - name: " + insert.getName());
-				insert.setName(ErrorMessages.INVALID_INPUT_STRING);
-			}
+		if (insert.getName() != null && !ValidationHelper.checkInputForAttacks(insert.getName())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_NAME + insert.getName());
+			insert.setName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (insert.getExternalCaseId() != null) {
-			if (!ValidationHelper.checkInputForAttacks(insert.getExternalCaseId())) {
-				log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - externalCaseId: " + insert.getExternalCaseId());
-				insert.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
-			}
+		if (insert.getExternalCaseId() != null && !ValidationHelper.checkInputForAttacks(insert.getExternalCaseId())) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_EXTERNAL_CASE_ID + insert.getExternalCaseId());
+			insert.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		if (insert.getStart() == null) {
 			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - start: null");
-			isInvalid = true;
-		}
-
-		if (isInvalid) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 

@@ -24,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class LocationSearchController {
 
+	private static final String EXCEPTION_MESSAGE_SEARCH = " - search: ";
 	private final SearchClient searchClient;
 
 	@GetMapping("/search")
@@ -32,16 +33,12 @@ public class LocationSearchController {
 		if (isSearchInputValid(search)) {
 			return searchClient.search(search, pageable);
 		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - search: " + search);
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_SEARCH + search);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 	}
 
 	private boolean isSearchInputValid(String search) {
-		if (search == null || search.length() < 4 || ValidationHelper.checkInputForAttacks(search)) {
-			return false;
-		}
-
-		return true;
+		return (search == null || search.length() < 4 || ValidationHelper.checkInputForAttacks(search));
 	}
 }
