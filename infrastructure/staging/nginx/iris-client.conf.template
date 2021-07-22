@@ -44,6 +44,13 @@ server {
     # X-XSS-Protection - legacy, should be covered by CSP
     add_header X-XSS-Protection "1; mode=block";
 
+    # CACHE
+    location ~* \.(js|jpg|jpeg|gif|png|css|tgz|gz|rar|bz2|doc|pdf|ppt|tar|wav|bmp|rtf|swf|ico|flv|txt|woff|woff2|svg)$ {
+        expires 1d;
+        add_header Pragma "private";
+        add_header Cache-Control "private";
+    }
+
     # CORS
     set $cors_origin "";
     set $cors_cred   "";
