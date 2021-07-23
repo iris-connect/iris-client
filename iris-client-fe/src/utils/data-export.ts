@@ -407,49 +407,40 @@ const sanitiseRows = function (
   rowsDict = JSON.parse(JSON.stringify(rows));
   rowsDict = rowsDict.map((row) => {
     for (const prop in row) {
-      row[prop] = sanitiseField(row[prop].toString(), separator);
+      row[prop] = sanitizeField(row[prop].toString());
     }
     return row;
   });
   return rowsDict;
 };
 
-export const sanitiseField = function (
-  field: string | undefined,
-  separator = ""
-): string {
-  const possibleSeperatorRE = /[,;]/g;
-  const whitespaceRE = RegExp(/\s+/, "g");
-  const whitelistRE = /([\p{L}\p{N}]@[\p{L}\p{N}])|[\p{L}\p{N}()[\]:./ -]/gu;
-  const headWhitelistRE = /^([()[\]]*[\p{L}\p{N}])+/u;
+export const sanitizeField = function (field: string | undefined) {
+  // Some of the steps are unnecessary or may seem overly restrictive.
+  // This is intended to provide redundancy in case some sanitization gets broken with future changes. If this leads to issues, some of the restrictions may be relaxed with care.
 
-  if (!field) {
-    return field || "-";
+  if (field == null) { // Catches both null and undefined
+    return "\"\"";
   }
 
-  field = field.replace(possibleSeperatorRE, "/");
-  field = field.replace(whitespaceRE, " ");
-  const matches = field.match(whitelistRE);
-  field = matches?.join("") || "";
+  // Replace newlines and other line breaks with a space
+  const regex_linebreaks = /\r?\n|\r/g // Recognizes /r (CR), /n (LF) and /r/n (CRLF)
+  field = field.replace(regex_linebreaks, " ");
+  
+  // Strip whitespace at the beginning and end
+  field = field.trim();
 
-  /**
-   * json2csv uses a seperator to split table columns. We currently are using ; and , as those.
-   * If such a sign would appear in the content than it would result in a split.
-   * To prevent this we change the seperators symbol with another symbol not used as such.
-   */
-  if (separator != "") {
-    let separator_replacement = "/";
-    if (separator === "/") separator_replacement = ".";
-    while (field.includes(separator))
-      field = field.replace(separator, separator_replacement);
-  }
-  while (!headWhitelistRE.test(field) && field.length > 0) {
-    field = field.substring(1);
-  }
+  // Remove everything not whitelisted (this restriction may be relaxed at some point)
+  // If you intend to do so, we also have to filter out separator symbols (,/;)
+  const regex_whitelist = /[^a-zA-Z0-9äüöÄÜÖß \-@+\.]+/g; // Matches everything *not* in the group (the whitelist)
+  field = field.replace(regex_whitelist, "");
 
-  if (field.length == 0) {
-    return "-";
-  }
+  // Ensure beginning of string has no trigger characters (+,- and @ are allowed, but they should not start the string)
+  const regex_beginning = /^[=+-@\t\r \n]+/g;
+  field = field.replace(regex_beginning, "");
+
+  // Quote the whole string to be sure
+  field = "\"" + field + "\"";
+
   return field;
 };
 
