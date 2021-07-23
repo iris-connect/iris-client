@@ -414,7 +414,7 @@ const sanitiseRows = function (
   return rowsDict;
 };
 
-export const sanitizeField = function (field: string | undefined, separator: string) {
+export const sanitizeField = function (field: string | undefined, separator: string): string {
   // Some of the steps are unnecessary or may seem overly restrictive.
   // This is intended to provide redundancy in case some sanitization gets broken with future changes. If this leads to issues, some of the restrictions may be relaxed with care.
 
