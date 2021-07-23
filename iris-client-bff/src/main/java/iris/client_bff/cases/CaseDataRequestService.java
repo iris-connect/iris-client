@@ -9,7 +9,7 @@ import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.config.DwConfig;
 import iris.client_bff.config.HealthDepartmentConfig;
-import iris.client_bff.core.util.BusinessProcessInfo;
+import iris.client_bff.core.log.LogEvent;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
@@ -35,7 +35,6 @@ public class CaseDataRequestService {
 
 	CaseDataRequestRepository repository;
 	CaseEmailProvider caseEmailProvider;
-	private final BusinessProcessInfo bpInfo;
 	private final ProxyServiceClient proxyClient;
 	private final DwConfig dwConfig;
 	private final HealthDepartmentConfig hdConfig;
@@ -97,7 +96,7 @@ public class CaseDataRequestService {
 
 		dataRequest.setDwSubmissionUri(generateDwUrl(dataRequest));
 		CaseDataRequest savedDataRequest = repository.save(dataRequest);
-		bpInfo.logProcessWithConnToken(log, "Case data request", savedDataRequest.getId().toString(), announcementToken);
+		log.info(LogEvent.buildLogMsg(LogEvent.DATA_REQ, "Case data request"));
 		return savedDataRequest;
 	}
 

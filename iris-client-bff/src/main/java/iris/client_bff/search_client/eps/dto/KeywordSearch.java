@@ -8,7 +8,6 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class KeywordSearch {
 
-	private String traceId;
 	private String searchKeyword;
 	private PageableDto pageable;
 }

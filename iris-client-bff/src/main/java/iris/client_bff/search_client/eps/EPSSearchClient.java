@@ -1,6 +1,7 @@
 package iris.client_bff.search_client.eps;
 
-import iris.client_bff.core.util.BusinessProcessInfo;
+import static iris.client_bff.core.log.LogEvent.*;
+
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.SearchClientProperties;
 import iris.client_bff.search_client.eps.dto.IdSearch;
@@ -26,7 +27,6 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 @AllArgsConstructor
 public class EPSSearchClient implements SearchClient {
 
-	private final BusinessProcessInfo bpInfo;
 	private final SearchClientProperties config;
 	private final JsonRpcHttpClient epsRpcClient;
 
@@ -36,14 +36,12 @@ public class EPSSearchClient implements SearchClient {
 		var payload = IdSearch.builder()
 				.providerId(providerId)
 				.locationId(locationId)
-				.traceId(bpInfo.getNextId())
 				.build();
 
 		LocationInformation locationInformation;
 		var methodName = config.getEndpoint() + ".getLocationDetails";
 		try {
-			bpInfo.logProcessWithData(log, "Load location", payload.getTraceId(),
-					"providerId=" + providerId + "; locationId="+locationId);
+			log.info(buildLogMsg(DATA_REQ, "Get location details"));
 			locationInformation = epsRpcClient.invoke(methodName, payload, LocationInformation.class);
 		} catch (Throwable t) {
 			throw new IRISSearchException(methodName, t);
@@ -78,11 +76,10 @@ public class EPSSearchClient implements SearchClient {
 
 		KeywordSearch search = KeywordSearch.builder()
 				.searchKeyword(keyword)
-				.traceId(bpInfo.getNextId())
 				.pageable(pageableDto).build();
 		var methodName = config.getEndpoint() + ".searchForLocation";
 		try {
-			bpInfo.logProcessWithData(log,"Location search", search.getTraceId(), "Keyword="+keyword);
+			log.info(buildLogMsg(DATA_REQ, "Location search started"));
 			return epsRpcClient.invoke(methodName, search, LocationQueryResult.class);
 		} catch (Throwable t) {
 			throw new IRISSearchException(methodName, t);

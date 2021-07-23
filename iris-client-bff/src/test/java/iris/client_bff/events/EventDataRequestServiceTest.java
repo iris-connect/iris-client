@@ -2,11 +2,8 @@ package iris.client_bff.events;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-import iris.client_bff.core.util.BusinessProcessInfo;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.eps.DataProviderClient;
 import iris.client_bff.events.web.dto.EventStatusDTO;
@@ -20,16 +17,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 
 @ExtendWith(MockitoExtension.class)
 public class EventDataRequestServiceTest {
 
 	@Mock
 	EventDataRequestRepository repository;
-
-	@Mock
-	BusinessProcessInfo bpInfo;
 
 	@Mock
 	SearchClient searchClient;
@@ -47,7 +40,7 @@ public class EventDataRequestServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		service = new EventDataRequestService(repository, bpInfo, searchClient, proxyServiceClient, epsDataRequestClient, emailProvider);
+		service = new EventDataRequestService(repository, searchClient, proxyServiceClient, epsDataRequestClient, emailProvider);
 	}
 
 	@Test
