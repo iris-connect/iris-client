@@ -414,7 +414,11 @@ const sanitiseRows = function (
   return rowsDict;
 };
 
-export const sanitizeField = function (field: string | undefined, separator: string): string {
+export const sanitizeField = function (
+  field: string | undefined, 
+  separator: string
+): string {
+
   // Some of the steps are unnecessary or may seem overly restrictive.
   // This is intended to provide redundancy in case some sanitization gets broken with future changes. If this leads to issues, some of the restrictions may be relaxed with care.
 
@@ -422,21 +426,15 @@ export const sanitizeField = function (field: string | undefined, separator: str
     return "";
   }
 
-  if (separator !== "," && separator !== ";") {
-    console.log("Illegal separator symbol- output undefined");
-    return "";
-  }
-
-
   // Replace newlines and other line breaks with a space
-  const regex_linebreaks = /\r?\n|\r/g // Recognizes /r (CR), /n (LF) and /r/n (CRLF)
+  const regex_linebreaks = /\r?\n|\r/g; // Recognizes /r (CR), /n (LF) and /r/n (CRLF)
   field = field.replace(regex_linebreaks, " ");
   
   // Strip whitespace at the beginning and end
   field = field.trim();
 
   // Remove everything not whitelisted (this restriction may be relaxed at some point)
-  const regex_whitelist = /[^a-zA-Z0-9äüöÄÜÖß\(\): \-@+\.;,]+/g; // Matches everything *not* in the group (the whitelist)
+  const regex_whitelist = /[^a-zA-Z0-9äüöÄÜÖß(): \-@+.;,]+/g; // Matches everything *not* in the group (the whitelist)
   field = field.replace(regex_whitelist, "");
 
   // Ensure beginning of string has no trigger characters (+,- and @ are allowed, but they should not start the string)
@@ -450,7 +448,7 @@ export const sanitizeField = function (field: string | undefined, separator: str
    */
   
    const regex_separator = /[,;]+/g;
-   field = field.replace(regex_separator, "/")
+   field = field.replace(regex_separator, "/");
 
   return field;
 };
