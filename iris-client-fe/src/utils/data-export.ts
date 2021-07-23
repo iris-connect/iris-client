@@ -407,20 +407,26 @@ const sanitiseRows = function (
   rowsDict = JSON.parse(JSON.stringify(rows));
   rowsDict = rowsDict.map((row) => {
     for (const prop in row) {
-      row[prop] = sanitizeField(row[prop].toString());
+      row[prop] = sanitizeField(row[prop].toString(), separator);
     }
     return row;
   });
   return rowsDict;
 };
 
-export const sanitizeField = function (field: string | undefined) {
+export const sanitizeField = function (field: string | undefined, separator: string) {
   // Some of the steps are unnecessary or may seem overly restrictive.
   // This is intended to provide redundancy in case some sanitization gets broken with future changes. If this leads to issues, some of the restrictions may be relaxed with care.
 
   if (field == null) { // Catches both null and undefined
-    return "\"\"";
+    return "";
   }
+
+  if (separator !== "," && separator !== ";") {
+    console.log("Illegal separator symbol- output undefined");
+    return "";
+  }
+
 
   // Replace newlines and other line breaks with a space
   const regex_linebreaks = /\r?\n|\r/g // Recognizes /r (CR), /n (LF) and /r/n (CRLF)
@@ -430,16 +436,21 @@ export const sanitizeField = function (field: string | undefined) {
   field = field.trim();
 
   // Remove everything not whitelisted (this restriction may be relaxed at some point)
-  // If you intend to do so, we also have to filter out separator symbols (,/;)
-  const regex_whitelist = /[^a-zA-Z0-9äüöÄÜÖß \-@+\.]+/g; // Matches everything *not* in the group (the whitelist)
+  const regex_whitelist = /[^a-zA-Z0-9äüöÄÜÖß\(\): \-@+\.;,]+/g; // Matches everything *not* in the group (the whitelist)
   field = field.replace(regex_whitelist, "");
 
   // Ensure beginning of string has no trigger characters (+,- and @ are allowed, but they should not start the string)
-  const regex_beginning = /^[=+-@\t\r \n]+/g;
+  const regex_beginning = /^[=+\-@\t\r \n]+/g;
   field = field.replace(regex_beginning, "");
 
-  // Quote the whole string to be sure
-  field = "\"" + field + "\"";
+  /**
+   * json2csv uses a seperator to split table columns. We currently are using ; and , as those.
+   * If such a sign would appear in the content than it would result in a split.
+   * To prevent this we change the offending symbol to "/". We can't quote the whole string in every desired output format.
+   */
+  
+   const regex_separator = /[,;]+/g;
+   field = field.replace(regex_separator, "/")
 
   return field;
 };
