@@ -1,8 +1,9 @@
 package iris.client_bff.search_client.eps;
 
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
+
+import iris.client_bff.config.BackendServiceProperties;
 import iris.client_bff.search_client.SearchClient;
-import iris.client_bff.search_client.SearchClientProperties;
 import iris.client_bff.search_client.eps.dto.IdSearch;
 import iris.client_bff.search_client.eps.dto.KeywordSearch;
 import iris.client_bff.search_client.eps.dto.PageableDto;
@@ -21,7 +22,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class EPSSearchClient implements SearchClient {
 
-	private SearchClientProperties config;
+	private BackendServiceProperties config;
 
 	private final JsonRpcHttpClient epsRpcClient;
 
