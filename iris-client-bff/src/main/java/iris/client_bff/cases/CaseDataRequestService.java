@@ -9,6 +9,7 @@ import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.config.DwConfig;
 import iris.client_bff.config.HealthDepartmentConfig;
+import iris.client_bff.core.log.LogHelper;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
@@ -94,7 +95,9 @@ public class CaseDataRequestService {
 			.build();
 
 		dataRequest.setDwSubmissionUri(generateDwUrl(dataRequest));
-		return repository.save(dataRequest);
+		CaseDataRequest savedDataRequest = repository.save(dataRequest);
+		log.info(LogHelper.CASE_DATA_REQUEST);
+		return savedDataRequest;
 	}
 
 	public int getCountSinceDate(Instant date) {
