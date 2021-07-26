@@ -104,7 +104,7 @@ public class EventDataRequestService {
 		try {
 			dataRequest.setStatus(Status.DATA_REQUESTED);
 			dataRequest = repository.save(dataRequest);
-			log.info(LogHelper.eventDataRequest());
+			log.info(LogHelper.EVENT_DATA_REQUEST);
 			epsDataRequestClient.requestGuestListData(dataRequest);
 		} catch (IRISDataRequestException e) {
 			log.error("Event Data Request {} could not be submitted: {}", dataRequest.getId(), e);

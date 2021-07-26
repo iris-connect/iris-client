@@ -41,7 +41,7 @@ public class EPSSearchClient implements SearchClient {
 		LocationInformation locationInformation;
 		var methodName = config.getEndpoint() + ".getLocationDetails";
 		try {
-			log.info(locationDetails());
+			log.info(LOCATION_DETAILS);
 			locationInformation = epsRpcClient.invoke(methodName, payload, LocationInformation.class);
 		} catch (Throwable t) {
 			throw new IRISSearchException(methodName, t);
@@ -79,7 +79,7 @@ public class EPSSearchClient implements SearchClient {
 				.pageable(pageableDto).build();
 		var methodName = config.getEndpoint() + ".searchForLocation";
 		try {
-			log.info(locationSearch());
+			log.info(LOCATION_SEARCH);
 			return epsRpcClient.invoke(methodName, search, LocationQueryResult.class);
 		} catch (Throwable t) {
 			throw new IRISSearchException(methodName, t);

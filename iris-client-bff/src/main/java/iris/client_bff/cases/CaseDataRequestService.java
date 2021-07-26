@@ -96,7 +96,7 @@ public class CaseDataRequestService {
 
 		dataRequest.setDwSubmissionUri(generateDwUrl(dataRequest));
 		CaseDataRequest savedDataRequest = repository.save(dataRequest);
-		log.info(LogHelper.caseDataRequest());
+		log.info(LogHelper.CASE_DATA_REQUEST);
 		return savedDataRequest;
 	}
 
