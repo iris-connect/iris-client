@@ -74,9 +74,7 @@ public class EventEmailProvider extends EmailProvider {
 			return new AsyncResult<Try<Void>>(sendMail(email, recipient, parameters.get("caseId").toString()));
 		} else {
 			email = new EventEmail(null, subject, EmailTemplates.Keys.EVENT_DATA_RECEIVED_MAIL_FTLH, parameters);
-			ConfiguredRecipient standardRecipientForLogEntries =
-				new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
-			return new AsyncResult<Try<Void>>(sendMail(email, standardRecipientForLogEntries, parameters.get("eventId").toString()));
+			return new AsyncResult<Try<Void>>(sendMail(email, null, parameters.get("eventId").toString()));
 		}
 	}
 }

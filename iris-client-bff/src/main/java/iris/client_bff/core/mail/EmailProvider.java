@@ -15,6 +15,7 @@
 package iris.client_bff.core.mail;
 
 import io.vavr.control.Try;
+import iris.client_bff.core.EmailAddress;
 import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail.ConfiguredRecipient;
 import iris.client_bff.core.mail.EmailSender.TemplatedEmail;
 import lombok.NonNull;
@@ -39,11 +40,24 @@ public class EmailProvider {
 
 	protected Try<Void> sendMail(TemplatedEmail email, ConfiguredRecipient recipient, String id) {
 
-		var logArgs = new Object[] {
-			email.getTemplate(),
-			recipient.getFullName(),
-			recipient.getEmailAddress(),
-			id };
+		Object[] logArgs = null;
+		if (recipient != null) {
+			logArgs = new Object[] {
+				email.getTemplate(),
+				recipient.getFullName(),
+				recipient.getEmailAddress(),
+				id };
+
+		} else {
+			ConfiguredRecipient standardRecipientForLogEntries =
+				new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
+			logArgs = new Object[] {
+				email.getTemplate(),
+				standardRecipientForLogEntries.getFullName(),
+				standardRecipientForLogEntries.getEmailAddress(),
+				id };
+
+		}
 
 		return sendTillSuccessOrLimitReached(email, logArgs, 0);
 	}
