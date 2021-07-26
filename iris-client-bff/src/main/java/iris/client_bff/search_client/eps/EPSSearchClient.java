@@ -1,6 +1,6 @@
 package iris.client_bff.search_client.eps;
 
-import static iris.client_bff.core.log.LogEvent.*;
+import static iris.client_bff.core.log.LogHelper.*;
 
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.SearchClientProperties;
@@ -41,7 +41,7 @@ public class EPSSearchClient implements SearchClient {
 		LocationInformation locationInformation;
 		var methodName = config.getEndpoint() + ".getLocationDetails";
 		try {
-			log.info(buildLogMsg(DATA_REQ, "Get location details"));
+			log.info(locationDetails());
 			locationInformation = epsRpcClient.invoke(methodName, payload, LocationInformation.class);
 		} catch (Throwable t) {
 			throw new IRISSearchException(methodName, t);
@@ -79,7 +79,7 @@ public class EPSSearchClient implements SearchClient {
 				.pageable(pageableDto).build();
 		var methodName = config.getEndpoint() + ".searchForLocation";
 		try {
-			log.info(buildLogMsg(DATA_REQ, "Location search started"));
+			log.info(locationSearch());
 			return epsRpcClient.invoke(methodName, search, LocationQueryResult.class);
 		} catch (Throwable t) {
 			throw new IRISSearchException(methodName, t);
