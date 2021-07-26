@@ -1,5 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CompressionPlugin = require("compression-webpack-plugin");
+
 module.exports = {
   transpileDependencies: ["vuetify"],
+  configureWebpack: {
+    plugins: [new CompressionPlugin()],
+  },
   chainWebpack: (config) => {
     config.plugin("html").tap((args) => {
       const htmlConfig = args[0];

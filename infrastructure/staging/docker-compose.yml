@@ -1,5 +1,5 @@
 ########################################################
-# Intended for deployments at the health departments
+# Intended for deployments on DEV server
 #
 # Provides IRIS client BFF and frontend together with a Postgresql database and NGINX
 # IRIS frontend over NGINX: port = 443
@@ -33,11 +33,13 @@ services:
       retries: 4
       start_period: 30s
 
-  # IRIS Client backend for frontend
+  # IRIS Client backend for frontend (autoupdated by watchtower)
   iris-client:
-    image: inoeg/iris-client-bff:develop
+    image: inoeg/iris-client-bff:${CLIENT_VERSION}
     expose:
       - 8092
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_USER}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
@@ -52,16 +54,19 @@ services:
       EPS_CLIENT_EPS_CLIENT_URL: https://eps:5556/jsonrpc
       EPS_CLIENT_PROXY_CLIENT_URL: https://private-proxy-1:7766/jsonrpc
       PROXY_SERVICE_TARGET_SUBDOMAIN: proxy.test-gesundheitsamt.de
+      IRIS_CLIENT_BASEPATH: https://iris-frontend:28080
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
 
-  # IRIS Client Frontend
+  # IRIS Client Frontend (autoupdated by watchtower)
   iris-frontend:
-    image: inoeg/iris-client-frontend:develop
+    image: inoeg/iris-client-frontend:${CLIENT_VERSION}
     expose:
       - 28080
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     environment:
       SORMAS_SIDECAR_BASE_URL: /api
     restart: unless-stopped
@@ -69,14 +74,16 @@ services:
       - iris-client
 
   eps:
-    image: inoeg/eps:v0.1.32
+    image: inoeg/eps:${EPS_VERSION}
     expose:
       - 4446
       - 5556
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
       - iris-client
     volumes:
-      - ./settings:/app/settings
+      - ${LOCAL_MOUNT_DIR}/settings:/app/settings
     environment:
       - EPS_SETTINGS=settings/roles/hd-1
     command: ["--level", "debug", "server", "run"]
@@ -85,37 +92,43 @@ services:
   nginx:
     image: inoeg/iris-client-nginx:develop
     ports:
-      - 7443:443
+      - ${NGINX_PORT}:443
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     environment:
       IRIS_CLIENT_DOMAIN:
       IRIS_CLIENT_DOMAIN_CERT:
       IRIS_CLIENT_DOMAIN_CERT_KEY:
     volumes:
-      - ./conf:/etc/iris
-      - ./nginx:/etc/nginx/templates
+      - ${LOCAL_MOUNT_DIR}/conf:/etc/iris
+      - ${LOCAL_MOUNT_DIR}/nginx:/etc/nginx/templates
     depends_on:
       - iris-client
       - iris-frontend
 
   private-proxy:
-    image: inoeg/proxy:v0.1.32
+    image: inoeg/proxy:${EPS_VERSION}
     expose:
       - 5545
       - 8877
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
-      - ./settings:/app/settings
-      - ./private-proxy-db:/private-proxy
+      - ${LOCAL_MOUNT_DIR}/settings:/app/settings
+      - ${LOCAL_MOUNT_DIR}/private-proxy-db:/private-proxy
     environment:
       - PROXY_SETTINGS=settings/roles/private-proxy-1
     command: [ "--level", "trace", "run", "private" ]
 
   private-proxy-1:
-    image: inoeg/eps:v0.1.32
+    image: inoeg/eps:${EPS_VERSION}
     expose:
       - 7766
       - 7776
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
-      - ./settings:/app/settings
+      - ${LOCAL_MOUNT_DIR}/settings:/app/settings
     environment:
       - EPS_SETTINGS=settings/roles/private-proxy-eps-1
     command: [ "--level", "trace", "server", "run" ]
