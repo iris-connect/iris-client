@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import io.vavr.control.Try;
-import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.core.mail.EmailSender;
 import iris.client_bff.core.mail.EmailTemplates;
 
@@ -48,8 +47,8 @@ public class CaseEmailProviderTest {
 		Instant caseStart = Instant.now();
 		Instant caseEnd = Instant.now();
 
-		IndexCaseDetailsDTO caseData =
-			IndexCaseDetailsDTO.builder().name(caseName).externalCaseId(caseExternalCaseId).start(caseStart).end(caseEnd).caseId(caseId).build();
+		CaseDataRequest caseData =
+			CaseDataRequest.builder().name(caseName).refId(caseExternalCaseId).requestStart(caseStart).requestEnd(caseEnd).build();
 
 		when(messageSourceAccessor.getMessage("CaseDataReceivedEmail.subject")).thenReturn(subject);
 
@@ -63,10 +62,10 @@ public class CaseEmailProviderTest {
 
 		assertEquals(subject, argument.getValue().getSubject());
 		assertEquals(caseData.getName(), argument.getValue().getPlaceholders().get("caseId"));
-		assertEquals(caseData.getExternalCaseId(), argument.getValue().getPlaceholders().get("externalId"));
-		assertEquals(caseData.getStart(), argument.getValue().getPlaceholders().get("startTime"));
-		assertEquals(caseData.getEnd(), argument.getValue().getPlaceholders().get("endTime"));
-		assertTrue(argument.getValue().getPlaceholders().get("caseUrl").toString().contains(caseData.getCaseId().toString()));
+		assertEquals(caseData.getRefId(), argument.getValue().getPlaceholders().get("externalId"));
+		assertEquals(caseData.getRequestStart(), argument.getValue().getPlaceholders().get("startTime"));
+		assertEquals(caseData.getRequestEnd(), argument.getValue().getPlaceholders().get("endTime"));
+		assertTrue(argument.getValue().getPlaceholders().get("caseUrl").toString().contains(caseData.getId().toString()));
 		assertEquals(EmailTemplates.Keys.CASE_DATA_RECEIVED_MAIL_FTLH, argument.getValue().getTemplate());
 	}
 
@@ -79,8 +78,8 @@ public class CaseEmailProviderTest {
 		Instant caseStart = Instant.now();
 		Instant caseEnd = Instant.now();
 
-		IndexCaseDetailsDTO caseData =
-			IndexCaseDetailsDTO.builder().name(caseName).externalCaseId(caseExternalCaseId).start(caseStart).end(caseEnd).caseId(caseId).build();
+		CaseDataRequest caseData =
+			CaseDataRequest.builder().name(caseName).refId(caseExternalCaseId).requestStart(caseStart).requestEnd(caseEnd).build();
 
 		when(messageSourceAccessor.getMessage("CaseDataReceivedEmail.subject")).thenReturn(subject);
 
@@ -100,8 +99,8 @@ public class CaseEmailProviderTest {
 		Instant caseStart = Instant.now();
 		Instant caseEnd = Instant.now();
 
-		IndexCaseDetailsDTO caseData =
-			IndexCaseDetailsDTO.builder().name(caseName).externalCaseId(caseExternalCaseId).start(caseStart).end(caseEnd).caseId(caseId).build();
+		CaseDataRequest caseData =
+			CaseDataRequest.builder().name(caseName).refId(caseExternalCaseId).requestStart(caseStart).requestEnd(caseEnd).build();
 
 		when(messageSourceAccessor.getMessage("CaseDataReceivedEmail.subject")).thenReturn(subject);
 

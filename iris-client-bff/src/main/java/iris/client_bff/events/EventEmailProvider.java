@@ -66,7 +66,7 @@ public class EventEmailProvider extends EmailProvider {
 
 		EventEmail email;
 
-		if (dataReceivedRecipientName != null && dataReceivedRecipientEmail != null) {
+		if (dataReceivedRecipientName != null && EmailAddress.isValid(dataReceivedRecipientEmail)) {
 			EmailAddress emailAddress = EmailAddress.of(dataReceivedRecipientEmail);
 			ConfiguredRecipient recipient = new ConfiguredRecipient(dataReceivedRecipientName, emailAddress);
 

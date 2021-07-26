@@ -1,7 +1,7 @@
 package iris.client_bff.events;
 
-import static iris.client_bff.search_client.eps.LocationMapper.*;
-import static org.apache.commons.lang3.StringUtils.*;
+import static iris.client_bff.search_client.eps.LocationMapper.map;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
@@ -9,7 +9,6 @@ import iris.client_bff.events.eps.DataProviderClient;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.model.Location;
 import iris.client_bff.events.web.dto.DataRequestClient;
-import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
@@ -39,7 +38,6 @@ public class EventDataRequestService {
 	private final SearchClient searchClient;
 	private final ProxyServiceClient proxyClient;
 	private final DataProviderClient epsDataRequestClient;
-	private final EventEmailProvider eventEmailProvider;
 
 	public Page<EventDataRequest> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
@@ -151,11 +149,5 @@ public class EventDataRequestService {
 
 	public int getCountWithStatus(Status status) {
 		return repository.getCountWithStatus(status);
-	}
-
-	public void sendDataReceivedEmail(EventDataRequest updated, EventStatusDTO status) {
-		if (status == EventStatusDTO.DATA_RECEIVED) {
-			eventEmailProvider.sendDataReceivedEmailAsynchronously(updated);
-		}
 	}
 }

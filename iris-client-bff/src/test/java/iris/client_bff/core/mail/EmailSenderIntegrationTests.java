@@ -94,6 +94,8 @@ class EmailSenderIntegrationTests {
 			super(emailSender, messages);
 		}
 
+		ConfiguredRecipient standardRecipient = new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
+
 		Try<Void> sendTestEmailEn() {
 
 			var english = Locale.ENGLISH;
@@ -101,7 +103,6 @@ class EmailSenderIntegrationTests {
 
 			var email = new TestEmail(subject, TestKeys.TEST_MAIL_FTL, getParameters(), english);
 
-			ConfiguredRecipient standardRecipient = new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
 			return sendMail(email, standardRecipient, getParameters().get("caseId"));
 		}
 
@@ -112,7 +113,6 @@ class EmailSenderIntegrationTests {
 
 			var email = new TestEmail(subject, TestKeys.TEST_MAIL_FTL, getParameters(), locale);
 
-			ConfiguredRecipient standardRecipient = new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
 			return sendMail(email, standardRecipient, getParameters().get("caseId"));
 		}
 
@@ -123,7 +123,6 @@ class EmailSenderIntegrationTests {
 
 			var email = new TestEmail(subject, TestKeys.TEST_HTML_MAIL_FTLH, getParameters(), locale);
 
-			ConfiguredRecipient standardRecipient = new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
 			return sendMail(email, standardRecipient, getParameters().get("caseId"));
 		}
 

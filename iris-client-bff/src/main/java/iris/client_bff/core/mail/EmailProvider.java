@@ -35,6 +35,9 @@ public class EmailProvider {
 	@Value("${spring.mail.properties.limit.resending.attempts:5}")
 	private Integer limitResendingAttempts = 5;
 
+	@Value("${spring.mail.properties.limit.resending.delay:30000}")
+	private Integer sleepBetweenAttempts = 3000;
+
 	private final @NonNull EmailSender emailSender;
 	final @NonNull protected MessageSourceAccessor messages;
 
@@ -47,7 +50,6 @@ public class EmailProvider {
 				recipient.getFullName(),
 				recipient.getEmailAddress(),
 				id };
-
 		} else {
 			ConfiguredRecipient standardRecipientForLogEntries =
 				new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
@@ -56,7 +58,6 @@ public class EmailProvider {
 				standardRecipientForLogEntries.getFullName(),
 				standardRecipientForLogEntries.getEmailAddress(),
 				id };
-
 		}
 
 		return sendTillSuccessOrLimitReached(email, logArgs, 0);
@@ -72,7 +73,13 @@ public class EmailProvider {
 						"The attempt number " + count
 							+ " to send a mail of the template {} to {} ({}) for Event-Id/Case-ID {} failed. Retry will follow.",
 						logArgs);
-					sendTillSuccessOrLimitReached(email, logArgs, count);
+					try {
+						Thread.sleep(30000);
+						sendTillSuccessOrLimitReached(email, logArgs, count);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+						sendTillSuccessOrLimitReached(email, logArgs, count);
+					}
 				} else {
 					log.warn("Can't send a mail of the template {} to {} ({}) for Event-Id/Case-ID {}", logArgs);
 					log.warn("Exception", e);

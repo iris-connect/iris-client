@@ -3,9 +3,7 @@ package iris.client_bff.cases;
 import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.dto.DwUrlParamDto;
-import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
-import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.config.DwConfig;
 import iris.client_bff.config.HealthDepartmentConfig;
@@ -33,7 +31,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CaseDataRequestService {
 
 	CaseDataRequestRepository repository;
-	CaseEmailProvider caseEmailProvider;
 	private final ProxyServiceClient proxyClient;
 	private final DwConfig dwConfig;
 	private final HealthDepartmentConfig hdConfig;
@@ -105,22 +102,16 @@ public class CaseDataRequestService {
 		return repository.getCountWithStatus(status);
 	}
 
-	public void sendDataReceivedEmail(IndexCaseDetailsDTO indexCaseDetailsDTO, IndexCaseStatusDTO status) {
-		if (status == IndexCaseStatusDTO.DATA_RECEIVED) {
-			caseEmailProvider.sendDataReceivedEmailAsynchronously(indexCaseDetailsDTO);
-		}
-	}
-
 	private String generateDwUrl(CaseDataRequest dataRequest) throws IRISDataRequestException {
 		String paramsAsJsonBase64;
 
 		try {
-			DwUrlParamDto dwUrlParamDto = new DwUrlParamDto(dataRequest.getId().toString(),
-					dataRequest.getAnnouncementToken(),	hdConfig.getZipCode());
+			DwUrlParamDto dwUrlParamDto =
+				new DwUrlParamDto(dataRequest.getId().toString(), dataRequest.getAnnouncementToken(), hdConfig.getZipCode());
 			String paramsAsJson = new ObjectMapper().writeValueAsString(dwUrlParamDto);
 			paramsAsJsonBase64 = Base64.getEncoder().encodeToString(paramsAsJson.getBytes());
 			log.debug("Generated Base64 encoded params: {}", dwUrlParamDto);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			log.error("Generating DW URL failed", e);
 			throw new IRISDataRequestException(e);
 		}
