@@ -32,8 +32,8 @@ import org.springframework.context.support.MessageSourceAccessor;
 @RequiredArgsConstructor
 public class EmailProvider {
 
-	@Value("${spring.mail.properties.limit.resending.attempts}")
-	private Integer limitResendingAttempts;
+	@Value("${spring.mail.properties.limit.resending.attempts:5}")
+	private Integer limitResendingAttempts = 5;
 
 	private final @NonNull EmailSender emailSender;
 	final @NonNull protected MessageSourceAccessor messages;
@@ -66,9 +66,6 @@ public class EmailProvider {
 		return emailSender.sendMail(email)
 			.onSuccess(__ -> log.info("Mail of the template {} sent to {} ({}) for Event-Id/Case-ID {}", logArgs))
 			.onFailure(e -> {
-				if (limitResendingAttempts == null) {
-					limitResendingAttempts = 5;
-				}
 				if (attempts < limitResendingAttempts) {
 					int count = attempts + 1;
 					log.info(
