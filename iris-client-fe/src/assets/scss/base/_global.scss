@@ -6,7 +6,8 @@ a:active,
 .v-btn--active,
 a:hover {
   outline-width: 0;
-  text-decoration: underline #46ff9f 3px;
+  text-decoration: underline #46ff9f;
+  text-decoration-thickness: 3px;
   text-underline-offset: 3px;
 }
 
