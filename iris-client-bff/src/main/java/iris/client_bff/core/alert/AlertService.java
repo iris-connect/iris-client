@@ -1,6 +1,7 @@
 package iris.client_bff.core.alert;
 
 import iris.client_bff.config.BackendServiceProperties;
+import iris.client_bff.core.alert.AlertDto.AlertDtoBuilder;
 import iris.client_bff.core.alert.AlertDto.AlertType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ public class AlertService {
 	private final BackendServiceProperties config;
 	private final JsonRpcHttpClient epsRpcClient;
 
+	private static final String APP = "iris-bff";
 	private String version = "";
 	{
 		try {
@@ -69,11 +71,19 @@ public class AlertService {
 	}
 
 	private AlertDto message(String title, String text) {
-		return AlertDto.builder().title(title).text(text).version(version).alertType(AlertType.MESSAGE).build();
+		return createAlertBuilder(title, text).alertType(AlertType.MESSAGE).build();
 	}
 
 	private AlertDto ticket(String title, String text) {
-		return AlertDto.builder().title(title).text(text).version(version).alertType(AlertType.TICKET).build();
+		return createAlertBuilder(title, text).alertType(AlertType.TICKET).build();
+	}
+
+	private AlertDtoBuilder createAlertBuilder(String title, String text) {
+		return AlertDto.builder()
+				.title(title)
+				.text(text)
+				.sourceApp(APP)
+				.appVersion(version);
 	}
 
 	private void sendAlert(List<AlertDto> alerts) {

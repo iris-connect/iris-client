@@ -19,7 +19,8 @@ public class AlertDto {
 
 	String title;
 	String text;
-	String version;
+	String sourceApp;
+	String appVersion;
 	AlertType alertType;
 
 	public enum AlertType {
