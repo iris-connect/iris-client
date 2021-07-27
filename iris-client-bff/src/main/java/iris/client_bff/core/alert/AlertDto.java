@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 public class AlertDto {
 
+	String title;
 	String text;
 	String version;
 	AlertType alertType;

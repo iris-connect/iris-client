@@ -45,11 +45,11 @@ public class AlertService {
 	 * 
 	 * @param text
 	 */
-	public void createAlertMessage(String text) {
+	public void createAlertMessage(String title, String text) {
 
 		log.error("Alert: {}", text);
 
-		sendAlert(List.of(message(text)));
+		sendAlert(List.of(message(title, text)));
 	}
 
 	/**
@@ -61,19 +61,19 @@ public class AlertService {
 	 * 
 	 * @param text
 	 */
-	public void createAlertTicketAndMessage(String text) {
+	public void createAlertTicketAndMessage(String title, String text) {
 
 		log.error("Alert: {}", text);
 
-		sendAlert(List.of(message(text), ticket(text)));
+		sendAlert(List.of(message(title, text), ticket(title, text)));
 	}
 
-	private AlertDto message(String text) {
-		return AlertDto.builder().text(text).version(version).alertType(AlertType.MESSAGE).build();
+	private AlertDto message(String title, String text) {
+		return AlertDto.builder().title(title).text(text).version(version).alertType(AlertType.MESSAGE).build();
 	}
 
-	private AlertDto ticket(String text) {
-		return AlertDto.builder().text(text).version(version).alertType(AlertType.TICKET).build();
+	private AlertDto ticket(String title, String text) {
+		return AlertDto.builder().title(title).text(text).version(version).alertType(AlertType.TICKET).build();
 	}
 
 	private void sendAlert(List<AlertDto> alerts) {
