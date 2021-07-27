@@ -15,9 +15,13 @@
 package iris.client_bff.core.mail;
 
 import io.vavr.control.Try;
+import iris.client_bff.cases.CaseEmail;
 import iris.client_bff.core.EmailAddress;
+import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail;
 import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail.ConfiguredRecipient;
+import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail.Recipient;
 import iris.client_bff.core.mail.EmailSender.TemplatedEmail;
+import iris.client_bff.events.EventEmail;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,26 +45,34 @@ public class EmailProvider {
 	private final @NonNull EmailSender emailSender;
 	final @NonNull protected MessageSourceAccessor messages;
 
-	protected Try<Void> sendMail(TemplatedEmail email, ConfiguredRecipient recipient, String id) {
+	protected Try<Void> sendMail(TemplatedEmail email, String id) {
+		ConfiguredRecipient recipient = null;
 
-		Object[] logArgs = null;
-		if (recipient != null) {
-			logArgs = new Object[] {
-				email.getTemplate(),
-				recipient.getFullName(),
-				recipient.getEmailAddress(),
-				id };
+		if (email instanceof CaseEmail) {
+			recipient = getConfiguredRecipient(((CaseEmail) email).getTo());
+		} else if (email instanceof EventEmail) {
+			recipient = getConfiguredRecipient(((EventEmail) email).getTo());
+		} else if (email instanceof AbstractTemplatedEmail) {
+			recipient = getConfiguredRecipient(((AbstractTemplatedEmail) email).getTo());
 		} else {
-			ConfiguredRecipient standardRecipientForLogEntries =
-				new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
-			logArgs = new Object[] {
-				email.getTemplate(),
-				standardRecipientForLogEntries.getFullName(),
-				standardRecipientForLogEntries.getEmailAddress(),
-				id };
+			recipient = getConfiguredRecipient(null);
 		}
 
+		Object[] logArgs = new Object[] {
+			email.getTemplate(),
+			recipient.getFullName(),
+			recipient.getEmailAddress(),
+			id };
+
 		return sendTillSuccessOrLimitReached(email, logArgs, 0);
+	}
+
+	private ConfiguredRecipient getConfiguredRecipient(Recipient recipient) {
+		if (recipient == null || recipient.getEmailAddress() == null || recipient.getFullName() == null) {
+			return new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
+		} else {
+			return new ConfiguredRecipient(recipient.getFullName(), recipient.getEmailAddress());
+		}
 	}
 
 	private Try<Void> sendTillSuccessOrLimitReached(TemplatedEmail email, Object[] logArgs, int attempts) {
@@ -74,7 +86,7 @@ public class EmailProvider {
 							+ " to send a mail of the template {} to {} ({}) for Event-Id/Case-ID {} failed. Retry will follow.",
 						logArgs);
 					try {
-						Thread.sleep(30000);
+						Thread.sleep(sleepBetweenAttempts);
 						sendTillSuccessOrLimitReached(email, logArgs, count);
 					} catch (InterruptedException e1) {
 						e1.printStackTrace();
