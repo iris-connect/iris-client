@@ -1,5 +1,22 @@
 # Changelog
 
+# [1.0.0-rc.12](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.11...v1.0.0-rc.12) (2021-07-27)
+
+
+### Bug Fixes
+
+* Adds restart policy to all docker compose services. ([#217](https://github.com/iris-connect/iris-client/issues/217)) ([3a7534b](https://github.com/iris-connect/iris-client/commit/3a7534b3bce69ad58075ba522ad120831a2982b1))
+* FE image build error ([#229](https://github.com/iris-connect/iris-client/issues/229)) ([6905694](https://github.com/iris-connect/iris-client/commit/690569495df166d7ec360128214ff1e7c1ef6c6e))
+* repair mock api for location search ([#161](https://github.com/iris-connect/iris-client/issues/161)) ([3fe5cb6](https://github.com/iris-connect/iris-client/commit/3fe5cb656be01ce7018d7e81b18aaa31c8318aa0))
+* typo ([75769c7](https://github.com/iris-connect/iris-client/commit/75769c7c19e4d543fbade414ba79d9f4a5e7377e))
+
+
+### Features
+
+* 192 Feature flag for index cases ([#194](https://github.com/iris-connect/iris-client/issues/194)) ([22e0a4b](https://github.com/iris-connect/iris-client/commit/22e0a4b9e571e4a10551d944587423cac0ca3a76)), closes [#192](https://github.com/iris-connect/iris-client/issues/192)
+* Log outgoing data requests with common format ([b1e72fc](https://github.com/iris-connect/iris-client/commit/b1e72fcfc21e720ce4ccd000e4f69e1a569b451f)), closes [iris-connect/iris-backlog#202](https://github.com/iris-connect/iris-backlog/issues/202) [iris-connect/iris-backlog#169](https://github.com/iris-connect/iris-backlog/issues/169) [#224](https://github.com/iris-connect/iris-client/issues/224)
+* use local fonts for gdpr compliance ([#220](https://github.com/iris-connect/iris-client/issues/220)) ([6492e3a](https://github.com/iris-connect/iris-client/commit/6492e3a690537ee92b137d2f28c2c40eb1f26623))
+
 # [1.0.0-rc.11](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.10...v1.0.0-rc.11) (2021-07-02)
 
 
