@@ -27,8 +27,6 @@ public class EventDataRequestServiceTest {
 	@Mock
 	SearchClient searchClient;
 
-	EventDataRequestService service;
-
 	@Mock
 	DataProviderClient epsDataRequestClient;
 
@@ -37,6 +35,8 @@ public class EventDataRequestServiceTest {
 
 	@Mock
 	EventEmailProvider emailProvider;
+
+	EventDataRequestService service;
 
 	@BeforeEach
 	void setUp() {
