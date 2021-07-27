@@ -71,10 +71,10 @@ public class CaseEmailProvider extends EmailProvider {
 			ConfiguredRecipient recipient = new ConfiguredRecipient(dataReceivedRecipientName, emailAddress);
 
 			email = new CaseEmail(recipient, subject, EmailTemplates.Keys.CASE_DATA_RECEIVED_MAIL_FTLH, parameters);
-			return new AsyncResult<Try<Void>>(sendMail(email, recipient, parameters.get("caseId").toString()));
+			return new AsyncResult<Try<Void>>(sendMail(email, parameters.get("caseId").toString()));
 		} else {
 			email = new CaseEmail(null, subject, EmailTemplates.Keys.CASE_DATA_RECEIVED_MAIL_FTLH, parameters);
-			return new AsyncResult<Try<Void>>(sendMail(email, null, parameters.get("caseId").toString()));
+			return new AsyncResult<Try<Void>>(sendMail(email, parameters.get("caseId").toString()));
 		}
 
 	}
