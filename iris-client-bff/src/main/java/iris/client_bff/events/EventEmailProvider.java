@@ -71,10 +71,10 @@ public class EventEmailProvider extends EmailProvider {
 			ConfiguredRecipient recipient = new ConfiguredRecipient(dataReceivedRecipientName, emailAddress);
 
 			email = new EventEmail(recipient, subject, EmailTemplates.Keys.EVENT_DATA_RECEIVED_MAIL_FTLH, parameters);
-			return new AsyncResult<Try<Void>>(sendMail(email, parameters.get("caseId").toString()));
+			return new AsyncResult<Try<Void>>(sendMail(email, recipient, parameters.get("caseId").toString()));
 		} else {
 			email = new EventEmail(null, subject, EmailTemplates.Keys.EVENT_DATA_RECEIVED_MAIL_FTLH, parameters);
-			return new AsyncResult<Try<Void>>(sendMail(email, parameters.get("eventId").toString()));
+			return new AsyncResult<Try<Void>>(sendMail(email, null, parameters.get("eventId").toString()));
 		}
 	}
 }

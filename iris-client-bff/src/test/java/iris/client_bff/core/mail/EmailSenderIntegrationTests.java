@@ -103,7 +103,7 @@ class EmailSenderIntegrationTests {
 
 			var email = new TestEmail(subject, TestKeys.TEST_MAIL_FTL, getParameters(), english);
 
-			return sendMail(email, getParameters().get("caseId"));
+			return sendMail(email, standardRecipient, getParameters().get("caseId"));
 		}
 
 		Try<Void> sendTestEmailDe() {
@@ -113,7 +113,7 @@ class EmailSenderIntegrationTests {
 
 			var email = new TestEmail(subject, TestKeys.TEST_MAIL_FTL, getParameters(), locale);
 
-			return sendMail(email, getParameters().get("caseId"));
+			return sendMail(email, standardRecipient, getParameters().get("caseId"));
 		}
 
 		Try<Void> sendTestHtmlEmailDe() {
@@ -123,7 +123,7 @@ class EmailSenderIntegrationTests {
 
 			var email = new TestEmail(subject, TestKeys.TEST_HTML_MAIL_FTLH, getParameters(), locale);
 
-			return sendMail(email, getParameters().get("caseId"));
+			return sendMail(email, standardRecipient, getParameters().get("caseId"));
 		}
 
 		private Map<String, String> getParameters() {
