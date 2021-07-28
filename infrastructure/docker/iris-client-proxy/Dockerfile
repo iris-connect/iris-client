@@ -1,4 +1,4 @@
-FROM inoeg/proxy:v0.1.32
+FROM inoeg/proxy:v0.1.37
 
 COPY conf /app/settings
 COPY ca /app/settings/ca
