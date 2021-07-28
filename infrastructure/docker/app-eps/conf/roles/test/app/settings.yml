@@ -25,9 +25,6 @@ directory:
     endpoints: [ "https://test.iris-gateway.de:32324/jsonrpc" ]
     server_names: [ "sd-1" ]
 channels: # defines all the channels that we want to open when starting the server
-  - name: Stdout channel
-    type: stdout
-    settings: {}
   - name: main gRPC server # accepts incoming gRPC connections to deliver and receive messages
     type: grpc_server
     settings:

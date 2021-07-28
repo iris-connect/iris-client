@@ -1,5 +1,7 @@
 module name | license | repository
 ---|---|---
+@fontsource/roboto@4.5.0 | MIT | https://github.com/fontsource/fontsource
+@mdi/font@5.9.55 | Apache-2.0 | https://github.com/Templarian/MaterialDesign-Webfont
 @types/chart.js@2.9.31 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/lodash@4.14.168 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 axios@0.21.1 | MIT | https://github.com/axios/axios
