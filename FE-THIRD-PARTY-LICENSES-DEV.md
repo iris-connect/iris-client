@@ -121,6 +121,7 @@ module name | license | repository
 @nodelib/fs.stat@1.1.3 | MIT | https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.stat
 @nodelib/fs.stat@2.0.4 | MIT | https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.stat
 @nodelib/fs.walk@1.2.6 | MIT | https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.walk
+@npmcli/move-file@1.1.2 | MIT | https://github.com/npm/move-file
 @soda/friendly-errors-webpack-plugin@1.8.0 | MIT | https://github.com/sodatea/friendly-errors-webpack-plugin
 @soda/get-current-script@1.0.2 | MIT | https://github.com/sodatea/get-current-script
 @types/anymatch@1.3.1 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -140,6 +141,7 @@ module name | license | repository
 @types/istanbul-reports@1.1.2 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/jest@24.9.1 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/json-schema@7.0.7 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/json-schema@7.0.8 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/mime@1.3.2 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/minimatch@3.0.4 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/minimist@1.2.1 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -235,7 +237,6 @@ ajv-errors@1.0.1 | MIT | https://github.com/epoberezkin/ajv-errors
 ajv-keywords@3.5.2 | MIT | https://github.com/epoberezkin/ajv-keywords
 ajv@6.12.6 | MIT | https://github.com/ajv-validator/ajv
 alphanum-sort@1.0.2 | MIT | https://github.com/TrySound/alphanum-sort
-amdefine@1.0.1 | BSD-3-Clause OR MIT | https://github.com/jrburke/amdefine
 ansi-colors@3.2.4 | MIT | https://github.com/doowb/ansi-colors
 ansi-colors@4.1.1 | MIT | https://github.com/doowb/ansi-colors
 ansi-escapes@3.2.0 | MIT | https://github.com/sindresorhus/ansi-escapes
@@ -253,7 +254,6 @@ anymatch@2.0.0 | ISC | https://github.com/micromatch/anymatch
 anymatch@3.1.1 | ISC | https://github.com/micromatch/anymatch
 aproba@1.2.0 | ISC | https://github.com/iarna/aproba
 arch@2.2.0 | MIT | https://github.com/feross/arch
-are-we-there-yet@1.1.5 | ISC | https://github.com/iarna/are-we-there-yet
 argparse@1.0.10 | MIT | https://github.com/nodeca/argparse
 arr-diff@4.0.0 | MIT | https://github.com/jonschlinkert/arr-diff
 arr-flatten@1.1.0 | MIT | https://github.com/jonschlinkert/arr-flatten
@@ -275,7 +275,6 @@ assign-symbols@1.0.0 | MIT | https://github.com/jonschlinkert/assign-symbols
 astral-regex@1.0.0 | MIT | https://github.com/kevva/astral-regex
 astral-regex@2.0.0 | MIT | https://github.com/kevva/astral-regex
 async-each@1.0.3 | MIT | https://github.com/paulmillr/async-each
-async-foreach@0.1.3 | MIT* | https://github.com/cowboy/javascript-sync-async-foreach
 async-limiter@1.0.1 | MIT | https://github.com/strml/async-limiter
 async@2.6.3 | MIT | https://github.com/caolan/async
 asynckit@0.4.0 | MIT | https://github.com/alexindigo/asynckit
@@ -332,7 +331,7 @@ browserify-des@1.0.2 | MIT | https://github.com/crypto-browserify/browserify-des
 browserify-rsa@4.1.0 | MIT | https://github.com/crypto-browserify/browserify-rsa
 browserify-sign@4.2.1 | ISC | https://github.com/crypto-browserify/browserify-sign
 browserify-zlib@0.2.0 | MIT | https://github.com/devongovett/browserify-zlib
-browserslist@4.16.3 | MIT | https://github.com/browserslist/browserslist
+browserslist@4.16.6 | MIT | https://github.com/browserslist/browserslist
 bs-logger@0.2.6 | MIT | https://github.com/huafu/bs-logger
 bser@2.1.1 | Apache-2.0 | https://github.com/facebook/watchman
 buffer-from@1.1.1 | MIT | https://github.com/LinusU/buffer-from
@@ -345,6 +344,7 @@ builtin-status-codes@3.0.0 | MIT | https://github.com/bendrucker/builtin-status-
 bytes@3.0.0 | MIT | https://github.com/visionmedia/bytes.js
 bytes@3.1.0 | MIT | https://github.com/visionmedia/bytes.js
 cacache@12.0.4 | ISC | https://github.com/npm/cacache
+cacache@15.2.0 | ISC | https://github.com/npm/cacache
 cache-base@1.0.1 | MIT | https://github.com/jonschlinkert/cache-base
 cache-loader@4.1.0 | MIT | https://github.com/webpack-contrib/cache-loader
 call-bind@1.0.2 | MIT | https://github.com/ljharb/call-bind
@@ -355,13 +355,12 @@ callsite@1.0.0 | MIT* |
 callsites@2.0.0 | MIT | https://github.com/sindresorhus/callsites
 callsites@3.1.0 | MIT | https://github.com/sindresorhus/callsites
 camel-case@3.0.0 | MIT | https://github.com/blakeembrey/camel-case
-camelcase-keys@2.1.0 | MIT | https://github.com/sindresorhus/camelcase-keys
-camelcase@2.1.1 | MIT | https://github.com/sindresorhus/camelcase
 camelcase@4.1.0 | MIT | https://github.com/sindresorhus/camelcase
 camelcase@5.3.1 | MIT | https://github.com/sindresorhus/camelcase
 camelcase@6.2.0 | MIT | https://github.com/sindresorhus/camelcase
 caniuse-api@3.0.0 | MIT | https://github.com/nyalab/caniuse-api
 caniuse-lite@1.0.30001204 | CC-BY-4.0 | https://github.com/ben-eb/caniuse-lite
+caniuse-lite@1.0.30001243 | CC-BY-4.0 | https://github.com/browserslist/caniuse-lite
 capture-exit@2.0.0 | ISC | https://github.com/stefanpenner/capture-exit
 case-sensitive-paths-webpack-plugin@2.4.0 | MIT | https://github.com/Urthen/case-sensitive-paths-webpack-plugin
 caseless@0.12.0 | Apache-2.0 | https://github.com/mikeal/caseless
@@ -412,6 +411,7 @@ commander@6.2.1 | MIT | https://github.com/tj/commander.js
 commondir@1.0.1 | MIT | https://github.com/substack/node-commondir
 component-emitter@1.3.0 | MIT | https://github.com/component/emitter
 compressible@2.0.18 | MIT | https://github.com/jshttp/compressible
+compression-webpack-plugin@6.1.1 | MIT | https://github.com/webpack-contrib/compression-webpack-plugin
 compression@1.7.4 | MIT | https://github.com/expressjs/compression
 concat-map@0.0.1 | MIT | https://github.com/substack/node-concat-map
 concat-stream@1.6.2 | MIT | https://github.com/maxogden/concat-stream
@@ -419,7 +419,6 @@ condense-newlines@0.2.1 | MIT | https://github.com/jonschlinkert/condense-newlin
 config-chain@1.1.12 | MIT | https://github.com/dominictarr/config-chain
 connect-history-api-fallback@1.6.0 | MIT | https://github.com/bripkens/connect-history-api-fallback
 console-browserify@1.2.0 | MIT | https://github.com/browserify/console-browserify
-console-control-strings@1.1.0 | ISC | https://github.com/iarna/console-control-strings
 consolidate@0.15.1 | MIT | https://github.com/tj/consolidate.js
 constants-browserify@1.0.0 | MIT | https://github.com/juliangruber/constants-browserify
 content-disposition@0.5.3 | MIT | https://github.com/jshttp/content-disposition
@@ -448,9 +447,11 @@ css-declaration-sorter@4.0.1 | MIT | https://github.com/Siilwyn/css-declaration-
 css-loader@3.6.0 | MIT | https://github.com/webpack-contrib/css-loader
 css-select-base-adapter@0.1.1 | MIT | https://github.com/nrkn/css-select-base-adapter
 css-select@2.1.0 | BSD-2-Clause | https://github.com/fb55/css-select
+css-select@4.1.3 | BSD-2-Clause | https://github.com/fb55/css-select
 css-tree@1.0.0-alpha.37 | MIT | https://github.com/csstree/csstree
 css-tree@1.1.3 | MIT | https://github.com/csstree/csstree
 css-what@3.4.2 | BSD-2-Clause | https://github.com/fb55/css-what
+css-what@5.0.1 | BSD-2-Clause | https://github.com/fb55/css-what
 css@2.2.4 | MIT | https://github.com/reworkcss/css
 cssesc@3.0.0 | MIT | https://github.com/mathiasbynens/cssesc
 cssnano-preset-default@4.0.8 | MIT | https://github.com/cssnano/cssnano
@@ -466,7 +467,6 @@ cssstyle@1.4.0 | MIT | https://github.com/jsakas/CSSStyleDeclaration
 cssstyle@2.3.0 | MIT | https://github.com/jsdom/cssstyle
 csv-parse@4.15.4 | MIT | https://github.com/wdavidw/node-csv-parse
 csv2md@1.1.0 | MIT | https://github.com/pstaender/csv2md
-currently-unhandled@0.4.1 | MIT | https://github.com/jamestalmage/currently-unhandled
 cyclist@1.0.1 | MIT | https://github.com/mafintosh/cyclist
 dashdash@1.14.1 | MIT | https://github.com/trentm/node-dashdash
 data-urls@1.1.0 | MIT | https://github.com/jsdom/data-urls
@@ -492,7 +492,6 @@ define-property@1.0.0 | MIT | https://github.com/jonschlinkert/define-property
 define-property@2.0.2 | MIT | https://github.com/jonschlinkert/define-property
 del@4.1.1 | MIT | https://github.com/sindresorhus/del
 delayed-stream@1.0.0 | MIT | https://github.com/felixge/node-delayed-stream
-delegates@1.0.0 | MIT | https://github.com/visionmedia/node-delegates
 depd@1.1.2 | MIT | https://github.com/dougwilson/nodejs-depd
 des.js@1.0.1 | MIT | https://github.com/indutny/des.js
 destroy@1.0.4 | MIT | https://github.com/stream-utils/destroy
@@ -505,18 +504,20 @@ diffie-hellman@5.0.3 | MIT | https://github.com/crypto-browserify/diffie-hellman
 dir-glob@2.2.2 | MIT | https://github.com/kevva/dir-glob
 dir-glob@3.0.1 | MIT | https://github.com/kevva/dir-glob
 dns-equal@1.0.0 | MIT | https://github.com/watson/dns-equal
-dns-packet@1.3.1 | MIT | https://github.com/mafintosh/dns-packet
+dns-packet@1.3.4 | MIT | https://github.com/mafintosh/dns-packet
 dns-txt@2.0.2 | MIT | https://github.com/watson/dns-txt
 doctrine@3.0.0 | Apache-2.0 | https://github.com/eslint/doctrine
 dom-converter@0.2.0 | MIT | https://github.com/AriaMinaei/dom-converter
 dom-event-types@1.0.0 | MIT | https://github.com/eddyerburgh/dom-event-types
 dom-serializer@0.2.2 | MIT | https://github.com/cheeriojs/dom-renderer
+dom-serializer@1.3.2 | MIT | https://github.com/cheeriojs/dom-renderer
 domain-browser@1.2.0 | MIT | https://github.com/bevry/domain-browser
 domelementtype@1.3.1 | BSD-2-Clause | https://github.com/fb55/domelementtype
 domelementtype@2.2.0 | BSD-2-Clause | https://github.com/fb55/domelementtype
 domexception@1.0.1 | MIT | https://github.com/jsdom/domexception
-domhandler@2.4.2 | BSD-2-Clause | https://github.com/fb55/DomHandler
+domhandler@4.2.0 | BSD-2-Clause | https://github.com/fb55/domhandler
 domutils@1.7.0 | BSD-2-Clause | https://github.com/FB55/domutils
+domutils@2.7.0 | BSD-2-Clause | https://github.com/fb55/domutils
 dot-prop@5.3.0 | MIT | https://github.com/sindresorhus/dot-prop
 dotenv-expand@5.1.0 | BSD-2-Clause | 
 dotenv@8.6.0 | BSD-2-Clause | https://github.com/motdotla/dotenv
@@ -527,7 +528,7 @@ ecc-jsbn@0.1.2 | MIT | https://github.com/quartzjer/ecc-jsbn
 editorconfig@0.15.3 | MIT | https://github.com/editorconfig/editorconfig-core-js
 ee-first@1.1.1 | MIT | https://github.com/jonathanong/ee-first
 ejs@2.7.4 | Apache-2.0 | https://github.com/mde/ejs
-electron-to-chromium@1.3.701 | ISC | https://github.com/kilian/electron-to-chromium
+electron-to-chromium@1.3.770 | ISC | https://github.com/kilian/electron-to-chromium
 elliptic@6.5.4 | MIT | https://github.com/indutny/elliptic
 emoji-regex@7.0.3 | MIT | https://github.com/mathiasbynens/emoji-regex
 emoji-regex@8.0.0 | MIT | https://github.com/mathiasbynens/emoji-regex
@@ -537,9 +538,7 @@ encodeurl@1.0.2 | MIT | https://github.com/pillarjs/encodeurl
 end-of-stream@1.4.4 | MIT | https://github.com/mafintosh/end-of-stream
 enhanced-resolve@4.5.0 | MIT | https://github.com/webpack/enhanced-resolve
 enquirer@2.3.6 | MIT | https://github.com/enquirer/enquirer
-entities@1.1.2 | BSD-2-Clause | https://github.com/fb55/entities
 entities@2.2.0 | BSD-2-Clause | https://github.com/fb55/entities
-env-paths@2.2.1 | MIT | https://github.com/sindresorhus/env-paths
 errno@0.1.8 | MIT | https://github.com/rvagg/node-errno
 error-ex@1.3.2 | MIT | https://github.com/qix-/node-error-ex
 error-stack-parser@2.0.6 | MIT | https://github.com/stacktracejs/error-stack-parser
@@ -641,14 +640,11 @@ fsevents@1.2.13 | MIT | https://github.com/strongloop/fsevents
 fsevents@2.3.2 | MIT | https://github.com/fsevents/fsevents
 function-bind@1.1.1 | MIT | https://github.com/Raynos/function-bind
 functional-red-black-tree@1.0.1 | MIT | https://github.com/mikolalysenko/functional-red-black-tree
-gauge@2.7.4 | ISC | https://github.com/iarna/gauge
-gaze@1.1.3 | MIT | https://github.com/shama/gaze
 gensync@1.0.0-beta.2 | MIT | https://github.com/loganfsmyth/gensync
 get-caller-file@1.0.3 | ISC | https://github.com/stefanpenner/get-caller-file
 get-caller-file@2.0.5 | ISC | https://github.com/stefanpenner/get-caller-file
 get-intrinsic@1.1.1 | MIT | https://github.com/ljharb/get-intrinsic
 get-own-enumerable-property-symbols@3.0.2 | ISC | https://github.com/mightyiam/get-own-enumerable-property-symbols
-get-stdin@4.0.1 | MIT | https://github.com/sindresorhus/get-stdin
 get-stdin@6.0.0 | MIT | https://github.com/sindresorhus/get-stdin
 get-stream@3.0.0 | MIT | https://github.com/sindresorhus/get-stream
 get-stream@4.1.0 | MIT | https://github.com/sindresorhus/get-stream
@@ -666,7 +662,6 @@ globby@11.0.3 | MIT | https://github.com/sindresorhus/globby
 globby@6.1.0 | MIT | https://github.com/sindresorhus/globby
 globby@7.1.1 | MIT | https://github.com/sindresorhus/globby
 globby@9.2.0 | MIT | https://github.com/sindresorhus/globby
-globule@1.3.2 | MIT | https://github.com/cowboy/node-globule
 graceful-fs@4.2.6 | ISC | https://github.com/isaacs/node-graceful-fs
 growly@1.3.0 | MIT | https://github.com/theabraham/growly
 gzip-size@5.1.1 | MIT | https://github.com/sindresorhus/gzip-size
@@ -678,7 +673,6 @@ has-bigints@1.0.1 | MIT | https://github.com/ljharb/has-bigints
 has-flag@3.0.0 | MIT | https://github.com/sindresorhus/has-flag
 has-flag@4.0.0 | MIT | https://github.com/sindresorhus/has-flag
 has-symbols@1.0.2 | MIT | https://github.com/inspect-js/has-symbols
-has-unicode@2.0.1 | ISC | https://github.com/iarna/has-unicode
 has-value@0.3.1 | MIT | https://github.com/jonschlinkert/has-value
 has-value@1.0.0 | MIT | https://github.com/jonschlinkert/has-value
 has-values@0.1.4 | MIT | https://github.com/jonschlinkert/has-values
@@ -704,7 +698,7 @@ html-minifier@3.5.21 | MIT | https://github.com/kangax/html-minifier
 html-tags@2.0.0 | MIT | https://github.com/sindresorhus/html-tags
 html-tags@3.1.0 | MIT | https://github.com/sindresorhus/html-tags
 html-webpack-plugin@3.2.0 | MIT | https://github.com/jantimon/html-webpack-plugin
-htmlparser2@3.10.1 | MIT | https://github.com/fb55/htmlparser2
+htmlparser2@6.1.0 | MIT | https://github.com/fb55/htmlparser2
 http-deceiver@1.2.7 | MIT | https://github.com/indutny/http-deceiver
 http-errors@1.6.3 | MIT | https://github.com/jshttp/http-errors
 http-errors@1.7.2 | MIT | https://github.com/jshttp/http-errors
@@ -729,7 +723,6 @@ import-fresh@3.3.0 | MIT | https://github.com/sindresorhus/import-fresh
 import-from@2.1.0 | MIT | https://github.com/sindresorhus/import-from
 import-local@2.0.0 | MIT | https://github.com/sindresorhus/import-local
 imurmurhash@0.1.4 | MIT | https://github.com/jensyt/imurmurhash-js
-indent-string@2.1.0 | MIT | https://github.com/sindresorhus/indent-string
 indent-string@4.0.0 | MIT | https://github.com/sindresorhus/indent-string
 indexes-of@1.0.1 | MIT | https://github.com/dominictarr/indexes-of
 infer-owner@1.0.4 | ISC | https://github.com/npm/infer-owner
@@ -775,7 +768,6 @@ is-docker@2.2.1 | MIT | https://github.com/sindresorhus/is-docker
 is-extendable@0.1.1 | MIT | https://github.com/jonschlinkert/is-extendable
 is-extendable@1.0.1 | MIT | https://github.com/jonschlinkert/is-extendable
 is-extglob@2.1.1 | MIT | https://github.com/jonschlinkert/is-extglob
-is-finite@1.1.0 | MIT | https://github.com/sindresorhus/is-finite
 is-fullwidth-code-point@1.0.0 | MIT | https://github.com/sindresorhus/is-fullwidth-code-point
 is-fullwidth-code-point@2.0.0 | MIT | https://github.com/sindresorhus/is-fullwidth-code-point
 is-fullwidth-code-point@3.0.0 | MIT | https://github.com/sindresorhus/is-fullwidth-code-point
@@ -803,7 +795,6 @@ is-string@1.0.5 | MIT | https://github.com/ljharb/is-string
 is-symbol@1.0.3 | MIT | https://github.com/inspect-js/is-symbol
 is-typedarray@1.0.0 | MIT | https://github.com/hughsk/is-typedarray
 is-unicode-supported@0.1.0 | MIT | https://github.com/sindresorhus/is-unicode-supported
-is-utf8@0.2.1 | MIT | https://github.com/wayfind/is-utf8
 is-whitespace@0.3.0 | MIT | https://github.com/jonschlinkert/is-whitespace
 is-windows@1.0.2 | MIT | https://github.com/jonschlinkert/is-windows
 is-wsl@1.1.0 | MIT | https://github.com/sindresorhus/is-wsl
@@ -851,7 +842,6 @@ jest-watch-typeahead@0.4.2 | MIT | https://github.com/jest-community/jest-watch-
 jest-watcher@24.9.0 | MIT | https://github.com/facebook/jest
 jest-worker@24.9.0 | MIT | https://github.com/facebook/jest
 jest@24.9.0 | MIT | https://github.com/facebook/jest
-js-base64@2.6.4 | BSD-3-Clause | https://github.com/dankogai/js-base64
 js-beautify@1.13.5 | MIT | https://github.com/beautify-web/js-beautify
 js-message@1.0.7 | MIT | https://github.com/RIAEvangelist/js-message
 js-queue@2.0.2 | MIT | https://github.com/RIAEvangelist/js-queue
@@ -893,7 +883,6 @@ license-checker@25.0.1 | BSD-3-Clause | https://github.com/davglass/license-chec
 lines-and-columns@1.1.6 | MIT | https://github.com/eventualbuddha/lines-and-columns
 lint-staged@10.5.4 | MIT | https://github.com/okonet/lint-staged
 listr2@3.4.3 | MIT | https://github.com/cenk1cenk2/listr2
-load-json-file@1.1.0 | MIT | https://github.com/sindresorhus/load-json-file
 load-json-file@4.0.0 | MIT | https://github.com/sindresorhus/load-json-file
 loader-fs-cache@1.0.3 | MIT | https://github.com/viankakrisna/loader-fs-cache
 loader-runner@2.4.0 | MIT | https://github.com/webpack/loader-runner
@@ -936,7 +925,6 @@ log-symbols@4.1.0 | MIT | https://github.com/sindresorhus/log-symbols
 log-update@4.0.0 | MIT | https://github.com/sindresorhus/log-update
 loglevel@1.7.1 | MIT | https://github.com/pimterry/loglevel
 loose-envify@1.4.0 | MIT | https://github.com/zertosh/loose-envify
-loud-rejection@1.6.0 | MIT | https://github.com/sindresorhus/loud-rejection
 lower-case@1.1.4 | MIT | https://github.com/blakeembrey/lower-case
 lru-cache@4.1.5 | ISC | https://github.com/isaacs/node-lru-cache
 lru-cache@5.1.1 | ISC | https://github.com/isaacs/node-lru-cache
@@ -947,7 +935,6 @@ make-error@1.3.6 | ISC | https://github.com/JsCommunity/make-error
 makeerror@1.0.11 | BSD-3-Clause | https://github.com/daaku/nodejs-makeerror
 map-age-cleaner@0.1.3 | MIT | https://github.com/SamVerschueren/map-age-cleaner
 map-cache@0.2.2 | MIT | https://github.com/jonschlinkert/map-cache
-map-obj@1.0.1 | MIT | https://github.com/sindresorhus/map-obj
 map-visit@1.0.0 | MIT | https://github.com/jonschlinkert/map-visit
 md5.js@1.3.5 | MIT | https://github.com/crypto-browserify/md5.js
 mdn-data@2.0.14 | CC0-1.0 | https://github.com/mdn/data
@@ -957,7 +944,6 @@ mem@4.3.0 | MIT | https://github.com/sindresorhus/mem
 memfs@3.2.2 | Unlicense | https://github.com/streamich/memfs
 memory-fs@0.4.1 | MIT | https://github.com/webpack/memory-fs
 memory-fs@0.5.0 | MIT | https://github.com/webpack/memory-fs
-meow@3.7.0 | MIT | https://github.com/sindresorhus/meow
 merge-descriptors@1.0.1 | MIT | https://github.com/component/merge-descriptors
 merge-source-map@1.1.0 | MIT | https://github.com/keik/merge-source-map
 merge-stream@2.0.0 | MIT | https://github.com/grncdr/merge-stream
@@ -979,6 +965,9 @@ minimalistic-assert@1.0.1 | ISC | https://github.com/calvinmetcalf/minimalistic-
 minimalistic-crypto-utils@1.0.1 | MIT | https://github.com/indutny/minimalistic-crypto-utils
 minimatch@3.0.4 | ISC | https://github.com/isaacs/minimatch
 minimist@1.2.5 | MIT | https://github.com/substack/minimist
+minipass-collect@1.0.2 | ISC | 
+minipass-flush@1.0.5 | ISC | https://github.com/isaacs/minipass-flush
+minipass-pipeline@1.2.4 | ISC | 
 minipass@3.1.3 | ISC | https://github.com/isaacs/minipass
 minizlib@2.1.2 | MIT | https://github.com/isaacs/minizlib
 miragejs@0.1.41 | MIT | https://github.com/miragejs/miragejs
@@ -1005,14 +994,12 @@ no-case@2.3.2 | MIT | https://github.com/blakeembrey/no-case
 node-addon-api@1.7.2 | MIT | https://github.com/nodejs/node-addon-api
 node-cache@4.2.1 | MIT | https://github.com/mpneuried/nodecache
 node-forge@0.10.0 | (BSD-3-Clause OR GPL-2.0) | https://github.com/digitalbazaar/forge
-node-gyp@7.1.2 | MIT | https://github.com/nodejs/node-gyp
 node-int64@0.4.0 | MIT | https://github.com/broofa/node-int64
 node-ipc@9.1.4 | MIT | https://github.com/RIAEvangelist/node-ipc
 node-libs-browser@2.2.1 | MIT | https://github.com/webpack/node-libs-browser
 node-modules-regexp@1.0.0 | MIT | https://github.com/jamestalmage/node-modules-regexp
 node-notifier@5.4.5 | MIT | https://github.com/mikaelbr/node-notifier
-node-releases@1.1.71 | MIT | https://github.com/chicoxyzzy/node-releases
-node-sass@5.0.0 | MIT | https://github.com/sass/node-sass
+node-releases@1.1.73 | MIT | https://github.com/chicoxyzzy/node-releases
 nopt@4.0.3 | ISC | https://github.com/npm/nopt
 nopt@5.0.0 | ISC | https://github.com/npm/nopt
 normalize-package-data@2.5.0 | BSD-2-Clause | https://github.com/npm/normalize-package-data
@@ -1025,8 +1012,8 @@ normalize-url@3.3.0 | MIT | https://github.com/sindresorhus/normalize-url
 npm-normalize-package-bin@1.0.1 | ISC | https://github.com/npm/npm-normalize-package-bin
 npm-run-path@2.0.2 | MIT | https://github.com/sindresorhus/npm-run-path
 npm-run-path@4.0.1 | MIT | https://github.com/sindresorhus/npm-run-path
-npmlog@4.1.2 | ISC | https://github.com/npm/npmlog
 nth-check@1.0.2 | BSD-2-Clause | https://github.com/fb55/nth-check
+nth-check@2.0.0 | BSD-2-Clause | https://github.com/fb55/nth-check
 null-loader@3.0.0 | MIT | https://github.com/webpack-contrib/null-loader
 num2fraction@1.2.2 | MIT | https://github.com/yisibl/num2fraction
 number-is-nan@1.0.1 | MIT | https://github.com/sindresorhus/number-is-nan
@@ -1081,7 +1068,6 @@ parallel-transform@1.2.0 | MIT | https://github.com/mafintosh/parallel-transform
 param-case@2.1.1 | MIT | https://github.com/blakeembrey/param-case
 parent-module@1.0.1 | MIT | https://github.com/sindresorhus/parent-module
 parse-asn1@5.1.6 | ISC | https://github.com/crypto-browserify/parse-asn1
-parse-json@2.2.0 | MIT | https://github.com/sindresorhus/parse-json
 parse-json@4.0.0 | MIT | https://github.com/sindresorhus/parse-json
 parse-json@5.2.0 | MIT | https://github.com/sindresorhus/parse-json
 parse5-htmlparser2-tree-adapter@6.0.1 | MIT | https://github.com/inikulin/parse5
@@ -1102,7 +1088,6 @@ path-key@2.0.1 | MIT | https://github.com/sindresorhus/path-key
 path-key@3.1.1 | MIT | https://github.com/sindresorhus/path-key
 path-parse@1.0.6 | MIT | https://github.com/jbgutierrez/path-parse
 path-to-regexp@0.1.7 | MIT | https://github.com/component/path-to-regexp
-path-type@1.1.0 | MIT | https://github.com/sindresorhus/path-type
 path-type@3.0.0 | MIT | https://github.com/sindresorhus/path-type
 path-type@4.0.0 | MIT | https://github.com/sindresorhus/path-type
 pbkdf2@3.1.1 | MIT | https://github.com/crypto-browserify/pbkdf2
@@ -1160,7 +1145,7 @@ postcss-svgo@4.0.3 | MIT | https://github.com/cssnano/cssnano
 postcss-unique-selectors@4.0.1 | MIT | https://github.com/cssnano/cssnano
 postcss-value-parser@3.3.1 | MIT | https://github.com/TrySound/postcss-value-parser
 postcss-value-parser@4.1.0 | MIT | https://github.com/TrySound/postcss-value-parser
-postcss@7.0.35 | MIT | https://github.com/postcss/postcss
+postcss@7.0.36 | MIT | https://github.com/postcss/postcss
 prelude-ls@1.1.2 | MIT | https://github.com/gkz/prelude-ls
 prepend-http@1.0.4 | MIT | https://github.com/sindresorhus/prepend-http
 pretender@3.4.3 | MIT | https://github.com/pretenderjs/pretender
@@ -1202,9 +1187,7 @@ raw-body@2.4.0 | MIT | https://github.com/stream-utils/raw-body
 react-is@16.13.1 | MIT | https://github.com/facebook/react
 read-installed@4.0.3 | ISC | https://github.com/isaacs/read-installed
 read-package-json@2.1.2 | ISC | https://github.com/npm/read-package-json
-read-pkg-up@1.0.1 | MIT | https://github.com/sindresorhus/read-pkg-up
 read-pkg-up@4.0.0 | MIT | https://github.com/sindresorhus/read-pkg-up
-read-pkg@1.1.0 | MIT | https://github.com/sindresorhus/read-pkg
 read-pkg@3.0.0 | MIT | https://github.com/sindresorhus/read-pkg
 read-pkg@5.2.0 | MIT | https://github.com/sindresorhus/read-pkg
 readable-stream@2.3.7 | MIT | https://github.com/nodejs/readable-stream
@@ -1214,7 +1197,6 @@ readdirp@2.2.1 | MIT | https://github.com/paulmillr/readdirp
 readdirp@3.5.0 | MIT | https://github.com/paulmillr/readdirp
 realpath-native@1.1.0 | MIT | https://github.com/SimenB/realpath-native
 rechoir@0.6.2 | MIT | https://github.com/tkellen/node-rechoir
-redent@1.0.0 | MIT | https://github.com/sindresorhus/redent
 regenerate-unicode-properties@8.2.0 | MIT | https://github.com/mathiasbynens/regenerate-unicode-properties
 regenerate@1.4.2 | MIT | https://github.com/mathiasbynens/regenerate
 regenerator-runtime@0.11.1 | MIT | https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime
@@ -1229,10 +1211,9 @@ regjsgen@0.5.2 | MIT | https://github.com/bnjmnt4n/regjsgen
 regjsparser@0.6.9 | BSD-2-Clause | https://github.com/jviereck/regjsparser
 relateurl@0.2.7 | MIT | https://github.com/stevenvachon/relateurl
 remove-trailing-separator@1.1.0 | ISC | https://github.com/darsain/remove-trailing-separator
-renderkid@2.0.5 | MIT | https://github.com/AriaMinaei/RenderKid
+renderkid@2.0.7 | MIT | https://github.com/AriaMinaei/RenderKid
 repeat-element@1.1.3 | MIT | https://github.com/jonschlinkert/repeat-element
 repeat-string@1.6.1 | MIT | https://github.com/jonschlinkert/repeat-string
-repeating@2.0.1 | MIT | https://github.com/sindresorhus/repeating
 request-promise-core@1.1.4 | ISC | https://github.com/request/promise-core
 request-promise-native@1.0.9 | ISC | https://github.com/request/request-promise-native
 request@2.88.2 | Apache-2.0 | https://github.com/request/request
@@ -1268,7 +1249,6 @@ safe-buffer@5.2.1 | MIT | https://github.com/feross/safe-buffer
 safe-regex@1.1.0 | MIT | https://github.com/substack/safe-regex
 safer-buffer@2.1.2 | MIT | https://github.com/ChALkeR/safer-buffer
 sane@4.1.0 | MIT | https://github.com/amasad/sane
-sass-graph@2.2.5 | MIT | https://github.com/xzyfer/sass-graph
 sass-loader@10.1.1 | MIT | https://github.com/webpack-contrib/sass-loader
 sass@1.32.8 | MIT | https://github.com/sass/dart-sass
 sax@1.2.4 | ISC | https://github.com/isaacs/sax-js
@@ -1277,7 +1257,7 @@ schema-utils@1.0.0 | MIT | https://github.com/webpack-contrib/schema-utils
 schema-utils@2.7.0 | MIT | https://github.com/webpack/schema-utils
 schema-utils@2.7.1 | MIT | https://github.com/webpack/schema-utils
 schema-utils@3.0.0 | MIT | https://github.com/webpack/schema-utils
-scss-tokenizer@0.2.3 | MIT | https://github.com/sasstools/scss-tokenizer
+schema-utils@3.1.1 | MIT | https://github.com/webpack/schema-utils
 select-hose@2.0.0 | MIT | https://github.com/indutny/select-hose
 selfsigned@1.10.11 | MIT | https://github.com/jfromaniello/selfsigned
 semver-compare@1.0.0 | MIT | https://github.com/substack/semver-compare
@@ -1287,6 +1267,7 @@ semver@7.0.0 | ISC | https://github.com/npm/node-semver
 semver@7.3.5 | ISC | https://github.com/npm/node-semver
 send@0.17.1 | MIT | https://github.com/pillarjs/send
 serialize-javascript@4.0.0 | BSD-3-Clause | https://github.com/yahoo/serialize-javascript
+serialize-javascript@5.0.1 | BSD-3-Clause | https://github.com/yahoo/serialize-javascript
 serve-index@1.9.1 | MIT | https://github.com/expressjs/serve-index
 serve-static@1.14.1 | MIT | https://github.com/expressjs/serve-static
 set-blocking@2.0.0 | ISC | https://github.com/yargs/set-blocking
@@ -1323,7 +1304,6 @@ source-list-map@2.0.1 | MIT | https://github.com/webpack/source-list-map
 source-map-resolve@0.5.3 | MIT | https://github.com/lydell/source-map-resolve
 source-map-support@0.5.19 | MIT | https://github.com/evanw/node-source-map-support
 source-map-url@0.4.1 | MIT | https://github.com/lydell/source-map-url
-source-map@0.4.4 | BSD-3-Clause | https://github.com/mozilla/source-map
 source-map@0.5.7 | BSD-3-Clause | https://github.com/mozilla/source-map
 source-map@0.6.1 | BSD-3-Clause | https://github.com/mozilla/source-map
 source-map@0.7.3 | BSD-3-Clause | https://github.com/mozilla/source-map
@@ -1339,14 +1319,13 @@ spdy@4.0.2 | MIT | https://github.com/indutny/node-spdy
 split-string@3.1.0 | MIT | https://github.com/jonschlinkert/split-string
 sprintf-js@1.0.3 | BSD-3-Clause | https://github.com/alexei/sprintf.js
 sshpk@1.16.1 | MIT | https://github.com/joyent/node-sshpk
-ssri@6.0.1 | ISC | https://github.com/zkat/ssri
+ssri@6.0.2 | ISC | https://github.com/zkat/ssri
 ssri@8.0.1 | ISC | https://github.com/npm/ssri
 stable@0.1.8 | MIT | https://github.com/Two-Screen/stable
 stack-utils@1.0.4 | MIT | https://github.com/tapjs/stack-utils
 stackframe@1.2.0 | MIT | https://github.com/stacktracejs/stackframe
 static-extend@0.1.2 | MIT | https://github.com/jonschlinkert/static-extend
 statuses@1.5.0 | MIT | https://github.com/jshttp/statuses
-stdout-stream@1.4.1 | MIT | https://github.com/mafintosh/stdout-stream
 stealthy-require@1.1.1 | ISC | https://github.com/analog-nico/stealthy-require
 stream-browserify@2.0.2 | MIT | https://github.com/browserify/stream-browserify
 stream-each@1.2.3 | MIT | https://github.com/mafintosh/stream-each
@@ -1369,11 +1348,9 @@ strip-ansi@3.0.1 | MIT | https://github.com/chalk/strip-ansi
 strip-ansi@4.0.0 | MIT | https://github.com/chalk/strip-ansi
 strip-ansi@5.2.0 | MIT | https://github.com/chalk/strip-ansi
 strip-ansi@6.0.0 | MIT | https://github.com/chalk/strip-ansi
-strip-bom@2.0.0 | MIT | https://github.com/sindresorhus/strip-bom
 strip-bom@3.0.0 | MIT | https://github.com/sindresorhus/strip-bom
 strip-eof@1.0.0 | MIT | https://github.com/sindresorhus/strip-eof
 strip-final-newline@2.0.0 | MIT | https://github.com/sindresorhus/strip-final-newline
-strip-indent@1.0.1 | MIT | https://github.com/sindresorhus/strip-indent
 strip-indent@2.0.0 | MIT | https://github.com/sindresorhus/strip-indent
 strip-json-comments@2.0.1 | MIT | https://github.com/sindresorhus/strip-json-comments
 strip-json-comments@3.1.1 | MIT | https://github.com/sindresorhus/strip-json-comments
@@ -1416,8 +1393,6 @@ tough-cookie@2.5.0 | BSD-3-Clause | https://github.com/salesforce/tough-cookie
 tough-cookie@3.0.1 | BSD-3-Clause | https://github.com/salesforce/tough-cookie
 tr46@1.0.1 | MIT | https://github.com/Sebmaster/tr46.js
 treeify@1.1.0 | MIT | https://github.com/notatestuser/treeify
-trim-newlines@1.0.0 | MIT | https://github.com/sindresorhus/trim-newlines
-true-case-path@1.0.3 | Apache-2.0 | https://github.com/barsh/true-case-path
 tryer@1.0.1 | MIT | git+https://gitlab.com/philbooth/tryer
 ts-jest@24.3.0 | MIT | https://github.com/kulshekhar/ts-jest
 ts-loader@6.2.2 | MIT | https://github.com/TypeStrong/ts-loader
@@ -1482,7 +1457,7 @@ vue-eslint-parser@7.6.0 | MIT | https://github.com/vuejs/vue-eslint-parser
 vue-hot-reload-api@2.3.4 | MIT | https://github.com/vuejs/vue-hot-reload-api
 vue-jest@3.0.7 | MIT | https://github.com/vuejs/vue-jest
 vue-loader@15.9.7 | MIT | https://github.com/vuejs/vue-loader
-vue-loader@16.2.0 | MIT | 
+vue-loader@16.3.3 | MIT | 
 vue-style-loader@4.1.3 | MIT | https://github.com/vuejs/vue-style-loader
 vue-template-compiler@2.6.12 | MIT | https://github.com/vuejs/vue
 vue-template-es2015-compiler@1.9.1 | MIT | https://github.com/vuejs/vue-template-es2015-compiler
@@ -1513,7 +1488,6 @@ which-boxed-primitive@1.0.2 | MIT | https://github.com/inspect-js/which-boxed-pr
 which-module@2.0.0 | ISC | https://github.com/nexdrew/which-module
 which@1.3.1 | ISC | https://github.com/isaacs/node-which
 which@2.0.2 | ISC | https://github.com/isaacs/node-which
-wide-align@1.1.3 | ISC | https://github.com/iarna/wide-align
 word-wrap@1.2.3 | MIT | https://github.com/jonschlinkert/word-wrap
 worker-farm@1.7.0 | MIT | https://github.com/rvagg/node-worker-farm
 worker-rpc@0.1.1 | MIT | https://github.com/DirtyHairy/worker-rpc
@@ -1524,9 +1498,9 @@ wrap-ansi@7.0.0 | MIT | https://github.com/chalk/wrap-ansi
 wrappy@1.0.2 | ISC | https://github.com/npm/wrappy
 write-file-atomic@2.4.1 | ISC | https://github.com/iarna/write-file-atomic
 write@1.0.3 | MIT | https://github.com/jonschlinkert/write
-ws@5.2.2 | MIT | https://github.com/websockets/ws
-ws@6.2.1 | MIT | https://github.com/websockets/ws
-ws@7.4.4 | MIT | https://github.com/websockets/ws
+ws@5.2.3 | MIT | https://github.com/websockets/ws
+ws@6.2.2 | MIT | https://github.com/websockets/ws
+ws@7.5.2 | MIT | https://github.com/websockets/ws
 xml-name-validator@3.0.0 | Apache-2.0 | https://github.com/jsdom/xml-name-validator
 xmlchars@2.2.0 | MIT | https://github.com/lddubeau/xmlchars
 xtend@4.0.2 | MIT | https://github.com/Raynos/xtend

@@ -55,9 +55,6 @@ directory:
 # ToDo: Service Directory Name
 
 channels: # defines all the channels that we want to open when starting the server
-  - name: Stdout channel
-    type: stdout
-    settings: { }
   - name: main JSON-RPC client # creates outgoing JSONRPC connections to deliver and receive messages
     type: jsonrpc_client
     settings:

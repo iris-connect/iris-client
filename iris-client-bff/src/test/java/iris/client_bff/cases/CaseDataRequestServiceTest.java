@@ -2,19 +2,17 @@ package iris.client_bff.cases;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
-
-import java.time.Instant;
-
 import iris.client_bff.config.DwConfig;
 import iris.client_bff.config.HealthDepartmentConfig;
 import iris.client_bff.proxy.ProxyServiceClient;
+
+import java.time.Instant;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
