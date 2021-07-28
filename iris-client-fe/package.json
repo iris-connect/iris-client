@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serve:bff": "vue-cli-service serve --port 8081 --mode bff_local",
     "serve:int": "vue-cli-service serve --mode integration",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
