@@ -135,10 +135,11 @@ public class CaseDataRequestController {
 			update.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (!(update.getStatus() == IndexCaseStatusDTO.DATA_RECEIVED
-			|| update.getStatus() == IndexCaseStatusDTO.DATA_REQUESTED
-			|| update.getStatus() == IndexCaseStatusDTO.ABORTED
-			|| update.getStatus() == IndexCaseStatusDTO.CLOSED)) {
+		if (update.getStatus() != null
+			&& !(update.getStatus() == IndexCaseStatusDTO.DATA_RECEIVED
+				|| update.getStatus() == IndexCaseStatusDTO.DATA_REQUESTED
+				|| update.getStatus() == IndexCaseStatusDTO.ABORTED
+				|| update.getStatus() == IndexCaseStatusDTO.CLOSED)) {
 			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_STATUS + update.getStatus());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}

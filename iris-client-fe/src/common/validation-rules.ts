@@ -17,11 +17,11 @@ const sanitised = (v?: string): string | boolean => {
   if (v.length <= 0) return true;
 
   if (v.includes("<script")) {
-    return "Aus Sicherheitsgründen ist die Sequenz <script nicht erlaubt. Bitte modifiziere deine Eingabe.";
+    return "Aus Sicherheitsgründen ist die Sequenz <script nicht erlaubt. Bitte modifizieren Sie die Eingabe.";
   }
 
   if (v.includes("SELECT") && v.includes("FROM")) {
-    return "Aus Sicherheitsgründen ist die Sequenz SELECT .... FROM ... nicht erlaubt. Bitte modifiziere deine Eingabe.";
+    return "Aus Sicherheitsgründen ist die Sequenz SELECT .... FROM ... nicht erlaubt. Bitte modifizieren Sie die Eingabe.";
   }
 
   if (
@@ -87,7 +87,7 @@ const sanitised = (v?: string): string | boolean => {
       "„",
     ])
   ) {
-    return "Aus Sicherheitsgründen ist ein Spezialcharakter nicht als erstes Symbol erlaubt. Bitte modifiziere deine Eingabe.";
+    return "Aus Sicherheitsgründen ist ein Spezialcharakter nicht als erstes Symbol erlaubt. Bitte modifizieren Sie die Eingabe.";
   }
 
   return true;

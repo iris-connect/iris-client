@@ -163,10 +163,11 @@ public class EventDataRequestController {
 			patch.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (!(patch.getStatus() == EventStatusDTO.DATA_RECEIVED
-			|| patch.getStatus() == EventStatusDTO.DATA_REQUESTED
-			|| patch.getStatus() == EventStatusDTO.ABORTED
-			|| patch.getStatus() == EventStatusDTO.CLOSED)) {
+		if (patch.getStatus() != null
+			&& !(patch.getStatus() == EventStatusDTO.DATA_RECEIVED
+				|| patch.getStatus() == EventStatusDTO.DATA_REQUESTED
+				|| patch.getStatus() == EventStatusDTO.ABORTED
+				|| patch.getStatus() == EventStatusDTO.CLOSED)) {
 			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_STATUS + patch.getStatus());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}

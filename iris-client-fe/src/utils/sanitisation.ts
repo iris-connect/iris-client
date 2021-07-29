@@ -3,23 +3,25 @@
 export const sanitiseAndCheckRecordWithNoRestrictionToInput = function (
   input: Record<string, unknown>
 ): Record<string, unknown> {
-  console.log("sanitiseAndCheckUIINputWithNoRestrictionToInput");
-  console.log(input);
-  if (input["name"] != null && typeof input["name"] == "string") {
+  if (input["name"] != null && isString(input["name"])) {
     input["name"] = sanitiseField(String(input["name"]));
   }
-  if (input["comment"] != null && typeof input["comment"] == "string") {
+  if (input["comment"] != null && isString(input["comment"])) {
     input["comment"] = sanitiseField(String(input["comment"]));
   }
   if (
     input["externalRequestId"] != null &&
-    typeof input["externalRequestId"] == "string"
+    isString(input["externalRequestId"])
   ) {
     input["externalRequestId"] = sanitiseField(
       String(input["externalRequestId"])
     );
   }
   return input;
+};
+
+const isString = function (input: unknown): boolean {
+  return typeof input == "string";
 };
 
 export const sanitiseAndCheckUIInputWithNoRestrictionToInput = function (

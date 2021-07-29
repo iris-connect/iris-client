@@ -5,9 +5,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 import org.apache.commons.lang3.StringUtils;
 
 @Slf4j
@@ -109,70 +106,5 @@ public class ValidationHelper {
 		}
 
 		return false;
-	}
-
-	public static boolean checkInputNameConventions(String input) {
-		String[] forbiddenSymbolsArray = {
-			"=",
-			"<",
-			">",
-			"!",
-			"\"",
-			"§",
-			"$",
-			"%",
-			"&",
-			"/",
-			"(",
-			")",
-			"?",
-			"´",
-			"`",
-			"¿",
-			"≠",
-			"¯",
-			"}",
-			"·",
-			"{",
-			"˜",
-			"\\",
-			"]",
-			"^",
-			"ﬁ",
-			"[",
-			"¢",
-			"¶",
-			"“",
-			"¡",
-			"¬",
-			"”",
-			"#",
-			"£",
-			"+",
-			"*",
-			"±",
-			"",
-			"_",
-			":",
-			"…",
-			"÷",
-			"∞",
-			";",
-			"˛",
-			"æ",
-			"Æ",
-			"œ",
-			"Œ",
-			"@",
-			"•",
-			"°",
-			"„" };
-		Stream<String> forbiddenSymbolsStream = Arrays.stream(forbiddenSymbolsArray);
-		int forbiddenSymbolCounter = (int) forbiddenSymbolsStream.filter(symbol -> input.contains(symbol) == true).count();
-
-		if (forbiddenSymbolCounter > 0)
-			return false;
-
-		return true;
 	}
 }

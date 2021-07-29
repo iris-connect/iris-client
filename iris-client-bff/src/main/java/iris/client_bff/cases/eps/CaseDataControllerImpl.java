@@ -25,7 +25,13 @@ import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 @RequiredArgsConstructor
 public class CaseDataControllerImpl implements CaseDataController {
 
+	private static final String EXCEPTION_MESSAGE_NULL = "null";
+	private static final String EXCEPTION_MESSAGE_START_DATE = " - startDate: ";
+	private static final String EXCEPTION_MESSAGE_END_DATE = " - endDate: ";
+	private static final String EXCEPTION_MESSAGE_DATE_OF_BIRTH = " - dateOfBirth: ";
 	private static final String EXCEPTION_MESSAGE_DATA_AUTHORIZATION_TOKEN = " - dataAuthorizationToken: ";
+	private static final String EXCEPTION_MESSAGE_FIRSTNAME = " - firstName: ";
+	private static final String EXCEPTION_MESSAGE_LASTNAME = " - lastName: ";
 	private final CaseDataSubmissionService submissionService;
 
 	@Override
@@ -37,9 +43,9 @@ public class CaseDataControllerImpl implements CaseDataController {
 
 		if (ValidationHelper
 			.isUUIDInputValid(dataAuthorizationToken.toString(), EXCEPTION_MESSAGE_DATA_AUTHORIZATION_TOKEN + dataAuthorizationToken.toString())
-			&& isEventsInputValid(events)
-			&& isContactsInputValid(contacts)
-			&& isCaseDataProviderInputValid(dataProvider)) {
+			&& validateEvents(events)
+			&& validateContacts(contacts)
+			&& validateCaseDataProvider(dataProvider)) {
 			log.trace("Start submission {}: contacts = {}; events = {}; dataProvider = {}", dataAuthorizationToken, contacts, events, dataProvider);
 
 			return submissionService.validateAndSaveData(dataAuthorizationToken, contacts, events, dataProvider);
@@ -49,21 +55,65 @@ public class CaseDataControllerImpl implements CaseDataController {
 		}
 	}
 
-	private boolean isEventsInputValid(Events events) {
-		return events != null;
-	}
+	private boolean validateEvents(Events events) {
 
-	private boolean isContactsInputValid(Contacts contacts) {
-		if (contacts == null) {
-			return false;
+		if (events == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
+
+		if (events.getStartDate() == null) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_START_DATE + EXCEPTION_MESSAGE_NULL);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		}
+
+		if (events.getEndDate() == null) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_END_DATE + EXCEPTION_MESSAGE_NULL);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		}
+
+		// TODO: validate Event List - requires validating Address: already done - move into model ?
 
 		return true;
 	}
 
-	private boolean isCaseDataProviderInputValid(CaseDataProvider dataProvider) {
+	private boolean validateContacts(Contacts contacts) {
+
+		if (contacts == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		}
+
+		if (contacts.getStartDate() == null) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_START_DATE + EXCEPTION_MESSAGE_NULL);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		}
+
+		if (contacts.getEndDate() == null) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_END_DATE + EXCEPTION_MESSAGE_NULL);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		}
+
+		// TODO: validate Contact Person List
+
+		return true;
+	}
+
+	private boolean validateCaseDataProvider(CaseDataProvider dataProvider) {
+
 		if (dataProvider == null) {
-			return false;
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		}
+
+		if (ValidationHelper.isPossibleAttack(dataProvider.getFirstName(), EXCEPTION_MESSAGE_FIRSTNAME + dataProvider.getFirstName())) {
+			dataProvider.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
+		}
+
+		if (ValidationHelper.isPossibleAttack(dataProvider.getLastName(), EXCEPTION_MESSAGE_LASTNAME + dataProvider.getLastName())) {
+			dataProvider.setLastName(ErrorMessages.INVALID_INPUT_STRING);
+		}
+
+		if (dataProvider.getDateOfBirth() == null) {
+			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_DATE_OF_BIRTH + EXCEPTION_MESSAGE_NULL);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
 		return true;
