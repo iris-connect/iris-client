@@ -25,6 +25,7 @@ import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 @RequiredArgsConstructor
 public class CaseDataControllerImpl implements CaseDataController {
 
+	private static final String EXCEPTION_MESSAGE_DATA_AUTHORIZATION_TOKEN = " - dataAuthorizationToken: ";
 	private final CaseDataSubmissionService submissionService;
 
 	@Override
@@ -34,7 +35,8 @@ public class CaseDataControllerImpl implements CaseDataController {
 		@Valid Events events,
 		@Valid CaseDataProvider dataProvider) {
 
-		if (ValidationHelper.isUUIDInputValid(dataAuthorizationToken.toString())
+		if (ValidationHelper
+			.isUUIDInputValid(dataAuthorizationToken.toString(), EXCEPTION_MESSAGE_DATA_AUTHORIZATION_TOKEN + dataAuthorizationToken.toString())
 			&& isEventsInputValid(events)
 			&& isContactsInputValid(contacts)
 			&& isCaseDataProviderInputValid(dataProvider)) {
@@ -48,11 +50,7 @@ public class CaseDataControllerImpl implements CaseDataController {
 	}
 
 	private boolean isEventsInputValid(Events events) {
-		if (events == null) {
-			return false;
-		}
-
-		return true;
+		return events != null;
 	}
 
 	private boolean isContactsInputValid(Contacts contacts) {

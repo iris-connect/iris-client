@@ -72,7 +72,7 @@ public class CaseDataRequestController {
 	@PostMapping
 	@ResponseStatus(OK)
 	public IndexCaseDetailsDTO create(@RequestBody @Valid IndexCaseInsertDTO insert) {
-		IndexCaseInsertDTO insertValidated = indexCaseInsertDTOInputValidated(insert);
+		IndexCaseInsertDTO insertValidated = validateIndexCaseInsertDTO(insert);
 
 		try {
 			return mapDetailed(caseDataRequestService.create(insertValidated));
@@ -85,7 +85,7 @@ public class CaseDataRequestController {
 	@GetMapping("/{id}")
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> getDetails(@PathVariable UUID id) {
-		if (ValidationHelper.isUUIDInputValid(id.toString())) {
+		if (ValidationHelper.isUUIDInputValid(id.toString(), EXCEPTION_MESSAGE_ID + id.toString())) {
 			return caseDataRequestService.findDetailed(id).map((dataRequest -> {
 				var indexCaseDetailsDTO = mapDetailed(dataRequest);
 
@@ -94,7 +94,6 @@ public class CaseDataRequestController {
 				return indexCaseDetailsDTO;
 			})).map(ResponseEntity::ok).orElseGet(ResponseEntity.notFound()::build);
 		} else {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_ID + id.toString());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -102,12 +101,11 @@ public class CaseDataRequestController {
 	@PatchMapping("/{id}")
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> update(@PathVariable UUID id, @RequestBody @Valid IndexCaseUpdateDTO update) {
-		if (!ValidationHelper.isUUIDInputValid(id.toString())) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_ID + id.toString());
+		if (!ValidationHelper.isUUIDInputValid(id.toString(), EXCEPTION_MESSAGE_ID + id.toString())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
-		IndexCaseUpdateDTO updateValidated = indexCaseUpdateDTOInputValidated(update);
+		IndexCaseUpdateDTO updateValidated = validateIndexCaseUpdateDTO(update);
 
 		ResponseEntity<IndexCaseDetailsDTO> responseEntity = caseDataRequestService.findDetailed(id)
 			.map(it -> caseDataRequestService.update(it, updateValidated))
@@ -120,23 +118,20 @@ public class CaseDataRequestController {
 		return responseEntity;
 	}
 
-	private IndexCaseUpdateDTO indexCaseUpdateDTOInputValidated(IndexCaseUpdateDTO update) {
+	private IndexCaseUpdateDTO validateIndexCaseUpdateDTO(IndexCaseUpdateDTO update) {
 		if (update == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
-		if (update.getComment() != null && !ValidationHelper.checkInputForAttacks(update.getComment())) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_COMMENT + update.getComment());
+		if (ValidationHelper.isPossibleAttack(update.getComment(), EXCEPTION_MESSAGE_COMMENT + update.getComment())) {
 			update.setComment(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (update.getName() != null && !ValidationHelper.checkInputForAttacks(update.getName())) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_NAME + update.getName());
+		if (ValidationHelper.isPossibleAttack(update.getName(), EXCEPTION_MESSAGE_NAME + update.getName())) {
 			update.setName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (update.getExternalCaseId() != null && !ValidationHelper.checkInputForAttacks(update.getExternalCaseId())) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_EXTERNAL_CASE_ID + update.getExternalCaseId());
+		if (ValidationHelper.isPossibleAttack(update.getExternalCaseId(), EXCEPTION_MESSAGE_EXTERNAL_CASE_ID + update.getExternalCaseId())) {
 			update.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
@@ -151,23 +146,20 @@ public class CaseDataRequestController {
 		return update;
 	}
 
-	private IndexCaseInsertDTO indexCaseInsertDTOInputValidated(IndexCaseInsertDTO insert) {
+	private IndexCaseInsertDTO validateIndexCaseInsertDTO(IndexCaseInsertDTO insert) {
 		if (insert == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
-		if (insert.getComment() != null && !ValidationHelper.checkInputForAttacks(insert.getComment())) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_COMMENT + insert.getComment());
+		if (ValidationHelper.isPossibleAttack(insert.getComment(), EXCEPTION_MESSAGE_COMMENT + insert.getComment())) {
 			insert.setComment(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (insert.getName() != null && !ValidationHelper.checkInputForAttacks(insert.getName())) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_NAME + insert.getName());
+		if (ValidationHelper.isPossibleAttack(insert.getName(), EXCEPTION_MESSAGE_NAME + insert.getName())) {
 			insert.setName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (insert.getExternalCaseId() != null && !ValidationHelper.checkInputForAttacks(insert.getExternalCaseId())) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_EXTERNAL_CASE_ID + insert.getExternalCaseId());
+		if (ValidationHelper.isPossibleAttack(insert.getExternalCaseId(), EXCEPTION_MESSAGE_EXTERNAL_CASE_ID + insert.getExternalCaseId())) {
 			insert.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
