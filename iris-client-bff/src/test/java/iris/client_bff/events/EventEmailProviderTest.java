@@ -1,14 +1,11 @@
 package iris.client_bff.events;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import io.vavr.control.Try;
-import iris.client_bff.core.mail.EmailSender;
+import iris.client_bff.core.mail.EmailSenderReal;
 import iris.client_bff.core.mail.EmailTemplates;
 
 import java.time.Instant;
@@ -19,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.support.MessageSourceAccessor;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,14 +25,19 @@ public class EventEmailProviderTest {
 	EventEmailProvider systemUnderTest;
 
 	@Mock
-	EmailSender emailSender;
+	EmailSenderReal emailSender;
 
 	@Mock
 	MessageSourceAccessor messageSourceAccessor;
 
+	@Mock
+	MailProperties mailProperties;
+
 	@BeforeEach
 	void setUp() {
-		systemUnderTest = new EventEmailProvider(emailSender, messageSourceAccessor);
+		systemUnderTest = new EventEmailProvider(emailSender, messageSourceAccessor, mailProperties);
+		systemUnderTest.setMailingActive(true);
+		systemUnderTest.setDataReceivedRecipientEmail("test@test.de");
 	}
 
 	@Test
@@ -45,8 +48,8 @@ public class EventEmailProviderTest {
 		Instant eventStart = Instant.now();
 		Instant eventEnd = Instant.now();
 
-		EventDataRequest eventData =
-			EventDataRequest.builder().name(eventName).refId(eventRefId).requestStart(eventStart).requestEnd(eventEnd).build();
+		EventDataRequest eventData = EventDataRequest.builder().name(eventName).refId(eventRefId).requestStart(eventStart)
+				.requestEnd(eventEnd).build();
 
 		when(messageSourceAccessor.getMessage("EventDataReceivedEmail.subject")).thenReturn(subject);
 

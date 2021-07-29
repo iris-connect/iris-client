@@ -1,13 +1,13 @@
 package iris.client_bff.core.mail;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import io.vavr.control.Try;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.core.EmailAddress;
 import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail;
-import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail.ConfiguredRecipient;
-import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail.Recipient;
+import iris.client_bff.core.mail.EmailSender.TemplatedEmail.ConfiguredRecipient;
+import iris.client_bff.core.mail.EmailSender.TemplatedEmail.Recipient;
 import iris.client_bff.core.mail.EmailTemplates.Key;
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +19,7 @@ import javax.mail.MessagingException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -26,14 +27,13 @@ import com.icegreen.greenmail.util.GreenMailUtil;
 
 @RequiredArgsConstructor
 @IrisWebIntegrationTest
-@ActiveProfiles({
-	"dev",
-	"test" })
+@ActiveProfiles({ "dev", "test" })
 class EmailSenderIntegrationTests {
 
-	final EmailSender sender;
+	final EmailSenderReal sender;
 	final MessageSourceAccessor messages;
 	final TestEmailServer mailServer;
+	final MailProperties mailProperties;
 
 	private TestEmails testEmails;
 
@@ -41,7 +41,7 @@ class EmailSenderIntegrationTests {
 	void setUp() throws Exception {
 		mailServer.reset();
 
-		testEmails = new TestEmails(sender, messages);
+		testEmails = new TestEmails(sender, messages, mailProperties);
 	}
 
 	@Test
@@ -53,7 +53,8 @@ class EmailSenderIntegrationTests {
 
 			assertThat(message.getSubject()).isEqualTo("This is a test mail");
 			assertThat(GreenMailUtil.getBody(message)).startsWith("Hi Name");
-			assertThat(message.getRecipients(RecipientType.TO)[0]).hasToString("\"Test Person - test {at} test.de\" <testmailbox@iris-gateway.de>");
+			assertThat(message.getRecipients(RecipientType.TO)[0])
+					.hasToString("\"Test Person - test {at} test.de\" <testmailbox@iris-gateway.de>");
 			assertThat(message.getFrom()[0]).hasToString("Gesundheitsamt Entenhausen <mail-ga@entenhausen.de>");
 		});
 	}
@@ -68,7 +69,8 @@ class EmailSenderIntegrationTests {
 			assertThat(message.getContentType()).contains("text/plain");
 			assertThat(message.getSubject()).isEqualTo("Das ist eine Test-Mail");
 			assertThat(GreenMailUtil.getBody(message)).startsWith("Hallo Name");
-			assertThat(message.getRecipients(RecipientType.TO)[0]).hasToString("\"Test Person - test {at} test.de\" <testmailbox@iris-gateway.de>");
+			assertThat(message.getRecipients(RecipientType.TO)[0])
+					.hasToString("\"Test Person - test {at} test.de\" <testmailbox@iris-gateway.de>");
 			assertThat(message.getFrom()[0]).hasToString("Gesundheitsamt Entenhausen <mail-ga@entenhausen.de>");
 		});
 	}
@@ -83,18 +85,20 @@ class EmailSenderIntegrationTests {
 			assertThat(message.getContentType()).contains("multipart/mixed");
 			assertThat(message.getSubject()).isEqualTo("Das ist eine Test-Mail");
 			assertThat(GreenMailUtil.getBody(message)).contains("Hallo Name");
-			assertThat(message.getRecipients(RecipientType.TO)[0]).hasToString("\"Test Person - test {at} test.de\" <testmailbox@iris-gateway.de>");
+			assertThat(message.getRecipients(RecipientType.TO)[0])
+					.hasToString("\"Test Person - test {at} test.de\" <testmailbox@iris-gateway.de>");
 			assertThat(message.getFrom()[0]).hasToString("Gesundheitsamt Entenhausen <mail-ga@entenhausen.de>");
 		});
 	}
 
 	public class TestEmails extends EmailProvider {
 
-		public TestEmails(EmailSender emailSender, MessageSourceAccessor messages) {
-			super(emailSender, messages);
+		public TestEmails(EmailSender emailSender, MessageSourceAccessor messages, MailProperties mailProperties) {
+			super(emailSender, messages, mailProperties);
 		}
 
-		ConfiguredRecipient standardRecipient = new ConfiguredRecipient("fix-recipient", EmailAddress.of("fix-recipient@iris-connect.de"));
+		ConfiguredRecipient standardRecipient = new ConfiguredRecipient("fix-recipient",
+				EmailAddress.of("fix-recipient@iris-connect.de"));
 
 		Try<Void> sendTestEmailEn() {
 
@@ -141,11 +145,10 @@ class EmailSenderIntegrationTests {
 	}
 
 	enum TestKeys
-		implements
-		Key {
+			implements
+			Key {
 
-		TEST_MAIL_FTL,
-		TEST_HTML_MAIL_FTLH;
+		TEST_MAIL_FTL, TEST_HTML_MAIL_FTLH;
 
 		@Override
 		public String getKey() {

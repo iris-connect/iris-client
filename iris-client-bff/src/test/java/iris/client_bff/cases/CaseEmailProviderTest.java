@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import io.vavr.control.Try;
-import iris.client_bff.core.mail.EmailSender;
+import iris.client_bff.core.mail.EmailSenderReal;
 import iris.client_bff.core.mail.EmailTemplates;
 
 import java.time.Instant;
@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.support.MessageSourceAccessor;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,14 +29,19 @@ public class CaseEmailProviderTest {
 	CaseEmailProvider systemUnderTest;
 
 	@Mock
-	EmailSender emailSender;
+	EmailSenderReal emailSender;
 
 	@Mock
 	MessageSourceAccessor messageSourceAccessor;
+	
+	@Mock
+	MailProperties mailProperties;
 
 	@BeforeEach
 	void setUp() {
-		systemUnderTest = new CaseEmailProvider(emailSender, messageSourceAccessor);
+		systemUnderTest = new CaseEmailProvider(emailSender, messageSourceAccessor, mailProperties);
+		systemUnderTest.setMailingActive(true);
+		systemUnderTest.setDataReceivedRecipientEmail("test@test.de");
 	}
 
 	@Test

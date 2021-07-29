@@ -7,7 +7,8 @@ import java.util.Map;
 
 public class CaseEmail extends AbstractTemplatedEmail {
 
-	CaseEmail(Recipient recipient, String subject, EmailTemplates.Key template, Map<String, ? extends Object> placeholders) {
+	CaseEmail(Recipient recipient, String subject, EmailTemplates.Key template,
+			Map<String, ? extends Object> placeholders) {
 
 		super(recipient, subject, template, placeholders, null);
 	}
