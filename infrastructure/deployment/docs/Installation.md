@@ -89,3 +89,6 @@ Bei dieser Installationsvariante werden alle Komponenten vom IRIS Client von ein
 
 [Hier geht es weiter. ](../../stand-alone-deployment/README.md)
 
+## Testen der Installation
+
+[Hier geht es weiter. ](Smoketest.md)
