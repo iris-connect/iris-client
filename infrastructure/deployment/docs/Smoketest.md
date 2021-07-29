@@ -1,6 +1,6 @@
 # Testen der Installation
 
-Unabhängig von der Installations Variante können Sie testen, ob die Installation erfolgreich war. Erfolgreich bedeutet das Ihre IRIS Client Installation mit den zentralen IRIS Services als auch mit den de-zentralen Kontaktdaten Anbieter Apps kommunizieren kann. Die Zertifikate wurden korrekt konfiguriert. 
+Unabhängig von der Installationsvariante können Sie testen, ob die Installation erfolgreich war. Erfolgreich bedeutet, dass Ihre IRIS Client Installation mit den zentralen IRIS Services als auch mit den de-zentralen Kontaktdaten Anbieter Apps kommunizieren kann. Die Zertifikate wurden korrekt konfiguriert. 
 
 1. Öffnen Sie einen Browser und navigieren zum IRIS Client (`IRIS_CLIENT_DOMAIN` aus der Konfiguration)
 
@@ -17,7 +17,7 @@ Unabhängig von der Installations Variante können Sie testen, ob die Installati
 
    ![](images/smoketest/SearchResult.png)
 
-1. Füllen Sie die restlichen Anfrage Parameter aus. Wählen Sie als zeitraum den 03. Juni von 12:00 bis 23:59. Klick Sie auf `Anfrage senden`.
+1. Füllen Sie die restlichen Anfrage Parameter aus. Wählen Sie als Zeitraum den 03. Juni von 12:00 bis 23:59. Klick Sie auf `Anfrage senden`.
 
    ![](images/smoketest/EventRequest.png)
 
