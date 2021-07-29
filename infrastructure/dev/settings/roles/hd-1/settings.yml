@@ -11,9 +11,6 @@ directory:
     endpoints: [ "https://iris.staging.iris-gateway.de:3322/jsonrpc" ]
     server_names: [ "sd-1" ]
 channels: # defines all the channels that we want to open when starting the server
-  - name: Stdout channel
-    type: stdout
-    settings: { }
   - name: main JSON-RPC client # creates outgoing JSONRPC connections to deliver and receive messages
     type: jsonrpc_client
     settings:
