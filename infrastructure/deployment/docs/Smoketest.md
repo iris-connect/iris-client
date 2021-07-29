@@ -21,4 +21,4 @@ Unabhängig von der Installationsvariante können Sie testen, ob die Installatio
 
    ![](images/smoketest/EventRequest.png)
 
-Bei `Da Michele (SmartMeeting GmbH)` handelt es sich um eine Test Lokation, die eigens für einen Smoketest zur Verfügung steht. Die Lokation liefert fiktionale Testdaten für den 03. Juni. 
+Bei `Da Michele (SmartMeeting GmbH)` handelt es sich um eine Test Lokation, die eigens für einen Smoketest zur Verfügung steht. Die Lokation liefert fiktive Testdaten für den 03. Juni. 
