@@ -13,7 +13,7 @@ Unabhängig von der Installationsvariante können Sie testen, ob die Installatio
    ![](images/smoketest/NewEvent.png)
 
 
-1. Klicken Sie auf Ereignisort auswählen und suchen Sie nach `Da Michele`. Suchen Sie nach `Da Michele (SmartMeeting GmbH)`. Klicken Sie auf `Wählen`.
+1. Klicken Sie auf Ereignisort auswählen und suchen Sie nach `Da Michele (SmartMeeting GmbH)`. Klicken Sie auf `Wählen`.
 
    ![](images/smoketest/SearchResult.png)
 
