@@ -1,4 +1,4 @@
-package iris.client_bff.search_client;
+package iris.client_bff.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,12 +7,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
 @ConstructorBinding
-@ConfigurationProperties(prefix = "iris.location-service")
+@ConfigurationProperties(prefix = "iris.backend-service")
 @Getter
 @AllArgsConstructor
-public class SearchClientProperties {
+public class BackendServiceProperties {
 
-	// ToDo: Change to server, port as in IRIS Public Server configuration
 	private String endpoint;
-
 }
