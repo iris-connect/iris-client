@@ -5,7 +5,7 @@ import iris.client_bff.core.mail.EmailTemplates;
 
 import java.util.Map;
 
-public class CaseEmail extends AbstractTemplatedEmail {
+class CaseEmail extends AbstractTemplatedEmail {
 
 	CaseEmail(Recipient recipient, String subject, EmailTemplates.Key template,
 			Map<String, ? extends Object> placeholders) {
