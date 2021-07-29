@@ -78,7 +78,7 @@ Bei dieser Installationsvariante werden alle Komponenten vom IRIS Client in eine
 
 > Diese Installationsart ist empfohlen.
 
-[Hier geht es weiter. ](./Installation-Docker-Compose.md)
+[Docker Compose Installation](./Installation-Docker-Compose.md)
 
 
 ## IRIS-Client - Stand-Alone Installation
@@ -87,8 +87,10 @@ Bei dieser Installationsvariante werden alle Komponenten vom IRIS Client von ein
 
 > Diese Installationsart ist aufgrund der komplexen Konfiguration NICHT empfohlen.
 
-[Hier geht es weiter. ](../../stand-alone-deployment/README.md)
+[Stand-Alone Installation](../../stand-alone-deployment/README.md)
 
 ## Testen der Installation
 
-[Hier geht es weiter. ](Smoketest.md)
+Unabhängig von der Installations Variante können Sie testen, ob die Installation erfolgreich war.
+
+[Test](Smoketest.md)
