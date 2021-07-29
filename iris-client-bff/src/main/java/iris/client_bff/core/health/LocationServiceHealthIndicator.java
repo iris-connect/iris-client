@@ -1,6 +1,6 @@
 package iris.client_bff.core.health;
 
-import iris.client_bff.search_client.SearchClientProperties;
+import iris.client_bff.config.BackendServiceProperties;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.boot.actuate.health.Health;
@@ -17,7 +17,7 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 @RequiredArgsConstructor
 class LocationServiceHealthIndicator implements HealthIndicator {
 
-	private final SearchClientProperties config;
+	private final BackendServiceProperties config;
 	private final JsonRpcHttpClient epsRpcClient;
 
 	@Override

@@ -2,8 +2,10 @@ package iris.client_bff.search_client.eps;
 
 import static iris.client_bff.core.log.LogHelper.*;
 
+import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
+
+import iris.client_bff.config.BackendServiceProperties;
 import iris.client_bff.search_client.SearchClient;
-import iris.client_bff.search_client.SearchClientProperties;
 import iris.client_bff.search_client.eps.dto.IdSearch;
 import iris.client_bff.search_client.eps.dto.KeywordSearch;
 import iris.client_bff.search_client.eps.dto.PageableDto;
@@ -20,14 +22,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class EPSSearchClient implements SearchClient {
 
-	private final SearchClientProperties config;
+	private BackendServiceProperties config;
+
 	private final JsonRpcHttpClient epsRpcClient;
 
 	public LocationInformation findByProviderIdAndLocationId(String providerId, String locationId)

@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableJpaAuditing(dateTimeProviderRef = "irisDateTimeProvider")
 @EnableScheduling
 @ConfigurationPropertiesScan
-public class IrisClientSormasSidecarApplication {
+public class IrisClientBffApplication {
 
 	public static void main(String[] args) throws Exception {
 
@@ -28,7 +28,7 @@ public class IrisClientSormasSidecarApplication {
 			}
 		};
 
-		var application = new SpringApplication(IrisClientSormasSidecarApplication.class);
+		var application = new SpringApplication(IrisClientBffApplication.class);
 		application.setBanner(banner);
 		application.setBannerMode(Mode.LOG);
 		application.run(args);
