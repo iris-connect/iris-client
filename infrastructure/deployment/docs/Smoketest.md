@@ -1,10 +1,10 @@
 # Testen der Installation
 
-Unabhängig von der Installationsvariante können Sie testen, ob die Installation erfolgreich war. Erfolgreich bedeutet, dass Ihre IRIS Client Installation mit den zentralen IRIS Services als auch mit den de-zentralen Kontaktdaten Anbieter Apps kommunizieren kann. Die Zertifikate wurden korrekt konfiguriert. 
+Unabhängig von der Installationsvariante können Sie testen, ob die Installation erfolgreich war. Erfolgreich bedeutet, dass Ihre IRIS Client Installation mit den zentralen IRIS Services als auch mit den dezentralen Kontaktdaten Anbieter Apps kommunizieren kann. Die Zertifikate wurden korrekt konfiguriert. 
 
-1. Öffnen Sie einen Browser und navigieren zum IRIS Client (`IRIS_CLIENT_DOMAIN` aus der Konfiguration)
+1. Öffnen Sie einen Browser und navigieren Sie zum IRIS Client (`IRIS_CLIENT_DOMAIN` aus der Konfiguration).
 
-1. Melden Sie sich mit den initialen Admin Zugangsdaten an (`SECURITY_AUTH_DB_ADMIN_USER_NAME` und `SECURITY_AUTH_DB_ADMIN_USER_PASSWORD` aus der Konfiguration)
+1. Melden Sie sich mit den initialen Admin Zugangsdaten an (`SECURITY_AUTH_DB_ADMIN_USER_NAME` und `SECURITY_AUTH_DB_ADMIN_USER_PASSWORD` aus der Konfiguration).
 
    ![](images/smoketest/Login.png)
 
