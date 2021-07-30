@@ -40,8 +40,8 @@ public class UserController {
 	private static final String EXCEPTION_MESSAGE_ROLE = " - role: ";
 	private static final String EXCEPTION_MESSAGE_PASSWORD = " - password";
 	private static final String EXCEPTION_MESSAGE_USER_NAME = " - userName: ";
-	private static final String EXCEPTION_MESSAGE_LAST_NAME = " - lastName: ";
-	private static final String EXCEPTION_MESSAGE_FIRST_NAME = " - firstName: ";
+	private static final String EXCEPTION_MESSAGE_LAST_NAME = " - lastName";
+	private static final String EXCEPTION_MESSAGE_FIRST_NAME = " - firstName";
 	private static final String EXCEPTION_MESSAGE_ID = " - id: ";
 	private final UserDetailsServiceImpl userService;
 
@@ -89,16 +89,16 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
-		if (ValidationHelper.isPossibleAttack(userUpdateDTO.getFirstName(), EXCEPTION_MESSAGE_FIRST_NAME + userUpdateDTO.getFirstName())) {
+		if (ValidationHelper.isPossibleAttack(userUpdateDTO.getFirstName(), EXCEPTION_MESSAGE_FIRST_NAME)) {
 			userUpdateDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(userUpdateDTO.getLastName(), EXCEPTION_MESSAGE_LAST_NAME + userUpdateDTO.getFirstName())) {
+		if (ValidationHelper.isPossibleAttack(userUpdateDTO.getLastName(), EXCEPTION_MESSAGE_LAST_NAME)) {
 			userUpdateDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		if (ValidationHelper
-			.isPossibleAttackForRequiredValue(userUpdateDTO.getUserName(), EXCEPTION_MESSAGE_USER_NAME + userUpdateDTO.getFirstName())) {
+			.isPossibleAttackForRequiredValue(userUpdateDTO.getUserName(), EXCEPTION_MESSAGE_USER_NAME + userUpdateDTO.getUserName())) {
 			userUpdateDTO.setUserName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
@@ -125,11 +125,11 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
 
-		if (ValidationHelper.isPossibleAttack(userInsertDTO.getFirstName(), EXCEPTION_MESSAGE_FIRST_NAME + userInsertDTO.getFirstName())) {
+		if (ValidationHelper.isPossibleAttack(userInsertDTO.getFirstName(), EXCEPTION_MESSAGE_FIRST_NAME)) {
 			userInsertDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(userInsertDTO.getLastName(), EXCEPTION_MESSAGE_LAST_NAME + userInsertDTO.getLastName())) {
+		if (ValidationHelper.isPossibleAttack(userInsertDTO.getLastName(), EXCEPTION_MESSAGE_LAST_NAME)) {
 			userInsertDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
