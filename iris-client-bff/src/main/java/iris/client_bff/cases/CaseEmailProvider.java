@@ -51,9 +51,9 @@ public class CaseEmailProvider extends EmailProvider {
 	@Value("${iris.client.mailing.active:false}")
 	private @Setter(value = AccessLevel.PACKAGE) boolean mailingActive;
 
-	@Value("${spring.mail.properties.recipient.case.data-received.name:null}")
+	@Value("${spring.mail.properties.recipient.case.data-received.name:#{null}}")
 	private String dataReceivedRecipientName;
-	@Value("${spring.mail.properties.recipient.case.data-received.email:null}")
+	@Value("${spring.mail.properties.recipient.case.data-received.email:#{null}}")
 	private @Setter(value = AccessLevel.PACKAGE) String dataReceivedRecipientEmail;
 
 	public CaseEmailProvider(EmailSender emailSender, MessageSourceAccessor messages, MailProperties mailProperties) {
