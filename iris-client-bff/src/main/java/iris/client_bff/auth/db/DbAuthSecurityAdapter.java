@@ -1,13 +1,15 @@
 package iris.client_bff.auth.db;
 
-import static iris.client_bff.config.DataSubmissionConfig.DATA_SUBMISSION_ENDPOINT;
-import static iris.client_bff.config.DataSubmissionConfig.DATA_SUBMISSION_ENDPOINT_WITH_SLASH;
+import static iris.client_bff.config.DataSubmissionConfig.*;
 
 import iris.client_bff.auth.db.jwt.JWTSigner;
 import iris.client_bff.auth.db.jwt.JWTVerifier;
+import iris.client_bff.auth.db.login_attempts.IrisAuthenticationFailureHandler;
+import iris.client_bff.auth.db.login_attempts.LoginAttemptsRepository;
 import iris.client_bff.users.UserDetailsServiceImpl;
 import iris.client_bff.users.entities.UserRole;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
@@ -51,8 +53,15 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 
 	private UserDetailsServiceImpl userDetailsService;
 
+	private IrisAuthenticationFailureHandler authFailureHandler;
+
+	private final @NonNull LoginAttemptsRepository loginAttempts;
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+
+		var authFilter = new JWTAuthenticationFilter(authenticationManager(), jwtSigner, loginAttempts);
+		authFilter.setAuthenticationFailureHandler(authFailureHandler);
 
 		http.cors().and().csrf().disable()
 				.authorizeRequests()
@@ -69,8 +78,7 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 				.addLogoutHandler(logoutHandler)
 				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
 				.and()
-				.addFilter(
-						new JWTAuthenticationFilter(authenticationManager(), jwtSigner))
+				.addFilter(authFilter)
 				.addFilter(
 						new JWTAuthorizationFilter(authenticationManager(), jwtVerifier))
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -80,5 +88,4 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
 	}
-
 }
