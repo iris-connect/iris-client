@@ -1,6 +1,6 @@
 package iris.client_bff.events.web;
 
-import static org.springframework.http.ResponseEntity.*;
+import static org.springframework.http.ResponseEntity.ok;
 
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.Status;
@@ -50,8 +50,7 @@ public class EventDataRequestController {
 
 	private ModelMapper modelMapper;
 
-	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (
-			EventDataRequest request) -> {
+	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (EventDataRequest request) -> {
 		ExistingDataRequestClientWithLocation mapped = EventMapper.map(request);
 		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
 		return mapped;
@@ -69,9 +68,9 @@ public class EventDataRequestController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public Page<ExistingDataRequestClientWithLocation> getDataRequests(
-			@RequestParam(required = false) Status status,
-			@RequestParam(required = false) String search,
-			Pageable pageable) {
+		@RequestParam(required = false) Status status,
+		@RequestParam(required = false) String search,
+		Pageable pageable) {
 		if (status != null && StringUtils.isNotEmpty(search)) {
 			return dataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(eventMapperFunction);
 		} else if (StringUtils.isNotEmpty(search)) {
@@ -99,12 +98,9 @@ public class EventDataRequestController {
 	@PatchMapping("/{code}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> update(@PathVariable UUID code, @RequestBody EventUpdateDTO patch) {
-
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
 			EventDataRequest updated = dataRequestService.update(dataRequest.get(), patch);
-
-			dataRequestService.sendDataRecievedEmail(updated, patch.getStatus());
 
 			DataRequestDetails requestDetails = mapDataRequestDetails(updated);
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);
@@ -128,8 +124,7 @@ public class EventDataRequestController {
 	}
 
 	private ExistingDataRequestClientWithLocation mapExistingDataRequestClientWithLocation(EventDataRequest request) {
-		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request,
-				ExistingDataRequestClientWithLocation.class);
+		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
 		mapped.setCode(request.getId().toString());
 		mapped.setStart(request.getRequestStart());
 		mapped.setEnd(request.getRequestEnd());
@@ -144,27 +139,22 @@ public class EventDataRequestController {
 
 	private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
 
-		submissionRepo.findAllByRequest(request)
-				.get()
-				.findFirst()
-				.ifPresent(it -> addSubmissionToRequest(requestDetails, it));
+		submissionRepo.findAllByRequest(request).get().findFirst().ifPresent(it -> addSubmissionToRequest(requestDetails, it));
 	}
 
 	private void addSubmissionToRequest(DataRequestDetails requestDetails, EventDataSubmission submission) {
 
 		var dataProvider = modelMapper.map(submission.getDataProvider(), GuestListDataProvider.class);
 
-		var guests = submission.getGuests().stream()
-				.map(it -> modelMapper.map(it, Guest.class))
-				.collect(Collectors.toList());
+		var guests = submission.getGuests().stream().map(it -> modelMapper.map(it, Guest.class)).collect(Collectors.toList());
 
 		var guestList = GuestList.builder()
-				.additionalInformation(submission.getAdditionalInformation())
-				.startDate(submission.getStartDate())
-				.endDate(submission.getEndDate())
-				.dataProvider(dataProvider)
-				.guests(guests)
-				.build();
+			.additionalInformation(submission.getAdditionalInformation())
+			.startDate(submission.getStartDate())
+			.endDate(submission.getEndDate())
+			.dataProvider(dataProvider)
+			.guests(guests)
+			.build();
 
 		requestDetails.setSubmissionData(guestList);
 	}

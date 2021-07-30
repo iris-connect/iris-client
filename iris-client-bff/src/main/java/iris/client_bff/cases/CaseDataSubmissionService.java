@@ -1,7 +1,8 @@
 package iris.client_bff.cases;
 
-import static iris.client_bff.cases.CaseDataRequest.Status.*;
-import static iris.client_bff.cases.web.IndexCaseMapper.mapDataSubmission;
+import static iris.client_bff.cases.CaseDataRequest.Status.ABORTED;
+import static iris.client_bff.cases.CaseDataRequest.Status.CLOSED;
+import static iris.client_bff.cases.CaseDataRequest.Status.DATA_RECEIVED;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
@@ -37,6 +38,7 @@ public class CaseDataSubmissionService {
 	private final CaseDataSubmissionRepository submissionRepo;
 	private final CaseDataRequestRepository requestRepo;
 	private final ProxyServiceClient proxyClient;
+	private final CaseEmailProvider caseEmailProvider;
 
 	// NOTE: Necessary to map here and use Transactional annotation, because of
 	// https://stackoverflow.com/a/42206232
@@ -47,8 +49,7 @@ public class CaseDataSubmissionService {
 		return submission.map(IndexCaseMapper::mapDataSubmission);
 	}
 
-	public String validateAndSaveData(UUID dataAuthorizationToken, Contacts contacts, Events events,
-			CaseDataProvider dataProvider) {
+	public String validateAndSaveData(UUID dataAuthorizationToken, Contacts contacts, Events events, CaseDataProvider dataProvider) {
 		// Todo check client.getName() vs. providerIdø
 
 		return requestRepo.findById(CaseDataRequest.DataRequestIdentifier.of(dataAuthorizationToken)).map(dataRequest -> {
@@ -59,16 +60,16 @@ public class CaseDataSubmissionService {
 				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString() + ". Request was aborted.";
 			} else if (requestStatus.equals(CLOSED)) {
 				log.trace("Submission {} for closed case {}", dataAuthorizationToken, dataRequest.getId());
-				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString()
-						+ ". Request already closed.";
+				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString() + ". Request already closed.";
 			} else if (requestStatus.equals(DATA_RECEIVED)) {
 				log.trace("Submission {} for received case {}", dataAuthorizationToken, dataRequest.getId());
-				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString()
-						+ ". Data already received.";
+				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString() + ". Data already received.";
 			}
 
-
 			save(dataRequest, contacts, events, dataProvider);
+
+			caseEmailProvider.sendDataReceivedEmailAsynchronously(dataRequest);
+
 			try {
 				proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
 			} catch (IRISAnnouncementException e) {
@@ -92,32 +93,35 @@ public class CaseDataSubmissionService {
 	}
 
 	public void save(CaseDataRequest dataRequest, Contacts contacts, Events events, CaseDataProvider dataProvider) {
-		var contactsForDb = contacts.getContactPersons().stream()
-				.map(it -> {
-					var mapped = mapper.map(it, Contact.class);
+		var contactsForDb = contacts.getContactPersons().stream().map(it -> {
+			var mapped = mapper.map(it, Contact.class);
 
-					Optional.ofNullable(it.getContactInformation()).ifPresent(contactInformation -> {
-						mapped.setBasicConditions(contactInformation.getBasicConditions());
-						if(contactInformation.getContactCategory() != null) {
-							mapped.setContactCategory(Contact.ContactCategory.valueOf(contactInformation.getContactCategory().name()));
-						}
-						mapped.setFirstContactDate(contactInformation.getFirstContactDate());
-						mapped.setLastContactDate(contactInformation.getLastContactDate());
-					});
+			Optional.ofNullable(it.getContactInformation()).ifPresent(contactInformation -> {
+				mapped.setBasicConditions(contactInformation.getBasicConditions());
+				if (contactInformation.getContactCategory() != null) {
+					mapped.setContactCategory(Contact.ContactCategory.valueOf(contactInformation.getContactCategory().name()));
+				}
+				mapped.setFirstContactDate(contactInformation.getFirstContactDate());
+				mapped.setLastContactDate(contactInformation.getLastContactDate());
+			});
 
-					return mapped;
-				})
-				.collect(Collectors.toSet());
+			return mapped;
+		}).collect(Collectors.toSet());
 
-		var eventsForDb = events.getEvents().stream()
-				.map(it -> mapper.map(it, CaseEvent.class))
-				.collect(Collectors.toSet());
+		var eventsForDb = events.getEvents().stream().map(it -> mapper.map(it, CaseEvent.class)).collect(Collectors.toSet());
 
 		var dataProviderForDb = mapper.map(dataProvider, iris.client_bff.cases.model.CaseDataProvider.class);
 		dataProviderForDb.setDateOfBirth(LocalDate.ofInstant(dataProvider.getDateOfBirth(), ZoneId.of("CET")));
 
-		var submission = new CaseDataSubmission(dataRequest, contactsForDb, contacts.getStartDate(), contacts.getEndDate(),
-				eventsForDb, events.getStartDate(), events.getStartDate(), dataProviderForDb);
+		var submission = new CaseDataSubmission(
+			dataRequest,
+			contactsForDb,
+			contacts.getStartDate(),
+			contacts.getEndDate(),
+			eventsForDb,
+			events.getStartDate(),
+			events.getStartDate(),
+			dataProviderForDb);
 
 		contactsForDb.forEach(it -> it.setSubmission(submission));
 		eventsForDb.forEach(it -> it.setSubmission(submission));
