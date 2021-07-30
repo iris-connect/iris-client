@@ -51,9 +51,9 @@ public class EventEmailProvider extends EmailProvider {
 	@Value("${iris.client.mailing.active:false}")
 	private @Setter(value = AccessLevel.PACKAGE) boolean mailingActive;
 
-	@Value("${spring.mail.properties.recipient.event.data-received.name}")
+	@Value("${spring.mail.properties.recipient.event.data-received.name:#{null}}")
 	private String dataReceivedRecipientName;
-	@Value("${spring.mail.properties.recipient.event.data-received.email}")
+	@Value("${spring.mail.properties.recipient.event.data-received.email:#{null}}")
 	private @Setter(value = AccessLevel.PACKAGE) String dataReceivedRecipientEmail;
 
 	public EventEmailProvider(EmailSender emailSender, MessageSourceAccessor messages, MailProperties mailProperties) {
