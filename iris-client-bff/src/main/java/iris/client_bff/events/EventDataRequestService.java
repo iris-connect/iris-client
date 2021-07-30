@@ -74,7 +74,7 @@ public class EventDataRequestService {
 				location = map(searchClient.findByProviderIdAndLocationId(providerId, locationId));
 			}
 		} catch (IRISSearchException e) {
-			log.error("Location {} with provider {} could not be obtained: {}", locationId, providerId, e);
+			log.error("Location {} with provider {} could not be obtained: {}", locationId, providerId, e.getMessage());
 
 			throw new IRISDataRequestException(e);
 		}
@@ -83,7 +83,7 @@ public class EventDataRequestService {
 		try {
 			announcementToken = proxyClient.announce();
 		} catch (IRISAnnouncementException e) {
-			e.printStackTrace();
+			log.error("Announcement failed: ", e);
 
 			throw new IRISDataRequestException(e);
 		}
@@ -105,8 +105,7 @@ public class EventDataRequestService {
 			log.info(LogHelper.EVENT_DATA_REQUEST);
 			epsDataRequestClient.requestGuestListData(dataRequest);
 		} catch (IRISDataRequestException e) {
-			log.error("Event Data Request {} could not be submitted: {}", dataRequest.getId(), e);
-
+			
 			repository.delete(dataRequest);
 
 			throw new IRISDataRequestException(e);
@@ -133,8 +132,7 @@ public class EventDataRequestService {
 				proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
 				epsDataRequestClient.abortGuestListDataRequest(dataRequest);
 			} catch (IRISAnnouncementException | IRISDataRequestException e) {
-				e.printStackTrace();
-				// TODO: Should we do something here?
+				log.error("Abort announcement for token {} failed", dataRequest.getAnnouncementToken(), e);
 			}
 		}
 

@@ -1,5 +1,6 @@
 package iris.client_bff.events.eps;
 
+import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,9 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 public class EPSDataProviderClient implements DataProviderClient {
 
 	private final JsonRpcHttpClient epsRpcClient;
+	private final AlertService alertService;
 
+	@Override
 	public void requestGuestListData(EventDataRequest request) throws IRISDataRequestException {
 
 		var requestId = request.getId().toString();
@@ -43,7 +46,10 @@ public class EPSDataProviderClient implements DataProviderClient {
 			log.debug("requestGuestListData done: method {}; request {};", methodName, requestId);
 
 		} catch (Throwable t) {
-			log.error("requestGuestListData error: method {}; request {}; error {}", methodName, requestId, t);
+
+			log.error("requestGuestListData error: method {}; request {}; error {}", methodName, requestId, t.getMessage());
+			alertService.createAlertMessage("Request data error", "IRIS can't request data from provider "
+					+ request.getLocation().getProviderId() + ". Can't call JSON-RPC method createDataRequest.");
 
 			throw new IRISDataRequestException(t);
 		}
@@ -70,8 +76,10 @@ public class EPSDataProviderClient implements DataProviderClient {
 			log.debug("abortGuestListDataRequest done: method {}; request {};", methodName, requestId);
 
 		} catch (Throwable t) {
-			log.error("abortGuestListDataRequest error: method {}; request {}; error {}", methodName, requestId, t);
-			throw new IRISDataRequestException(t);
+			log.info("abortGuestListDataRequest error: method {}; request {}; error {}", methodName, requestId,
+					t.getMessage());
+			// The abort method isn't documented at the moment and therefore it is currently not mandatory
+			// throw new IRISDataRequestException(t);
 		}
 	}
 
