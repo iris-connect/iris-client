@@ -89,7 +89,6 @@ public class EventDataRequestController {
 		@RequestParam(required = false) Status status,
 		@RequestParam(required = false) String search,
 		Pageable pageable) {
-
 		if (ValidationHelper.isPossibleAttackForRequiredValue(search, EXCEPTION_MESSAGE_SEARCH + search)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
 		}
@@ -134,8 +133,6 @@ public class EventDataRequestController {
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
 			EventDataRequest updated = dataRequestService.update(dataRequest.get(), patchValidated);
-
-			dataRequestService.sendDataRecievedEmail(updated, patchValidated.getStatus());
 
 			DataRequestDetails requestDetails = mapDataRequestDetails(updated);
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);

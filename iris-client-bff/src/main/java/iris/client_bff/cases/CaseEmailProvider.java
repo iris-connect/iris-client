@@ -15,20 +15,27 @@
 package iris.client_bff.cases;
 
 import io.vavr.control.Try;
-import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.core.EmailAddress;
 import iris.client_bff.core.mail.EmailProvider;
 import iris.client_bff.core.mail.EmailSender;
-import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail.ConfiguredRecipient;
+import iris.client_bff.core.mail.EmailSender.TemplatedEmail.ConfiguredRecipient;
 import iris.client_bff.core.mail.EmailTemplates;
-import lombok.extern.slf4j.Slf4j;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 /**
  * Helper to send out emails during index case processing
@@ -36,42 +43,52 @@ import org.springframework.stereotype.Component;
  * @author Jens Kutzsche
  */
 @Component
-@Slf4j
 public class CaseEmailProvider extends EmailProvider {
 
 	@Value("${iris.client.basePath}")
 	private String basePath;
 
-	@Value("${spring.mail.properties.recipient.case.data-recieved.name}")
-	private String dataRecievedRecipientName;
-	@Value("${spring.mail.properties.recipient.case.data-recieved.email}")
-	private String dataRecievedRecipientEmail;
+	@Value("${iris.client.mailing.active:false}")
+	private @Setter(value = AccessLevel.PACKAGE) boolean mailingActive;
 
-	public CaseEmailProvider(EmailSender emailSender, MessageSourceAccessor messages) {
-		super(emailSender, messages);
+	@Value("${spring.mail.properties.recipient.case.data-received.name:#{null}}")
+	private String dataReceivedRecipientName;
+	@Value("${spring.mail.properties.recipient.case.data-received.email:#{null}}")
+	private @Setter(value = AccessLevel.PACKAGE) String dataReceivedRecipientEmail;
+
+	public CaseEmailProvider(EmailSender emailSender, MessageSourceAccessor messages, MailProperties mailProperties) {
+		super(emailSender, messages, mailProperties);
 	}
 
-	public Try<Void> sendDataRecievedEmail(IndexCaseDetailsDTO caseData) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("caseId", caseData.getName());
-		parameters.put("externalId", caseData.getExternalCaseId());
-		parameters.put("startTime", caseData.getStart());
-		parameters.put("endTime", caseData.getEnd());
-		parameters.put("caseUrl", basePath + "/cases/details/" + caseData.getCaseId());
+	@PostConstruct
+	void checkMailProperties() {
 
-		var subject = messages.getMessage("CaseDataRecievedEmail.subject");
+		if (mailingActive) {
+			Assert.isTrue(EmailAddress.isValid(dataReceivedRecipientEmail),
+					"The property spring.mail.properties.recipient.case.data-received.email must contains the e-mail address of the recipient for case hints!");
+		}
+	}
 
-		CaseEmail email;
+	@Async
+	public Future<Try<Void>> sendDataReceivedEmailAsynchronously(CaseDataRequest caseData) {
 
-		if (dataRecievedRecipientName != null && dataRecievedRecipientEmail != null) {
-			EmailAddress emailAddress = EmailAddress.of(dataRecievedRecipientEmail);
-			ConfiguredRecipient recipient = new ConfiguredRecipient(dataRecievedRecipientName, emailAddress);
-
-			email = new CaseEmail(recipient, subject, EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, parameters);
-		} else {
-			email = new CaseEmail(null, subject, EmailTemplates.Keys.CASE_DATA_RECIEVED_MAIL_FTLH, parameters);
+		if (!mailingActive) {
+			return AsyncResult.forValue(Try.success(null));
 		}
 
-		return sendMail(email);
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("caseId", caseData.getName());
+		parameters.put("externalId", caseData.getRefId());
+		parameters.put("startTime", caseData.getRequestStart());
+		parameters.put("endTime", caseData.getRequestEnd());
+		parameters.put("caseUrl", basePath + "/cases/details/" + caseData.getId());
+
+		var subject = messages.getMessage("CaseDataReceivedEmail.subject");
+
+		EmailAddress emailAddress = EmailAddress.of(dataReceivedRecipientEmail);
+		ConfiguredRecipient recipient = new ConfiguredRecipient(dataReceivedRecipientName, emailAddress);
+
+		CaseEmail email = new CaseEmail(recipient, subject, EmailTemplates.Keys.CASE_DATA_RECEIVED_MAIL_FTLH, parameters);
+		return new AsyncResult<>(sendMail(email, parameters.get("caseId").toString()));
 	}
 }

@@ -113,8 +113,6 @@ public class CaseDataRequestController {
 			.map(ResponseEntity::ok)
 			.orElseGet(ResponseEntity.notFound()::build);
 
-		caseDataRequestService.sendDataRecievedEmail(responseEntity.getBody(), updateValidated.getStatus());
-
 		return responseEntity;
 	}
 
