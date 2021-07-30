@@ -13,7 +13,7 @@ import com.googlecode.jsonrpc4j.spring.CompositeJsonServiceExporter;
 @AllArgsConstructor
 public class DataSubmissionConfig {
 
-	public static final String DATA_SUBMISSION_ENDPOINT = "/data-submission-rpc";
+	public static final String DATA_SUBMISSION_ENDPOINT = "/data-submission-rpc/";
 
 	CaseDataController caseDataController;
 
