@@ -6,6 +6,7 @@ declare global {
 
 export type IRISAppContext = {
   apiBaseURL: string;
+  csvExportStandardAtomicAddress: string;
   localContactPerson: {
     name?: string;
     phone?: string;
