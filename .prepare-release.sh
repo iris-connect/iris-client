@@ -136,6 +136,7 @@ export VUE_APP_API_BASE_URL="/api"
 export VUE_APP_LOCAL_CONTACT_PERSON_NAME=""
 export VUE_APP_LOCAL_CONTACT_PERSON_MAIL=""
 export VUE_APP_LOCAL_CONTACT_PERSON_PHONE=""
+export VUE_APP_CSV_EXPORT_STANDARD_ATOMIC_ADDRESS=""
 npm run build
 cd dist && zip -qq -r ../../release/iris-client-fe-$VERSION.zip *
 
@@ -207,4 +208,4 @@ fi
 
 printf "\n  COMPLETED: Build components and prepare release  \n\n"
 
-#printenv 
+#printenv
