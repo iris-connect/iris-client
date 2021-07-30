@@ -1,6 +1,5 @@
 package iris.client_bff.cases.web;
 
-import static iris.client_bff.cases.web.IndexCaseMapper.mapDataSubmission;
 import static iris.client_bff.cases.web.IndexCaseMapper.mapDetailed;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -46,11 +45,12 @@ public class CaseDataRequestController {
 
 	@GetMapping
 	@ResponseStatus(OK)
-	public Page<IndexCaseDTO> getAll(@RequestParam(required = false) Status status,
-			@RequestParam(required = false) String search, Pageable pageable) {
+	public Page<IndexCaseDTO> getAll(
+		@RequestParam(required = false) Status status,
+		@RequestParam(required = false) String search,
+		Pageable pageable) {
 		if (status != null && StringUtils.isNotEmpty(search)) {
-			return caseDataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable)
-					.map(IndexCaseMapper::map);
+			return caseDataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(IndexCaseMapper::map);
 		} else if (StringUtils.isNotEmpty(search)) {
 			return caseDataRequestService.searchByRefIdOrName(search, pageable).map(IndexCaseMapper::map);
 		} else if (status != null) {
@@ -74,16 +74,13 @@ public class CaseDataRequestController {
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> getDetails(@PathVariable UUID id) {
 
-		return caseDataRequestService.findDetailed(id)
-				.map((dataRequest -> {
-					var indexCaseDetailsDTO = mapDetailed(dataRequest);
+		return caseDataRequestService.findDetailed(id).map((dataRequest -> {
+			var indexCaseDetailsDTO = mapDetailed(dataRequest);
 
-					submissionService.findByRequest(dataRequest).ifPresent(indexCaseDetailsDTO::setSubmissionData);
+			submissionService.findByRequest(dataRequest).ifPresent(indexCaseDetailsDTO::setSubmissionData);
 
-					return indexCaseDetailsDTO;
-				}))
-				.map(ResponseEntity::ok)
-				.orElseGet(ResponseEntity.notFound()::build);
+			return indexCaseDetailsDTO;
+		})).map(ResponseEntity::ok).orElseGet(ResponseEntity.notFound()::build);
 	}
 
 	@PatchMapping("/{id}")
@@ -94,8 +91,6 @@ public class CaseDataRequestController {
 			.map(IndexCaseMapper::mapDetailed)
 			.map(ResponseEntity::ok)
 			.orElseGet(ResponseEntity.notFound()::build);
-
-		caseDataRequestService.sendDataRecievedEmail(responseEntity.getBody(), update.getStatus());
 
 		return responseEntity;
 	}

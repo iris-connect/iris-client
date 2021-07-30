@@ -2,11 +2,11 @@ package iris.client_bff.events;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.eps.DataProviderClient;
-import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.proxy.ProxyServiceClient;
 import iris.client_bff.search_client.SearchClient;
 
@@ -27,8 +27,6 @@ public class EventDataRequestServiceTest {
 	@Mock
 	SearchClient searchClient;
 
-	EventDataRequestService service;
-
 	@Mock
 	DataProviderClient epsDataRequestClient;
 
@@ -38,9 +36,11 @@ public class EventDataRequestServiceTest {
 	@Mock
 	EventEmailProvider emailProvider;
 
+	EventDataRequestService service;
+
 	@BeforeEach
 	void setUp() {
-		service = new EventDataRequestService(repository, searchClient, proxyServiceClient, epsDataRequestClient, emailProvider);
+		service = new EventDataRequestService(repository, searchClient, proxyServiceClient, epsDataRequestClient);
 	}
 
 	@Test
@@ -63,25 +63,5 @@ public class EventDataRequestServiceTest {
 
 		verify(repository).getCountWithStatus(status);
 		assertEquals(value, 20);
-	}
-
-	@Test
-	void sendDataRecievedEmailWithStatusUpdated() {
-		EventDataRequest updated = new EventDataRequest();
-		EventStatusDTO status = EventStatusDTO.DATA_RECEIVED;
-
-		service.sendDataRecievedEmail(updated, status);
-
-		verify(emailProvider, times(1)).sendDataRecievedEmail(any());
-	}
-
-	@Test
-	void sendDataRecievedEmailWithStatusNotUpdated() {
-		EventDataRequest updated = new EventDataRequest();
-		EventStatusDTO status = EventStatusDTO.DATA_REQUESTED;
-
-		service.sendDataRecievedEmail(updated, status);
-
-		verify(emailProvider, times(0)).sendDataRecievedEmail(any());
 	}
 }

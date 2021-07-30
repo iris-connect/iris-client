@@ -3,7 +3,7 @@ server {
     listen 443 ssl;
 
     ssl_certificate /etc/iris/${IRIS_CLIENT_DOMAIN_CERT};
-    ssl_certificate_key /etc/iris/${IRIS_CLIENT_DOMAIN_CERT_KEY};    
+    ssl_certificate_key /etc/iris/${IRIS_CLIENT_DOMAIN_CERT_KEY};
 
     # Proxy headers
     proxy_set_header Upgrade           $http_upgrade;
@@ -32,7 +32,6 @@ server {
     }
 
     # SECURITY
-
     # Strict Transport Security
     add_header Strict-Transport-Security "max-age=31536000; includeSubdomains; preload";
     # X Content Type Options
@@ -43,9 +42,17 @@ server {
     add_header Content-Security-Policy "default-src 'self'; child-src 'none';";
     # X-XSS-Protection - legacy, should be covered by CSP
     add_header X-XSS-Protection "1; mode=block";
+    # Referrer-Policy
+    add_header Referrer-Policy 'strict-origin';
+
+    #GZIP
+    gzip on;
+    gzip_static on;
+    gzip_types text/css application/javascript image/vnd.microsoft.icon image/png image/svg+xml application/x-font-ttf application/x-font-opentype application/vnd.ms-fontobject;
 
     # CACHE
     location ~* \.(js|jpg|jpeg|gif|png|css|tgz|gz|rar|bz2|doc|pdf|ppt|tar|wav|bmp|rtf|swf|ico|flv|txt|woff|woff2|svg)$ {
+        proxy_pass                         http://iris-frontend:28080;
         expires 1d;
         add_header Pragma "private";
         add_header Cache-Control "private";
@@ -66,7 +73,7 @@ server {
     }
 
     # "always" keyword is required to also set access-control headers in case of error responses.
-    # Otherwise errors like 403 will not be forwarded by nginx and instead 
+    # Otherwise errors like 403 will not be forwarded by nginx and instead
     add_header Access-Control-Allow-Origin      $cors_origin    always;
     add_header Access-Control-Allow-Credentials $cors_cred      always;
     add_header Access-Control-Allow-Headers     $cors_header    always;
