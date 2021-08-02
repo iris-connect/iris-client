@@ -3,10 +3,8 @@ private:
   database_file: /private-proxy/private-proxy-announcements.db
   bind_address: 0.0.0.0:5545
   internal_endpoint:
-    #address: iris-client:8092
-    jsonrpc_path: /data-submission-rpc
-    jsonrpc_client:
-      endpoint: http://iris-client:8092/data-submission-rpc
+    internal_endpoint:
+      address: "iris-client:8092/data-submission-rpc"
     tls:
       verify_client: false
       server_name: proxy.test-gesundheitsamt.de
