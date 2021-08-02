@@ -38,10 +38,7 @@ private:
   database_file: /app/db/private-proxy-announcements.db
   bind_address: 0.0.0.0:5545
   internal_endpoint: 
-    jsonrpc_path: /data-submission-rpc
-    jsonrpc_client:
-      endpoint: "http://$IRIS_CLIENT_BFF_HOSTNAME:8092/data-submission-rpc"
-
+    address: "$IRIS_CLIENT_BFF_HOSTNAME:8092/data-submission-rpc"
     tls:
       verify_client: false
       server_name: "$PROXY_DOMAIN"
