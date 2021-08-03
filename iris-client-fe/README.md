@@ -180,6 +180,7 @@ Steps:
    export LOCAL_CONTACT_PERSON_NAME="Max Musterkontakt"
    export LOCAL_CONTACT_PERSON_PHONE="069 123 4567"
    export LOCAL_CONTACT_PERSON_MAIL="max.musterkontakt@ga.de"
+   export CSV_EXPORT_STANDARD_ATOMIC_ADDRESS="false"
    ```
 
 5. Start caddy

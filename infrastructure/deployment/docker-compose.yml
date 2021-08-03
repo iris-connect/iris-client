@@ -69,6 +69,7 @@ services:
       LOCAL_CONTACT_PERSON_NAME:
       LOCAL_CONTACT_PERSON_MAIL:
       LOCAL_CONTACT_PERSON_PHONE:
+      CSV_EXPORT_STANDARD_ATOMIC_ADDRESS:
     depends_on:
       - iris-client
     restart: unless-stopped
