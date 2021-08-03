@@ -24,20 +24,20 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class LocationSearchController {
 
-	private static final String EXCEPTION_MESSAGE_SEARCH = " - search: ";
+	private static final String ERR_MSG_SEARCH = " - search: ";
 	private final SearchClient searchClient;
 
 	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
-	public LocationQueryResult searchSearchKeywordGet(@Size(min = 4) @RequestParam String search, Pageable pageable) {
+	public LocationQueryResult searchSearchKeywordGet(@Size(min = 4, max = 100) @RequestParam String search, Pageable pageable) {
 		if (isSearchInputValid(search)) {
 			return searchClient.search(search, pageable);
 		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 	}
 
 	private boolean isSearchInputValid(String search) {
-		return (search.length() < 4 && !ValidationHelper.isPossibleAttack(search, EXCEPTION_MESSAGE_SEARCH + search));
+		return (!ValidationHelper.isPossibleAttack(search, ERR_MSG_SEARCH + search));
 	}
 }

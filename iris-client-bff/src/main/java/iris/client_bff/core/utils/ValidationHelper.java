@@ -11,28 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ValidationHelper {
 
-	public static boolean isUUIDInputValid(String id, String message) {
-		String uuidRegex = "([0123456789abcdef]{8})-([0123456789abcdef]{4})-([0123456789abcdef]{4})-([0123456789abcdef]{4})-([0123456789abcdef]{12})";
-
-		if (id.matches(uuidRegex)) {
-			return true;
-		}
-
-		log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + message);
-		return false;
-	}
-
-	public static boolean isPossibleAttackForRequiredValue(String input, String message) {
-		if (input == null || input.length() <= 0) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + message);
-			return true;
-		}
-
-		return isPossibleAttack(input, message);
-	}
-
-	public static boolean isPossibleAttack(String input, String message) {
-		String[] forbiddenSymbolsArray = {
+	private static final String UUID_REGEX = "([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})";
+	private static final String[] FORBIDDEN_SYMBOLS = {
 			"=",
 			"<",
 			">",
@@ -93,6 +73,26 @@ public class ValidationHelper {
 			"°",
 			"„" };
 
+	public static boolean isUUIDInputValid(String id, String idName) {
+
+		if (id.matches(UUID_REGEX)) {
+			return true;
+		}
+
+		log.warn(ErrorMessages.INVALID_INPUT + idName + id);
+		return false;
+	}
+
+	public static boolean isPossibleAttackForRequiredValue(String input, String message) {
+		if (input == null || input.length() <= 0) {
+			log.warn(ErrorMessages.INVALID_INPUT + message);
+			return true;
+		}
+
+		return isPossibleAttack(input, message);
+	}
+
+	public static boolean isPossibleAttack(String input, String message) {
 		if (input == null) {
 			return false;
 		}
@@ -100,8 +100,8 @@ public class ValidationHelper {
 		String inputUpper = input.toUpperCase();
 		if (inputUpper.contains("<SCRIPT")
 			|| inputUpper.contains("SELECT") && inputUpper.contains("FROM")
-			|| StringUtils.startsWithAny(input, forbiddenSymbolsArray)) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + message);
+			|| StringUtils.startsWithAny(input, FORBIDDEN_SYMBOLS)) {
+			log.warn(ErrorMessages.INVALID_INPUT + message);
 			return true;
 		}
 

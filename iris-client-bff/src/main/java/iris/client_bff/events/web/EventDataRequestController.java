@@ -51,15 +51,15 @@ import org.springframework.web.server.ResponseStatusException;
 @AllArgsConstructor
 public class EventDataRequestController {
 
-	private static final String EXCEPTION_MESSAGE_PROVIDER_ID = " - providerId: ";
-	private static final String EXCEPTION_MESSAGE_LOCATION_ID = " - locationId: ";
-	private static final String EXCEPTION_MESSAGE_REQUEST_DETAILS = " - requestDetails: ";
-	private static final String EXCEPTION_MESSAGE_STATUS = " - status: ";
-	private static final String EXCEPTION_MESSAGE_EXTERNAL_REQUEST_ID = " - externalRequestId: ";
-	private static final String EXCEPTION_MESSAGE_NAME = " - name: ";
-	private static final String EXCEPTION_MESSAGE_COMMENT = " - comment: ";
-	private static final String EXCEPTION_MESSAGE_CODE = " - code: ";
-	private static final String EXCEPTION_MESSAGE_SEARCH = " - search: ";
+	private static final String ERR_MSG_PROVIDER_ID = " - providerId: ";
+	private static final String ERR_MSG_LOCATION_ID = " - locationId: ";
+	private static final String ERR_MSG_REQUEST_DETAILS = " - requestDetails: ";
+	private static final String ERR_MSG_STATUS = " - status: ";
+	private static final String ERR_MSG_EXTERNAL_REQUEST_ID = " - externalRequestId: ";
+	private static final String ERR_MSG_NAME = " - name: ";
+	private static final String ERR_MSG_COMMENT = " - comment: ";
+	private static final String ERR_MSG_CODE = " - code: ";
+	private static final String ERR_MSG_SEARCH = " - search: ";
 
 	private EventDataRequestService dataRequestService;
 	private EventDataSubmissionRepository submissionRepo;
@@ -89,8 +89,8 @@ public class EventDataRequestController {
 		@RequestParam(required = false) Status status,
 		@RequestParam(required = false) String search,
 		Pageable pageable) {
-		if (ValidationHelper.isPossibleAttackForRequiredValue(search, EXCEPTION_MESSAGE_SEARCH + search)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		if (ValidationHelper.isPossibleAttack(search, ERR_MSG_SEARCH + search)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
 		if (status != null && StringUtils.isNotEmpty(search)) {
@@ -106,7 +106,7 @@ public class EventDataRequestController {
 	@GetMapping("/{code}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable UUID code) {
-		if (ValidationHelper.isUUIDInputValid(code.toString(), EXCEPTION_MESSAGE_CODE + code.toString())) {
+		if (ValidationHelper.isUUIDInputValid(code.toString(), ERR_MSG_CODE)) {
 			var dataRequest = dataRequestService.findById(code);
 			if (dataRequest.isPresent()) {
 				DataRequestDetails requestDetails = mapDataRequestDetails(dataRequest.get());
@@ -124,11 +124,12 @@ public class EventDataRequestController {
 	@PatchMapping("/{code}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> update(@PathVariable UUID code, @RequestBody EventUpdateDTO patch) {
-		if (!ValidationHelper.isUUIDInputValid(code.toString(), EXCEPTION_MESSAGE_CODE + code.toString())) {
+		if (!ValidationHelper.isUUIDInputValid(code.toString(), ERR_MSG_CODE)) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		EventUpdateDTO patchValidated = validateEventUpdateDTO(patch);
+		EventUpdateDTO patchValidated = patch;//validateEventUpdateDTO(patch);
+
 
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
@@ -145,18 +146,18 @@ public class EventDataRequestController {
 
 	private EventUpdateDTO validateEventUpdateDTO(EventUpdateDTO patch) {
 		if (patch == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		if (ValidationHelper.isPossibleAttack(patch.getComment(), EXCEPTION_MESSAGE_COMMENT + patch.getComment())) {
+		if (ValidationHelper.isPossibleAttack(patch.getComment(), ERR_MSG_COMMENT + patch.getComment())) {
 			patch.setComment(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(patch.getName(), EXCEPTION_MESSAGE_NAME + patch.getName())) {
+		if (ValidationHelper.isPossibleAttack(patch.getName(), ERR_MSG_NAME + patch.getName())) {
 			patch.setName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(patch.getExternalRequestId(), EXCEPTION_MESSAGE_EXTERNAL_REQUEST_ID + patch.getExternalRequestId())) {
+		if (ValidationHelper.isPossibleAttack(patch.getExternalRequestId(), ERR_MSG_EXTERNAL_REQUEST_ID + patch.getExternalRequestId())) {
 			patch.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
@@ -165,8 +166,8 @@ public class EventDataRequestController {
 				|| patch.getStatus() == EventStatusDTO.DATA_REQUESTED
 				|| patch.getStatus() == EventStatusDTO.ABORTED
 				|| patch.getStatus() == EventStatusDTO.CLOSED)) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_STATUS + patch.getStatus());
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+			log.warn(ErrorMessages.INVALID_INPUT + ERR_MSG_STATUS + patch.getStatus());
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
 		return patch;
@@ -174,49 +175,49 @@ public class EventDataRequestController {
 
 	private DataRequestClient validateDataRequestClient(DataRequestClient request) {
 		if (request == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		if (ValidationHelper.isPossibleAttack(request.getComment(), EXCEPTION_MESSAGE_COMMENT + request.getComment())) {
+		if (ValidationHelper.isPossibleAttack(request.getComment(), ERR_MSG_COMMENT + request.getComment())) {
 			request.setComment(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(request.getName(), EXCEPTION_MESSAGE_NAME + request.getName())) {
+		if (ValidationHelper.isPossibleAttack(request.getName(), ERR_MSG_NAME + request.getName())) {
 			request.setName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(request.getRequestDetails(), EXCEPTION_MESSAGE_REQUEST_DETAILS + request.getRequestDetails())) {
+		if (ValidationHelper.isPossibleAttack(request.getRequestDetails(), ERR_MSG_REQUEST_DETAILS + request.getRequestDetails())) {
 			request.setRequestDetails(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		if (ValidationHelper.isPossibleAttackForRequiredValue(
 			request.getExternalRequestId(),
-			EXCEPTION_MESSAGE_EXTERNAL_REQUEST_ID + request.getExternalRequestId())) {
+			ERR_MSG_EXTERNAL_REQUEST_ID + request.getExternalRequestId())) {
 			request.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttackForRequiredValue(request.getProviderId(), EXCEPTION_MESSAGE_PROVIDER_ID + request.getProviderId())) {
+		if (ValidationHelper.isPossibleAttackForRequiredValue(request.getProviderId(), ERR_MSG_PROVIDER_ID + request.getProviderId())) {
 			request.setProviderId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttackForRequiredValue(request.getLocationId(), EXCEPTION_MESSAGE_LOCATION_ID + request.getLocationId())) {
+		if (ValidationHelper.isPossibleAttackForRequiredValue(request.getLocationId(), ERR_MSG_LOCATION_ID + request.getLocationId())) {
 			request.setLocationId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		boolean isInvalid = false;
 
 		if (request.getStart() == null) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - start: null");
+			log.warn(ErrorMessages.INVALID_INPUT + " - start: null");
 			isInvalid = true;
 		}
 
 		if (request.getEnd() == null) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + " - end: null");
+			log.warn(ErrorMessages.INVALID_INPUT + " - end: null");
 			isInvalid = true;
 		}
 
 		if (isInvalid) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
 		return request;

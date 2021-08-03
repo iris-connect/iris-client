@@ -37,12 +37,12 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/users")
 public class UserController {
 
-	private static final String EXCEPTION_MESSAGE_ROLE = " - role: ";
-	private static final String EXCEPTION_MESSAGE_PASSWORD = " - password";
-	private static final String EXCEPTION_MESSAGE_USER_NAME = " - userName: ";
-	private static final String EXCEPTION_MESSAGE_LAST_NAME = " - lastName";
-	private static final String EXCEPTION_MESSAGE_FIRST_NAME = " - firstName";
-	private static final String EXCEPTION_MESSAGE_ID = " - id: ";
+	private static final String ERR_MSG_ROLE = " - role: ";
+	private static final String ERR_MSG_PASSWORD = " - password";
+	private static final String ERR_MSG_USER_NAME = " - userName: ";
+	private static final String ERR_MSG_LAST_NAME = " - lastName";
+	private static final String ERR_MSG_FIRST_NAME = " - firstName";
+	private static final String ERR_MSG_USER_ID = " - userId: ";
 	private final UserDetailsServiceImpl userService;
 
 	@GetMapping
@@ -64,8 +64,8 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
-		if (!ValidationHelper.isUUIDInputValid(id.toString(), EXCEPTION_MESSAGE_ID + userUpdateDTO)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+		if (!ValidationHelper.isUUIDInputValid(id.toString(), ERR_MSG_USER_ID)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
 		UserUpdateDTO userUpdateDTOValidated = validateUserUpdateDTO(userUpdateDTO);
@@ -77,44 +77,44 @@ public class UserController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public void deleteUser(@PathVariable UUID id) {
-		if (ValidationHelper.isUUIDInputValid(id.toString(), EXCEPTION_MESSAGE_ID + id)) {
+		if (ValidationHelper.isUUIDInputValid(id.toString(), ERR_MSG_USER_ID)) {
 			this.userService.deleteById(id);
 		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 	}
 
 	private UserUpdateDTO validateUserUpdateDTO(UserUpdateDTO userUpdateDTO) {
 		if (userUpdateDTO == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		if (ValidationHelper.isPossibleAttack(userUpdateDTO.getFirstName(), EXCEPTION_MESSAGE_FIRST_NAME)) {
+		if (ValidationHelper.isPossibleAttack(userUpdateDTO.getFirstName(), ERR_MSG_FIRST_NAME)) {
 			userUpdateDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(userUpdateDTO.getLastName(), EXCEPTION_MESSAGE_LAST_NAME)) {
+		if (ValidationHelper.isPossibleAttack(userUpdateDTO.getLastName(), ERR_MSG_LAST_NAME)) {
 			userUpdateDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		if (ValidationHelper
-			.isPossibleAttackForRequiredValue(userUpdateDTO.getUserName(), EXCEPTION_MESSAGE_USER_NAME + userUpdateDTO.getUserName())) {
+			.isPossibleAttackForRequiredValue(userUpdateDTO.getUserName(), ERR_MSG_USER_NAME + userUpdateDTO.getUserName())) {
 			userUpdateDTO.setUserName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		boolean isInvalid = false;
 
-		if (ValidationHelper.isPossibleAttackForRequiredValue(userUpdateDTO.getPassword(), EXCEPTION_MESSAGE_PASSWORD)) {
+		if (ValidationHelper.isPossibleAttackForRequiredValue(userUpdateDTO.getPassword(), ERR_MSG_PASSWORD)) {
 			isInvalid = true;
 		}
 
 		if (!(userUpdateDTO.getRole() == UserRoleDTO.ADMIN || userUpdateDTO.getRole() == UserRoleDTO.USER)) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_ROLE + userUpdateDTO.getRole());
+			log.warn(ErrorMessages.INVALID_INPUT + ERR_MSG_ROLE + userUpdateDTO.getRole());
 			isInvalid = true;
 		}
 
 		if (isInvalid) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
 		return userUpdateDTO;
@@ -122,35 +122,35 @@ public class UserController {
 
 	private UserInsertDTO validateUserInsertDTO(UserInsertDTO userInsertDTO) {
 		if (userInsertDTO == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		if (ValidationHelper.isPossibleAttack(userInsertDTO.getFirstName(), EXCEPTION_MESSAGE_FIRST_NAME)) {
+		if (ValidationHelper.isPossibleAttack(userInsertDTO.getFirstName(), ERR_MSG_FIRST_NAME)) {
 			userInsertDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(userInsertDTO.getLastName(), EXCEPTION_MESSAGE_LAST_NAME)) {
+		if (ValidationHelper.isPossibleAttack(userInsertDTO.getLastName(), ERR_MSG_LAST_NAME)) {
 			userInsertDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		if (ValidationHelper
-			.isPossibleAttackForRequiredValue(userInsertDTO.getUserName(), EXCEPTION_MESSAGE_USER_NAME + userInsertDTO.getUserName())) {
+			.isPossibleAttackForRequiredValue(userInsertDTO.getUserName(), ERR_MSG_USER_NAME + userInsertDTO.getUserName())) {
 			userInsertDTO.setUserName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		boolean isInvalid = false;
 
-		if (ValidationHelper.isPossibleAttackForRequiredValue(userInsertDTO.getPassword(), EXCEPTION_MESSAGE_PASSWORD)) {
+		if (ValidationHelper.isPossibleAttackForRequiredValue(userInsertDTO.getPassword(), ERR_MSG_PASSWORD)) {
 			isInvalid = true;
 		}
 
 		if (!(userInsertDTO.getRole() == UserRoleDTO.ADMIN || userInsertDTO.getRole() == UserRoleDTO.USER)) {
-			log.warn(ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE + EXCEPTION_MESSAGE_ROLE + userInsertDTO.getRole());
+			log.warn(ErrorMessages.INVALID_INPUT + ERR_MSG_ROLE + userInsertDTO.getRole());
 			isInvalid = true;
 		}
 
 		if (isInvalid) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_EXCEPTION_MESSAGE);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
 		return userInsertDTO;
