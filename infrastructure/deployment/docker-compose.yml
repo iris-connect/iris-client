@@ -37,7 +37,7 @@ services:
 
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-bff:1.0
+    image: inoeg/iris-client-bff:local-version
     expose:
       - 8092
     environment:
@@ -55,13 +55,14 @@ services:
       SECURITY_JWT_JWT_SHARED_SECRET:
       IRIS_LOCATION_SERVICE_ENDPOINT: ${EPS_LS_NAME}
       IRIS_CLIENT_BASEPATH: "https://${IRIS_CLIENT_DOMAIN}"
+      EXT_APP_DW_BASEURL:
     depends_on:
       - postgres
     restart: unless-stopped
 
   # IRIS Client Frontend for users
   iris-frontend:
-    image: inoeg/iris-client-frontend:1.0
+    image: inoeg/iris-client-frontend:develop
     expose:
       - 28080
     environment:
@@ -76,7 +77,7 @@ services:
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: inoeg/iris-client-eps:1.0
+    image: inoeg/iris-client-eps:develop
     expose:
       - 4446
       - 5556
@@ -98,7 +99,7 @@ services:
 
   # Proxy for inbound connections.
   private-proxy:
-    image: inoeg/iris-client-proxy:1.0
+    image: inoeg/iris-client-proxy:develop
     expose:
       - 5545
       - 8877
@@ -123,7 +124,7 @@ services:
     restart: unless-stopped
 
   private-proxy-eps:
-    image: inoeg/iris-client-eps:1.0
+    image: inoeg/iris-client-eps:develop
     expose:
       - 7766
       - 7776
@@ -145,7 +146,7 @@ services:
 
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:1.0
+    image: inoeg/iris-client-nginx:develop
     ports:
       - ${IRIS_CLIENT_PORT:-443}:443
     environment:
