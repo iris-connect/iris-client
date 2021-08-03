@@ -18,5 +18,4 @@ import lombok.ToString;
 public class CaseDataProvider {
 	String firstName;
 	String lastName;
-	Instant dateOfBirth;
 }
