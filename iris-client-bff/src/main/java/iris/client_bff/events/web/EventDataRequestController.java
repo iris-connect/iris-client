@@ -51,19 +51,20 @@ import org.springframework.web.server.ResponseStatusException;
 @AllArgsConstructor
 public class EventDataRequestController {
 
-	private static final String ERR_MSG_PROVIDER_ID = " - providerId: ";
-	private static final String ERR_MSG_LOCATION_ID = " - locationId: ";
-	private static final String ERR_MSG_REQUEST_DETAILS = " - requestDetails: ";
-	private static final String ERR_MSG_STATUS = " - status: ";
-	private static final String ERR_MSG_EXTERNAL_REQUEST_ID = " - externalRequestId: ";
-	private static final String ERR_MSG_NAME = " - name: ";
-	private static final String ERR_MSG_COMMENT = " - comment: ";
-	private static final String ERR_MSG_CODE = " - code: ";
-	private static final String ERR_MSG_SEARCH = " - search: ";
+	private static final String FIELD_PROVIDER_ID = "providerId";
+	private static final String FIELD_LOCATION_ID = "locationId";
+	private static final String FIELD_REQUEST_DETAILS = "requestDetails";
+	private static final String FIELD_STATUS = "status";
+	private static final String FIELD_EXTERNAL_REQUEST_ID = "externalRequestId";
+	private static final String FIELD_NAME = "name";
+	private static final String FIELD_COMMENT = "comment";
+	private static final String FIELD_CODE = "code";
+	private static final String FIELD_SEARCH = "search";
 
 	private EventDataRequestService dataRequestService;
 	private EventDataSubmissionRepository submissionRepo;
 
+	private ValidationHelper validHelper;
 	private ModelMapper modelMapper;
 
 	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (EventDataRequest request) -> {
@@ -89,7 +90,7 @@ public class EventDataRequestController {
 		@RequestParam(required = false) Status status,
 		@RequestParam(required = false) String search,
 		Pageable pageable) {
-		if (ValidationHelper.isPossibleAttack(search, ERR_MSG_SEARCH + search)) {
+		if (validHelper.isPossibleAttack(search, FIELD_SEARCH, false)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
@@ -106,7 +107,7 @@ public class EventDataRequestController {
 	@GetMapping("/{code}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable UUID code) {
-		if (ValidationHelper.isUUIDInputValid(code.toString(), ERR_MSG_CODE)) {
+		if (ValidationHelper.isUUIDInputValid(code.toString(), FIELD_CODE)) {
 			var dataRequest = dataRequestService.findById(code);
 			if (dataRequest.isPresent()) {
 				DataRequestDetails requestDetails = mapDataRequestDetails(dataRequest.get());
@@ -124,7 +125,7 @@ public class EventDataRequestController {
 	@PatchMapping("/{code}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> update(@PathVariable UUID code, @RequestBody EventUpdateDTO patch) {
-		if (!ValidationHelper.isUUIDInputValid(code.toString(), ERR_MSG_CODE)) {
+		if (!ValidationHelper.isUUIDInputValid(code.toString(), FIELD_CODE)) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
@@ -149,15 +150,15 @@ public class EventDataRequestController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		if (ValidationHelper.isPossibleAttack(patch.getComment(), ERR_MSG_COMMENT + patch.getComment())) {
+		if (validHelper.isPossibleAttack(patch.getComment(), FIELD_COMMENT, false)) {
 			patch.setComment(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(patch.getName(), ERR_MSG_NAME + patch.getName())) {
+		if (validHelper.isPossibleAttack(patch.getName(), FIELD_NAME, false)) {
 			patch.setName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(patch.getExternalRequestId(), ERR_MSG_EXTERNAL_REQUEST_ID + patch.getExternalRequestId())) {
+		if (validHelper.isPossibleAttack(patch.getExternalRequestId(), FIELD_EXTERNAL_REQUEST_ID, false)) {
 			patch.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
@@ -166,7 +167,7 @@ public class EventDataRequestController {
 				|| patch.getStatus() == EventStatusDTO.DATA_REQUESTED
 				|| patch.getStatus() == EventStatusDTO.ABORTED
 				|| patch.getStatus() == EventStatusDTO.CLOSED)) {
-			log.warn(ErrorMessages.INVALID_INPUT + ERR_MSG_STATUS + patch.getStatus());
+			log.warn(ErrorMessages.INVALID_INPUT + FIELD_STATUS + patch.getStatus());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
@@ -178,29 +179,27 @@ public class EventDataRequestController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		if (ValidationHelper.isPossibleAttack(request.getComment(), ERR_MSG_COMMENT + request.getComment())) {
+		if (validHelper.isPossibleAttack(request.getComment(), FIELD_COMMENT, false)) {
 			request.setComment(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(request.getName(), ERR_MSG_NAME + request.getName())) {
+		if (validHelper.isPossibleAttack(request.getName(), FIELD_NAME, false)) {
 			request.setName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(request.getRequestDetails(), ERR_MSG_REQUEST_DETAILS + request.getRequestDetails())) {
+		if (validHelper.isPossibleAttack(request.getRequestDetails(), FIELD_REQUEST_DETAILS, false)) {
 			request.setRequestDetails(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttackForRequiredValue(
-			request.getExternalRequestId(),
-			ERR_MSG_EXTERNAL_REQUEST_ID + request.getExternalRequestId())) {
+		if (validHelper.isPossibleAttackForRequiredValue(request.getExternalRequestId(), FIELD_EXTERNAL_REQUEST_ID, false)) {
 			request.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttackForRequiredValue(request.getProviderId(), ERR_MSG_PROVIDER_ID + request.getProviderId())) {
+		if (validHelper.isPossibleAttackForRequiredValue(request.getProviderId(), FIELD_PROVIDER_ID, false)) {
 			request.setProviderId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttackForRequiredValue(request.getLocationId(), ERR_MSG_LOCATION_ID + request.getLocationId())) {
+		if (validHelper.isPossibleAttackForRequiredValue(request.getLocationId(), FIELD_LOCATION_ID, false)) {
 			request.setLocationId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 

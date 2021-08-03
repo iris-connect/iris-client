@@ -30,23 +30,25 @@ import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 @RequiredArgsConstructor
 public class CaseDataControllerImpl implements CaseDataController {
 
-	private static final String ERR_MSG_NULL = "null";
-	private static final String ERR_MSG_START_DATE = " - startDate: ";
-	private static final String ERR_MSG_END_DATE = " - endDate: ";
-	private static final String ERR_MSG_DATE_OF_BIRTH = " - dateOfBirth: ";
-	private static final String ERR_MSG_DATA_AUTHORIZATION_TOKEN = " - dataAuthorizationToken: ";
-	private static final String ERR_MSG_FIRSTNAME = " - firstName";
-	private static final String ERR_MSG_LASTNAME = " - lastName";
-	private static final String ERR_MSG_EMAIL = " - email";
-	private static final String ERR_MSG_PHONE = " - phone";
-	private static final String ERR_MSG_MOBILPHONE = " - mobilePhone";
-	private static final String ERR_MSG_NAME = " - name";
-	private static final String ERR_MSG_STREET = " - street";
-	private static final String ERR_MSG_ZIP_CODE = " - zipCode";
-	private static final String ERR_MSG_HOUSE_NUMBER = " - houseNumber";
-	private static final String ERR_MSG_CITY = " - city";
-	private static final String ERR_MSG_ADDITIONAL_INFORMATION = " - additionalInformation";
-	private static final String ERR_MSG_POINT_OF_CONTACT = " - pointOfContact";
+	private static final String NULL = "null";
+	private static final String FIELD_START_DATE = "startDate";
+	private static final String FIELD_END_DATE = "endDate";
+	private static final String FIELD_DATE_OF_BIRTH = "dateOfBirth";
+	private static final String FIELD_DATA_AUTHORIZATION_TOKEN = "dataAuthorizationToken";
+	private static final String FIELD_FIRSTNAME = "firstName";
+	private static final String FIELD_LASTNAME = "lastName";
+	private static final String FIELD_EMAIL = "email";
+	private static final String FIELD_PHONE = "phone";
+	private static final String FIELD_MOBILE_PHONE = "mobilePhone";
+	private static final String FIELD_NAME = "name";
+	private static final String FIELD_STREET = "street";
+	private static final String FIELD_ZIP_CODE = "zipCode";
+	private static final String FIELD_HOUSE_NUMBER = "houseNumber";
+	private static final String FIELD_CITY = "city";
+	private static final String FIELD_ADDITIONAL_INFORMATION = "additionalInformation";
+	private static final String FIELD_POINT_OF_CONTACT = "pointOfContact";
+
+	private final ValidationHelper validHelper;
 	private final CaseDataSubmissionService submissionService;
 
 	@Override
@@ -57,7 +59,7 @@ public class CaseDataControllerImpl implements CaseDataController {
 		@Valid CaseDataProvider dataProvider) {
 
 		if (ValidationHelper
-			.isUUIDInputValid(dataAuthorizationToken.toString(), ERR_MSG_DATA_AUTHORIZATION_TOKEN)
+			.isUUIDInputValid(dataAuthorizationToken.toString(), FIELD_DATA_AUTHORIZATION_TOKEN)
 			&& validateEvents(events)
 			&& validateContacts(contacts)
 			&& validateCaseDataProvider(dataProvider)) {
@@ -77,27 +79,27 @@ public class CaseDataControllerImpl implements CaseDataController {
 		}
 
 		if (events.getStartDate() == null) {
-			log.warn(ErrorMessages.INVALID_INPUT + ERR_MSG_START_DATE + ERR_MSG_NULL);
+			log.warn(ErrorMessages.INVALID_INPUT + FIELD_START_DATE + NULL);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
 		if (events.getEndDate() == null) {
-			log.warn(ErrorMessages.INVALID_INPUT + ERR_MSG_END_DATE + ERR_MSG_NULL);
+			log.warn(ErrorMessages.INVALID_INPUT + FIELD_END_DATE + NULL);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
 		if (events.getEvents() != null) {
 			for (Event event : events.getEvents()) {
 
-				if (ValidationHelper.isPossibleAttack(event.getName(), ERR_MSG_NAME)) {
+				if (validHelper.isPossibleAttack(event.getName(), FIELD_NAME, true)) {
 					event.setName(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
-				if (ValidationHelper.isPossibleAttack(event.getPhone(), ERR_MSG_PHONE)) {
+				if (validHelper.isPossibleAttack(event.getPhone(), FIELD_PHONE, true)) {
 					event.setPhone(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
-				if (ValidationHelper.isPossibleAttack(event.getAdditionalInformation(), ERR_MSG_ADDITIONAL_INFORMATION)) {
+				if (validHelper.isPossibleAttack(event.getAdditionalInformation(), FIELD_ADDITIONAL_INFORMATION, true)) {
 					event.setAdditionalInformation(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
@@ -117,23 +119,23 @@ public class CaseDataControllerImpl implements CaseDataController {
 		if (contacts.getContactPersons() != null) {
 			for (ContactPerson contactPerson : contacts.getContactPersons()) {
 
-				if (ValidationHelper.isPossibleAttack(contactPerson.getLastName(), ERR_MSG_LASTNAME)) {
+				if (validHelper.isPossibleAttack(contactPerson.getLastName(), FIELD_LASTNAME, true)) {
 					contactPerson.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
-				if (ValidationHelper.isPossibleAttack(contactPerson.getFirstName(), ERR_MSG_FIRSTNAME)) {
+				if (validHelper.isPossibleAttack(contactPerson.getFirstName(), FIELD_FIRSTNAME,true)) {
 					contactPerson.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
-				if (ValidationHelper.isPossibleAttack(contactPerson.getEmail(), ERR_MSG_EMAIL)) {
+				if (validHelper.isPossibleAttack(contactPerson.getEmail(), FIELD_EMAIL,true)) {
 					contactPerson.setEmail(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
-				if (ValidationHelper.isPossibleAttack(contactPerson.getPhone(), ERR_MSG_PHONE)) {
+				if (validHelper.isPossibleAttack(contactPerson.getPhone(), FIELD_PHONE, true)) {
 					contactPerson.setPhone(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
-				if (ValidationHelper.isPossibleAttack(contactPerson.getMobilePhone(), ERR_MSG_MOBILPHONE)) {
+				if (validHelper.isPossibleAttack(contactPerson.getMobilePhone(), FIELD_MOBILE_PHONE,true)) {
 					contactPerson.setMobilePhone(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
@@ -144,12 +146,12 @@ public class CaseDataControllerImpl implements CaseDataController {
 		}
 
 		if (contacts.getStartDate() == null) {
-			log.warn(ErrorMessages.INVALID_INPUT + ERR_MSG_START_DATE + ERR_MSG_NULL);
+			log.warn(ErrorMessages.INVALID_INPUT + FIELD_START_DATE + NULL);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
 		if (contacts.getEndDate() == null) {
-			log.warn(ErrorMessages.INVALID_INPUT + ERR_MSG_END_DATE + ERR_MSG_NULL);
+			log.warn(ErrorMessages.INVALID_INPUT + FIELD_END_DATE + NULL);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
@@ -171,19 +173,19 @@ public class CaseDataControllerImpl implements CaseDataController {
 	private Address validateAddress(Address address) {
 		if (address != null) {
 
-			if (ValidationHelper.isPossibleAttack(address.getCity(), ERR_MSG_CITY)) {
+			if (validHelper.isPossibleAttack(address.getCity(), FIELD_CITY, true)) {
 				address.setCity(ErrorMessages.INVALID_INPUT_STRING);
 			}
 
-			if (ValidationHelper.isPossibleAttack(address.getHouseNumber(), ERR_MSG_HOUSE_NUMBER)) {
+			if (validHelper.isPossibleAttack(address.getHouseNumber(), FIELD_HOUSE_NUMBER, true)) {
 				address.setHouseNumber(ErrorMessages.INVALID_INPUT_STRING);
 			}
 
-			if (ValidationHelper.isPossibleAttack(address.getStreet(), ERR_MSG_STREET)) {
+			if (validHelper.isPossibleAttack(address.getStreet(), FIELD_STREET, true)) {
 				address.setStreet(ErrorMessages.INVALID_INPUT_STRING);
 			}
 
-			if (ValidationHelper.isPossibleAttack(address.getZipCode(), ERR_MSG_ZIP_CODE)) {
+			if (validHelper.isPossibleAttack(address.getZipCode(), FIELD_ZIP_CODE, true)) {
 				address.setZipCode(ErrorMessages.INVALID_INPUT_STRING);
 			}
 
@@ -196,15 +198,15 @@ public class CaseDataControllerImpl implements CaseDataController {
 	private WorkPlace validateWorkPlace(WorkPlace workPlace) {
 		if (workPlace != null) {
 
-			if (ValidationHelper.isPossibleAttack(workPlace.getName(), ERR_MSG_NAME)) {
+			if (validHelper.isPossibleAttack(workPlace.getName(), FIELD_NAME, true)) {
 				workPlace.setName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 
-			if (ValidationHelper.isPossibleAttack(workPlace.getPhone(), ERR_MSG_PHONE)) {
+			if (validHelper.isPossibleAttack(workPlace.getPhone(), FIELD_PHONE, true)) {
 				workPlace.setPhone(ErrorMessages.INVALID_INPUT_STRING);
 			}
 
-			if (ValidationHelper.isPossibleAttack(workPlace.getPointOfContact(), ERR_MSG_POINT_OF_CONTACT)) {
+			if (validHelper.isPossibleAttack(workPlace.getPointOfContact(), FIELD_POINT_OF_CONTACT, true)) {
 				workPlace.setPointOfContact(ErrorMessages.INVALID_INPUT_STRING);
 			}
 
@@ -221,16 +223,16 @@ public class CaseDataControllerImpl implements CaseDataController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		if (ValidationHelper.isPossibleAttack(dataProvider.getFirstName(), ERR_MSG_FIRSTNAME)) {
+		if (validHelper.isPossibleAttack(dataProvider.getFirstName(), FIELD_FIRSTNAME, true)) {
 			dataProvider.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(dataProvider.getLastName(), ERR_MSG_LASTNAME)) {
+		if (validHelper.isPossibleAttack(dataProvider.getLastName(), FIELD_LASTNAME, true)) {
 			dataProvider.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		if (dataProvider.getDateOfBirth() == null) {
-			log.warn(ErrorMessages.INVALID_INPUT + ERR_MSG_DATE_OF_BIRTH + ERR_MSG_NULL);
+			log.warn(ErrorMessages.INVALID_INPUT + FIELD_DATE_OF_BIRTH + NULL);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 

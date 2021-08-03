@@ -43,15 +43,16 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/data-requests-client/cases")
 public class CaseDataRequestController {
 
-	private static final String ERR_MSG_ID = " - id: ";
-	private static final String ERR_MSG_STATUS = " - status: ";
-	private static final String ERR_MSG_COMMENT = " - comment: ";
-	private static final String ERR_MSG_NAME = " - name: ";
-	private static final String ERR_MSG_EXTERNAL_CASE_ID = " - externalCaseId: ";
+	private static final String FIELD_ID = "id";
+	private static final String FIELD_STATUS = "status";
+	private static final String FIELD_COMMENT = "comment";
+	private static final String FIELD_NAME = "name";
+	private static final String FIELD_EXTERNAL_CASE_ID = "externalCaseId";
 
 	private final CaseDataRequestService caseDataRequestService;
 
 	private final CaseDataSubmissionService submissionService;
+	private final ValidationHelper validHelper;
 
 	@GetMapping
 	@ResponseStatus(OK)
@@ -85,7 +86,7 @@ public class CaseDataRequestController {
 	@GetMapping("/{id}")
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> getDetails(@PathVariable UUID id) {
-		if (ValidationHelper.isUUIDInputValid(id.toString(), ERR_MSG_ID)) {
+		if (ValidationHelper.isUUIDInputValid(id.toString(), FIELD_ID)) {
 			return caseDataRequestService.findDetailed(id).map((dataRequest -> {
 				var indexCaseDetailsDTO = mapDetailed(dataRequest);
 
@@ -101,7 +102,7 @@ public class CaseDataRequestController {
 	@PatchMapping("/{id}")
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> update(@PathVariable UUID id, @RequestBody @Valid IndexCaseUpdateDTO update) {
-		if (!ValidationHelper.isUUIDInputValid(id.toString(), ERR_MSG_ID)) {
+		if (!ValidationHelper.isUUIDInputValid(id.toString(), FIELD_ID)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
@@ -121,15 +122,15 @@ public class CaseDataRequestController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		if (ValidationHelper.isPossibleAttack(update.getComment(), ERR_MSG_COMMENT + update.getComment())) {
+		if (validHelper.isPossibleAttack(update.getComment(), FIELD_COMMENT, false)) {
 			update.setComment(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(update.getName(), ERR_MSG_NAME + update.getName())) {
+		if (validHelper.isPossibleAttack(update.getName(), FIELD_NAME, false)) {
 			update.setName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(update.getExternalCaseId(), ERR_MSG_EXTERNAL_CASE_ID + update.getExternalCaseId())) {
+		if (validHelper.isPossibleAttack(update.getExternalCaseId(), FIELD_EXTERNAL_CASE_ID, false)) {
 			update.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
@@ -138,7 +139,7 @@ public class CaseDataRequestController {
 				|| update.getStatus() == IndexCaseStatusDTO.DATA_REQUESTED
 				|| update.getStatus() == IndexCaseStatusDTO.ABORTED
 				|| update.getStatus() == IndexCaseStatusDTO.CLOSED)) {
-			log.warn(ErrorMessages.INVALID_INPUT + ERR_MSG_STATUS + update.getStatus());
+			log.warn(ErrorMessages.INVALID_INPUT + FIELD_STATUS + update.getStatus());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
@@ -150,15 +151,15 @@ public class CaseDataRequestController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		if (ValidationHelper.isPossibleAttack(insert.getComment(), ERR_MSG_COMMENT + insert.getComment())) {
+		if (validHelper.isPossibleAttack(insert.getComment(), FIELD_COMMENT, false)) {
 			insert.setComment(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(insert.getName(), ERR_MSG_NAME + insert.getName())) {
+		if (validHelper.isPossibleAttack(insert.getName(), FIELD_NAME, false)) {
 			insert.setName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(insert.getExternalCaseId(), ERR_MSG_EXTERNAL_CASE_ID + insert.getExternalCaseId())) {
+		if (validHelper.isPossibleAttack(insert.getExternalCaseId(), FIELD_EXTERNAL_CASE_ID, false)) {
 			insert.setExternalCaseId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 

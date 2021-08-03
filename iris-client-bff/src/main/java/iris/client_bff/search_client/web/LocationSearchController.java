@@ -24,8 +24,9 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class LocationSearchController {
 
-	private static final String ERR_MSG_SEARCH = " - search: ";
+	private static final String FIELD_SEARCH = "search";
 	private final SearchClient searchClient;
+	private final ValidationHelper validHelper;
 
 	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
@@ -38,6 +39,6 @@ public class LocationSearchController {
 	}
 
 	private boolean isSearchInputValid(String search) {
-		return (!ValidationHelper.isPossibleAttack(search, ERR_MSG_SEARCH + search));
+		return (!validHelper.isPossibleAttack(search, FIELD_SEARCH, false));
 	}
 }

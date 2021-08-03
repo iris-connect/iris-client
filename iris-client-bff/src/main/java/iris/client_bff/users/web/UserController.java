@@ -37,13 +37,14 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/users")
 public class UserController {
 
-	private static final String ERR_MSG_ROLE = " - role: ";
-	private static final String ERR_MSG_PASSWORD = " - password";
-	private static final String ERR_MSG_USER_NAME = " - userName: ";
-	private static final String ERR_MSG_LAST_NAME = " - lastName";
-	private static final String ERR_MSG_FIRST_NAME = " - firstName";
-	private static final String ERR_MSG_USER_ID = " - userId: ";
+	private static final String FIELD_ROLE = "role";
+	private static final String FIELD_PASSWORD = "password";
+	private static final String FIELD_USER_NAME = "userName";
+	private static final String FIELD_LAST_NAME = "lastName";
+	private static final String FIELD_FIRST_NAME = "firstName";
+	private static final String FIELD_USER_ID = "userId";
 	private final UserDetailsServiceImpl userService;
+	private final ValidationHelper validationHelper;
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
@@ -64,7 +65,7 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
-		if (!ValidationHelper.isUUIDInputValid(id.toString(), ERR_MSG_USER_ID)) {
+		if (!ValidationHelper.isUUIDInputValid(id.toString(), FIELD_USER_ID)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
@@ -77,7 +78,7 @@ public class UserController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public void deleteUser(@PathVariable UUID id) {
-		if (ValidationHelper.isUUIDInputValid(id.toString(), ERR_MSG_USER_ID)) {
+		if (ValidationHelper.isUUIDInputValid(id.toString(), FIELD_USER_ID)) {
 			this.userService.deleteById(id);
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
@@ -89,27 +90,26 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		if (ValidationHelper.isPossibleAttack(userUpdateDTO.getFirstName(), ERR_MSG_FIRST_NAME)) {
+		if (validationHelper.isPossibleAttack(userUpdateDTO.getFirstName(), FIELD_FIRST_NAME, true)) {
 			userUpdateDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(userUpdateDTO.getLastName(), ERR_MSG_LAST_NAME)) {
+		if (validationHelper.isPossibleAttack(userUpdateDTO.getLastName(), FIELD_LAST_NAME, true)) {
 			userUpdateDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper
-			.isPossibleAttackForRequiredValue(userUpdateDTO.getUserName(), ERR_MSG_USER_NAME + userUpdateDTO.getUserName())) {
+		if (validationHelper.isPossibleAttackForRequiredValue(userUpdateDTO.getUserName(), FIELD_USER_NAME, false)) {
 			userUpdateDTO.setUserName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		boolean isInvalid = false;
 
-		if (ValidationHelper.isPossibleAttackForRequiredValue(userUpdateDTO.getPassword(), ERR_MSG_PASSWORD)) {
+		if (validationHelper.isPossibleAttackForRequiredValue(userUpdateDTO.getPassword(), FIELD_PASSWORD, true)) {
 			isInvalid = true;
 		}
 
 		if (!(userUpdateDTO.getRole() == UserRoleDTO.ADMIN || userUpdateDTO.getRole() == UserRoleDTO.USER)) {
-			log.warn(ErrorMessages.INVALID_INPUT + ERR_MSG_ROLE + userUpdateDTO.getRole());
+			log.warn(ErrorMessages.INVALID_INPUT + FIELD_ROLE + userUpdateDTO.getRole());
 			isInvalid = true;
 		}
 
@@ -125,27 +125,27 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		if (ValidationHelper.isPossibleAttack(userInsertDTO.getFirstName(), ERR_MSG_FIRST_NAME)) {
+		if (validationHelper.isPossibleAttack(userInsertDTO.getFirstName(), FIELD_FIRST_NAME, true)) {
 			userInsertDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper.isPossibleAttack(userInsertDTO.getLastName(), ERR_MSG_LAST_NAME)) {
+		if (validationHelper.isPossibleAttack(userInsertDTO.getLastName(), FIELD_LAST_NAME, true)) {
 			userInsertDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (ValidationHelper
-			.isPossibleAttackForRequiredValue(userInsertDTO.getUserName(), ERR_MSG_USER_NAME + userInsertDTO.getUserName())) {
+		if (validationHelper
+			.isPossibleAttackForRequiredValue(userInsertDTO.getUserName(), FIELD_USER_NAME, false)) {
 			userInsertDTO.setUserName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		boolean isInvalid = false;
 
-		if (ValidationHelper.isPossibleAttackForRequiredValue(userInsertDTO.getPassword(), ERR_MSG_PASSWORD)) {
+		if (validationHelper.isPossibleAttackForRequiredValue(userInsertDTO.getPassword(), FIELD_PASSWORD, true)) {
 			isInvalid = true;
 		}
 
 		if (!(userInsertDTO.getRole() == UserRoleDTO.ADMIN || userInsertDTO.getRole() == UserRoleDTO.USER)) {
-			log.warn(ErrorMessages.INVALID_INPUT + ERR_MSG_ROLE + userInsertDTO.getRole());
+			log.warn(ErrorMessages.INVALID_INPUT + FIELD_ROLE + userInsertDTO.getRole());
 			isInvalid = true;
 		}
 
