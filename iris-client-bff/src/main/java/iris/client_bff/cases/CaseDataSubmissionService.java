@@ -20,7 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -108,10 +110,12 @@ public class CaseDataSubmissionService {
 			return mapped;
 		}).collect(Collectors.toSet());
 
-		var eventsForDb = events.getEvents().stream().map(it -> mapper.map(it, CaseEvent.class)).collect(Collectors.toSet());
+		Set<CaseEvent> eventsForDb = new HashSet<>();
+		if (events.getEvents() != null) {
+			eventsForDb = events.getEvents().stream().map(it -> mapper.map(it, CaseEvent.class)).collect(Collectors.toSet());
+		}
 
 		var dataProviderForDb = mapper.map(dataProvider, iris.client_bff.cases.model.CaseDataProvider.class);
-		dataProviderForDb.setDateOfBirth(LocalDate.ofInstant(dataProvider.getDateOfBirth(), ZoneId.of("CET")));
 
 		var submission = new CaseDataSubmission(
 			dataRequest,
