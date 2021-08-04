@@ -1,6 +1,7 @@
 package iris.client_bff.auth.db;
 
 import static iris.client_bff.config.DataSubmissionConfig.DATA_SUBMISSION_ENDPOINT;
+import static iris.client_bff.config.DataSubmissionConfig.DATA_SUBMISSION_ENDPOINT_WITH_SLASH;
 
 import iris.client_bff.auth.db.jwt.JWTSigner;
 import iris.client_bff.auth.db.jwt.JWTVerifier;
@@ -60,6 +61,7 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 				.requestMatchers(EndpointRequest.toAnyEndpoint())
 				.hasAuthority(UserRole.ADMIN.name())
 				.antMatchers(HttpMethod.POST, DATA_SUBMISSION_ENDPOINT).permitAll()
+				.antMatchers(HttpMethod.POST, DATA_SUBMISSION_ENDPOINT_WITH_SLASH).permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.logout()

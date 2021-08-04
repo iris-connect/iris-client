@@ -161,6 +161,18 @@ LOCAL_CONTACT_PERSON_NAME
 LOCAL_CONTACT_PERSON_MAIL
 LOCAL_CONTACT_PERSON_PHONE
 ```
+
+## Standard CSV Export Adressformatierung
+
+Sie können bestimmen, wie die Adressdaten im Standard CSV Export ausgegeben werden.
+
+Folgender Parameter kann dafür optional gesetzt werden.
+- `false` oder keine Angabe: Adressdaten erscheinen zusammenhängend in einer Spalte = Standardeinstellung
+- `true`: Jedes Addressfeld erscheint in einer separaten Spalte
+```
+CSV_EXPORT_STANDARD_ATOMIC_ADDRESS
+```
+
 ## Einrichtung HTTP Connect Proxy
 
 In den meisten GAs werden Verbindungen ins Internet über einen Proxy geleitet. Dafür ist folgender Parameter vorgesehen. 

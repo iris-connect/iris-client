@@ -1,6 +1,7 @@
 package iris.client_bff.config;
 
 import static iris.client_bff.config.DataSubmissionConfig.DATA_SUBMISSION_ENDPOINT;
+import static iris.client_bff.config.DataSubmissionConfig.DATA_SUBMISSION_ENDPOINT_WITH_SLASH;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,11 @@ public class CORSConfig {
       public void addCorsMappings(CorsRegistry registry) {
         registry
             .addMapping(DATA_SUBMISSION_ENDPOINT)
+            .allowedOrigins("*")
+            .allowedMethods("OPTIONS", "POST")
+            .allowedHeaders("*");
+        registry
+            .addMapping(DATA_SUBMISSION_ENDPOINT_WITH_SLASH)
             .allowedOrigins("*")
             .allowedMethods("OPTIONS", "POST")
             .allowedHeaders("*");

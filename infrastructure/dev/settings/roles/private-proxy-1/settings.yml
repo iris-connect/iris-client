@@ -3,10 +3,7 @@ private:
   database_file: /private-proxy/private-proxy-announcements.db
   bind_address: 0.0.0.0:5545
   internal_endpoint:
-    #address: iris-client:8092
-    jsonrpc_path: /data-submission-rpc
-    jsonrpc_client:
-      endpoint: http://iris-client:8092/data-submission-rpc
+    address: "iris-client:8092/data-submission-rpc"
     tls:
       verify_client: false
       server_name: proxy.test-gesundheitsamt.de
@@ -23,3 +20,4 @@ private:
       key_file: "$DIR/../../certs/private-proxy-1.key"
   jsonrpc_server: # the JSON-RPC server that the EPS server uses for communication
     bind_address: 0.0.0.0:8877
+

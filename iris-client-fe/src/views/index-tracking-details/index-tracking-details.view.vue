@@ -441,6 +441,7 @@ export default class IndexTrackingDetailsView extends Vue {
         address: getFormattedAddress(contact.address) || "-",
         workPlace: getFormattedWorkPlace(contact.workPlace) || "-",
         basicConditions: contact.contactInformation?.basicConditions || "-",
+        raw: contact,
       };
     });
   }
@@ -466,6 +467,7 @@ export default class IndexTrackingDetailsView extends Vue {
         phone: event.phone || "-",
         address: getFormattedAddress(event.address) || "-",
         additionalInformation: event.additionalInformation || "-",
+        raw: event,
       };
     });
   }

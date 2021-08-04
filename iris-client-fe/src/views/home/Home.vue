@@ -39,8 +39,8 @@
         <v-card color="primary" class="pb-8 pt-2 pl-2">
           <v-container>
             <h2 class="light-font mb-6">
-              Herzlich wilkommen bei IRIS - dem offenen Portal des
-              Gesundheitsamtes
+              Herzlich willkommen bei IRIS connect - Die öffentliche
+              Datenschnittstelle des Gesundheitsamts
             </h2>
             <v-row>
               <v-col>

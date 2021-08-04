@@ -37,10 +37,8 @@ private:
   name: "$PROXY_OP"
   database_file: ./db/private-proxy-announcements.db
   bind_address: 0.0.0.0:5545
-  internal_endpoint: 
-    jsonrpc_path: /data-submission-rpc
-    jsonrpc_client:
-      endpoint: "$IRIS_CLIENT_BFF_ENDPOINT"
+  internal_endpoint:
+    address: "$IRIS_CLIENT_BFF_ENDPOINT"
     tls:
       verify_client: false
       server_name: "$PROXY_DOMAIN"
