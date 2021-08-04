@@ -19,13 +19,13 @@ import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
+import iris.client_bff.events.exceptions.IRISDataRequestException;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import iris.client_bff.events.exceptions.IRISDataRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -58,8 +58,8 @@ class IndexCaseControllerTest {
 	@Autowired
 	private ObjectMapper om;
 
-  @MockBean
-  CaseDataRequestService service;
+	@MockBean
+	CaseDataRequestService service;
 
 	// mock responses
 	private final CaseDataRequest MOCK_CASE = getCase();
@@ -224,7 +224,20 @@ class IndexCaseControllerTest {
 
 		var url_404 = baseUrl + "/" + UUID.randomUUID().toString();
 
-		mockMvc.perform(MockMvcRequestBuilders.patch(url_404).content("{}").contentType(MediaType.APPLICATION_JSON))
+		String updatedComment = "This is an updated comment";
+		String updatedName = "CASE_UPDATED";
+		String updatedExternalCaseId = "CASE_EXTERNALID";
+		IndexCaseStatusDTO updatedStatus = IndexCaseStatusDTO.DATA_RECEIVED;
+
+		var payload = om.writeValueAsString(
+			IndexCaseUpdateDTO.builder()
+				.name(updatedName)
+				.status(updatedStatus)
+				.comment(updatedComment)
+				.externalCaseId(updatedExternalCaseId)
+				.build());
+
+		mockMvc.perform(MockMvcRequestBuilders.patch(url_404).content(payload).contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isNotFound())
 			.andReturn();
 	}

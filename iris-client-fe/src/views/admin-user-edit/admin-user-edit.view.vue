@@ -8,12 +8,14 @@
             <v-text-field
               v-model="form.model.firstName"
               label="Vorname"
+              :rules="validationRules.names"
             ></v-text-field>
           </v-col>
           <v-col cols="12" md="6">
             <v-text-field
               v-model="form.model.lastName"
               label="Nachname"
+              :rules="validationRules.names"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -22,6 +24,7 @@
             <v-text-field
               v-model="form.model.userName"
               label="Anmeldename"
+              :rules="validationRules.sanitisedAndDefined"
             ></v-text-field>
           </v-col>
           <v-col cols="12" md="6">
@@ -142,7 +145,10 @@ export default class AdminUserEditView extends Vue {
   get validationRules(): Record<string, Array<unknown>> {
     return {
       defined: [rules.defined],
-      password: [rules.password],
+      password: [rules.password, rules.sanitised],
+      sanitisedAndDefined: [rules.defined, rules.sanitised],
+      sanitised: [rules.sanitised],
+      names: [rules.sanitised, rules.nameConventions],
     };
   }
 

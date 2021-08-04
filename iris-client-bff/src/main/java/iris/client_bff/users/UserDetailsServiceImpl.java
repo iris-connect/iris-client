@@ -36,8 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
-		UserAccount userAccount = userAccountsRepository.findByUserName(username)
-				.orElseThrow(() -> new UsernameNotFoundException(username));
+		UserAccount userAccount = userAccountsRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException(username));
 
 		// By convention we expect that there exists only one authority and it represents the role
 		var role = userAccount.getRole().name();
@@ -51,9 +50,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	public List<UserAccount> loadAll() {
-		return StreamSupport
-				.stream(userAccountsRepository.findAll().spliterator(), false)
-				.collect(Collectors.toList());
+		return StreamSupport.stream(userAccountsRepository.findAll().spliterator(), false).collect(Collectors.toList());
 	}
 
 	public UserAccount create(UserInsertDTO userInsertDTO) {
@@ -96,7 +93,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	public void deleteById(UUID id) {
-		log.info("Delete user: {}", id);
+		log.info("Delete User: {}", id);
+
 		var optional = userAccountsRepository.findById(id);
 		if (optional.isPresent()) {
 			jwtService.invalidateTokensOfUser(optional.get().getUserName());
@@ -113,4 +111,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		user.setFirstName(userInsertDTO.getFirstName());
 		return user;
 	}
+
 }

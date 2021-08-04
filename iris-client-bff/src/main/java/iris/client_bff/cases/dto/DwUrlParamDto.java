@@ -3,6 +3,8 @@ package iris.client_bff.cases.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import static iris.client_bff.core.log.LogHelper.obfuscateAtStart8;
+
 @Data
 @AllArgsConstructor
 public class DwUrlParamDto {
@@ -16,6 +18,11 @@ public class DwUrlParamDto {
     private String p;
 
     public String toString() {
-        return "dataAuthorizationToken=" + d + "; connectionAuthorizationToken=" + c + "; HD zip code=" + p;
+        return String.format("dataAuthorizationToken=%s; connectionAuthorizationToken=%s; HD zip code=%s", d, c, p);
+    }
+
+    public String toStringWithObfuscation() {
+        return String.format("dataAuthorizationToken=%s; connectionAuthorizationToken=%s; HD zip code=%s",
+                obfuscateAtStart8(d), obfuscateAtStart8(c), p);
     }
 }
