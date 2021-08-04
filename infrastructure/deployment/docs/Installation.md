@@ -62,7 +62,7 @@ IRIS stellt zwei Umgebungen bereit. Staging zum Testen und Live für den Produkt
 |----------------------------|--------------|---------------------------------|------------------------|
 |     IRIS Service Directory |     staging  |     test.iris-gateway.de        |     32324              |
 |     IRIS Locations Service |     staging  |     test.iris-gateway.de        |     32323              |
-|     IRIS Public Proxy      |     staging  |     test.iris-gateway.de        |     32327, 32327       |
+|     IRIS Public Proxy      |     staging  |     test.iris-gateway.de        |     32326, 32327       |
 |     IRIS Connected Apps    |     staging  |     *.apps.test.iris-gateway.de |     4443, 4444, 443    |
 |     IRIS Service Directory |     live     |     prod.iris-gateway.de        |     32324              |
 |     IRIS Locations Service |     live     |     prod.iris-gateway.de        |     32323              |
