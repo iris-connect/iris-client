@@ -95,20 +95,23 @@ public class CaseDataSubmissionService {
 	}
 
 	public void save(CaseDataRequest dataRequest, Contacts contacts, Events events, CaseDataProvider dataProvider) {
-		var contactsForDb = contacts.getContactPersons().stream().map(it -> {
-			var mapped = mapper.map(it, Contact.class);
+		Set<Contact> contactsForDb = new HashSet<>();
+		if(contacts.getContactPersons() != null) {
+			contactsForDb = contacts.getContactPersons().stream().map(it -> {
+				var mapped = mapper.map(it, Contact.class);
 
-			Optional.ofNullable(it.getContactInformation()).ifPresent(contactInformation -> {
-				mapped.setBasicConditions(contactInformation.getBasicConditions());
-				if (contactInformation.getContactCategory() != null) {
-					mapped.setContactCategory(Contact.ContactCategory.valueOf(contactInformation.getContactCategory().name()));
-				}
-				mapped.setFirstContactDate(contactInformation.getFirstContactDate());
-				mapped.setLastContactDate(contactInformation.getLastContactDate());
-			});
+				Optional.ofNullable(it.getContactInformation()).ifPresent(contactInformation -> {
+					mapped.setBasicConditions(contactInformation.getBasicConditions());
+					if (contactInformation.getContactCategory() != null) {
+						mapped.setContactCategory(Contact.ContactCategory.valueOf(contactInformation.getContactCategory().name()));
+					}
+					mapped.setFirstContactDate(contactInformation.getFirstContactDate());
+					mapped.setLastContactDate(contactInformation.getLastContactDate());
+				});
 
-			return mapped;
-		}).collect(Collectors.toSet());
+				return mapped;
+			}).collect(Collectors.toSet());
+		}
 
 		Set<CaseEvent> eventsForDb = new HashSet<>();
 		if (events.getEvents() != null) {

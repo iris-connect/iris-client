@@ -18,7 +18,7 @@ public class DtoSupplier {
     @PostConstruct
     public void init() {
         addressList.add(Address.builder().street("Rathausplatz").houseNumber("25").city("Neustadt").zipCode("12345").build());
-        addressList.add(Address.builder().street("Bahnhofstrasse").houseNumber("9").city("'Altheim'").zipCode("34567").build());
+        addressList.add(Address.builder().street("Bahnhofstrasse").houseNumber("9").city("Altheim").zipCode("34567").build());
         addressList.add(Address.builder().street("Hauptstrasse").houseNumber("163").city("Musterhausen").zipCode("23456").build());
 
         contactPersonList.add(ContactPerson.builder().firstName("Heinz").lastName("Huber").build());

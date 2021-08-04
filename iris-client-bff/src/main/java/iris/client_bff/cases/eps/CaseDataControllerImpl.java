@@ -30,9 +30,6 @@ import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 @RequiredArgsConstructor
 public class CaseDataControllerImpl implements CaseDataController {
 
-	private static final String NULL = "null";
-	private static final String FIELD_START_DATE = "startDate";
-	private static final String FIELD_END_DATE = "endDate";
 	private static final String FIELD_DATA_AUTHORIZATION_TOKEN = "dataAuthorizationToken";
 	private static final String FIELD_FIRSTNAME = "firstName";
 	private static final String FIELD_LASTNAME = "lastName";
@@ -74,16 +71,6 @@ public class CaseDataControllerImpl implements CaseDataController {
 	private boolean validateEvents(Events events) {
 
 		if (events == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
-		}
-
-		if (events.getStartDate() == null) {
-			log.warn(ErrorMessages.INVALID_INPUT + FIELD_START_DATE + NULL);
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
-		}
-
-		if (events.getEndDate() == null) {
-			log.warn(ErrorMessages.INVALID_INPUT + FIELD_END_DATE + NULL);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
@@ -142,16 +129,6 @@ public class CaseDataControllerImpl implements CaseDataController {
 
 				contactPerson.setContactInformation(contactPerson.getContactInformation());
 			}
-		}
-
-		if (contacts.getStartDate() == null) {
-			log.warn(ErrorMessages.INVALID_INPUT + FIELD_START_DATE + NULL);
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
-		}
-
-		if (contacts.getEndDate() == null) {
-			log.warn(ErrorMessages.INVALID_INPUT + FIELD_END_DATE + NULL);
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
 		return true;
