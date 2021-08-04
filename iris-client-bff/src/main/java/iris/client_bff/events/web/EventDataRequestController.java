@@ -129,8 +129,7 @@ public class EventDataRequestController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		EventUpdateDTO patchValidated = patch;//validateEventUpdateDTO(patch);
-
+		EventUpdateDTO patchValidated = validateEventUpdateDTO(patch);
 
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {

@@ -127,8 +127,8 @@ public class ValidationHelper {
 			String logString = calculateLogableValue(input, obfuscateLogging, range.get());
 			log.warn(ErrorMessages.INVALID_INPUT + " - {}: {}", field, logString);
 
-			alertService.createAlertMessage("Input validation (BFF) - possible attack",
-					String.format("Input `%s` from BFF in health department with zip code `%s` contains the character or keyword `%s` that is a potential attack!",
+			alertService.createAlertMessage("Input validation - possible attack",
+					String.format("Input `%s` in health department with zip code `%s` contains the character or keyword `%s` that is a potential attack!",
 							field, hdConfig.getZipCode(), logString));
 
 			return true;
@@ -179,7 +179,7 @@ public class ValidationHelper {
 
 	private static String calculateLogableValue(String input, boolean obfuscateLogging, Range<Integer> range) {
 		return obfuscateLogging
-				? LogHelper.obfuscateOutsiteExtRange(input, range)
+				? LogHelper.obfuscateWithExcludedRange(input, range)
 				: input;
 	}
 }

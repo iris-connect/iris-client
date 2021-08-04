@@ -1,8 +1,8 @@
 package iris.client_bff.core.log;
 
-import org.apache.commons.lang3.Range;
-
 import java.util.stream.IntStream;
+
+import org.apache.commons.lang3.Range;
 
 public class LogHelper {
 
@@ -17,9 +17,9 @@ public class LogHelper {
     }
 
     /**
-     * Extends unobfuscated range with 3 to both sides.
+     * Obfuscates the string, but excludes the given range plus 3 characters at its begin and end from obfuscation.
      */
-    public static String obfuscateOutsiteExtRange(String s, Range<Integer> range) {
+    public static String obfuscateWithExcludedRange(String s, Range<Integer> range) {
 
         if (s == null) {
             return null;
@@ -36,4 +36,19 @@ public class LogHelper {
                         StringBuilder::append)
                 .toString();
     }
+
+    public static String obfuscateAtStart8(String s) {
+        return obfuscate(s, false, 8);
+    }
+
+    public static String obfuscate(String s, boolean fromEnd, int obfuscateAmount) {
+        if(s == null)
+            return null;
+
+        String regex = ".{0,"+obfuscateAmount+"}";
+        if(fromEnd)
+            regex += "$";
+        return s.replaceFirst(regex, "*".repeat(Math.max(0, obfuscateAmount)));
+    }
+
 }

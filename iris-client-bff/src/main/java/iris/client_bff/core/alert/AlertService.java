@@ -89,8 +89,8 @@ public class AlertService {
 	private void sendAlert(List<AlertDto> alerts) {
 		var methodName = config.getEndpoint() + ".postAlerts";
 		try {
-
-			var result = epsRpcClient.invoke(methodName, alerts, String.class);
+			AlertListDto alertListDto = AlertListDto.builder().alertList(alerts).build();
+			var result = epsRpcClient.invoke(methodName, alertListDto, String.class);
 
 			if (!"OK".equals(result)) {
 				log.error("Alert - could not be sent => Result: {}", result);
