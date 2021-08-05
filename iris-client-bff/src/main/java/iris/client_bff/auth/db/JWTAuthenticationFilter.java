@@ -4,7 +4,7 @@ import static iris.client_bff.auth.db.SecurityConstants.*;
 
 import iris.client_bff.auth.db.dto.LoginRequestDTO;
 import iris.client_bff.auth.db.jwt.JWTSigner;
-import iris.client_bff.users.LoggingHelper;
+import iris.client_bff.core.log.LogHelper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,7 +39,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
 			throws AuthenticationException {
 
-		log.debug("Login request from remote address: " + LoggingHelper.obfuscate(req.getRemoteAddr()));
+		log.debug("Login request from remote address: " + LogHelper.obfuscateLastThree(req.getRemoteAddr()));
 
 		try {
 
