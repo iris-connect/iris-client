@@ -12,6 +12,8 @@ public class LogHelper {
     public static final String LOCATION_DETAILS = buildLogMsg(DATA_REQ, "Get location details");
     public static final String LOCATION_SEARCH = buildLogMsg(DATA_REQ, "Location search started");
 
+    private LogHelper() {}
+    
     public static String buildLogMsg(String eventId, String detail) {
         return String.format("%s: %s", eventId, detail);
     }
@@ -51,4 +53,7 @@ public class LogHelper {
         return s.replaceFirst(regex, "*".repeat(Math.max(0, obfuscateAmount)));
     }
 
+  	public static String obfuscateLastThree(String s) {
+  		return obfuscate(s, true, 3);
+  	}
 }
