@@ -1,6 +1,6 @@
 package iris.client_bff.users.web;
 
-import static iris.client_bff.users.web.UserMappers.map;
+import static iris.client_bff.users.web.UserMappers.*;
 
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.ui.messages.ErrorMessages;
@@ -50,7 +50,8 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserListDTO getAllUsers() {
-		return new UserListDTO().users(this.userService.loadAll().stream().map(UserMappers::map).collect(Collectors.toList()));
+		return new UserListDTO()
+				.users(this.userService.loadAll().stream().map(UserMappers::map).collect(Collectors.toList()));
 	}
 
 	@PostMapping
@@ -98,13 +99,10 @@ public class UserController {
 			userUpdateDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (validationHelper.isPossibleAttackForRequiredValue(userUpdateDTO.getUserName(), FIELD_USER_NAME, false)) {
-			userUpdateDTO.setUserName(ErrorMessages.INVALID_INPUT_STRING);
-		}
+		var isInvalid = false;
 
-		boolean isInvalid = false;
-
-		if (validationHelper.isPossibleAttackForRequiredValue(userUpdateDTO.getPassword(), FIELD_PASSWORD, true)) {
+		if (validationHelper.isPossibleAttackForRequiredValue(userUpdateDTO.getUserName(), FIELD_USER_NAME, false)
+				|| validationHelper.isPossibleAttackForPassword(userUpdateDTO.getPassword(), FIELD_PASSWORD, true)) {
 			isInvalid = true;
 		}
 
@@ -115,6 +113,11 @@ public class UserController {
 
 		if (isInvalid) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+		}
+
+		if (!validationHelper.isPasswordValid(userUpdateDTO.getPassword())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					ValidationHelper.PW_ERROR_MESSAGE);
 		}
 
 		return userUpdateDTO;
@@ -133,14 +136,11 @@ public class UserController {
 			userInsertDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
+		var isInvalid = false;
+
 		if (validationHelper
-			.isPossibleAttackForRequiredValue(userInsertDTO.getUserName(), FIELD_USER_NAME, false)) {
-			userInsertDTO.setUserName(ErrorMessages.INVALID_INPUT_STRING);
-		}
-
-		boolean isInvalid = false;
-
-		if (validationHelper.isPossibleAttackForRequiredValue(userInsertDTO.getPassword(), FIELD_PASSWORD, true)) {
+				.isPossibleAttackForRequiredValue(userInsertDTO.getUserName(), FIELD_USER_NAME, false)
+				|| validationHelper.isPossibleAttackForPassword(userInsertDTO.getPassword(), FIELD_PASSWORD, true)) {
 			isInvalid = true;
 		}
 
@@ -151,6 +151,11 @@ public class UserController {
 
 		if (isInvalid) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+		}
+
+		if (!validationHelper.isPasswordValid(userInsertDTO.getPassword())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					ValidationHelper.PW_ERROR_MESSAGE);
 		}
 
 		return userInsertDTO;
