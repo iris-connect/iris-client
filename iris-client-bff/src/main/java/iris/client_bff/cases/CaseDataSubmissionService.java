@@ -1,8 +1,6 @@
 package iris.client_bff.cases;
 
-import static iris.client_bff.cases.CaseDataRequest.Status.ABORTED;
-import static iris.client_bff.cases.CaseDataRequest.Status.CLOSED;
-import static iris.client_bff.cases.CaseDataRequest.Status.DATA_RECEIVED;
+import static iris.client_bff.cases.CaseDataRequest.Status.*;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
@@ -13,13 +11,13 @@ import iris.client_bff.cases.model.CaseEvent;
 import iris.client_bff.cases.model.Contact;
 import iris.client_bff.cases.web.IndexCaseMapper;
 import iris.client_bff.cases.web.submission_dto.ContactsAndEvents;
+import iris.client_bff.core.alert.AlertService;
+import iris.client_bff.core.log.LogHelper;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -41,6 +39,7 @@ public class CaseDataSubmissionService {
 	private final CaseDataRequestRepository requestRepo;
 	private final ProxyServiceClient proxyClient;
 	private final CaseEmailProvider caseEmailProvider;
+	private final AlertService alertService;
 
 	// NOTE: Necessary to map here and use Transactional annotation, because of
 	// https://stackoverflow.com/a/42206232
@@ -84,10 +83,9 @@ public class CaseDataSubmissionService {
 
 		}).orElseGet(() -> {
 
-			// TODO sufficient?
-			// probably throw exception
-
-			log.error("Case submission for unknown data request occurred: {}", dataAuthorizationToken);
+			alertService.createAlertMessage("Submission for unknown Token - possible attack",
+					String.format("Case data submission for unknown data request occurred: (Data Authorization Token = %s)",
+							LogHelper.obfuscateAtStart8(dataAuthorizationToken.toString())));
 
 			return "Unknown dataAuthorizationToken: " + dataAuthorizationToken.toString();
 		});

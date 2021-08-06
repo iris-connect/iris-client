@@ -1,5 +1,6 @@
 package iris.client_bff.events;
 
+import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.log.LogHelper;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.model.EventDataSubmission;
@@ -9,11 +10,11 @@ import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ public class EventDataSubmissionService {
 	private final EventDataRequestService requestService;
 	private final EventEmailProvider eventEmailProvider;
 	private final ProxyServiceClient proxyClient;
+	private final AlertService alertService;
 
 	public String findRequestAndSaveGuestList(UUID dataAuthorizationToken, GuestList guestList) {
 		return requestService.findById(dataAuthorizationToken).map(dataRequest -> {
@@ -68,7 +70,10 @@ public class EventDataSubmissionService {
 			return "OK";
 
 		}).orElseGet(() -> {
-			log.error("Data submission for unknown data request occurred: {}", LogHelper.obfuscateAtStart8(dataAuthorizationToken.toString()));
+
+			alertService.createAlertMessage("Submission for unknown Token - possible attack",
+					String.format("Event data submission for unknown data request occurred: (Data Authorization Token = %s)",
+							LogHelper.obfuscateAtStart8(dataAuthorizationToken.toString())));
 
 			return "Unknown dataAuthorizationToken: " + dataAuthorizationToken;
 		});
