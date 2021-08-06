@@ -13,12 +13,25 @@ Unabhängig von der Installationsvariante können Sie testen, ob die Installatio
    ![](images/smoketest/NewEvent.png)
 
 
-1. Klicken Sie auf Ereignisort auswählen und suchen Sie nach `Da Michele (SmartMeeting GmbH)`. Klicken Sie auf `Wählen`.
+1. Klicken Sie auf Ereignisort auswählen und suchen Sie nach `IRIS connect Demo`. Klicken Sie auf `Wählen`.
 
    ![](images/smoketest/SearchResult.png)
 
-1. Füllen Sie die restlichen Anfrage Parameter aus. Wählen Sie als Zeitraum den 03. Juni von 12:00 bis 23:59. Klick Sie auf `Anfrage senden`.
+1. Füllen Sie die restlichen Anfrage Parameter aus. Sie können jeden beliebigen Zeitraum wählen. Klick Sie auf `Anfrage senden`.
 
    ![](images/smoketest/EventRequest.png)
 
-Bei `Da Michele (SmartMeeting GmbH)` handelt es sich um eine Test Lokation, die eigens für einen Smoketest zur Verfügung steht. Die Lokation liefert fiktive Testdaten für den 03. Juni. 
+1. Als Ergebnis können Sie die Gästelisten-Daten einsehen. 
+
+   ![](images/smoketest/EventResponse.png)
+
+
+Bei `IRIS connect Demo` handelt es sich um eine Test Lokation, die eigens für einen Smoketest zur Verfügung steht. Die Lokation liefert immer 3 fiktive Testdatensätze unabhängig vom angefragten Datum. 
+
+Bei einem erfolgreichen Test haben Sie folgende Punkte sichergestellt. 
+
+- [x] Ihre Installation kann mit IRIS kommunizieren.
+- [x] Ihre Installation kann mit den App Anbietern kommunizieren.
+- [x] Die Zertifikate sind richtig konfiguriert.
+
+Sollte es bei dem Smoketest zu Problemen kommen, melden Sie sich bei `rollout@iris-connect.de`.
