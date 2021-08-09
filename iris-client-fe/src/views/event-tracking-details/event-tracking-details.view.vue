@@ -40,7 +40,7 @@ import {
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import dataExport from "@/utils/data-export";
+import dataExport, { Row } from "@/utils/data-export";
 import EventTrackingDetailsLocationInfo from "@/views/event-tracking-details/components/event-tracking-details-location-info.vue";
 import dayjs from "@/utils/date";
 import Genders from "@/constants/Genders";
@@ -315,7 +315,7 @@ export default class EventTrackingDetailsView extends Vue {
     });
   }
 
-  handleStandardCsvExport(payload: Array<Array<string>>): void {
+  handleStandardCsvExport(payload: Row[]): void {
     dataExport.exportStandardCsvForEventTracking(
       payload,
       [
@@ -325,7 +325,7 @@ export default class EventTrackingDetailsView extends Vue {
     );
   }
 
-  handleAlternativeStandardCsvExport(payload: Array<Array<string>>): void {
+  handleAlternativeStandardCsvExport(payload: Row[]): void {
     dataExport.exportAlternativeStandardCsvForEventTracking(
       payload,
       [

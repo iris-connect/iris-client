@@ -62,11 +62,11 @@ IRIS stellt zwei Umgebungen bereit. Staging zum Testen und Live für den Produkt
 |----------------------------|--------------|---------------------------------|------------------------|
 |     IRIS Service Directory |     staging  |     test.iris-gateway.de        |     32324              |
 |     IRIS Locations Service |     staging  |     test.iris-gateway.de        |     32323              |
-|     IRIS Public Proxy      |     staging  |     test.iris-gateway.de        |     32327              |
+|     IRIS Public Proxy      |     staging  |     test.iris-gateway.de        |     32326, 32327       |
 |     IRIS Connected Apps    |     staging  |     *.apps.test.iris-gateway.de |     4443, 4444, 443    |
 |     IRIS Service Directory |     live     |     prod.iris-gateway.de        |     32324              |
 |     IRIS Locations Service |     live     |     prod.iris-gateway.de        |     32323              |
-|     IRIS Public Proxy      |     live     |     prod.iris-gateway.de        |     32327              |
+|     IRIS Public Proxy      |     live     |     prod.iris-gateway.de        |     32326, 32327       |
 |     IRIS Connected Apps    |     live     |     *.apps.prod.iris-gateway.de |     4444, 443          |
 ## Authentifizierung und Authorisierung
 
@@ -78,7 +78,7 @@ Bei dieser Installationsvariante werden alle Komponenten vom IRIS Client in eine
 
 > Diese Installationsart ist empfohlen.
 
-[Hier geht es weiter. ](./Installation-Docker-Compose.md)
+[Docker Compose Installation](./Installation-Docker-Compose.md)
 
 
 ## IRIS-Client - Stand-Alone Installation
@@ -87,5 +87,10 @@ Bei dieser Installationsvariante werden alle Komponenten vom IRIS Client von ein
 
 > Diese Installationsart ist aufgrund der komplexen Konfiguration NICHT empfohlen.
 
-[Hier geht es weiter. ](./Installation-Standalone.md)
+[Stand-Alone Installation](../../stand-alone-deployment/README.md)
 
+## Testen der Installation
+
+Unabhängig von der Installations Variante können Sie testen, ob die Installation erfolgreich war.
+
+[Test](Smoketest.md)

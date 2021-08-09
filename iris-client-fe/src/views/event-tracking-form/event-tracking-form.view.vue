@@ -12,12 +12,16 @@
           <v-col cols="12" sm="6">
             <v-text-field
               v-model="form.model.externalId"
-              :rules="validationRules.defined"
+              :rules="validationRules.sanitisedAndDefined"
               label="Externe ID"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6">
-            <v-text-field v-model="form.model.name" label="Name"></v-text-field>
+            <v-text-field
+              v-model="form.model.name"
+              label="Name"
+              :rules="validationRules.sanitised"
+            ></v-text-field>
           </v-col>
         </v-row>
         <location-select-dialog
@@ -98,6 +102,7 @@
               rows="1"
               value=""
               hint="Datenschutz-Hinweis: Die Anfragendetails werden an den Betrieb übermittelt!"
+              :rules="validationRules.sanitised"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -213,29 +218,12 @@ export default class EventTrackingFormView extends Vue {
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      start: [
-        (v: string): string | boolean => {
-          return (
-            dayjs(v).isSameOrBefore(dayjs(), "minute") ||
-            "Bitte geben Sie einen Zeitpunkt in der Vergangenheit an"
-          );
-        },
-      ],
-      end: [
-        (v: string): string | boolean => {
-          if (!this.form.model.start) return true;
-          return (
-            dayjs(v).isSameOrAfter(dayjs(this.form.model.start), "minute") ||
-            "Bitte geben Sie einen Zeitpunkt an, der nach dem Beginn liegt"
-          );
-        },
-      ],
+      start: [rules.dateStart],
+      end: [rules.dateEnd(this.form.model.start)],
       defined: [rules.defined],
-      location: [
-        (v: LocationInformation): string | boolean => {
-          return !!v || "Bitte wählen Sie einen Ereignisort aus";
-        },
-      ],
+      location: [rules.location],
+      sanitised: [rules.sanitised],
+      sanitisedAndDefined: [rules.sanitised, rules.defined],
     };
   }
 
@@ -268,7 +256,9 @@ export default class EventTrackingFormView extends Vue {
 
   @Watch("form.model.start")
   onDateChanged(): void {
-    this.form.model.end = dayjs(this.form.model.start).endOf("day").toString();
+    this.form.model.end = dayjs(this.form.model.start)
+      .endOf("day")
+      .toISOString();
     this.minEndDate = dayjs(this.form.model.start).format("YYYY-MM-DD");
     this.validateField("end");
   }

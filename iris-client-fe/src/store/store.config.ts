@@ -9,6 +9,8 @@ import adminUserEdit from "@/views/admin-user-edit/admin-user-edit.store";
 import indexTrackingForm from "../views/index-tracking-form/index-tracking-form.store";
 import indexTrackingList from "../views/index-tracking-list/index-tracking-list.store";
 import indexTrackingDetails from "@/views/index-tracking-details/index-tracking-details.store";
+// @todo - indexTracking: optional remove next line once index cases are permanently activated again
+import indexTrackingSettings from "@/views/index-tracking-settings/index-tracking-settings.store";
 
 import { StoreOptions } from "vuex";
 import { RootState } from "@/store/types";
@@ -32,11 +34,17 @@ export const storeOptions: StoreOptions<RootState> = {
     indexTrackingForm,
     indexTrackingList,
     indexTrackingDetails,
+    // @todo - indexTracking: optional remove next line once index cases are permanently activated again
+    indexTrackingSettings,
   },
   plugins: [
     createPersistedState({
       key: "iris-client-frontend",
-      paths: ["userLogin.session"],
+      paths: [
+        "userLogin.session",
+        // @todo - indexTracking: optional remove next line once index cases are permanently activated again
+        "indexTrackingSettings.indexTrackingEnabled",
+      ],
       getState(key: string, storage) {
         try {
           const item: string | null = storage.getItem(key);

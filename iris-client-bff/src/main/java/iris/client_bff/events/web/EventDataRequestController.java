@@ -2,14 +2,15 @@ package iris.client_bff.events.web;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionRepository;
-import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.DataRequestClient;
 import iris.client_bff.events.web.dto.DataRequestDetails;
+import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
 import iris.client_bff.events.web.dto.Guest;
@@ -18,6 +19,7 @@ import iris.client_bff.events.web.dto.GuestListDataProvider;
 import iris.client_bff.events.web.dto.LocationInformation;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -41,15 +43,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+@Slf4j
 @RequestMapping("/data-requests-client/events")
 @RestController
 @AllArgsConstructor
 public class EventDataRequestController {
 
+	private static final String FIELD_PROVIDER_ID = "providerId";
+	private static final String FIELD_LOCATION_ID = "locationId";
+	private static final String FIELD_REQUEST_DETAILS = "requestDetails";
+	private static final String FIELD_STATUS = "status";
+	private static final String FIELD_EXTERNAL_REQUEST_ID = "externalRequestId";
+	private static final String FIELD_NAME = "name";
+	private static final String FIELD_COMMENT = "comment";
+	private static final String FIELD_CODE = "code";
+	private static final String FIELD_SEARCH = "search";
+
 	private EventDataRequestService dataRequestService;
 	private EventDataSubmissionRepository submissionRepo;
 
+	private ValidationHelper validHelper;
 	private ModelMapper modelMapper;
 
 	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (EventDataRequest request) -> {
@@ -60,19 +75,13 @@ public class EventDataRequestController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity createDataRequest(@Valid @RequestBody DataRequestClient request) {
+	public ResponseEntity<?> createDataRequest(@Valid @RequestBody DataRequestClient request) {
 
-		EventDataRequest result = null;
-		try {
-			result = dataRequestService.createDataRequest(request);
+		DataRequestClient requestValidated = validateDataRequestClient(request);
 
-			return ok(mapDataRequestDetails(result));
+		var result = dataRequestService.createDataRequest(requestValidated);
 
-		} catch (IRISDataRequestException e) {
-
-			// TODO this is an interim solution to improve UX and display user friendly error messages
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorMessages.EVENT_DATA_REQUEST_CREATION);
-		}
+		return ok(mapDataRequestDetails(result));
 	}
 
 	@GetMapping
@@ -81,6 +90,10 @@ public class EventDataRequestController {
 		@RequestParam(required = false) Status status,
 		@RequestParam(required = false) String search,
 		Pageable pageable) {
+		if (validHelper.isPossibleAttack(search, FIELD_SEARCH, false)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+		}
+
 		if (status != null && StringUtils.isNotEmpty(search)) {
 			return dataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(eventMapperFunction);
 		} else if (StringUtils.isNotEmpty(search)) {
@@ -92,28 +105,35 @@ public class EventDataRequestController {
 	}
 
 	@GetMapping("/{code}")
-	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable UUID code) {
-		var dataRequest = dataRequestService.findById(code);
-		if (dataRequest.isPresent()) {
-			DataRequestDetails requestDetails = mapDataRequestDetails(dataRequest.get());
-			addSubmissionsToRequest(dataRequest.get(), requestDetails);
+		if (ValidationHelper.isUUIDInputValid(code.toString(), FIELD_CODE)) {
+			var dataRequest = dataRequestService.findById(code);
+			if (dataRequest.isPresent()) {
+				DataRequestDetails requestDetails = mapDataRequestDetails(dataRequest.get());
+				addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
-			return ResponseEntity.of(Optional.of(requestDetails));
+				return ResponseEntity.of(Optional.of(requestDetails));
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PatchMapping("/{code}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> update(@PathVariable UUID code, @RequestBody EventUpdateDTO patch) {
+		if (!ValidationHelper.isUUIDInputValid(code.toString(), FIELD_CODE)) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		EventUpdateDTO patchValidated = validateEventUpdateDTO(patch);
 
 		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
-			EventDataRequest updated = dataRequestService.update(dataRequest.get(), patch);
-
-			dataRequestService.sendDataRecievedEmail(updated, patch.getStatus());
+			EventDataRequest updated = dataRequestService.update(dataRequest.get(), patchValidated);
 
 			DataRequestDetails requestDetails = mapDataRequestDetails(updated);
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);
@@ -122,6 +142,83 @@ public class EventDataRequestController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+
+	private EventUpdateDTO validateEventUpdateDTO(EventUpdateDTO patch) {
+		if (patch == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+		}
+
+		if (validHelper.isPossibleAttack(patch.getComment(), FIELD_COMMENT, false)) {
+			patch.setComment(ErrorMessages.INVALID_INPUT_STRING);
+		}
+
+		if (validHelper.isPossibleAttack(patch.getName(), FIELD_NAME, false)) {
+			patch.setName(ErrorMessages.INVALID_INPUT_STRING);
+		}
+
+		if (validHelper.isPossibleAttack(patch.getExternalRequestId(), FIELD_EXTERNAL_REQUEST_ID, false)) {
+			patch.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
+		}
+
+		if (patch.getStatus() != null
+			&& !(patch.getStatus() == EventStatusDTO.DATA_RECEIVED
+				|| patch.getStatus() == EventStatusDTO.DATA_REQUESTED
+				|| patch.getStatus() == EventStatusDTO.ABORTED
+				|| patch.getStatus() == EventStatusDTO.CLOSED)) {
+			log.warn(ErrorMessages.INVALID_INPUT + FIELD_STATUS + patch.getStatus());
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+		}
+
+		return patch;
+	}
+
+	private DataRequestClient validateDataRequestClient(DataRequestClient request) {
+		if (request == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+		}
+
+		if (validHelper.isPossibleAttack(request.getComment(), FIELD_COMMENT, false)) {
+			request.setComment(ErrorMessages.INVALID_INPUT_STRING);
+		}
+
+		if (validHelper.isPossibleAttack(request.getName(), FIELD_NAME, false)) {
+			request.setName(ErrorMessages.INVALID_INPUT_STRING);
+		}
+
+		if (validHelper.isPossibleAttack(request.getRequestDetails(), FIELD_REQUEST_DETAILS, false)) {
+			request.setRequestDetails(ErrorMessages.INVALID_INPUT_STRING);
+		}
+
+		if (validHelper.isPossibleAttackForRequiredValue(request.getExternalRequestId(), FIELD_EXTERNAL_REQUEST_ID, false)) {
+			request.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
+		}
+
+		if (validHelper.isPossibleAttackForRequiredValue(request.getProviderId(), FIELD_PROVIDER_ID, false)) {
+			request.setProviderId(ErrorMessages.INVALID_INPUT_STRING);
+		}
+
+		if (validHelper.isPossibleAttackForRequiredValue(request.getLocationId(), FIELD_LOCATION_ID, false)) {
+			request.setLocationId(ErrorMessages.INVALID_INPUT_STRING);
+		}
+
+		boolean isInvalid = false;
+
+		if (request.getStart() == null) {
+			log.warn(ErrorMessages.INVALID_INPUT + " - start: null");
+			isInvalid = true;
+		}
+
+		if (request.getEnd() == null) {
+			log.warn(ErrorMessages.INVALID_INPUT + " - end: null");
+			isInvalid = true;
+		}
+
+		if (isInvalid) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+		}
+
+		return request;
 	}
 
 	private DataRequestDetails mapDataRequestDetails(EventDataRequest request) {
@@ -151,7 +248,6 @@ public class EventDataRequestController {
 	}
 
 	private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
-
 		submissionRepo.findAllByRequest(request).get().findFirst().ifPresent(it -> addSubmissionToRequest(requestDetails, it));
 	}
 

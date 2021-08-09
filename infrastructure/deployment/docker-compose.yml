@@ -16,8 +16,6 @@ services:
       POSTGRES_PASSWORD:
     volumes:
       - psqldata_iris:/var/lib/postgresql/data
-
-    restart: unless-stopped
     healthcheck:
       test:
         [
@@ -35,6 +33,7 @@ services:
       start_period: 30s
     depends_on:
       - logger
+    restart: unless-stopped
 
   # IRIS Client backend for frontend
   iris-client:
@@ -56,9 +55,9 @@ services:
       SECURITY_JWT_JWT_SHARED_SECRET:
       IRIS_LOCATION_SERVICE_ENDPOINT: ${EPS_LS_NAME}
       IRIS_CLIENT_BASEPATH: "https://${IRIS_CLIENT_DOMAIN}"
-    restart: unless-stopped
     depends_on:
       - postgres
+    restart: unless-stopped
 
   # IRIS Client Frontend for users
   iris-frontend:
@@ -70,9 +69,10 @@ services:
       LOCAL_CONTACT_PERSON_NAME:
       LOCAL_CONTACT_PERSON_MAIL:
       LOCAL_CONTACT_PERSON_PHONE:
-    restart: unless-stopped
+      CSV_EXPORT_STANDARD_ATOMIC_ADDRESS:
     depends_on:
       - iris-client
+    restart: unless-stopped
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
@@ -85,14 +85,16 @@ services:
     volumes:
       - ./certs/eps:/app/settings/certs
     environment:
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
       EPS_SETTINGS: "settings/roles/${IRIS_ENV}/hd"
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ${PROXY_URL}
       EPS_OP:
       EPS_CLIENT_CERT:
       EPS_CLIENT_CERT_KEY:
       EPS_SD_ENDPOINT:
       EPS_SD_NAME:
-      HTTPS_PROXY: ${PROXY_URL}
-      PROXY_URL: ${PROXY_URL}
+    restart: unless-stopped
 
   # Proxy for inbound connections.
   private-proxy:
@@ -105,17 +107,20 @@ services:
       - proxy_db_iris:/app/db
     environment:
       PROXY_SETTINGS: "settings/roles/${IRIS_ENV}/private-proxy"
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
+      PRIVATE_PROXY_EPS_HOSTNAME: private-proxy-eps
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_DOMAIN: ${PROXY_SUBDOMAIN}
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
-      HTTPS_PROXY: ${PROXY_URL}
-      PROXY_DOMAIN: ${PROXY_SUBDOMAIN}
       PROXY_TLS_CERT:
       PROXY_TLS_CERT_KEY:
     command: ["--level", "trace", "run", "private"]
     depends_on:
       - logger
       - private-proxy-eps
+    restart: unless-stopped
 
   private-proxy-eps:
     image: inoeg/iris-client-eps:1.0
@@ -126,6 +131,7 @@ services:
       - ./certs/eps:/app/settings/certs
     environment:
       EPS_SETTINGS: settings/roles/${IRIS_ENV}/private-proxy-eps
+      PRIVATE_PROXY_HOSTNAME: private-proxy
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
@@ -135,6 +141,7 @@ services:
       PROXY_URL: ${PROXY_URL}
     depends_on:
       - logger
+    restart: unless-stopped
 
   # Reverse Proxy
   nginx:
@@ -150,6 +157,7 @@ services:
     depends_on:
       - iris-client
       - iris-frontend
+    restart: unless-stopped
 
   # Watchtower for auto-updates
   watchtower:
@@ -165,11 +173,11 @@ services:
       WATCHTOWER_NO_PULL: "true"
     depends_on:
       - nginx
+    restart: unless-stopped
 
   # Log shipper
   logger:
     image: umputun/docker-logger
-    restart: always
     logging:
       driver: json-file
       options:
@@ -186,6 +194,7 @@ services:
     volumes:
       - ${LOG_FOLDER:-./logs}:/srv/logs
       - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
 
 volumes:
   psqldata_iris:

@@ -17,6 +17,10 @@
           actionlabel="Zur Indexübersicht"
           image="sketch_medicine.svg"
           actionlink="cases/list"
+          :linkDisabled="
+            // @todo indexTracking: remove linkDisabled once index cases are permanently activated again
+            !$store.state.indexTrackingSettings.indexTrackingEnabled
+          "
         ></counter-widget>
       </v-col>
       <v-col>
@@ -35,8 +39,8 @@
         <v-card color="primary" class="pb-8 pt-2 pl-2">
           <v-container>
             <h2 class="light-font mb-6">
-              Herzlich wilkommen bei IRIS - dem offenen Portal des
-              Gesundheitsamtes
+              Herzlich willkommen bei IRIS connect - Die öffentliche
+              Datenschnittstelle des Gesundheitsamts
             </h2>
             <v-row>
               <v-col>
@@ -50,7 +54,15 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn color="primary" :to="{ name: 'index-new' }" class="mb-5">
+                <v-btn
+                  color="primary"
+                  :to="{ name: 'index-new' }"
+                  class="mb-5"
+                  :disabled="
+                    // @todo indexTracking: remove disabled once index cases are permanently activated again
+                    !$store.state.indexTrackingSettings.indexTrackingEnabled
+                  "
+                >
                   Indexfall-Daten anfordern
                 </v-btn>
               </v-col>

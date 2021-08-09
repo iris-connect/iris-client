@@ -17,7 +17,7 @@
             :key="link.name"
             :to="link.path"
             :exact="link.meta.menuExact"
-            :disabled="link.meta.disabled"
+            :disabled="isLinkDisabled(link)"
             text
           >
             {{ link.meta.menuName }}
@@ -44,6 +44,7 @@
 import Vue from "vue";
 import { routes, setInterceptRoute } from "@/router";
 import UserMenu from "@/views/user-login/components/user-menu.vue";
+import { RouteConfig } from "vue-router";
 
 // @todo: move user functionality to a dedicated user-module?
 export default Vue.extend({
@@ -104,6 +105,19 @@ export default Vue.extend({
     },
   },
   methods: {
+    isLinkDisabled(link: RouteConfig): boolean {
+      // @todo - indexTracking: remove disabled check once index cases are permanently activated again
+      if (
+        link.name === "index-new" ||
+        link.name === "index-list" ||
+        link.name === "index-details"
+      ) {
+        if (!this.$store.state.indexTrackingSettings.indexTrackingEnabled) {
+          return true;
+        }
+      }
+      return link.meta.disabled;
+    },
     logoutUser() {
       this.$store.dispatch("userLogin/logout");
     },

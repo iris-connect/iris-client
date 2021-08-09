@@ -176,11 +176,9 @@ class IndexCaseMapperTest {
 		CaseDataProvider dataProvider = CaseDataProvider.builder()
 				.firstName("Max")
 				.lastName("Mustermann")
-				.dateOfBirth(Instant.parse("1978-12-12T10:15:30Z"))
 				.build();
 
 		var caseDataProvider = mapper.map(dataProvider, iris.client_bff.cases.model.CaseDataProvider.class);
-		caseDataProvider.setDateOfBirth(LocalDate.ofInstant(dataProvider.getDateOfBirth(), ZoneId.of("CET")));
 
 		return new CaseDataSubmission(getRequest(),
 				contactSet,

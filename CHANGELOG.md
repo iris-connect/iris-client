@@ -1,5 +1,45 @@
 # Changelog
 
+# [1.0.0-rc.12](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.11...v1.0.0-rc.12) (2021-07-27)
+
+
+### Bug Fixes
+
+* Adds restart policy to all docker compose services. ([#217](https://github.com/iris-connect/iris-client/issues/217)) ([3a7534b](https://github.com/iris-connect/iris-client/commit/3a7534b3bce69ad58075ba522ad120831a2982b1))
+* FE image build error ([#229](https://github.com/iris-connect/iris-client/issues/229)) ([6905694](https://github.com/iris-connect/iris-client/commit/690569495df166d7ec360128214ff1e7c1ef6c6e))
+* repair mock api for location search ([#161](https://github.com/iris-connect/iris-client/issues/161)) ([3fe5cb6](https://github.com/iris-connect/iris-client/commit/3fe5cb656be01ce7018d7e81b18aaa31c8318aa0))
+* typo ([75769c7](https://github.com/iris-connect/iris-client/commit/75769c7c19e4d543fbade414ba79d9f4a5e7377e))
+
+
+### Features
+
+* 192 Feature flag for index cases ([#194](https://github.com/iris-connect/iris-client/issues/194)) ([22e0a4b](https://github.com/iris-connect/iris-client/commit/22e0a4b9e571e4a10551d944587423cac0ca3a76)), closes [#192](https://github.com/iris-connect/iris-client/issues/192)
+* Log outgoing data requests with common format ([b1e72fc](https://github.com/iris-connect/iris-client/commit/b1e72fcfc21e720ce4ccd000e4f69e1a569b451f)), closes [iris-connect/iris-backlog#202](https://github.com/iris-connect/iris-backlog/issues/202) [iris-connect/iris-backlog#169](https://github.com/iris-connect/iris-backlog/issues/169) [#224](https://github.com/iris-connect/iris-client/issues/224)
+* use local fonts for gdpr compliance ([#220](https://github.com/iris-connect/iris-client/issues/220)) ([6492e3a](https://github.com/iris-connect/iris-client/commit/6492e3a690537ee92b137d2f28c2c40eb1f26623))
+
+# [1.0.0-rc.11](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.10...v1.0.0-rc.11) (2021-07-02)
+
+
+### Bug Fixes
+
+* enable cross origin POST for data submission endpoint ([389a08d](https://github.com/iris-connect/iris-client/commit/389a08d034db361568e1fa34732593eac1ab3536))
+* Fixes problem stand alone release did not contain the ca folder. ([#201](https://github.com/iris-connect/iris-client/issues/201)) ([6c5fba5](https://github.com/iris-connect/iris-client/commit/6c5fba54287127c0b7d88b2b4ef410f7018cc3e6))
+
+# [1.0.0-rc.10](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.9...v1.0.0-rc.10) (2021-07-02)
+
+
+### Bug Fixes
+
+* Fixes problem that incorrect version and build were shown. ([fe917ec](https://github.com/iris-connect/iris-client/commit/fe917ec0504427e994f9b3e95394a269f76b534e))
+
+
+### Features
+
+* disable access to index-case feature in FE ([#193](https://github.com/iris-connect/iris-client/issues/193)) ([5b77fbd](https://github.com/iris-connect/iris-client/commit/5b77fbdb085d87b3f88bba63b9d8ce04676a7212))
+* index case data ([611d4f0](https://github.com/iris-connect/iris-client/commit/611d4f03f893245f90cca593f03ffbff54e032d9)), closes [iris-connect/iris-backlog/issues#129](https://github.com/iris-connect/iris-backlog/issues/issues/129) [iris-connect/iris-backlog/issues#129](https://github.com/iris-connect/iris-backlog/issues/issues/129) [iris-connect/iris-backlog/issues#129](https://github.com/iris-connect/iris-backlog/issues/issues/129) [iris-connect/iris-backlog/issues#129](https://github.com/iris-connect/iris-backlog/issues/issues/129)
+* Stand Alone Documentation for Health Departments without Docker environment. ([2af2c1f](https://github.com/iris-connect/iris-client/commit/2af2c1f48f624655b5770c6ced357132d580cf45)), closes [#182](https://github.com/iris-connect/iris-client/issues/182)
+* use env vars for hostnames in eps roles ([#199](https://github.com/iris-connect/iris-client/issues/199)) ([34a3df4](https://github.com/iris-connect/iris-client/commit/34a3df458f5f59e1fdb7f994bd29c9a33560f62c))
+
 # [1.0.0-rc.9](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.8...v1.0.0-rc.9) (2021-06-30)
 
 

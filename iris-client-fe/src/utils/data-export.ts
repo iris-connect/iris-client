@@ -1,3 +1,7 @@
+import _get from "lodash/get";
+import _set from "lodash/set";
+import _toString from "lodash/toString";
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Parser } = require("json2csv");
 
@@ -5,6 +9,11 @@ export interface Header {
   text: string;
   value: string;
 }
+
+export type Row = Record<string, unknown>;
+type SanitizedRow = {
+  [index: string]: SanitizedRow | string;
+};
 
 export type TableRow = {
   lastName: string;
@@ -46,127 +55,153 @@ export type EventParticipantData = {
   houseNumber: string;
 };
 
-const headerStandardForIndexTrackingContacts = [
-  {
-    text: "Nachname",
-    value: "lastName",
-    align: "start",
-  },
-  {
-    text: "Vorname",
-    value: "firstName",
-  },
-  {
-    text: "Geburtsdatum",
-    value: "dateOfBirth",
-  },
-  {
-    text: "Erster Kontakt am",
-    value: "firstContactDate",
-  },
-  {
-    text: "Letzter Kontakt am",
-    value: "lastContactDate",
-  },
-  {
-    text: "Kontaktkathegorie",
-    value: "contactCategory",
-  },
-  {
-    text: "Geschlecht",
-    value: "sex",
-  },
-  {
-    text: "E-Mail",
-    value: "email",
-  },
-  {
-    text: "Telefon",
-    value: "phone",
-  },
-  {
-    text: "Mobil",
-    value: "mobilePhone",
-  },
-  {
-    text: "Adresse",
-    value: "address",
-  },
-  {
-    text: "Arbeitsplatz",
-    value: "workPlace",
-  },
-  {
-    text: "Kontaktsituation",
-    value: "basicConditions",
-  },
-];
+const getAddressHeaders = () => {
+  if (window.irisAppContext?.csvExportStandardAtomicAddress === "true") {
+    return [
+      {
+        text: "Straße",
+        value: "raw.address.street",
+      },
+      {
+        text: "Hausnummer",
+        value: "raw.address.houseNumber",
+      },
+      {
+        text: "Postleitzahl",
+        value: "raw.address.zipCode",
+      },
+      {
+        text: "Ort",
+        value: "raw.address.city",
+      },
+    ];
+  }
+  return [
+    {
+      text: "Adresse",
+      value: "address",
+    },
+  ];
+};
 
-const headerStandardForIndexTrackingEvents = [
-  {
-    text: "Event",
-    value: "name",
-  },
-  {
-    text: "Telefonnummer",
-    value: "phone",
-  },
-  {
-    text: "Adresse",
-    value: "address",
-  },
-  {
-    text: "zus. Informationen",
-    value: "additionalInformation",
-  },
-];
+const getHeadersStandardForIndexTrackingContacts = () => {
+  return [
+    {
+      text: "Nachname",
+      value: "lastName",
+      align: "start",
+    },
+    {
+      text: "Vorname",
+      value: "firstName",
+    },
+    {
+      text: "Geburtsdatum",
+      value: "dateOfBirth",
+    },
+    {
+      text: "Erster Kontakt am",
+      value: "firstContactDate",
+    },
+    {
+      text: "Letzter Kontakt am",
+      value: "lastContactDate",
+    },
+    {
+      text: "Kontaktkathegorie",
+      value: "contactCategory",
+    },
+    {
+      text: "Geschlecht",
+      value: "sex",
+    },
+    {
+      text: "E-Mail",
+      value: "email",
+    },
+    {
+      text: "Telefon",
+      value: "phone",
+    },
+    {
+      text: "Mobil",
+      value: "mobilePhone",
+    },
+    ...getAddressHeaders(),
+    {
+      text: "Arbeitsplatz",
+      value: "workPlace",
+    },
+    {
+      text: "Kontaktsituation",
+      value: "basicConditions",
+    },
+  ];
+};
 
-const headerStandardForEventTracking = [
-  {
-    text: "Nachname",
-    value: "lastName",
-  },
-  {
-    text: "Vorname",
-    value: "firstName",
-  },
-  {
-    text: "Check-In",
-    value: "checkInTime",
-  },
-  {
-    text: "Check-Out",
-    value: "checkOutTime",
-  },
-  {
-    text: "max. Kontaktdauer",
-    value: "maxDuration",
-  },
-  {
-    text: "Kommentar",
-    value: "comment",
-  },
-  {
-    text: "Geschlecht",
-    value: "sex",
-  },
-  {
-    text: "E-Mail",
-    value: "email",
-  },
-  {
-    text: "Telefon",
-    value: "phone",
-  },
-  {
-    text: "Mobil",
-    value: "mobilePhone",
-  },
-  {
-    text: "Adresse",
-    value: "address",
-  },
-];
+const getHeadersStandardForIndexTrackingEvents = () => {
+  return [
+    {
+      text: "Event",
+      value: "name",
+    },
+    {
+      text: "Telefonnummer",
+      value: "phone",
+    },
+    ...getAddressHeaders(),
+    {
+      text: "zus. Informationen",
+      value: "additionalInformation",
+    },
+  ];
+};
+
+const getHeaderStandardForEventTracking = () => {
+  return [
+    {
+      text: "Nachname",
+      value: "lastName",
+    },
+    {
+      text: "Vorname",
+      value: "firstName",
+    },
+    {
+      text: "Check-In",
+      value: "checkInTime",
+    },
+    {
+      text: "Check-Out",
+      value: "checkOutTime",
+    },
+    {
+      text: "max. Kontaktdauer",
+      value: "maxDuration",
+    },
+    {
+      text: "Kommentar",
+      value: "comment",
+    },
+    {
+      text: "Geschlecht",
+      value: "sex",
+    },
+    {
+      text: "E-Mail",
+      value: "email",
+    },
+    {
+      text: "Telefon",
+      value: "phone",
+    },
+    {
+      text: "Mobil",
+      value: "mobilePhone",
+    },
+    ...getAddressHeaders(),
+  ];
+};
 
 const headerSormasContactPerson = [
   {
@@ -255,66 +290,54 @@ const headerSormasEventParticipants = [
 ];
 
 const exportStandardCsvForEventTracking = function (
-  rows: Array<Array<string>>,
+  rows: Row[],
   fileName: string
 ): void {
-  const header = headerStandardForEventTracking;
-  exportCsvWithoutQuote(header, rows, fileName, ",");
+  const headers = getHeaderStandardForEventTracking();
+  exportCsvWithoutQuote(headers, rows, fileName, ",");
 };
 
 const exportStandardCsvForIndexTrackingContacts = function (
-  rows: Array<Array<string>>,
+  rows: Row[],
   fileName: string
 ): void {
-  const header = headerStandardForIndexTrackingContacts;
-  exportCsvWithoutQuote(header, rows, fileName, ",");
+  const headers = getHeadersStandardForIndexTrackingContacts();
+  exportCsvWithoutQuote(headers, rows, fileName, ",");
 };
 
 const exportStandardCsvForIndexTrackingEvents = function (
-  rows: Array<Array<string>>,
+  rows: Row[],
   fileName: string
 ): void {
-  const header = headerStandardForIndexTrackingEvents;
-  exportCsvWithoutQuote(header, rows, fileName, ",");
+  const headers = getHeadersStandardForIndexTrackingEvents();
+  exportCsvWithoutQuote(headers, rows, fileName, ",");
 };
 
 const exportAlternativeStandardCsvForEventTracking = function (
-  rows: Array<Array<string>>,
+  rows: Row[],
   fileName: string
 ): void {
-  const header = headerStandardForEventTracking;
-  exportCsvWithQuote(header, rows, fileName, ";");
+  const headers = getHeaderStandardForEventTracking();
+  exportCsvWithQuote(headers, rows, fileName, ";");
 };
 
 const exportSormasEventParticipantsCsv = function (
   rows: Array<EventParticipantData>,
   fileName: string
 ): void {
-  const headers = headerSormasEventParticipants;
-  exportCsvWithQuote(
-    headers,
-    (rows as unknown) as Array<Array<string>>,
-    fileName,
-    ";"
-  );
+  exportCsvWithQuote(headerSormasEventParticipants, rows, fileName, ";");
 };
 
 const exportSormasContactPersonCsv = function (
   rows: Array<ContactCaseData>,
   fileName: string
 ): void {
-  const headers = headerSormasContactPerson;
-  exportCsvWithQuote(
-    headers,
-    (rows as unknown) as Array<Array<string>>,
-    fileName,
-    ";"
-  );
+  exportCsvWithQuote(headerSormasContactPerson, rows, fileName, ";");
 };
 
 const exportCsvWithQuote = function (
-  headers: Array<Header>,
-  rows: Array<Array<string>>,
+  headers: Header[],
+  rows: Row[],
   fileName: string,
   separator: string
 ): void {
@@ -336,8 +359,8 @@ const exportCsvWithQuote = function (
         delimiter: separator,
         quote: "",
       });
-      const test = sanitiseRows(rows, separator);
-      const csv = parser.parse(test);
+      const sanitizedRows = sanitizeRows(rows, headers);
+      const csv = parser.parse(sanitizedRows);
       downloadCsvFile(fileName, csv);
       resolve(csv);
     } catch (error) {
@@ -348,7 +371,7 @@ const exportCsvWithQuote = function (
 
 const exportCsvWithoutQuote = function (
   headers: Array<Header>,
-  rows: Array<Array<string>>,
+  rows: Row[],
   fileName: string,
   separator: string
 ): void {
@@ -369,8 +392,8 @@ const exportCsvWithoutQuote = function (
         defaultValue: "-",
         delimiter: separator,
       });
-      const test = sanitiseRows(rows, separator);
-      const csv = parser.parse(test);
+      const sanitizedRows = sanitizeRows(rows, headers);
+      const csv = parser.parse(sanitizedRows);
       downloadCsvFile(fileName, csv);
       resolve(csv);
     } catch (error) {
@@ -399,57 +422,56 @@ const downloadCsvFile = function (fileName: string, csv: string): void {
   }
 };
 
-const sanitiseRows = function (
-  rows: Array<Array<string>>,
-  separator: string
-): unknown {
-  let rowsDict: Array<Record<string, string>>;
-  rowsDict = JSON.parse(JSON.stringify(rows));
-  rowsDict = rowsDict.map((row) => {
-    for (const prop in row) {
-      row[prop] = sanitiseField(row[prop].toString(), separator);
-    }
-    return row;
+const sanitizeRows = function (rows: Row[], headers: Header[]): SanitizedRow[] {
+  const rowsDict: Row[] = JSON.parse(JSON.stringify(rows));
+  return rowsDict.map((row) => {
+    // we start with an empty object, copying over only those properties that are listed in the headers config.
+    // we do not use "const" as we change sanitizedRow with lodash
+    // eslint-disable-next-line
+    let sanitizedRow: SanitizedRow = {}
+    headers.forEach((header) => {
+      // header.value can be a property name like "firstName" or a path like "raw.address.street". We use lodash _get to get the field (=value).
+      const field = _get(row, header.value);
+      // we apply the sanitized field to the row
+      _set(sanitizedRow, header.value, sanitizeField(_toString(field)));
+    });
+    return sanitizedRow;
   });
-  return rowsDict;
 };
 
-export const sanitiseField = function (
-  field: string | undefined,
-  separator = ""
-): string {
-  const possibleSeperatorRE = /[,;]/g;
-  const whitespaceRE = RegExp(/\s+/, "g");
-  const whitelistRE = /([\p{L}\p{N}]@[\p{L}\p{N}])|[\p{L}\p{N}()[\]:./ -]/gu;
-  const headWhitelistRE = /^([()[\]]*[\p{L}\p{N}])+/u;
+export const sanitizeField = function (field: string | undefined): string {
+  // Some of the steps are unnecessary or may seem overly restrictive.
+  // This is intended to provide redundancy in case some sanitization gets broken with future changes. If this leads to issues, some of the restrictions may be relaxed with care.
 
-  if (!field) {
-    return field || "-";
+  if (field == null) {
+    // Catches both null and undefined
+    return "";
   }
 
-  field = field.replace(possibleSeperatorRE, "/");
-  field = field.replace(whitespaceRE, " ");
-  const matches = field.match(whitelistRE);
-  field = matches?.join("") || "";
+  // Replace newlines and other line breaks with a space
+  const regex_linebreaks = /\r?\n|\r/g; // Recognizes /r (CR), /n (LF) and /r/n (CRLF)
+  field = field.replace(regex_linebreaks, " ");
+
+  // Strip whitespace at the beginning and end
+  field = field.trim();
+
+  // Remove everything not whitelisted (this restriction may be relaxed at some point)
+  const regex_whitelist = /[^a-zA-Z0-9äüöÄÜÖß(): \-@+.;,]+/g; // Matches everything *not* in the group (the whitelist)
+  field = field.replace(regex_whitelist, "");
+
+  // Ensure beginning of string has no trigger characters (+,- and @ are allowed, but they should not start the string)
+  const regex_beginning = /^[=+\-@\t\r \n]+/g;
+  field = field.replace(regex_beginning, "");
 
   /**
    * json2csv uses a seperator to split table columns. We currently are using ; and , as those.
    * If such a sign would appear in the content than it would result in a split.
-   * To prevent this we change the seperators symbol with another symbol not used as such.
+   * To prevent this we change the offending symbol to "/". We can't quote the whole string in every desired output format.
    */
-  if (separator != "") {
-    let separator_replacement = "/";
-    if (separator === "/") separator_replacement = ".";
-    while (field.includes(separator))
-      field = field.replace(separator, separator_replacement);
-  }
-  while (!headWhitelistRE.test(field) && field.length > 0) {
-    field = field.substring(1);
-  }
 
-  if (field.length == 0) {
-    return "-";
-  }
+  const regex_separator = /[,;]+/g;
+  field = field.replace(regex_separator, "/");
+
   return field;
 };
 

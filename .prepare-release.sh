@@ -15,52 +15,81 @@ printf "\n  Build components and prepare release  \n\n"
 # Get version number from version tag if this given
 VERSION=`echo $1 | cut -d'v' -f2`
 MAJOR=`echo $VERSION | cut -d'.' -f1`
-MINOR=`echo $VERSION | cut -d'.' -f2`
+MINOR=$MAJOR.`echo $VERSION | cut -d'.' -f2`
+MAJOR_LATEST=$MAJOR-latest
+MINOR_LATEST=$MAJOR.`echo $VERSION | cut -d'.' -f2`-latest
 
 echo "version = $VERSION"
 
 # expect commit sha as second parameter
 COMMIT=$2
 
+# expect channel as the third parameter
+# if the channel is undefined, the default channel == main is used for this release
+CHANNEL=$3
+RELEASE=$([[ -z $CHANNEL ]] && echo 1 || echo 0)
+
+echo "channel = $CHANNEL; is release = $RELEASE"
+
 printf "\n  Build NGINX image  \n\n"
 NGINX_IMAGE_NAME="$NAMESPACE/iris-client-nginx"
 docker build -t $NGINX_IMAGE_NAME ./infrastructure/docker/nginx/
 
 docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$VERSION
-docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MAJOR
-docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MAJOR.$MINOR
+docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MAJOR_LATEST
+docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MINOR_LATEST
+if (( $RELEASE )); then
+	docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MAJOR
+	docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MINOR
+fi
 
 printf "\n  Build IRIS Client EPS image  \n\n"
 IRIS_CLIENT_EPS_IMAGE_NAME="$NAMESPACE/iris-client-eps"
 docker build -t $IRIS_CLIENT_EPS_IMAGE_NAME ./infrastructure/docker/iris-client-eps/
 
 docker tag $IRIS_CLIENT_EPS_IMAGE_NAME $IRIS_CLIENT_EPS_IMAGE_NAME:$VERSION
-docker tag $IRIS_CLIENT_EPS_IMAGE_NAME $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR
-docker tag $IRIS_CLIENT_EPS_IMAGE_NAME $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR.$MINOR
+docker tag $IRIS_CLIENT_EPS_IMAGE_NAME $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR_LATEST
+docker tag $IRIS_CLIENT_EPS_IMAGE_NAME $IRIS_CLIENT_EPS_IMAGE_NAME:$MINOR_LATEST
+if (( $RELEASE )); then
+	docker tag $IRIS_CLIENT_EPS_IMAGE_NAME $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR
+	docker tag $IRIS_CLIENT_EPS_IMAGE_NAME $IRIS_CLIENT_EPS_IMAGE_NAME:$MINOR
+fi
 
 printf "\n  Build IRIS Client PROXY image  \n\n"
 IRIS_CLIENT_PROXY_IMAGE_NAME="$NAMESPACE/iris-client-proxy"
 docker build -t $IRIS_CLIENT_PROXY_IMAGE_NAME ./infrastructure/docker/iris-client-proxy/
 
 docker tag $IRIS_CLIENT_PROXY_IMAGE_NAME $IRIS_CLIENT_PROXY_IMAGE_NAME:$VERSION
-docker tag $IRIS_CLIENT_PROXY_IMAGE_NAME $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR
-docker tag $IRIS_CLIENT_PROXY_IMAGE_NAME $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR.$MINOR
+docker tag $IRIS_CLIENT_PROXY_IMAGE_NAME $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR_LATEST
+docker tag $IRIS_CLIENT_PROXY_IMAGE_NAME $IRIS_CLIENT_PROXY_IMAGE_NAME:$MINOR_LATEST
+if (( $RELEASE )); then
+	docker tag $IRIS_CLIENT_PROXY_IMAGE_NAME $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR
+	docker tag $IRIS_CLIENT_PROXY_IMAGE_NAME $IRIS_CLIENT_PROXY_IMAGE_NAME:$MINOR
+fi
 
 printf "\n  Build App EPS image  \n\n"
 APP_EPS_IMAGE_NAME="$NAMESPACE/app-eps"
 docker build -t $APP_EPS_IMAGE_NAME ./infrastructure/docker/app-eps/
 
 docker tag $APP_EPS_IMAGE_NAME $APP_EPS_IMAGE_NAME:$VERSION
-docker tag $APP_EPS_IMAGE_NAME $APP_EPS_IMAGE_NAME:$MAJOR
-docker tag $APP_EPS_IMAGE_NAME $APP_EPS_IMAGE_NAME:$MAJOR.$MINOR
+docker tag $APP_EPS_IMAGE_NAME $APP_EPS_IMAGE_NAME:$MAJOR_LATEST
+docker tag $APP_EPS_IMAGE_NAME $APP_EPS_IMAGE_NAME:$MINOR_LATEST
+if (( $RELEASE )); then
+	docker tag $APP_EPS_IMAGE_NAME $APP_EPS_IMAGE_NAME:$MAJOR
+	docker tag $APP_EPS_IMAGE_NAME $APP_EPS_IMAGE_NAME:$MINOR
+fi
 
 printf "\n  Build FE image  \n\n"
 FE_IMAGE_NAME="$NAMESPACE/iris-client-frontend"
-docker build -t $FE_IMAGE_NAME ./iris-client-fe/
+docker build --build-arg VUE_APP_VERSION_ID=$VERSION --build-arg VUE_APP_BUILD_ID=$COMMIT -t $FE_IMAGE_NAME ./iris-client-fe/
 
 docker tag $FE_IMAGE_NAME $FE_IMAGE_NAME:$VERSION
-docker tag $FE_IMAGE_NAME $FE_IMAGE_NAME:$MAJOR
-docker tag $FE_IMAGE_NAME $FE_IMAGE_NAME:$MAJOR.$MINOR
+docker tag $FE_IMAGE_NAME $FE_IMAGE_NAME:$MAJOR_LATEST
+docker tag $FE_IMAGE_NAME $FE_IMAGE_NAME:$MINOR_LATEST
+if (( $RELEASE )); then
+	docker tag $FE_IMAGE_NAME $FE_IMAGE_NAME:$MAJOR
+	docker tag $FE_IMAGE_NAME $FE_IMAGE_NAME:$MINOR
+fi
 
 printf "\n  Set version to POMs and build BFF image and JAR  \n\n"
 # Set new version in pom.xml using mvn versions:set command
@@ -73,8 +102,12 @@ mkdir release && cp ./iris-client-bff/target/*.jar release
 
 BFF_IMAGE_NAME="$NAMESPACE/iris-client-bff"
 docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:latest
-docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:$MAJOR
-docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:$MAJOR.$MINOR
+docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:$MAJOR_LATEST
+docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:$MINOR_LATEST
+if (( $RELEASE )); then
+	docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:$MAJOR
+	docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:$MINOR
+fi
 
 # Generate third-party dependencies for BFF and move them to root
 # File will be uploaded to github by @semantic-release/github
@@ -103,11 +136,17 @@ export VUE_APP_API_BASE_URL="/api"
 export VUE_APP_LOCAL_CONTACT_PERSON_NAME=""
 export VUE_APP_LOCAL_CONTACT_PERSON_MAIL=""
 export VUE_APP_LOCAL_CONTACT_PERSON_PHONE=""
+export VUE_APP_CSV_EXPORT_STANDARD_ATOMIC_ADDRESS=""
 npm run build
 cd dist && zip -qq -r ../../release/iris-client-fe-$VERSION.zip *
 
 printf "\n  Create ZIP of deployment scripts and instructions  \n\n"
 cd ../../infrastructure/deployment && zip -qq -r ../../release/deployment-$VERSION.zip * .*
+
+printf "\n  Create ZIP of stand-alone-deployment  \n\n"
+
+cd ../../infrastructure/stand-alone-deployment && zip -qq -r ../../release/stand-alone-deployment-$VERSION.zip * .*
+
 
 cd ../../
 
@@ -115,34 +154,58 @@ printf "\n  Push images and tags to docker registry  \n\n"
 
 docker push $BFF_IMAGE_NAME:$VERSION
 docker push $BFF_IMAGE_NAME:latest
-docker push $BFF_IMAGE_NAME:$MAJOR
-docker push $BFF_IMAGE_NAME:$MAJOR.$MINOR
+docker push $BFF_IMAGE_NAME:$MAJOR_LATEST
+docker push $BFF_IMAGE_NAME:$MINOR_LATEST
+if (( $RELEASE )); then
+	docker push $BFF_IMAGE_NAME:$MAJOR
+	docker push $BFF_IMAGE_NAME:$MINOR
+fi
 
 docker push $FE_IMAGE_NAME:$VERSION
 docker push $FE_IMAGE_NAME:latest
-docker push $FE_IMAGE_NAME:$MAJOR
-docker push $FE_IMAGE_NAME:$MAJOR.$MINOR
+docker push $FE_IMAGE_NAME:$MAJOR_LATEST
+docker push $FE_IMAGE_NAME:$MINOR_LATEST
+if (( $RELEASE )); then
+	docker push $FE_IMAGE_NAME:$MAJOR
+	docker push $FE_IMAGE_NAME:$MINOR
+fi
 
 docker push $NGINX_IMAGE_NAME:$VERSION
 docker push $NGINX_IMAGE_NAME:latest
-docker push $NGINX_IMAGE_NAME:$MAJOR
-docker push $NGINX_IMAGE_NAME:$MAJOR.$MINOR
+docker push $NGINX_IMAGE_NAME:$MAJOR_LATEST
+docker push $NGINX_IMAGE_NAME:$MINOR_LATEST
+if (( $RELEASE )); then
+	docker push $NGINX_IMAGE_NAME:$MAJOR
+	docker push $NGINX_IMAGE_NAME:$MINOR
+fi
 
 docker push $IRIS_CLIENT_EPS_IMAGE_NAME:$VERSION
 docker push $IRIS_CLIENT_EPS_IMAGE_NAME:latest
-docker push $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR
-docker push $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR.$MINOR
+docker push $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR_LATEST
+docker push $IRIS_CLIENT_EPS_IMAGE_NAME:$MINOR_LATEST
+if (( $RELEASE )); then
+	docker push $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR
+	docker push $IRIS_CLIENT_EPS_IMAGE_NAME:$MINOR
+fi
 
 docker push $IRIS_CLIENT_PROXY_IMAGE_NAME:$VERSION
 docker push $IRIS_CLIENT_PROXY_IMAGE_NAME:latest
-docker push $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR
-docker push $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR.$MINOR
+docker push $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR_LATEST
+docker push $IRIS_CLIENT_PROXY_IMAGE_NAME:$MINOR_LATEST
+if (( $RELEASE )); then
+	docker push $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR
+	docker push $IRIS_CLIENT_PROXY_IMAGE_NAME:$MINOR
+fi
 
 docker push $APP_EPS_IMAGE_NAME:$VERSION
 docker push $APP_EPS_IMAGE_NAME:latest
-docker push $APP_EPS_IMAGE_NAME:$MAJOR
-docker push $APP_EPS_IMAGE_NAME:$MAJOR.$MINOR
+docker push $APP_EPS_IMAGE_NAME:$MAJOR_LATEST
+docker push $APP_EPS_IMAGE_NAME:$MINOR_LATEST
+if (( $RELEASE )); then
+	docker push $APP_EPS_IMAGE_NAME:$MAJOR
+	docker push $APP_EPS_IMAGE_NAME:$MINOR
+fi
 
 printf "\n  COMPLETED: Build components and prepare release  \n\n"
 
-#printenv 
+#printenv

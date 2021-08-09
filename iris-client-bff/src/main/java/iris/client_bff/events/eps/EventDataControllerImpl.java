@@ -3,6 +3,7 @@ package iris.client_bff.events.eps;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionService;
+import iris.client_bff.events.EventEmailProvider;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
@@ -20,6 +21,7 @@ public class EventDataControllerImpl implements EventDataController {
 
 	private final EventDataRequestService requestService;
 	private final EventDataSubmissionService dataSubmissionService;
+	private final EventEmailProvider eventEmailProvider;
 	private final ProxyServiceClient proxyClient;
 	private final DataProviderClient epsDataRequestClient;
 
@@ -39,7 +41,9 @@ public class EventDataControllerImpl implements EventDataController {
 			try {
 				dataSubmissionService.save(dataRequest, guestList);
 				proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
-				log.trace("Submission of data for {} is complete and proxy ancouncement has been closed", dataAuthorizationToken);
+				eventEmailProvider.sendDataReceivedEmailAsynchronously(dataRequest);
+
+			log.trace("Submission of data for {} is complete and proxy ancouncement has been closed", dataAuthorizationToken);
 			} catch (IRISAnnouncementException e) {
 				// Todo: Do I also need to remove the submission ? Possibly remove the saved data again
 				dataSubmissionService.deleteFailedSubmissionAttempt(dataRequest, guestList);

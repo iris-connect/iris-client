@@ -6,7 +6,8 @@ import io.vavr.control.Try;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.core.EmailAddress;
 import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail;
-import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail.Recipient;
+import iris.client_bff.core.mail.EmailSender.TemplatedEmail.ConfiguredRecipient;
+import iris.client_bff.core.mail.EmailSender.TemplatedEmail.Recipient;
 import iris.client_bff.core.mail.EmailTemplates.Key;
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +19,7 @@ import javax.mail.MessagingException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -25,12 +27,13 @@ import com.icegreen.greenmail.util.GreenMailUtil;
 
 @RequiredArgsConstructor
 @IrisWebIntegrationTest
-@ActiveProfiles({"dev", "test"})
+@ActiveProfiles({ "dev", "test" })
 class EmailSenderIntegrationTests {
 
-	final EmailSender sender;
+	final EmailSenderReal sender;
 	final MessageSourceAccessor messages;
 	final TestEmailServer mailServer;
+	final MailProperties mailProperties;
 
 	private TestEmails testEmails;
 
@@ -38,7 +41,7 @@ class EmailSenderIntegrationTests {
 	void setUp() throws Exception {
 		mailServer.reset();
 
-		testEmails = new TestEmails(sender, messages);
+		testEmails = new TestEmails(sender, messages, mailProperties);
 	}
 
 	@Test
@@ -90,9 +93,12 @@ class EmailSenderIntegrationTests {
 
 	public class TestEmails extends EmailProvider {
 
-		public TestEmails(EmailSender emailSender, MessageSourceAccessor messages) {
-			super(emailSender, messages);
+		public TestEmails(EmailSender emailSender, MessageSourceAccessor messages, MailProperties mailProperties) {
+			super(emailSender, messages, mailProperties);
 		}
+
+		ConfiguredRecipient standardRecipient = new ConfiguredRecipient("fix-recipient",
+				EmailAddress.of("fix-recipient@iris-connect.de"));
 
 		Try<Void> sendTestEmailEn() {
 
@@ -101,7 +107,7 @@ class EmailSenderIntegrationTests {
 
 			var email = new TestEmail(subject, TestKeys.TEST_MAIL_FTL, getParameters(), english);
 
-			return sendMail(email);
+			return sendMail(email, getParameters().get("caseId"));
 		}
 
 		Try<Void> sendTestEmailDe() {
@@ -111,7 +117,7 @@ class EmailSenderIntegrationTests {
 
 			var email = new TestEmail(subject, TestKeys.TEST_MAIL_FTL, getParameters(), locale);
 
-			return sendMail(email);
+			return sendMail(email, getParameters().get("caseId"));
 		}
 
 		Try<Void> sendTestHtmlEmailDe() {
@@ -121,7 +127,7 @@ class EmailSenderIntegrationTests {
 
 			var email = new TestEmail(subject, TestKeys.TEST_HTML_MAIL_FTLH, getParameters(), locale);
 
-			return sendMail(email);
+			return sendMail(email, getParameters().get("caseId"));
 		}
 
 		private Map<String, String> getParameters() {
@@ -138,7 +144,9 @@ class EmailSenderIntegrationTests {
 		}
 	}
 
-	enum TestKeys implements Key {
+	enum TestKeys
+			implements
+			Key {
 
 		TEST_MAIL_FTL, TEST_HTML_MAIL_FTLH;
 

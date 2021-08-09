@@ -11,6 +11,7 @@ import iris.client_bff.RestResponsePage;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.EventDataRequestService;
+import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.model.Location;
 import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
@@ -193,6 +194,17 @@ class EventDataRequestControllerTest {
 	@WithMockUser()
 	public void createDataRequest() throws Exception {
 		postNewDataRequest();
+	}
+
+	@Test
+	@WithMockUser()
+	public void createDataRequestWithError() throws Exception {
+		when(dataRequestManagement.createDataRequest(any())).thenThrow(new IRISDataRequestException("Data request failed"));
+
+		mockMvc.perform(
+						MockMvcRequestBuilders.post(baseUrl).content(TestData.DATA_REQUEST)
+								.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
 	}
 
 	private void postNewDataRequest() throws Exception {

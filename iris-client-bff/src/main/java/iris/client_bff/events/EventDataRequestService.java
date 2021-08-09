@@ -1,15 +1,15 @@
 package iris.client_bff.events;
 
-import static iris.client_bff.search_client.eps.LocationMapper.*;
-import static org.apache.commons.lang3.StringUtils.*;
+import static iris.client_bff.search_client.eps.LocationMapper.map;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
+import iris.client_bff.core.log.LogHelper;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.eps.DataProviderClient;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.model.Location;
 import iris.client_bff.events.web.dto.DataRequestClient;
-import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
@@ -35,11 +35,9 @@ import org.springframework.stereotype.Service;
 public class EventDataRequestService {
 
 	private final EventDataRequestRepository repository;
-
 	private final SearchClient searchClient;
 	private final ProxyServiceClient proxyClient;
 	private final DataProviderClient epsDataRequestClient;
-	private final EventEmailProvider eventEmailProvider;
 
 	public Page<EventDataRequest> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
@@ -104,10 +102,8 @@ public class EventDataRequestService {
 		try {
 			dataRequest.setStatus(Status.DATA_REQUESTED);
 			dataRequest = repository.save(dataRequest);
+			log.info(LogHelper.EVENT_DATA_REQUEST);
 			epsDataRequestClient.requestGuestListData(dataRequest);
-
-			log.info("Event Data Request submit success: {}", dataRequest.getId().toString());
-
 		} catch (IRISDataRequestException e) {
 			log.error("Event Data Request {} could not be submitted: {}", dataRequest.getId(), e);
 
@@ -156,11 +152,5 @@ public class EventDataRequestService {
 
 	public int getCountWithStatus(Status status) {
 		return repository.getCountWithStatus(status);
-	}
-
-	public void sendDataRecievedEmail(EventDataRequest updated, EventStatusDTO status) {
-		if (status == EventStatusDTO.DATA_RECEIVED) {
-			eventEmailProvider.sendDataRecievedEmail(updated);
-		}
 	}
 }

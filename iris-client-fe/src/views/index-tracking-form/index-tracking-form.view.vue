@@ -12,12 +12,16 @@
           <v-col cols="12" sm="6">
             <v-text-field
               v-model="form.model.externalId"
-              :rules="validationRules.defined"
+              :rules="validationRules.sanitisedAndDefined"
               label="Externe ID"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6">
-            <v-text-field v-model="form.model.name" label="Name"></v-text-field>
+            <v-text-field
+              v-model="form.model.name"
+              label="Name"
+              :rules="validationRules.sanitised"
+            ></v-text-field>
           </v-col>
         </v-row>
         <v-row>
@@ -25,6 +29,7 @@
             <v-textarea
               v-model="form.model.comment"
               label="Kommentar"
+              :rules="validationRules.sanitised"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -77,10 +82,10 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store/index";
 import { DataRequestCaseClient, DataRequestCaseDetails } from "@/api";
 import router from "@/router";
-import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
 import DateTimeInputField from "@/components/form/date-time-input-field.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
+import rules from "@/common/validation-rules";
 
 type IndexTrackingForm = {
   model: IndexTrackingFormModel;
@@ -126,18 +131,11 @@ export default class IndexTrackingFormView extends Vue {
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      start: [],
-      end: [
-        (v: string): string | boolean => {
-          if (!this.form.model.start) return true;
-          if (!this.form.model.end) return true;
-          return (
-            dayjs(v).isSameOrAfter(dayjs(this.form.model.start), "minute") ||
-            "Bitte geben Sie einen Zeitpunkt an, der nach dem Beginn liegt"
-          );
-        },
-      ],
-      defined: [(v: unknown): string | boolean => !!v || "Pflichtfeld"],
+      start: [rules.defined],
+      end: [rules.defined, rules.dateEnd(this.form.model.start)],
+      defined: [rules.defined],
+      sanitised: [rules.sanitised],
+      sanitisedAndDefined: [rules.sanitised, rules.defined],
     };
   }
 
@@ -168,6 +166,8 @@ export default class IndexTrackingFormView extends Vue {
   }
   @Watch("form.model.start")
   onDateChanged(): void {
+    // please note: backend expects date-strings as ISO Strings.
+    // If you want to set the end date based on the start date (like event-tracking-form), please make sure that you format is as ISO string
     this.validateField("end");
   }
 

@@ -13,14 +13,14 @@
             <v-col cols="12">
               <v-text-field
                 v-model="formModel.userName"
-                :rules="validationRules.defined"
+                :rules="validationRules.sanatisedAndDefined"
                 label="Anmeldename"
               ></v-text-field>
             </v-col>
             <v-col cols="12">
               <v-text-field
                 v-model="formModel.password"
-                :rules="validationRules.defined"
+                :rules="validationRules.password"
                 label="Passwort"
                 type="password"
                 @keyup.native.enter="submit"
@@ -73,7 +73,8 @@ export default class UserLoginView extends Vue {
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      defined: [rules.defined],
+      sanatisedAndDefined: [rules.defined, rules.sanitised],
+      password: [rules.defined, rules.sanitised],
     };
   }
 

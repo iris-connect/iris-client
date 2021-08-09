@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Set;
 import java.util.UUID;
 
@@ -87,5 +89,25 @@ public class CaseDataSubmission extends Aggregate<CaseDataSubmission, CaseDataSu
 		public String toString() {
 			return submissionId.toString();
 		}
+	}
+
+	public LocalDate getEventsStartDateAsLocalDate() {
+		return safelyParseInstant(eventsStartDate);
+	}
+
+	public LocalDate getEventsEndDateAsLocalDate() {
+		return safelyParseInstant(eventsEndDate);
+	}
+
+	public LocalDate getContactsStartDateAsLocalDate() {
+		return safelyParseInstant(contactsStartDate);
+	}
+
+	public LocalDate getContactsEndDateAsLocalDate() {
+		return safelyParseInstant(contactsEndDate);
+	}
+
+	private LocalDate safelyParseInstant(Instant instant) {
+		return instant == null ? null : LocalDate.ofInstant(instant, ZoneId.of("CET"));
 	}
 }

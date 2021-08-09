@@ -29,14 +29,6 @@
     />
     <meta name="theme-color" content="#ffffff" />
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css"
-    />
   </head>
   <body>
     <noscript>
@@ -46,21 +38,18 @@
         continue.</strong
       >
     </noscript>
-    <script type="text/javascript">
-      window.irisAppContext = {
-        apiBaseURL:
-          "<%= htmlWebpackPlugin.options.irisAppContext.apiBaseURL %>",
-        localContactPerson: {
-          name:
-            "<%= htmlWebpackPlugin.options.irisAppContext.localContactPerson.name %>",
-          phone:
-            "<%= htmlWebpackPlugin.options.irisAppContext.localContactPerson.phone %>",
-          mail:
-            "<%= htmlWebpackPlugin.options.irisAppContext.localContactPerson.mail %>",
-        },
-      };
-    </script>
-    <div id="app"></div>
+    <div
+        id="app"
+        data-iris-app-context='{
+            "apiBaseURL": "<%= htmlWebpackPlugin.options.irisAppContext.apiBaseURL %>",
+            "csvExportStandardAtomicAddress": "<%= htmlWebpackPlugin.options.irisAppContext.csvExportStandardAtomicAddress %>",
+            "localContactPerson": {
+                "name": "<%= htmlWebpackPlugin.options.irisAppContext.localContactPerson.name %>",
+                "phone": "<%= htmlWebpackPlugin.options.irisAppContext.localContactPerson.phone %>",
+                "mail": "<%= htmlWebpackPlugin.options.irisAppContext.localContactPerson.mail %>"
+            }
+        }'
+    ></div>
     <!-- built files will be auto injected -->
   </body>
 </html>
