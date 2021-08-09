@@ -76,10 +76,9 @@ public class EPSDataProviderClient implements DataProviderClient {
 			log.debug("abortGuestListDataRequest done: method {}; request {};", methodName, requestId);
 
 		} catch (Throwable t) {
+			// The abort method isn't documented and therefore it is currently not mandatory (logged as info not as error). 
 			log.info("abortGuestListDataRequest error: method {}; request {}; error {}", methodName, requestId,
 					t.getMessage());
-			// The abort method isn't documented at the moment and therefore it is currently not mandatory
-			// throw new IRISDataRequestException(t);
 		}
 	}
 
