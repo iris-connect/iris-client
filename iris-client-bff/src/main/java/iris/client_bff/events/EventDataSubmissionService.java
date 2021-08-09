@@ -37,22 +37,22 @@ public class EventDataSubmissionService {
 
 			switch (dataRequest.getStatus()) {
 				case ABORTED: {
-					logSubmissionStatus("aborted", dataAuthorizationToken, dataRequest.getId());
+					logSubmissionStatus("aborted", dataAuthorizationToken);
 					return ERR_SUBM_NOT_ALLOWED + dataAuthorizationToken.toString() + ". Request was aborted.";
 				}
 				case CLOSED: {
-					logSubmissionStatus("closed", dataAuthorizationToken, dataRequest.getId());
+					logSubmissionStatus("closed", dataAuthorizationToken);
 					return ERR_SUBM_NOT_ALLOWED + dataAuthorizationToken.toString() + ". Request already closed.";
 				}
 				case DATA_RECEIVED: {
-					logSubmissionStatus("received", dataAuthorizationToken, dataRequest.getId());
+					logSubmissionStatus("received", dataAuthorizationToken);
 					return ERR_SUBM_NOT_ALLOWED + dataAuthorizationToken.toString() + ". Data already received.";
 				}
 				case DATA_REQUESTED:
-					logSubmissionStatus("requested", dataAuthorizationToken, dataRequest.getId());
+					logSubmissionStatus("requested", dataAuthorizationToken);
 					break;
 				default: {
-					logSubmissionStatus(dataRequest.getStatus().toString(), dataAuthorizationToken, dataRequest.getId());
+					logSubmissionStatus(dataRequest.getStatus().toString(), dataAuthorizationToken);
 					return ERR_SUBM_NOT_ALLOWED + dataAuthorizationToken.toString() + ". Data not requested.";
 				}
 			}
@@ -74,9 +74,8 @@ public class EventDataSubmissionService {
 		});
 	}
 
-	private void logSubmissionStatus(String status, UUID dataAuthorizationToken, EventDataRequest.DataRequestIdentifier dataRequestId) {
-		log.trace("Submission {} for {} event {}", LogHelper.obfuscateAtStart8(dataAuthorizationToken.toString()),
-				status,	LogHelper.obfuscateAtStart8(dataRequestId.toString()));
+	private void logSubmissionStatus(String status, UUID dataAuthorizationToken) {
+		log.trace("Submission for {} event {}", status, LogHelper.obfuscateAtStart8(dataAuthorizationToken.toString()));
 	}
 
 	private void save(EventDataRequest dataRequest, GuestList guestList) {
