@@ -105,7 +105,7 @@ public class EventDataRequestService {
 			log.info(LogHelper.EVENT_DATA_REQUEST);
 			epsDataRequestClient.requestGuestListData(dataRequest);
 		} catch (IRISDataRequestException e) {
-			
+
 			repository.delete(dataRequest);
 
 			throw new IRISDataRequestException(e);
@@ -125,14 +125,17 @@ public class EventDataRequestService {
 			dataRequest.setName(patch.getName());
 		}
 		if (patch.getStatus() != null) {
-			var status = Status.valueOf(patch.getStatus().name());
-			dataRequest.setStatus(status);
 
-			try {
-				proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
-				epsDataRequestClient.abortGuestListDataRequest(dataRequest);
-			} catch (IRISAnnouncementException | IRISDataRequestException e) {
-				log.error("Abort announcement for token {} failed", dataRequest.getAnnouncementToken(), e);
+			var status = Status.valueOf(patch.getStatus().name());
+			if (dataRequest.getStatus() != status) {
+				dataRequest.setStatus(status);
+
+				try {
+					proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
+					epsDataRequestClient.abortGuestListDataRequest(dataRequest);
+				} catch (IRISAnnouncementException | IRISDataRequestException e) {
+					log.error("Abort announcement for token {} failed", dataRequest.getAnnouncementToken(), e);
+				}
 			}
 		}
 
