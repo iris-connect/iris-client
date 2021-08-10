@@ -7,6 +7,7 @@ import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.events.web.dto.GuestAttendanceInformation;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.events.web.dto.GuestListDataProvider;
+import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,15 +32,19 @@ public class EventDataControllerImpl implements EventDataController {
 	public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
 		log.trace("Start submission {}", dataAuthorizationToken);
 
-		validateGuestList(guestList);
+		if(dataAuthorizationToken != null && ValidationHelper.isUUIDInputValid(dataAuthorizationToken.toString(), "dataAuthorizationToken")) {
+			validateGuestList(guestList);
 
-		return dataSubmissionService.findRequestAndSaveGuestList(dataAuthorizationToken, guestList);
+			return dataSubmissionService.findRequestAndSaveGuestList(dataAuthorizationToken, guestList);
+		}
+		// token invalid
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT+": data auth token");
 	}
 
 	private void validateGuestList(GuestList guestList) {
 		GuestListDataProvider dataProvider = guestList.getDataProvider();
 		if(dataProvider == null || dataProvider.getAddress() == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_INPUT);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_INPUT+": data provider / address");
 		}
 
 		guestList.setAdditionalInformation(validateInput(guestList.getAdditionalInformation(),
