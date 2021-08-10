@@ -44,12 +44,10 @@ public class AlertService {
 	 * <p>
 	 * The text is also logged locally by the method!
 	 * </p>
-	 * 
-	 * @param text
 	 */
 	public void createAlertMessage(String title, String text) {
 
-		log.error("Alert: {}", text);
+		log.warn("Alert: {} - {}", title, text);
 
 		sendAlert(List.of(message(title, text)));
 	}
@@ -60,12 +58,10 @@ public class AlertService {
 	 * <p>
 	 * The text is also logged locally by the method!
 	 * </p>
-	 * 
-	 * @param text
 	 */
 	public void createAlertTicketAndMessage(String title, String text) {
 
-		log.error("Alert: {}", text);
+		log.warn("Alert: {} - {}", title, text);
 
 		sendAlert(List.of(message(title, text), ticket(title, text)));
 	}
@@ -93,11 +89,11 @@ public class AlertService {
 			var result = epsRpcClient.invoke(methodName, alertListDto, String.class);
 
 			if (!"OK".equals(result)) {
-				log.error("Alert - could not be sent => Result: {}", result);
+				log.error("Alert Service - could not be sent => Result: {}", result);
 			}
 
 		} catch (Throwable t) {
-			log.error("Alert - could not be sent => Exception", t);
+			log.error("Alert Service - could not be sent => Exception", t);
 		}
 	}
 }
