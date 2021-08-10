@@ -31,11 +31,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode(of = "remoteAddr", callSuper = false)
+@EqualsAndHashCode(of = "reference", callSuper = false)
 public class LoginAttempts {
 
 	@Id
-	private String remoteAddr;
+	private String reference;
 
 	@Column(nullable = false)
 	private @Setter int attempts;
