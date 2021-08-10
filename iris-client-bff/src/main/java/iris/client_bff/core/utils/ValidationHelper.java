@@ -87,7 +87,7 @@ public class ValidationHelper {
 			"„" };
 
 	private static final String[][] FORBIDDEN_KEYWORD_TUPLES = {
-			{ "<SCRIPT" }, { "SELECT", "FROM" }, { "INSERT", "INTO" }, { "UPDATE", "SET" }, { "DELETE", "FROM" },
+			{ "<SCRIPT" }, { "JAVASCRIPT:" }, { "SELECT", "FROM" }, { "INSERT", "INTO" }, { "UPDATE", "SET" }, { "DELETE", "FROM" },
 			{ "CREATE", "TABLE" }, { "DROP", "TABLE" }, { "ALTER", "TABLE" },
 			{ "CREATE", "INDEX" }, { "DROP", "INDEX" }, { "CREATE", "VIEW" }, { "DROP", "VIEW" }
 	};
