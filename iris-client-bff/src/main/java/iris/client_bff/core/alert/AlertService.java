@@ -12,7 +12,7 @@ import java.util.List;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Service;
 
-import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
+import com.googlecode.jsonrpc4j.IJsonRpcClient;
 
 /**
  * @author Jens Kutzsche
@@ -23,7 +23,7 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 public class AlertService {
 
 	private final BackendServiceProperties config;
-	private final JsonRpcHttpClient epsRpcClient;
+	private final IJsonRpcClient epsRpcClient;
 
 	private static final String APP = "iris-bff";
 	private String version = "";

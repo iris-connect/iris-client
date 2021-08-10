@@ -14,7 +14,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
+import com.googlecode.jsonrpc4j.IJsonRpcClient;
 
 @Slf4j
 @Service
@@ -23,7 +23,7 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 
 	private final ProxyServiceConfig config;
 
-	private final JsonRpcHttpClient proxyRpcClient;
+	private final IJsonRpcClient proxyRpcClient;
 
 	private String sendAnnouncement(String domain, Instant expirationTime) throws IRISAnnouncementException {
 		var announcementDto = AnnouncementDto.builder()
