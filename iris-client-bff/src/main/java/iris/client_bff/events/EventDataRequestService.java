@@ -126,7 +126,6 @@ public class EventDataRequestService {
 		}
 		if (patch.getStatus() != null) {
 
-			var tempStatus = dataRequest.getStatus();
 			var status = Status.valueOf(patch.getStatus().name());
 			if (dataRequest.getStatus() != status) {
 				dataRequest.setStatus(status);
