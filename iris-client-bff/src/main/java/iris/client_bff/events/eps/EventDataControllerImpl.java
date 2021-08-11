@@ -43,8 +43,8 @@ public class EventDataControllerImpl implements EventDataController {
 
 	private void validateGuestList(GuestList guestList) {
 		GuestListDataProvider dataProvider = guestList.getDataProvider();
-		if(dataProvider == null || dataProvider.getAddress() == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_INPUT+": data provider / address");
+		if(dataProvider == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_INPUT+": data provider");
 		}
 
 		guestList.setAdditionalInformation(validateInput(guestList.getAdditionalInformation(),
@@ -54,14 +54,16 @@ public class EventDataControllerImpl implements EventDataController {
 				"dataProvider.name", false, 256));
 
 		Address providerAddress = dataProvider.getAddress();
-		providerAddress.setCity(validateInput(providerAddress.getCity(),
-				"dataProvider.address.city", false, 256));
-		providerAddress.setStreet(validateInput(providerAddress.getStreet(),
-				"dataProvider.address.street", false, 256));
-		providerAddress.setHouseNumber(validateInput(providerAddress.getHouseNumber(),
-				"dataProvider.address.houseNumber", false, 256));
-		providerAddress.setZipCode(validateInput(providerAddress.getZipCode(),
-				"dataProvider.address.zipCode", false, 10));
+		if(providerAddress != null){
+			providerAddress.setCity(validateInput(providerAddress.getCity(),
+					"dataProvider.address.city", false, 256));
+			providerAddress.setStreet(validateInput(providerAddress.getStreet(),
+					"dataProvider.address.street", false, 256));
+			providerAddress.setHouseNumber(validateInput(providerAddress.getHouseNumber(),
+					"dataProvider.address.houseNumber", false, 256));
+			providerAddress.setZipCode(validateInput(providerAddress.getZipCode(),
+					"dataProvider.address.zipCode", false, 10));
+		}
 
 		if(guestList.getGuests() != null) {
 			for (Guest guest : guestList.getGuests()) {
