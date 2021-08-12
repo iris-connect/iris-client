@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @AllArgsConstructor
@@ -36,7 +38,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
-		UserAccount userAccount = userAccountsRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException(username));
+		UserAccount userAccount = userAccountsRepository.findByUserName(username)
+				.orElseThrow(() -> new UsernameNotFoundException(username));
 
 		// By convention we expect that there exists only one authority and it represents the role
 		var role = userAccount.getRole().name();
@@ -92,13 +95,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userAccountsRepository.save(userAccount);
 	}
 
-	public void deleteById(UUID id) {
-		log.info("Delete User: {}", id);
+	public void deleteById(UUID id, String currentUserName) {
 
-		var optional = userAccountsRepository.findById(id);
-		if (optional.isPresent()) {
-			jwtService.invalidateTokensOfUser(optional.get().getUserName());
-		}
+		userAccountsRepository.findById(id)
+				.ifPresent(it -> {
+
+					if (it.getUserName().equals(currentUserName)) {
+						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A user may not delete himself!");
+					}
+
+					log.info("Delete User: {}", id);
+
+					jwtService.invalidateTokensOfUser(it.getUserName());
+				});
+
 		userAccountsRepository.deleteById(id);
 	}
 
