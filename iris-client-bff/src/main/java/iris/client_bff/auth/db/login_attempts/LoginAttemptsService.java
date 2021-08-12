@@ -54,7 +54,7 @@ public class LoginAttemptsService {
 			attempt.setNextWarningThreshold(newNextWarningThreshold);
 
 			log.warn(
-					"From one IP (hash: {}) there were {} failed attempts to log in to the IRIS client. The next warning occurs at {}.",
+					"For user name (hash: {}) there were {} failed attempts to log in to the IRIS client. The next warning occurs at {}.",
 					keyHash, attempts, newNextWarningThreshold);
 		}
 
