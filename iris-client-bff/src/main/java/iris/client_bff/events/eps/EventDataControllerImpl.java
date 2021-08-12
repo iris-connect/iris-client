@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,7 +33,7 @@ public class EventDataControllerImpl implements EventDataController {
 	public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
 		log.trace("Start submission {}", dataAuthorizationToken);
 
-		if(dataAuthorizationToken != null && ValidationHelper.isUUIDInputValid(dataAuthorizationToken.toString(), "dataAuthorizationToken")) {
+		if(dataAuthorizationToken != null) {
 			validateGuestList(guestList);
 
 			return dataSubmissionService.findRequestAndSaveGuestList(dataAuthorizationToken, guestList);
@@ -47,56 +48,56 @@ public class EventDataControllerImpl implements EventDataController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_INPUT+": data provider");
 		}
 
-		guestList.setAdditionalInformation(validateInput(guestList.getAdditionalInformation(),
-				"additionalInformation", false, 500));
+		guestList.setAdditionalInformation(defuseInput(guestList.getAdditionalInformation(),
+				"additionalInformation", true, 500));
 
-		dataProvider.setName(validateInput(dataProvider.getName(),
-				"dataProvider.name", false, 256));
+		dataProvider.setName(defuseInput(dataProvider.getName(),
+				"dataProvider.name", true, 256));
 
 		Address providerAddress = dataProvider.getAddress();
 		if(providerAddress != null){
-			providerAddress.setCity(validateInput(providerAddress.getCity(),
-					"dataProvider.address.city", false, 256));
-			providerAddress.setStreet(validateInput(providerAddress.getStreet(),
-					"dataProvider.address.street", false, 256));
-			providerAddress.setHouseNumber(validateInput(providerAddress.getHouseNumber(),
-					"dataProvider.address.houseNumber", false, 256));
-			providerAddress.setZipCode(validateInput(providerAddress.getZipCode(),
-					"dataProvider.address.zipCode", false, 10));
+			providerAddress.setCity(defuseInput(providerAddress.getCity(),
+					"dataProvider.address.city", true, 256));
+			providerAddress.setStreet(defuseInput(providerAddress.getStreet(),
+					"dataProvider.address.street", true, 256));
+			providerAddress.setHouseNumber(defuseInput(providerAddress.getHouseNumber(),
+					"dataProvider.address.houseNumber", true, 256));
+			providerAddress.setZipCode(defuseInput(providerAddress.getZipCode(),
+					"dataProvider.address.zipCode", true, 10));
 		}
 
 		if(guestList.getGuests() != null) {
 			for (Guest guest : guestList.getGuests()) {
-				guest.setFirstName(validateInput(guest.getFirstName(),"guest.firstName", true, 100));
-				guest.setLastName(validateInput(guest.getLastName(),"guest.lastName", true, 100));
-				guest.setEmail(validateInput(guest.getEmail(),"guest.email", true, 100));
-				guest.setPhone(validateInput(guest.getPhone(),"guest.phone", true, 100));
-				guest.setMobilePhone(validateInput(guest.getMobilePhone(),"guest.mobilePhone", true, 100));
+				guest.setFirstName(defuseInput(guest.getFirstName(),"guest.firstName", true, 100));
+				guest.setLastName(defuseInput(guest.getLastName(),"guest.lastName", true, 100));
+				guest.setEmail(defuseInput(guest.getEmail(),"guest.email", true, 100));
+				guest.setPhone(defuseInput(guest.getPhone(),"guest.phone", true, 100));
+				guest.setMobilePhone(defuseInput(guest.getMobilePhone(),"guest.mobilePhone", true, 100));
 
 				Address guestAddress = guest.getAddress();
 				if(guestAddress != null) {
-					guestAddress.setStreet(validateInput(guestAddress.getStreet(), "guest.address.street", true, 256));
-					guestAddress.setHouseNumber(validateInput(guestAddress.getHouseNumber(), "guest.address.houseNumber", true, 256));
-					guestAddress.setZipCode(validateInput(guestAddress.getZipCode(), "guest.address.zipCode", false, 10));
-					guestAddress.setCity(validateInput(guestAddress.getCity(), "guest.address.city", false, 256));
+					guestAddress.setStreet(defuseInput(guestAddress.getStreet(), "guest.address.street", true, 256));
+					guestAddress.setHouseNumber(defuseInput(guestAddress.getHouseNumber(), "guest.address.houseNumber", true, 256));
+					guestAddress.setZipCode(defuseInput(guestAddress.getZipCode(), "guest.address.zipCode", true, 10));
+					guestAddress.setCity(defuseInput(guestAddress.getCity(), "guest.address.city", true, 256));
 				}
 
 				GuestAttendanceInformation attendInfo = guest.getAttendanceInformation();
-				attendInfo.setAdditionalInformation(validateInput(attendInfo.getAdditionalInformation(),
-						"guest.attendanceInformation.additionalInformation", false, 500));
-				attendInfo.setDescriptionOfParticipation(validateInput(attendInfo.getDescriptionOfParticipation(),
-						"guest.attendanceInformation.descriptionOfPartizipation", false, 500));
+				attendInfo.setAdditionalInformation(defuseInput(attendInfo.getAdditionalInformation(),
+						"guest.attendanceInformation.additionalInformation", true, 500));
+				attendInfo.setDescriptionOfParticipation(defuseInput(attendInfo.getDescriptionOfParticipation(),
+						"guest.attendanceInformation.descriptionOfParticipation", true, 500));
 			}
 		}
 	}
 
-	private String validateInput(String input, String field, boolean obfuscateLogging, int maxLength) {
+	private String defuseInput(String input, String field, boolean obfuscateLogging, int maxLength) {
 		if(validHelper.isPossibleAttack(input, field, obfuscateLogging)) {
 			return INVALID_INPUT_STRING;
 		}
 
 		if(input != null && input.length() > maxLength) {
-			return input.substring(0, maxLength);
+			return StringUtils.truncate(input, maxLength);
 		}
 
 		return input;
