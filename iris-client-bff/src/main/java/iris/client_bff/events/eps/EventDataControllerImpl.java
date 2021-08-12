@@ -96,10 +96,6 @@ public class EventDataControllerImpl implements EventDataController {
 			return INVALID_INPUT_STRING;
 		}
 
-		if(input != null && input.length() > maxLength) {
-			return StringUtils.truncate(input, maxLength);
-		}
-
-		return input;
+		return StringUtils.truncate(input, maxLength);
 	}
 }
