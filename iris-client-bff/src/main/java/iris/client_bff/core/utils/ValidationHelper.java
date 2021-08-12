@@ -1,7 +1,6 @@
 package iris.client_bff.core.utils;
 
-import static org.apache.commons.lang3.StringUtils.indexOf;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.config.HealthDepartmentConfig;
 import iris.client_bff.core.alert.AlertService;
@@ -12,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,12 @@ public class ValidationHelper {
 	private final AlertService alertService;
 	private final HealthDepartmentConfig hdConfig;
 
-	private static final String UUID_REGEX = "([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})";
+	public static final Pattern UUID_REGEX = Pattern
+			.compile("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})");
+	public static final Pattern PW_REGEX = Pattern
+			.compile("^(?=.*[0-9].*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[_\\-#()@§!])(?!.*[\\s\\u202F\\u00A0]).{8,}$");
+	public static final String PW_ERROR_MESSAGE = "The specified password does not follow the password policy (≥ 8 characters, no spaces, lowercase and uppercase letters, two numbers, one special character [_-#()@§!]).";
+	static final String[] PW_SYMBOLS = "_-#()@§!".split("(?!^)");
 	private static final String[] FORBIDDEN_SYMBOLS = {
 			"=",
 			"<",
@@ -94,12 +100,16 @@ public class ValidationHelper {
 
 	public static boolean isUUIDInputValid(String id, String idName) {
 
-		if (id.matches(UUID_REGEX)) {
+		if (UUID_REGEX.matcher(id).matches()) {
 			return true;
 		}
 
 		log.warn(ErrorMessages.INVALID_INPUT + idName + id);
 		return false;
+	}
+
+	public boolean isPasswordValid(String password) {
+		return PW_REGEX.matcher(password).matches();
 	}
 
 	public boolean isPossibleAttackForRequiredValue(String input, String field, boolean obfuscateLogging) {
@@ -111,16 +121,17 @@ public class ValidationHelper {
 		return isPossibleAttack(input, field, obfuscateLogging);
 	}
 
-	public boolean isPossibleAttack(String input, String field, boolean obfuscateLogging) {
+	public boolean isPossibleAttack(String input, String field, boolean obfuscateLogging,
+			String[][] forbiddenKeywordTuples, String[] forbiddenSymbols) {
 		if (input == null) {
 			return false;
 		}
 
 		// Test for attacks
 		String inputUpper = input.toUpperCase();
-		Optional<Range<Integer>> range = findAnyOfKeywordTuples(inputUpper, FORBIDDEN_KEYWORD_TUPLES);
-		if(range.isEmpty()) {
-			range = findSymbolsAtStart(input, FORBIDDEN_SYMBOLS);
+		Optional<Range<Integer>> range = findAnyOfKeywordTuples(inputUpper, forbiddenKeywordTuples);
+		if (range.isEmpty()) {
+			range = findSymbolsAtStart(input, forbiddenSymbols);
 		}
 
 		if (range.isPresent()) {
@@ -128,7 +139,8 @@ public class ValidationHelper {
 			log.warn(ErrorMessages.INVALID_INPUT + " - {}: {}", field, logString);
 
 			alertService.createAlertMessage("Input validation - possible attack",
-					String.format("Input `%s` in health department with zip code `%s` contains the character or keyword `%s` that is a potential attack!",
+					String.format(
+							"Input `%s` in health department with zip code `%s` contains the character or keyword `%s` that is a potential attack!",
 							field, hdConfig.getZipCode(), logString));
 
 			return true;
@@ -137,11 +149,28 @@ public class ValidationHelper {
 		return false;
 	}
 
+	public boolean isPossibleAttack(String input, String field, boolean obfuscateLogging) {
+		return isPossibleAttack(input, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES, FORBIDDEN_SYMBOLS);
+	}
+
+	public boolean isPossibleAttackForPassword(String input, String field) {
+
+		if (isBlank(input)) {
+			log.warn(ErrorMessages.MISSING_REQUIRED_INPUT + " - {}" + field);
+			return true;
+		}
+
+		return isPossibleAttack(input, field, true, FORBIDDEN_KEYWORD_TUPLES,
+				ArrayUtils.removeElements(FORBIDDEN_SYMBOLS, PW_SYMBOLS));
+	}
+
 	/**
 	 * Searches for any occurrence of given keyword tuples and stops at first match.
+	 * 
 	 * @param str String to be tested
 	 * @param keywordTuples Array of tuples with keywords to find
-	 * @return If found: range of first matching tuple in tested string starting at beginning of first keyword, ending at end of last keyword.
+	 * @return If found: range of first matching tuple in tested string starting at beginning of first keyword, ending at
+	 *         end of last keyword.
 	 */
 	private static Optional<Range<Integer>> findAnyOfKeywordTuples(String str, String[][] keywordTuples) {
 
@@ -153,6 +182,7 @@ public class ValidationHelper {
 
 	/**
 	 * Searches for the keyword tuple in the input string.
+	 * 
 	 * @param input String to be tested
 	 * @param keywordTuple tuple with keywords to find
 	 * @return If found: range in tested string starting at beginning of first keyword, ending at end of last keyword.
@@ -166,7 +196,8 @@ public class ValidationHelper {
 
 		var lastKeyword = keywordTuple[keywordTuple.length - 1];
 
-		return Optional.of(Range.between(indexOf(input, keywordTuple[0]), indexOf(input, lastKeyword) + lastKeyword.length() - 1));
+		return Optional
+				.of(Range.between(indexOf(input, keywordTuple[0]), indexOf(input, lastKeyword) + lastKeyword.length() - 1));
 	}
 
 	private static Optional<Range<Integer>> findSymbolsAtStart(String input, String[] forbiddenSymbolsArray) {
