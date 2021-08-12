@@ -153,14 +153,14 @@ public class ValidationHelper {
 		return isPossibleAttack(input, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES, FORBIDDEN_SYMBOLS);
 	}
 
-	public boolean isPossibleAttackForPassword(String input, String field, boolean obfuscateLogging) {
+	public boolean isPossibleAttackForPassword(String input, String field) {
 
 		if (isBlank(input)) {
 			log.warn(ErrorMessages.MISSING_REQUIRED_INPUT + " - {}" + field);
 			return true;
 		}
 
-		return isPossibleAttack(input, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES,
+		return isPossibleAttack(input, field, true, FORBIDDEN_KEYWORD_TUPLES,
 				ArrayUtils.removeElements(FORBIDDEN_SYMBOLS, PW_SYMBOLS));
 	}
 

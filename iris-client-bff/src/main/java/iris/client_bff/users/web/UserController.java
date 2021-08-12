@@ -102,7 +102,7 @@ public class UserController {
 		var isInvalid = false;
 
 		if (validationHelper.isPossibleAttackForRequiredValue(userUpdateDTO.getUserName(), FIELD_USER_NAME, false)
-				|| validationHelper.isPossibleAttackForPassword(userUpdateDTO.getPassword(), FIELD_PASSWORD, true)) {
+				|| validationHelper.isPossibleAttackForPassword(userUpdateDTO.getPassword(), FIELD_PASSWORD)) {
 			isInvalid = true;
 		}
 
@@ -140,7 +140,7 @@ public class UserController {
 
 		if (validationHelper
 				.isPossibleAttackForRequiredValue(userInsertDTO.getUserName(), FIELD_USER_NAME, false)
-				|| validationHelper.isPossibleAttackForPassword(userInsertDTO.getPassword(), FIELD_PASSWORD, true)) {
+				|| validationHelper.isPossibleAttackForPassword(userInsertDTO.getPassword(), FIELD_PASSWORD)) {
 			isInvalid = true;
 		}
 
