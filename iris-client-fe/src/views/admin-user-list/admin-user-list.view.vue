@@ -50,7 +50,10 @@
                       color="error"
                       class="ml-3"
                       @click="deleteUser(item.id)"
-                      :disabled="isBusy"
+                      :disabled="
+                        isBusy ||
+                        $store.getters['userLogin/isCurrentUser'](item.id)
+                      "
                       :user-name="item.userName"
                     >
                       <v-icon> mdi-delete </v-icon>
