@@ -1,4 +1,5 @@
 import {
+  Credentials,
   DataRequestCaseDetails,
   DataRequestDetails,
   ExistingDataRequestClientWithLocation,
@@ -21,6 +22,7 @@ import {
 } from "@/server/data/dummy-userlist";
 import { remove, findIndex, some } from "lodash";
 import { paginated } from "@/server/utils/pagination";
+import dayjs from "@/utils/date";
 
 // @todo: find better solution for data type
 const authResponse = (
@@ -53,7 +55,24 @@ export function makeMockAPIServer() {
     routes() {
       this.namespace = "";
 
-      this.post("/login", () => {
+      this.post("/login", (schema, request) => {
+        const credentials: Credentials = JSON.parse(request.requestBody);
+        if (credentials.userName === "admin") {
+          if (credentials.password === "auth") {
+            return new Response(401, {}, { message: "Unauthorized" });
+          }
+          if (credentials.password === "block") {
+            return new Response(
+              401,
+              {},
+              {
+                message: `User blocked! (${dayjs()
+                  .add(10, "minutes")
+                  .toISOString()})`,
+              }
+            );
+          }
+        }
         return authResponse();
       });
 

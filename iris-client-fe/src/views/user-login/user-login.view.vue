@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-center>
-    <v-card class="my-3">
+    <v-card class="my-3 user-login-container">
       <v-form
         ref="form"
         v-model="formIsValid"
@@ -91,3 +91,9 @@ export default class UserLoginView extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.user-login-container {
+  max-width: 420px;
+}
+</style>

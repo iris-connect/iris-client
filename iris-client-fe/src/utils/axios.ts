@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import dayjs from "@/utils/date";
 
 interface ParsedError {
   data: unknown;
@@ -29,6 +30,8 @@ export const parseError = (error: AxiosError): ParsedError => {
   };
 };
 
+const userBlockedRegExp = /User blocked! \((.*)\)/i;
+
 const parseErrorMessage = (error: unknown): ErrorMessage => {
   if (typeof error === "object") {
     const e = error as Record<string, unknown>;
@@ -37,7 +40,16 @@ const parseErrorMessage = (error: unknown): ErrorMessage => {
       .filter((v) => v)
       .join(", ");
   }
-  if (typeof error === "string") return error;
+  if (typeof error === "string") {
+    if (userBlockedRegExp.test(error)) {
+      const dtString = error.match(userBlockedRegExp)?.[1];
+      if (dtString) {
+        const diffInMinutes = Math.abs(dayjs().diff(dtString, "minutes"));
+        return `Die Anmeldung mit diesem Anmeldenamen wurde aufgrund zu vieler Fehlversuche für die nächsten ${diffInMinutes} Minuten gesperrt.`;
+      }
+    }
+    return error;
+  }
   return null;
 };
 
@@ -47,14 +59,7 @@ export const getErrorMessage = (
 ): ErrorMessage => {
   if (!error || axios.isCancel(error)) return "";
   if (typeof error === "string") return error;
-
-  if (error.response) {
-    const errData = error.response.data;
-    return (
-      errData.message + " (" + errData.error + " [" + errData.status + "])"
-    );
-  }
-
   const parsedError = parseError(error);
-  return parseErrorMessage(parsedError.data) || fallback;
+  const message = parseErrorMessage(parsedError.data) || fallback;
+  return `${message} [${parsedError.status}]`;
 };
