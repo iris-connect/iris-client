@@ -49,6 +49,7 @@ export interface UserLoginModule extends Module<UserLoginState, RootState> {
     isAuthenticated(): boolean;
     isAdmin(): boolean;
     userDisplayName(): string;
+    isCurrentUser(): (id: string) => boolean;
   };
 }
 
@@ -146,6 +147,10 @@ const userLogin: UserLoginModule = {
         user?.userName ??
         ""
       );
+    },
+    isCurrentUser: () => (id: string) => {
+      const user = store.state.userLogin.user;
+      return user?.id === id;
     },
   },
 };
