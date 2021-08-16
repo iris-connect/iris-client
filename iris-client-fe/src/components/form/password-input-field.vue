@@ -5,7 +5,13 @@
     :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
     :type="showPassword ? 'text' : 'password'"
     @click:append="showPassword = !showPassword"
-  ></v-text-field>
+  >
+    <template #message="{ message }">
+      <span class="validation-message">
+        {{ message }}
+      </span>
+    </template>
+  </v-text-field>
 </template>
 
 <script lang="ts">
@@ -15,3 +21,9 @@ export default class PasswordInputField extends Vue {
   showPassword = false;
 }
 </script>
+<style scoped>
+.validation-message {
+  white-space: pre-line;
+  line-height: 1rem;
+}
+</style>
