@@ -3,7 +3,7 @@
     <v-card>
       <v-list-item three-line>
         <v-list-item-content>
-          <v-list-item-title class="headline mb-1">{{
+          <v-list-item-title class="headline mb-1 primary--text">{{
             count
           }}</v-list-item-title>
           <v-list-item-subtitle>
@@ -56,7 +56,6 @@
     padding: 20px 10px;
   }
   .headline {
-    color: #46ff9f;
     font-size: 2.2rem !important;
   }
   .v-card__actions {
