@@ -69,7 +69,7 @@ export function makeMockAPIServer() {
             return new Response(401, {}, { message: "Unauthorized" });
           }
           if (credentials.password === "block") {
-            const blockedUntil = dayjs().add(10, "minutes").toISOString();
+            const blockedUntil = dayjs().add(10, "seconds").toISOString();
             return new Response(
               401,
               {},
