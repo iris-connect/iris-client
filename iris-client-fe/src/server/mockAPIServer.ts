@@ -55,6 +55,13 @@ export function makeMockAPIServer() {
     routes() {
       this.namespace = "";
 
+      /**
+       * You can simulate the "username blocked due to too many invalid login attempts" behaviour with the following credentials:
+       * username: admin
+       * password:
+       * - auth: default / non blocking login error: 401 "Unauthorized"
+       * - block: blocking login error: 401 "User blocked! (dateTime ISOString)"
+       */
       this.post("/login", (schema, request) => {
         const credentials: Credentials = JSON.parse(request.requestBody);
         if (credentials.userName === "admin") {
@@ -62,13 +69,12 @@ export function makeMockAPIServer() {
             return new Response(401, {}, { message: "Unauthorized" });
           }
           if (credentials.password === "block") {
+            const blockedUntil = dayjs().add(10, "minutes").toISOString();
             return new Response(
               401,
               {},
               {
-                message: `User blocked! (${dayjs()
-                  .add(10, "minutes")
-                  .toISOString()})`,
+                message: `User blocked! (${blockedUntil})`,
               }
             );
           }
