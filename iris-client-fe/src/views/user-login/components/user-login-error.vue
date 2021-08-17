@@ -46,19 +46,24 @@ export default class UserLoginError extends UserLoginErrorProps {
   get errorMessage(): ErrorMessage {
     // checks if this is a blocking error -> true if dateString of error message is valid
     if (dayjs(this.blockedUntil).isValid()) {
+      const milliseconds =
+        (this.blockedUntilMs * this.blockedRemainingPercent) / 100;
+      const seconds = Math.round(milliseconds / 1000);
       // checks if user has to wait until blockedUntil date is passed
-      if (this.blockedRemainingPercent > 0) {
-        const milliseconds =
-          (this.blockedUntilMs * this.blockedRemainingPercent) / 100;
-        const seconds = Math.round(milliseconds / 1000);
+      if (seconds > 0) {
         // shows error message with remaining block time
         return this.error.replace(
           blockedRegExp,
-          `Die Anmeldung mit diesem Anmeldenamen wurde aufgrund zu vieler Fehlversuche für die nächsten ${seconds} Sekunden gesperrt.`
+          `Diese Anmeldedaten sind leider nicht korrekt, bitte versuchen Sie es in ${seconds} ${
+            seconds === 1 ? "Sekunde" : "Sekunden"
+          } noch einmal.`
         );
       }
       // shows generic auth error message if blockedUntil date is passed
-      return this.error.replace(blockedRegExp, "Authentifizierung ungültig");
+      return this.error.replace(
+        blockedRegExp,
+        "Diese Anmeldedaten sind leider nicht korrekt."
+      );
     }
     return this.error;
   }
