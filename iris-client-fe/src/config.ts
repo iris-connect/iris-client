@@ -12,7 +12,7 @@ const config = {
   localContactPerson: window.irisAppContext?.localContactPerson || {},
   passwordRegExp: /^(?=.*[0-9].*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[_\-#()@§!])(?!.*[\s]).{8,}$/,
   passwordRules:
-    "- Klein- und Großbuchstaben\n- min. 8 Zeichen\n- min. 2 Zahlen\n- min. 1 Sonderzeichen (_-#()@§!)",
+    "- Klein- und Großbuchstaben\n- min. 8 Zeichen\n- min. 2 Zahlen\n- min. 1 Sonderzeichen (_-#()@§!)\n- kein Leerzeichen",
   appVersionId: process.env.VUE_APP_VERSION_ID as string | undefined,
   appBuildId: process.env.VUE_APP_BUILD_ID as string | undefined,
 };
