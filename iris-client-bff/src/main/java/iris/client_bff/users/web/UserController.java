@@ -1,7 +1,6 @@
 package iris.client_bff.users.web;
 
 import static iris.client_bff.users.web.UserMappers.*;
-import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.ui.messages.ErrorMessages;
@@ -89,25 +88,25 @@ public class UserController {
 	}
 
 	private UserUpdateDTO validateUserUpdateDTO(UserUpdateDTO userUpdateDTO) {
-		if (userUpdateDTO == null) {
+		if (userUpdateDTO == null
+				|| isToLong(userUpdateDTO.getUserName(), 50)
+				|| isToLong(userUpdateDTO.getPassword(), 200)
+				|| isToLong(userUpdateDTO.getFirstName(), 200)
+				|| isToLong(userUpdateDTO.getLastName(), 200)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		userUpdateDTO.setFirstName(truncate(userUpdateDTO.getFirstName(), 200));
 		if (validationHelper.isPossibleAttack(userUpdateDTO.getFirstName(), FIELD_FIRST_NAME, true)) {
 			userUpdateDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		userUpdateDTO.setLastName(truncate(userUpdateDTO.getLastName(), 200));
 		if (validationHelper.isPossibleAttack(userUpdateDTO.getLastName(), FIELD_LAST_NAME, true)) {
 			userUpdateDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		var isInvalid = false;
 
-		if (isToLong(userUpdateDTO.getUserName(), 50)
-				|| isToLong(userUpdateDTO.getPassword(), 200)
-				|| validationHelper.isPossibleAttackForRequiredValue(userUpdateDTO.getUserName(), FIELD_USER_NAME, false)
+		if (validationHelper.isPossibleAttackForRequiredValue(userUpdateDTO.getUserName(), FIELD_USER_NAME, false)
 				|| validationHelper.isPossibleAttackForPassword(userUpdateDTO.getPassword(), FIELD_PASSWORD)) {
 			isInvalid = true;
 		}
@@ -130,25 +129,25 @@ public class UserController {
 	}
 
 	private UserInsertDTO validateUserInsertDTO(UserInsertDTO userInsertDTO) {
-		if (userInsertDTO == null) {
+		if (userInsertDTO == null
+				|| isToLong(userInsertDTO.getUserName(), 50)
+				|| isToLong(userInsertDTO.getPassword(), 200)
+				|| isToLong(userInsertDTO.getFirstName(), 200)
+				|| isToLong(userInsertDTO.getLastName(), 200)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		userInsertDTO.setFirstName(truncate(userInsertDTO.getFirstName(), 200));
 		if (validationHelper.isPossibleAttack(userInsertDTO.getFirstName(), FIELD_FIRST_NAME, true)) {
 			userInsertDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		userInsertDTO.setLastName(truncate(userInsertDTO.getLastName(), 200));
 		if (validationHelper.isPossibleAttack(userInsertDTO.getLastName(), FIELD_LAST_NAME, true)) {
 			userInsertDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
 		var isInvalid = false;
 
-		if (isToLong(userInsertDTO.getUserName(), 50)
-				|| isToLong(userInsertDTO.getPassword(), 200)
-				|| validationHelper.isPossibleAttackForRequiredValue(userInsertDTO.getUserName(), FIELD_USER_NAME, false)
+		if (validationHelper.isPossibleAttackForRequiredValue(userInsertDTO.getUserName(), FIELD_USER_NAME, false)
 				|| validationHelper.isPossibleAttackForPassword(userInsertDTO.getPassword(), FIELD_PASSWORD)) {
 			isInvalid = true;
 		}
