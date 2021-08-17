@@ -59,7 +59,6 @@ export const routes: Array<RouteConfig> = [
     name: "admin-user-edit",
     meta: {
       menu: false,
-      admin: true,
     },
     component: () =>
       import(

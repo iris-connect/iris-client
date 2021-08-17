@@ -26,7 +26,8 @@
         <v-spacer></v-spacer>
         <user-menu
           :display-name="userDisplayName"
-          :is-admin="isAdmin"
+          :role="userRole"
+          :id="userID"
           @logout="logoutUser"
         />
       </template>
@@ -45,6 +46,7 @@ import Vue from "vue";
 import { routes, setInterceptRoute } from "@/router";
 import UserMenu from "@/views/user-login/components/user-menu.vue";
 import { RouteConfig } from "vue-router";
+import { UserRole } from "@/api";
 
 // @todo: move user functionality to a dedicated user-module?
 export default Vue.extend({
@@ -65,8 +67,11 @@ export default Vue.extend({
     userDisplayName(): string {
       return this.$store.getters["userLogin/userDisplayName"];
     },
-    isAdmin(): boolean {
-      return this.$store.getters["userLogin/isAdmin"];
+    userID(): string {
+      return this.$store.state.userLogin.user?.id ?? "";
+    },
+    userRole(): UserRole | undefined {
+      return this.$store.state.userLogin.user?.role;
     },
   },
   watch: {
