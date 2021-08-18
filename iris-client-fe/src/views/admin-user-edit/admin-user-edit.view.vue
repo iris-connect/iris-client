@@ -146,6 +146,9 @@ type FieldsConfig = {
 const fieldsConfigByRole: Record<UserRole, FieldsConfig> = {
   [UserRole.Admin]: {},
   [UserRole.User]: {
+    userName: {
+      edit: false,
+    },
     role: {
       edit: false,
     },
