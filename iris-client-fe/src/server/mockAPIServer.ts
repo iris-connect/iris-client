@@ -57,6 +57,10 @@ export function makeMockAPIServer() {
         return authResponse();
       });
 
+      this.get("/user/logout", () => {
+        return new Response(200);
+      });
+
       this.get("/user-profile", (schema, request) => {
         const user = dummyUserList.users?.[0];
         return authResponse(request, user);
