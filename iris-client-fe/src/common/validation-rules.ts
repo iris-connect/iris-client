@@ -7,6 +7,11 @@ const minLength = (min: number) => (v?: string): string | boolean => {
   return v.length <= 0 || v.length >= min || `Mindestens ${min} Zeichen`;
 };
 
+const password = (v: string): string | boolean => {
+  if (config.passwordRegExp.test(v)) return true;
+  return `Bitte geben Sie ein gültiges Passwort an: \n${config.passwordRules}`;
+};
+
 const defined = (v: unknown): string | boolean => !!v || "Pflichtfeld";
 
 const location = (v: unknown): string | boolean =>
@@ -184,7 +189,7 @@ const dateEnd = (start: string) => (v: string): string | boolean => {
 const rules = {
   defined,
   minLength,
-  password: minLength(config.passwordMinLength),
+  password,
   sanitised,
   nameConventions,
   dateStart,
