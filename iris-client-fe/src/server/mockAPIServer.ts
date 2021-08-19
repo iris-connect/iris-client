@@ -1,4 +1,5 @@
 import {
+  Credentials,
   DataRequestCaseDetails,
   DataRequestDetails,
   ExistingDataRequestClientWithLocation,
@@ -21,6 +22,7 @@ import {
 } from "@/server/data/dummy-userlist";
 import { remove, findIndex, some } from "lodash";
 import { paginated } from "@/server/utils/pagination";
+import dayjs from "@/utils/date";
 
 // @todo: find better solution for data type
 const authResponse = (
@@ -53,7 +55,30 @@ export function makeMockAPIServer() {
     routes() {
       this.namespace = "";
 
-      this.post("/login", () => {
+      /**
+       * You can simulate the "username blocked due to too many invalid login attempts" behaviour with the following credentials:
+       * username: admin
+       * password:
+       * - auth: default / non blocking login error: 401 "Unauthorized"
+       * - block: blocking login error: 401 "User blocked! (dateTime ISOString)"
+       */
+      this.post("/login", (schema, request) => {
+        const credentials: Credentials = JSON.parse(request.requestBody);
+        if (credentials.userName === "admin") {
+          if (credentials.password === "auth") {
+            return new Response(401, {}, { message: "Unauthorized" });
+          }
+          if (credentials.password === "block") {
+            const blockedUntil = dayjs().add(10, "seconds").toISOString();
+            return new Response(
+              401,
+              {},
+              {
+                message: `User blocked! (${blockedUntil})`,
+              }
+            );
+          }
+        }
         return authResponse();
       });
 

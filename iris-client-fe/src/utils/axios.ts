@@ -47,14 +47,7 @@ export const getErrorMessage = (
 ): ErrorMessage => {
   if (!error || axios.isCancel(error)) return "";
   if (typeof error === "string") return error;
-
-  if (error.response) {
-    const errData = error.response.data;
-    return (
-      errData.message + " (" + errData.error + " [" + errData.status + "])"
-    );
-  }
-
   const parsedError = parseError(error);
-  return parseErrorMessage(parsedError.data) || fallback;
+  const message = parseErrorMessage(parsedError.data) || fallback;
+  return `${message} [${parsedError.status}]`;
 };
