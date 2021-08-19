@@ -44,12 +44,14 @@ $theme-colors-with-variations: ();
   $theme-colors-with-variations: map-merge($theme-colors-with-variations, create_color_variations($color_name, $color_value));
 }
 
+$primary-text-color: map-get($theme-colors-with-variations, 'primary-darken-3');
+
 /**
 The JavaScript based inline-style theme uses the primary color for links.
 As the primary color of iris is very light - and the text would be hard to read - a darker variation is used.
  */
 .v-application a {
-  color: map-get($theme-colors-with-variations, 'primary-darken-3')
+  color: $primary-text-color;
 }
 
 /**
@@ -60,6 +62,17 @@ This is used to replace the JavaScript based theme functionality for creating th
     @include background-color($color_value);
   }
   .v-application .#{$color_name}--text {
-    @include text-color($color_value);
+    @if($color_name == 'primary') {
+      // This darkens the text color if the color_name equals "primary"
+      @include text-color($primary-text-color);
+      // The input bottom border color uses "currentColor" which leads to a darkened border color.
+      // Setting the text color of the input component to the lighter color fixes this issue.
+      .v-input__slot {
+        @include text-color($color_value);
+      }
+    }
+    @else {
+      @include text-color($color_value);
+    }
   }
 }

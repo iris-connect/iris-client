@@ -23,7 +23,9 @@
         <v-list-item-content>
           <v-list-item-title>GitHub</v-list-item-title>
           <v-list-item-subtitle
-            ><a href="https://github.com/iris-connect"
+            ><a
+              class="d-inline-block mb-3"
+              href="https://github.com/iris-connect"
               >https://github.com/iris-connect</a
             ></v-list-item-subtitle
           >
