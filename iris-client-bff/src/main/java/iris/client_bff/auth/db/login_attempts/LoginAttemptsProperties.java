@@ -5,11 +5,12 @@ import lombok.Data;
 
 import java.time.Duration;
 
-import javax.annotation.PostConstruct;
+import javax.validation.constraints.Positive;
 
+import org.hibernate.validator.constraints.time.DurationMin;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
-import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @author Jens Kutzsche
@@ -18,21 +19,17 @@ import org.springframework.util.Assert;
 @ConstructorBinding
 @Data
 @AllArgsConstructor
+@Validated
 public class LoginAttemptsProperties {
 
+	@Positive
 	private int firstWarningThreshold;
+	@Positive
 	private int warningThresholdMultiplier;
+	@DurationMin(seconds = 1)
 	private Duration firstWaitingTime;
+	@Positive
 	private int waitingTimeMultiplier;
+	@DurationMin(hours = 1)
 	private Duration ignoreOldAttemptsAfter;
-
-	@PostConstruct
-	void checkValues() {
-		Assert.isTrue(firstWarningThreshold > 0, "firstWarningThreshold must be > 0!");
-		Assert.isTrue(warningThresholdMultiplier > 0, "warningThresholdMultiplier must be > 0!");
-		Assert.isTrue(!firstWaitingTime.isNegative() && !firstWaitingTime.isZero(), "firstWaitingTime must be > 0!");
-		Assert.isTrue(waitingTimeMultiplier > 0, "waitingTimeMultiplier must be > 0!");
-		Assert.isTrue(!ignoreOldAttemptsAfter.isNegative() && !ignoreOldAttemptsAfter.isZero(),
-				"ignoreOldAttemptsAfter must be > 0!");
-	}
 }

@@ -27,29 +27,25 @@ public class InitialAdminLoader {
 	private PasswordEncoder passwordEncoder;
 
 	@PostConstruct
-	protected void initializeAdmin() {
-		if (conf.getAdminUserName() != null && conf.getAdminUserPassword() != null) {
-			createAdminUserIfNotExists();
-		} else {
-			log.info("No admin user configured. Skip creating admin user.");
-		}
-	}
+	protected void createAdminUserIfNotExists() {
 
-	private void createAdminUserIfNotExists() {
-		if (repo.findByUserName(conf.getAdminUserName()).isEmpty()) {
-			log.info("Create admin user [{}]", conf.getAdminUserName());
+		var userName = conf.getAdminUserName();
+
+		if (repo.findByUserName(userName).isEmpty()) {
+
+			log.info("Create admin user [{}]", userName);
+
 			var userAccount = new UserAccount();
-			userAccount.setUserName(conf.getAdminUserName());
+			userAccount.setUserName(userName);
 			userAccount.setPassword(passwordEncoder.encode(conf.getAdminUserPassword()));
 			userAccount.setFirstName("admin");
 			userAccount.setLastName("admin");
 			userAccount.setRole(UserRole.ADMIN);
 
 			repo.save(userAccount);
+
 		} else {
-			log.info("Admin user [{}] already exists. Skip creating admin user.", conf.getAdminUserName());
+			log.info("Admin user [{}] already exists. Skip creating admin user.", userName);
 		}
-
 	}
-
 }
