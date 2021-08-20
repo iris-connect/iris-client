@@ -9,6 +9,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 @Data
 @Builder
 @ToString
@@ -17,5 +20,5 @@ import lombok.ToString;
 public class GuestListDataProvider {
 
   private String name;
-  private Address address;
+  private @NotNull @Valid Address address;
 }

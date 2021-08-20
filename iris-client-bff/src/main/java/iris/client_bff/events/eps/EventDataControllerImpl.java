@@ -1,5 +1,6 @@
 package iris.client_bff.events.eps;
 
+import iris.client_bff.config.JsonRpcDataValidator;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.core.web.dto.Address;
 import iris.client_bff.events.EventDataSubmissionService;
@@ -28,6 +29,8 @@ public class EventDataControllerImpl implements EventDataController {
 
 	private final EventDataSubmissionService dataSubmissionService;
 	private final ValidationHelper validHelper;
+	private final JsonRpcDataValidator jsonRpcDataValidator;
+
 
 	@Override
 	public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
@@ -35,6 +38,8 @@ public class EventDataControllerImpl implements EventDataController {
 
 		if(dataAuthorizationToken != null) {
 			validateGuestList(guestList);
+
+			jsonRpcDataValidator.validateData(guestList);
 
 			return dataSubmissionService.findRequestAndSaveGuestList(dataAuthorizationToken, guestList);
 		}
