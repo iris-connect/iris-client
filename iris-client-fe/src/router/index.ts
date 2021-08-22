@@ -1,7 +1,14 @@
 import store from "@/store";
 import Vue from "vue";
-import VueRouter, { Location, Route, RouteConfig } from "vue-router";
+import VueRouter, {
+  Location,
+  NavigationGuardNext,
+  Route,
+  RouteConfig,
+} from "vue-router";
 import Home from "../views/home/Home.vue";
+import { getAuthenticatedUser } from "@/views/user-login/utils/store";
+import { UserRole } from "@/api";
 
 Vue.use(VueRouter);
 
@@ -57,9 +64,23 @@ export const routes: Array<RouteConfig> = [
   {
     path: "/admin/user/edit/:id",
     name: "admin-user-edit",
+    beforeEnter: async (
+      to: Route,
+      from: Route,
+      next: NavigationGuardNext
+    ): Promise<void> => {
+      const user = await getAuthenticatedUser();
+      const accessGranted =
+        user?.role === UserRole.Admin ||
+        (user?.role === UserRole.User && user.id === to.params.id);
+      if (accessGranted) {
+        next();
+      } else {
+        next("/");
+      }
+    },
     meta: {
       menu: false,
-      admin: true,
     },
     component: () =>
       import(
@@ -167,7 +188,7 @@ export const setInterceptRoute = (route: Route): void => {
   store.commit("userLogin/setInterceptedRoute", locationFromRoute(route));
 };
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // @todo: remove indexTracking enabled / disabled query functionality once index cases are permanently activated again
   if (to.query.indexTracking) {
     const indexTrackingQuery = to.query.indexTracking;
@@ -195,8 +216,11 @@ router.beforeEach((to, from, next) => {
     setInterceptRoute(to);
     return next("/user/login");
   }
-  if (to.meta.admin === true && !store.getters["userLogin/isAdmin"]) {
-    return next("/");
+  if (to.meta.admin === true) {
+    const user = await getAuthenticatedUser();
+    if (user?.role !== UserRole.Admin) {
+      return next("/");
+    }
   }
   if (to.name === "user-login" && store.getters["userLogin/isAuthenticated"]) {
     return next("/");
