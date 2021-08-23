@@ -13,6 +13,7 @@ import iris.client_bff.users.web.dto.UserUpdateDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.security.Principal;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,7 @@ public class UserController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserDTO createUser(@RequestBody @Valid UserInsertDTO userInsert) {
-		UserInsertDTO userInsertValidated = validateUserInsertDTO(userInsert);
+		var userInsertValidated = validateUserInsertDTO(userInsert);
 		return map(userService.create(userInsertValidated));
 	}
 
@@ -78,9 +79,10 @@ public class UserController {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public void deleteUser(@PathVariable UUID id) {
+	public void deleteUser(@PathVariable UUID id, Principal principal) {
+
 		if (ValidationHelper.isUUIDInputValid(id.toString(), FIELD_USER_ID)) {
-			this.userService.deleteById(id);
+			this.userService.deleteById(id, principal.getName());
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
@@ -138,8 +140,7 @@ public class UserController {
 
 		var isInvalid = false;
 
-		if (validationHelper
-				.isPossibleAttackForRequiredValue(userInsertDTO.getUserName(), FIELD_USER_NAME, false)
+		if (validationHelper.isPossibleAttackForRequiredValue(userInsertDTO.getUserName(), FIELD_USER_NAME, false)
 				|| validationHelper.isPossibleAttackForPassword(userInsertDTO.getPassword(), FIELD_PASSWORD)) {
 			isInvalid = true;
 		}
