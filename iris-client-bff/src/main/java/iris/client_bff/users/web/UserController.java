@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -89,7 +90,11 @@ public class UserController {
 	}
 
 	private UserUpdateDTO validateUserUpdateDTO(UserUpdateDTO userUpdateDTO) {
-		if (userUpdateDTO == null) {
+		if (userUpdateDTO == null
+				|| isToLong(userUpdateDTO.getUserName(), 50)
+				|| isToLong(userUpdateDTO.getPassword(), 200)
+				|| isToLong(userUpdateDTO.getFirstName(), 200)
+				|| isToLong(userUpdateDTO.getLastName(), 200)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
@@ -126,7 +131,11 @@ public class UserController {
 	}
 
 	private UserInsertDTO validateUserInsertDTO(UserInsertDTO userInsertDTO) {
-		if (userInsertDTO == null) {
+		if (userInsertDTO == null
+				|| isToLong(userInsertDTO.getUserName(), 50)
+				|| isToLong(userInsertDTO.getPassword(), 200)
+				|| isToLong(userInsertDTO.getFirstName(), 200)
+				|| isToLong(userInsertDTO.getLastName(), 200)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
@@ -155,11 +164,13 @@ public class UserController {
 		}
 
 		if (!validationHelper.isPasswordValid(userInsertDTO.getPassword())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					ValidationHelper.PW_ERROR_MESSAGE);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationHelper.PW_ERROR_MESSAGE);
 		}
 
 		return userInsertDTO;
 	}
 
+	private boolean isToLong(String value, int maxLength) {
+		return StringUtils.length(value) > maxLength;
+	}
 }
