@@ -114,7 +114,7 @@ export default class AdminUserCreateView extends Vue {
   get roleSelectOptions(): Array<Record<string, unknown>> {
     return [
       {
-        text: "Nutzer",
+        text: "Nutzung",
         value: UserRole.User,
       },
       {

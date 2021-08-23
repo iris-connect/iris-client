@@ -97,7 +97,7 @@ type TableRow = {
 
 const UserRoleName = new Map<UserRole, string>([
   [UserRole.Admin, "Administration"],
-  [UserRole.User, "Nutzer"],
+  [UserRole.User, "Nutzung"],
 ]);
 
 @Component({
