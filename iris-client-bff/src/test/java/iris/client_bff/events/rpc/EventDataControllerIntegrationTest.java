@@ -17,8 +17,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @IrisWebIntegrationTest
 public class EventDataControllerIntegrationTest {
@@ -99,11 +98,10 @@ public class EventDataControllerIntegrationTest {
                 .build();
 
         // test
-        try {
-            var result = controller.submitGuestList(clientDto, UUID.fromString(dataRequest.getId().toString()), guestList);
-        } catch (Exception e) {
-            assertEquals(e.getClass(), ResponseStatusException.class);
-            assertTrue(e.getMessage().contains("Eingabedaten sind ungültig") && e.getMessage().contains("dataProvider.address.city"));
-        }
+				var e = assertThrows(ResponseStatusException.class,
+						() -> controller.submitGuestList(clientDto, UUID.fromString(dataRequest.getId().toString()), guestList));
+        
+				assertTrue(e.getMessage().contains("Eingabedaten sind ungültig")
+						&& e.getMessage().contains("dataProvider.address.city"));
     }
 }
