@@ -106,6 +106,7 @@ import PasswordInputField from "@/components/form/password-input-field.vue";
 import rules from "@/common/validation-rules";
 import { omitBy } from "lodash";
 import ConditionalField from "@/views/admin-user-edit/components/conditional-field.vue";
+import _defaults from "lodash/defaults";
 
 type AdminUserEditForm = {
   model: UserUpdate;
@@ -242,12 +243,11 @@ export default class AdminUserEditView extends Vue {
 
   @Watch("user")
   onUserChanged(newValue: User | null): void {
-    const { id, ...restProps } = newValue || {};
-    this.userId = id || "";
-    this.form.model = {
-      ...this.form.model,
-      ...restProps,
-    };
+    if (newValue) {
+      const { id, ...restProps } = newValue;
+      this.userId = id || "";
+      this.form.model = _defaults({}, restProps, this.form.model);
+    }
     this.$refs.form.resetValidation();
   }
   get user(): User | null {
