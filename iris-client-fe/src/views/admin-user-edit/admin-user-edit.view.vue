@@ -14,6 +14,7 @@
                 v-bind="scope"
                 v-model="form.model.firstName"
                 label="Vorname"
+                maxlength="50"
               ></v-text-field>
             </conditional-field>
           </v-col>
@@ -27,6 +28,7 @@
                 v-bind="scope"
                 v-model="form.model.lastName"
                 label="Nachname"
+                maxlength="50"
               ></v-text-field>
             </conditional-field>
           </v-col>
@@ -35,13 +37,14 @@
           <v-col cols="12" md="6">
             <conditional-field
               :config="fieldsConfig['userName']"
-              :rules="validationRules.sanitisedAndDefined"
+              :rules="validationRules.userName"
               v-slot="scope"
             >
               <v-text-field
                 v-bind="scope"
                 v-model="form.model.userName"
                 label="Anmeldename"
+                maxlength="50"
               ></v-text-field>
             </conditional-field>
           </v-col>
@@ -220,9 +223,9 @@ export default class AdminUserEditView extends Vue {
     return {
       defined: [rules.defined],
       password: [rules.defined, rules.password, rules.sanitised],
-      sanitisedAndDefined: [rules.defined, rules.sanitised],
+      userName: [rules.defined, rules.sanitised, rules.maxLength(50)],
       sanitised: [rules.sanitised],
-      names: [rules.sanitised, rules.nameConventions],
+      names: [rules.sanitised, rules.nameConventions, rules.maxLength(50)],
     };
   }
 

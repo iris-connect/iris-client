@@ -7,6 +7,11 @@ const minLength = (min: number) => (v?: string): string | boolean => {
   return v.length <= 0 || v.length >= min || `Mindestens ${min} Zeichen`;
 };
 
+const maxLength = (max: number) => (v?: string): string | boolean => {
+  if (typeof v !== "string") return true; // we only check the length for strings
+  return v.length <= max || `Höchstens ${max} Zeichen`;
+};
+
 const password = (v: string): string | boolean => {
   if (config.passwordRegExp.test(v)) return true;
   return `Bitte geben Sie ein gültiges Passwort an: \n${config.passwordRules}`;
@@ -189,6 +194,7 @@ const dateEnd = (start: string) => (v: string): string | boolean => {
 const rules = {
   defined,
   minLength,
+  maxLength,
   password,
   sanitised,
   nameConventions,

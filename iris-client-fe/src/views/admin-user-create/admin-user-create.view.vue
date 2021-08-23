@@ -14,6 +14,7 @@
               v-model="form.model.firstName"
               label="Vorname"
               :rules="validationRules.names"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="12" md="6">
@@ -21,6 +22,7 @@
               v-model="form.model.lastName"
               label="Nachname"
               :rules="validationRules.names"
+              maxlength="50"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -29,7 +31,8 @@
             <v-text-field
               v-model="form.model.userName"
               label="Anmeldename"
-              :rules="validationRules.sanitisedAndDefined"
+              :rules="validationRules.userName"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="12" md="6">
@@ -128,9 +131,9 @@ export default class AdminUserCreateView extends Vue {
     return {
       defined: [rules.defined],
       password: [rules.defined, rules.password, rules.sanitised],
-      sanitisedAndDefined: [rules.defined, rules.sanitised],
+      userName: [rules.defined, rules.sanitised, rules.maxLength(50)],
       sanitised: [rules.sanitised],
-      names: [rules.sanitised, rules.nameConventions],
+      names: [rules.sanitised, rules.nameConventions, rules.maxLength(50)],
     };
   }
 
