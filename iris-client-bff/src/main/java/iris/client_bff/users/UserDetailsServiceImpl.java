@@ -1,9 +1,14 @@
 package iris.client_bff.users;
 
+import static java.util.Objects.*;
+import static org.apache.commons.lang3.StringUtils.*;
+
+import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.auth.db.jwt.JWTService;
 import iris.client_bff.users.entities.UserAccount;
 import iris.client_bff.users.entities.UserRole;
 import iris.client_bff.users.web.dto.UserInsertDTO;
+import iris.client_bff.users.web.dto.UserRoleDTO;
 import iris.client_bff.users.web.dto.UserUpdateDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,34 +67,76 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userAccountsRepository.save(userAccount);
 	}
 
-	public UserAccount update(UUID userId, UserUpdateDTO userUpdateDTO) {
+	public UserAccount update(UUID userId, UserUpdateDTO userUpdateDTO, UserAccountAuthentication authentication) {
+
 		log.info("Update user: {}", userId);
 
-		var optional = userAccountsRepository.findById(userId);
-		if (optional.isEmpty()) {
-			var error = "User not found: " + userId.toString();
-			log.error(error);
-			throw new RuntimeException(error);
-		}
-		jwtService.invalidateTokensOfUser(optional.get().getUserName());
+		var userAccount = userAccountsRepository.findById(userId)
+				.orElseThrow(() -> {
+					var error = "User not found: " + userId.toString();
+					log.error(error);
+					throw new RuntimeException(error);
+				});
 
-		var userAccount = optional.get();
-		userAccount.setLastName(userUpdateDTO.getLastName());
-		userAccount.setFirstName(userUpdateDTO.getFirstName());
+		var isAdmin = authentication.isAdmin();
+		var invalidateTokens = false;
+
+		var oldUserName = userAccount.getUserName();
+		if (!isAdmin && !oldUserName.equals(authentication.getUserName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change other users!");
+		}
+
+		var lastName = userUpdateDTO.getLastName();
+		if (nonNull(lastName)) {
+			userAccount.setLastName(lastName);
+		}
+
+		var firstName = userUpdateDTO.getFirstName();
+		if (nonNull(firstName)) {
+			userAccount.setFirstName(firstName);
+		}
 
 		var newUserName = userUpdateDTO.getUserName();
-		if (StringUtils.isNotEmpty(newUserName)) {
+		if (!isAdmin && isNotBlank(newUserName)) {
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change his username!");
+
+		} else if (isNotBlank(newUserName)
+				&& !StringUtils.equals(oldUserName, newUserName)) {
+
 			userAccount.setUserName(newUserName);
+			invalidateTokens = true;
 		}
 
-		var newRole = userUpdateDTO.getRole();
-		if (newRole != null) {
-			userAccount.setRole(UserRole.valueOf(newRole.name()));
+		var newRoleDto = userUpdateDTO.getRole();
+		if (!isAdmin && newRoleDto != null) {
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change his role!");
+
+		} else if (isRemoveLastAdmin(userAccount, newRoleDto)) {
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The role of the last admin can't be changed!");
+
+		} else if (newRoleDto != null) {
+
+			var newRole = UserRole.valueOf(newRoleDto.name());
+
+			if (userAccount.getRole() != newRole) {
+				userAccount.setRole(newRole);
+				invalidateTokens = true;
+			}
 		}
 
 		var newPassword = userUpdateDTO.getPassword();
-		if (StringUtils.isNotEmpty(newPassword)) {
+		if (isNotBlank(newPassword)
+				&& !StringUtils.equals(userAccount.getPassword(), newPassword)) {
+
 			userAccount.setPassword(passwordEncoder.encode(newPassword));
+			invalidateTokens = true;
+		}
+
+		if (invalidateTokens) {
+			jwtService.invalidateTokensOfUser(oldUserName);
 		}
 
 		return userAccountsRepository.save(userAccount);
@@ -122,4 +169,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return user;
 	}
 
+	private boolean isRemoveLastAdmin(UserAccount userAccount, UserRoleDTO newRoleDto) {
+		return newRoleDto != UserRoleDTO.ADMIN
+				&& userAccount.getRole() == UserRole.ADMIN
+				&& userAccountsRepository.countByRole(UserRole.ADMIN) == 1;
+	}
 }

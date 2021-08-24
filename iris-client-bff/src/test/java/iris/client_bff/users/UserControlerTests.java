@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.config.HealthDepartmentConfig;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.utils.ValidationHelper;
@@ -12,6 +13,9 @@ import iris.client_bff.users.entities.UserRole;
 import iris.client_bff.users.web.UserController;
 import iris.client_bff.users.web.dto.UserInsertDTO;
 import iris.client_bff.users.web.dto.UserRoleDTO;
+import iris.client_bff.users.web.dto.UserUpdateDTO;
+
+import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,6 +59,17 @@ class UserControlerTests {
 			account.setRole(UserRole.valueOf(user.getRole().name()));
 			return account;
 		});
+		when(userService.update(any(UUID.class), any(UserUpdateDTO.class), any(UserAccountAuthentication.class)))
+				.thenAnswer(it -> {
+					var user = it.getArgument(1, UserUpdateDTO.class);
+					var account = new UserAccount();
+					account.setFirstName(user.getFirstName());
+					account.setLastName(user.getLastName());
+					account.setPassword(user.getPassword());
+					account.setUserName(user.getUserName());
+					account.setRole(UserRole.valueOf(user.getRole().name()));
+					return account;
+				});
 
 		userController = new UserController(userService, validationHelper);
 	}
@@ -65,10 +80,13 @@ class UserControlerTests {
 	void testWrongPasswords(String pw) {
 
 		var dto = new UserInsertDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
+		Assertions.assertThrows(ResponseStatusException.class, () -> userController.createUser(dto),
+				ValidationHelper.PW_ERROR_MESSAGE);
 
-		Assertions.assertThrows(ResponseStatusException.class, () -> {
-			userController.createUser(dto);
-		}, ValidationHelper.PW_ERROR_MESSAGE);
+		var dto2 = new UserUpdateDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
+		var authentication = new UserAccountAuthentication("test", true, null);
+		Assertions.assertThrows(ResponseStatusException.class,
+				() -> userController.updateUser(UUID.randomUUID(), dto2, authentication), ValidationHelper.PW_ERROR_MESSAGE);
 	}
 
 	@ParameterizedTest
@@ -78,6 +96,15 @@ class UserControlerTests {
 		var dto = new UserInsertDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
 		var user = userController.createUser(dto);
 
+		verify(userService).create(dto);
+		assertThat(user).isNotNull();
+
+		var dto2 = new UserUpdateDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
+		var authentication = new UserAccountAuthentication("test", true, null);
+		var id = UUID.randomUUID();
+		userController.updateUser(id, dto2, authentication);
+
+		verify(userService).update(id, dto2, authentication);
 		assertThat(user).isNotNull();
 	}
 }
