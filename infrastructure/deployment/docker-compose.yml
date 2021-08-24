@@ -55,6 +55,7 @@ services:
       SECURITY_JWT_JWT_SHARED_SECRET:
       IRIS_LOCATION_SERVICE_ENDPOINT: ${EPS_LS_NAME}
       IRIS_CLIENT_BASEPATH: "https://${IRIS_CLIENT_DOMAIN}"
+      EXT_APP_DW_BASEURL:
     depends_on:
       - postgres
     restart: unless-stopped
