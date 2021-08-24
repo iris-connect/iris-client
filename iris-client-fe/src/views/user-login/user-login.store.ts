@@ -146,11 +146,8 @@ const userLogin: UserLoginModule = {
     },
     userDisplayName(): string {
       const user = store.state.userLogin.user;
-      return (
-        [user?.firstName, user?.lastName].join(" ").trim() ??
-        user?.userName ??
-        ""
-      );
+      const fullName = [user?.firstName, user?.lastName].join(" ").trim();
+      return fullName || user?.userName || "";
     },
     isCurrentUser: () => (id: string) => {
       const user = store.state.userLogin.user;

@@ -221,10 +221,8 @@ export default class AdminUserEditView extends Vue {
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      defined: [rules.defined],
-      password: [rules.defined, rules.password, rules.sanitised],
-      userName: [rules.defined, rules.sanitised, rules.maxLength(50)],
-      sanitised: [rules.sanitised],
+      password: [rules.password, rules.sanitised],
+      userName: [rules.sanitised, rules.maxLength(50)],
       names: [rules.sanitised, rules.nameConventions, rules.maxLength(50)],
     };
   }
@@ -260,7 +258,6 @@ export default class AdminUserEditView extends Vue {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
       const protectedFields = Object.keys(this.fieldsConfig).filter((key) => {
-        if (key === "password") return false;
         const config = this.fieldsConfig[key as keyof UserUpdate];
         return config?.show === false || config?.edit === false;
       });
@@ -278,7 +275,7 @@ const ensureIntegrityOfUserUpsert = (
   data: UserUpdate,
   protectedFields: string[]
 ): UserUpdate => {
-  const mandatoryFields = ["userName", "role"];
+  const mandatoryFields = ["userName", "password", "role"];
   return omitBy<UserUpdate>(data, (value, key) => {
     if (protectedFields.indexOf(key) !== -1) return true;
     if (!value) {
