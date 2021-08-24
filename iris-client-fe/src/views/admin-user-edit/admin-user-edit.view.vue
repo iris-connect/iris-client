@@ -282,13 +282,8 @@ const ensureIntegrityOfUserUpsert = (
   data: UserUpdate,
   protectedFields: string[]
 ): UserUpdate => {
-  const mandatoryFields = ["userName", "password", "role"];
   return omitBy<UserUpdate>(data, (value, key) => {
-    if (protectedFields.indexOf(key) !== -1) return true;
-    if (!value) {
-      return mandatoryFields.indexOf(key) !== -1;
-    }
-    return false;
+    return protectedFields.indexOf(key) !== -1;
   });
 };
 </script>
