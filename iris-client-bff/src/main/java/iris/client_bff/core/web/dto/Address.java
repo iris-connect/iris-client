@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @Builder
 @ToString
@@ -15,8 +17,8 @@ import lombok.ToString;
 @AllArgsConstructor(access = PRIVATE)
 public class Address {
 
-  private String street;
-  private String houseNumber;
-  private String zipCode;
-  private String city;
+  private @NotBlank String street;
+  private @NotBlank String houseNumber;
+  private @NotBlank String zipCode;
+  private @NotBlank String city;
 }
