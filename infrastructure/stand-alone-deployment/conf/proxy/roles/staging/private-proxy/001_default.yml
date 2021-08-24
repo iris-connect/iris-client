@@ -35,7 +35,10 @@ vars:
 
 private:
   name: "$PROXY_OP"
-  database_file: ./db/private-proxy-announcements.db
+  datastore:
+    type: file
+    settings:
+      filename: ./db/private-proxy-announcements.db
   bind_address: 0.0.0.0:5545
   internal_endpoint:
     address: "$IRIS_CLIENT_BFF_ENDPOINT"

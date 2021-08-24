@@ -1,6 +1,9 @@
 private:
   name: private-proxy-1
-  database_file: /private-proxy/private-proxy-announcements.db
+  datastore:
+    type: file
+    settings:
+      filename: /private-proxy/private-proxy-announcements.db
   bind_address: 0.0.0.0:5545
   internal_endpoint:
     address: "iris-client:8092/data-submission-rpc"
