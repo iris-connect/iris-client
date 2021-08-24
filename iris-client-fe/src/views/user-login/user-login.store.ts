@@ -42,7 +42,10 @@ export interface UserLoginModule extends Module<UserLoginState, RootState> {
       { commit }: { commit: Commit },
       formData: Credentials
     ): Promise<void>;
-    fetchAuthenticatedUser({ commit }: { commit: Commit }): Promise<void>;
+    fetchAuthenticatedUser(
+      { commit }: { commit: Commit },
+      silent?: boolean
+    ): Promise<void>;
     logout({ commit }: { commit: Commit }): Promise<void>;
   };
   getters: {
@@ -112,10 +115,19 @@ const userLogin: UserLoginModule = {
         commit("setAuthenticating", false);
       }
     },
-    async fetchAuthenticatedUser({ commit }): Promise<void> {
+    async fetchAuthenticatedUser({ commit }, silent): Promise<void> {
+      let user = null;
+      if (silent) {
+        try {
+          user = (await authClient.userProfileGet()).data;
+          if (user) commit("setUser", user);
+        } catch (e) {
+          // silent mode: do nothing
+        }
+        return;
+      }
       commit("setUserLoadingError", null);
       commit("setUserLoading", true);
-      let user = null;
       try {
         user = (await authClient.userProfileGet()).data;
       } catch (e) {

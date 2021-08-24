@@ -267,6 +267,13 @@ export default class AdminUserEditView extends Vue {
       };
       await store.dispatch("adminUserEdit/editUser", payload);
       this.$router.back();
+      // fetch the user profile after changing the current user to update the user`s display name in the main navigation bar
+      // can be ignored if it fails because no business logic is affected if the user profile is not up to date as the user`s access token is invalidated by the Backend if anything of relevance (e.g. userName, password) changes
+      if (store.getters["userLogin/isCurrentUser"](this.userId)) {
+        store.dispatch("userLogin/fetchAuthenticatedUser", true).catch(() => {
+          // ignored
+        });
+      }
     }
   }
 }
