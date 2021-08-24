@@ -221,10 +221,8 @@ export default class AdminUserEditView extends Vue {
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      defined: [rules.defined],
-      password: [rules.defined, rules.password, rules.sanitised],
-      userName: [rules.defined, rules.sanitised, rules.maxLength(50)],
-      sanitised: [rules.sanitised],
+      password: [rules.password, rules.sanitised],
+      userName: [rules.sanitised, rules.maxLength(50)],
       names: [rules.sanitised, rules.nameConventions, rules.maxLength(50)],
     };
   }
@@ -260,7 +258,6 @@ export default class AdminUserEditView extends Vue {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
       const protectedFields = Object.keys(this.fieldsConfig).filter((key) => {
-        if (key === "password") return false;
         const config = this.fieldsConfig[key as keyof UserUpdate];
         return config?.show === false || config?.edit === false;
       });
@@ -270,6 +267,13 @@ export default class AdminUserEditView extends Vue {
       };
       await store.dispatch("adminUserEdit/editUser", payload);
       this.$router.back();
+      // fetch the user profile after changing the current user to update the user`s display name in the main navigation bar
+      // can be ignored if it fails because no business logic is affected if the user profile is not up to date as the user`s access token is invalidated by the Backend if anything of relevance (e.g. userName, password) changes
+      if (store.getters["userLogin/isCurrentUser"](this.userId)) {
+        store.dispatch("userLogin/fetchAuthenticatedUser", true).catch(() => {
+          // ignored
+        });
+      }
     }
   }
 }
@@ -278,13 +282,8 @@ const ensureIntegrityOfUserUpsert = (
   data: UserUpdate,
   protectedFields: string[]
 ): UserUpdate => {
-  const mandatoryFields = ["userName", "role"];
   return omitBy<UserUpdate>(data, (value, key) => {
-    if (protectedFields.indexOf(key) !== -1) return true;
-    if (!value) {
-      return mandatoryFields.indexOf(key) !== -1;
-    }
-    return false;
+    return protectedFields.indexOf(key) !== -1;
   });
 };
 </script>

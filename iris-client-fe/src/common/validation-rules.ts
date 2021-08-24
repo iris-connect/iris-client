@@ -13,7 +13,7 @@ const maxLength = (max: number) => (v?: string): string | boolean => {
 };
 
 const password = (v: string): string | boolean => {
-  if (config.passwordRegExp.test(v)) return true;
+  if (!v || config.passwordRegExp.test(v)) return true;
   return `Bitte geben Sie ein gültiges Passwort an: \n${config.passwordRules}`;
 };
 
@@ -111,7 +111,8 @@ const anyMatches = (query: string, match: string[]): boolean => {
   return some(match, (item) => query.includes(item));
 };
 
-const nameConventions = (v: string): string | boolean => {
+const nameConventions = (v?: string): string | boolean => {
+  if (typeof v !== "string") return true; // we only check strings
   if (
     anyMatches(v, [
       "=",

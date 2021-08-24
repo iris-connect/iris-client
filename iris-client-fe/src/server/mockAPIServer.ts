@@ -23,6 +23,7 @@ import {
 import { remove, findIndex, some } from "lodash";
 import { paginated } from "@/server/utils/pagination";
 import dayjs from "@/utils/date";
+import _defaults from "lodash/defaults";
 
 // @todo: find better solution for data type
 const authResponse = (
@@ -112,7 +113,11 @@ export function makeMockAPIServer() {
             const id = request.params.id;
             const users: Array<User> = dummyUserList.users || [];
             const index = findIndex(users, (user) => user.id === id);
-            users[index] = getDummyUserFromRequest(request, id);
+            users[index] = _defaults(
+              {},
+              getDummyUserFromRequest(request, id),
+              users[index]
+            );
           }
         } catch (e) {
           // ignored
