@@ -4,12 +4,10 @@ import static iris.client_bff.config.DataSubmissionConfig.*;
 
 import iris.client_bff.auth.db.jwt.JWTSigner;
 import iris.client_bff.auth.db.jwt.JWTVerifier;
-import iris.client_bff.auth.db.login_attempts.IrisAuthenticationFailureHandler;
-import iris.client_bff.auth.db.login_attempts.LoginAttemptsRepository;
+import iris.client_bff.auth.db.login_attempts.LoginAttemptsService;
 import iris.client_bff.users.UserDetailsServiceImpl;
 import iris.client_bff.users.entities.UserRole;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
@@ -53,22 +51,18 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 
 	private UserDetailsServiceImpl userDetailsService;
 
-	private IrisAuthenticationFailureHandler authFailureHandler;
-
-	private final @NonNull LoginAttemptsRepository loginAttempts;
+	private final LoginAttemptsService loginAttempts;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
 		var authFilter = new JWTAuthenticationFilter(authenticationManager(), jwtSigner, loginAttempts);
-		authFilter.setAuthenticationFailureHandler(authFailureHandler);
 
 		http.cors().and().csrf().disable()
 				.authorizeRequests()
-				.antMatchers(SWAGGER_WHITELIST)
-				.permitAll()
-				.requestMatchers(EndpointRequest.toAnyEndpoint())
-				.hasAuthority(UserRole.ADMIN.name())
+				.mvcMatchers("/error").permitAll()
+				.antMatchers(SWAGGER_WHITELIST).permitAll()
+				.requestMatchers(EndpointRequest.toAnyEndpoint()).hasAuthority(UserRole.ADMIN.name())
 				.antMatchers(HttpMethod.POST, DATA_SUBMISSION_ENDPOINT).permitAll()
 				.antMatchers(HttpMethod.POST, DATA_SUBMISSION_ENDPOINT_WITH_SLASH).permitAll()
 				.anyRequest().authenticated()

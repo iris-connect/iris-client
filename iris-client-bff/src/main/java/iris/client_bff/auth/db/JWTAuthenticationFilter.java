@@ -4,10 +4,9 @@ import static iris.client_bff.auth.db.SecurityConstants.*;
 
 import iris.client_bff.auth.db.dto.LoginRequestDTO;
 import iris.client_bff.auth.db.jwt.JWTSigner;
-import iris.client_bff.auth.db.login_attempts.LoginAttemptsRepository;
+import iris.client_bff.auth.db.login_attempts.LoginAttemptsService;
+import iris.client_bff.auth.db.login_attempts.WaitingTimeAuthenticationFailureHandler;
 import iris.client_bff.core.log.LogHelper;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -19,10 +18,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -32,13 +30,24 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@AllArgsConstructor
 @Slf4j
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-	private AuthenticationManager authenticationManager;
-	private JWTSigner jwtSigner;
-	private final @NonNull LoginAttemptsRepository loginAttempts;
+	private final AuthenticationManager authenticationManager;
+	private final JWTSigner jwtSigner;
+	private final LoginAttemptsService loginAttempts;
+
+	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTSigner jwtSigner,
+			LoginAttemptsService loginAttempts) {
+
+		super();
+
+		this.authenticationManager = authenticationManager;
+		this.jwtSigner = jwtSigner;
+		this.loginAttempts = loginAttempts;
+
+		setAuthenticationFailureHandler(new WaitingTimeAuthenticationFailureHandler());
+	}
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
@@ -48,12 +57,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 		try {
 
-			LoginRequestDTO loginRequest = new ObjectMapper()
+			var loginRequest = new ObjectMapper()
 					.readValue(req.getInputStream(), LoginRequestDTO.class);
+			var userName = loginRequest.getUserName();
+
+			loginAttempts.getBlockedUntil(userName)
+					.ifPresent(it -> {
+						throw new LockedException(String.format("User blocked! (%s)", it));
+					});
 
 			return authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(
-							loginRequest.getUserName(),
+							userName,
 							loginRequest.getPassword(),
 							new ArrayList<>()));
 
@@ -90,10 +105,5 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 		res.addHeader(AUTHENTICATION_INFO, BEARER_TOKEN_PREFIX + token);
 		res.addHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, AUTHENTICATION_INFO);
-
-		var remoteAddr = DigestUtils.md5Hex(req.getRemoteAddr());
-		try {
-			loginAttempts.deleteById(remoteAddr);
-		} catch (EmptyResultDataAccessException e) {}
 	}
 }
