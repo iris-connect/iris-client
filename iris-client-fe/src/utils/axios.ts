@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import _isNil from "lodash/isNil";
 
 interface ParsedError {
   data: unknown;
@@ -29,13 +30,19 @@ export const parseError = (error: AxiosError): ParsedError => {
   };
 };
 
-const parseErrorMessage = (error: unknown): ErrorMessage => {
+const parseErrorMessage = (error: unknown, keys: string[]): ErrorMessage => {
   if (typeof error === "object") {
     const e = error as Record<string, unknown>;
-    return Object.keys(e)
-      .map((key) => parseErrorMessage(e[key]))
-      .filter((v) => v)
-      .join(", ");
+    const message = keys.map((k) => e[k]).filter((v) => !_isNil(v));
+    if (message.length > 0) {
+      return message.join(", ");
+    }
+    // return Object.keys(e)
+    //   .map((key) => {
+    //     return parseErrorMessage(e[key], keys);
+    //   })
+    //   .filter((v) => !_isNil(v))
+    //   .join(", ");
   }
   if (typeof error === "string") return error;
   return null;
@@ -48,6 +55,7 @@ export const getErrorMessage = (
   if (!error || axios.isCancel(error)) return "";
   if (typeof error === "string") return error;
   const parsedError = parseError(error);
-  const message = parseErrorMessage(parsedError.data) || fallback;
+  const message =
+    parseErrorMessage(parsedError.data, ["message", "error"]) || fallback;
   return `${message} [${parsedError.status}]`;
 };
