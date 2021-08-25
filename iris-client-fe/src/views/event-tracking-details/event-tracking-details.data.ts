@@ -42,7 +42,7 @@ const normalizeLocationContact = (
   return finalizeData(normalized, source, parse);
 };
 
-const normalizeLocationContext = (
+export const normalizeLocationContext = (
   source?: LocationContext,
   parse?: boolean
 ): LocationContext => {
@@ -54,7 +54,7 @@ const normalizeLocationContext = (
   return finalizeData(normalized, source, parse);
 };
 
-const normalizeLocationInformation = (
+export const normalizeLocationInformation = (
   source?: LocationInformation,
   parse?: boolean
 ): LocationInformation => {

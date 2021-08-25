@@ -32,6 +32,9 @@ const validateType = (value: unknown, type: string): boolean => {
   if (type === "dateString") {
     return typeof value === "string" && dayjs(value).isValid();
   }
+  if (type === "any") {
+    return true;
+  }
   return typeof value === type;
 };
 
