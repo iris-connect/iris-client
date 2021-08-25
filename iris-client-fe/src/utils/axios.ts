@@ -1,5 +1,4 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import _isNil from "lodash/isNil";
 
 interface ParsedError {
   data: unknown;
@@ -33,7 +32,9 @@ export const parseError = (error: AxiosError): ParsedError => {
 const parseErrorMessage = (error: unknown, keys: string[]): ErrorMessage => {
   if (typeof error === "object") {
     const e = error as Record<string, unknown>;
-    const message = keys.map((k) => e[k]).filter((v) => !_isNil(v));
+    const message = keys
+      .map((k) => e[k])
+      .filter((v) => typeof v === "string" && v.length > 0);
     if (message.length > 0) {
       return message.join(", ");
     }
