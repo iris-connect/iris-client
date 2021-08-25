@@ -219,7 +219,12 @@ export function makeMockAPIServer() {
           };
         }
 
-        return authResponse(request, data);
+        return authResponse(request, {
+          ...data,
+          totalElements: dummyLocations.length,
+          page: 1,
+          size: 1,
+        });
       });
     },
   });
