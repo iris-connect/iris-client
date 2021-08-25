@@ -49,11 +49,12 @@ export const parseData = <T>(data: T): T => {
 export const finalizeData = <A>(
   normalized: A,
   source?: A,
-  parse?: boolean
+  parse?: boolean,
+  message?: string
 ): A => {
   if (!parse) return normalized;
   const parsed = parseData(normalized);
-  notifyDifference(source, parsed, "UserList");
+  notifyDifference(source, parsed, message);
   return parsed;
 };
 
@@ -64,6 +65,8 @@ export const notifyDifference = <A>(a: A, b: A, msg?: string): void => {
       const diffB = difference(b, a);
       if (!_isEmpty(diffA) || !_isEmpty(diffB)) {
         console.log(msg, "diff A - B: ", diffA, "diff B - A: ", diffB);
+      } else {
+        console.log(msg, "mapping successful");
       }
     }
   }
