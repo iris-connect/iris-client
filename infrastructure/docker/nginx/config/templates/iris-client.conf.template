@@ -40,13 +40,13 @@ server {
 
     # SECURITY
     # Strict Transport Security
-    add_header Strict-Transport-Security "max-age=31536000; includeSubdomains; preload";
+    add_header Strict-Transport-Security "max-age=31536000; includeSubdomains;";
     # X Content Type Options
     add_header X-Content-Type-Options nosniff;
     # X Frame Options - no iframes allowed
     add_header X-Frame-Options DENY;
     # Content Security Policy - no iframes or external resources allowed
-    add_header Content-Security-Policy "default-src 'self'; child-src 'none';";
+    add_header Content-Security-Policy "default-src 'self'; child-src 'none'; frame-ancestors 'none';";
     # X-XSS-Protection - legacy, should be covered by CSP
     add_header X-XSS-Protection "1; mode=block";
     # Referrer-Policy
