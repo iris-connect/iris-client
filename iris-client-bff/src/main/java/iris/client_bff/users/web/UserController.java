@@ -1,7 +1,9 @@
 package iris.client_bff.users.web;
 
 import static iris.client_bff.users.web.UserMappers.*;
+import static org.apache.commons.lang3.StringUtils.*;
 
+import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.ui.messages.ErrorMessages;
 import iris.client_bff.users.UserDetailsServiceImpl;
@@ -44,7 +46,6 @@ public class UserController {
 	private static final String FIELD_USER_NAME = "userName";
 	private static final String FIELD_LAST_NAME = "lastName";
 	private static final String FIELD_FIRST_NAME = "firstName";
-	private static final String FIELD_USER_ID = "userId";
 	private final UserDetailsServiceImpl userService;
 	private final ValidationHelper validationHelper;
 
@@ -66,30 +67,23 @@ public class UserController {
 
 	@PatchMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public UserDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
-		if (!ValidationHelper.isUUIDInputValid(id.toString(), FIELD_USER_ID)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
-		}
+	public UserDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO,
+			UserAccountAuthentication authentication) {
 
-		UserUpdateDTO userUpdateDTOValidated = validateUserUpdateDTO(userUpdateDTO);
+		var userUpdateDTOValidated = validateUserUpdateDTO(userUpdateDTO);
 
-		return map(userService.update(id, userUpdateDTOValidated));
+		return map(userService.update(id, userUpdateDTOValidated, authentication));
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public void deleteUser(@PathVariable UUID id, Principal principal) {
-
-		if (ValidationHelper.isUUIDInputValid(id.toString(), FIELD_USER_ID)) {
-			this.userService.deleteById(id, principal.getName());
-		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
-		}
+		this.userService.deleteById(id, principal.getName());
 	}
 
 	private UserUpdateDTO validateUserUpdateDTO(UserUpdateDTO userUpdateDTO) {
+
 		if (userUpdateDTO == null
 				|| isToLong(userUpdateDTO.getUserName(), 50)
 				|| isToLong(userUpdateDTO.getPassword(), 200)
@@ -108,13 +102,18 @@ public class UserController {
 
 		var isInvalid = false;
 
-		if (validationHelper.isPossibleAttackForRequiredValue(userUpdateDTO.getUserName(), FIELD_USER_NAME, false)
-				|| validationHelper.isPossibleAttackForPassword(userUpdateDTO.getPassword(), FIELD_PASSWORD)) {
+		var userName = userUpdateDTO.getUserName();
+		var password = userUpdateDTO.getPassword();
+
+		if ((isNoneBlank(userName) && validationHelper.isPossibleAttack(userName, FIELD_USER_NAME, false))
+				|| (isNotBlank(password) && validationHelper.isPossibleAttackForPassword(password, FIELD_PASSWORD))) {
 			isInvalid = true;
 		}
 
-		if (!(userUpdateDTO.getRole() == UserRoleDTO.ADMIN || userUpdateDTO.getRole() == UserRoleDTO.USER)) {
-			log.warn(ErrorMessages.INVALID_INPUT + FIELD_ROLE + userUpdateDTO.getRole());
+		var role = userUpdateDTO.getRole();
+
+		if (role != null && !(role == UserRoleDTO.ADMIN || role == UserRoleDTO.USER)) {
+			log.warn(ErrorMessages.INVALID_INPUT + FIELD_ROLE + role);
 			isInvalid = true;
 		}
 
@@ -122,9 +121,8 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		if (!validationHelper.isPasswordValid(userUpdateDTO.getPassword())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					ValidationHelper.PW_ERROR_MESSAGE);
+		if (isNoneBlank(password) && !validationHelper.isPasswordValid(password)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationHelper.PW_ERROR_MESSAGE);
 		}
 
 		return userUpdateDTO;
