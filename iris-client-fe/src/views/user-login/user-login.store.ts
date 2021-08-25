@@ -11,6 +11,7 @@ import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import { omit } from "lodash";
 import { RawLocation } from "vue-router";
 import { Commit, Module } from "vuex";
+import { normalizeUser } from "@/views/user-login/user-login.data";
 
 export type UserLoginState = {
   authenticating: boolean;
@@ -119,7 +120,7 @@ const userLogin: UserLoginModule = {
       let user = null;
       if (silent) {
         try {
-          user = (await authClient.userProfileGet()).data;
+          user = normalizeUser((await authClient.userProfileGet()).data, true);
           if (user) commit("setUser", user);
         } catch (e) {
           // silent mode: do nothing
@@ -129,7 +130,7 @@ const userLogin: UserLoginModule = {
       commit("setUserLoadingError", null);
       commit("setUserLoading", true);
       try {
-        user = (await authClient.userProfileGet()).data;
+        user = normalizeUser((await authClient.userProfileGet()).data, true);
       } catch (e) {
         commit("setUserLoadingError", getErrorMessage(e));
         throw e;
