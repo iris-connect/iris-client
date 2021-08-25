@@ -35,7 +35,7 @@ const validateType = (value: unknown, type: string): boolean => {
   return typeof value === type;
 };
 
-export const parseData = <T>(data: T): Partial<T> => {
+export const parseData = <T>(data: T): T => {
   try {
     return JSON.parse(JSON.stringify(data));
   } catch {
@@ -43,12 +43,25 @@ export const parseData = <T>(data: T): Partial<T> => {
   }
 };
 
+export const finalizeData = <A>(
+  normalized: A,
+  source?: A,
+  parse?: boolean
+): A => {
+  if (!parse) return normalized;
+  const parsed = parseData(normalized);
+  notifyDifference(source, parsed, "UserList");
+  return parsed;
+};
+
 export const notifyDifference = <A>(a: A, b: A, msg?: string): void => {
-  if (a) {
-    const diffA = difference(a, b);
-    const diffB = difference(b, a);
-    if (!_isEmpty(diffA) || !_isEmpty(diffB)) {
-      console.log(msg, "diff A - B: ", diffA, "diff B - A: ", diffB);
+  if (process.env.NODE_ENV !== "production") {
+    if (a && b) {
+      const diffA = difference(a, b);
+      const diffB = difference(b, a);
+      if (!_isEmpty(diffA) || !_isEmpty(diffB)) {
+        console.log(msg, "diff A - B: ", diffA, "diff B - A: ", diffB);
+      }
     }
   }
 };

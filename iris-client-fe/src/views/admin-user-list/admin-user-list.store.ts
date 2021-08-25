@@ -1,10 +1,10 @@
-import { User, UserList, UserRole } from "@/api";
+import { UserList } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Dispatch, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import authClient from "@/api-client";
-import { normalize } from "@/utils/data";
+import { normalizeUserList } from "@/views/admin-user-list/admin-user-list.data";
 
 export type AdminUserListState = {
   userList: UserList | null;
@@ -81,7 +81,7 @@ const adminUserList: AdminUserListModule = {
       commit("setUserListLoadingError", null);
       commit("setUserListLoading", true);
       try {
-        userList = normalizeUserList((await authClient.usersGet()).data);
+        userList = normalizeUserList((await authClient.usersGet()).data, true);
       } catch (e) {
         commit("setUserListLoadingError", getErrorMessage(e));
       } finally {
@@ -103,43 +103,6 @@ const adminUserList: AdminUserListModule = {
       await dispatch("fetchUserList");
     },
   },
-};
-
-export const normalizeUser = (user: User, fallback?: Partial<User>): User => {
-  return {
-    id: normalize<User, "id">(user, "id", "string", fallback?.id),
-    userName: normalize<User, "userName">(
-      user,
-      "userName",
-      "string",
-      fallback?.userName || ""
-    ),
-    role: normalize<User, "role">(
-      user,
-      "role",
-      "string",
-      fallback?.role || UserRole.User
-    ),
-    firstName: normalize<User, "firstName">(
-      user,
-      "firstName",
-      "string",
-      fallback?.firstName
-    ),
-    lastName: normalize<User, "lastName">(
-      user,
-      "lastName",
-      "string",
-      fallback?.lastName
-    ),
-  };
-};
-
-export const normalizeUserList = (data: UserList): UserList => {
-  const users = normalize<UserList, "users">(data, "users", "array", []);
-  return {
-    users: users?.map((user) => normalizeUser(user)),
-  };
 };
 
 export default adminUserList;
