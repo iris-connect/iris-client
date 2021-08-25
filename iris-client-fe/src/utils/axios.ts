@@ -31,19 +31,11 @@ export const parseError = (error: AxiosError): ParsedError => {
 
 const parseErrorMessage = (error: unknown, keys: string[]): ErrorMessage => {
   if (typeof error === "object") {
-    const e = error as Record<string, unknown>;
-    const message = keys
-      .map((k) => e[k])
-      .filter((v) => typeof v === "string" && v.length > 0);
-    if (message.length > 0) {
-      return message.join(", ");
-    }
-    // return Object.keys(e)
-    //   .map((key) => {
-    //     return parseErrorMessage(e[key], keys);
-    //   })
-    //   .filter((v) => !_isNil(v))
-    //   .join(", ");
+    const e = error as Record<string, string>;
+    const errorKey = keys.find((k) => {
+      return Object.prototype.hasOwnProperty.call(e, k);
+    });
+    if (errorKey) return e[errorKey];
   }
   if (typeof error === "string") return error;
   return null;

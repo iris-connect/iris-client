@@ -97,29 +97,22 @@ import {
   getStringParamFromRouteWithOptionalFallback,
 } from "@/utils/pagination";
 import { Dictionary } from "vue-router/types/router";
+import { join } from "@/utils/misc";
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
 ): string {
-  if (data) {
-    if (data.locationInformation) {
-      const contact = data.locationInformation.contact;
-      if (contact) {
-        let name = `${data.locationInformation.name}`;
-        if (contact.officialName) {
-          name = name + `\n(${contact.officialName})`;
-        }
-        return (
-          name +
-          `\n${contact.address.street} \n${contact.address.zip} ${contact.address.city}`
-        );
-      }
-
-      return data.locationInformation.name;
-    }
-    return "-";
-  }
-  return "-";
+  const contact = data?.locationInformation?.contact;
+  const officialName = contact?.officialName;
+  return join(
+    [
+      data?.locationInformation?.name ?? "-",
+      officialName ? `(${officialName})` : "",
+      contact?.address?.street,
+      join([contact?.address?.zip, contact?.address?.city], " "),
+    ],
+    "\n"
+  );
 }
 
 function getFormattedDate(date?: string): string {
@@ -223,20 +216,26 @@ export default class EventTrackingListView extends Vue {
       page: getPageFromRouteWithDefault(this.$route),
       itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
       loading: eventTrackingListLoading,
-      itemsLength: eventTrackingList?.totalElements | 0,
-      data: eventTrackingList?.content.map((dataRequest) => {
-        return {
-          address: getFormattedAddress(dataRequest),
-          endTime: getFormattedDate(dataRequest.end),
-          startTime: getFormattedDate(dataRequest.start),
-          generatedTime: getFormattedDate(dataRequest.requestedAt),
-          lastChange: getFormattedDate(dataRequest.lastUpdatedAt),
-          extID: dataRequest.externalRequestId || "-",
-          code: dataRequest.code,
-          name: dataRequest.name || "-",
-          status: dataRequest.status?.toString() || "-",
-        };
-      }),
+      itemsLength: eventTrackingList?.totalElements || 0,
+      data: (eventTrackingList?.content || []).map(
+        (
+          dataRequest:
+            | Partial<ExistingDataRequestClientWithLocation>
+            | undefined
+        ) => {
+          return {
+            address: getFormattedAddress(dataRequest),
+            endTime: getFormattedDate(dataRequest?.end),
+            startTime: getFormattedDate(dataRequest?.start),
+            generatedTime: getFormattedDate(dataRequest?.requestedAt),
+            lastChange: getFormattedDate(dataRequest?.lastUpdatedAt),
+            extID: dataRequest?.externalRequestId || "-",
+            code: dataRequest?.code,
+            name: dataRequest?.name || "-",
+            status: dataRequest?.status?.toString() || "-",
+          };
+        }
+      ),
       headers: [
         {
           text: "Ext.ID",
