@@ -71,7 +71,10 @@ export const normalizeLocationInformation = (
   return finalizeData(normalized, source, parse);
 };
 
-export const normalizeAddress = (source?: Address, parse?: boolean): Address => {
+export const normalizeAddress = (
+  source?: Address,
+  parse?: boolean
+): Address => {
   const normalizer = entryNormalizer(source);
   const normalized = {
     street: normalizer("street", undefined),
@@ -132,7 +135,10 @@ export const normalizeGuestListDataProvider = (
   return finalizeData(normalized, source, parse);
 };
 
-export const normalizeGuestList = (source?: GuestList, parse?: boolean): GuestList => {
+export const normalizeGuestList = (
+  source?: GuestList,
+  parse?: boolean
+): GuestList => {
   const normalizer = entryNormalizer(source);
   const guests = normalizer("guests", [], "array");
   const normalized = {

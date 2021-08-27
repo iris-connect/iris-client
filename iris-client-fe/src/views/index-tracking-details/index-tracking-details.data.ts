@@ -3,7 +3,8 @@ import {
   ContactPersonAllOfContactInformation,
   ContactPersonAllOfWorkPlace,
   ContactPersonList,
-  ContactsAndEvents, ContactsAndEventsDataProvider,
+  ContactsAndEvents,
+  ContactsAndEventsDataProvider,
   DataRequestCaseData,
   Event,
   EventList,
@@ -38,7 +39,10 @@ export const normalizeEvent = (source?: Event, parse?: boolean): Event => {
   return finalizeData(normalized, source, parse);
 };
 
-export const normalizeEventList = (source?: EventList, parse?: boolean): EventList => {
+export const normalizeEventList = (
+  source?: EventList,
+  parse?: boolean
+): EventList => {
   const normalizer = entryNormalizer(source);
   const events = normalizer("events", [], "array");
   const normalized: EventList = {
