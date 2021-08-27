@@ -11,5 +11,5 @@ export const normalizeStatistics = (
     indexCasesCount: normalizer("indexCasesCount", undefined, "number"),
     sumStatus: normalizer("sumStatus", undefined, "number"),
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(normalized, source, parse, "Statistics");
 };

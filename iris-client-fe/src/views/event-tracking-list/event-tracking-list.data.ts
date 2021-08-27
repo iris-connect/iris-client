@@ -21,7 +21,12 @@ export const normalizeExistingDataRequestClientWithLocation = (
       ? normalizeLocationInformation(source?.locationInformation)
       : source?.locationInformation,
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(
+    normalized,
+    source,
+    parse,
+    "ExistingDataRequestClientWithLocation"
+  );
 };
 
 export const normalizePageEvent = (
@@ -45,5 +50,5 @@ export const normalizePageEvent = (
     pageable: normalizer("pageable", undefined, "any"),
     empty: normalizer("empty", undefined, "boolean"),
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(normalized, source, parse, "PageEvent");
 };

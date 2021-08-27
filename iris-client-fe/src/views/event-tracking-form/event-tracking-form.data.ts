@@ -16,5 +16,5 @@ export const normalizeLocationList = (
     page: normalizer("page", 0, "number"),
     size: normalizer("size", 0, "number"),
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(normalized, source, parse, "LocationList");
 };

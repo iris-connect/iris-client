@@ -8,8 +8,8 @@ export const normalizeUserList = (
 ): UserList => {
   const normalizer = entryNormalizer(source);
   const users = normalizer("users", undefined, "array");
-  const normalized = {
+  const normalized: UserList = {
     users: users ? users.map((user) => normalizeUser(user)) : undefined,
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(normalized, source, parse, "UserList");
 };

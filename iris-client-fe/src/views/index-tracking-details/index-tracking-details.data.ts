@@ -21,9 +21,14 @@ export const normalizeContactsAndEventsDataProvider = (
   const normalized: ContactsAndEventsDataProvider = {
     firstName: normalizer("firstName", ""),
     lastName: normalizer("lastName", ""),
-    dateOfBirth: normalizer("dateOfBirth", "", "dateString"),
+    dateOfBirth: normalizer("dateOfBirth", ""),
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(
+    normalized,
+    source,
+    parse,
+    "ContactsAndEventsDataProvider"
+  );
 };
 
 export const normalizeEvent = (source?: Event, parse?: boolean): Event => {
@@ -36,7 +41,7 @@ export const normalizeEvent = (source?: Event, parse?: boolean): Event => {
       : source?.address,
     additionalInformation: normalizer("additionalInformation", undefined),
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(normalized, source, parse, "Event");
 };
 
 export const normalizeEventList = (
@@ -50,7 +55,7 @@ export const normalizeEventList = (
     startDate: normalizer("startDate", undefined, "dateString"),
     endDate: normalizer("endDate", undefined, "dateString"),
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(normalized, source, parse, "EventList");
 };
 
 export const normalizeContactPersonAllOfContactInformation = (
@@ -66,7 +71,12 @@ export const normalizeContactPersonAllOfContactInformation = (
       : source?.contactCategory,
     basicConditions: normalizer("basicConditions", undefined),
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(
+    normalized,
+    source,
+    parse,
+    "ContactPersonAllOfContactInformation"
+  );
 };
 
 export const normalizeContactPersonAllOfWorkPlace = (
@@ -82,7 +92,7 @@ export const normalizeContactPersonAllOfWorkPlace = (
       ? normalizeAddress(source?.address)
       : source?.address,
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(normalized, source, parse, "ContactPersonAllOfWorkPlace");
 };
 
 export const normalizeContactPerson = (
@@ -93,7 +103,7 @@ export const normalizeContactPerson = (
   const normalized: ContactPerson = {
     firstName: normalizer("firstName", ""),
     lastName: normalizer("lastName", ""),
-    dateOfBirth: normalizer("dateOfBirth", undefined, "dateString"),
+    dateOfBirth: normalizer("dateOfBirth", undefined),
     sex: normalizer("sex", undefined),
     email: normalizer("email", undefined),
     phone: normalizer("phone", undefined),
@@ -110,7 +120,7 @@ export const normalizeContactPerson = (
         )
       : source?.contactInformation,
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(normalized, source, parse, "ContactPerson");
 };
 
 export const normalizeContactPersonList = (
@@ -126,7 +136,7 @@ export const normalizeContactPersonList = (
     startDate: normalizer("startDate", undefined, "dateString"),
     endDate: normalizer("endDate", undefined, "dateString"),
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(normalized, source, parse, "ContactPersonList");
 };
 
 export const normalizeContactsAndEvents = (
@@ -138,7 +148,7 @@ export const normalizeContactsAndEvents = (
     events: normalizeEventList(source?.events),
     dataProvider: normalizeContactsAndEventsDataProvider(source?.dataProvider),
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(normalized, source, parse, "ContactsAndEvents");
 };
 
 export const normalizeDataRequestCaseData = (
@@ -160,5 +170,5 @@ export const normalizeDataRequestCaseData = (
       ? normalizeContactsAndEvents(source?.submissionData)
       : source?.submissionData,
   };
-  return finalizeData(normalized, source, parse);
+  return finalizeData(normalized, source, parse, "DataRequestCaseData");
 };

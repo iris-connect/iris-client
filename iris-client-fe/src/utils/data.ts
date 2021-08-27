@@ -63,9 +63,15 @@ export const notifyDifference = <A>(a: A, b: A, msg?: string): void => {
       const diffA = difference(a, b);
       const diffB = difference(b, a);
       if (!_isEmpty(diffA) || !_isEmpty(diffB)) {
-        console.log(msg, "diff A - B: ", diffA, "diff B - A: ", diffB);
+        console.log(
+          `[${msg || "unknown"}]:`,
+          "\ndiff source (A) -> normalizer (B):\n",
+          diffA,
+          "\ndiff normalizer (A) -> source (B):\n",
+          diffB
+        );
       } else {
-        console.log(msg, "mapping successful");
+        console.log(`[${msg || "unknown"}]: mapping successful`);
       }
     }
   }
@@ -78,10 +84,14 @@ export const difference = <A extends Record<string, any>, B extends A>(
 ): Record<string, unknown> => {
   return _transform(object, (result, value, key) => {
     if (!_isEqual(value, base[key])) {
-      result[key] =
-        _isObject(value) && _isObject(base[key])
-          ? difference(value, base[key])
-          : [value, base[key]];
+      if (_isObject(value) && _isObject(base[key])) {
+        const diff = difference(value, base[key]);
+        if (!_isEmpty(diff)) {
+          result[key] = diff;
+        }
+      } else {
+        result[key] = { A: value, B: base[key] };
+      }
     }
   });
 };
