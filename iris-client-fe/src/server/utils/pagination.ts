@@ -10,7 +10,7 @@ export function paginated<T extends Named>(
 ): PageEvent | PageIndexCase {
   const pageId = Number(page || 0);
   return {
-    totalElements: 43,
+    totalElements: items.length,
     content: items.map((r) => {
       return {
         ...r,

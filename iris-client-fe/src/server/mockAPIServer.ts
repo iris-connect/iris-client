@@ -223,7 +223,7 @@ export function makeMockAPIServer() {
           ...data,
           totalElements: dummyLocations.length,
           page: 1,
-          size: 1,
+          size: 20,
         });
       });
     },
