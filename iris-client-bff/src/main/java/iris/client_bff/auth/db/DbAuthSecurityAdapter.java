@@ -56,8 +56,6 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		var authFilter = new JWTAuthenticationFilter(authenticationManager(), jwtSigner, loginAttempts);
-
 		http.cors().and().csrf().disable()
 				.authorizeRequests()
 				.mvcMatchers("/error").permitAll()
@@ -72,9 +70,8 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 				.addLogoutHandler(logoutHandler)
 				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
 				.and()
-				.addFilter(authFilter)
-				.addFilter(
-						new JWTAuthorizationFilter(authenticationManager(), jwtVerifier))
+				.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSigner, loginAttempts))
+				.addFilterAfter(new JWTAuthorizationFilter(jwtVerifier), JWTAuthenticationFilter.class)
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 

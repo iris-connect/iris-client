@@ -1,9 +1,9 @@
 package iris.client_bff.auth.db;
 
-import static iris.client_bff.auth.db.SecurityConstants.BEARER_TOKEN_PREFIX;
-import static iris.client_bff.auth.db.SecurityConstants.JWT_CLAIM_USER_ROLE;
+import static iris.client_bff.auth.db.SecurityConstants.*;
 
 import iris.client_bff.auth.db.jwt.JWTVerifier;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,28 +13,31 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+@Slf4j
+public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
-	public JWTAuthorizationFilter(AuthenticationManager authManager, JWTVerifier jwtVerifier) {
-		super(authManager);
+	private JWTVerifier jwtVerifier;
+
+	public JWTAuthorizationFilter(JWTVerifier jwtVerifier) {
+		super();
 		this.jwtVerifier = jwtVerifier;
 	}
 
-	public JWTVerifier jwtVerifier;
-
 	@Override
-	protected void doFilterInternal(HttpServletRequest req,
-			HttpServletResponse res,
-			FilterChain chain) throws IOException, ServletException {
-		String header = req.getHeader(HttpHeaders.AUTHORIZATION);
+	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+			throws IOException, ServletException {
+
+		var header = req.getHeader(HttpHeaders.AUTHORIZATION);
 
 		if (header == null || !header.startsWith(BEARER_TOKEN_PREFIX)) {
 			chain.doFilter(req, res);
@@ -43,10 +46,23 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
 		var token = header.replace(BEARER_TOKEN_PREFIX, "");
 
-		var authentication = authenticate(token);
+		try {
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		chain.doFilter(req, res);
+			var authentication = authenticate(token);
+
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			chain.doFilter(req, res);
+
+		} catch (JWTVerificationException e) {
+
+			log.debug("Sending 401 Unauthorized error");
+
+			var msg = StringUtils.isNotBlank(e.getLocalizedMessage())
+					? e.getLocalizedMessage()
+					: HttpStatus.UNAUTHORIZED.getReasonPhrase();
+
+			res.sendError(HttpStatus.UNAUTHORIZED.value(), msg);
+		}
 	}
 
 	/**

@@ -10,6 +10,7 @@ import iris.client_bff.core.log.LogHelper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -89,19 +90,19 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
 			Authentication auth) throws IOException, ServletException {
 
-		User user = (User) auth.getPrincipal();
+		var user = (User) auth.getPrincipal();
 
 		// By convention we expect that there exists only one authority and it represents the role
 		var role = user.getAuthorities().stream().findFirst().get().getAuthority();
 
-		var expirationTime = new Date(System.currentTimeMillis() + EXPIRATION_TIME);
+		var expirationTime = Instant.now().plus(EXPIRATION_TIME);
 		var token = jwtSigner.sign(JWT.create()
 				.withSubject(user.getUsername())
 				.withClaim(JWT_CLAIM_USER_ROLE, role)
-				.withExpiresAt(expirationTime));
+				.withExpiresAt(Date.from(expirationTime)));
 
 		// Whitelist the token
-		jwtSigner.saveToken(token, user.getUsername(), expirationTime.toInstant());
+		jwtSigner.saveToken(token, user.getUsername(), expirationTime);
 
 		res.addHeader(AUTHENTICATION_INFO, BEARER_TOKEN_PREFIX + token);
 		res.addHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, AUTHENTICATION_INFO);
