@@ -7,7 +7,7 @@ import { DataQuery } from "@/api/common";
 import { normalizePageEvent } from "@/views/event-tracking-list/event-tracking-list.data";
 
 export type EventTrackingListState = {
-  eventTrackingList: PageEvent;
+  eventTrackingList: PageEvent | null;
   eventTrackingListLoading: boolean;
 };
 

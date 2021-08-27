@@ -4,9 +4,10 @@ import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 import { DataQuery } from "@/api/common";
+import { normalizePageIndexCase } from "@/views/index-tracking-list/index-tracking-list.data";
 
 export type IndexTrackingListState = {
-  indexTrackingList: PageIndexCase;
+  indexTrackingList: PageIndexCase | null;
   indexTrackingListLoading: boolean;
 };
 
@@ -62,11 +63,10 @@ const indexTrackingList: IndexTrackingListModule = {
       let indexTrackingList: PageIndexCase | null = null;
       commit("setIndexTrackingListLoading", true);
       try {
-        indexTrackingList = (
-          await client.dataRequestClientCasesGet({
-            params: query,
-          })
-        ).data;
+        indexTrackingList = normalizePageIndexCase(
+          (await client.dataRequestClientCasesGet({ params: query })).data,
+          true
+        );
       } finally {
         commit("setIndexTrackingList", indexTrackingList);
         commit("setIndexTrackingListLoading", false);
