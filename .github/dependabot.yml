@@ -5,19 +5,32 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "docker"
-    directory: "infrastructure/docker/nginx"
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "docker"
-    directory: "iris-client-fe"
-    schedule:
-      interval: "weekly"
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
       interval: "weekly"
   - package-ecosystem: "npm"
-    directory: "/"
+    directory: "/iris-client-fe"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/iris-client-fe"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/infrastructure/docker/nginx"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/infrastructure/docker/app-eps"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/infrastructure/docker/iris-client-eps"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/infrastructure/docker/iris-client-proxy"
+    schedule:
+      interval: "weekly"
+      
