@@ -287,7 +287,7 @@
 			<!-- Integration tests -->
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.0</version>
+				<version>2.22.2</version>
 				<configuration>
 					<excludes>
 						<exclude>**/*SystemTest.java</exclude>
