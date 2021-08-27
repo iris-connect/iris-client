@@ -13,7 +13,7 @@ import {
 import { entryNormalizer, finalizeData } from "@/utils/data";
 import _isNil from "lodash/isNil";
 
-const normalizeLocationAddress = (
+export const normalizeLocationAddress = (
   source?: LocationAddress,
   parse?: boolean
 ): LocationAddress => {
@@ -26,7 +26,7 @@ const normalizeLocationAddress = (
   return finalizeData(normalized, source, parse);
 };
 
-const normalizeLocationContact = (
+export const normalizeLocationContact = (
   source?: LocationContact,
   parse?: boolean
 ): LocationContact => {
@@ -71,7 +71,7 @@ export const normalizeLocationInformation = (
   return finalizeData(normalized, source, parse);
 };
 
-const normalizeAddress = (source?: Address, parse?: boolean): Address => {
+export const normalizeAddress = (source?: Address, parse?: boolean): Address => {
   const normalizer = entryNormalizer(source);
   const normalized = {
     street: normalizer("street", undefined),
@@ -82,7 +82,7 @@ const normalizeAddress = (source?: Address, parse?: boolean): Address => {
   return finalizeData(normalized, source, parse);
 };
 
-const normalizeGuestAllOfAttendanceInformation = (
+export const normalizeGuestAllOfAttendanceInformation = (
   source?: GuestAllOfAttendanceInformation,
   parse?: boolean
 ): GuestAllOfAttendanceInformation => {
@@ -99,7 +99,7 @@ const normalizeGuestAllOfAttendanceInformation = (
   return finalizeData(normalized, source, parse);
 };
 
-const normalizeGuest = (source?: Guest, parse?: boolean): Guest => {
+export const normalizeGuest = (source?: Guest, parse?: boolean): Guest => {
   const normalizer = entryNormalizer(source);
   const normalized = {
     firstName: normalizer("firstName", ""),
@@ -120,7 +120,7 @@ const normalizeGuest = (source?: Guest, parse?: boolean): Guest => {
   return finalizeData(normalized, source, parse);
 };
 
-const normalizeGuestListDataProvider = (
+export const normalizeGuestListDataProvider = (
   source?: GuestListDataProvider,
   parse?: boolean
 ): GuestListDataProvider => {
@@ -132,7 +132,7 @@ const normalizeGuestListDataProvider = (
   return finalizeData(normalized, source, parse);
 };
 
-const normalizeGuestList = (source?: GuestList, parse?: boolean): GuestList => {
+export const normalizeGuestList = (source?: GuestList, parse?: boolean): GuestList => {
   const normalizer = entryNormalizer(source);
   const guests = normalizer("guests", [], "array");
   const normalized = {

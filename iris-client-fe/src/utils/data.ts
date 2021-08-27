@@ -5,12 +5,11 @@ import _isEqual from "lodash/isEqual";
 import _isObject from "lodash/isObject";
 import _isEmpty from "lodash/isEmpty";
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const entryNormalizer = <T>(obj?: T) => <K extends keyof T>(
   key: K,
   fallback: T[K],
   type = "string"
-) => {
+): T[K] => {
   return normalize<T, K>(obj, key, type, fallback);
 };
 

@@ -3,6 +3,7 @@ import client from "@/api-client";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
+import { normalizeDataRequestCaseData } from "@/views/index-tracking-details/index-tracking-details.data";
 
 export type IndexTrackingDetailsState = {
   indexTrackingDetails: DataRequestCaseData | null;
@@ -57,9 +58,10 @@ const indexTrackingDetails: IndexTrackingDetailsModule = {
       commit("setIndexTrackingDetails", indexTrackingDetails);
       commit("setIndexTrackingDetailsLoading", true);
       try {
-        indexTrackingDetails = (
-          await client.dataRequestClientCasesCaseIdGet(indexId)
-        ).data;
+        indexTrackingDetails = normalizeDataRequestCaseData(
+          (await client.dataRequestClientCasesCaseIdGet(indexId)).data,
+          true
+        );
       } finally {
         commit("setIndexTrackingDetails", indexTrackingDetails);
         commit("setIndexTrackingDetailsLoading", false);

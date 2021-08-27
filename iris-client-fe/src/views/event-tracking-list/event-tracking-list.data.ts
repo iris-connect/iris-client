@@ -2,7 +2,7 @@ import { ExistingDataRequestClientWithLocation, PageEvent } from "@/api";
 import { entryNormalizer, finalizeData } from "@/utils/data";
 import { normalizeLocationInformation } from "@/views/event-tracking-details/event-tracking-details.data";
 
-const normalizeExistingDataRequestClientWithLocation = (
+export const normalizeExistingDataRequestClientWithLocation = (
   source?: ExistingDataRequestClientWithLocation,
   parse?: boolean
 ): ExistingDataRequestClientWithLocation => {

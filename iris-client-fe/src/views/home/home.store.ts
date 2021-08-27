@@ -11,6 +11,7 @@ import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import { DataQuery, getSortAttribute } from "@/api/common";
 import { normalizePageEvent } from "@/views/event-tracking-list/event-tracking-list.data";
+import { normalizeStatistics } from "@/views/home/home.data";
 
 export type HomeState = {
   eventTrackingList: Array<ExistingDataRequestClientWithLocation> | null;
@@ -97,7 +98,10 @@ const home: HomeModule = {
         sumStatus: 0,
       };
       try {
-        statistics = (await authClient.getWeeklyData()).data;
+        statistics = normalizeStatistics(
+          (await authClient.getWeeklyData()).data,
+          true
+        );
       } catch (e) {
         // TODO
       } finally {
