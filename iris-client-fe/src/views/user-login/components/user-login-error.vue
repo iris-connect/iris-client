@@ -16,6 +16,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
 
+const unauthorizedRegExp = /Unauthorized/i;
 const blockedRegExp = /User blocked! \((.*)\)/i;
 
 const UserLoginErrorProps = Vue.extend({
@@ -65,6 +66,12 @@ export default class UserLoginError extends UserLoginErrorProps {
         "Diese Anmeldedaten sind leider nicht korrekt."
       );
     }
+    if (this.error && unauthorizedRegExp.test(this.error)) {
+      return this.error.replace(
+        unauthorizedRegExp,
+        "Diese Anmeldedaten sind leider nicht korrekt."
+      );
+    }
     return this.error;
   }
 
@@ -75,7 +82,10 @@ export default class UserLoginError extends UserLoginErrorProps {
   watchBlockedUntil(newValue: string): void {
     this.reset();
     if (dayjs(newValue).isValid()) {
-      this.blockedUntilMs = dayjs(newValue).diff(dayjs(), "milliseconds");
+      this.blockedUntilMs = Math.max(
+        0,
+        dayjs(newValue).diff(dayjs(), "milliseconds")
+      );
       this.countDown();
     }
   }
@@ -99,7 +109,8 @@ export default class UserLoginError extends UserLoginErrorProps {
       return;
     }
     const remainingMs = dayjs(this.blockedUntil).diff(dayjs(), "milliseconds");
-    this.blockedRemainingPercent = (remainingMs * 100) / this.blockedUntilMs;
+    this.blockedRemainingPercent =
+      this.blockedUntilMs > 0 ? (remainingMs * 100) / this.blockedUntilMs : 0;
     this.countDownTimeout = setTimeout(() => {
       if (this.blockedRemainingPercent > 0) {
         this.countDown();
