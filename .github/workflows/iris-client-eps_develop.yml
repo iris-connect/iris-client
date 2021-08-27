@@ -41,3 +41,31 @@ jobs:
           push: true
           labels: |
             iris.client-eps.image.revision=${{ github.sha }}
+
+  container_scan:
+    name: Trivy Container Scan
+    needs: push_to_registry
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.3.4
+
+      - name: Create image tag
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: inoeg/iris-client-eps
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ steps.meta.outputs.tags }}'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'MEDIUM'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
