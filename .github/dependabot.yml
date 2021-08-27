@@ -9,10 +9,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "maven"
-    directory: "/iris-client-bff"
-    schedule:
-      interval: "weekly"
   - package-ecosystem: "npm"
     directory: "/iris-client-fe"
     schedule:
