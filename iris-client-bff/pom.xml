@@ -27,7 +27,7 @@
 		<docker.image.prefix>inoeg</docker.image.prefix>
 		<version.tag>${project.version}</version.tag>
 		<vavr-version>0.10.3</vavr-version>
-		<greenmail-version>1.6.4</greenmail-version>
+		<greenmail-version>1.6.5</greenmail-version>
 	</properties>
 
 	<profiles>
