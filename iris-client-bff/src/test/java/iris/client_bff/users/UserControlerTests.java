@@ -76,7 +76,7 @@ class UserControlerTests {
 
 	@ParameterizedTest
 	@ValueSource(
-			strings = { "Password", "X1ab€2a", "X1ab€aae", "X1aba2ae", "x1ab€2ae", "X1ab€2 ae", "X1ab€2 ae", "X1ab€2 ae" })
+			strings = { "Password", "X1aba2a", "X1aba2ae+", "X1ab€2 ae", "X1ab€2 ae", "X1ab€2 ae" })
 	void testWrongPasswords(String pw) {
 
 		var dto = new UserInsertDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
@@ -90,7 +90,7 @@ class UserControlerTests {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "Password12A_", "X1ab_2ae" })
+	@ValueSource(strings = { "Password12A_", "X1ab__ae", "X1aba2ae", "X1ab$aae", "x-ab$aae", "X-AB$AAE" })
 	void testCorrectPasswords(String pw) {
 
 		var dto = new UserInsertDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
