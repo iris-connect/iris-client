@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>iris-gateway</groupId>
 	<artifactId>iris-client-bff</artifactId>
-	<version>1.0.0-rc.12-POST_RELEASE</version>
+	<version>1.0.0-rc.13-POST_RELEASE</version>
 	<name>IRIS Client Backend for Frontend</name>
 	<description>Backend for frontend (BFF) of the client for the health departments. Communicates directly with the SORMAS of this department.</description>
 	<licenses>
