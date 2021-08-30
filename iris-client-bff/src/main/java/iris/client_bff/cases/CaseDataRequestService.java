@@ -68,8 +68,20 @@ public class CaseDataRequestService {
 			indexCase.setRefId(update.getExternalCaseId());
 		}
 		if (update.getStatus() != null) {
-			indexCase.setStatus(Status.valueOf(update.getStatus().name()));
+			
+			var status = Status.valueOf(update.getStatus().name());
+			if (indexCase.getStatus() != status) {
+			
+				indexCase.setStatus(status);
+
+				try {
+					proxyClient.abortAnnouncement(indexCase.getAnnouncementToken());
+				} catch (IRISAnnouncementException | IRISDataRequestException e) {
+					log.error("Abort announcement for token {} failed", indexCase.getAnnouncementToken(), e);
+				}
+			}
 		}
+		
 		return repository.save(indexCase);
 	}
 
