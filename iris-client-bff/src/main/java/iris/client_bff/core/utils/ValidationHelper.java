@@ -28,7 +28,8 @@ public class ValidationHelper {
 	public static final Pattern UUID_REGEX = Pattern
 			.compile("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})");
 	public static final Pattern PW_REGEX = Pattern
-			.compile("^(?=.*[0-9].*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[_\\-#()@§!])(?!.*[\\s\\u202F\\u00A0]).{8,}$");
+			.compile(
+					"^(?=.*[0123456789_\\-#()@§!$].*[0123456789_\\-#()@§!$])(?=.*[ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞabcdefghijklmnopqrstuvwxyzäöüß])([ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞ]|[abcdefghijklmnopqrstuvwxyzäöüß]|[0123456789]|[_\\-#()@§!$]){8,}$");
 	public static final String PW_ERROR_MESSAGE = "The specified password does not follow the password policy (≥ 8 characters, no spaces, lowercase and uppercase letters, two numbers, one special character [_-#()@§!]).";
 	static final String[] PW_SYMBOLS = "_-#()@§!".split("(?!^)");
 	private static final String[] FORBIDDEN_SYMBOLS = {
