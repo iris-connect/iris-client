@@ -22,9 +22,9 @@ public class EventDataRequestsDataInitializer implements DataInitializer {
 
 	public static final DataRequestIdentifier REQ_ID_1 = DataRequestIdentifier
 			.of(UUID.fromString("790b9a69-17f8-4ba7-a8ae-2f7bf34e0b80"));
-	static final DataRequestIdentifier REQ_ID_2 = DataRequestIdentifier
+	public static final DataRequestIdentifier REQ_ID_2 = DataRequestIdentifier
 			.of(UUID.fromString("2707fd28-9b4f-4140-b80e-d56d9aad831f"));
-	static final DataRequestIdentifier REQ_ID_3 = DataRequestIdentifier
+	public static final DataRequestIdentifier REQ_ID_3 = DataRequestIdentifier
 			.of(UUID.fromString("3907e730-af89-4944-8e75-fbe6ba60c904"));
 
 	public static final EventDataRequest DATA_REQUEST_1 = new EventDataRequest(REQ_ID_1.toString(), "Anfrage 1",
