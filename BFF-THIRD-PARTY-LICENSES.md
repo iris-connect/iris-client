@@ -36,7 +36,7 @@ List of third-party dependencies grouped by their license type.
     Apache License, Version 2.0:
 
         * ClassMate (com.fasterxml:classmate:1.5.1 - https://github.com/FasterXML/java-classmate)
-        * fastinfoset (com.sun.xml.fastinfoset:FastInfoset:2.0.0 - https://projects.eclipse.org/projects/ee4j.jaxb-impl/FastInfoset)
+        * fastinfoset (com.sun.xml.fastinfoset:FastInfoset:1.2.18 - https://projects.eclipse.org/projects/ee4j.jaxb-impl/FastInfoset)
         * jsonassert (com.toomuchcoding.jsonassert:jsonassert:0.6.0 - https://github.com/marcingrzejszczak/jsonassert/jsonassert)
         * Apache Commons BeanUtils (commons-beanutils:commons-beanutils:1.9.4 - https://commons.apache.org/proper/commons-beanutils/)
         * Apache Commons Codec (commons-codec:commons-codec:1.11 - http://commons.apache.org/proper/commons-codec/)
@@ -62,7 +62,7 @@ List of third-party dependencies grouped by their license type.
         * flyway-core (org.flywaydb:flyway-core:7.7.3 - https://flywaydb.org/flyway-core)
         * Apache FreeMarker (org.freemarker:freemarker:2.3.31 - https://freemarker.apache.org/)
         * Java Annotation Indexer (org.jboss:jandex:2.2.3.Final - http://www.jboss.org/jandex)
-        * ModelMapper (org.modelmapper:modelmapper:2.3.9 - http://modelmapper.org/modelmapper)
+        * ModelMapper (org.modelmapper:modelmapper:2.4.4 - http://modelmapper.org/modelmapper)
         * Objenesis (org.objenesis:objenesis:3.2 - http://objenesis.org/objenesis)
         * Spring AOP (org.springframework:spring-aop:4.3.9.RELEASE - https://github.com/spring-projects/spring-framework)
         * Spring AOP (org.springframework:spring-aop:5.3.9 - https://github.com/spring-projects/spring-framework)
@@ -165,8 +165,9 @@ List of third-party dependencies grouped by their license type.
     Bouncy Castle Licence:
 
         * Bouncy Castle OpenPGP API (org.bouncycastle:bcpg-jdk15on:1.61 - http://www.bouncycastle.org/java.html)
-        * Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs (org.bouncycastle:bcpkix-jdk15on:1.68 - http://www.bouncycastle.org/java.html)
-        * Bouncy Castle Provider (org.bouncycastle:bcprov-jdk15on:1.68 - http://www.bouncycastle.org/java.html)
+        * Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs (org.bouncycastle:bcpkix-jdk15on:1.69 - https://www.bouncycastle.org/java.html)
+        * Bouncy Castle Provider (org.bouncycastle:bcprov-jdk15on:1.69 - https://www.bouncycastle.org/java.html)
+        * Bouncy Castle ASN.1 Extension and Utility APIs (org.bouncycastle:bcutil-jdk15on:1.69 - https://www.bouncycastle.org/java.html)
 
     CC0:
 
@@ -203,38 +204,38 @@ List of third-party dependencies grouped by their license type.
     Eclipse Distribution License - v 1.0:
 
         * istack common utility code runtime (com.sun.istack:istack-commons-runtime:3.0.12 - https://projects.eclipse.org/projects/ee4j/istack-commons/istack-commons-runtime)
-        * Old JAXB Core (com.sun.xml.bind:jaxb-core:3.0.2 - https://eclipse-ee4j.github.io/jaxb-ri/)
-        * Old JAXB Runtime (com.sun.xml.bind:jaxb-impl:3.0.2 - https://eclipse-ee4j.github.io/jaxb-ri/)
-        * Old JAXB JXC (com.sun.xml.bind:jaxb-jxc:3.0.2 - https://eclipse-ee4j.github.io/jaxb-ri/)
-        * Old JAXB XJC (com.sun.xml.bind:jaxb-xjc:3.0.2 - https://eclipse-ee4j.github.io/jaxb-ri/)
-        * fastinfoset (com.sun.xml.fastinfoset:FastInfoset:2.0.0 - https://projects.eclipse.org/projects/ee4j.jaxb-impl/FastInfoset)
+        * Old JAXB Runtime (com.sun.xml.bind:jaxb-impl:2.3.5 - https://eclipse-ee4j.github.io/jaxb-ri/)
+        * Old JAXB JXC (com.sun.xml.bind:jaxb-jxc:2.3.5 - https://eclipse-ee4j.github.io/jaxb-ri/)
+        * Old JAXB XJC (com.sun.xml.bind:jaxb-xjc:2.3.5 - https://eclipse-ee4j.github.io/jaxb-ri/)
+        * fastinfoset (com.sun.xml.fastinfoset:FastInfoset:1.2.18 - https://projects.eclipse.org/projects/ee4j.jaxb-impl/FastInfoset)
         * Jakarta SOAP Implementation (com.sun.xml.messaging.saaj:saaj-impl:1.5.3 - https://projects.eclipse.org/projects/ee4j/metro-saaj/saaj-impl)
-        * xmlstreambuffer (com.sun.xml.stream.buffer:streambuffer:2.0.2 - https://github.com/eclipse-ee4j/metro-xmlstreambuffer)
-        * JAX-WS RI Eclipselink Plugin (com.sun.xml.ws:jaxws-eclipselink-plugin:3.0.2 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/jaxws-eclipselink-plugin)
-        * JAX-WS RI Standalone Zipped Bundle (com.sun.xml.ws:jaxws-ri:3.0.2 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/bundles/jaxws-ri)
-        * JAX-WS RI Runtime (jaxws-rt) (com.sun.xml.ws:jaxws-rt:3.0.2 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/jaxws-rt)
-        * JAX-WS RI Tools (jaxws-tools) (com.sun.xml.ws:jaxws-tools:3.0.2 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/jaxws-tools)
-        * JAX-WS RI Release Documentation (com.sun.xml.ws:release-documentation:3.0.2 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/docs/release-documentation)
-        * JAX-WS RI Samples (com.sun.xml.ws:samples:3.0.2 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/samples)
-        * JAX-WS RI Eclipselink SDO Plugin (com.sun.xml.ws:sdo-eclipselink-plugin:3.0.2 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/sdo-eclipselink-plugin)
-        * Jakarta Web Services Metadata API (jakarta.jws:jakarta.jws-api:3.0.0 - https://github.com/eclipse-ee4j/jws-api)
+        * xmlstreambuffer (com.sun.xml.stream.buffer:streambuffer:1.5.10 - https://github.com/eclipse-ee4j/metro-xmlstreambuffer)
+        * JAX-WS RI Eclipselink Plugin (com.sun.xml.ws:jaxws-eclipselink-plugin:2.3.5 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/jaxws-eclipselink-plugin)
+        * JAX-WS RI Standalone Zipped Bundle (com.sun.xml.ws:jaxws-ri:2.3.5 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/bundles/jaxws-ri)
+        * JAX-WS RI Runtime (jaxws-rt) (com.sun.xml.ws:jaxws-rt:2.3.5 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/jaxws-rt)
+        * JAX-WS RI Tools (jaxws-tools) (com.sun.xml.ws:jaxws-tools:2.3.5 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/jaxws-tools)
+        * policy (com.sun.xml.ws:policy:2.7.10 - https://github.com/eclipse-ee4j/metro-policy)
+        * JAX-WS RI Release Documentation (com.sun.xml.ws:release-documentation:2.3.5 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/docs/release-documentation)
+        * JAX-WS RI Samples (com.sun.xml.ws:samples:2.3.5 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/samples)
+        * JAX-WS RI Eclipselink SDO Plugin (com.sun.xml.ws:sdo-eclipselink-plugin:2.3.5 - https://projects.eclipse.org/projects/ee4j/jaxws-ri-bom/jaxws-ri-bom-ext/project/sdo-eclipselink-plugin)
+        * Jakarta Web Services Metadata API (jakarta.jws:jakarta.jws-api:2.1.0 - https://github.com/eclipse-ee4j/jws-api)
         * jakarta.xml.bind-api (jakarta.xml.bind:jakarta.xml.bind-api:2.3.2 - https://github.com/eclipse-ee4j/jaxb-api/jakarta.xml.bind-api)
         * Jakarta XML Binding API (jakarta.xml.bind:jakarta.xml.bind-api:2.3.3 - https://github.com/eclipse-ee4j/jaxb-api/jakarta.xml.bind-api)
         * Jakarta SOAP with Attachments API (jakarta.xml.soap:jakarta.xml.soap-api:1.4.2 - https://github.com/eclipse-ee4j/saaj-api)
         * Jakarta XML Web Services API (jakarta.xml.ws:jakarta.xml.ws-api:2.3.3 - https://github.com/eclipse-ee4j/jax-ws-api)
         * EclipseLink ASM (org.eclipse.persistence:org.eclipse.persistence.asm:9.1.0 - http://www.eclipse.org/eclipselink)
-        * EclipseLink Core (org.eclipse.persistence:org.eclipse.persistence.core:3.0.2 - http://www.eclipse.org/eclipselink/foundation/org.eclipse.persistence.core)
-        * EclipseLink MOXy (org.eclipse.persistence:org.eclipse.persistence.moxy:3.0.2 - http://www.eclipse.org/eclipselink/moxy/org.eclipse.persistence.moxy)
-        * EclipseLink SDO (org.eclipse.persistence:org.eclipse.persistence.sdo:3.0.2 - http://www.eclipse.org/eclipselink/sdo/org.eclipse.persistence.sdo)
         * JAXB Runtime (org.glassfish.jaxb:jaxb-runtime:2.3.5 - https://eclipse-ee4j.github.io/jaxb-ri/)
         * TXW2 Runtime (org.glassfish.jaxb:txw2:2.3.5 - https://eclipse-ee4j.github.io/jaxb-ri/)
         * MIME streaming extension (org.jvnet.mimepull:mimepull:1.9.15 - https://github.com/eclipse-ee4j/metro-mimepull)
-        * Extended StAX API (org.jvnet.staxex:stax-ex:2.0.1 - https://projects.eclipse.org/projects/ee4j/stax-ex)
+        * Extended StAX API (org.jvnet.staxex:stax-ex:1.8.3 - https://projects.eclipse.org/projects/ee4j/stax-ex)
 
     Eclipse Distribution License v. 1.0:
 
         * Jakarta Persistence API (jakarta.persistence:jakarta.persistence-api:2.2.3 - https://github.com/eclipse-ee4j/jpa-api)
         * SDO API (org.eclipse.persistence:commonj.sdo:2.1.1 - http://www.eclipse.org/eclipselink)
+        * EclipseLink Core (org.eclipse.persistence:org.eclipse.persistence.core:2.7.9 - http://www.eclipse.org/eclipselink)
+        * EclipseLink Moxy (org.eclipse.persistence:org.eclipse.persistence.moxy:2.7.9 - http://www.eclipse.org/eclipselink)
+        * EclipseLink SDO (org.eclipse.persistence:org.eclipse.persistence.sdo:2.7.9 - http://www.eclipse.org/eclipselink)
 
     Eclipse Public License - v 1.0:
 
@@ -245,9 +246,6 @@ List of third-party dependencies grouped by their license type.
 
         * AspectJ Weaver (org.aspectj:aspectjweaver:1.9.7 - https://www.eclipse.org/aspectj/)
         * EclipseLink ASM (org.eclipse.persistence:org.eclipse.persistence.asm:9.1.0 - http://www.eclipse.org/eclipselink)
-        * EclipseLink Core (org.eclipse.persistence:org.eclipse.persistence.core:3.0.2 - http://www.eclipse.org/eclipselink/foundation/org.eclipse.persistence.core)
-        * EclipseLink MOXy (org.eclipse.persistence:org.eclipse.persistence.moxy:3.0.2 - http://www.eclipse.org/eclipselink/moxy/org.eclipse.persistence.moxy)
-        * EclipseLink SDO (org.eclipse.persistence:org.eclipse.persistence.sdo:3.0.2 - http://www.eclipse.org/eclipselink/sdo/org.eclipse.persistence.sdo)
 
     Eclipse Public License 1.0:
 
@@ -260,6 +258,9 @@ List of third-party dependencies grouped by their license type.
     Eclipse Public License v. 2.0:
 
         * Jakarta Persistence API (jakarta.persistence:jakarta.persistence-api:2.2.3 - https://github.com/eclipse-ee4j/jpa-api)
+        * EclipseLink Core (org.eclipse.persistence:org.eclipse.persistence.core:2.7.9 - http://www.eclipse.org/eclipselink)
+        * EclipseLink Moxy (org.eclipse.persistence:org.eclipse.persistence.moxy:2.7.9 - http://www.eclipse.org/eclipselink)
+        * EclipseLink SDO (org.eclipse.persistence:org.eclipse.persistence.sdo:2.7.9 - http://www.eclipse.org/eclipselink)
 
     Eclipse Public License v1.0:
 
@@ -355,22 +356,22 @@ List of third-party dependencies grouped by their license type.
 
     The Apache Software License, Version 2.0:
 
-        * Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.12.2 - http://github.com/FasterXML/jackson)
         * Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.12.4 - http://github.com/FasterXML/jackson)
-        * Jackson-core (com.fasterxml.jackson.core:jackson-core:2.12.2 - https://github.com/FasterXML/jackson-core)
+        * Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.12.5 - http://github.com/FasterXML/jackson)
         * Jackson-core (com.fasterxml.jackson.core:jackson-core:2.12.4 - https://github.com/FasterXML/jackson-core)
-        * jackson-databind (com.fasterxml.jackson.core:jackson-databind:2.12.2 - http://github.com/FasterXML/jackson)
+        * Jackson-core (com.fasterxml.jackson.core:jackson-core:2.12.5 - https://github.com/FasterXML/jackson-core)
         * jackson-databind (com.fasterxml.jackson.core:jackson-databind:2.12.4 - http://github.com/FasterXML/jackson)
+        * jackson-databind (com.fasterxml.jackson.core:jackson-databind:2.12.5 - http://github.com/FasterXML/jackson)
         * Jackson-dataformat-YAML (com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.12.4 - https://github.com/FasterXML/jackson-dataformats-text)
         * Jackson datatype: jdk8 (com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.12.4 - https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jdk8)
-        * Jackson datatype: JSR310 (com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.2 - https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jsr310)
         * Jackson datatype: JSR310 (com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.4 - https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jsr310)
-        * Jackson-JAXRS-base (com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.12.2 - http://github.com/FasterXML/jackson-jaxrs-providers/jackson-jaxrs-base)
+        * Jackson datatype: JSR310 (com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.5 - https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jsr310)
         * Jackson-JAXRS-base (com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.12.4 - http://github.com/FasterXML/jackson-jaxrs-providers/jackson-jaxrs-base)
-        * Jackson-JAXRS-JSON (com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.12.2 - http://github.com/FasterXML/jackson-jaxrs-providers/jackson-jaxrs-json-provider)
+        * Jackson-JAXRS-base (com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.12.5 - http://github.com/FasterXML/jackson-jaxrs-providers/jackson-jaxrs-base)
         * Jackson-JAXRS-JSON (com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.12.4 - http://github.com/FasterXML/jackson-jaxrs-providers/jackson-jaxrs-json-provider)
-        * Jackson module: JAXB Annotations (com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.12.2 - https://github.com/FasterXML/jackson-modules-base)
+        * Jackson-JAXRS-JSON (com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.12.5 - http://github.com/FasterXML/jackson-jaxrs-providers/jackson-jaxrs-json-provider)
         * Jackson module: JAXB Annotations (com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.12.4 - https://github.com/FasterXML/jackson-modules-base)
+        * Jackson module: JAXB Annotations (com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.12.5 - https://github.com/FasterXML/jackson-modules-base)
         * Jackson-module-parameter-names (com.fasterxml.jackson.module:jackson-module-parameter-names:2.12.4 - https://github.com/FasterXML/jackson-modules-java8/jackson-module-parameter-names)
         * Handlebars (com.github.jknack:handlebars:4.2.0 - https://github.com/jknack/handlebars.java/handlebars)
         * WireMock (com.github.tomakehurst:wiremock-jre8-standalone:2.27.1 - http://wiremock.org)
