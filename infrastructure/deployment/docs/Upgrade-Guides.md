@@ -65,6 +65,7 @@ Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installa
     ```
     cp -R <Zielverzeichnis>/* <Installationsverzeichnis>/public
     ```
+3. Falls sie das Feature `Adressformat im CSV Export` aktivieren möchten schauen Sie bitte in die [Installationsanleitung](../../stand-alone-deployment/README.md).
 
 #### Konfigurations-Dateien
 
@@ -79,5 +80,3 @@ Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installa
     ```
     cp -R <Zielverzeichnis>/conf/proxy/roles <Installationsverzeichnis>/conf/proxy    
     ```
-
-3. Kopieren und ersetzen Sie den gesamten Inhalt der PROXY Konfiguration in den entsprechenden Ordner vom `Installationsverzeichnis`.
