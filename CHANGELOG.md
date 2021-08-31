@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.0.0-rc.14](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.13...v1.0.0-rc.14) (2021-08-31)
+
+
+### Bug Fixes
+
+* fixes ClassNotFoundException with jsonrpc4j ([#315](https://github.com/iris-connect/iris-client/issues/315)) ([a0e1cdc](https://github.com/iris-connect/iris-client/commit/a0e1cdc77fcbd36957437e02722fc49f26244372))
+
 # [1.0.0-rc.13](https://github.com/iris-connect/iris-client/compare/v1.0.0-rc.12...v1.0.0-rc.13) (2021-08-30)
 
 
