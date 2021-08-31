@@ -6,7 +6,7 @@
 
 [Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.0.0) finden Sie Informationen zum Release 1.0.0.
 
-1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.0.0-rc.13/deployment-1.0.0-rc.13.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
+1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.0.0/deployment-1.0.0.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
 2. Wechseln Sie in das aktuelle `Installationsverzeichnis`.
 3. Ersetzen Sie ihre aktuelle `docker-compose.yml` mit der Version aus dem neuen Release. 
     ```
@@ -48,7 +48,7 @@ Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installa
 
 #### IRIS Client BFF
 
-1. Laden Sie sich [aktuelle EPS Version vom IRIS CLient BFF](https://github.com/iris-connect/iris-client/releases/download/v1.0.0-rc.13/iris-client-bff-1.0.0-rc.13.jar) herunter. Ihre Ziel-Plattform. 
+1. Laden Sie sich [aktuelle EPS Version vom IRIS CLient BFF](https://github.com/iris-connect/iris-client/releases/download/v1.0.0/iris-client-bff-1.0.0.jar) herunter. Ihre Ziel-Plattform. 
 
 2. Kopieren sie die ausführbare Datei in den `bin` Ordner vom `Installationsverzeichnis`.  
 
@@ -58,7 +58,7 @@ Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installa
 
 #### IRIS CLient Frontend
 
-1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.0.0-rc.13/iris-client-fe-1.0.0-rc.13.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
+1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.0.0/iris-client-fe-1.0.0.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
 
 2. Kopieren Sie den gesamten Inhalt vom `Zielverzeichnis` in den `public` Ordner vom `Installationsverzeichnis`.
     > Sollten Sie einen eigenen Webserver betreiben, müssen Sie den Pfad entsprechend anpassen. 
@@ -69,7 +69,7 @@ Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installa
 
 #### Konfigurations-Dateien
 
-1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.0.0-rc.13/stand-alone-deployment-1.0.0-rc.13.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
+1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.0.0/stand-alone-deployment-1.0.0.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
 
 2. Kopieren und ersetzen Sie den gesamten Inhalt der EPS Konfiguration in den entsprechenden Ordner vom `Installationsverzeichnis`.
     ```
