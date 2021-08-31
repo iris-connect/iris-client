@@ -1,0 +1,7 @@
+/**
+The "Details" button in some table views is outside the viewport on medium screen sizes as the container max width is to narrow.
+If we set the max-width to "none" there is a much better chance that the "Details" button is visible without scrolling the table horizontally.
+ */
+$container-max-widths: (
+        'md': none
+);

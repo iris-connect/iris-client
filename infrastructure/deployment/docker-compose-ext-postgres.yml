@@ -1,0 +1,170 @@
+########################################################
+# Intended for deployments at the health departments
+#
+# Provides IRIS client BFF and frontend together with an NGINX. Uses an externally provided postgres database.
+# IRIS frontend over NGINX: port = 443
+########################################################
+version: "3.4"
+services:
+  # IRIS Client backend for frontend
+  iris-client:
+    image: inoeg/iris-client-bff:1.0
+    expose:
+      - 8092
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: prod
+      EPS_CLIENT_EPS_CLIENT_URL: https://eps:5556/jsonrpc
+      EPS_CLIENT_PROXY_CLIENT_URL: https://private-proxy-eps:7766/jsonrpc
+      PROXY_SERVICE_EPS_NAME: "${PROXY_OP}"
+      PROXY_SERVICE_TARGET_SUBDOMAIN: ${PROXY_SUBDOMAIN}
+      PROXY_SERVICE_TARGET_PROXY: ${EPS_PP_NAME}
+      SECURITY_AUTH_DB_ADMIN_USER_NAME:
+      SECURITY_AUTH_DB_ADMIN_USER_PASSWORD:
+      SECURITY_JWT_JWT_SHARED_SECRET:
+      IRIS_LOCATION_SERVICE_ENDPOINT: ${EPS_LS_NAME}
+      IRIS_CLIENT_BASEPATH: "https://${IRIS_CLIENT_DOMAIN}"
+      EXT_APP_DW_BASEURL:
+    restart: unless-stopped
+
+  # IRIS Client Frontend for users
+  iris-frontend:
+    image: inoeg/iris-client-frontend:1.0
+    expose:
+      - 28080
+    environment:
+      SORMAS_SIDECAR_BASE_URL: /api
+      LOCAL_CONTACT_PERSON_NAME:
+      LOCAL_CONTACT_PERSON_MAIL:
+      LOCAL_CONTACT_PERSON_PHONE:
+      CSV_EXPORT_STANDARD_ATOMIC_ADDRESS:
+    depends_on:
+      - iris-client
+    restart: unless-stopped
+
+  # Endpoint server to communicate with Apps and IRIS Connect central services
+  eps:
+    image: inoeg/iris-client-eps:1.0
+    expose:
+      - 4446
+      - 5556
+    depends_on:
+      - iris-client
+    volumes:
+      - ./certs/eps:/app/settings/certs
+    environment:
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
+      EPS_SETTINGS: "settings/roles/${IRIS_ENV}/hd"
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ${PROXY_URL}
+      EPS_OP:
+      EPS_CLIENT_CERT:
+      EPS_CLIENT_CERT_KEY:
+      EPS_SD_ENDPOINT:
+      EPS_SD_NAME:
+    restart: unless-stopped
+
+  # Proxy for inbound connections.
+  private-proxy:
+    image: inoeg/iris-client-proxy:1.0
+    expose:
+      - 5545
+      - 8877
+    volumes:
+      - ./certs/eps:/app/settings/certs
+      - proxy_db_iris:/app/db
+    environment:
+      PROXY_SETTINGS: "settings/roles/${IRIS_ENV}/private-proxy"
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
+      PRIVATE_PROXY_EPS_HOSTNAME: private-proxy-eps
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_DOMAIN: ${PROXY_SUBDOMAIN}
+      PROXY_OP:
+      PROXY_CLIENT_CERT:
+      PROXY_CLIENT_CERT_KEY:
+      PROXY_TLS_CERT:
+      PROXY_TLS_CERT_KEY:
+    command: ["--level", "trace", "run", "private"]
+    depends_on:
+      - logger
+      - private-proxy-eps
+    restart: unless-stopped
+
+  private-proxy-eps:
+    image: inoeg/iris-client-eps:1.0
+    expose:
+      - 7766
+      - 7776
+    volumes:
+      - ./certs/eps:/app/settings/certs
+    environment:
+      EPS_SETTINGS: settings/roles/${IRIS_ENV}/private-proxy-eps
+      PRIVATE_PROXY_HOSTNAME: private-proxy
+      PROXY_OP:
+      PROXY_CLIENT_CERT:
+      PROXY_CLIENT_CERT_KEY:
+      EPS_SD_ENDPOINT:
+      EPS_SD_NAME:
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ${PROXY_URL}
+    depends_on:
+      - logger
+    restart: unless-stopped
+
+  # Reverse Proxy
+  nginx:
+    image: inoeg/iris-client-nginx:1.0
+    ports:
+      - ${IRIS_CLIENT_PORT:-443}:443
+    environment:
+      IRIS_CLIENT_DOMAIN:
+      IRIS_CLIENT_DOMAIN_CERT:
+      IRIS_CLIENT_DOMAIN_CERT_KEY:
+    volumes:
+      - ./certs/nginx:/etc/iris
+    depends_on:
+      - iris-client
+      - iris-frontend
+    restart: unless-stopped
+
+  # Watchtower for auto-updates
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    # for Docker on Windows hosts - untested!
+    # https://stackoverflow.com/questions/57466568/how-do-you-mount-the-docker-socket-on-windows
+    #      - //var/run/docker.sock://var/run/docker.sock
+    environment:
+      TZ: Europe/Berlin
+      WATCHTOWER_SCHEDULE: 0 0 3 * * *
+      WATCHTOWER_NO_PULL: "true"
+    depends_on:
+      - nginx
+    restart: unless-stopped
+
+  # Log shipper
+  logger:
+    image: umputun/docker-logger
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    environment:
+      - LOG_FILES=true
+      - LOG_SYSLOG=false
+      - EXCLUDE=deployment_logger_1
+      - MAX_FILES=10
+      - MAX_SIZE=50
+      - MAX_AGE=28
+      - DEBUG=false
+    volumes:
+      - ${LOG_FOLDER:-./logs}:/srv/logs
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+volumes:
+  proxy_db_iris:

@@ -1,0 +1,59 @@
+{
+     "repositoryUrl": "https://github.com/iris-connect/iris-client.git",
+     "branches": ["+([0-9])?(.{+([0-9]),x}).x", "main", "next", "next-major", {"name": "release", "prerelease": "rc"}],
+     "debug": "true",
+     "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        [
+            "@semantic-release/changelog",
+            {
+                "changelogFile": "CHANGELOG.md",
+                "changelogTitle": "# Changelog"
+            }
+        ],
+        [
+      	  	"@google/semantic-release-replace-plugin",
+	      	{
+	        	"replacements": [
+	          		{
+	            		"files": ["infrastructure/deployment/docker-compose-ext-postgres.yml", "infrastructure/deployment/docker-compose.yml"],
+	            		"from": "inoeg/(iris-client.*):.*",
+	            		"to": "inoeg/$1:${nextRelease.version.split('.').slice(0,2).join('.')}",
+	            		"countMatches": true
+	          		}
+	        	]
+	      	}
+	    ],
+        [
+            "@semantic-release/exec",
+            {
+                "prepareCmd": "./.prepare-release.sh ${nextRelease.version} ${nextRelease.gitHead} ${nextRelease.channel}"
+            }
+        ],
+        [
+            "@semantic-release/git",
+            {
+                "assets": [
+                    "CHANGELOG.md",
+                    "**/pom.xml",
+                    "infrastructure/deployment/docker-compose.yml",
+                    "infrastructure/deployment/docker-compose-ext-postgres.yml",
+                    "FE-THIRD-PARTY-LICENSES-PROD.md",
+                    "FE-THIRD-PARTY-LICENSES-DEV.md",
+                    "BFF-THIRD-PARTY-LICENSES.md"
+                ]
+            }
+        ],
+        [
+            "@semantic-release/github",
+            {
+                "assets": [
+                    {
+                        "path": "release/**"
+                    }
+                ]
+            }
+        ]
+    ]
+} 

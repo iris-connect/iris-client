@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="120x120"
+      href="<%= BASE_URL %>apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="<%= BASE_URL %>favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="<%= BASE_URL %>favicon-16x16.png"
+    />
+    <link
+      rel="mask-icon"
+      href="<%= BASE_URL %>safari-pinned-tab.svg"
+      color="#5bbad5"
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to
+        continue.</strong
+      >
+    </noscript>
+    <div
+        id="app"
+        data-iris-app-context='{
+            "apiBaseURL": "<%= htmlWebpackPlugin.options.irisAppContext.apiBaseURL %>",
+            "csvExportStandardAtomicAddress": "<%= htmlWebpackPlugin.options.irisAppContext.csvExportStandardAtomicAddress %>",
+            "localContactPerson": {
+                "name": "<%= htmlWebpackPlugin.options.irisAppContext.localContactPerson.name %>",
+                "phone": "<%= htmlWebpackPlugin.options.irisAppContext.localContactPerson.phone %>",
+                "mail": "<%= htmlWebpackPlugin.options.irisAppContext.localContactPerson.mail %>"
+            }
+        }'
+    ></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

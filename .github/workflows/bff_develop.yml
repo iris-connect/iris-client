@@ -1,0 +1,78 @@
+# Build and package image for iris-client-bff and publish it to docker.io
+# https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#build-image
+
+name: BFF Develop
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - iris-client-bff/**
+      - iris-sormas-api-client/**
+      - .github/workflows/bff_develop.yml
+  pull_request:
+    branches:
+      - develop
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+    
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Create image tag
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: inoeg/iris-client-bff
+
+      - name: build, package and publish the image
+        run: |
+          VER_TAG=$(echo ${{ steps.meta.outputs.tags }} | cut --delimiter=: --fields=2-3)
+          mvn -B clean package spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=$VER_TAG
+        env:
+          DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+          DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
+
+  container_scan:
+    name: Trivy Container Scan
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.3.4
+      
+      - name: Create image tag
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: inoeg/iris-client-bff
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ steps.meta.outputs.tags }}'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'

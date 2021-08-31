@@ -1,0 +1,15 @@
+.v-sheet.v-card {
+  border-radius: .428rem;
+  box-shadow: none !important;
+  &.primary{
+    .v-btn{
+      background-color: #fff !important;
+      border-color: #fff !important;
+    }
+  }
+  &.v-card-table{
+    .v-card__text{
+      padding: 0;
+    }
+  }
+}
