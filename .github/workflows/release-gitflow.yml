@@ -67,7 +67,7 @@ jobs:
             @semantic-release/exec
             @semantic-release/git
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.JK_GITHUB_TOKEN }}
 
   container_scan:
     needs: release-client
