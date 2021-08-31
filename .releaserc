@@ -26,12 +26,6 @@
 	      	}
 	    ],
         [
-            "@semantic-release/exec",
-            {
-                "prepareCmd": "./.prepare-release.sh ${nextRelease.version} ${nextRelease.gitHead} ${nextRelease.channel}"
-            }
-        ],
-        [
             "@semantic-release/git",
             {
                 "assets": [
@@ -45,15 +39,5 @@
                 ]
             }
         ],
-        [
-            "@semantic-release/github",
-            {
-                "assets": [
-                    {
-                        "path": "release/**"
-                    }
-                ]
-            }
-        ]
     ]
 } 
