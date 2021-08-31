@@ -162,6 +162,15 @@ LOCAL_CONTACT_PERSON_MAIL
 LOCAL_CONTACT_PERSON_PHONE
 ```
 
+## Adressformat im CSV Export ( ab Version 1.0.0 )
+
+Standardmäßig wird die Adresse für einen Eintrag in einer Gästeliste beim CSV Export in ein Feld geschrieben. Dieses Verhalten kann konfiguriert werden, so dass der IRIS Client die Adressdaten in 4 Felder aufteilt (Straße, PLZ, Hausnummer, Ort). 
+
+Dafür muss das folgende Flag gesetzt werden.
+```
+CSV_EXPORT_STANDARD_ATOMIC_ADDRESS="true"
+```
+
 ## Standard CSV Export Adressformatierung
 
 Sie können bestimmen, wie die Adressdaten im Standard CSV Export ausgegeben werden.

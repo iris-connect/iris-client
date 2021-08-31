@@ -193,6 +193,17 @@ SECURITY_AUTH_DB_ADMIN_USER_PASSWORD
 
 Sobald der Account beim ersten Starten angelegt wurde, werden die Parameter ignoriert. 
 
+## Adressformat im CSV Export ( ab Version 1.0.0 )
+
+Standardmäßig wird die Adresse für einen Eintrag in einer Gästeliste beim CSV Export in ein Feld geschrieben. Dieses Verhalten kann konfiguriert werden, so dass der IRIS Client die Adressdaten in 4 Felder aufteilt (Straße, PLZ, Hausnummer, Ort). 
+
+Dafür muss in der Datei `index.html` folgendes Flag gesetzt werden ( siehe `Einrichtung IRIS-Client Frontend` weiter oben im Text ).
+```
+[..]
+"csvExportStandardAtomicAddress": "true",
+[..]
+```
+
 ## Einrichtung HTTP Connect Proxy
 
 In den meisten GAs werden Verbindungen ins Internet über einen Proxy geleitet. Dafür ist folgender Parameter vorgesehen. 
