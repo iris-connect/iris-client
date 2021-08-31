@@ -1,5 +1,6 @@
 # IRIS Client - Upgrade Guides
 
+
 ## IRIS-Client - Docker Compose Installation
 
 ### Release Candidate RC-11 und RC-12 auf 1.0.0
@@ -31,6 +32,10 @@
     $ docker-compose up -d
     ```
 9. Loggen Sie sich mit Ihrem Benutzer ein und gehen Sie auf `Über IRIS`. Unter Version sollten Sie die neue Version `1.0.0` vorfinden. 
+
+Neben dem technischen Update muss noch ein weiterer Port geöffnet werden. 
+
+10. Fügen Sie Port `32326` (IRIS Public Service) in Ihren Firewall regeln hinzu. Mehr Informationen finden Sie [hier](https://github.com/iris-connect/iris-client/blob/develop/infrastructure/deployment/docs/Installation.md). 
 
 ## IRIS-Client - Stand-Alone Installation 
 
@@ -80,3 +85,9 @@ Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installa
     ```
     cp -R <Zielverzeichnis>/conf/proxy/roles <Installationsverzeichnis>/conf/proxy    
     ```
+
+#### Firewall Freischaltung für Port 32326
+
+Neben dem technischen Update muss noch ein weiterer Port geöffnet werden. 
+
+Fügen Sie Port `32326` (IRIS Public Service) in Ihren Firewall regeln hinzu. Mehr Informationen finden Sie [hier](https://github.com/iris-connect/iris-client/blob/develop/infrastructure/deployment/docs/Installation.md). 
