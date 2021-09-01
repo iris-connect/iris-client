@@ -1,16 +1,24 @@
 package iris.client_bff.config;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import javax.validation.constraints.NotBlank;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
 
-@ConstructorBinding
-@ConfigurationProperties(prefix = "iris.location-service")
-@Getter
-@AllArgsConstructor
+@Configuration
+@Validated
 public class BackendServiceProperties {
 
+	@Value("${iris.backend-service.endpoint:#{null}}")
 	private String endpoint;
+
+	@Value("${iris.location-service.endpoint:#{null}}")
+	private String endpointOld;
+
+	@NotBlank
+	public String getEndpoint() {
+		return StringUtils.isNotBlank(endpoint) ? endpoint : endpointOld;
+	}
 }
