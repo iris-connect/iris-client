@@ -28,5 +28,11 @@ RUN mv dist /usr/share/caddy
 # copy webserver configuration
 COPY ./Caddyfile /etc/caddy/Caddyfile
 
+# Create a group and user
+RUN addgroup --gid 9999 iris && adduser --disabled-password --gecos '' --uid 9999 -G iris -s /bin/ash iris
+COPY --chown=iris:iris ./autosave.json /config/caddy/autosave.json
+# Change to non-root privilege
+USER iris:iris
+
 # note: exposed port needs to match port in Caddyfile
 EXPOSE 28080
