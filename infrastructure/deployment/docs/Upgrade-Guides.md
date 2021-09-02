@@ -3,7 +3,27 @@
 
 ## IRIS-Client - Docker Compose Installation
 
-### Release Candidate RC-11 und RC-12 auf 1.0.0
+### 1.0.0 -> 1.0.1
+
+[Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.0.1) finden Sie Informationen zum Release 1.0.1.
+
+1. Fahren Sie die aktuelle Version herunter. 
+    ```
+    $ docker-compose down
+    ```    
+    > Bitte unbedingt ohne die Option (-v) ausführen. 
+
+1. Laden Sie sich die Images vom letzten Release herunter.
+    ```
+    $ docker-compose pull
+    ```    
+1. Starten Sie die neue Version. 
+    ```
+    $ docker-compose up -d
+    ```    
+1. Loggen Sie sich mit Ihrem Benutzer ein und gehen Sie auf `Über IRIS`. Unter Version sollten Sie die neue Version `1.0.1` vorfinden. 
+
+### Release Candidate RC-11 und RC-12 -> 1.0.0
 
 [Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.0.0) finden Sie Informationen zum Release 1.0.0.
 
@@ -39,7 +59,21 @@ Neben dem technischen Update muss noch ein weiterer Port geöffnet werden.
 
 ## IRIS-Client - Stand-Alone Installation 
 
-### Release Candidate RC-11 und RC-12 auf 1.0.0
+### 1.0.0 -> 1.0.1
+
+[Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.0.1) finden Sie Informationen zum Release 1.0.1.
+
+#### IRIS Client BFF
+
+1. Laden Sie sich [aktuelle EPS Version vom IRIS CLient BFF](https://github.com/iris-connect/iris-client/releases/download/v1.0.1/iris-client-bff-1.0.1.jar) herunter.
+
+2. Kopieren sie die ausführbare Datei in den `bin` Ordner vom `Installationsverzeichnis`.  
+
+    ```
+    cp <Jar Datei> <Installationsverzeichnis>/bin
+    ```
+
+### Release Candidate RC-11 und RC-12 -> 1.0.0
 
 [Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.0.0) finden Sie Informationen zum Release 1.0.0.
 
