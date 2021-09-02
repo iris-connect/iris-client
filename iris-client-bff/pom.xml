@@ -49,6 +49,10 @@
 					<artifactId>h2</artifactId>
 					<scope>runtime</scope>
 				</dependency>
+				<dependency>
+					<groupId>com.icegreen</groupId>
+					<artifactId>greenmail</artifactId>
+				</dependency>
 			</dependencies>
 		</profile>
 	</profiles>
@@ -122,6 +126,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.icegreen</groupId>
+			<artifactId>greenmail</artifactId>
+			<scope>provided</scope>
+			<!-- Greenmail E-Mail server, can be activated with dev_env profile -->
+			<!-- Not included in the application unless localDev profile is active (see above) -->
 		</dependency>
 
 		<!-- Tests and Development -->
@@ -229,12 +240,6 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.5.7</version>
-		</dependency>
-
-		<!--Greenmail E-Mail server, can be activated with dev_env profile -->
-		<dependency>
-			<groupId>com.icegreen</groupId>
-			<artifactId>greenmail</artifactId>
 		</dependency>
 
 	</dependencies>
