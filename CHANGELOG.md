@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/iris-connect/iris-client/compare/v1.0.0...v1.0.1) (2021-09-02)
+
+
+### Bug Fixes
+
+* Fixes bug that iris location service ENV parameter had no effect.  ([517d436](https://github.com/iris-connect/iris-client/commit/517d436b65193da4f5d51cf8475f1e90353e725b))
+
 # [1.0.0](https://github.com/iris-connect/iris-client/compare/v0.1.0...v1.0.0) (2021-08-31)
 
 
