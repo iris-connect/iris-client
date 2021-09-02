@@ -18,7 +18,7 @@ import org.springframework.test.context.TestPropertySource;
 
 @AutoConfigureWireMock(port = 0)
 @TestPropertySource(properties = { "iris.serverAddress=localhost", "iris.serverPort=${wiremock.server.port}",
-		"iris.backend-service.endpoint=http://localhost:${wiremock.server.port}/search" })
+		"iris.location-service.endpoint=http://localhost:${wiremock.server.port}/search" })
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestConstructor(autowireMode = AutowireMode.ALL)
