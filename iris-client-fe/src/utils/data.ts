@@ -63,7 +63,8 @@ export const notifyDifference = <A>(a: A, b: A, msg?: string): void => {
       const diffA = difference(a, b);
       const diffB = difference(b, a);
       if (!_isEmpty(diffA) || !_isEmpty(diffB)) {
-        console.log(
+        // eslint-disable-next-line no-console
+        console.warn(
           `[${msg || "unknown"}]:`,
           "\ndiff source (A) -> normalizer (B):\n",
           diffA,
@@ -71,6 +72,7 @@ export const notifyDifference = <A>(a: A, b: A, msg?: string): void => {
           diffB
         );
       } else {
+        // eslint-disable-next-line no-console
         console.log(`[${msg || "unknown"}]: mapping successful`);
       }
     }
