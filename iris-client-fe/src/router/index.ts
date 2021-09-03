@@ -211,12 +211,12 @@ router.beforeEach(async (to, from, next) => {
       return next("/");
     }
   }
-  if (to.meta.auth !== false && !store.getters["userLogin/isAuthenticated"]) {
+  if (to.meta?.auth !== false && !store.getters["userLogin/isAuthenticated"]) {
     // this is triggered if a user is not logged in and tries to deep link into the application
     setInterceptRoute(to);
     return next("/user/login");
   }
-  if (to.meta.admin === true) {
+  if (to.meta?.admin === true) {
     const user = await getAuthenticatedUser();
     if (user?.role !== UserRole.Admin) {
       return next("/");
