@@ -4,6 +4,7 @@ import _transform from "lodash/transform";
 import _isEqual from "lodash/isEqual";
 import _isObject from "lodash/isObject";
 import _isEmpty from "lodash/isEmpty";
+import store from "@/store";
 
 export const entryNormalizer = <T>(obj?: T) => <K extends keyof T>(
   key: K,
@@ -58,7 +59,7 @@ export const finalizeData = <A>(
 };
 
 export const notifyDifference = <A>(a: A, b: A, msg?: string): void => {
-  if (process.env.NODE_ENV !== "production") {
+  if (store.state.normalizeSettings.logEnabled) {
     if (a && b) {
       const diffA = difference(a, b);
       const diffB = difference(b, a);
