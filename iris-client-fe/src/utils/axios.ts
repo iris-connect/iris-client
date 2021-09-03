@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
+import _get from "lodash/get";
 
 interface ParsedError {
   data: unknown;
@@ -7,13 +8,12 @@ interface ParsedError {
 
 export type ErrorMessage = string | null;
 
-export const parseError = (error: AxiosError): ParsedError => {
-  if (error.isAxiosError) {
+export const parseError = (error: unknown): ParsedError => {
+  if (error && axios.isAxiosError(error)) {
     if (error.response) {
-      const response = error.response as AxiosResponse;
       return {
-        data: response.data,
-        status: response.status,
+        data: error.response?.data,
+        status: error.response?.status,
       };
     }
     if (error.request) {
@@ -24,7 +24,7 @@ export const parseError = (error: AxiosError): ParsedError => {
     }
   }
   return {
-    data: error.message,
+    data: _get(error, "message", ""),
     status: -1,
   };
 };
@@ -42,7 +42,7 @@ const parseErrorMessage = (error: unknown, keys: string[]): ErrorMessage => {
 };
 
 export const getErrorMessage = (
-  error: AxiosError | string,
+  error: AxiosError | string | unknown,
   fallback = "Fehler"
 ): ErrorMessage => {
   if (!error || axios.isCancel(error)) return "";
