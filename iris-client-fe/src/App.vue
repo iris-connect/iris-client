@@ -121,7 +121,7 @@ export default Vue.extend({
           return true;
         }
       }
-      return link.meta.disabled;
+      return link.meta?.disabled;
     },
     logoutUser() {
       this.$store.dispatch("userLogin/logout");
