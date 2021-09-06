@@ -252,7 +252,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<swagger-annotations-version>2.1.10</swagger-annotations-version>
-		<spring-web-version>4.3.9.RELEASE</spring-web-version>
+		<spring-web-version>5.3.9</spring-web-version>
 		<jackson-version>2.12.5</jackson-version>
 		<maven-plugin-version>1.0.0</maven-plugin-version>
 		<junit-version>4.13.1</junit-version>
