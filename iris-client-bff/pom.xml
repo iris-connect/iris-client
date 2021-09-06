@@ -231,7 +231,7 @@
 		<dependency>
 			<groupId>com.sun.xml.ws</groupId>
 			<artifactId>jaxws-ri</artifactId>
-			<version>2.3.5</version><!-- Must be <3 because jsonrpc4j need javax.jws.WebParam! -->
+			<version>3.0.2</version><!-- Must be <3 because jsonrpc4j need javax.jws.WebParam! -->
 			<type>pom</type>
 		</dependency>
 
