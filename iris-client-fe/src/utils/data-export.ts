@@ -402,10 +402,15 @@ const exportCsvWithoutQuote = function (
   });
 };
 
+type LegacyNavigator = Navigator & {
+  msSaveBlob?: (blob: Blob, defaultName?: string) => boolean;
+};
+
 const downloadCsvFile = function (fileName: string, csv: string): void {
-  if (navigator.msSaveBlob) {
+  const legacyNavigator = navigator as LegacyNavigator;
+  if (legacyNavigator.msSaveBlob) {
     // IE10
-    navigator.msSaveBlob(
+    legacyNavigator.msSaveBlob(
       new Blob([csv], {
         type: "application/octet-stream",
       }),
