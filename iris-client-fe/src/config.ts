@@ -10,7 +10,8 @@ initAppContext();
 const config = {
   apiBaseURL: window.irisAppContext?.apiBaseURL,
   localContactPerson: window.irisAppContext?.localContactPerson || {},
-  passwordRegExp: /^(?=.*[0123456789_\-#()@§!$].*[0123456789_\-#()@§!$])(?=.*[ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞabcdefghijklmnopqrstuvwxyzäöüß])([ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞ]|[abcdefghijklmnopqrstuvwxyzäöüß]|[0123456789]|[_\-#()@§!$]){8,}$/,
+  passwordRegExp:
+    /^(?=.*[0123456789_\-#()@§!$].*[0123456789_\-#()@§!$])(?=.*[ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞabcdefghijklmnopqrstuvwxyzäöüß])([ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞ]|[abcdefghijklmnopqrstuvwxyzäöüß]|[0123456789]|[_\-#()@§!$]){8,}$/,
   passwordRules:
     "- Klein- und Großbuchstaben\n- min. 8 Zeichen\n- min. 2 Zahlen\n- min. 1 Sonderzeichen (_-#()@§!)\n- kein Leerzeichen",
   appVersionId: process.env.VUE_APP_VERSION_ID as string | undefined,
