@@ -24,6 +24,12 @@ module.exports = {
         endOfLine: "auto",
       },
     ],
+    "vue/valid-v-slot": [
+      "error",
+      {
+        allowModifiers: true,
+      },
+    ],
   },
   overrides: [
     {

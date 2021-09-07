@@ -10,9 +10,14 @@
       </v-col>
     </v-row>
     <v-row class="mb-6">
-      <v-col cols="8">
+      <v-col cols="12">
         Status:
-        <v-btn-toggle dense mandatory :value="statusButtonSelected">
+        <v-btn-toggle
+          dense
+          mandatory
+          :value="statusButtonSelected"
+          class="flex-wrap"
+        >
           <v-btn
             text
             @click="filterStatus(selectableStatus[status])"
@@ -208,10 +213,8 @@ export default class EventTrackingListView extends Vue {
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   get dataTableModel() {
-    const {
-      eventTrackingList,
-      eventTrackingListLoading,
-    } = store.state.eventTrackingList;
+    const { eventTrackingList, eventTrackingListLoading } =
+      store.state.eventTrackingList;
     return {
       page: getPageFromRouteWithDefault(this.$route),
       itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
