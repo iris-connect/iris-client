@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -82,12 +83,6 @@
 	</dependencyManagement>
 
 	<dependencies>
-		<dependency>
-			<groupId>iris-gateway</groupId>
-			<artifactId>iris-sormas-api-client</artifactId>
-			<version>1.61.0-SNAPSHOT</version>
-		</dependency>
-
 		<!-- Persistance -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -132,7 +127,8 @@
 			<artifactId>greenmail</artifactId>
 			<scope>provided</scope>
 			<!-- Greenmail E-Mail server, can be activated with dev_env profile -->
-			<!-- Not included in the application unless localDev profile is active (see above) -->
+			<!-- Not included in the application unless localDev profile is active 
+				(see above) -->
 		</dependency>
 
 		<!-- Tests and Development -->
@@ -168,6 +164,10 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

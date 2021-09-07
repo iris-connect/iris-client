@@ -19,7 +19,6 @@
 
     <modules>
         <module>iris-client-bff</module>
-        <module>iris-sormas-api-client</module>
     </modules>
 
     <build>
