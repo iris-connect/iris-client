@@ -26,13 +26,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
  * @author Jens Kutzsche
  */
 @ExtendWith(MockitoExtension.class)
-class UserControlerTests {
+class UserControllerTests {
 
 	@Mock(lenient = true)
 	UserDetailsServiceImpl userService;
@@ -40,6 +41,8 @@ class UserControlerTests {
 	AlertService alertService;
 	@Mock(lenient = true)
 	HealthDepartmentConfig hdConfig;
+	@Mock(lenient = true)
+	MessageSourceAccessor messages;
 
 	@InjectMocks
 	ValidationHelper validationHelper;
@@ -72,7 +75,7 @@ class UserControlerTests {
 					return account;
 				});
 
-		userController = new UserController(userService, validationHelper);
+		userController = new UserController(userService, validationHelper, messages);
 	}
 
 	@ParameterizedTest

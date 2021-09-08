@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,6 +49,7 @@ public class UserController {
 	private static final String FIELD_FIRST_NAME = "firstName";
 	private final UserDetailsServiceImpl userService;
 	private final ValidationHelper validationHelper;
+	private final MessageSourceAccessor messages;
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
@@ -61,7 +63,11 @@ public class UserController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserDTO createUser(@RequestBody @Valid UserInsertDTO userInsert) {
+
 		var userInsertValidated = validateUserInsertDTO(userInsert);
+
+		checkUniqueUsername(userInsertValidated.getUserName());
+
 		return map(userService.create(userInsertValidated));
 	}
 
@@ -71,6 +77,8 @@ public class UserController {
 			UserAccountAuthentication authentication) {
 
 		var userUpdateDTOValidated = validateUserUpdateDTO(userUpdateDTO);
+
+		checkUniqueUsername(userUpdateDTOValidated.getUserName());
 
 		return map(userService.update(id, userUpdateDTOValidated, authentication));
 	}
@@ -170,5 +178,14 @@ public class UserController {
 
 	private boolean isToLong(String value, int maxLength) {
 		return StringUtils.length(value) > maxLength;
+	}
+
+	private void checkUniqueUsername(String username) {
+
+		userService.findByUsername(username)
+				.ifPresent(__ -> {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							messages.getMessage("UserController.username.notunique"));
+				});
 	}
 }
