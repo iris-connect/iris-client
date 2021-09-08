@@ -122,7 +122,7 @@ public class UserController {
 		}
 
 		if (isNoneBlank(password) && !validationHelper.isPasswordValid(password)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationHelper.PW_ERROR_MESSAGE);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.PW_ERROR_MESSAGE);
 		}
 
 		return userUpdateDTO;
@@ -162,7 +162,7 @@ public class UserController {
 		}
 
 		if (!validationHelper.isPasswordValid(userInsertDTO.getPassword())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationHelper.PW_ERROR_MESSAGE);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.PW_ERROR_MESSAGE);
 		}
 
 		return userInsertDTO;

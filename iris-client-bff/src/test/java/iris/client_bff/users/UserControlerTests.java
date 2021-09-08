@@ -8,6 +8,7 @@ import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.config.HealthDepartmentConfig;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.utils.ValidationHelper;
+import iris.client_bff.ui.messages.ErrorMessages;
 import iris.client_bff.users.entities.UserAccount;
 import iris.client_bff.users.entities.UserRole;
 import iris.client_bff.users.web.UserController;
@@ -81,12 +82,12 @@ class UserControlerTests {
 
 		var dto = new UserInsertDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
 		Assertions.assertThrows(ResponseStatusException.class, () -> userController.createUser(dto),
-				ValidationHelper.PW_ERROR_MESSAGE);
+				ErrorMessages.PW_ERROR_MESSAGE);
 
 		var dto2 = new UserUpdateDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
 		var authentication = new UserAccountAuthentication("test", true, null);
 		Assertions.assertThrows(ResponseStatusException.class,
-				() -> userController.updateUser(UUID.randomUUID(), dto2, authentication), ValidationHelper.PW_ERROR_MESSAGE);
+				() -> userController.updateUser(UUID.randomUUID(), dto2, authentication), ErrorMessages.PW_ERROR_MESSAGE);
 	}
 
 	@ParameterizedTest
