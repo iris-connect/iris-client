@@ -1,0 +1,17 @@
+- name: "Create JWT secret for {{ client.name }}"
+  set_fact:
+    jwt_secret: "{{ lookup('password', '/dev/null chars=chars=ascii_letters,digits length=64') }}"
+
+- name: "Create Admin start password for {{ client.name }}"
+  set_fact:
+    admin_password: "{{ lookup('password',  passwords_dir + '/' + client.name + '-admin chars=chars=ascii_letters,digits length=16') }}"
+
+- name: "Create Admin start password for {{ client.name }}"
+  set_fact:
+    postgres_password: "{{ lookup('password',  passwords_dir + '/' + client.name + '-postgres chars=chars=ascii_letters,digits length=16') }}"
+
+
+- name: "Create .env file for {{ client.name }}"
+  ansible.builtin.template:
+    src: templates/.env.j2
+    dest: "{{ install_dir }}/.{{ client.name }}.env"

@@ -1,0 +1,35 @@
+---
+contact:
+  name: <Your Name>
+  mail: <Your E-Mail>
+  phone: <Your phone number>
+nginx:
+  cert: <The wildcard ssl certificate located in certs/nginx>
+  key: <Its corresponding key>
+clients:
+  - name: iris-client-1
+    domain: < e.g. iris-client-1.iris.local >
+    eps:
+      PROXY_SUBDOMAIN: <iris-client-1 proxy subdomain>
+      PROXY_TLS_CERT: <iris-client-1 proxy subdomain cert (located in certs/eps) >
+      PROXY_TLS_CERT_KEY: <iris-client-1 proxy subdomain key (located in certs/eps)>
+      EPS_OP: < CN name from EPS mTls certificate >
+      EPS_CLIENT_CERT: < EPS mTls certificate (located in certs/eps) >
+      EPS_CLIENT_CERT_KEY: < EPS mTls key (located in certs/eps) >
+      PROXY_OP: < SAN name from EPS mTls certificate (eps-proxy.*) >
+      PROXY_CLIENT_CERT: < EPS mTls certificate (located in certs/eps) >
+      PROXY_CLIENT_CERT_KEY: < EPS mTls key (located in certs/eps) >
+
+  - name: iris-client-2
+    domain: < e.g. iris-client-2.iris.local >
+    eps:
+      PROXY_SUBDOMAIN: <iris-client-2 proxy subdomain>
+      PROXY_TLS_CERT: <iris-client-2 proxy subdomain cert (located in certs/eps) >
+      PROXY_TLS_CERT_KEY: <iris-client-2 proxy subdomain key (located in certs/eps)>
+      EPS_OP: < CN name from EPS mTls certificate >
+      EPS_CLIENT_CERT: < EPS mTls certificate (located in certs/eps) >
+      EPS_CLIENT_CERT_KEY: < EPS mTls key (located in certs/eps) >
+      PROXY_OP: < SAN name from EPS mTls certificate (eps-proxy.*) >
+      PROXY_CLIENT_CERT: < EPS mTls certificate (located in certs/eps) >
+      PROXY_CLIENT_CERT_KEY: < EPS mTls key (located in certs/eps) >
+      

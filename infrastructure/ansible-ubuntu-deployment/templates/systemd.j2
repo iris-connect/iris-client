@@ -1,0 +1,16 @@
+[Unit]
+
+Description=IRIS Client - {{ client.name }}
+Requires=docker.service
+After=docker.service
+
+[Service]
+
+User=root
+WorkingDirectory={{ install_dir }}
+ExecStartPre=/usr/local/bin/docker-compose -f {{install_dir}}/docker-compose.yaml -p {{ client.name }} --env-file {{install_dir}}/.{{ client.name }}.env down
+ExecStart=/usr/local/bin/docker-compose -f {{install_dir}}/docker-compose.yaml -p {{ client.name }} --env-file {{install_dir}}/.{{ client.name }}.env up
+ExecStop=/usr/local/bin/docker-compose -f {{install_dir}}/docker-compose.yaml -p {{ client.name }} --env-file {{install_dir}}/.{{ client.name }}.env down
+
+[Install]
+WantedBy=multi-user.target

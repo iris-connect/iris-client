@@ -1,0 +1,84 @@
+---
+- name: Install IRIS Client
+  hosts: localhost
+  vars:
+    install_dir: "{{ lookup('env', 'PWD') }}/iris-clients"
+    bin_dir: "{{ install_dir }}/bin"
+    passwords_dir: "{{ install_dir }}/.start-passwords"
+  vars_files:
+    - vars.yaml
+  tasks:
+
+# Install Docker and Docker Comopose.
+
+#  - name: Install Docker
+#    include: includes/install-docker.yaml
+
+# Create inital folder structure.
+
+  - name: Create passwords folder
+    file:
+      path: "{{ passwords_dir }}"
+      state: directory  
+
+  - name: Create eps certs folder
+    file:
+      path: "{{ install_dir }}/certs/eps"
+      state: directory
+
+  - name: Create nginx certs folder
+    file:
+      path: "{{ install_dir }}/certs/nginx"
+      state: directory
+
+  - name: Copy all certificates
+    ansible.builtin.copy:
+      src: "certs"
+      dest: "{{ install_dir }}"    
+
+  - name: Create docker-compose.yml
+    ansible.builtin.template:
+      src: templates/docker-compose.yaml.j2
+      dest: "{{ install_dir }}/docker-compose.yaml"
+
+# IRIS Client conf files for all instances
+
+  - include: includes/create-env-files.yaml client={{ item }}
+    vars: 
+      cert: "{{ nginx.cert}}"
+      key: "{{ nginx.key}}"      
+    loop: "{{ clients }}"      
+    loop_control:
+      index_var: index   
+
+
+# Systemd conf for all instances
+
+  - include: includes/create-systemd.yaml client={{ item }}
+    loop: "{{ clients }}"        
+
+  - name: Reload systemd
+    ansible.builtin.systemd:
+      daemon_reload: yes    
+
+# NGINX reverse Proxy
+
+  - name: Install nginx
+    apt:
+      name: nginx
+      state: latest
+      update_cache: yes    
+
+  - include: includes/create-nginx-conf.yaml client={{ item }}
+    vars: 
+      cert: "{{ nginx.cert}}"
+      key: "{{ nginx.key}}"      
+    loop: "{{ clients }}"
+    loop_control:
+      index_var: index   
+
+  - name: Start and enable nginx
+    ansible.builtin.systemd:
+      name: nginx
+      state: restarted
+      enabled: yes
