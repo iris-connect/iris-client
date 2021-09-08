@@ -11,8 +11,8 @@
 
 # Install Docker and Docker Comopose.
 
-#  - name: Install Docker
-#    include: includes/install-docker.yaml
+  - name: Install Docker
+    include: includes/install-docker.yaml
 
 # Create inital folder structure.
 
