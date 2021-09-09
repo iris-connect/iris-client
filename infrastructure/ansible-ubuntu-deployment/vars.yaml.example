@@ -1,4 +1,5 @@
 ---
+env: <live or staging>
 contact:
   name: <Your Name>
   mail: <Your E-Mail>
