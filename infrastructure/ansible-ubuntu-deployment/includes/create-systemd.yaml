@@ -7,5 +7,5 @@
 - name: "Start and enable service for {{ client.name }}"
   ansible.builtin.systemd:
     name: "iris-client-{{ client.name }}"
-    state: restarted
+    state: started
     enabled: yes

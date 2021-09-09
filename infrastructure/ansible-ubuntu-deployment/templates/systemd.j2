@@ -8,9 +8,9 @@ After=docker.service
 
 User=root
 WorkingDirectory={{ install_dir }}
-ExecStartPre=/usr/local/bin/docker-compose -f {{install_dir}}/docker-compose.yaml -p {{ client.name }} --env-file {{install_dir}}/.{{ client.name }}.env down
-ExecStart=/usr/local/bin/docker-compose -f {{install_dir}}/docker-compose.yaml -p {{ client.name }} --env-file {{install_dir}}/.{{ client.name }}.env up
-ExecStop=/usr/local/bin/docker-compose -f {{install_dir}}/docker-compose.yaml -p {{ client.name }} --env-file {{install_dir}}/.{{ client.name }}.env down
+ExecStartPre=/usr/local/bin/docker-compose -p {{ client.name }} --project-directory {{ env_dir }}/{{ client.name }} down
+ExecStart=/usr/local/bin/docker-compose -p {{ client.name }} --project-directory {{ env_dir }}/{{ client.name }} up
+ExecStop=/usr/local/bin/docker-compose -p {{ client.name }} --project-directory {{ env_dir }}/{{ client.name }} down
 
 [Install]
 WantedBy=multi-user.target
