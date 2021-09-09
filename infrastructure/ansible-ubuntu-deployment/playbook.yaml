@@ -58,9 +58,7 @@
   - include: includes/create-systemd.yaml client={{ item }}
     loop: "{{ clients }}"        
 
-  - name: Reload systemd
-    ansible.builtin.systemd:
-      daemon_reload: yes    
+
 
 # NGINX reverse Proxy
 
