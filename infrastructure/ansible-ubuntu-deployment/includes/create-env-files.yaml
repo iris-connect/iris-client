@@ -13,5 +13,5 @@
 
 - name: "Create .env file for {{ client.name }}"
   ansible.builtin.template:
-    src: templates/.env.j2
+    src: templates/env.j2
     dest: "{{ install_dir }}/.{{ client.name }}.env"
