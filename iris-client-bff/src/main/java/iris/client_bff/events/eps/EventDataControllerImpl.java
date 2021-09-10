@@ -76,8 +76,8 @@ public class EventDataControllerImpl implements EventDataController {
 				guest.setFirstName(defuseInput(guest.getFirstName(),"guest.firstName", true, 100));
 				guest.setLastName(defuseInput(guest.getLastName(),"guest.lastName", true, 100));
 				guest.setEmail(defuseInput(guest.getEmail(),"guest.email", true, 100));
-				guest.setPhone(defuseInput(guest.getPhone(),"guest.phone", true, 100));
-				guest.setMobilePhone(defuseInput(guest.getMobilePhone(),"guest.mobilePhone", true, 100));
+				guest.setPhone(defuseInputPhone(guest.getPhone(),"guest.phone", true, 100));
+				guest.setMobilePhone(defuseInputPhone(guest.getMobilePhone(),"guest.mobilePhone", true, 100));
 
 				Address guestAddress = guest.getAddress();
 				if(guestAddress != null) {
@@ -101,6 +101,14 @@ public class EventDataControllerImpl implements EventDataController {
 			return INVALID_INPUT_STRING;
 		}
 
+		return StringUtils.truncate(input, maxLength);
+	}
+	
+	private String defuseInputPhone(String input, String field, boolean obfuscateLogging, int maxLength) {
+		if(validHelper.isPossibleAttackForPhone(input, field, obfuscateLogging)) {
+			return INVALID_INPUT_STRING;
+		}
+		
 		return StringUtils.truncate(input, maxLength);
 	}
 }

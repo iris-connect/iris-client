@@ -103,6 +103,10 @@ public class EventDataRequest extends Aggregate<EventDataRequest, EventDataReque
 	public String toString() {
 	  return requestId.toString();
 	}
+	
+	public UUID toUUID() {
+		return requestId;
+	}
   }
 
   public enum Status {

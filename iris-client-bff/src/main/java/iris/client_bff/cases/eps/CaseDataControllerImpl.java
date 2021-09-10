@@ -49,16 +49,16 @@ public class CaseDataControllerImpl implements CaseDataController {
 
 	@Override
 	public String submitContactAndEventData(
-		UUID dataAuthorizationToken,
-		@Valid Contacts contacts,
-		@Valid Events events,
-		@Valid CaseDataProvider dataProvider) {
+			UUID dataAuthorizationToken,
+			@Valid Contacts contacts,
+			@Valid Events events,
+			@Valid CaseDataProvider dataProvider) {
 
 		if (ValidationHelper
-			.isUUIDInputValid(dataAuthorizationToken.toString(), FIELD_DATA_AUTHORIZATION_TOKEN)
-			&& validateEvents(events)
-			&& validateContacts(contacts)
-			&& validateCaseDataProvider(dataProvider)) {
+				.isUUIDInputValid(dataAuthorizationToken.toString(), FIELD_DATA_AUTHORIZATION_TOKEN)
+				&& validateEvents(events)
+				&& validateContacts(contacts)
+				&& validateCaseDataProvider(dataProvider)) {
 			log.trace("Start submission {}", dataAuthorizationToken);
 
 			return submissionService.validateAndSaveData(dataAuthorizationToken, contacts, events, dataProvider);
@@ -81,7 +81,7 @@ public class CaseDataControllerImpl implements CaseDataController {
 					event.setName(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
-				if (validHelper.isPossibleAttack(event.getPhone(), FIELD_PHONE, true)) {
+				if (validHelper.isPossibleAttackForPhone(event.getPhone(), FIELD_PHONE, true)) {
 					event.setPhone(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
@@ -109,19 +109,19 @@ public class CaseDataControllerImpl implements CaseDataController {
 					contactPerson.setLastName(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
-				if (validHelper.isPossibleAttack(contactPerson.getFirstName(), FIELD_FIRSTNAME,true)) {
+				if (validHelper.isPossibleAttack(contactPerson.getFirstName(), FIELD_FIRSTNAME, true)) {
 					contactPerson.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
-				if (validHelper.isPossibleAttack(contactPerson.getEmail(), FIELD_EMAIL,true)) {
+				if (validHelper.isPossibleAttack(contactPerson.getEmail(), FIELD_EMAIL, true)) {
 					contactPerson.setEmail(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
-				if (validHelper.isPossibleAttack(contactPerson.getPhone(), FIELD_PHONE, true)) {
+				if (validHelper.isPossibleAttackForPhone(contactPerson.getPhone(), FIELD_PHONE, true)) {
 					contactPerson.setPhone(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
-				if (validHelper.isPossibleAttack(contactPerson.getMobilePhone(), FIELD_MOBILE_PHONE,true)) {
+				if (validHelper.isPossibleAttackForPhone(contactPerson.getMobilePhone(), FIELD_MOBILE_PHONE, true)) {
 					contactPerson.setMobilePhone(ErrorMessages.INVALID_INPUT_STRING);
 				}
 
@@ -178,7 +178,7 @@ public class CaseDataControllerImpl implements CaseDataController {
 				workPlace.setName(ErrorMessages.INVALID_INPUT_STRING);
 			}
 
-			if (validHelper.isPossibleAttack(workPlace.getPhone(), FIELD_PHONE, true)) {
+			if (validHelper.isPossibleAttackForPhone(workPlace.getPhone(), FIELD_PHONE, true)) {
 				workPlace.setPhone(ErrorMessages.INVALID_INPUT_STRING);
 			}
 

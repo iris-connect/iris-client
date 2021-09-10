@@ -164,6 +164,11 @@ public class ValidationHelper {
 				ArrayUtils.removeElements(FORBIDDEN_SYMBOLS, PW_SYMBOLS));
 	}
 
+	public boolean isPossibleAttackForPhone(String input, String field, boolean obfuscateLogging) {
+		return isPossibleAttack(input, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES,
+				ArrayUtils.removeElement(FORBIDDEN_SYMBOLS, "+"));
+	}
+
 	/**
 	 * Searches for any occurrence of given keyword tuples and stops at first match.
 	 * 
