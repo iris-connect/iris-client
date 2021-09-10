@@ -113,6 +113,7 @@ import { TableRow } from "@/components/event-list.vue";
 import { ErrorMessage } from "@/utils/axios";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
+import { join } from "@/utils/misc";
 
 const tableRowMapper = (
   dataRequest: ExistingDataRequestClientWithLocation
@@ -135,14 +136,16 @@ const tableRowMapper = (
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
 ): string {
-  if (data) {
-    const contact = data.locationInformation?.contact;
-    if (contact) {
-      return `${data.name}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
-    }
-    return data.name || "-"; // TODO repeating - improve
-  }
-  return "-";
+  const contact = data?.locationInformation?.contact;
+  if (!contact) return data?.locationInformation?.name || data?.name || "-";
+  return join(
+    [
+      contact?.officialName,
+      contact?.address?.street,
+      join([contact?.address?.zip, contact?.address?.city], " "),
+    ],
+    ", "
+  );
 }
 
 function getFormattedDate(date?: string): string {
