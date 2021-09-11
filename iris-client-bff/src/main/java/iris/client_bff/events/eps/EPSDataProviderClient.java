@@ -40,9 +40,11 @@ public class EPSDataProviderClient implements DataProviderClient {
 						.requestDetails(request.getRequestDetails())
 						.build());
 
+		String result;
 		try {
+
 			log.trace("requestGuestListData start: method {}; request {}", methodName, requestId);
-			epsRpcClient.invoke(methodName, payload);
+			result = epsRpcClient.invoke(methodName, payload, String.class);
 			log.debug("requestGuestListData done: method {}; request {};", methodName, requestId);
 
 		} catch (Throwable t) {
@@ -52,6 +54,14 @@ public class EPSDataProviderClient implements DataProviderClient {
 					+ request.getLocation().getProviderId() + ". Can't call JSON-RPC method createDataRequest.");
 
 			throw new IRISDataRequestException(t);
+		}
+
+		if (!"OK".equals(result)) {
+			log.error("requestGuestListData error: method {}; request {}; error {}", methodName, requestId, result);
+			alertService.createAlertMessage("Request data error", "IRIS can't request data from provider "
+					+ request.getLocation().getProviderId() + ". Can't call JSON-RPC method createDataRequest.");
+
+			throw new IRISDataRequestException("Error from remote system: " + result);
 		}
 	}
 
@@ -76,7 +86,7 @@ public class EPSDataProviderClient implements DataProviderClient {
 			log.debug("abortGuestListDataRequest done: method {}; request {};", methodName, requestId);
 
 		} catch (Throwable t) {
-			// The abort method isn't documented and therefore it is currently not mandatory (logged as info not as error). 
+			// The abort method isn't documented and therefore it is currently not mandatory (logged as info not as error).
 			log.info("abortGuestListDataRequest error: method {}; request {}; error {}", methodName, requestId,
 					t.getMessage());
 		}

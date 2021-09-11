@@ -108,7 +108,7 @@ public class EventDataRequestService {
 
 			repository.delete(dataRequest);
 
-			throw new IRISDataRequestException(e);
+			throw e;
 		}
 
 		return dataRequest;
