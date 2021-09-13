@@ -62,7 +62,9 @@ const indexTrackingForm: IndexTrackingFormModule = {
       commit("setIndexCreationOngoing", true);
       try {
         return await normalizeDataRequestCaseExtendedDetails(
-          (await client.dataRequestClientCasesPost(dataRequestCaseClient)).data,
+          (
+            await client.dataRequestClientCasesPost(dataRequestCaseClient)
+          ).data,
           true
         );
       } catch (e) {

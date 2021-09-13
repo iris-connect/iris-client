@@ -6,13 +6,39 @@ import _isObject from "lodash/isObject";
 import _isEmpty from "lodash/isEmpty";
 import store from "@/store";
 
-export const entryNormalizer = <T>(obj?: T) => <K extends keyof T>(
+export const normalizeData = <T>(
+  source: T | undefined,
+  callback: (n: EntryNormalizer<T>) => T,
+  parse?: boolean,
+  message?: string
+): T => {
+  if (!isEnabled()) return source as T;
+  const normalizer = entryNormalizer(source);
+  return finalizeData(callback(normalizer), source, parse, message);
+};
+
+// utility type to check if all keys of T exist
+export type Complete<T> = {
+  [P in keyof Required<T>]: Pick<T, P> extends Required<Pick<T, P>>
+    ? T[P]
+    : T[P] | undefined;
+};
+
+export const isEnabled = (): boolean => {
+  return store.state.normalizeSettings.enabled;
+};
+
+export type EntryNormalizer<T> = <K extends keyof T>(
   key: K,
   fallback: T[K],
-  type = "string"
-): T[K] => {
-  return normalize<T, K>(obj, key, type, fallback);
-};
+  type?: string
+) => T[K];
+
+export const entryNormalizer =
+  <T>(obj?: T) =>
+  <K extends keyof T>(key: K, fallback: T[K], type = "string"): T[K] => {
+    return normalize<T, K>(obj, key, type, fallback);
+  };
 
 export const normalize = <T, K extends keyof T>(
   obj: T | unknown | undefined,

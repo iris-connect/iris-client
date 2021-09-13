@@ -1,15 +1,21 @@
 import { UserList } from "@/api";
-import { entryNormalizer, finalizeData } from "@/utils/data";
+import { Complete, normalizeData } from "@/utils/data";
 import { normalizeUser } from "@/views/user-login/user-login.data";
 
 export const normalizeUserList = (
   source?: UserList,
   parse?: boolean
 ): UserList => {
-  const normalizer = entryNormalizer(source);
-  const users = normalizer("users", undefined, "array");
-  const normalized: UserList = {
-    users: users ? users.map((user) => normalizeUser(user)) : undefined,
-  };
-  return finalizeData(normalized, source, parse, "UserList");
+  return normalizeData(
+    source,
+    (normalizer) => {
+      const users = normalizer("users", undefined, "array");
+      const normalized: Complete<UserList> = {
+        users: users ? users.map((user) => normalizeUser(user)) : undefined,
+      };
+      return normalized;
+    },
+    parse,
+    "UserList"
+  );
 };
