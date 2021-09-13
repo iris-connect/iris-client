@@ -1,4 +1,4 @@
-FROM caddy:2.4.3-alpine
+FROM caddy:2.4.5-alpine
 
 # install node + npm
 RUN apk add --update nodejs npm
