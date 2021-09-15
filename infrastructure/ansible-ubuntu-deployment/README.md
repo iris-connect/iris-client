@@ -43,7 +43,7 @@ Running the playbook requires the latest version of Ansible.
     ansible --version
     # ansible 2.9.24
     ```
-
+    (This or newer)
 
 ## Project structure
 
