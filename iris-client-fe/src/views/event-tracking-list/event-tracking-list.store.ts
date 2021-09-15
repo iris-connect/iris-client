@@ -4,9 +4,10 @@ import { RootState } from "@/store/types";
 import { Commit, Module } from "vuex";
 import authClient from "@/api-client";
 import { DataQuery } from "@/api/common";
+import { normalizePageEvent } from "@/views/event-tracking-list/event-tracking-list.data";
 
 export type EventTrackingListState = {
-  eventTrackingList: PageEvent;
+  eventTrackingList: PageEvent | null;
   eventTrackingListLoading: boolean;
 };
 
@@ -62,11 +63,14 @@ const eventTrackingList: EventTrackingListModule = {
       let eventTrackingList: PageEvent | null = null;
       commit("setEventTrackingListLoading", true);
       try {
-        eventTrackingList = (
-          await authClient.dataRequestsClientLocationsGet({
-            params: query,
-          })
-        ).data;
+        eventTrackingList = normalizePageEvent(
+          (
+            await authClient.dataRequestsClientLocationsGet({
+              params: query,
+            })
+          ).data,
+          true
+        );
       } finally {
         commit("setEventTrackingList", eventTrackingList);
         commit("setEventTrackingListLoading", false);

@@ -73,6 +73,21 @@ Please note:
 - The feature can be triggered on every page (even on index tracking pages)
 - The enabled / disabled state is stored in localStorage
 
+### Enabling / Disabling normalizer logging feature
+
+To enable normalizer log:
+`[[URL]]?normalizeLog=enabled`
+
+To disable normalizer log:
+`[[URL]]?normalizeLog=disabled`
+
+Please note:
+- The default setting is "disabled"
+- Enabling / disabling the logging feature reloads the page and removes the query-string automatically
+- The normalizer is always active / enabled - independent of the log settings
+- The feature can be triggered on every page
+- The enabled / disabled state is stored in localStorage
+
 ### Routes/views and params
 
 In this section you find all deeplinks for our SPA.

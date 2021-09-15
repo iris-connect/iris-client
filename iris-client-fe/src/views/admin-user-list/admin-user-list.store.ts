@@ -4,6 +4,7 @@ import { RootState } from "@/store/types";
 import { Commit, Dispatch, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import authClient from "@/api-client";
+import { normalizeUserList } from "@/views/admin-user-list/admin-user-list.data";
 
 export type AdminUserListState = {
   userList: UserList | null;
@@ -80,7 +81,7 @@ const adminUserList: AdminUserListModule = {
       commit("setUserListLoadingError", null);
       commit("setUserListLoading", true);
       try {
-        userList = (await authClient.usersGet()).data;
+        userList = normalizeUserList((await authClient.usersGet()).data, true);
       } catch (e) {
         commit("setUserListLoadingError", getErrorMessage(e));
       } finally {

@@ -5,6 +5,8 @@ import { Commit, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import authClient from "@/api-client";
 import { DataQuery } from "@/api/common";
+import { normalizeLocationList } from "@/views/event-tracking-form/event-tracking-form.data";
+import { normalizeDataRequestDetails } from "@/views/event-tracking-details/event-tracking-details.data";
 
 export type EventTrackingFormState = {
   locationList: LocationList | null;
@@ -95,9 +97,10 @@ const eventTrackingForm: EventTrackingFormModule = {
       commit("setEventLocationsError", null);
       commit("setEventLocationsLoading", true);
       try {
-        locationList = (
-          await authClient.searchSearchKeywordGet({ params: query })
-        ).data;
+        locationList = normalizeLocationList(
+          (await authClient.searchSearchKeywordGet({ params: query })).data,
+          true
+        );
       } catch (e) {
         commit("setEventLocationsError", getErrorMessage(e));
       } finally {
@@ -113,9 +116,11 @@ const eventTrackingForm: EventTrackingFormModule = {
       commit("setEventCreationError", null);
       commit("setEventCreationOngoing", true);
       try {
-        return await (
-          await authClient.dataRequestsClientLocationsPost(dataRequestClient)
-        ).data;
+        return normalizeDataRequestDetails(
+          (await authClient.dataRequestsClientLocationsPost(dataRequestClient))
+            .data,
+          true
+        );
       } catch (e) {
         commit("setEventCreationError", getErrorMessage(e));
         throw e;

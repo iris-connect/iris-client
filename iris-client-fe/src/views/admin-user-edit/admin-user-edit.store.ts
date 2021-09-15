@@ -6,6 +6,7 @@ import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import authClient from "@/api-client";
 import messages from "@/common/messages";
 import store from "@/store";
+import { normalizeUser } from "@/views/user-login/user-login.data";
 
 export type AdminUserEditState = {
   user: User | null;
@@ -77,7 +78,7 @@ const adminUserEdit: AdminUserEditModule = {
       commit("setUserLoading", true);
       commit("setUser", null);
       try {
-        user = await fetchUserById(id);
+        user = normalizeUser(await fetchUserById(id), true);
       } catch (e) {
         commit("setUserLoadingError", getErrorMessage(e));
       } finally {

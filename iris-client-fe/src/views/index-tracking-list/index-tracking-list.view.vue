@@ -197,8 +197,8 @@ export default class IndexTrackingListView extends Vue {
       page: getPageFromRouteWithDefault(this.$route),
       itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
       loading: indexTrackingListLoading,
-      itemsLength: indexTrackingList.totalElements,
-      data: indexTrackingList.content.map((dataRequest) => {
+      itemsLength: indexTrackingList?.totalElements || 0,
+      data: (indexTrackingList?.content || []).map((dataRequest) => {
         return {
           endTime: getFormattedDate(dataRequest.end),
           startTime: getFormattedDate(dataRequest.start),

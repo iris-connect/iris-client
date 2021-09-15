@@ -4,6 +4,7 @@ import { RootState } from "@/store/types";
 import { Commit, Dispatch, Module } from "vuex";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
+import { normalizeDataRequestDetails } from "@/views/event-tracking-details/event-tracking-details.data";
 
 export type EventTrackingDetailsState = {
   eventTrackingDetails: DataRequestDetails | null;
@@ -92,8 +93,10 @@ const eventTrackingDetails: EventTrackingDetailsModule = {
       commit("setEventTrackingDetailsLoading", true);
       commit("setEventTrackingDetailsLoadingError", null);
       try {
-        eventTrackingDetails = (await authClient.getLocationDetails(eventId))
-          .data;
+        eventTrackingDetails = normalizeDataRequestDetails(
+          (await authClient.getLocationDetails(eventId)).data,
+          true
+        );
       } catch (e) {
         commit("setEventTrackingDetailsLoadingError", getErrorMessage(e));
       } finally {
