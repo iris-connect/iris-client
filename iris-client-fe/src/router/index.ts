@@ -9,7 +9,6 @@ import VueRouter, {
 import Home from "../views/home/Home.vue";
 import { getAuthenticatedUser } from "@/views/user-login/utils/store";
 import { UserRole } from "@/api";
-import _get from "lodash/get";
 import dayjs from "@/utils/date";
 
 Vue.use(VueRouter);
