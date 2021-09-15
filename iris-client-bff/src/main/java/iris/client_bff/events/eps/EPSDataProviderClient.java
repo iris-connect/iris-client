@@ -3,14 +3,15 @@ package iris.client_bff.events.eps;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -18,11 +19,18 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EPSDataProviderClient implements DataProviderClient {
 
 	private final JsonRpcHttpClient epsRpcClient;
 	private final AlertService alertService;
+
+	/**
+	 * The abort method isn't documented for the app providers at the moment and is also not yet configured in the service
+	 * directory. This feature switch is therefore false by default and intended for test purposes.
+	 */
+	@Value("${iris.client.sendAbort.active:false}")
+	private boolean sendAbortIsActive;
 
 	@Override
 	public void requestGuestListData(EventDataRequest request) throws IRISDataRequestException {
@@ -67,6 +75,11 @@ public class EPSDataProviderClient implements DataProviderClient {
 
 	@Override
 	public void abortGuestListDataRequest(EventDataRequest request) throws IRISDataRequestException {
+
+		if (!sendAbortIsActive) {
+			return;
+		}
+
 		var requestId = request.getId().toString();
 		var methodName = request.getLocation().getProviderId() + ".abortDataRequest";
 
