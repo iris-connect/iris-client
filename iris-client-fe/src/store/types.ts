@@ -12,6 +12,7 @@ import { AdminUserEditState } from "@/views/admin-user-edit/admin-user-edit.stor
 // @todo - indexTracking: optional remove next line once index cases are permanently activated again
 import { IndexTrackingSettingsState } from "@/views/app-settings/index-tracking-settings.store";
 import { NormalizeSettingsState } from "@/views/app-settings/normalize-settings.store";
+import { ChunkLoaderState } from "@/views/app-settings/chunk-loader.store";
 
 export type RootState = {
   home: HomeState;
@@ -28,4 +29,5 @@ export type RootState = {
   // @todo - indexTracking: optional remove next line once index cases are permanently activated again
   indexTrackingSettings: IndexTrackingSettingsState;
   normalizeSettings: NormalizeSettingsState;
+  chunkLoader: ChunkLoaderState;
 };

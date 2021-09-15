@@ -9,6 +9,8 @@ import VueRouter, {
 import Home from "../views/home/Home.vue";
 import { getAuthenticatedUser } from "@/views/user-login/utils/store";
 import { UserRole } from "@/api";
+import _get from "lodash/get";
+import dayjs from "@/utils/date";
 
 Vue.use(VueRouter);
 
@@ -236,6 +238,31 @@ router.beforeEach(async (to, from, next) => {
     return next("/");
   }
   next();
+});
+
+/**
+ * Webpack splits files (assets, code, etc.) into hashed chunks to improve loading performance and to handle outdated / cached files.
+ * Some of the hashed chunks are not loaded initially with the index.html file but only if they are used / required.
+ * If new code (-> new chunks with new file-hashes) is deployed to the server the old files are deleted and the references to the old chunk file hashes are no longer valid.
+ * The router views are imported as hashed chunks which means that the router wont be able to navigate to the view-chunk after a deployment.
+ * There are many solutions for that problem (not deleting old files from the server, removing the hash from the output files, etc.)
+ * To keep it simple - the following approach is used:
+ * - if a router error is thrown, check if it is caused by a missing chunk
+ * - reload the page which should update the file paths to the chunks
+ * - to avoid infinite reload loops: check the last time the page was reloaded due to a missing chunk.
+ * - trigger the reload only after 30 minutes have passed since the last reload (or if it is the first reload).
+ */
+router.onError((error) => {
+  const pattern = /Loading chunk.*failed/g;
+  if (pattern.test(error.message)) {
+    const reloadedAt = store.state.chunkLoader.reloadedAt;
+    if (!reloadedAt || Math.abs(dayjs().diff(reloadedAt, "minutes")) > 30) {
+      store.commit("chunkLoader/setReloadedAt", dayjs().valueOf());
+      window.location.reload();
+      return;
+    }
+  }
+  throw error;
 });
 
 export default router;
