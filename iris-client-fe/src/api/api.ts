@@ -2852,8 +2852,8 @@ export const IrisClientFrontendApiAxiosParamCreator = function (
     },
     /**
      *
-     * @summary Create IRIS user
-     * @param {UserInsert} userInsert
+     * @summary Feedback Post
+     * @param {FeedbackInsert} feedbackObject
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -3544,8 +3544,8 @@ export const IrisClientFrontendApiFactory = function (
     },
     /**
      *
-     * @summary Create IRIS user
-     * @param {UserInsert} userInsert
+     * @summary Feedback Post
+     * @param {FeedbackInsert} feedbackObject
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */

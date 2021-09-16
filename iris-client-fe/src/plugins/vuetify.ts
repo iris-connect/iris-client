@@ -18,9 +18,6 @@ import "./../styles/theme.scss";
 Vue.use(Vuetify);
 
 export default new Vuetify({
-  icons: {
-    iconfont: "mdiSvg",
-  },
   lang: {
     locales: { de },
     current: "de",
