@@ -36,6 +36,7 @@
     <v-main class="grey lighten-3">
       <v-container>
         <router-view />
+        <feedback-dialog v-if="feedbackEnabled" />
       </v-container>
     </v-main>
   </v-app>
@@ -47,12 +48,14 @@ import { routes, setInterceptRoute } from "@/router";
 import UserMenu from "@/views/user-login/components/user-menu.vue";
 import { RouteConfig } from "vue-router";
 import { UserRole } from "@/api";
+import FeedbackDialog from "@/views/feedback/feedback.dialog.vue";
 
 // @todo: move user functionality to a dedicated user-module?
 export default Vue.extend({
   name: "App",
   components: {
     UserMenu,
+    FeedbackDialog,
   },
   created() {
     document.title = "IRIS connect";
@@ -72,6 +75,12 @@ export default Vue.extend({
     },
     userRole(): UserRole | undefined {
       return this.$store.state.userLogin.user?.role;
+    },
+    feedbackEnabled(): boolean {
+      return (
+        this.authenticated &&
+        this.$router.currentRoute?.meta?.feedback !== false
+      );
     },
   },
   watch: {

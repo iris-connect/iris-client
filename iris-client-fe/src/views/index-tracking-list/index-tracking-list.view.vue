@@ -79,7 +79,6 @@
         </v-data-table>
       </v-card-text>
     </v-card>
-    <FeedbackDialog> </FeedbackDialog>
   </div>
 </template>
 
@@ -89,7 +88,6 @@ import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import IndexTrackingFormView from "../index-tracking-form/index-tracking-form.view.vue";
 import StatusColors from "@/constants/StatusColors";
-import FeedbackDialog from "@/components/feedback.component.vue";
 import StatusMessages from "@/constants/StatusMessages";
 import _omit from "lodash/omit";
 import { debounce } from "lodash";
@@ -112,7 +110,6 @@ function getFormattedDate(date?: string): string {
 @Component({
   components: {
     IndexTrackingFormView: IndexTrackingFormView,
-    FeedbackDialog,
   },
   beforeRouteLeave(to, from, next) {
     store.commit("indexTrackingList/reset");

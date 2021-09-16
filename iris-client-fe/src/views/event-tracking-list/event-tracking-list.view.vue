@@ -78,7 +78,6 @@
         </v-data-table>
       </v-card-text>
     </v-card>
-    <FeedbackDialog> </FeedbackDialog>
   </div>
 </template>
 
@@ -104,7 +103,6 @@ import {
 } from "@/utils/pagination";
 import { Dictionary } from "vue-router/types/router";
 import { join } from "@/utils/misc";
-import FeedbackDialog from "@/components/feedback.component.vue";
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
@@ -132,7 +130,6 @@ function getFormattedDate(date?: string): string {
 @Component({
   components: {
     EventTrackingFormView: EventTrackingFormView,
-    FeedbackDialog,
   },
   beforeRouteLeave(to, from, next) {
     store.commit("eventTrackingList/reset");

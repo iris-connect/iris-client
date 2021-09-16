@@ -13,6 +13,7 @@ import { AdminUserEditState } from "@/views/admin-user-edit/admin-user-edit.stor
 import { IndexTrackingSettingsState } from "@/views/app-settings/index-tracking-settings.store";
 import { NormalizeSettingsState } from "@/views/app-settings/normalize-settings.store";
 import { ChunkLoaderState } from "@/views/app-settings/chunk-loader.store";
+import { FeedbackState } from "@/views/feedback/feedback.store";
 
 export type RootState = {
   home: HomeState;
@@ -30,4 +31,5 @@ export type RootState = {
   indexTrackingSettings: IndexTrackingSettingsState;
   normalizeSettings: NormalizeSettingsState;
   chunkLoader: ChunkLoaderState;
+  feedback: FeedbackState;
 };

@@ -184,7 +184,6 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-    <FeedbackDialog> </FeedbackDialog>
   </div>
 </template>
 <style></style>
@@ -207,7 +206,6 @@ import dayjs from "@/utils/date";
 import ContactCategories from "@/constants/ContactCategories";
 import AlertComponent from "@/components/alerts/alert.component.vue";
 import IndexTrackingSubmissionUrl from "@/views/index-tracking-details/components/index-tracking-submission-url.vue";
-import FeedbackDialog from "@/components/feedback.component.vue";
 
 type IndexData = {
   extID: string;
@@ -276,7 +274,6 @@ function getFormattedAddress(address?: Address | null): string {
     IndexTrackingSubmissionUrl,
     IndexTrackingDetailsView: IndexTrackingDetailsView,
     AlertComponent,
-    FeedbackDialog,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();

@@ -98,8 +98,6 @@
     <!--        </v-card>-->
     <!--      </v-col>-->
     <!--    </v-row>-->
-    <!--TODO This here needs to be  extracted see feedback-button.component.vue -->
-    <FeedbackDialog> </FeedbackDialog>
   </div>
 </template>
 
@@ -112,7 +110,6 @@ import EventList from "@/components/event-list.vue";
 import store from "@/store";
 import { ExistingDataRequestClientWithLocation, Statistics } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
-import FeedbackDialog from "@/components/feedback.component.vue";
 import { ErrorMessage } from "@/utils/axios";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
@@ -163,7 +160,6 @@ function getFormattedDate(date?: string): string {
     // CasesPieChart,
     // CasesBarChart,
     CounterWidget,
-    FeedbackDialog,
   },
   async beforeRouteEnter(_from, _to, next) {
     next();
