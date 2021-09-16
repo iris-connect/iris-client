@@ -8,6 +8,8 @@
         :headers="tableData.headers"
         :items="tableRowData"
         :items-per-page="10"
+        :hide-default-footer="true"
+        :disable-sort="true"
         class="elevation-1 mt-5"
       >
         <template v-slot:[itemActionSlotName]="{ item }">
@@ -55,7 +57,6 @@ export default class EventTrackingList extends EventTrackingListProps {
       {
         text: "Ext.ID",
         align: "start",
-        sortable: true,
         value: "extID",
       },
       { text: "Event", value: "name" },

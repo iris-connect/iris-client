@@ -1,0 +1,78 @@
+/**
+background-color & text-color mixins
+ */
+@import "~vuetify/src/styles/generic/colors";
+
+/**
+By disabling the JavaScript based inline-style theme, all theme colors have to be defined.
+'primary' is the only custom color at the moment.
+ */
+$theme-colors: (
+        'primary': #46ff9f,
+        'secondary': #424242,
+        'accent': #82B1FF,
+        'error': #FF5252,
+        'info': #2196F3,
+        'success': #4CAF50,
+        'warning': #FFC107
+);
+
+/**
+Utility function to create color variations with a lighten / darken offset in 5 10% steps.
+The offset values are based on the lighten / darken functions of \node_modules\vuetify\src\services\theme\utils.ts
+Returns a Map (color_name: color_value) for a single color with the following variations:
+- 1 base color - e.g. 'primary': #46ff9f
+- 5 light shades - e.g. 'primary-lighten-1': #79ffb9
+- 5 dark shades - e.g. 'primary-darken-5': #004622
+ */
+@function create_color_variations($color_name, $color_value) {
+  $map: ($color_name: $color_value);
+  @for $i from 1 through 5 {
+    $map: map-merge($map, (
+            "#{$color_name}-lighten-#{$i}": lighten($color_value, $i * 10%),
+            "#{$color_name}-darken-#{$i}": darken($color_value, $i * 10%)
+    ));
+  }
+  @return $map;
+}
+
+/**
+Definition of theme colors with variations (lighten & darken) based on $theme-colors
+ */
+$theme-colors-with-variations: ();
+@each $color_name, $color_value in $theme-colors {
+  $theme-colors-with-variations: map-merge($theme-colors-with-variations, create_color_variations($color_name, $color_value));
+}
+
+$primary-text-color: map-get($theme-colors-with-variations, 'primary-darken-3');
+
+/**
+The JavaScript based inline-style theme uses the primary color for links.
+As the primary color of iris is very light - and the text would be hard to read - a darker variation is used.
+ */
+.v-application a {
+  color: $primary-text-color;
+}
+
+/**
+This is used to replace the JavaScript based theme functionality for creating theme color classes
+ */
+@each $color_name, $color_value in $theme-colors-with-variations {
+  .v-application .#{$color_name} {
+    @include background-color($color_value);
+  }
+  .v-application .#{$color_name}--text {
+    @if($color_name == 'primary') {
+      // This darkens the text color if the color_name equals "primary"
+      @include text-color($primary-text-color);
+      // The input bottom border color uses "currentColor" which leads to a darkened border color.
+      // Setting the text color of the input component to the lighter color fixes this issue.
+      .v-input__slot {
+        @include text-color($color_value);
+      }
+    }
+    @else {
+      @include text-color($color_value);
+    }
+  }
+}

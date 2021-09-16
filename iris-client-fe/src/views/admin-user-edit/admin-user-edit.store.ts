@@ -1,10 +1,12 @@
-import { User, UserList, UserUpdate } from "@/api";
+import { User, UserList, UserRole, UserUpdate } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import authClient from "@/api-client";
 import messages from "@/common/messages";
+import store from "@/store";
+import { normalizeUser } from "@/views/user-login/user-login.data";
 
 export type AdminUserEditState = {
   user: User | null;
@@ -76,7 +78,7 @@ const adminUserEdit: AdminUserEditModule = {
       commit("setUserLoading", true);
       commit("setUser", null);
       try {
-        user = await fetchUserById(id);
+        user = normalizeUser(await fetchUserById(id), true);
       } catch (e) {
         commit("setUserLoadingError", getErrorMessage(e));
       } finally {
@@ -101,6 +103,16 @@ const adminUserEdit: AdminUserEditModule = {
 
 // @todo: clarify: do we need a dedicated api endpoint for fetching user details?
 const fetchUserById = async (id: string): Promise<User> => {
+  const currentUser = store.state.userLogin.user;
+  // fetch the user profile if the current user wants to edit her/himself
+  // we could use the user profile stored in the vuex store as well but it might not be up to date
+  if (currentUser?.id === id) {
+    return (await authClient.userProfileGet()).data;
+  }
+  // throw an error if the current user wants to edit someone else and doesn't have the access rights to do so
+  if (currentUser?.role !== UserRole.Admin) {
+    throw new Error(messages.error.accessDenied);
+  }
   const userList: UserList | undefined = (await authClient.usersGet()).data;
   const user = userList?.users?.find((user) => user.id === id);
   if (!user) {

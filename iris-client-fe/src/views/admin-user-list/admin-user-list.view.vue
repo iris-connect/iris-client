@@ -7,7 +7,7 @@
             class="float-right"
             color="primary"
             :to="{ name: 'admin-user-create' }"
-            >Neuen Nutzer anlegen
+            >Neues Konto anlegen
           </v-btn>
         </div>
       </v-col>
@@ -15,7 +15,7 @@
     <v-row>
       <v-col>
         <v-card>
-          <v-card-title>Benutzerverwaltung</v-card-title>
+          <v-card-title>Kontoverwaltung</v-card-title>
           <v-card-text>
             <v-row>
               <v-col>
@@ -50,7 +50,10 @@
                       color="error"
                       class="ml-3"
                       @click="deleteUser(item.id)"
-                      :disabled="isBusy"
+                      :disabled="
+                        isBusy ||
+                        $store.getters['userLogin/isCurrentUser'](item.id)
+                      "
                       :user-name="item.userName"
                     >
                       <v-icon> mdi-delete </v-icon>
@@ -93,8 +96,8 @@ type TableRow = {
 };
 
 const UserRoleName = new Map<UserRole, string>([
-  [UserRole.Admin, "Administrator"],
-  [UserRole.User, "Nutzer"],
+  [UserRole.Admin, "Administration"],
+  [UserRole.User, "Nutzung"],
 ]);
 
 @Component({
@@ -124,7 +127,7 @@ export default class AdminUserListView extends Vue {
         value: "firstName",
       },
       {
-        text: "Benutzername",
+        text: "Anmeldename",
         value: "userName",
       },
       {

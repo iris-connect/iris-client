@@ -4,7 +4,7 @@
       <v-col>
         <counter-widget
           subtitle="Ereignisse/Woche"
-          count="233"
+          :count="statistics.eventsCount"
           actionlabel="Zur Ereignisübersicht"
           image="sketch_file_analysis.svg"
           actionlink="events/list"
@@ -13,16 +13,20 @@
       <v-col>
         <counter-widget
           subtitle="Indexfälle/Woche"
-          count="23"
+          :count="statistics.indexCasesCount"
           actionlabel="Zur Indexübersicht"
           image="sketch_medicine.svg"
           actionlink="cases/list"
+          :linkDisabled="
+            // @todo indexTracking: remove linkDisabled once index cases are permanently activated again
+            !$store.state.indexTrackingSettings.indexTrackingEnabled
+          "
         ></counter-widget>
       </v-col>
       <v-col>
         <counter-widget
           subtitle="Statusänderungen"
-          count="12"
+          :count="statistics.sumStatus"
           actionlabel="Anzeigen"
           image="sketch_reviewed_docs.svg"
           actionlink="events/list"
@@ -35,8 +39,8 @@
         <v-card color="primary" class="pb-8 pt-2 pl-2">
           <v-container>
             <h2 class="light-font mb-6">
-              Herzlich wilkommen bei IRIS - dem offenen Portal des
-              Gesundheitsamtes
+              Herzlich willkommen bei IRIS connect - Die öffentliche
+              Datenschnittstelle des Gesundheitsamts
             </h2>
             <v-row>
               <v-col>
@@ -50,8 +54,16 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn color="primary" :to="{ name: 'index-new' }" class="mb-5"
-                  >Indexfall-Daten anfordern
+                <v-btn
+                  color="primary"
+                  :to="{ name: 'index-new' }"
+                  class="mb-5"
+                  :disabled="
+                    // @todo indexTracking: remove disabled once index cases are permanently activated again
+                    !$store.state.indexTrackingSettings.indexTrackingEnabled
+                  "
+                >
+                  Indexfall-Daten anfordern
                 </v-btn>
               </v-col>
             </v-row>
@@ -98,43 +110,13 @@ import CounterWidget from "@/components/dashboard/counter-widget.vue";
 // import CasesPieChart from "@/components/dashboard/cases-pie-chart.vue";
 import EventList from "@/components/event-list.vue";
 import store from "@/store";
-import {
-  ExistingDataRequestClientWithLocationStatusEnum,
-  ExistingDataRequestClientWithLocation,
-} from "@/api";
+import { ExistingDataRequestClientWithLocation, Statistics } from "@/api";
 import { TableRow } from "@/components/event-list.vue";
 import FeedbackDialog from "@/components/feedback.component.vue";
 import { ErrorMessage } from "@/utils/axios";
-
-function getStatusColor(
-  status?: ExistingDataRequestClientWithLocationStatusEnum
-): string {
-  switch (status) {
-    case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
-      return "blue";
-    case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
-      return "red";
-    case ExistingDataRequestClientWithLocationStatusEnum.Closed:
-      return "green";
-    default:
-      return "gray"; // TODO
-  }
-}
-
-function getStatusName(
-  status?: ExistingDataRequestClientWithLocationStatusEnum
-): string {
-  switch (status) {
-    case ExistingDataRequestClientWithLocationStatusEnum.DataRequested:
-      return "Angefragt";
-    case ExistingDataRequestClientWithLocationStatusEnum.DataReceived:
-      return "Geliefert";
-    case ExistingDataRequestClientWithLocationStatusEnum.Closed:
-      return "Abgeschlossen";
-    default:
-      return "Unbekannt"; // TODO find better name
-  }
-}
+import StatusColors from "@/constants/StatusColors";
+import StatusMessages from "@/constants/StatusMessages";
+import { join } from "@/utils/misc";
 
 const tableRowMapper = (
   dataRequest: ExistingDataRequestClientWithLocation
@@ -149,22 +131,24 @@ const tableRowMapper = (
     code: dataRequest.code || "-",
     name: dataRequest.name || "-",
     status: dataRequest.status?.toString() || "-",
-    statusColor: getStatusColor(dataRequest.status),
-    statusName: getStatusName(dataRequest.status),
+    statusColor: StatusColors.getColor(dataRequest.status),
+    statusName: StatusMessages.getMessage(dataRequest.status),
   };
 };
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
 ): string {
-  if (data) {
-    const contact = data.locationInformation?.contact;
-    if (contact) {
-      return `${data.name}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
-    }
-    return data.name || "-"; // TODO repeating - improve
-  }
-  return "-";
+  const contact = data?.locationInformation?.contact;
+  if (!contact) return data?.locationInformation?.name || data?.name || "-";
+  return join(
+    [
+      contact?.officialName,
+      contact?.address?.street,
+      join([contact?.address?.zip, contact?.address?.city], " "),
+    ],
+    ", "
+  );
 }
 
 function getFormattedDate(date?: string): string {
@@ -184,6 +168,7 @@ function getFormattedDate(date?: string): string {
   async beforeRouteEnter(_from, _to, next) {
     next();
     await store.dispatch("home/fetchEventTrackingList");
+    await store.dispatch("home/fetchStatistics");
   },
   beforeRouteLeave(to, from, next) {
     store.commit("home/reset");
@@ -194,15 +179,14 @@ export default class Home extends Vue {
   get eventTrackingListError(): ErrorMessage {
     return store.state.home.eventTrackingListError;
   }
+
   get openEventListData(): TableRow[] {
-    const dataRequests = store.state.home.eventTrackingList?.dataRequests || [];
-    return dataRequests
-      .filter(
-        (request) =>
-          request.status ===
-          ExistingDataRequestClientWithLocationStatusEnum.DataRequested
-      )
-      .map(tableRowMapper);
+    const dataRequests = store.state.home.eventTrackingList || [];
+    return dataRequests.map(tableRowMapper);
+  }
+
+  get statistics(): Statistics {
+    return store.state.home.statistics;
   }
 }
 </script>
@@ -211,6 +195,7 @@ export default class Home extends Vue {
 .home {
   > * {
     margin-top: 1em;
+
     &:last-child {
       margin-bottom: 1em;
     }

@@ -59,6 +59,35 @@ See `public/index.html`.
 Later on these values are picked up at runtime in the Vue app.
 See `src/config.ts`.
 
+### Enabling / Disabling index tracking features
+
+To enable index tracking features:
+`[[URL]]?indexTracking=enabled`
+
+To disable index tracking features:
+`[[URL]]?indexTracking=disabled`
+
+Please note:
+- The default setting is "disabled"
+- Enabling / disabling the feature reloads the page and removes the query-string automatically
+- The feature can be triggered on every page (even on index tracking pages)
+- The enabled / disabled state is stored in localStorage
+
+### Enabling / Disabling normalizer logging feature
+
+To enable normalizer log:
+`[[URL]]?normalizeLog=enabled`
+
+To disable normalizer log:
+`[[URL]]?normalizeLog=disabled`
+
+Please note:
+- The default setting is "disabled"
+- Enabling / disabling the logging feature reloads the page and removes the query-string automatically
+- The normalizer is always active / enabled - independent of the log settings
+- The feature can be triggered on every page
+- The enabled / disabled state is stored in localStorage
+
 ### Routes/views and params
 
 In this section you find all deeplinks for our SPA.
@@ -163,6 +192,10 @@ Steps:
 
    ```bash
    export SORMAS_SIDECAR_BASE_URL="https://api.staging.iris-gateway.de"
+   export LOCAL_CONTACT_PERSON_NAME="Max Musterkontakt"
+   export LOCAL_CONTACT_PERSON_PHONE="069 123 4567"
+   export LOCAL_CONTACT_PERSON_MAIL="max.musterkontakt@ga.de"
+   export CSV_EXPORT_STANDARD_ATOMIC_ADDRESS="false"
    ```
 
 5. Start caddy

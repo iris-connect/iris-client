@@ -3,7 +3,7 @@
     <v-card>
       <v-list-item three-line>
         <v-list-item-content>
-          <v-list-item-title class="headline mb-1">{{
+          <v-list-item-title class="headline mb-1 primary--text">{{
             count
           }}</v-list-item-title>
           <v-list-item-subtitle>
@@ -21,7 +21,9 @@
       </v-list-item>
 
       <v-card-actions>
-        <v-btn :to="actionlink" outlined rounded text> {{ actionlabel }}</v-btn>
+        <v-btn :to="actionlink" outlined rounded text :disabled="linkDisabled">
+          {{ actionlabel }}</v-btn
+        >
       </v-card-actions>
     </v-card>
   </section>
@@ -31,7 +33,7 @@
 
   export default  {
     name: 'counter-widget',
-    props: ['subtitle','count','actionlabel','actionlink','image'],
+    props: ['subtitle','count','actionlabel','actionlink','image', 'linkDisabled'],
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     mounted () {
 //
@@ -54,7 +56,6 @@
     padding: 20px 10px;
   }
   .headline {
-    color: #46ff9f;
     font-size: 2.2rem !important;
   }
   .v-card__actions {

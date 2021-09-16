@@ -70,8 +70,8 @@ export default class DateTimeInputField extends DateTimeInputFieldProps {
         : "",
       (v: unknown): string | boolean =>
         !v ||
-        (typeof v === "string" && /\d{4}-\d{2}-\d{2}/.test(v)) ||
-        "Bitte geben Sie ein Datum im Format YYYY-MM-DD an",
+        (typeof v === "string" && /^\d{2}.\d{2}.\d{4}$/.test(v)) ||
+        "Bitte geben Sie ein Datum im Format DD.MM.YYYY ein",
     ].filter((v) => v),
     time: [
       this.required
@@ -80,7 +80,7 @@ export default class DateTimeInputField extends DateTimeInputFieldProps {
         : "",
       (v: unknown): string | boolean =>
         !v ||
-        (typeof v === "string" && /\d\d:\d\d/.test(v)) ||
+        (typeof v === "string" && /^\d\d:\d\d$/.test(v)) ||
         "Bitte geben Sie eine Uhrzeit im Format HH:mm an",
     ].filter((v) => v),
   };
@@ -88,6 +88,21 @@ export default class DateTimeInputField extends DateTimeInputFieldProps {
   date = "";
   time = "";
   error = false;
+
+  @Watch("date")
+  onDateChange(date: string): void {
+    const now = dayjs();
+    if (
+      this.dateProps.max &&
+      dayjs(date).isSame(now.format("YYYY-MM-DD"), "day")
+    ) {
+      this.timeProps.max = now.format("HH:mm");
+      if (!this.time || this.time > this.timeProps.max) {
+        this.time = this.timeProps.max;
+      }
+    }
+    this.setDateTime();
+  }
 
   @Watch("value")
   onChange(newValue: string): void {

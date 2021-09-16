@@ -1,8 +1,14 @@
 package iris.client_bff.users;
 
+import static java.util.Objects.*;
+import static org.apache.commons.lang3.StringUtils.*;
+
+import iris.client_bff.auth.db.UserAccountAuthentication;
+import iris.client_bff.auth.db.jwt.JWTService;
 import iris.client_bff.users.entities.UserAccount;
 import iris.client_bff.users.entities.UserRole;
 import iris.client_bff.users.web.dto.UserInsertDTO;
+import iris.client_bff.users.web.dto.UserRoleDTO;
 import iris.client_bff.users.web.dto.UserUpdateDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +20,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +28,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @AllArgsConstructor
@@ -30,6 +38,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private final UserAccountsRepository userAccountsRepository;
 
 	private final PasswordEncoder passwordEncoder;
+
+	private final JWTService jwtService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
@@ -48,9 +58,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	public List<UserAccount> loadAll() {
-		return StreamSupport
-				.stream(userAccountsRepository.findAll().spliterator(), false)
-				.collect(Collectors.toList());
+		return StreamSupport.stream(userAccountsRepository.findAll().spliterator(), false).collect(Collectors.toList());
 	}
 
 	public UserAccount create(UserInsertDTO userInsertDTO) {
@@ -59,40 +67,95 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userAccountsRepository.save(userAccount);
 	}
 
-	public UserAccount update(UUID userId, UserUpdateDTO userUpdateDTO) {
+	public UserAccount update(UUID userId, UserUpdateDTO userUpdateDTO, UserAccountAuthentication authentication) {
+
 		log.info("Update user: {}", userId);
 
-		var optional = userAccountsRepository.findById(userId);
-		if (optional.isEmpty()) {
-			var error = "User not found: " + userId.toString();
-			log.error(error);
-			throw new RuntimeException(error);
+		var userAccount = userAccountsRepository.findById(userId)
+				.orElseThrow(() -> {
+					var error = "User not found: " + userId.toString();
+					log.error(error);
+					throw new RuntimeException(error);
+				});
+
+		var isAdmin = authentication.isAdmin();
+		var invalidateTokens = false;
+
+		var oldUserName = userAccount.getUserName();
+		if (!isAdmin && !oldUserName.equals(authentication.getUserName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change other users!");
 		}
 
-		var userAccount = optional.get();
-		userAccount.setLastName(userUpdateDTO.getLastName());
-		userAccount.setFirstName(userUpdateDTO.getFirstName());
+		var lastName = userUpdateDTO.getLastName();
+		if (nonNull(lastName)) {
+			userAccount.setLastName(lastName);
+		}
+
+		var firstName = userUpdateDTO.getFirstName();
+		if (nonNull(firstName)) {
+			userAccount.setFirstName(firstName);
+		}
 
 		var newUserName = userUpdateDTO.getUserName();
-		if (StringUtils.isNotEmpty(newUserName)) {
+		if (!isAdmin && isNotBlank(newUserName)) {
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change his username!");
+
+		} else if (isNotBlank(newUserName)
+				&& !StringUtils.equals(oldUserName, newUserName)) {
+
 			userAccount.setUserName(newUserName);
+			invalidateTokens = true;
 		}
 
-		var newRole = userUpdateDTO.getRole();
-		if (newRole != null) {
-			userAccount.setRole(UserRole.valueOf(newRole.name()));
+		var newRoleDto = userUpdateDTO.getRole();
+		if (!isAdmin && newRoleDto != null) {
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change his role!");
+
+		} else if (isRemoveLastAdmin(userAccount, newRoleDto)) {
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The role of the last admin can't be changed!");
+
+		} else if (newRoleDto != null) {
+
+			var newRole = UserRole.valueOf(newRoleDto.name());
+
+			if (userAccount.getRole() != newRole) {
+				userAccount.setRole(newRole);
+				invalidateTokens = true;
+			}
 		}
 
 		var newPassword = userUpdateDTO.getPassword();
-		if (StringUtils.isNotEmpty(newPassword)) {
+		if (isNotBlank(newPassword)
+				&& !StringUtils.equals(userAccount.getPassword(), newPassword)) {
+
 			userAccount.setPassword(passwordEncoder.encode(newPassword));
+			invalidateTokens = true;
+		}
+
+		if (invalidateTokens) {
+			jwtService.invalidateTokensOfUser(oldUserName);
 		}
 
 		return userAccountsRepository.save(userAccount);
 	}
 
-	public void deleteById(UUID id) {
-		log.info("Delete user: {}", id);
+	public void deleteById(UUID id, String currentUserName) {
+
+		userAccountsRepository.findById(id)
+				.ifPresent(it -> {
+
+					if (it.getUserName().equals(currentUserName)) {
+						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A user may not delete himself!");
+					}
+
+					log.info("Delete User: {}", id);
+
+					jwtService.invalidateTokensOfUser(it.getUserName());
+				});
+
 		userAccountsRepository.deleteById(id);
 	}
 
@@ -104,5 +167,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		user.setPassword(passwordEncoder.encode(userInsertDTO.getPassword()));
 		user.setFirstName(userInsertDTO.getFirstName());
 		return user;
+	}
+
+	private boolean isRemoveLastAdmin(UserAccount userAccount, UserRoleDTO newRoleDto) {
+		return newRoleDto != UserRoleDTO.ADMIN
+				&& userAccount.getRole() == UserRole.ADMIN
+				&& userAccountsRepository.countByRole(UserRole.ADMIN) == 1;
 	}
 }

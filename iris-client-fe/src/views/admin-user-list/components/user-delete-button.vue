@@ -6,9 +6,9 @@
       </v-btn>
     </template>
     <v-card>
-      <v-card-title> Nutzer {{ userName }} löschen? </v-card-title>
+      <v-card-title> Konto {{ userName }} löschen? </v-card-title>
       <v-card-text>
-        Sind Sie sicher, dass Sie den Nutzer {{ userName }} löschen möchten?
+        Sind Sie sicher, dass Sie das Konto {{ userName }} löschen möchten?
       </v-card-text>
       <v-card-actions>
         <v-btn color="secondary" text @click="confirmDialog = false">

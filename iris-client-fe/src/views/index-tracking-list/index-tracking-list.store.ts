@@ -1,11 +1,13 @@
-import { DataRequestCaseDetails } from "@/api";
+import { PageIndexCase } from "@/api";
 import client from "@/api-client";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
+import { DataQuery } from "@/api/common";
+import { normalizePageIndexCase } from "@/views/index-tracking-list/index-tracking-list.data";
 
 export type IndexTrackingListState = {
-  indexTrackingList: Array<DataRequestCaseDetails> | null;
+  indexTrackingList: PageIndexCase | null;
   indexTrackingListLoading: boolean;
 };
 
@@ -14,7 +16,7 @@ export interface IndexTrackingListModule
   mutations: {
     setIndexTrackingList(
       state: IndexTrackingListState,
-      indexTrackingList: Array<DataRequestCaseDetails> | null
+      indexTrackingList: PageIndexCase
     ): void;
     setIndexTrackingListLoading(
       state: IndexTrackingListState,
@@ -23,12 +25,18 @@ export interface IndexTrackingListModule
     reset(state: IndexTrackingListState, payload: null): void;
   };
   actions: {
-    fetchIndexTrackingList({ commit }: { commit: Commit }): Promise<void>;
+    fetchIndexTrackingList(
+      { commit }: { commit: Commit },
+      payload: DataQuery
+    ): Promise<void>;
   };
 }
 
 const defaultState: IndexTrackingListState = {
-  indexTrackingList: null,
+  indexTrackingList: {
+    content: [],
+    totalElements: 0,
+  },
   indexTrackingListLoading: false,
 };
 
@@ -38,8 +46,8 @@ const indexTrackingList: IndexTrackingListModule = {
     return { ...defaultState };
   },
   mutations: {
-    setIndexTrackingList(state, indexTrackingList) {
-      state.indexTrackingList = indexTrackingList;
+    setIndexTrackingList(state, payload) {
+      state.indexTrackingList = payload;
     },
     setIndexTrackingListLoading(state, loading) {
       state.indexTrackingListLoading = loading;
@@ -51,11 +59,14 @@ const indexTrackingList: IndexTrackingListModule = {
     },
   },
   actions: {
-    async fetchIndexTrackingList({ commit }) {
-      let indexTrackingList: Array<DataRequestCaseDetails> | null = null;
+    async fetchIndexTrackingList({ commit }, query: DataQuery) {
+      let indexTrackingList: PageIndexCase | null = null;
       commit("setIndexTrackingListLoading", true);
       try {
-        indexTrackingList = (await client.dataRequestClientCasesGet()).data;
+        indexTrackingList = normalizePageIndexCase(
+          (await client.dataRequestClientCasesGet({ params: query })).data,
+          true
+        );
       } finally {
         commit("setIndexTrackingList", indexTrackingList);
         commit("setIndexTrackingListLoading", false);

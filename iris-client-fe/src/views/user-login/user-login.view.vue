@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-center>
-    <v-card class="my-3">
+    <v-card class="my-3 user-login-container">
       <v-form
         ref="form"
         v-model="formIsValid"
@@ -13,23 +13,21 @@
             <v-col cols="12">
               <v-text-field
                 v-model="formModel.userName"
-                :rules="validationRules.defined"
-                label="Benutzername"
+                :rules="validationRules.sanatisedAndDefined"
+                label="Anmeldename"
               ></v-text-field>
             </v-col>
             <v-col cols="12">
               <v-text-field
                 v-model="formModel.password"
-                :rules="validationRules.defined"
+                :rules="validationRules.password"
                 label="Passwort"
                 type="password"
                 @keyup.native.enter="submit"
               ></v-text-field>
             </v-col>
           </v-row>
-          <v-alert v-if="authenticationError" text type="error">
-            {{ authenticationError }}
-          </v-alert>
+          <user-login-error :error="authenticationError" />
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -48,8 +46,12 @@ import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
 import { Credentials } from "@/api";
 import rules from "@/common/validation-rules";
+import UserLoginError from "@/views/user-login/components/user-login-error.vue";
 
 @Component({
+  components: {
+    UserLoginError,
+  },
   beforeRouteLeave(to, from, next) {
     store.commit("userLogin/reset");
     next();
@@ -73,7 +75,8 @@ export default class UserLoginView extends Vue {
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      defined: [rules.defined],
+      sanatisedAndDefined: [rules.defined, rules.sanitised],
+      password: [rules.defined, rules.sanitised],
     };
   }
 
@@ -90,3 +93,9 @@ export default class UserLoginView extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.user-login-container {
+  max-width: 420px;
+}
+</style>

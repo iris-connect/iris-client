@@ -403,6 +403,12 @@ export interface DataRequest {
    * @memberof DataRequest
    */
   requestDetails?: string;
+  /**
+   * Comment from an IRIS user
+   * @type {string}
+   * @memberof DataRequest
+   */
+  comment?: string;
 }
 /**
  * Creates a new index case data request from FE - persistent data has to be refined. Starting with contact persons name.
@@ -485,10 +491,10 @@ export interface DataRequestCaseData {
   caseId?: string;
   /**
    *
-   * @type {string}
+   * @type {DataRequestStatus}
    * @memberof DataRequestCaseData
    */
-  status?: DataRequestCaseDataStatusEnum;
+  status?: DataRequestStatus;
   /**
    * Nonce used in provider app to authorize data upload
    * @type {string}
@@ -496,23 +502,18 @@ export interface DataRequestCaseData {
    */
   nonce?: string;
   /**
+   * The URI that can be used to submit contact data for this tracing code.
+   * @type {string}
+   * @memberof DataRequestCaseData
+   */
+  submissionUri: string;
+  /**
    *
    * @type {ContactsAndEvents}
    * @memberof DataRequestCaseData
    */
   submissionData?: ContactsAndEvents;
 }
-
-/**
- * @export
- * @enum {string}
- */
-export enum DataRequestCaseDataStatusEnum {
-  DataRequested = "DATA_REQUESTED",
-  DataReceived = "DATA_RECEIVED",
-  Closed = "CLOSED",
-}
-
 /**
  *
  * @export
@@ -570,22 +571,11 @@ export interface DataRequestCaseDetails {
   caseId?: string;
   /**
    *
-   * @type {string}
+   * @type {DataRequestStatus}
    * @memberof DataRequestCaseDetails
    */
-  status?: DataRequestCaseDetailsStatusEnum;
+  status?: DataRequestStatus;
 }
-
-/**
- * @export
- * @enum {string}
- */
-export enum DataRequestCaseDetailsStatusEnum {
-  DataRequested = "DATA_REQUESTED",
-  DataReceived = "DATA_RECEIVED",
-  Closed = "CLOSED",
-}
-
 /**
  *
  * @export
@@ -600,22 +590,11 @@ export interface DataRequestCaseDetailsAllOf {
   caseId?: string;
   /**
    *
-   * @type {string}
+   * @type {DataRequestStatus}
    * @memberof DataRequestCaseDetailsAllOf
    */
-  status?: DataRequestCaseDetailsAllOfStatusEnum;
+  status?: DataRequestStatus;
 }
-
-/**
- * @export
- * @enum {string}
- */
-export enum DataRequestCaseDetailsAllOfStatusEnum {
-  DataRequested = "DATA_REQUESTED",
-  DataReceived = "DATA_RECEIVED",
-  Closed = "CLOSED",
-}
-
 /**
  * Details for index case
  * @export
@@ -660,10 +639,10 @@ export interface DataRequestCaseExtendedDetails {
   caseId?: string;
   /**
    *
-   * @type {string}
+   * @type {DataRequestStatus}
    * @memberof DataRequestCaseExtendedDetails
    */
-  status?: DataRequestCaseExtendedDetailsStatusEnum;
+  status?: DataRequestStatus;
   /**
    * Nonce used in provider app to authorize data upload
    * @type {string}
@@ -671,17 +650,6 @@ export interface DataRequestCaseExtendedDetails {
    */
   nonce?: string;
 }
-
-/**
- * @export
- * @enum {string}
- */
-export enum DataRequestCaseExtendedDetailsStatusEnum {
-  DataRequested = "DATA_REQUESTED",
-  DataReceived = "DATA_RECEIVED",
-  Closed = "CLOSED",
-}
-
 /**
  *
  * @export
@@ -743,6 +711,43 @@ export interface DataRequestClient {
    * @memberof DataRequestClient
    */
   requestDetails?: string;
+  /**
+   * Comment from an IRIS user.
+   * @type {string}
+   * @memberof DataRequestClient
+   */
+  comment?: string;
+}
+/**
+ * The data request that will be updated by the FE.
+ * @export
+ * @interface DataRequestClientUpdate
+ */
+export interface DataRequestClientUpdate {
+  /**
+   * Friendly name of the request to be identified easily by GA
+   * @type {string}
+   * @memberof DataRequestClientUpdate
+   */
+  name?: string;
+  /**
+   * External ID outside of IRIS
+   * @type {string}
+   * @memberof DataRequestClientUpdate
+   */
+  externalRequestId?: string;
+  /**
+   * Comment from an IRIS user.
+   * @type {string}
+   * @memberof DataRequestClientUpdate
+   */
+  comment?: string;
+  /**
+   *
+   * @type {DataRequestStatusUpdateByUser}
+   * @memberof DataRequestClientUpdate
+   */
+  status?: DataRequestStatusUpdateByUser;
 }
 /**
  *
@@ -751,17 +756,17 @@ export interface DataRequestClient {
  */
 export interface DataRequestDetails {
   /**
-   *
-   * @type {GuestList}
-   * @memberof DataRequestDetails
-   */
-  submissionData?: GuestList;
-  /**
-   *
+   * Comments on given data request from GA employees
    * @type {string}
    * @memberof DataRequestDetails
    */
-  status?: DataRequestDetailsStatusEnum;
+  comment?: string;
+  /**
+   *
+   * @type {DataRequestStatus}
+   * @memberof DataRequestDetails
+   */
+  status?: DataRequestStatus;
   /**
    * Code for DataRequest
    * @type {string}
@@ -803,7 +808,7 @@ export interface DataRequestDetails {
    * @type {string}
    * @memberof DataRequestDetails
    */
-  lastUpdatedAt?: string;
+  lastModifiedAt?: string;
   /**
    * Details of the data request, specifying it in more detail and narrowing down the data to be provided (e.g. table and environment, seat, rank, ...).
    * @type {string}
@@ -816,16 +821,47 @@ export interface DataRequestDetails {
    * @memberof DataRequestDetails
    */
   locationInformation?: LocationInformation;
+  /**
+   *
+   * @type {GuestList}
+   * @memberof DataRequestDetails
+   */
+  submissionData?: GuestList;
 }
-
 /**
+ *
+ * @export
+ * @interface DataRequestDetailsAllOf
+ */
+export interface DataRequestDetailsAllOf {
+  /**
+   *
+   * @type {GuestList}
+   * @memberof DataRequestDetailsAllOf
+   */
+  submissionData?: GuestList;
+}
+/**
+ * Status of data request.
  * @export
  * @enum {string}
  */
-export enum DataRequestDetailsStatusEnum {
+export enum DataRequestStatus {
   DataRequested = "DATA_REQUESTED",
   DataReceived = "DATA_RECEIVED",
   Closed = "CLOSED",
+  Aborted = "ABORTED",
+}
+
+/**
+ * Status of data request.
+ * @export
+ * @enum {string}
+ */
+export enum DataRequestStatusUpdateByUser {
+  DataReceived = "DATA_RECEIVED",
+  Closed = "CLOSED",
+  Aborted = "ABORTED",
 }
 
 /**
@@ -911,10 +947,10 @@ export interface EventList {
 export interface ExistingDataRequestClientWithLocation {
   /**
    *
-   * @type {string}
+   * @type {DataRequestStatus}
    * @memberof ExistingDataRequestClientWithLocation
    */
-  status?: ExistingDataRequestClientWithLocationStatusEnum;
+  status?: DataRequestStatus;
   /**
    * Code for DataRequest
    * @type {string}
@@ -970,17 +1006,6 @@ export interface ExistingDataRequestClientWithLocation {
    */
   locationInformation?: LocationInformation;
 }
-
-/**
- * @export
- * @enum {string}
- */
-export enum ExistingDataRequestClientWithLocationStatusEnum {
-  DataRequested = "DATA_REQUESTED",
-  DataReceived = "DATA_RECEIVED",
-  Closed = "CLOSED",
-}
-
 /**
  *
  * @export
@@ -1335,6 +1360,12 @@ export interface LocationDataRequest {
    */
   requestDetails?: string;
   /**
+   * Comment from an IRIS user
+   * @type {string}
+   * @memberof LocationDataRequest
+   */
+  comment?: string;
+  /**
    * The URI that can be used to submit contact data for this tracing code.
    * @type {string}
    * @memberof LocationDataRequest
@@ -1421,6 +1452,24 @@ export interface LocationList {
    * @memberof LocationList
    */
   locations: Array<LocationInformation>;
+  /**
+   *
+   * @type {number}
+   * @memberof LocationList
+   */
+  totalElements: number;
+  /**
+   *
+   * @type {number}
+   * @memberof LocationList
+   */
+  page: number;
+  /**
+   *
+   * @type {number}
+   * @memberof LocationList
+   */
+  size: number;
 }
 /**
  * Basic data type of a person.
@@ -1629,43 +1678,261 @@ export interface UserUpdate {
  * @interface FeedbackInsert
  */
 export interface FeedbackInsert {
-  /**
-   *
-   * @type {string}
-   * @memberof FeedbackInsert
-   */
-  category: string;
-  /**
-   *
-   * @type {string}
-   * @memberof FeedbackInsert
-   */
-  title: string;
-  /**
-   *
-   * @type {string}
-   * @memberof FeedbackInsert
-   */
-  comment: string;
-  /**
-   *
-   * @type {string}
-   * @memberof FeedbackInsert
-   */
-  name: string;
-  /**
-   *
-   * @type {string}
-   * @memberof FeedbackInsert
-   */
-  organisation: string;
-  /**
-   *
-   * @type {string}
-   * @memberof FeedbackInsert
-   */
-  email: string;
+    /**
+     *
+     * @type {string}
+     * @memberof FeedbackInsert
+     */
+    category: string;
+    /**
+     *
+     * @type {string}
+     * @memberof FeedbackInsert
+     */
+    title: string;
+    /**
+     *
+     * @type {string}
+     * @memberof FeedbackInsert
+     */
+    comment: string;
+    /**
+     *
+     * @type {string}
+     * @memberof FeedbackInsert
+     */
+    name: string;
+    /**
+     *
+     * @type {string}
+     * @memberof FeedbackInsert
+     */
+    organisation: string;
+    /**
+     *
+     * @type {string}
+     * @memberof FeedbackInsert
+     */
+    email: string;
 }
+/**
+ *
+ * @export
+ * @interface Statistics
+ */
+export interface Statistics {
+  /**
+   *
+   * @type {number}
+   * @memberof Statistics
+   */
+  eventsCount?: any;
+  /**
+   *
+   * @type {number}
+   * @memberof Statistics
+   */
+  indexCasesCount?: any;
+  /**
+   *
+   * @type {number}
+   * @memberof Statistics
+   */
+  sumStatus?: any;
+}
+
+/**
+ *
+ * @export
+ * @interface Pageable
+ */
+export interface Pageable {
+  /**
+   *
+   * @type {number}
+   * @memberof Pageable
+   */
+  offset?: any;
+  /**
+   *
+   * @type {Sort}
+   * @memberof Pageable
+   */
+  sort?: any;
+  /**
+   *
+   * @type {number}
+   * @memberof Pageable
+   */
+  pageSize?: any;
+  /**
+   *
+   * @type {number}
+   * @memberof Pageable
+   */
+  pageNumber?: any;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Pageable
+   */
+  paged?: any;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Pageable
+   */
+  unpaged?: any;
+}
+
+/**
+ *
+ * @export
+ * @interface PageIndexCase
+ */
+export interface PageIndexCase {
+  /**
+   *
+   * @type {number}
+   * @memberof PageIndexCase
+   */
+  totalElements?: any;
+  /**
+   *
+   * @type {number}
+   * @memberof PageIndexCase
+   */
+  totalPages?: any;
+  /**
+   *
+   * @type {number}
+   * @memberof PageIndexCase
+   */
+  size?: any;
+  /**
+   *
+   * @type {Array&lt;DataRequestCaseDetails&gt;}
+   * @memberof PageIndexCase
+   */
+  content: Array<DataRequestCaseDetails>;
+  /**
+   *
+   * @type {number}
+   * @memberof PageIndexCase
+   */
+  number?: any;
+  /**
+   *
+   * @type {Sort}
+   * @memberof PageIndexCase
+   */
+  sort?: any;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PageIndexCase
+   */
+  first?: any;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PageIndexCase
+   */
+  last?: any;
+  /**
+   *
+   * @type {number}
+   * @memberof PageIndexCase
+   */
+  numberOfElements?: any;
+  /**
+   *
+   * @type {Pageable}
+   * @memberof PageIndexCase
+   */
+  pageable?: any;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PageIndexCase
+   */
+  empty?: any;
+}
+
+/**
+ *
+ * @export
+ * @interface PageEvent
+ */
+export interface PageEvent {
+  /**
+   *
+   * @type {number}
+   * @memberof PageEvent
+   */
+  totalElements?: any;
+  /**
+   *
+   * @type {number}
+   * @memberof PageEvent
+   */
+  totalPages?: any;
+  /**
+   *
+   * @type {number}
+   * @memberof PageEvent
+   */
+  size?: any;
+  /**
+   *
+   * @type {Array&lt;ExistingDataRequestClientWithLocation&gt;}
+   * @memberof PageEvent
+   */
+  content: Array<ExistingDataRequestClientWithLocation>;
+  /**
+   *
+   * @type {number}
+   * @memberof PageEvent
+   */
+  number?: any;
+  /**
+   *
+   * @type {Sort}
+   * @memberof PageEvent
+   */
+  sort?: any;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PageEvent
+   */
+  first?: any;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PageEvent
+   */
+  last?: any;
+  /**
+   *
+   * @type {number}
+   * @memberof PageEvent
+   */
+  numberOfElements?: any;
+  /**
+   *
+   * @type {Pageable}
+   * @memberof PageEvent
+   */
+  pageable?: any;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PageEvent
+   */
+  empty?: any;
+}
+
 /**
  * IrisClientFrontendApi - axios parameter creator
  * @export
@@ -1674,6 +1941,53 @@ export const IrisClientFrontendApiAxiosParamCreator = function (
   configuration?: Configuration
 ) {
   return {
+    /**
+     *
+     * @summary Logout user
+     * @param {*} [options] Override http request option.
+     */
+    logout: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/user/logout`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
     /**
      *
      * @summary Detail view for index data request with the data submissions already received
@@ -1849,6 +2163,78 @@ export const IrisClientFrontendApiAxiosParamCreator = function (
     },
     /**
      *
+     * @summary Patches details of an existing data request
+     * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+     * @param {DataRequestClientUpdate} dataRequestClientUpdate
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    dataRequestsClientLocationsCodePatch: async (
+      code: string,
+      dataRequestClientUpdate: DataRequestClientUpdate,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'code' is not null or undefined
+      assertParamExists("dataRequestsClientLocationsCodePatch", "code", code);
+      // verify required parameter 'dataRequestClientUpdate' is not null or undefined
+      assertParamExists(
+        "dataRequestsClientLocationsCodePatch",
+        "dataRequestClientUpdate",
+        dataRequestClientUpdate
+      );
+      const localVarPath = `/data-requests-client/events/{code}`.replace(
+        `{${"code"}}`,
+        encodeURIComponent(String(code))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "PATCH",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        dataRequestClientUpdate,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @summary Fetches data requests
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1856,7 +2242,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (
     dataRequestsClientLocationsGet: async (
       options: any = {}
     ): Promise<RequestArgs> => {
-      const localVarPath = `/data-requests-client/locations`;
+      const localVarPath = `/data-requests-client/events`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -1914,7 +2300,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (
         "dataRequestClient",
         dataRequestClient
       );
-      const localVarPath = `/data-requests-client/locations`;
+      const localVarPath = `/data-requests-client/events`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -1975,7 +2361,7 @@ export const IrisClientFrontendApiAxiosParamCreator = function (
     ): Promise<RequestArgs> => {
       // verify required parameter 'code' is not null or undefined
       assertParamExists("getLocationDetails", "code", code);
-      const localVarPath = `/data-requests-client/locations/{code}`.replace(
+      const localVarPath = `/data-requests-client/events/{code}`.replace(
         `{${"code"}}`,
         encodeURIComponent(String(code))
       );
@@ -2082,24 +2468,11 @@ export const IrisClientFrontendApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {string} searchKeyword The search keyword
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    searchSearchKeywordGet: async (
-      searchKeyword: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'searchKeyword' is not null or undefined
-      assertParamExists(
-        "searchSearchKeywordGet",
-        "searchKeyword",
-        searchKeyword
-      );
-      const localVarPath = `/search/{search_keyword}`.replace(
-        `{${"search_keyword"}}`,
-        encodeURIComponent(String(searchKeyword))
-      );
+    searchSearchKeywordGet: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/search`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -2424,6 +2797,61 @@ export const IrisClientFrontendApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getWeeklyData: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/data-requests-client/statistics`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      const query = new URLSearchParams(localVarUrlObj.search);
+      for (const key in localVarQueryParameter) {
+        query.set(key, localVarQueryParameter[key]);
+      }
+      for (const key in options.query) {
+        query.set(key, options.query[key]);
+      }
+      localVarUrlObj.search = new URLSearchParams(query).toString();
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @summary Create IRIS user
      * @param {UserInsert} userInsert
      * @param {*} [options] Override http request option.
@@ -2498,6 +2926,24 @@ export const IrisClientFrontendApiFp = function (
   return {
     /**
      *
+     * @summary Logout user
+     * @param {*} [options] Override http request option.
+     */
+    async logout(
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.logout(options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @summary Detail view for index data request with the data submissions already received
      * @param {string} caseId The internal unique CaseId of a index case in format.
      * @param {*} [options] Override http request option.
@@ -2532,10 +2978,7 @@ export const IrisClientFrontendApiFp = function (
     async dataRequestClientCasesGet(
       options?: any
     ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<Array<DataRequestCaseDetails>>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageIndexCase>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestClientCasesGet(
         options
@@ -2576,6 +3019,36 @@ export const IrisClientFrontendApiFp = function (
     },
     /**
      *
+     * @summary Patches details of an existing data request
+     * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+     * @param {DataRequestClientUpdate} dataRequestClientUpdate
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async dataRequestsClientLocationsCodePatch(
+      code: string,
+      dataRequestClientUpdate: DataRequestClientUpdate,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<DataRequestDetails>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestsClientLocationsCodePatch(
+        code,
+        dataRequestClientUpdate,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @summary Fetches data requests
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2583,10 +3056,7 @@ export const IrisClientFrontendApiFp = function (
     async dataRequestsClientLocationsGet(
       options?: any
     ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<ExistingDataRequestClientWithLocationList>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageEvent>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.dataRequestsClientLocationsGet(
         options
@@ -2678,18 +3148,15 @@ export const IrisClientFrontendApiFp = function (
     },
     /**
      *
-     * @param {string} searchKeyword The search keyword
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async searchSearchKeywordGet(
-      searchKeyword: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<LocationList>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.searchSearchKeywordGet(
-        searchKeyword,
         options
       );
       return createRequestFunction(
@@ -2816,14 +3283,17 @@ export const IrisClientFrontendApiFp = function (
         configuration
       );
     },
-    async feedbackPost(
-      feedbackObject: FeedbackInsert,
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getWeeklyData(
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Statistics>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.feedbackPost(
-        feedbackObject,
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getWeeklyData(
         options
       );
       return createRequestFunction(
@@ -2849,6 +3319,16 @@ export const IrisClientFrontendApiFactory = function (
   return {
     /**
      *
+     * @summary Logout user
+     * @param {*} [options] Override http request option.
+     */
+    logout(options?: any): AxiosPromise<void> {
+      return localVarFp
+        .logout(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @summary Detail view for index data request with the data submissions already received
      * @param {string} caseId The internal unique CaseId of a index case in format.
      * @param {*} [options] Override http request option.
@@ -2868,9 +3348,7 @@ export const IrisClientFrontendApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    dataRequestClientCasesGet(
-      options?: any
-    ): AxiosPromise<Array<DataRequestCaseDetails>> {
+    dataRequestClientCasesGet(options?: any): AxiosPromise<PageIndexCase> {
       return localVarFp
         .dataRequestClientCasesGet(options)
         .then((request) => request(axios, basePath));
@@ -2892,13 +3370,32 @@ export const IrisClientFrontendApiFactory = function (
     },
     /**
      *
+     * @summary Patches details of an existing data request
+     * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+     * @param {DataRequestClientUpdate} dataRequestClientUpdate
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    dataRequestsClientLocationsCodePatch(
+      code: string,
+      dataRequestClientUpdate: DataRequestClientUpdate,
+      options?: any
+    ): AxiosPromise<DataRequestDetails> {
+      return localVarFp
+        .dataRequestsClientLocationsCodePatch(
+          code,
+          dataRequestClientUpdate,
+          options
+        )
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @summary Fetches data requests
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    dataRequestsClientLocationsGet(
-      options?: any
-    ): AxiosPromise<ExistingDataRequestClientWithLocationList> {
+    dataRequestsClientLocationsGet(options?: any): AxiosPromise<PageEvent> {
       return localVarFp
         .dataRequestsClientLocationsGet(options)
         .then((request) => request(axios, basePath));
@@ -2947,16 +3444,12 @@ export const IrisClientFrontendApiFactory = function (
     },
     /**
      *
-     * @param {string} searchKeyword The search keyword
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    searchSearchKeywordGet(
-      searchKeyword: string,
-      options?: any
-    ): AxiosPromise<LocationList> {
+    searchSearchKeywordGet(options?: any): AxiosPromise<LocationList> {
       return localVarFp
-        .searchSearchKeywordGet(searchKeyword, options)
+        .searchSearchKeywordGet(options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -3024,18 +3517,12 @@ export const IrisClientFrontendApiFactory = function (
     },
     /**
      *
-     * @summary Create IRIS user
-     * @param {UserInsert} userInsert
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    feedbackPost(
-      feedbackObject: FeedbackInsert,
-      options?: any
-    ): AxiosPromise<any> {
-      //TODO any to whatever we need
+    getWeeklyData(options?: any): AxiosPromise<Statistics> {
       return localVarFp
-        .feedbackPost(feedbackObject, options)
+        .getWeeklyData(options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -3048,6 +3535,19 @@ export const IrisClientFrontendApiFactory = function (
  * @extends {BaseAPI}
  */
 export class IrisClientFrontendApi extends BaseAPI {
+  /**
+   *
+   * @summary Logout user
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public logout(options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .logout(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
   /**
    *
    * @summary Detail view for index data request with the data submissions already received
@@ -3089,6 +3589,29 @@ export class IrisClientFrontendApi extends BaseAPI {
   ) {
     return IrisClientFrontendApiFp(this.configuration)
       .dataRequestClientCasesPost(dataRequestCaseClient, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @summary Patches details of an existing data request
+   * @param {string} code The unique code of a data request in format of a UUID sent by the health department.
+   * @param {DataRequestClientUpdate} dataRequestClientUpdate
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public dataRequestsClientLocationsCodePatch(
+    code: string,
+    dataRequestClientUpdate: DataRequestClientUpdate,
+    options?: any
+  ) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .dataRequestsClientLocationsCodePatch(
+        code,
+        dataRequestClientUpdate,
+        options
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -3152,14 +3675,12 @@ export class IrisClientFrontendApi extends BaseAPI {
 
   /**
    *
-   * @param {string} searchKeyword The search keyword
    * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
    * @memberof IrisClientFrontendApi
    */
-  public searchSearchKeywordGet(searchKeyword: string, options?: any) {
+  public searchSearchKeywordGet(options?: any) {
     return IrisClientFrontendApiFp(this.configuration)
-      .searchSearchKeywordGet(searchKeyword, options)
+      .searchSearchKeywordGet(options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -3229,6 +3750,18 @@ export class IrisClientFrontendApi extends BaseAPI {
   public usersPost(userInsert: UserInsert, options?: any) {
     return IrisClientFrontendApiFp(this.configuration)
       .usersPost(userInsert, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof StatisticsControllerApi
+   */
+  public getWeeklyData(options?: any) {
+    return IrisClientFrontendApiFp(this.configuration)
+      .getWeeklyData(options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

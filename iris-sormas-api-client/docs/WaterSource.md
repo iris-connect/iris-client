@@ -1,9 +1,0 @@
-# WaterSource
-
-## Enum
-
-* `PIPE_NETWORK` (value: `"PIPE_NETWORK"`)
-* `COMMUNITY_BOREHOLE_WELL` (value: `"COMMUNITY_BOREHOLE_WELL"`)
-* `PRIVATE_BOREHOLE_WELL` (value: `"PRIVATE_BOREHOLE_WELL"`)
-* `STREAM` (value: `"STREAM"`)
-* `OTHER` (value: `"OTHER"`)

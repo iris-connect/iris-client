@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
+import _get from "lodash/get";
 
 interface ParsedError {
   data: unknown;
@@ -7,13 +8,12 @@ interface ParsedError {
 
 export type ErrorMessage = string | null;
 
-export const parseError = (error: AxiosError): ParsedError => {
-  if (error.isAxiosError) {
+export const parseError = (error: unknown): ParsedError => {
+  if (error && axios.isAxiosError(error)) {
     if (error.response) {
-      const response = error.response as AxiosResponse;
       return {
-        data: response.data,
-        status: response.status,
+        data: error.response?.data,
+        status: error.response?.status,
       };
     }
     if (error.request) {
@@ -24,29 +24,31 @@ export const parseError = (error: AxiosError): ParsedError => {
     }
   }
   return {
-    data: error.message,
+    data: _get(error, "message", ""),
     status: -1,
   };
 };
 
-const parseErrorMessage = (error: unknown): ErrorMessage => {
+const parseErrorMessage = (error: unknown, keys: string[]): ErrorMessage => {
   if (typeof error === "object") {
-    const e = error as Record<string, unknown>;
-    return Object.keys(e)
-      .map((key) => parseErrorMessage(e[key]))
-      .filter((v) => v)
-      .join(", ");
+    const e = error as Record<string, string>;
+    const errorKey = keys.find((k) => {
+      return Object.prototype.hasOwnProperty.call(e, k);
+    });
+    if (errorKey) return e[errorKey];
   }
   if (typeof error === "string") return error;
   return null;
 };
 
 export const getErrorMessage = (
-  error: AxiosError | string,
+  error: AxiosError | string | unknown,
   fallback = "Fehler"
 ): ErrorMessage => {
   if (!error || axios.isCancel(error)) return "";
   if (typeof error === "string") return error;
   const parsedError = parseError(error);
-  return parseErrorMessage(parsedError.data) || fallback;
+  const message =
+    parseErrorMessage(parsedError.data, ["message", "error"]) || fallback;
+  return `${message} [${parsedError.status}]`;
 };

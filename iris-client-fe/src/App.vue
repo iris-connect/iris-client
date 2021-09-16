@@ -5,10 +5,10 @@
         alt="IRIS Logo"
         class="shrink mt-3 mr-4"
         contain
-        src="@/assets/logo.png"
+        src="@/assets/logo-iris-connect.png"
         transition="scale-transition"
-        height="100"
-        max-width="100"
+        height="150"
+        max-width="150"
       />
       <template v-if="authenticated">
         <template v-for="link in links">
@@ -17,6 +17,7 @@
             :key="link.name"
             :to="link.path"
             :exact="link.meta.menuExact"
+            :disabled="isLinkDisabled(link)"
             text
           >
             {{ link.meta.menuName }}
@@ -25,7 +26,8 @@
         <v-spacer></v-spacer>
         <user-menu
           :display-name="userDisplayName"
-          :is-admin="isAdmin"
+          :role="userRole"
+          :id="userID"
           @logout="logoutUser"
         />
       </template>
@@ -43,12 +45,17 @@
 import Vue from "vue";
 import { routes, setInterceptRoute } from "@/router";
 import UserMenu from "@/views/user-login/components/user-menu.vue";
+import { RouteConfig } from "vue-router";
+import { UserRole } from "@/api";
 
 // @todo: move user functionality to a dedicated user-module?
 export default Vue.extend({
   name: "App",
   components: {
     UserMenu,
+  },
+  created() {
+    document.title = "IRIS connect";
   },
   data: () => ({
     links: routes,
@@ -60,8 +67,11 @@ export default Vue.extend({
     userDisplayName(): string {
       return this.$store.getters["userLogin/userDisplayName"];
     },
-    isAdmin(): boolean {
-      return this.$store.getters["userLogin/isAdmin"];
+    userID(): string {
+      return this.$store.state.userLogin.user?.id ?? "";
+    },
+    userRole(): UserRole | undefined {
+      return this.$store.state.userLogin.user?.role;
     },
   },
   watch: {
@@ -100,8 +110,21 @@ export default Vue.extend({
     },
   },
   methods: {
+    isLinkDisabled(link: RouteConfig): boolean {
+      // @todo - indexTracking: remove disabled check once index cases are permanently activated again
+      if (
+        link.name === "index-new" ||
+        link.name === "index-list" ||
+        link.name === "index-details"
+      ) {
+        if (!this.$store.state.indexTrackingSettings.indexTrackingEnabled) {
+          return true;
+        }
+      }
+      return link.meta?.disabled;
+    },
     logoutUser() {
-      this.$store.commit("userLogin/setSession");
+      this.$store.dispatch("userLogin/logout");
     },
   },
 });

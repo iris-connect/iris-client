@@ -1,5 +1,10 @@
 <template>
   <div>
+    <alert-component v-if="alert">
+      <template v-slot:message>
+        Die Kontaktdaten zu diesem Indexfall wurden angefragt.
+      </template>
+    </alert-component>
     <v-card>
       <v-card-title
         >Details für Indexfall ID: {{ indexData.extID }}</v-card-title
@@ -32,6 +37,10 @@
             <div>
               <strong> TAN: </strong>
               {{ indexData.tan }}
+            </div>
+            <div>
+              <strong> Übermittlungs-URL: </strong>
+              <index-tracking-submission-url :url="indexData.submissionUri" />
             </div>
           </v-col>
         </v-row>
@@ -179,22 +188,25 @@
   </div>
 </template>
 <style></style>
+
 <script lang="ts">
 import {
   Address,
   ContactPersonAllOfWorkPlace,
-  DataRequestCaseDetailsStatusEnum,
+  DataRequestStatus,
   Sex,
 } from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import DataExport from "@/utils/DataExport";
+import dataExport from "@/utils/data-export";
 import Genders from "@/constants/Genders";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import dayjs from "@/utils/date";
 import ContactCategories from "@/constants/ContactCategories";
+import AlertComponent from "@/components/alerts/alert.component.vue";
+import IndexTrackingSubmissionUrl from "@/views/index-tracking-details/components/index-tracking-submission-url.vue";
 import FeedbackDialog from "@/components/feedback.component.vue";
 
 type IndexData = {
@@ -206,6 +218,7 @@ type IndexData = {
   eventCount: number;
   contactCount: number;
   tan: string;
+  submissionUri: string;
   status: string;
 };
 
@@ -260,7 +273,9 @@ function getFormattedAddress(address?: Address | null): string {
 
 @Component({
   components: {
+    IndexTrackingSubmissionUrl,
     IndexTrackingDetailsView: IndexTrackingDetailsView,
+    AlertComponent,
     FeedbackDialog,
   },
   async beforeRouteEnter(_from, _to, next) {
@@ -276,6 +291,8 @@ function getFormattedAddress(address?: Address | null): string {
   },
 })
 export default class IndexTrackingDetailsView extends Vue {
+  alert = false;
+
   tableDataContacts = {
     search: "",
     expanded: [],
@@ -382,6 +399,7 @@ export default class IndexTrackingDetailsView extends Vue {
       eventCount: events.length,
       comment: dataRequest?.comment || "-",
       tan: "-", // TODO: TAN needed
+      submissionUri: dataRequest?.submissionUri || "-",
       status: dataRequest?.status || "",
     };
   }
@@ -426,6 +444,7 @@ export default class IndexTrackingDetailsView extends Vue {
         address: getFormattedAddress(contact.address) || "-",
         workPlace: getFormattedWorkPlace(contact.workPlace) || "-",
         basicConditions: contact.contactInformation?.basicConditions || "-",
+        raw: contact,
       };
     });
   }
@@ -451,8 +470,29 @@ export default class IndexTrackingDetailsView extends Vue {
         phone: event.phone || "-",
         address: getFormattedAddress(event.address) || "-",
         additionalInformation: event.additionalInformation || "-",
+        raw: event,
       };
     });
+  }
+
+  created(): void {
+    if (this.$route.query.is_created == "true") {
+      this.openAlert();
+    }
+
+    let query = Object.assign({}, this.$route.query);
+
+    if (query.is_created) {
+      delete query.is_created;
+      this.$router.replace({ query });
+    }
+  }
+
+  openAlert(): void {
+    this.alert = true;
+    setTimeout(() => {
+      this.alert = false;
+    }, 2000);
   }
 
   currentTab = 0;
@@ -460,11 +500,11 @@ export default class IndexTrackingDetailsView extends Vue {
     this.currentTab = index;
   }
 
-  getStatusName(status: DataRequestCaseDetailsStatusEnum): string {
+  getStatusName(status: DataRequestStatus): string {
     return StatusMessages.getMessage(status);
   }
 
-  getStatusColor(status: DataRequestCaseDetailsStatusEnum): string {
+  getStatusColor(status: DataRequestStatus): string {
     return StatusColors.getColor(status);
   }
 
@@ -473,19 +513,14 @@ export default class IndexTrackingDetailsView extends Vue {
   }
 
   handleContactsExport(): void {
-    DataExport.exportCsv(
-      [
-        ...this.tableDataContacts.headers,
-        ...this.tableDataContacts.expandedHeaders,
-      ],
+    dataExport.exportStandardCsvForIndexTrackingContacts(
       this.tableDataContacts.select,
       [this.indexData.extID, Date.now()].join("_")
     );
   }
 
   handleEventsExport(): void {
-    DataExport.exportCsv(
-      [...this.tableDataEvents.headers],
+    dataExport.exportStandardCsvForIndexTrackingEvents(
       this.tableDataEvents.select,
       [this.indexData.extID, Date.now()].join("_")
     );

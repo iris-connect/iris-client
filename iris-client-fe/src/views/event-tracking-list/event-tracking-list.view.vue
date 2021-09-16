@@ -10,33 +10,24 @@
       </v-col>
     </v-row>
     <v-row class="mb-6">
-      <v-col cols="8">
+      <v-col cols="12">
         Status:
-        <v-btn-toggle dense mandatory v-model="statusButtonSelected">
+        <v-btn-toggle
+          dense
+          mandatory
+          :value="statusButtonSelected"
+          class="flex-wrap"
+        >
           <v-btn
-            @click="filterStatus(statusEnum.DataRequested)"
-            style="opacity: 100%; background-color: white"
+            text
+            @click="filterStatus(selectableStatus[status])"
+            v-for="status in Object.keys(selectableStatus)"
+            :key="status"
           >
-            {{ getStatusName(statusEnum.DataRequested) }}
+            {{ getStatusSelectLabel(selectableStatus[status]) }}
           </v-btn>
-          <v-btn
-            @click="filterStatus(statusEnum.DataReceived)"
-            style="opacity: 100%; background-color: white"
-          >
-            {{ getStatusName(statusEnum.DataReceived) }}
-          </v-btn>
-          <v-btn
-            @click="filterStatus(statusEnum.Closed)"
-            style="opacity: 100%; background-color: white"
-          >
-            {{ getStatusName(statusEnum.Closed) }}
-          </v-btn>
-          <v-btn
-            @click="filterStatus(null)"
-            style="opacity: 100%; background-color: white"
-          >
-            Alle
-          </v-btn>
+          <!-- this needs to come last, see statusButtonSelected() -->
+          <v-btn text @click="filterStatus(undefined)"> Alle </v-btn>
         </v-btn-toggle>
       </v-col>
     </v-row>
@@ -45,20 +36,28 @@
       <v-card-title>Ereignisnachverfolgungen</v-card-title>
       <v-card-text>
         <v-text-field
-          v-model="tableData.search"
+          v-model="search"
           append-icon="mdi-magnify"
-          label="Search"
+          label="Suchbegriff (min. 2 Buchstaben)"
           single-line
           hide-details
+          @keyup="triggerSearch(search)"
         ></v-text-field>
         <v-data-table
-          :loading="eventListLoading"
-          :headers="tableData.headers"
-          :items="eventList"
-          :items-per-page="5"
+          :loading="dataTableModel.loading"
+          :page="dataTableModel.page"
+          :server-items-length="dataTableModel.itemsLength"
+          :headers="dataTableModel.headers"
+          :items="dataTableModel.data"
+          :items-per-page="dataTableModel.itemsPerPage"
           class="elevation-1 mt-5 twolineTable"
-          :search="tableData.search"
+          :search="search"
+          :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
+          @update:options="updatePagination"
         >
+          <template v-slot:[itemAddressSlotName]="{ item }">
+            <span class="text-pre-wrap"> {{ item.address }} </span>
+          </template>
           <template v-slot:[itemStatusSlotName]="{ item }">
             <v-chip :color="getStatusColor(item.status)" dark>
               {{ getStatusName(item.status) }}
@@ -68,7 +67,10 @@
             <!-- TODO use imported route name -->
             <v-btn
               color="primary"
-              :to="{ name: 'event-details', params: { id: item.code } }"
+              :to="{
+                name: 'event-details',
+                params: { id: item.code },
+              }"
             >
               Details
             </v-btn>
@@ -82,7 +84,7 @@
 
 <script lang="ts">
 import {
-  ExistingDataRequestClientWithLocationStatusEnum,
+  DataRequestStatus,
   ExistingDataRequestClientWithLocation,
 } from "@/api";
 import store from "@/store";
@@ -90,24 +92,34 @@ import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
-import { orderBy } from "lodash";
+import { debounce } from "lodash";
 import dayjs from "@/utils/date";
+import { DataQuery, getSortAttribute } from "@/api/common";
+import { DataOptions } from "vuetify";
+import {
+  getPageFromRouteWithDefault,
+  getPageSizeFromRouteWithDefault,
+  getStatusFilterFromRoute,
+  getStringParamFromRouteWithOptionalFallback,
+} from "@/utils/pagination";
+import { Dictionary } from "vue-router/types/router";
+import { join } from "@/utils/misc";
 import FeedbackDialog from "@/components/feedback.component.vue";
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
 ): string {
-  if (data) {
-    if (data.locationInformation) {
-      const contact = data.locationInformation.contact;
-      if (contact) {
-        return `${data.locationInformation.name}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
-      }
-      return data.locationInformation.name;
-    }
-    return "-";
-  }
-  return "-";
+  const contact = data?.locationInformation?.contact;
+  const officialName = contact?.officialName;
+  return join(
+    [
+      data?.locationInformation?.name ?? "-",
+      officialName ? `(${officialName})` : "",
+      contact?.address?.street,
+      join([contact?.address?.zip, contact?.address?.city], " "),
+    ],
+    "\n"
+  );
 }
 
 function getFormattedDate(date?: string): string {
@@ -117,25 +129,10 @@ function getFormattedDate(date?: string): string {
   return "-";
 }
 
-type TableRow = {
-  address: string;
-  endTime: string;
-  extID: string;
-  generatedTime: string;
-  lastChange: string;
-  name: string;
-  startTime: string;
-  status: string;
-};
-
 @Component({
   components: {
     EventTrackingFormView: EventTrackingFormView,
     FeedbackDialog,
-  },
-  async beforeRouteEnter(_from, _to, next) {
-    next();
-    await store.dispatch("eventTrackingList/fetchEventTrackingList");
   },
   beforeRouteLeave(to, from, next) {
     store.commit("eventTrackingList/reset");
@@ -143,63 +140,125 @@ type TableRow = {
   },
 })
 export default class EventTrackingListView extends Vue {
-  statusFilter: ExistingDataRequestClientWithLocationStatusEnum | null = null;
-  statusEnum = ExistingDataRequestClientWithLocationStatusEnum;
-  statusButtonSelected = 3;
-  filterStatus(
-    target: ExistingDataRequestClientWithLocationStatusEnum | null
-  ): void {
+  statusFilter: DataRequestStatus | undefined = getStatusFilterFromRoute(
+    this.$route
+  );
+
+  selectableStatus: Dictionary<DataRequestStatus> = DataRequestStatus;
+
+  search = getStringParamFromRouteWithOptionalFallback(
+    "search",
+    this.$route,
+    ""
+  );
+
+  runSearch = debounce(async (input: string | undefined) => {
+    let search = input?.trim();
+    if (!search || search.length > 1) {
+      this.$router.replace({
+        name: this.$route.name as string | undefined,
+        query: {
+          ...this.$route.query,
+          page: `1`,
+          search: search || undefined,
+        },
+      });
+
+      const query: DataQuery = {
+        size: getPageSizeFromRouteWithDefault(this.$route),
+        page: 0,
+        sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
+        status: getStatusFilterFromRoute(this.$route),
+        search: search,
+      };
+      await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
+    }
+  }, 1000);
+
+  async filterStatus(target: DataRequestStatus | undefined): Promise<void> {
     this.statusFilter = target;
+
+    this.$router.replace({
+      name: this.$route.name as string | undefined,
+      query: {
+        ...this.$route.query,
+        page: `1`,
+        status: target,
+      },
+    });
+
+    const query: DataQuery = {
+      size: getPageSizeFromRouteWithDefault(this.$route),
+      page: 0,
+      sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
+      status: target,
+      search: getStringParamFromRouteWithOptionalFallback(
+        "search",
+        this.$route
+      ),
+    };
+    await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
   }
 
-  tableData = {
-    search: "",
-    headers: [
-      {
-        text: "Ext.ID",
-        align: "start",
-        sortable: true,
-        value: "extID",
-      },
-      { text: "Event", value: "name" },
-      { text: "Ort", value: "address" },
-      { text: "Zeit (Start)", value: "startTime" },
-      { text: "Zeit (Ende)", value: "endTime" },
-      { text: "Generiert", value: "generatedTime" },
-      { text: "Status", value: "status" },
-      { text: "Letzte Änderung", value: "lastChange" },
-      { text: "", value: "actions" },
-    ],
-  };
+  get statusButtonSelected(): number {
+    if (!this.statusFilter) {
+      // return length + 1, assuming "Alle" button is displayed last
+      return Object.keys(this.selectableStatus).length;
+    }
+    return Object.values(this.selectableStatus).findIndex((v) => {
+      return v === this.statusFilter;
+    });
+  }
 
   get eventListLoading(): boolean {
     return store.state.eventTrackingList.eventTrackingListLoading;
   }
 
-  get eventList(): TableRow[] {
-    const dataRequests =
-      store.state.eventTrackingList.eventTrackingList?.dataRequests || [];
-    const list = dataRequests
-      // TODO this filtering could probably also be done in vuetify data-table
-      .filter(
-        (dataRequests) =>
-          !this.statusFilter || this.statusFilter === dataRequests.status
-      )
-      .map((dataRequest) => {
-        return {
-          address: getFormattedAddress(dataRequest),
-          endTime: getFormattedDate(dataRequest.end),
-          startTime: getFormattedDate(dataRequest.start),
-          generatedTime: getFormattedDate(dataRequest.requestedAt),
-          lastChange: getFormattedDate(dataRequest.lastUpdatedAt),
-          extID: dataRequest.externalRequestId || "-",
-          code: dataRequest.code,
-          name: dataRequest.name || "-",
-          status: dataRequest.status?.toString() || "-",
-        };
-      });
-    // default sorting. Could be done in data-table but then there would be a sort icon in the header.
-    return orderBy(list, "lastChange", "desc");
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  get dataTableModel() {
+    const { eventTrackingList, eventTrackingListLoading } =
+      store.state.eventTrackingList;
+    return {
+      page: getPageFromRouteWithDefault(this.$route),
+      itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
+      loading: eventTrackingListLoading,
+      itemsLength: eventTrackingList?.totalElements || 0,
+      data: (eventTrackingList?.content || []).map(
+        (
+          dataRequest:
+            | Partial<ExistingDataRequestClientWithLocation>
+            | undefined
+        ) => {
+          return {
+            address: getFormattedAddress(dataRequest),
+            endTime: getFormattedDate(dataRequest?.end),
+            startTime: getFormattedDate(dataRequest?.start),
+            generatedTime: getFormattedDate(dataRequest?.requestedAt),
+            lastChange: getFormattedDate(dataRequest?.lastUpdatedAt),
+            extID: dataRequest?.externalRequestId || "-",
+            code: dataRequest?.code,
+            name: dataRequest?.name || "-",
+            status: dataRequest?.status?.toString() || "-",
+          };
+        }
+      ),
+      headers: [
+        {
+          text: "Ext.ID",
+          align: "start",
+          sortable: true,
+          value: "extID",
+        },
+        { text: "Event", value: "name" },
+        { text: "Ort", value: "address", sortable: false },
+        { text: "Zeit (Start)", value: "startTime" },
+        { text: "Zeit (Ende)", value: "endTime" },
+        { text: "Generiert", value: "generatedTime" },
+        { text: "Status", value: "status" },
+        { text: "Letzte Änderung", value: "lastChange" },
+        { text: "", value: "actions", sortable: false },
+      ],
+    };
   }
 
   // TODO improve this - we need it to circumvent v-slot eslint errors
@@ -207,27 +266,58 @@ export default class EventTrackingListView extends Vue {
   get itemStatusSlotName(): string {
     return "item.status";
   }
+
   get itemActionSlotName(): string {
     return "item.actions";
   }
 
-  on(): void {
-    console.log("NOT IMPLEMENTED");
+  get itemAddressSlotName(): string {
+    return "item.address";
   }
 
-  selectItem(item: unknown): void {
-    console.log("NOT IMPLEMENTED", item);
+  async updatePagination(pagination: DataOptions): Promise<void> {
+    let sort = getSortAttribute(pagination.sortBy[0]);
+    if (sort) {
+      pagination.sortDesc[0] ? (sort = sort + ",desc") : (sort = sort + ",asc");
+    }
+
+    this.$router.replace({
+      name: this.$route.name as string | undefined,
+      query: {
+        ...this.$route.query,
+        page: `${pagination.page}`,
+        size: `${pagination.itemsPerPage}`,
+        sort: sort,
+      },
+    });
+
+    const query: DataQuery = {
+      size: pagination.itemsPerPage,
+      page: pagination.page - 1,
+      sort: sort,
+      status: getStatusFilterFromRoute(this.$route),
+      search: getStringParamFromRouteWithOptionalFallback(
+        "search",
+        this.$route
+      ),
+    };
+    await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
   }
 
-  getStatusColor(
-    status: ExistingDataRequestClientWithLocationStatusEnum
-  ): string {
+  async triggerSearch(input: string | undefined): Promise<void> {
+    await this.runSearch(input);
+  }
+
+  getStatusColor(status: DataRequestStatus): string {
     return StatusColors.getColor(status);
   }
 
-  getStatusName(
-    status: ExistingDataRequestClientWithLocationStatusEnum
-  ): string {
+  getStatusName(status: DataRequestStatus): string {
+    return StatusMessages.getMessage(status);
+  }
+
+  getStatusSelectLabel(status: DataRequestStatus | null): string {
+    if (!status) return "Alle";
     return StatusMessages.getMessage(status);
   }
 }

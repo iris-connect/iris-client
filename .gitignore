@@ -75,3 +75,15 @@ hs_err_pid*
 
 # MACOS
 .DS_Store
+
+# For IRIS Client deployment
+*.crt
+*.key
+*.pub
+*.pem
+*.csr
+*.cer
+*.srl
+!root-staging.crt
+.env*
+!.env.sample

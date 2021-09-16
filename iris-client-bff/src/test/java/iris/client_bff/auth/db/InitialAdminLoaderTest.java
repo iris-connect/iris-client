@@ -35,25 +35,27 @@ class InitialAdminLoaderTest {
 	}
 
 	@Test
-	public void shouldCreateAnAdminUserIfItDoesNotExist() {
+	void shouldCreateAnAdminUserIfItDoesNotExist() {
+
 		// when
 		Mockito.when(conf.getAdminUserName()).thenReturn("admin");
 		Mockito.when(conf.getAdminUserPassword()).thenReturn("admin");
 		Mockito.when(repo.findByUserName(eq("admin"))).thenReturn(Optional.empty());
 
 		// then
-		loader.initializeAdmin();
+		loader.createAdminUserIfNotExists();
 
 		// assert
-		Mockito.verify(repo, Mockito.times(1)).save(any());
-
+		Mockito.verify(repo).save(any());
+		Mockito.verify(encoder).encode("admin");
+		Mockito.verifyNoMoreInteractions(repo, conf, encoder);
 	}
 
 	@Test
-	public void shouldNotCreateAnAdminUserIfItDoesExist() {
+	void shouldNotCreateAnAdminUserIfItDoesExist() {
+
 		// when
 		Mockito.when(conf.getAdminUserName()).thenReturn("admin");
-		Mockito.when(conf.getAdminUserPassword()).thenReturn("admin");
 
 		var existingUser = new UserAccount();
 		existingUser.setUserName("admin");
@@ -61,11 +63,10 @@ class InitialAdminLoaderTest {
 		Mockito.when(repo.findByUserName(eq("admin"))).thenReturn(Optional.of(existingUser));
 
 		// then
-		loader.initializeAdmin();
+		loader.createAdminUserIfNotExists();
 
 		// assert
 		Mockito.verify(repo, Mockito.never()).save(any());
-
+		Mockito.verifyNoMoreInteractions(repo, conf, encoder);
 	}
-
 }

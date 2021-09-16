@@ -1,0 +1,17 @@
+name: License analysis with REUSE
+
+on:
+  push:
+    branches: [ release ]
+  pull_request:
+    branches: [ main, release ]
+
+jobs:
+  license-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.3.4
+          
+      - name: REUSE Compliance Check
+        uses: fsfe/reuse-action@v1.1 

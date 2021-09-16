@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "31fbe887-c00c-43f9-b950-4e93da8c25d7",
+		"_postman_id": "b50f7a39-2fc3-4f9e-88b3-f97f5f9a76cd",
 		"name": "IRIS Client BFF",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -588,7 +588,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"locationId\": \"7dd80f34-f9cd-456a-9b60-357d0a3485c7\",\n  \"providerId\": \"f002f370-bd54-4325-ad91-1aff3bf730a5\",\n  \"requestDetails\": \"{{$randomLoremSentence}}\",\n  \"externalRequestId\": \"{{$randomAlphaNumeric}}\",\n  \"name\": \"{{$randomProductName}}\",\n  \"comment\": \"{{$randomLoremSentence}}\",\n  \"start\": \"{{$isoTimestamp}}\",\n  \"end\": \"{{$isoTimestamp}}\"\n}",
+									"raw": "{\n    \"locationId\": \"7dd80f34-f9cd-456a-9b60-357d0a3485c7\",\n    \"providerId\": \"demo-app\",\n    \"requestDetails\": \"{{$randomLoremSentence}}\",\n    \"externalRequestId\": \"{{$randomAlphaNumeric}}\",\n    \"name\": \"{{$randomProductName}}\",\n    \"comment\": \"{{$randomLoremSentence}}\",\n    \"start\": \"{{$isoTimestamp}}\",\n    \"end\": \"{{$isoTimestamp}}\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -603,6 +603,48 @@
 									"path": [
 										"data-requests-client",
 										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_iris_client}}/data-requests-client/events/{{iris_event_id}}",
+									"host": [
+										"{{base_url_iris_client}}"
+									],
+									"path": [
+										"data-requests-client",
+										"events",
+										"{{iris_event_id}}"
 									]
 								}
 							},
@@ -700,13 +742,235 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url_iris_client}}/search/Darmstadt",
+							"raw": "{{base_url_iris_client}}/search/Restaurant",
 							"host": [
 								"{{base_url_iris_client}}"
 							],
 							"path": [
 								"search",
-								"Darmstadt"
+								"Restaurant"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "eps",
+			"item": [
+				{
+					"name": "locations",
+					"item": [
+						{
+							"name": "create location",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"method\": \"ls-1.postLocationsToSearchIndex\",\n    \"id\": \"1\",\n    \"params\": {\n        \"providerId\": \"6b3f5dee-acb0-11eb-8529-0242ac130003\",\n        \"locations\": [\n            {\n                \"id\": \"5eddd61036d39a0ff8b11fdb\",\n                \"name\": \"Restaurant Alberts\",\n                \"contact\": {\n                    \"officialName\": \"Darfichrein GmbH\",\n                    \"representative\": \"Silke \",\n                    \"address\": {\n                        \"street\": \"Türkenstr. 7\",\n                        \"city\": \"München\",\n                        \"zip\": \"80333\"\n                    },\n                    \"email\": \"covid2@restaurant.de\",\n                    \"phone\": \"die bleibt privat :-)\"\n                }\n            }\n        ]\n    },\n    \"jsonrpc\": \"2.0\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5554/jsonrpc",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5554",
+									"path": [
+										"jsonrpc"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get locations",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"method\": \"ls-1.getLocationDetails\",\n    \"id\": \"1\",\n    \"params\": {\n        \"providerId\": \"6b3f5dee-acb0-11eb-8529-0242ac130003\",\n        \"locationId\": \"5eddd61036d39a0ff8b11fdb\"\n    },\n    \"jsonrpc\": \"2.0\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5554/jsonrpc",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5554",
+									"path": [
+										"jsonrpc"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "data submission",
+					"item": [
+						{
+							"name": "submit guest list",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"method\": \"hd-1.submitGuestList\",\n    \"id\": \"1\",\n    \"params\": {\n        \"requestId\": \"{{iris_event_id}}\",\n        \"guestList\": {\n            \"secret\": \"string\",\n            \"keyReference\": \"string\",\n            \"guests\": [\n                {\n                    \"firstName\": \"string\",\n                    \"lastName\": \"string\",\n                    \"dateOfBirth\": \"2021-05-08\",\n                    \"sex\": \"UNKNOWN\",\n                    \"email\": \"user@example.com\",\n                    \"phone\": \"string\",\n                    \"mobilPhone\": \"string\",\n                    \"address\": {\n                        \"street\": \"string\",\n                        \"houseNumber\": \"string\",\n                        \"zipCode\": \"string\",\n                        \"city\": \"string\"\n                    },\n                    \"attendanceInformation\": {\n                        \"descriptionOfParticipation\": \"Guest or Staff\",\n                        \"attendFrom\": \"2021-05-08T11:31:29.659Z\",\n                        \"attendTo\": \"2021-05-08T11:31:29.659Z\",\n                        \"additionalInformation\": \"Table: 3; Floor: 2\"\n                    },\n                    \"identityChecked\": true\n                }\n            ],\n            \"dataProvider\": {\n                \"name\": \"string\",\n                \"address\": {\n                    \"street\": \"string\",\n                    \"houseNumber\": \"string\",\n                    \"zipCode\": \"string\",\n                    \"city\": \"string\"\n                }\n            },\n            \"additionalInformation\": \"string\",\n            \"startDate\": \"2021-05-08T11:31:29.659Z\",\n            \"endDate\": \"2021-05-08T11:31:29.659Z\"\n        }\n    },\n    \"jsonrpc\": \"2.0\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5554/jsonrpc",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5554",
+									"path": [
+										"jsonrpc"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "actuators",
+			"item": [
+				{
+					"name": "get info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_iris_client}}/actuator/info",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"actuator",
+								"info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_iris_client}}/actuator/health",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get prometheus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_iris_client}}/actuator/prometheus",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"actuator",
+								"prometheus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get loggers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_iris_client}}/actuator/loggers",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"actuator",
+								"loggers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get httptrace",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_iris_client}}/actuator/httptrace",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"actuator",
+								"httptrace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change iris log level",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"configuredLevel\": \"TRACE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_iris_client}}/actuator/loggers/iris",
+							"host": [
+								"{{base_url_iris_client}}"
+							],
+							"path": [
+								"actuator",
+								"loggers",
+								"iris"
 							]
 						}
 					},

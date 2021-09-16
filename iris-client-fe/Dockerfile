@@ -1,8 +1,7 @@
-FROM caddy/caddy:2.3.0-alpine
+FROM caddy:2.4.5-alpine
 
-# TODO: update to node 14 as soon as caddy uses newer alpine version
 # install node + npm
-RUN apk add --no-cache nodejs=12.22.1-r0 npm=12.22.1-r0	
+RUN apk add --update nodejs npm
 
 # make the 'app' folder the current working directory
 WORKDIR /app
@@ -16,6 +15,9 @@ RUN npm ci
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
 
+ARG VUE_APP_VERSION_ID=production
+ARG VUE_APP_BUILD_ID=local
+
 # build app for production with minification
 RUN npm run build
 
@@ -25,6 +27,12 @@ RUN mv dist /usr/share/caddy
 
 # copy webserver configuration
 COPY ./Caddyfile /etc/caddy/Caddyfile
+
+# Create a group and user
+RUN addgroup --gid 9999 iris && adduser --disabled-password --gecos '' --uid 9999 -G iris -s /bin/ash iris
+COPY --chown=iris:iris ./autosave.json /config/caddy/autosave.json
+# Change to non-root privilege
+USER iris:iris
 
 # note: exposed port needs to match port in Caddyfile
 EXPOSE 28080

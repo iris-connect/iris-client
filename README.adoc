@@ -1,6 +1,24 @@
 :toc: macro
 
-# image:iris-logo.png[width=100] IRIS Client
+# IRIS Client
+
+toc::[]
+
+image:https://img.shields.io/github/v/release/iris-connect/iris-client?include_prereleases&sort=semver[Release,link=https://github.com/iris-connect/iris-client/releases]
+image:https://img.shields.io/github/release-date-pre/iris-connect/iris-client[Release Date,link=https://github.com/iris-connect/iris-client/releases]
+image:https://img.shields.io/badge/-Release_Notes-blue[Release Notes,link=https://github.com/iris-connect/iris-client/releases]
+image:https://img.shields.io/github/license/iris-connect/iris-client?color=green[License,link=./LICENSE]
+image:https://img.shields.io/github/last-commit/iris-connect/iris-client[Last Commit,link=https://github.com/iris-connect/iris-client/commits/]
+image:https://img.shields.io/github/issues/iris-connect/iris-client[Open Issues,link=https://github.com/iris-connect/iris-client/issues/]
+image:https://api.reuse.software/badge/github.com/iris-connect/iris-client[REUSE Status,link=https://api.reuse.software/info/github.com/iris-connect/iris-client]
+
+== Feedback
+
+If you have any feedback or questions mailto:iris@steiger-stiftung.de[just contact us].
+
+== Participation
+
+We are happy about your contribution to the project! In order to ensure compliance with the licensing conditions and the future development of the project, we require a signed contributor license agreement (CLA) for all contributions in accordance with the http://selector.harmonyagreements.org[Harmony standard]. Please sign the corresponding document for link:.clas%2FIRIS%20Gateway-Individual.pdf[natural persons] or for link:.clas%2FIRIS%20Gateway-Entity.pdf[organizations] and send it to mailto:iris@steiger-stiftung.de[us].
 
 [[dev]]
 == Development
@@ -11,12 +29,12 @@ We use the specification https://www.conventionalcommits.org[Conventional Commit
 Commits should always refer to an issue (user story, bug or task). Therefore, always include the reference to the issue at the end of the commit message.
 ```
 Refs #{issue number} ⇒ same repository
-Refs iris-gateway/iris-backlog#{issue number} ⇒ other repository
+Refs iris-connect/iris-backlog#{issue number} ⇒ other repository
 ```
 
 === Branches
 
-https://www.atlassian.com/de/git/tutorials/comparing-workflows/gitflow-workflow[Git Flow] is our branching strategy and the base of our release prozess. Thus, development takes place on feature branches, which is merged in the `develop` branch. The `main` branch is reserved for releases.
+https://www.atlassian.com/de/git/tutorials/comparing-workflows/gitflow-workflow[Git Flow] is our branching strategy and the base of our release process. Thus, development takes place on feature branches, which is merged in the `develop` branch. The `main` branch is reserved for releases.
 
 Branches should be named according to the following scheme:
 ```
@@ -125,3 +143,17 @@ Object someMethod(…) {
 ==== Sonarlint
 
 As further support, use https://www.sonarlint.org/[SonarLint] to avoid code smells. We don't currently use any fixed rules here, but Sonarlint gives useful hints during development.
+
+## Supporting organizations
+
+- Björn Steiger Stiftung SbR - https://www.steiger-stiftung.de
+
+== License
+
+Currently this code is licensed under Affero GPL 3.0.
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the link:LICENSE[] for more details.
+
+Please see the https://api.reuse.software/info/github.com/iris-connect/iris-client[detailed licensing information] via the https://reuse.software/[REUSE Tool] for more details.

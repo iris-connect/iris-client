@@ -1,10 +1,14 @@
 package iris.client_bff.auth.db;
 
-import java.util.concurrent.TimeUnit;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+import java.time.Duration;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityConstants {
 
-	public static final long EXPIRATION_TIME = TimeUnit.MINUTES.toMillis(60);
+	public static final Duration EXPIRATION_TIME = Duration.ofHours(1);
 
 	public static final String BEARER_TOKEN_PREFIX = "Bearer ";
 	public static final String AUTHENTICATION_INFO = "Authentication-Info";

@@ -1,16 +1,17 @@
-import { Commit, Module } from "vuex";
-import { ErrorMessage, getErrorMessage } from "@/utils/axios";
-import { RootState } from "@/store/types";
 import {
   Credentials,
   IrisClientFrontendApiFactory,
   User,
   UserRole,
 } from "@/api";
-import store from "@/store";
 import authClient, { clientConfig, sessionFromResponse } from "@/api-client";
-import { RawLocation } from "vue-router";
+import store from "@/store";
+import { RootState } from "@/store/types";
+import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import { omit } from "lodash";
+import { RawLocation } from "vue-router";
+import { Commit, Module } from "vuex";
+import { normalizeUser } from "@/views/user-login/user-login.data";
 
 export type UserLoginState = {
   authenticating: boolean;
@@ -42,12 +43,18 @@ export interface UserLoginModule extends Module<UserLoginState, RootState> {
       { commit }: { commit: Commit },
       formData: Credentials
     ): Promise<void>;
-    fetchAuthenticatedUser({ commit }: { commit: Commit }): Promise<void>;
+    fetchAuthenticatedUser(
+      { commit }: { commit: Commit },
+      silent?: boolean
+    ): Promise<void>;
+    logout({ commit }: { commit: Commit }): Promise<void>;
   };
   getters: {
     isAuthenticated(): boolean;
     isAdmin(): boolean;
+    isUser(): boolean;
     userDisplayName(): string;
+    isCurrentUser(): (id: string) => boolean;
   };
 }
 
@@ -109,18 +116,34 @@ const userLogin: UserLoginModule = {
         commit("setAuthenticating", false);
       }
     },
-    async fetchAuthenticatedUser({ commit }): Promise<void> {
+    async fetchAuthenticatedUser({ commit }, silent): Promise<void> {
+      let user = null;
+      if (silent) {
+        try {
+          user = normalizeUser((await authClient.userProfileGet()).data, true);
+          if (user) commit("setUser", user);
+        } catch (e) {
+          // silent mode: do nothing
+        }
+        return;
+      }
       commit("setUserLoadingError", null);
       commit("setUserLoading", true);
-      let user = null;
       try {
-        user = (await authClient.userProfileGet()).data;
+        user = normalizeUser((await authClient.userProfileGet()).data, true);
       } catch (e) {
         commit("setUserLoadingError", getErrorMessage(e));
         throw e;
       } finally {
         commit("setUser", user);
         commit("setUserLoading", false);
+      }
+    },
+    async logout({ commit }): Promise<void> {
+      try {
+        await authClient.logout();
+      } finally {
+        commit("setSession");
       }
     },
   },
@@ -131,13 +154,17 @@ const userLogin: UserLoginModule = {
     isAdmin(): boolean {
       return store.state.userLogin.user?.role === UserRole.Admin;
     },
+    isUser(): boolean {
+      return store.state.userLogin.user?.role === UserRole.User;
+    },
     userDisplayName(): string {
       const user = store.state.userLogin.user;
-      return (
-        [user?.firstName, user?.lastName].join(" ").trim() ??
-        user?.userName ??
-        ""
-      );
+      const fullName = [user?.firstName, user?.lastName].join(" ").trim();
+      return fullName || user?.userName || "";
+    },
+    isCurrentUser: () => (id: string) => {
+      const user = store.state.userLogin.user;
+      return user?.id === id;
     },
   },
 };

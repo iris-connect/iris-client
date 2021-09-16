@@ -2,58 +2,59 @@
   <div>
     <v-card class="my-3">
       <v-form
-        ref="form"
-        v-model="form.valid"
-        lazy-validation
-        :disabled="eventCreationOngoing"
+          ref="form"
+          v-model="form.valid"
+          lazy-validation
+          :disabled="eventCreationOngoing"
       >
         <v-card-title>Ereignis-Nachverfolgung starten</v-card-title>
         <v-card-text>
           <v-row>
             <v-col cols="12" sm="6">
               <v-text-field
-                v-model="form.model.externalId"
-                :rules="validationRules.defined"
-                label="Externe ID"
+                  v-model="form.model.externalId"
+                  :rules="validationRules.sanitisedAndDefined"
+                  label="Externe ID"
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
               <v-text-field
-                v-model="form.model.name"
-                label="Name"
+                  v-model="form.model.name"
+                  label="Name"
+                  :rules="validationRules.sanitised"
               ></v-text-field>
             </v-col>
           </v-row>
           <location-select-dialog
-            v-model="form.model.location"
-            :locations="locations"
-            :disabled="locationsLoading"
-            :error="locationsError"
-            @search="handleLocationSearch"
+              v-model="form.model.location"
+              :locationList="locationList"
+              :disabled="locationsLoading"
+              :error="locationsError"
+              @search="handleLocationSearch"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-row>
                 <v-col v-if="form.model.location">
                   <event-tracking-form-location-info
-                    :location="form.model.location"
+                      :location="form.model.location"
                   />
                 </v-col>
                 <v-col>
                   <v-input
-                    v-model="form.model.location"
-                    :rules="validationRules.location"
+                      v-model="form.model.location"
+                      :rules="validationRules.location"
                   >
                     <v-btn
-                      color="red lighten-2"
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
-                      :disabled="eventCreationOngoing"
+                        color="red lighten-2"
+                        dark
+                        v-bind="attrs"
+                        v-on="on"
+                        :disabled="eventCreationOngoing"
                     >
                       {{
-                        form.model.location
-                          ? "Ereignisort ändern"
-                          : "Ereignisort auswählen"
+                      form.model.location
+                      ? "Ereignisort ändern"
+                      : "Ereignisort auswählen"
                       }}
                     </v-btn>
                   </v-input>
@@ -64,57 +65,58 @@
           <v-row>
             <v-col cols="12" md="6">
               <date-time-input-field
-                v-model="form.model.start"
-                :date-props="{
-                  label: 'Datum (Beginn)',
-                }"
-                :time-props="{
-                  label: 'Uhrzeit (Beginn)',
-                }"
-                :rules="validationRules.start"
-                required
+                  v-model="form.model.start"
+                  :date-props="{
+                label: 'Datum (Beginn)',
+                max: maxStartDate,
+              }"
+                  :time-props="{
+                label: 'Uhrzeit (Beginn)',
+                max: maxStartTime,
+              }"
+                  :rules="validationRules.start"
+                  required
               />
             </v-col>
             <v-col cols="12" md="6">
               <date-time-input-field
-                v-model="form.model.end"
-                :date-props="{
-                  label: 'Datum (Ende)',
-                }"
-                :time-props="{
-                  label: 'Uhrzeit (Ende)',
-                }"
-                :rules="validationRules.end"
-                required
+                  v-model="form.model.end"
+                  :date-props="{
+                label: 'Datum (Ende)',
+                min: minEndDate,
+              }"
+                  :time-props="{
+                label: 'Uhrzeit (Ende)',
+              }"
+                  :rules="validationRules.end"
+                  required
               />
             </v-col>
           </v-row>
           <v-row>
             <v-col>
               <v-textarea
-                name="requestComment"
-                label="Anfragendetails für den Betrieb"
-                auto-grow
-                rows="1"
-                value=""
-                hint="Datenschutz-Hinweis: Die Anfragendetails werden an den Betrieb übermittelt!"
+                  v-model="form.model.requestDetails"
+                  name="requestComment"
+                  label="Anfragendetails für den Betrieb"
+                  auto-grow
+                  rows="1"
+                  value=""
+                  hint="Datenschutz-Hinweis: Die Anfragendetails werden an den Betrieb übermittelt!"
+                  :rules="validationRules.sanitised"
               ></v-textarea>
             </v-col>
           </v-row>
           <v-alert v-if="eventCreationError" text type="error">{{
             eventCreationError
-          }}</v-alert>
+            }}</v-alert>
         </v-card-text>
         <v-card-actions>
           <v-btn color="secondary" plain @click="$router.back()">
             Abbrechen
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn
-            :disabled="eventCreationOngoing"
-            color="primary"
-            @click="submit"
-          >
+          <v-btn :disabled="eventCreationOngoing" color="primary" @click="submit">
             Anfrage senden
           </v-btn>
         </v-card-actions>
@@ -131,6 +133,7 @@ import {
   DataRequestClient,
   LocationInformation,
   DataRequestDetails,
+  LocationList,
 } from "@/api";
 import router from "@/router";
 import LocationSelectDialog from "@/views/event-tracking-form/components/location-select-dialog.vue";
@@ -140,6 +143,7 @@ import DateTimeInputField from "@/components/form/date-time-input-field.vue";
 import { get as _get, set as _set, has as _has } from "lodash";
 import EventTrackingFormLocationInfo from "@/views/event-tracking-form/components/event-tracking-form-location-info.vue";
 import rules from "@/common/validation-rules";
+import { DataQuery } from "@/api/common";
 import FeedbackDialog from "@/components/feedback.component.vue";
 
 type EventTrackingForm = {
@@ -153,6 +157,7 @@ type EventTrackingFormModel = {
   end: string;
   name: string;
   location: LocationInformation | null;
+  requestDetails: string;
 };
 
 type EventTrackingFormQueryParameters = Partial<
@@ -177,6 +182,19 @@ export default class EventTrackingFormView extends Vue {
     form: HTMLFormElement;
   };
 
+  minEndDate = "";
+
+  get maxStartDate(): string {
+    return dayjs().format("YYYY-MM-DD");
+  }
+
+  get maxStartTime(): string {
+    return this.form.model.start &&
+      dayjs(this.form.model.start).isSame(dayjs(), "day")
+      ? dayjs().format("HH:mm")
+      : "";
+  }
+
   get eventCreationOngoing(): boolean {
     return store.state.eventTrackingForm.eventCreationOngoing;
   }
@@ -193,34 +211,24 @@ export default class EventTrackingFormView extends Vue {
     return store.state.eventTrackingForm.locationsError;
   }
 
-  get locations(): LocationInformation[] | null {
-    return store.state.eventTrackingForm.locations;
+  get locationList(): LocationList | null {
+    return store.state.eventTrackingForm.locationList;
   }
 
-  async handleLocationSearch(searchText: string): Promise<void> {
-    await store.dispatch("eventTrackingForm/fetchEventLocations", searchText);
+  async handleLocationSearch(query: DataQuery): Promise<void> {
+    await store.dispatch("eventTrackingForm/fetchEventLocations", query);
   }
 
   homeRoute = "/";
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
-      start: [],
-      end: [
-        (v: string): string | boolean => {
-          if (!this.form.model.start) return true;
-          return (
-            dayjs(v).isSameOrAfter(dayjs(this.form.model.start), "minute") ||
-            "Bitte geben Sie einen Zeitpunkt an, der nach dem Beginn liegt"
-          );
-        },
-      ],
+      start: [rules.dateStart],
+      end: [rules.dateEnd(this.form.model.start)],
       defined: [rules.defined],
-      location: [
-        (v: LocationInformation): string | boolean => {
-          return !!v || "Bitte wählen Sie einen Ereignisort aus";
-        },
-      ],
+      location: [rules.location],
+      sanitised: [rules.sanitised],
+      sanitisedAndDefined: [rules.sanitised, rules.defined],
     };
   }
 
@@ -231,6 +239,7 @@ export default class EventTrackingFormView extends Vue {
       end: "",
       name: "",
       location: null,
+      requestDetails: "",
     },
     valid: false,
   };
@@ -249,8 +258,13 @@ export default class EventTrackingFormView extends Vue {
       });
     }
   }
+
   @Watch("form.model.start")
   onDateChanged(): void {
+    this.form.model.end = dayjs(this.form.model.start)
+      .endOf("day")
+      .toISOString();
+    this.minEndDate = dayjs(this.form.model.start).format("YYYY-MM-DD");
     this.validateField("end");
   }
 
@@ -273,7 +287,9 @@ export default class EventTrackingFormView extends Vue {
         locationId: location.id,
         providerId: location.providerId,
         externalRequestId: this.form.model.externalId,
+        requestDetails: this.form.model.requestDetails,
       };
+
       const created: DataRequestDetails = await store.dispatch(
         "eventTrackingForm/createEventTracking",
         payload
@@ -283,6 +299,7 @@ export default class EventTrackingFormView extends Vue {
         params: {
           id: created.code || "",
         },
+        query: { is_created: "true" },
       });
     }
   }

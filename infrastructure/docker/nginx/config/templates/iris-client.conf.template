@@ -1,9 +1,13 @@
+# IP-based rate limits, see https://www.nginx.com/blog/rate-limiting-nginx/
+limit_req_zone $binary_remote_addr zone=frontend:10m rate=15r/s;
+limit_req_zone $binary_remote_addr zone=api:10m rate=5r/s;
+
 server {
     server_name ${IRIS_CLIENT_DOMAIN};
     listen 443 ssl;
 
     ssl_certificate /etc/iris/${IRIS_CLIENT_DOMAIN_CERT};
-    ssl_certificate_key /etc/iris/${IRIS_CLIENT_DOMAIN_CERT_KEY};    
+    ssl_certificate_key /etc/iris/${IRIS_CLIENT_DOMAIN_CERT_KEY};
 
     # Proxy headers
     proxy_set_header Upgrade           $http_upgrade;
@@ -22,12 +26,42 @@ server {
     proxy_send_timeout                 10s;
     proxy_read_timeout                 10s;
 
-
     location / {
-        proxy_pass                         http://iris-frontend:28080;
+        # Two-stage limiting at a high rate, since mostly static assets are served here
+        limit_req   zone=frontend burst=25 delay=12;
+        proxy_pass  http://iris-frontend:28080;
     }
 
     location /api/ {
+        # Two-stage limiting at a low rate, since critical features such as login reside here
+        limit_req   zone=api burst=12 delay=8;
         proxy_pass  http://iris-client:8092/;
+    }
+
+    # SECURITY
+    # Strict Transport Security
+    add_header Strict-Transport-Security "max-age=31536000; includeSubdomains;";
+    # X Content Type Options
+    add_header X-Content-Type-Options nosniff;
+    # X Frame Options - no iframes allowed
+    add_header X-Frame-Options DENY;
+    # Content Security Policy - no iframes or external resources allowed
+    add_header Content-Security-Policy "default-src 'self'; child-src 'none'; frame-ancestors 'none';";
+    # X-XSS-Protection - legacy, should be covered by CSP
+    add_header X-XSS-Protection "1; mode=block";
+    # Referrer-Policy
+    add_header Referrer-Policy 'strict-origin';
+
+    #GZIP
+    gzip on;
+    gzip_static on;
+    gzip_types text/css application/javascript image/vnd.microsoft.icon image/png image/svg+xml application/x-font-ttf application/x-font-opentype application/vnd.ms-fontobject;
+
+    # CACHE
+    location ~* \.(js|jpg|jpeg|gif|png|css|tgz|gz|rar|bz2|doc|pdf|ppt|tar|wav|bmp|rtf|swf|ico|flv|txt|woff|woff2|svg)$ {
+        proxy_pass                         http://iris-frontend:28080;
+        expires 1d;
+        add_header Pragma "private";
+        add_header Cache-Control "private";
     }
 }
