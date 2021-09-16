@@ -80,7 +80,9 @@
             <confirm-dialog @confirm="feedbackDialog = false">
               <template #activator="{ on, attrs }">
                 <v-btn
-                  v-on="on"
+                  @click="
+                    isPristine() ? (feedbackDialog = false) : on.click($event)
+                  "
                   v-bind="attrs"
                   color="secondary"
                   text
@@ -99,7 +101,7 @@
             <confirm-dialog @confirm="submit">
               <template #activator="{ on, attrs }">
                 <v-btn
-                  @click="triggerIfValid(() => on.click($event))"
+                  @click="isValid() ? on.click($event) : noop"
                   v-bind="attrs"
                   color="primary"
                   text
@@ -152,19 +154,12 @@ import rules from "@/common/validation-rules";
 import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
 import ConfirmDialog from "@/components/confirm-dialog.vue";
+import _noop from "lodash/noop";
+import _isEqual from "lodash/isEqual";
 
 type FeedbackForm = {
   model: FeedbackInsert;
   valid: boolean;
-};
-
-const initialValues: FeedbackInsert = {
-  category: "",
-  title: "",
-  comment: "",
-  organisation: "",
-  email: "",
-  name: "",
 };
 
 /**
@@ -181,10 +176,23 @@ export default class FeedbackDialog extends Vue {
     form: HTMLFormElement;
   };
 
+  get initialValues(): FeedbackInsert {
+    return {
+      category: "",
+      title: "",
+      comment: "",
+      organisation: "",
+      email: "",
+      name: this.$store.getters["userLogin/userDisplayName"],
+    };
+  }
+
   form: FeedbackForm = {
-    model: { ...initialValues },
+    model: { ...this.initialValues },
     valid: false,
   };
+
+  noop = _noop;
 
   feedbackDialog = false;
   submitFeedback = false;
@@ -206,15 +214,17 @@ export default class FeedbackDialog extends Vue {
     return store.state.feedback.feedbackSubmissionError;
   }
 
-  triggerIfValid(callback: () => void): void {
-    const valid = this.$refs.form?.validate() as boolean;
-    if (valid) callback();
+  isPristine(): boolean {
+    return _isEqual(this.initialValues, this.form.model);
+  }
+
+  isValid(): boolean {
+    return this.$refs.form?.validate() as boolean;
   }
 
   // show submit feedback after successful submission
   async submit(): Promise<void> {
-    const valid = this.$refs.form?.validate() as boolean;
-    if (valid) {
+    if (this.isValid()) {
       await store.dispatch("feedback/submitFeedback", this.form.model);
       this.submitFeedback = true;
     }
@@ -231,11 +241,11 @@ export default class FeedbackDialog extends Vue {
   // reset everything if dialog is opened or closed to get a clean state
   @Watch("feedbackDialog")
   onFeedbackDialogChanged(): void {
-    this.form.model = {
-      ...initialValues,
-      name: this.$store.getters["userLogin/userDisplayName"],
+    this.form = {
+      model: { ...this.initialValues },
+      valid: false,
     };
-    this.$refs.form?.reset();
+    this.$refs.form?.resetValidation();
     store.commit("feedback/reset");
   }
 }
