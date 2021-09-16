@@ -1678,42 +1678,42 @@ export interface UserUpdate {
  * @interface FeedbackInsert
  */
 export interface FeedbackInsert {
-    /**
-     *
-     * @type {string}
-     * @memberof FeedbackInsert
-     */
-    category: string;
-    /**
-     *
-     * @type {string}
-     * @memberof FeedbackInsert
-     */
-    title: string;
-    /**
-     *
-     * @type {string}
-     * @memberof FeedbackInsert
-     */
-    comment: string;
-    /**
-     *
-     * @type {string}
-     * @memberof FeedbackInsert
-     */
-    name: string;
-    /**
-     *
-     * @type {string}
-     * @memberof FeedbackInsert
-     */
-    organisation: string;
-    /**
-     *
-     * @type {string}
-     * @memberof FeedbackInsert
-     */
-    email: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  category: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  title: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  comment: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  organisation: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  email: string;
 }
 /**
  *
@@ -3303,6 +3303,23 @@ export const IrisClientFrontendApiFp = function (
         configuration
       );
     },
+    async feedbackPost(
+      feedbackObject: FeedbackInsert,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.feedbackPost(
+        feedbackObject,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
   };
 };
 
@@ -3523,6 +3540,22 @@ export const IrisClientFrontendApiFactory = function (
     getWeeklyData(options?: any): AxiosPromise<Statistics> {
       return localVarFp
         .getWeeklyData(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Create IRIS user
+     * @param {UserInsert} userInsert
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    feedbackPost(
+      feedbackObject: FeedbackInsert,
+      options?: any
+    ): AxiosPromise<any> {
+      //TODO any to whatever we need
+      return localVarFp
+        .feedbackPost(feedbackObject, options)
         .then((request) => request(axios, basePath));
     },
   };

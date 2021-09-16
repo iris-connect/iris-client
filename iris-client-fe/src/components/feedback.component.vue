@@ -15,7 +15,7 @@
           :max-height="48"
           :max-width="48"
           v-on="on"
-          @click="form.model.name = userDisplayName()"
+          @click="form.model.name = userDisplayName"
         >
           <v-icon :size="30"> mdi-chat-alert-outline</v-icon>
           <slot />
@@ -39,14 +39,14 @@
               :items="['Verbesserungsvorschlag', 'Problem']"
               label="Kategorie auswählen*"
               required
-              :rules="kategoryRules"
+              :rules="validationRules.category"
             ></v-autocomplete>
 
             <v-text-field
               v-model="form.model.title"
               label="Titel*"
               required
-              :rules="titelRules"
+              :rules="validationRules.title"
               maxlength="100"
             ></v-text-field>
 
@@ -58,7 +58,7 @@
               outlined
               counter
               required
-              :rules="textRules"
+              :rules="validationRules.text"
               maxlength="1000"
             ></v-textarea>
 
@@ -81,7 +81,7 @@
               v-model="form.model.email"
               class="justify-center"
               label="E-Mail"
-              :rules="emailPatternRules"
+              :rules="validationRules.email"
               required
               maxlength="80"
             ></v-text-field>
@@ -222,8 +222,9 @@ import {
   IrisClientFrontendApiFactory,
   FeedbackInsert,
 } from "@/api";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import config from "@/config";
+import rules from "@/common/validation-rules";
 
 /**
  * The data transfer object
@@ -253,30 +254,20 @@ export default class FeedbackDialog extends Vue {
   showConfirmDialog = false;
   showFinishedDialog = false;
   isFormValid = false;
-  kategoryRules = [(content: any) => !!content || "Pflichtfeld"];
-  titelRules = [
-    (content: any) => !!content || "Pflichtfeld",
-    (content: string | any[]) =>
-      (content && content.length <= 100) ||
-      "Der Titel darf nicht mehr als 100 Zeichen beinhalten.",
-  ];
-  textRules = [
-    (content: any) => !!content || "Pflichtfeld",
-    (content: string | any[]) =>
-      (content && content.length <= 1000) ||
-      "Das Feedback darf nicht mehr als 1000 Zeichen beinhalten.",
-  ];
-  emailPatternRules = [
-    (content: string) =>
-      !content ||
-      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(content) ||
-      "E-mail muss gültig oder leer sein.",
-  ];
+
+  get validationRules(): Record<string, Array<unknown>> {
+    return {
+      category: [rules.defined, rules.sanitised],
+      title: [rules.defined, rules.sanitised, rules.maxLength(100)],
+      text: [rules.defined, rules.sanitised, rules.maxLength(1000)],
+      email: [rules.sanitised, rules.email],
+    };
+  }
 
   /**
    * privately used function to close the feedback dialog
    */
-  cancel() {
+  cancel(): void {
     this.showCancelDialog = false;
     this.show = false;
   }
@@ -284,14 +275,14 @@ export default class FeedbackDialog extends Vue {
   /**
    * privately used function to get the user name to display in the name text field.
    */
-  userDisplayName(): string {
+  get userDisplayName(): string {
     return this.$store.getters["userLogin/userDisplayName"];
   }
 
   /**
    * privately used function to close the feedback dialog and call the sendFeedback function
    */
-  confirm() {
+  confirm(): void {
     this.showConfirmDialog = false;
     this.show = false;
     this.sendFeedback();
@@ -301,7 +292,7 @@ export default class FeedbackDialog extends Vue {
   /**
    * makes a instance of the api class and attempts to send the feedback to the Server.
    */
-  sendFeedback() {
+  sendFeedback(): void {
     const authAxiosInstance = axios.create();
     const { apiBaseURL } = config;
     const clientConfig = new Configuration({
@@ -325,7 +316,7 @@ export default class FeedbackDialog extends Vue {
   /**
    * this method clears all entrys
    */
-  clearEntries() {
+  clearEntries(): void {
     this.showFinishedDialog = false;
     this.form.model.category = "";
     this.form.model.title = "";

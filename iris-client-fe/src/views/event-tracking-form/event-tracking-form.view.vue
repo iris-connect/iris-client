@@ -2,59 +2,59 @@
   <div>
     <v-card class="my-3">
       <v-form
-          ref="form"
-          v-model="form.valid"
-          lazy-validation
-          :disabled="eventCreationOngoing"
+        ref="form"
+        v-model="form.valid"
+        lazy-validation
+        :disabled="eventCreationOngoing"
       >
         <v-card-title>Ereignis-Nachverfolgung starten</v-card-title>
         <v-card-text>
           <v-row>
             <v-col cols="12" sm="6">
               <v-text-field
-                  v-model="form.model.externalId"
-                  :rules="validationRules.sanitisedAndDefined"
-                  label="Externe ID"
+                v-model="form.model.externalId"
+                :rules="validationRules.sanitisedAndDefined"
+                label="Externe ID"
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
               <v-text-field
-                  v-model="form.model.name"
-                  label="Name"
-                  :rules="validationRules.sanitised"
+                v-model="form.model.name"
+                label="Name"
+                :rules="validationRules.sanitised"
               ></v-text-field>
             </v-col>
           </v-row>
           <location-select-dialog
-              v-model="form.model.location"
-              :locationList="locationList"
-              :disabled="locationsLoading"
-              :error="locationsError"
-              @search="handleLocationSearch"
+            v-model="form.model.location"
+            :locationList="locationList"
+            :disabled="locationsLoading"
+            :error="locationsError"
+            @search="handleLocationSearch"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-row>
                 <v-col v-if="form.model.location">
                   <event-tracking-form-location-info
-                      :location="form.model.location"
+                    :location="form.model.location"
                   />
                 </v-col>
                 <v-col>
                   <v-input
-                      v-model="form.model.location"
-                      :rules="validationRules.location"
+                    v-model="form.model.location"
+                    :rules="validationRules.location"
                   >
                     <v-btn
-                        color="red lighten-2"
-                        dark
-                        v-bind="attrs"
-                        v-on="on"
-                        :disabled="eventCreationOngoing"
+                      color="red lighten-2"
+                      dark
+                      v-bind="attrs"
+                      v-on="on"
+                      :disabled="eventCreationOngoing"
                     >
                       {{
-                      form.model.location
-                      ? "Ereignisort ändern"
-                      : "Ereignisort auswählen"
+                        form.model.location
+                          ? "Ereignisort ändern"
+                          : "Ereignisort auswählen"
                       }}
                     </v-btn>
                   </v-input>
@@ -65,58 +65,62 @@
           <v-row>
             <v-col cols="12" md="6">
               <date-time-input-field
-                  v-model="form.model.start"
-                  :date-props="{
-                label: 'Datum (Beginn)',
-                max: maxStartDate,
-              }"
-                  :time-props="{
-                label: 'Uhrzeit (Beginn)',
-                max: maxStartTime,
-              }"
-                  :rules="validationRules.start"
-                  required
+                v-model="form.model.start"
+                :date-props="{
+                  label: 'Datum (Beginn)',
+                  max: maxStartDate,
+                }"
+                :time-props="{
+                  label: 'Uhrzeit (Beginn)',
+                  max: maxStartTime,
+                }"
+                :rules="validationRules.start"
+                required
               />
             </v-col>
             <v-col cols="12" md="6">
               <date-time-input-field
-                  v-model="form.model.end"
-                  :date-props="{
-                label: 'Datum (Ende)',
-                min: minEndDate,
-              }"
-                  :time-props="{
-                label: 'Uhrzeit (Ende)',
-              }"
-                  :rules="validationRules.end"
-                  required
+                v-model="form.model.end"
+                :date-props="{
+                  label: 'Datum (Ende)',
+                  min: minEndDate,
+                }"
+                :time-props="{
+                  label: 'Uhrzeit (Ende)',
+                }"
+                :rules="validationRules.end"
+                required
               />
             </v-col>
           </v-row>
           <v-row>
             <v-col>
               <v-textarea
-                  v-model="form.model.requestDetails"
-                  name="requestComment"
-                  label="Anfragendetails für den Betrieb"
-                  auto-grow
-                  rows="1"
-                  value=""
-                  hint="Datenschutz-Hinweis: Die Anfragendetails werden an den Betrieb übermittelt!"
-                  :rules="validationRules.sanitised"
+                v-model="form.model.requestDetails"
+                name="requestComment"
+                label="Anfragendetails für den Betrieb"
+                auto-grow
+                rows="1"
+                value=""
+                hint="Datenschutz-Hinweis: Die Anfragendetails werden an den Betrieb übermittelt!"
+                :rules="validationRules.sanitised"
               ></v-textarea>
             </v-col>
           </v-row>
           <v-alert v-if="eventCreationError" text type="error">{{
             eventCreationError
-            }}</v-alert>
+          }}</v-alert>
         </v-card-text>
         <v-card-actions>
           <v-btn color="secondary" plain @click="$router.back()">
             Abbrechen
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn :disabled="eventCreationOngoing" color="primary" @click="submit">
+          <v-btn
+            :disabled="eventCreationOngoing"
+            color="primary"
+            @click="submit"
+          >
             Anfrage senden
           </v-btn>
         </v-card-actions>

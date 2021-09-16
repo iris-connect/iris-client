@@ -21,6 +21,11 @@ const password = (v: string): string | boolean => {
   return `Bitte geben Sie ein gültiges Passwort an: \n${config.passwordRules}`;
 };
 
+const email = (v: string): string | boolean => {
+  if (!v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) return true;
+  return "Bitte geben Sie eine gültige E-Mail Adresse an.";
+};
+
 const defined = (v: unknown): string | boolean => !!v || "Pflichtfeld";
 
 const location = (v: unknown): string | boolean =>
@@ -208,6 +213,7 @@ const rules = {
   dateStart,
   dateEnd,
   location,
+  email,
 };
 
 export default rules;
