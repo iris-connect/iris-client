@@ -21,8 +21,12 @@ const password = (v: string): string | boolean => {
   return `Bitte geben Sie ein gültiges Passwort an: \n${config.passwordRules}`;
 };
 
+/* eslint-disable no-useless-escape */
+const rEmail =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
+/* eslint-enable no-useless-escape */
 const email = (v: string): string | boolean => {
-  if (!v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) return true;
+  if (!v || rEmail.test(v)) return true;
   return "Bitte geben Sie eine gültige E-Mail Adresse an.";
 };
 
