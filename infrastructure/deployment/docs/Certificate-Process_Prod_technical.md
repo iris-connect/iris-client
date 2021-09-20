@@ -116,7 +116,7 @@ Antragsstrecke:
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
 
-7. Es öffnet sich ein Webformular, mit dessen Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder, die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. auf dem vorausgefüllten Wert. 
+7. Es öffnet sich ein Webformular, mit dessen Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder, die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. auf dem vorausgefüllten Wert. Bei den einzutragenden Domains in den Feldern ist darauf zu achten, dass die Groß- oder Kleinschreibung der Domains korrekt ist, meist sind die Domains klein geschrieben.
 
    | Feld | Wert | Beispiel |
    | - | - | - |
@@ -187,7 +187,7 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
 
-7. Es öffnet sich ein Webformular, mit dessen Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder, die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert. 
+7. Es öffnet sich ein Webformular, mit dessen Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder, die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert.  Bei den einzutragenden Domains in den Feldern ist darauf zu achten, dass die Groß- oder Kleinschreibung der Domains korrekt ist, meist sind die Domains klein geschrieben.
 
    ### Achtung: CN und SAN unterscheiden sich zu Zertifikat #1
 
