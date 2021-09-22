@@ -236,6 +236,13 @@ Sie können die Zertifikate dann einfach im CSM herunterladen.
    Klicken Sie auf "Download", um die zwei Zertifikate herunterzuladen.
    ![Ansicht "Zertifikate" im CSM](images/certificate_service_manager/mycsm_Zertifikate.png)
 
+4. Die Bundesdruckerei übermittelt die Zertifikate mit einer durchlaufenden Nummerierung versehen, bspw. <b>myCert_1016059.cer</b>. Um nun zu überprüfen, welches Zertifikat das `TLS-Zertifikat - Private Proxy #1` und welches das `mTLS-Zertifikat - EPS #3` ist, kann folgender Befehl verwendet werden:
+
+   ```
+   openssl x509 -in myCert_1016059.cer -noout -subject
+   ```
+
+   Als Ergebnis erhält man eine kompakte Liste von Einträgen, von denen zur Identifikation der Zertifikate der Common Name (CN) interessant ist. Das `mTLS-Zertifikat - EPS #3` sollte hier einen Eintrag in der Form `CN = eps.[DOMAIN_NAME]` enthalten.
 ### Fingerprints von Zertifikat Nr. 3 an das IRIS Team übermitteln.
 
 Damit Ihr GA mit den im IRIS System befindlichen Akteuren kommunizieren kann, muss Ihr GA im IRIS Service Directory eingetragen werden. Führen Sie dafür die folgenden Schritte durch. 
