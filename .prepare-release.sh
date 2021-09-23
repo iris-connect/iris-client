@@ -97,7 +97,7 @@ mvn versions:set -DnewVersion=$VERSION -DprocessAllModules=true
 
 # Package the new version and copy it to release folder
 # These files will be upload to github by @semantic-release/github
-mvn -B clean package spring-boot:repackage spring-boot:build-image -Dspring-boot.build-image.publish=false
+mvn -B clean verify spring-boot:repackage spring-boot:build-image -Dspring-boot.build-image.publish=false
 mkdir release && cp ./iris-client-bff/target/*.jar release
 
 BFF_IMAGE_NAME="$NAMESPACE/iris-client-bff"

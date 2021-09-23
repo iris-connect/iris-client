@@ -68,6 +68,33 @@ jobs:
             @semantic-release/git
         env:
           GITHUB_TOKEN: ${{ secrets.JK_GITHUB_TOKEN }}
+          
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: |
+            **/surefire-reports/*.xml
+            **/failsafe-reports/*.xml
+
+  publish-test-results:
+    name: Publish Test Results
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: test-reports
+          path: reports
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          files: reports/**/*.xml
+          report_individual_runs: true
+          check_run_annotations_branch: "*"
 
   container_scan:
     needs: release-client
