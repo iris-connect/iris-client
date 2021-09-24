@@ -119,6 +119,7 @@ services:
       - ${LOCAL_MOUNT_DIR}/private-proxy-db:/private-proxy
     environment:
       - PROXY_SETTINGS=settings/roles/private-proxy-1
+      - MOUNT_POINTS=/app/settings,/private-proxy
     command: [ "--level", "trace", "run", "private" ]
 
   private-proxy-1:
