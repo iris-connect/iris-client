@@ -6,27 +6,36 @@
     <v-card>
       <v-card-title> Ereignisort auswählen </v-card-title>
       <v-card-text>
-        <v-row class="my-6">
-          <v-col cols="12" sm="6">
-            <v-text-field
-              v-model="search"
-              :disabled="disabled"
-              append-icon="mdi-magnify"
-              label="Suche (min. 4 Buchstaben)"
-              single-line
-              hide-details
-              @keydown.enter="handleSearch(search)"
-            />
-          </v-col>
-          <v-col cols="12" sm="6" class="d-flex align-end">
-            <v-btn
-              :disabled="disabled || search.length < 4"
-              @click="handleSearch(search)"
-            >
-              Ereignisort suchen
-            </v-btn>
-          </v-col>
-        </v-row>
+        <div class="my-6">
+          <v-row>
+            <v-col cols="12" sm="6">
+              <v-text-field
+                v-model="search"
+                :disabled="disabled"
+                append-icon="mdi-magnify"
+                label="Suche (min. 4 Buchstaben)"
+                single-line
+                hide-details
+                @keydown.enter="handleSearch(search)"
+              />
+            </v-col>
+            <v-col cols="12" sm="6" class="d-flex align-end">
+              <v-btn
+                :disabled="disabled || search.length < 4"
+                @click="handleSearch(search)"
+              >
+                Ereignisort suchen
+              </v-btn>
+            </v-col>
+          </v-row>
+          <p class="text-caption mt-2">
+            Sie können durch
+            <strong>Leerzeichen getrennte Suchbegriffe</strong>
+            miteinander kombinieren.<br />
+            Der Suchalgorithmus ermittelt dann die Ereignisorte, welche
+            <strong>alle Suchkriterien erfüllen</strong>.
+          </p>
+        </div>
         <v-data-table
           :loading="disabled"
           :page="dataTableModel.page"
