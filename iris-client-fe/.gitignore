@@ -6,6 +6,10 @@ node_modules
 .env.local
 .env.*.local
 
+# local cypress env files
+.env.e2e_test
+cypress.env.json
+
 # Log files
 npm-debug.log*
 yarn-debug.log*

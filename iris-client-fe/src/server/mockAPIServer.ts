@@ -65,8 +65,14 @@ export function makeMockAPIServer() {
        */
       this.post("/login", (schema, request) => {
         const credentials: Credentials = JSON.parse(request.requestBody);
-        if (credentials.userName === "admin") {
-          if (credentials.password === "auth") {
+        if (
+          credentials.userName === "admin" ||
+          credentials.userName === "e2e_test_invalid_userName"
+        ) {
+          if (
+            credentials.password === "auth" ||
+            credentials.password === "e2e_test_invalid_password"
+          ) {
             return new Response(401, {}, { message: "Unauthorized" });
           }
           if (credentials.password === "block") {
