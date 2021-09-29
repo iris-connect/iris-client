@@ -15,4 +15,7 @@ public interface EventDataSubmissionRepository extends CrudRepository<EventDataS
 
 	@Transactional
 	Streamable<EventDataSubmission> findAllByRequest(EventDataRequest request);
+
+	@Transactional
+	void deleteAllByRequestIn(Iterable<? extends EventDataRequest> requests);
 }
