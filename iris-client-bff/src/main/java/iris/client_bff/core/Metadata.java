@@ -6,6 +6,8 @@ import java.time.Instant;
 
 import javax.persistence.Embeddable;
 
+import org.hibernate.search.engine.backend.types.Sortable;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -17,7 +19,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 public class Metadata {
 
 	@CreatedDate
+	@GenericField(sortable = Sortable.YES)
 	Instant created;
 	@LastModifiedDate
+	@GenericField(sortable = Sortable.YES)
 	Instant lastModified;
 }

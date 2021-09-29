@@ -1,6 +1,6 @@
 package iris.client_bff.events.web;
 
-import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.*;
 
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.events.EventDataRequest;
@@ -67,7 +67,8 @@ public class EventDataRequestController {
 	private ValidationHelper validHelper;
 	private ModelMapper modelMapper;
 
-	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (EventDataRequest request) -> {
+	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (
+			EventDataRequest request) -> {
 		ExistingDataRequestClientWithLocation mapped = EventMapper.map(request);
 		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
 		return mapped;
@@ -87,17 +88,17 @@ public class EventDataRequestController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public Page<ExistingDataRequestClientWithLocation> getDataRequests(
-		@RequestParam(required = false) Status status,
-		@RequestParam(required = false) String search,
-		Pageable pageable) {
+			@RequestParam(required = false) Status status,
+			@RequestParam(required = false) String search,
+			Pageable pageable) {
 		if (validHelper.isPossibleAttack(search, FIELD_SEARCH, false)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
 		if (status != null && StringUtils.isNotEmpty(search)) {
-			return dataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(eventMapperFunction);
+			return dataRequestService.search(status, search, pageable).map(eventMapperFunction);
 		} else if (StringUtils.isNotEmpty(search)) {
-			return dataRequestService.searchByRefIdOrName(search, pageable).map(eventMapperFunction);
+			return dataRequestService.search(search, pageable).map(eventMapperFunction);
 		} else if (status != null) {
 			return dataRequestService.findByStatus(status, pageable).map(eventMapperFunction);
 		}
@@ -162,10 +163,10 @@ public class EventDataRequestController {
 		}
 
 		if (patch.getStatus() != null
-			&& !(patch.getStatus() == EventStatusDTO.DATA_RECEIVED
-				|| patch.getStatus() == EventStatusDTO.DATA_REQUESTED
-				|| patch.getStatus() == EventStatusDTO.ABORTED
-				|| patch.getStatus() == EventStatusDTO.CLOSED)) {
+				&& !(patch.getStatus() == EventStatusDTO.DATA_RECEIVED
+						|| patch.getStatus() == EventStatusDTO.DATA_REQUESTED
+						|| patch.getStatus() == EventStatusDTO.ABORTED
+						|| patch.getStatus() == EventStatusDTO.CLOSED)) {
 			log.warn(ErrorMessages.INVALID_INPUT + FIELD_STATUS + patch.getStatus());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
@@ -190,7 +191,8 @@ public class EventDataRequestController {
 			request.setRequestDetails(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
-		if (validHelper.isPossibleAttackForRequiredValue(request.getExternalRequestId(), FIELD_EXTERNAL_REQUEST_ID, false)) {
+		if (validHelper.isPossibleAttackForRequiredValue(request.getExternalRequestId(), FIELD_EXTERNAL_REQUEST_ID,
+				false)) {
 			request.setExternalRequestId(ErrorMessages.INVALID_INPUT_STRING);
 		}
 
@@ -234,7 +236,8 @@ public class EventDataRequestController {
 	}
 
 	private ExistingDataRequestClientWithLocation mapExistingDataRequestClientWithLocation(EventDataRequest request) {
-		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request, ExistingDataRequestClientWithLocation.class);
+		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request,
+				ExistingDataRequestClientWithLocation.class);
 		mapped.setCode(request.getId().toString());
 		mapped.setStart(request.getRequestStart());
 		mapped.setEnd(request.getRequestEnd());
@@ -248,22 +251,24 @@ public class EventDataRequestController {
 	}
 
 	private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
-		submissionRepo.findAllByRequest(request).get().findFirst().ifPresent(it -> addSubmissionToRequest(requestDetails, it));
+		submissionRepo.findAllByRequest(request).get().findFirst()
+				.ifPresent(it -> addSubmissionToRequest(requestDetails, it));
 	}
 
 	private void addSubmissionToRequest(DataRequestDetails requestDetails, EventDataSubmission submission) {
 
 		var dataProvider = modelMapper.map(submission.getDataProvider(), GuestListDataProvider.class);
 
-		var guests = submission.getGuests().stream().map(it -> modelMapper.map(it, Guest.class)).collect(Collectors.toList());
+		var guests = submission.getGuests().stream().map(it -> modelMapper.map(it, Guest.class))
+				.collect(Collectors.toList());
 
 		var guestList = GuestList.builder()
-			.additionalInformation(submission.getAdditionalInformation())
-			.startDate(submission.getStartDate())
-			.endDate(submission.getEndDate())
-			.dataProvider(dataProvider)
-			.guests(guests)
-			.build();
+				.additionalInformation(submission.getAdditionalInformation())
+				.startDate(submission.getStartDate())
+				.endDate(submission.getEndDate())
+				.dataProvider(dataProvider)
+				.guests(guests)
+				.build();
 
 		requestDetails.setSubmissionData(guestList);
 	}
