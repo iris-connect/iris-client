@@ -8,7 +8,9 @@
     "serve:int": "vue-cli-service serve --mode integration",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e --mode e2e_test",
+    "test:e2e:prepare": "cp .env.e2e_test_local.dist .env.e2e_test_local && cp cypress.env.json.dist cypress.env.json",
+    "test:e2e:prepare:win": "copy .env.e2e_test_local.dist .env.e2e_test_local && copy cypress.env.json.dist cypress.env.json",
+    "test:e2e": "vue-cli-service test:e2e --mode e2e_test_local",
     "lint": "vue-cli-service lint",
     "generate-licenses": "(license-checker --production --csv --out licenses-prod.csv || true) && license-checker --development --csv --out licenses-dev.csv",
     "convert-licenses": "(csv2md licenses-prod.csv > licenses-prod.md || true) && csv2md licenses-dev.csv > licenses-dev.md"

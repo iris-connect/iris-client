@@ -39,22 +39,27 @@ npm run test:unit
 
 ### Run e2e tests (locally)
 
-
-Before running tests locally you have to...
-
-1. create and configure a local `.env.e2e_test` file based on `.env.e2e_test.dist`.
-   - create the file: `cp .env.e2e_test.dist .env.e2e_test`
-   - optional: set the base url for the api you want to use for testing by setting the `VUE_APP_API_BASE_URL` parameter (defaults to mock server)
-2. create and configure a local `cypress.env.json` file based on `cypress.env.json.dist`
-   - create the file: `cp cypress.env.json.dist cypress.env.json`
-   - optional: set the auth credentials according to the api server that you have defined in the .env file with the `VUE_APP_API_BASE_URL` parameter.
-
-**Do not commit / push the generated files!**
-
-
 ```bash
 npm run test:e2e
 ```
+
+Before running tests locally you have to create 2 files:
+- `.env.e2e_test_local` (based on `.env.e2e_test_local.dist`)
+- `cypress.env.json` (based on `cypress.env.json.dist`)
+
+You can use the script `test:e2e:prepare` to generate the files.
+If you are using Windows, please use the script `test:e2e:prepare:win`
+
+**Do not commit / push the generated files!**
+
+If you run the tests locally, the mock server is used for handling api requests.
+
+To test with a "real" api server you have to:
+1. Change the server address by editing the `VUE_APP_API_BASE_URL` parameter in the file `.env.e2e_test`.
+2. Disable the mockup server by setting `VUE_APP_ENABLE_MOCK_SERVER` to `false` in the file `.env.e2e_test`.
+3. Change the auth credentials for the app login in the file `cypress.env.json`.
+
+**Do not commit / push your changes / the generated files!**
 
 ### Lints and fixes files
 
