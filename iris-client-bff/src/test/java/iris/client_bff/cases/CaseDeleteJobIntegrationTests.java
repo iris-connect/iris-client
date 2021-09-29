@@ -18,7 +18,6 @@ import com.github.javafaker.Faker;
 
 /**
  * @author Jens Kutzsche
- * @since 1.4
  */
 @IrisWebIntegrationTest
 @RequiredArgsConstructor
@@ -32,6 +31,9 @@ class CaseDeleteJobIntegrationTests {
 
 	@Test // Issue #244
 	void testDeleteCaseRequests() {
+
+		var requestsSize = caseRequests.findAll().size();
+		var submissionSize = caseSubmissions.findAll().size();
 
 		// in time
 		dateTimeProvider.setDelta(Period.ofMonths(-6));
@@ -50,20 +52,15 @@ class CaseDeleteJobIntegrationTests {
 
 		dateTimeProvider.reset();
 
-		var all = caseRequests.findAll();
-
 		// extra element from data initialization
-		assertThat(all).hasSize(5).element(4).satisfies(it -> {
-			assertThat(it.getName()).isEqualTo(oldName);
-		});
-		assertThat(caseSubmissions.findAll()).hasSize(2);
+		assertThat(caseRequests.findAll()).hasSize(requestsSize + 2).extracting(CaseDataRequest::getName).contains(oldName);
+		assertThat(caseSubmissions.findAll()).hasSize(submissionSize + 2);
 
 		deleteJob.deleteCaseRequests();
 
-		all = caseRequests.findAll();
-
-		assertThat(all).hasSize(4).extracting(CaseDataRequest::getName).doesNotContain(oldName);
-		assertThat(caseSubmissions.findAll()).hasSize(1);
+		assertThat(caseRequests.findAll()).hasSize(requestsSize + 1).extracting(CaseDataRequest::getName)
+				.doesNotContain(oldName);
+		assertThat(caseSubmissions.findAll()).hasSize(submissionSize + 1);
 	}
 
 	private CaseDataRequest createRequest(String name, String refId, Instant date) {
