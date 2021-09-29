@@ -13,9 +13,14 @@ Vue.config.productionTip = false;
 // in case: config.ts file is loaded before main.ts
 initAppContext();
 
-new Vue({
+const app = new Vue({
   router,
   store,
   vuetify,
   render: (h) => h(App),
 }).$mount("#app");
+
+// only available during E2E tests
+if (window.Cypress) {
+  window.irisApp = app;
+}

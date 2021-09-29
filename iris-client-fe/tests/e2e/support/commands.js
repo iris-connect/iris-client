@@ -24,10 +24,30 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add("login", (username, password) => {
+Cypress.Commands.add("logout", () => {
+  cy.window({ log: false })
+    .its("irisApp", { log: false })
+    .then((app) => {
+      cy.log("logout user");
+      return app.$store.dispatch("userLogin/logout");
+    });
   cy.clearLocalStorage();
-  cy.visit("/");
+});
 
+Cypress.Commands.add("login", () => {
+  cy.window({ log: false })
+    .its("irisApp", { log: false })
+    .then((app) => {
+      cy.log("authenticate user");
+      return app.$store.dispatch("userLogin/authenticate", {
+        userName: Cypress.env("auth_username"),
+        password: Cypress.env("auth_password"),
+      });
+    });
+  cy.visit("/");
+});
+
+Cypress.Commands.add("loginUsingUi", (username, password) => {
   cy.url().should("include", "/user/login");
   cy.contains(".v-card__title", "Anmelden");
 
