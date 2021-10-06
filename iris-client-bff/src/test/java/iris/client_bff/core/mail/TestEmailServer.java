@@ -23,7 +23,6 @@ import com.icegreen.greenmail.util.GreenMailUtil;
  * Wrapper around a {@link GreenMail} instance to simplify testing assertions.
  *
  * @author Oliver Drotbohm
- * @since 1.4
  */
 @Slf4j
 @Component
