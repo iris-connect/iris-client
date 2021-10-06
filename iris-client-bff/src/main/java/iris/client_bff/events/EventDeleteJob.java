@@ -45,7 +45,7 @@ class EventDeleteJob {
 		}
 
 		log.debug("{} event data request(s) are deleted with period {} after their creation!",
-				oldRequests,
+				oldRequests.size(),
 				properties.getDeleteAfter(),
 				oldRequests.get(0).getCreatedAt());
 

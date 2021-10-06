@@ -1,7 +1,6 @@
 package iris.client_bff.events.model;
 
 import iris.client_bff.core.Id;
-import iris.client_bff.events.EventDataRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +13,6 @@ import java.util.UUID;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 
 @Entity
 @Data
@@ -46,9 +44,6 @@ public class Location {
 	private String contactEmail;
 
 	private String contactPhone;
-
-	@OneToOne(mappedBy = "location")
-	private EventDataRequest request;
 
 	@Embeddable
 	@EqualsAndHashCode
