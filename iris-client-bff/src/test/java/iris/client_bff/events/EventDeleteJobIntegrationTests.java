@@ -30,12 +30,14 @@ class EventDeleteJobIntegrationTests {
 	private final IrisDateTimeProvider dateTimeProvider;
 	private final EventDeleteJob deleteJob;
 	private final Faker faker;
+	private final LocationRepository locations;
 
 	@Test // Issue #244
 	void testDeleteEventRequests() {
 
 		var requestsSize = eventRequests.findAll().size();
 		var submissionSize = eventSubmissions.findAll().size();
+		var locationSize = locations.findAll().size();
 
 		// in time
 		dateTimeProvider.setDelta(Period.ofMonths(-6));
@@ -55,16 +57,17 @@ class EventDeleteJobIntegrationTests {
 		dateTimeProvider.reset();
 
 		// extra element from data initialization
-		assertThat(eventRequests.findAll()).hasSize(requestsSize + 2).element(4).satisfies(it -> {
-			assertThat(it.getName()).isEqualTo(oldName);
-		});
+		assertThat(eventRequests.findAll()).hasSize(requestsSize + 2).extracting(EventDataRequest::getName)
+				.contains(oldName);
 		assertThat(eventSubmissions.findAll()).hasSize(submissionSize + 2);
+		assertThat(locations.findAll()).hasSize(locationSize + 2);
 
 		deleteJob.deleteEventRequests();
 
 		assertThat(eventRequests.findAll()).hasSize(requestsSize + 1).extracting(EventDataRequest::getName)
 				.doesNotContain(oldName);
 		assertThat(eventSubmissions.findAll()).hasSize(submissionSize + 1);
+		assertThat(locations.findAll()).hasSize(locationSize + 1);
 	}
 
 	private EventDataRequest createRequest(String name, String refId, Instant date) {
