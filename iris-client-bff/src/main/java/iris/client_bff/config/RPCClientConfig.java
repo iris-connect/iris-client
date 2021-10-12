@@ -18,6 +18,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
@@ -49,6 +50,8 @@ public class RPCClientConfig {
 	private final @NonNull String epsClientUrl;
 
 	private final @NonNull String proxyClientUrl;
+
+	private final @NotNull String ownEndpoint;
 
 	@Bean
 	public JsonRpcHttpClient epsRpcClient()
