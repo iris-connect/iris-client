@@ -77,6 +77,7 @@ jobs:
           path: |
             **/surefire-reports/*.xml
             **/failsafe-reports/*.xml
+            !**/failsafe-reports/failsafe-summary.xml
 
   publish-test-results:
     name: Publish Test Results

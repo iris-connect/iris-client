@@ -4,7 +4,6 @@ import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
 
 import java.time.Instant;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +15,6 @@ import org.springframework.data.util.Streamable;
  * @author Jens Kutzsche
  */
 public interface CaseDataRequestRepository extends JpaRepository<CaseDataRequest, DataRequestIdentifier> {
-
-	@Query("select count(1) = 0 from CaseDataRequest r where r.id = :code")
-	boolean isCodeAvailable(UUID code);
 
 	@Query("select count(r) from CaseDataRequest r where r.metadata.created >= :date")
 	int getCountSinceDate(Instant date);
