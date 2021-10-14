@@ -5,9 +5,9 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
-import iris.client_bff.config.DwConfig;
 import iris.client_bff.config.HealthDepartmentConfig;
 import iris.client_bff.core.utils.HibernateSearcher;
+import iris.client_bff.core.service.TokenGenerator;
 import iris.client_bff.proxy.ProxyServiceClient;
 
 import java.time.Instant;
@@ -33,14 +33,15 @@ public class CaseDataRequestServiceTest {
 	@Mock
 	ProxyServiceClient proxyServiceClient;
 
-	DwConfig dwConfig;
+	TokenGenerator tokenGenerator;
+
 	HealthDepartmentConfig hdConfig;
 
 	CaseDataRequestService service;
 
 	@BeforeEach
 	void setUp() {
-		service = new CaseDataRequestService(repository, searcher, proxyServiceClient, dwConfig, hdConfig);
+		service = new CaseDataRequestService(repository, searcher, proxyServiceClient, hdConfig, tokenGenerator);
 	}
 
 	@Test

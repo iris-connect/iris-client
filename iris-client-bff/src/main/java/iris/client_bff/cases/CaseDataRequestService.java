@@ -2,12 +2,12 @@ package iris.client_bff.cases;
 
 import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
-import iris.client_bff.cases.dto.DwUrlParamDto;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
-import iris.client_bff.config.DwConfig;
 import iris.client_bff.config.HealthDepartmentConfig;
 import iris.client_bff.core.log.LogHelper;
+import iris.client_bff.core.IdentifierToken;
+import iris.client_bff.core.service.TokenGenerator;
 import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.proxy.IRISAnnouncementException;
@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
-import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,8 +24,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Slf4j
 @Service
@@ -38,8 +35,7 @@ public class CaseDataRequestService {
 	private final CaseDataRequestRepository repository;
 	private final HibernateSearcher searcher;
 	private final ProxyServiceClient proxyClient;
-	private final DwConfig dwConfig;
-	private final HealthDepartmentConfig hdConfig;
+	private final TokenGenerator tokenGenerator;
 
 	public Page<CaseDataRequest> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
@@ -99,9 +95,22 @@ public class CaseDataRequestService {
 	}
 
 	public CaseDataRequest create(IndexCaseInsertDTO insert) throws IRISDataRequestException {
-		String announcementToken;
+		IdentifierToken idToken;
+		String announcedDomain;
+
 		try {
-			announcementToken = proxyClient.announce();
+			idToken = tokenGenerator.generateIdentifierToken();
+			log.debug("Generated tokens for case request {}", idToken.toStringWithObfuscation());
+		} catch(Exception e) {
+			log.error("Failed to generate identifying tokens.");
+			throw new IRISDataRequestException(e);
+		}
+
+		try {
+			announcedDomain = proxyClient.announceExplicitToken(idToken.getConnectionAuthorizationToken());
+			log.debug("Announced incoming connection on domain {} for readable token {}",
+					LogHelper.obfuscateAtStart20(announcedDomain),
+					LogHelper.obfuscateAtStart20(idToken.getReadableToken()));
 		} catch (IRISAnnouncementException e) {
 			log.error("Announcement failed: ", e);
 			throw new IRISDataRequestException(e);
@@ -113,10 +122,9 @@ public class CaseDataRequestService {
 				.name(insert.getName())
 				.requestStart(insert.getStart())
 				.requestEnd(insert.getEnd())
-				.announcementToken(announcementToken)
+				.identifierToken(idToken)
 				.build();
 
-		dataRequest.setDwSubmissionUri(generateDwUrl(dataRequest));
 		CaseDataRequest savedDataRequest = repository.save(dataRequest);
 		log.info(LogHelper.CASE_DATA_REQUEST);
 		return savedDataRequest;
@@ -130,20 +138,4 @@ public class CaseDataRequestService {
 		return repository.getCountWithStatus(status);
 	}
 
-	private String generateDwUrl(CaseDataRequest dataRequest) throws IRISDataRequestException {
-		String paramsAsJsonBase64;
-
-		try {
-			DwUrlParamDto dwUrlParamDto = new DwUrlParamDto(dataRequest.getId().toString(),
-					dataRequest.getAnnouncementToken(), hdConfig.getZipCode());
-			String paramsAsJson = new ObjectMapper().writeValueAsString(dwUrlParamDto);
-			paramsAsJsonBase64 = Base64.getEncoder().encodeToString(paramsAsJson.getBytes());
-			log.debug("Generated Base64 encoded params: {}", dwUrlParamDto.toStringWithObfuscation());
-		} catch (Exception e) {
-			log.error("Generating DW URL failed", e);
-			throw new IRISDataRequestException(e);
-		}
-
-		return dwConfig.getBaseurl() + dwConfig.getSuburlNewcase() + "?iris=" + paramsAsJsonBase64;
-	}
 }

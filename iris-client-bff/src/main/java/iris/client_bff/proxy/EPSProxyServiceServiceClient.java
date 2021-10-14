@@ -61,6 +61,15 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 	}
 
 	@Override
+	public String announceExplicitToken(String connectionAuthorizationToken) throws IRISAnnouncementException {
+		var domain = connectionAuthorizationToken
+				+ "."
+				+ config.getPublicProxyDomain();
+		var oneWeekFromNow = Instant.now().plus(7, ChronoUnit.DAYS);
+		return this.sendAnnouncement(domain, oneWeekFromNow);
+	}
+
+	@Override
 	public String abortAnnouncement(String domain) throws IRISAnnouncementException {
 		var oneWeekAgo = Instant.now().minus(7, ChronoUnit.DAYS);
 		return this.sendAnnouncement(domain, oneWeekAgo);

@@ -72,7 +72,7 @@ class CaseDataControllerIntegrationTest {
 				.build();
 
 		// test
-		var result = controller.submitContactAndEventData(dataRequest.getId().getRequestId(), contacts, events, dataProvider);
+		var result = controller.submitContactAndEventData(dataRequest.getId().getRequestId().toString(), contacts, events, dataProvider);
 		assertEquals("OK", result);
 
 		// compare
@@ -92,7 +92,7 @@ class CaseDataControllerIntegrationTest {
 		// test repeated data submission is rejected
 		contacts.setContactPersons(dtoSupplier.getContactPersonList(2,3));
 		events.setEvents(dtoSupplier.getEventList(2,3));
-		result = controller.submitContactAndEventData(dataRequest.getId().getRequestId(), contacts, events, dataProvider);
+		result = controller.submitContactAndEventData(dataRequest.getId().getRequestId().toString(), contacts, events, dataProvider);
 		assertNotEquals("OK", result);
 
 	}
@@ -125,7 +125,7 @@ class CaseDataControllerIntegrationTest {
 				.build();
 
 		// test
-		var result = controller.submitContactAndEventData(dataRequest.getId().getRequestId(), contacts, events, dataProvider);
+		var result = controller.submitContactAndEventData(dataRequest.getId().getRequestId().toString(), contacts, events, dataProvider);
 		assertEquals("OK", result);
 
 		// compare
@@ -143,7 +143,7 @@ class CaseDataControllerIntegrationTest {
 		// test repeated data submission is rejected
 		contacts.setContactPersons(dtoSupplier.getContactPersonList(2,3));
 		events.setEvents(dtoSupplier.getEventList(2,3));
-		result = controller.submitContactAndEventData(dataRequest.getId().getRequestId(), contacts, events, dataProvider);
+		result = controller.submitContactAndEventData(dataRequest.getId().getRequestId().toString(), contacts, events, dataProvider);
 		assertNotEquals("OK", result);
 	}
 

@@ -2,6 +2,7 @@ package iris.client_bff.cases;
 
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
+import iris.client_bff.core.IdentifierToken;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -57,29 +58,32 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 
 	private @Setter String comment;
 	private String announcementToken;
-	private @Setter String dwSubmissionUri;
+    private String dataAuthorizationToken;
+    private String readableToken;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	@GenericField(sortable = Sortable.YES)
 	private Status status = Status.DATA_REQUESTED;
 
-	@Builder
-	public CaseDataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
-			String hdUserId, String comment, String announcementToken) {
+  @Builder
+  public CaseDataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
+	  String hdUserId, String comment, IdentifierToken identifierToken) {
 
-		super();
+	super();
 
-		id = DataRequestIdentifier.of(UUID.randomUUID());
+	id = DataRequestIdentifier.of(UUID.randomUUID());
 
-		this.refId = refId;
-		this.name = name;
-		this.requestStart = requestStart;
-		this.requestEnd = requestEnd;
-		this.hdUserId = hdUserId;
-		this.comment = comment;
-		this.announcementToken = announcementToken;
-	}
+	this.refId = refId;
+	this.name = name;
+	this.requestStart = requestStart;
+	this.requestEnd = requestEnd;
+	this.hdUserId = hdUserId;
+	this.comment = comment;
+      this.announcementToken = identifierToken.getConnectionAuthorizationToken();
+      this.dataAuthorizationToken = identifierToken.getDataAuthorizationToken();
+      this.readableToken = identifierToken.getReadableToken();
+  }
 
 	public Instant getLastModifiedAt() {
 		return this.getMetadata().getLastModified();

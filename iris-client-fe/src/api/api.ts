@@ -480,6 +480,12 @@ export interface DataRequestCaseData {
    * @memberof DataRequestCaseData
    */
   submissionData?: ContactsAndEvents;
+  /**
+   * The TAN
+   * @type {string}
+   * @memberof DataRequestCaseData
+   */
+  readableToken?: string;
 }
 /**
  *

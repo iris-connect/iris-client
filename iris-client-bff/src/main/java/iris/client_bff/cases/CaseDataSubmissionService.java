@@ -50,10 +50,10 @@ public class CaseDataSubmissionService {
 		return submission.map(IndexCaseMapper::mapDataSubmission);
 	}
 
-	public String validateAndSaveData(UUID dataAuthorizationToken, Contacts contacts, Events events, CaseDataProvider dataProvider) {
+	public String validateAndSaveData(String dataAuthorizationToken, Contacts contacts, Events events, CaseDataProvider dataProvider) {
 		// Todo check client.getName() vs. providerIdø
 
-		return requestRepo.findById(CaseDataRequest.DataRequestIdentifier.of(dataAuthorizationToken)).map(dataRequest -> {
+		return requestRepo.findByIdOrDataAuthorizationToken(CaseDataRequest.DataRequestIdentifier.of(dataAuthorizationToken), dataAuthorizationToken).map(dataRequest -> {
 
 			var requestStatus = dataRequest.getStatus();
 			if (requestStatus.equals(ABORTED)) {

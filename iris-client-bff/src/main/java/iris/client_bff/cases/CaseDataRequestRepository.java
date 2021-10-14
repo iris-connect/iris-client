@@ -4,6 +4,7 @@ import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
 
 import java.time.Instant;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,4 +32,6 @@ public interface CaseDataRequestRepository extends JpaRepository<CaseDataRequest
 	 * @return
 	 */
 	Streamable<CaseDataRequest> findByMetadataCreatedIsBefore(Instant refDate);
+
+	Optional<CaseDataRequest> findByIdOrDataAuthorizationToken(DataRequestIdentifier id, String dataAuthorizationToken);
 }

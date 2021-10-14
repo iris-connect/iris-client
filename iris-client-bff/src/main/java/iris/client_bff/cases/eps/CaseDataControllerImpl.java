@@ -49,7 +49,7 @@ public class CaseDataControllerImpl implements CaseDataController {
 
 	@Override
 	public String submitContactAndEventData(
-			UUID dataAuthorizationToken,
+			String dataAuthorizationToken,
 			@Valid Contacts contacts,
 			@Valid Events events,
 			@Valid CaseDataProvider dataProvider) {
