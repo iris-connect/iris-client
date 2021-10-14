@@ -19,6 +19,7 @@
             :exact="link.meta.menuExact"
             :disabled="isLinkDisabled(link)"
             text
+            :data-test="`app-menu.nav.link.${link.name}`"
           >
             {{ link.meta.menuName }}
           </v-btn>

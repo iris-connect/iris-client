@@ -15,6 +15,7 @@
                 v-model="formModel.userName"
                 :rules="validationRules.sanatisedAndDefined"
                 label="Anmeldename"
+                data-test="userName"
               ></v-text-field>
             </v-col>
             <v-col cols="12">
@@ -24,6 +25,7 @@
                 label="Passwort"
                 type="password"
                 @keyup.native.enter="submit"
+                data-test="password"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -31,7 +33,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn :disabled="isDisabled" color="primary" @click="submit">
+          <v-btn
+            :disabled="isDisabled"
+            color="primary"
+            @click="submit"
+            data-test="submit"
+          >
             Anmelden
           </v-btn>
         </v-card-actions>

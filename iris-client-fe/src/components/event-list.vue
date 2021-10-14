@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-card class="v-card-table">
+  <v-card class="v-card-table" data-test="data-table.open-events">
     <v-card-title
       ><h2 class="light-font mb-6">Offene Ereignisse</h2></v-card-title
     >

@@ -5,12 +5,13 @@ describe("Logout", () => {
     cy.clearLocalStorage();
     cy.visit("/");
   });
-  it("should logout user and redirect to login page", () => {
+  it("should open user-menu and logout user with confirmation dialog and redirect to login page", () => {
     cy.login();
-    cy.url().should("not.include", "/user/login");
-    cy.get(".v-toolbar button .mdi-account-circle").should("exist").click();
-    cy.get("div[role='menu']").contains("Abmelden").click();
-    cy.get(".v-dialog .v-card__actions").contains("Abmelden").click();
-    cy.url().should("include", "/user/login");
+    cy.getBy("user-menu.activator").should("exist").click();
+    cy.getBy("{user-menu} {logout-confirm-dialog.activator}")
+      .should("exist")
+      .click();
+    cy.getBy("logout-confirm-dialog.action.confirm").should("exist").click();
+    cy.location("pathname").should("equal", "/user/login");
   });
 });
