@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@fontsource/roboto": "^4.5.1",
-    "@mdi/font": "^6.1.95",
+    "@mdi/font": "^6.2.95",
     "@types/lodash": "^4.14.175",
     "axios": "^0.21.4",
     "chart.js": "^2.9.4",
