@@ -461,14 +461,23 @@ const sanitizeField = function (
   /**
    * json2csv uses a delimiter to split table columns. We currently are using ; and , as those.
    * If such a sign would appear in the content than it would result in a split.
-   * To prevent this we have to quote the field value if it contains any delimiters - but only if the field isn't quoted by the json2csv Parser
+   * To prevent this...
+   * ... we have to quote the field value if it contains any delimiters - but only if the field isn't quoted by the json2csv Parser.
+   * ... OR ...
+   * ... we change the offending symbol to "/".
+   * please note: we use quotes only if atomic address export is enabled to ensure backwards compatibility
    */
 
-  if (!quoted) {
-    const regex_delimiter = new RegExp(`${delimiter}+`, "g");
-    if (regex_delimiter.test(field)) {
-      field = `"${field}"`;
+  if (window.irisAppContext?.csvExportStandardAtomicAddress === "true") {
+    if (!quoted) {
+      const regex_delimiter = new RegExp(`${delimiter}+`, "g");
+      if (regex_delimiter.test(field)) {
+        field = `"${field}"`;
+      }
     }
+  } else {
+    const regex_separator = /[,;]+/g;
+    field = field.replace(regex_separator, "/");
   }
 
   return field;
