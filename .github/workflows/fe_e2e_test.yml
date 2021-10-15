@@ -1,0 +1,43 @@
+name: FE e2e Test
+
+on:
+  push:
+    branches:
+      - feature/fe_e2e_test
+#      - develop
+#    paths:
+#      - iris-client-fe/**
+#      - .github/workflows/fe_e2e_test.yml
+#  pull_request:
+#    branches:
+#      - develop
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2.4.1
+        with:
+          # Version Spec of the version to use.  Examples: 12.x, 10.15.1, >=10.15.0
+          node-version: 12.x
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2.11.7
+        with:
+          browser: chrome
+          headless: true
+          project: ./iris-client-fe
+          start: npm run serve --mode e2e_test
+          wait-on: http://localhost:8080/
+          config_file: cypress.json
+          spec: "tests/e2e/**/*"
+        env:
+          CYPRESS_baseUrl: http://localhost:8080/
+          CYPRESS_auth_username: ${{ secrets.FE_TEST_AUTH_USERNAME }}
+          CYPRESS_auth_password: ${{ secrets.FE_TEST_AUTH_PASSWORD }}
+          VUE_APP_API_BASE_URL: ${{ secrets.FE_TEST_API_BASE_URL }}
+          VUE_APP_ENABLE_MOCK_SERVER: false
