@@ -27,12 +27,14 @@ jobs:
 
       - name: Cypress run
         uses: cypress-io/github-action@v2.11.7
+        timeout-minutes: 10
         with:
           browser: chrome
           headless: true
           working-directory: ./iris-client-fe
           start: npm run serve -- --mode e2e_test
           wait-on: http://localhost:8080/
+          wait-on-timeout: 300
           config-file: cypress.json
           spec: "tests/e2e/**/*"
         env:
