@@ -47,7 +47,6 @@ import Genders from "@/constants/Genders";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { ErrorMessage } from "@/utils/axios";
 import EditableField from "@/components/form/editable-field.vue";
-import StatusChangeConfirmDialog from "@/views/event-tracking-details/components/confirm-dialog.vue";
 import EventTrackingStatusChange from "@/views/event-tracking-details/components/event-tracking-status-change.vue";
 import EventTrackingDetailsComponent from "@/views/event-tracking-details/components/event-tracking-details.component.vue";
 import AlertComponent from "@/components/alerts/alert.component.vue";
@@ -138,7 +137,6 @@ function sanitiseFieldForDisplay(text = ""): string {
   components: {
     EventTrackingDetailsComponent,
     EventTrackingStatusChange,
-    StatusChangeConfirmDialog,
     EditableField,
     ErrorMessageAlert,
     EventTrackingDetailsLocationInfo,

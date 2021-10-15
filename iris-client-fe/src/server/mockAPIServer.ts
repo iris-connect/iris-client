@@ -107,6 +107,10 @@ export function makeMockAPIServer() {
         return authResponse(request);
       });
 
+      this.post("/feedback", (schema, request) => {
+        return authResponse(request);
+      });
+
       this.patch("/users/:id", (schema, request) => {
         try {
           if (validateAuthHeader(request)) {

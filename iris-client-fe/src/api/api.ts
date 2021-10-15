@@ -1675,6 +1675,49 @@ export interface UserUpdate {
 /**
  *
  * @export
+ * @interface FeedbackInsert
+ */
+export interface FeedbackInsert {
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  category: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  title: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  comment: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  organisation: string;
+  /**
+   *
+   * @type {string}
+   * @memberof FeedbackInsert
+   */
+  email: string;
+}
+/**
+ *
+ * @export
  * @interface Statistics
  */
 export interface Statistics {
@@ -2807,6 +2850,66 @@ export const IrisClientFrontendApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
+    /**
+     *
+     * @summary Feedback Post
+     * @param {FeedbackInsert} feedbackObject
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    feedbackPost: async (
+      feedbackObject: FeedbackInsert,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'userInsert' is not null or undefined
+      assertParamExists("feedbackPost", "feedbackObject", feedbackObject);
+      const localVarPath = `/feedback`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication ApiKeyAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        "X-IRIS-API-KEY",
+        configuration
+      );
+
+      // authentication BearerAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        feedbackObject,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
   };
 };
 
@@ -3200,6 +3303,23 @@ export const IrisClientFrontendApiFp = function (
         configuration
       );
     },
+    async feedbackPost(
+      feedbackObject: FeedbackInsert,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.feedbackPost(
+        feedbackObject,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
   };
 };
 
@@ -3420,6 +3540,22 @@ export const IrisClientFrontendApiFactory = function (
     getWeeklyData(options?: any): AxiosPromise<Statistics> {
       return localVarFp
         .getWeeklyData(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Feedback Post
+     * @param {FeedbackInsert} feedbackObject
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    feedbackPost(
+      feedbackObject: FeedbackInsert,
+      options?: any
+    ): AxiosPromise<any> {
+      //TODO any to whatever we need
+      return localVarFp
+        .feedbackPost(feedbackObject, options)
         .then((request) => request(axios, basePath));
     },
   };

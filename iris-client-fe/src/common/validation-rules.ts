@@ -21,6 +21,15 @@ const password = (v: string): string | boolean => {
   return `Bitte geben Sie ein gültiges Passwort an: \n${config.passwordRules}`;
 };
 
+/* eslint-disable no-useless-escape */
+const rEmail =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
+/* eslint-enable no-useless-escape */
+const email = (v: string): string | boolean => {
+  if (!v || rEmail.test(v)) return true;
+  return "Bitte geben Sie eine gültige E-Mail Adresse an.";
+};
+
 const defined = (v: unknown): string | boolean => !!v || "Pflichtfeld";
 
 const location = (v: unknown): string | boolean =>
@@ -208,6 +217,7 @@ const rules = {
   dateStart,
   dateEnd,
   location,
+  email,
 };
 
 export default rules;

@@ -13,6 +13,7 @@ import indexTrackingDetails from "@/views/index-tracking-details/index-tracking-
 import indexTrackingSettings from "@/views/app-settings/index-tracking-settings.store";
 import normalizeSettings from "@/views/app-settings/normalize-settings.store";
 import chunkLoader from "@/views/app-settings/chunk-loader.store";
+import feedback from "@/views/feedback/feedback.store";
 
 import { StoreOptions } from "vuex";
 import { RootState } from "@/store/types";
@@ -40,6 +41,7 @@ export const storeOptions: StoreOptions<RootState> = {
     indexTrackingSettings,
     normalizeSettings,
     chunkLoader,
+    feedback,
   },
   plugins: [
     createPersistedState({

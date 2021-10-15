@@ -50,7 +50,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { DataRequestStatus, DataRequestStatusUpdateByUser } from "@/api";
-import StatusChangeConfirmDialog from "@/views/event-tracking-details/components/confirm-dialog.vue";
+import StatusChangeConfirmDialog from "@/components/confirm-dialog.vue";
 
 const EventTrackingStatusChangeProps = Vue.extend({
   props: {
