@@ -30,7 +30,7 @@ jobs:
         with:
           browser: chrome
           headless: true
-          project: ./iris-client-fe
+          working-directory: ./iris-client-fe
           start: npm run serve --mode e2e_test
           wait-on: http://localhost:8080/
           config-file: cypress.json
