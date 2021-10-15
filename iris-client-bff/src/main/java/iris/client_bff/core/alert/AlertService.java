@@ -25,7 +25,7 @@ public class AlertService {
 	private final BackendServiceProperties config;
 	private final IJsonRpcClient epsRpcClient;
 
-	private static final String APP = "iris-bff";
+	public static final String APP = "iris-bff";
 	private String version = "";
 	{
 		try {
