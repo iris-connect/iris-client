@@ -10,6 +10,10 @@ node_modules
 .env.e2e_test_local
 cypress.env.json
 
+# test files
+tests/e2e/screenshots
+tests/e2e/videos
+
 # Log files
 npm-debug.log*
 yarn-debug.log*

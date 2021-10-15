@@ -6,7 +6,8 @@ declare namespace Cypress {
     login(): Chainable<Subject>;
     loginUsingUi(username: string, password: string): Chainable<Subject>;
     fetchUser(): Chainable<Subject>;
-    assertInputValid(selector: string): Chainable<Subject>;
+    assertInputValid(selector?: string): Chainable<Subject>;
+    assertInputInvalid(message?: string): Chainable<Subject>;
     assertInputInvalid(selector: string, message?: string): Chainable<Subject>;
     getApp(): Chainable<Vue | undefined>;
     getBy(

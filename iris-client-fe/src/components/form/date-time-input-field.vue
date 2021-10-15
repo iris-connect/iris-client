@@ -5,7 +5,7 @@
     v-bind="$attrs"
     @update:error="handleError"
   >
-    <v-row class="date-time">
+    <v-row class="date-time" :data-test="dataTest">
       <v-col cols="12" sm="6">
         <date-input-field
           v-model="date"
@@ -55,6 +55,10 @@ const DateTimeInputFieldProps = Vue.extend({
     required: {
       type: Boolean,
       default: false,
+    },
+    dataTest: {
+      type: String,
+      default: null,
     },
   },
 });

@@ -225,6 +225,12 @@ export function makeMockAPIServer() {
           };
         }
 
+        if (searchMatches(searchQuery, ["iris"])) {
+          data = {
+            locations: [dummyLocations[3]],
+          };
+        }
+
         return authResponse(request, {
           ...data,
           totalElements: dummyLocations.length,

@@ -74,22 +74,45 @@ Cypress.Commands.add("fetchUser", () => {
   });
 });
 
-Cypress.Commands.add("assertInputValid", (selector) => {
-  const inputField = cy.getBy(selector).closest(".v-input");
-  inputField
-    .should("not.have.class", "error--text")
-    .and("not.have.descendants", ".error--text");
-});
-
-Cypress.Commands.add("assertInputInvalid", (selector, message) => {
-  const inputField = cy.getBy(selector).closest(".v-input");
-  inputField
-    .should("have.class", "error--text")
-    .and("have.descendants", ".error--text");
-  if (message) {
-    inputField.should("contain", message);
+Cypress.Commands.add(
+  "assertInputValid",
+  { prevSubject: "optional" },
+  (subject, selector) => {
+    if (subject) {
+      cy.get(subject, { log: false }).as("input");
+    } else {
+      cy.getBy(selector, { log: false }).as("input");
+    }
+    cy.get("@input", { log: false })
+      .closest(".v-input")
+      .should("not.have.class", "error--text")
+      .and("not.have.descendants", ".error--text");
+    return cy.get("@input", { log: false });
   }
-});
+);
+
+Cypress.Commands.add(
+  "assertInputInvalid",
+  { prevSubject: "optional" },
+  (subject, selector, message) => {
+    if (subject) {
+      cy.get(subject, { log: false }).as("input");
+    } else {
+      cy.getBy(selector, { log: false }).as("input");
+    }
+    cy.get("@input", { log: false })
+      .closest(".v-input")
+      .within({ log: false }, () => {
+        cy.root({ log: false })
+          .should("have.class", "error--text")
+          .and("have.descendants", ".error--text");
+        if (message) {
+          cy.root({ log: false }).should("contain", message);
+        }
+      });
+    return cy.get("@input", { log: false });
+  }
+);
 
 Cypress.Commands.add("loginUsingUi", (username, password) => {
   cy.location("pathname").should("equal", "/user/login");

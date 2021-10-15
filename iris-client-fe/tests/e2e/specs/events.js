@@ -1,0 +1,125 @@
+// import dayjs from "dayjs";
+
+describe("Events", () => {
+  beforeEach(() => {
+    cy.clearLocalStorage();
+    cy.visit("/");
+    cy.login();
+  });
+  afterEach(() => {
+    cy.logout();
+  });
+  it("should display the new event link, navigate to the event creation page and cancel the event creation", () => {
+    cy.visit("/events/list");
+    cy.getBy("event-list.link.event-create")
+      .should("have.attr", "href", "/events/new")
+      .click();
+    cy.location("pathname").should("equal", "/events/new");
+    cy.get("form").within(() => {
+      cy.getBy("button{cancel}").should("exist").click();
+    });
+    cy.location("pathname").should("equal", "/events/list");
+  });
+  it("should validate and open the location select dialog, select a location and cancel selection", () => {
+    cy.visit("/events/new");
+    cy.location("pathname").should("equal", "/events/new");
+    cy.getBy("location-select.dialog").should("not.exist");
+    cy.getBy("location-info").should("not.exist");
+    cy.get("form")
+      .should("exist")
+      .within(() => {
+        cy.getBy("button{submit}").click();
+        cy.assertInputInvalid(
+          "location-select.dialog.activator",
+          "Bitte wählen Sie einen Ereignisort aus"
+        )
+          .should("contain", "Ereignisort auswählen")
+          .click();
+      });
+    cy.getBy("location-select.dialog")
+      .should("be.visible")
+      .within(() => {
+        cy.getBy("search.input").type("iri");
+        cy.getBy("search.button").should("be.disabled");
+        cy.getBy("search.input").type("s");
+        cy.getBy("search.button").should("be.enabled").click();
+        cy.get(".v-data-table")
+          .contains("IRIS connect Demo")
+          .should("exist")
+          .closest("tr")
+          .within(() => {
+            cy.getBy("select.button").click();
+          });
+      });
+    cy.getBy("location-select.dialog").should("not.be.visible");
+    cy.getBy("location-info")
+      .should("exist")
+      .and("contain.text", "IRIS connect Demo");
+    cy.getBy("location-select.dialog.activator")
+      .assertInputValid()
+      .should("contain", "Ereignisort ändern")
+      .click();
+    cy.getBy("location-select.dialog")
+      .should("be.visible")
+      .within(() => {
+        cy.get(".v-data-table").contains("IRIS connect Demo").should("exist");
+        cy.getBy("cancel").should("exist").click();
+      });
+    cy.getBy("location-select.dialog").should("not.be.visible");
+  });
+  // it("should validate and auto-fill the event creation form", () => {
+  //   cy.visit("/events/new");
+  //   cy.location("pathname").should("equal", "/events/new");
+  //   cy.get("form")
+  //     .should("exist")
+  //     .within(() => {
+  //       cy.getBy("button{submit}").click();
+  //       cy.assertInputInvalid("input{externalId}", "Pflichtfeld");
+  //       cy.assertInputValid("input{name}");
+  //       cy.assertInputInvalid(
+  //         "location-select.dialog.activator",
+  //         "Bitte wählen Sie einen Ereignisort aus"
+  //       );
+  //       cy.getBy("start")
+  //         .assertInputInvalid(
+  //           "Bitte geben Sie einen Zeitpunkt in der Vergangenheit an"
+  //         )
+  //         .within(() => {
+  //           cy.assertInputInvalid(
+  //             "date-input-field",
+  //             "Bitte geben Sie ein Datum an"
+  //           )
+  //             .type("1234")
+  //             .assertInputInvalid(
+  //               "Bitte geben Sie ein Datum im Format DD.MM.YYYY ein"
+  //             )
+  //             .clear()
+  //             .type(dayjs().subtract(1, "day").format("DD.MM.YYYY"))
+  //             .assertInputValid();
+  //           cy.getBy("time-input-field")
+  //             .should("have.value", dayjs().format("HH:mm"))
+  //             .assertInputValid()
+  //             .clear()
+  //             .assertInputInvalid(
+  //               "time-input-field",
+  //               "Bitte geben Sie eine Uhrzeit an"
+  //             )
+  //             .type("1234")
+  //             .assertInputInvalid(
+  //               "Bitte geben Sie eine Uhrzeit im Format HH:mm an"
+  //             );
+  //         });
+  //       cy.getBy("end").within(() => {
+  //         cy.assertInputInvalid(
+  //           "date-input-field",
+  //           "Bitte geben Sie ein Datum an"
+  //         );
+  //         cy.assertInputInvalid(
+  //           "time-input-field",
+  //           "Bitte geben Sie eine Uhrzeit an"
+  //         );
+  //       });
+  //       cy.assertInputValid("textarea{requestDetails}");
+  //     });
+  // });
+});
