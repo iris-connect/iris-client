@@ -131,6 +131,7 @@
           single-expand
           :expanded.sync="tableData.expanded"
           @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
+          data-test="event-details.contacts.data-table"
         >
           <template v-if="isStatusRequested" #no-data>
             <span class="black--text">
@@ -175,6 +176,7 @@
           color="primary"
           @click="handleStandardCsvExport"
           :disabled="tableData.select.length <= 0"
+          data-test="export.standard"
         >
           Auswahl exportieren
         </v-btn>
@@ -182,6 +184,7 @@
           color="white"
           @click="openExportModal"
           :disabled="tableData.select.length <= 0"
+          data-test="export-dialog.activator"
         >
           Exportformat wählen
         </v-btn>

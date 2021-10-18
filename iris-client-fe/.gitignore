@@ -11,8 +11,10 @@ node_modules
 cypress.env.json
 
 # test files
+cypress
 tests/e2e/screenshots
 tests/e2e/videos
+tests/e2e/downloads
 
 # Log files
 npm-debug.log*

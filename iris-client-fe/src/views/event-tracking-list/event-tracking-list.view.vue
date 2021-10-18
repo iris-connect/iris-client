@@ -58,6 +58,7 @@
           :search="search"
           :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
           @update:options="updatePagination"
+          data-test="event-list.data-table"
         >
           <template v-slot:[itemAddressSlotName]="{ item }">
             <span class="text-pre-wrap"> {{ item.address }} </span>
@@ -75,6 +76,7 @@
                 name: 'event-details',
                 params: { id: item.code },
               }"
+              data-test="select.button"
             >
               Details
             </v-btn>

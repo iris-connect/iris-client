@@ -147,7 +147,6 @@ describe("Events", () => {
       });
   });
   it("should create a new event", () => {
-    cy.visit("/events/list");
     cy.visit("/events/new");
     cy.get("form")
       .should("exist")
@@ -180,5 +179,51 @@ describe("Events", () => {
       cy.getBy("button{submit}").click();
     });
     cy.location("pathname").should("contain", "/events/details");
+  });
+  it("should edit an existing event", () => {
+    cy.visit("/events/list");
+    cy.getBy("event-list.data-table")
+      .contains("e2e_test_")
+      .closest("tr")
+      .within(() => {
+        cy.getBy("select.button").click();
+      });
+    cy.location("pathname").should("contain", "/events/details");
+    cy.checkEditableField("editable-field.externalRequestId");
+    cy.checkEditableField("editable-field.name");
+    cy.checkEditableField("editable-field.comment", "textarea", false);
+  });
+  it("should export event data as csv file", () => {
+    cy.visit("/events/list");
+    cy.getBy("event-list.data-table")
+      .contains("Geliefert")
+      .closest("tr")
+      .within(() => {
+        cy.getBy("select.button").click();
+      });
+    cy.location("pathname").should("contain", "/events/details");
+    cy.getBy("button{export.standard}").should("be.disabled");
+    cy.getBy("button{export-dialog.activator}").should("be.disabled");
+    cy.getBy("event-details.contacts.data-table")
+      .should("exist")
+      .within(() => {
+        cy.get("tbody tr").should("have.length.at.least", 2);
+        cy.get("thead .v-simple-checkbox").click();
+      });
+    cy.getBy("export.standard").should("not.be.disabled").click();
+    cy.getBy("export-dialog").should("not.exist");
+    cy.getBy("button{export-dialog.activator}")
+      .should("not.be.disabled")
+      .click();
+    cy.getBy("export-dialog")
+      .should("be.visible")
+      .within(() => {
+        cy.getBy("export.standard").should("exist").click();
+        cy.getBy("export.standard-alternative").should("exist").click();
+        cy.getBy("export.sormas-participants").should("exist").click();
+        cy.getBy("export.sormas-contact-person").should("exist").click();
+        cy.getBy("button{close}").should("exist").click();
+      });
+    cy.getBy("export-dialog").should("not.exist");
   });
 });

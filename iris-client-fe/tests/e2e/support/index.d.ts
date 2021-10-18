@@ -10,6 +10,11 @@ declare namespace Cypress {
     assertInputInvalid(message?: string): Chainable<Subject>;
     assertInputInvalid(selector: string, message?: string): Chainable<Subject>;
     getApp(): Chainable<Vue | undefined>;
+    checkEditableField(
+      selector: string,
+      input?: string,
+      isRequired?: boolean
+    ): Chainable<Subject>;
     getBy(
       selector: string,
       options?: Partial<Loggable & Timeoutable & Withinable & Shadow>

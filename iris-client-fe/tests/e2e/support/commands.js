@@ -67,6 +67,29 @@ Cypress.Commands.add("login", () => {
   cy.visit("/");
 });
 
+Cypress.Commands.add(
+  "checkEditableField",
+  (selector, field = "input", isRequired) => {
+    cy.getBy(selector)
+      .should("exist")
+      .within(() => {
+        cy.get(".editable-button").should("exist").click();
+        cy.get("button.mdi-check").should("exist");
+        cy.get(field).should("exist").clear().should("be.empty");
+        if (isRequired !== false) {
+          cy.get(field).assertInputInvalid("Pflichtfeld");
+        } else {
+          cy.get(field).assertInputValid().type("test");
+        }
+        cy.get("button.mdi-undo-variant").should("exist").click();
+        cy.get(field).should("not.be.empty");
+        cy.get(".editable-button").should("exist").click();
+        cy.get(field).type("e2e:editable");
+        cy.get("button.mdi-check").click();
+      });
+    cy.getBy(selector).should("contain", "e2e:editable");
+  });
+
 Cypress.Commands.add("fetchUser", () => {
   cy.getApp().then((app) => {
     cy.log("fetch authenticated user");

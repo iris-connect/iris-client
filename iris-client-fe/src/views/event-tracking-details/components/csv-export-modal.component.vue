@@ -1,6 +1,6 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask">
+    <div class="modal-mask" data-test="export-dialog">
       <div class="modal-wrapper">
         <div class="modal-container">
           <v-card>
@@ -14,7 +14,10 @@
                   <span>Standard-csv</span>
                 </v-col>
                 <v-col cols="4">
-                  <v-btn color="primary" @click="handleStandardCsvExport"
+                  <v-btn
+                    color="primary"
+                    @click="handleStandardCsvExport"
+                    data-test="export.standard"
                     >Download</v-btn
                   >
                 </v-col>
@@ -27,6 +30,7 @@
                   <v-btn
                     color="primary"
                     @click="handleAlternativeStandardCsvExport"
+                    data-test="export.standard-alternative"
                     >Download</v-btn
                   >
                 </v-col>
@@ -39,6 +43,7 @@
                   <v-btn
                     color="primary"
                     @click="handleSormasCsvEventParticipantsExport"
+                    data-test="export.sormas-participants"
                     >Download</v-btn
                   >
                 </v-col>
@@ -51,6 +56,7 @@
                   <v-btn
                     color="primary"
                     @click="handleSormasCsvContactPersonExport"
+                    data-test="export.sormas-contact-person"
                     >Download</v-btn
                   >
                 </v-col>
@@ -60,7 +66,9 @@
             <v-card-actions>
               <v-row no-gutters justify="end">
                 <v-col cols="4">
-                  <v-btn text @click="closeExportModal">Schließen</v-btn>
+                  <v-btn text @click="closeExportModal" data-test="close">
+                    Schließen
+                  </v-btn>
                 </v-col>
               </v-row>
             </v-card-actions>
