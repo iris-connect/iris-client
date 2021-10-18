@@ -146,4 +146,39 @@ describe("Events", () => {
         );
       });
   });
+  it("should create a new event", () => {
+    cy.visit("/events/list");
+    cy.visit("/events/new");
+    cy.get("form")
+      .should("exist")
+      .within(() => {
+        cy.getBy("input{externalId}").type("e2e_test_" + dayjs().valueOf());
+        cy.getBy("input{name}").type("E2E Test");
+        cy.getBy("textarea{requestDetails}").type("E2E Test Details");
+        cy.getBy("start").within(() => {
+          cy.getBy("date-input-field").type(
+            dayjs().subtract(1, "day").format("DD.MM.YYYY")
+          );
+          cy.getBy("time-input-field").type(dayjs().format("HH:mm"));
+        });
+        cy.getBy("location-select.dialog.activator").click();
+      });
+    cy.getBy("location-select.dialog")
+      .should("be.visible")
+      .within(() => {
+        cy.getBy("search.input").type("iris");
+        cy.getBy("search.button").click();
+        cy.get(".v-data-table")
+          .contains("IRIS connect Demo")
+          .should("exist")
+          .closest("tr")
+          .within(() => {
+            cy.getBy("select.button").click();
+          });
+      });
+    cy.get("form").within(() => {
+      cy.getBy("button{submit}").click();
+    });
+    cy.location("pathname").should("contain", "/events/details");
+  });
 });
