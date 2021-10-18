@@ -34,4 +34,8 @@ public class TokenConfig {
     @Value("${tokens.catSalt: VtXKYoNmvme86V2zrjdWg9NglGQfAAUB}")
     private String catSalt;
 
+    @NotBlank(message="Token generator salt must be set. (Environment variable: TOKENS_GENERATOR_SALT)")
+    @Length(min = 16, max = 32, message = "Token generator salt must be between 16 and 32 Chars. (Environment variable: TOKENS_GENERATOR_SALT)")
+    private String generatorSalt;
+
 }

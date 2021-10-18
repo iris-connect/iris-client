@@ -11,6 +11,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 import java.util.Random;
@@ -58,10 +59,10 @@ public class TokenGenerator {
 
 
     private String generateReadableToken(List<String> dict, int numberOfElements) {
-        Random rand = new Random();
+        SecureRandom secureRandom = new SecureRandom(tokenConfig.getGeneratorSalt().getBytes());
         String token = "";
         for (int i = 0; i < numberOfElements; i++) {
-            int randomIndex = rand.nextInt(dict.size());
+            int randomIndex = secureRandom.nextInt(dict.size());
             token = token.concat(dict.get(randomIndex).toLowerCase());
             if (i != (numberOfElements - 1))
                 token = token.concat("-");
