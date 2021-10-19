@@ -13,6 +13,7 @@
           small
           color="error"
           class="px-2 mx-n2"
+          data-test="event.cancel"
         >
           Anfrage abbrechen
         </v-btn>
@@ -31,6 +32,7 @@
       color="success"
       small
       outlined
+      data-test="event.close"
     >
       Als bearbeitet markieren
     </v-btn>
@@ -41,6 +43,7 @@
       small
       color="secondary"
       class="px-2 mx-n2"
+      data-test="event.resume"
     >
       Als unbearbeitet markieren
     </v-btn>

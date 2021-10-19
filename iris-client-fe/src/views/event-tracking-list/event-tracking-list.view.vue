@@ -27,11 +27,20 @@
             @click="filterStatus(selectableStatus[status])"
             v-for="status in Object.keys(selectableStatus)"
             :key="status"
+            :data-test="`event.status.select.${getStatusTestLabel(
+              selectableStatus[status]
+            )}`"
           >
             {{ getStatusSelectLabel(selectableStatus[status]) }}
           </v-btn>
           <!-- this needs to come last, see statusButtonSelected() -->
-          <v-btn text @click="filterStatus(undefined)"> Alle </v-btn>
+          <v-btn
+            text
+            @click="filterStatus(undefined)"
+            data-test="event.status.select.all"
+          >
+            Alle
+          </v-btn>
         </v-btn-toggle>
       </v-col>
     </v-row>
@@ -54,7 +63,13 @@
           :headers="dataTableModel.headers"
           :items="dataTableModel.data"
           :items-per-page="dataTableModel.itemsPerPage"
-          class="elevation-1 mt-5 twolineTable"
+          :class="`elevation-1 mt-5 twolineTable ${
+            dataTableModel.loading
+              ? 'is-loading'
+              : dataTableModel.itemsLength <= 0
+              ? 'is-empty'
+              : ''
+          }`"
           :search="search"
           :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
           @update:options="updatePagination"
@@ -64,7 +79,11 @@
             <span class="text-pre-wrap"> {{ item.address }} </span>
           </template>
           <template v-slot:[itemStatusSlotName]="{ item }">
-            <v-chip :color="getStatusColor(item.status)" dark>
+            <v-chip
+              :color="getStatusColor(item.status)"
+              dark
+              :data-test="`event.status.${getStatusTestLabel(item.status)}`"
+            >
               {{ getStatusName(item.status) }}
             </v-chip>
           </template>
@@ -317,6 +336,21 @@ export default class EventTrackingListView extends Vue {
 
   getStatusName(status: DataRequestStatus): string {
     return StatusMessages.getMessage(status);
+  }
+
+  getStatusTestLabel(status: DataRequestStatus): string {
+    switch (status) {
+      case DataRequestStatus.DataRequested:
+        return "requested";
+      case DataRequestStatus.DataReceived:
+        return "received";
+      case DataRequestStatus.Closed:
+        return "closed";
+      case DataRequestStatus.Aborted:
+        return "aborted";
+      default:
+        return "unknown"; // TODO find better name
+    }
   }
 
   getStatusSelectLabel(status: DataRequestStatus | null): string {

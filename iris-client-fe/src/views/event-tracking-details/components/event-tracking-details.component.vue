@@ -71,7 +71,7 @@
         <v-row>
           <v-col cols="12" md="6">
             <v-row>
-              <v-col cols="12">
+              <v-col cols="12" data-test="event.duration">
                 <strong> Zeitraum: </strong>
                 {{ eventData.startTime }} - {{ eventData.endTime }}
               </v-col>
@@ -79,7 +79,7 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-row>
-              <v-col cols="12">
+              <v-col cols="12" data-test="event.status">
                 <span class="d-inline-block mr-3">
                   <strong> Status: </strong>
                 </span>
@@ -106,7 +106,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col>
+          <v-col data-test="event.requestDetails">
             <strong> Anfragedetails: </strong>
             {{ eventData.additionalInformation }}
           </v-col>

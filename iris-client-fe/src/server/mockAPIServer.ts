@@ -144,16 +144,30 @@ export function makeMockAPIServer() {
         return authResponse(request);
       });
 
-      this.post("/data-requests-client/events", () => {
+      this.post("/data-requests-client/events", (schema, request) => {
+        const { locationId, ...data } = JSON.parse(request.requestBody);
         const created: Partial<DataRequestDetails> = {
-          code: "NEWREQUEST123",
+          code: "NEWREQUEST_" + dayjs().valueOf(),
+          ...data,
+          locationInformation: dummyLocations.find(
+            (location) => location.id === locationId
+          ),
         };
+        dummyDataRequests.push(created);
         return created;
       });
 
       this.get("/data-requests-client/events", (schema, request) => {
-        const { page } = request.queryParams;
-        return authResponse(request, paginated(dummyDataRequests, page));
+        const { page, status } = request.queryParams;
+        return authResponse(
+          request,
+          paginated(
+            dummyDataRequests.filter((r) =>
+              status ? r.status === status : true
+            ),
+            page
+          )
+        );
       });
 
       this.get("/data-requests-client/events/:id", (schema, request) => {

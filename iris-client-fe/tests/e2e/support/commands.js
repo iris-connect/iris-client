@@ -67,28 +67,117 @@ Cypress.Commands.add("login", () => {
   cy.visit("/");
 });
 
-Cypress.Commands.add(
-  "checkEditableField",
-  (selector, field = "input", isRequired) => {
-    cy.getBy(selector)
-      .should("exist")
-      .within(() => {
-        cy.get(".editable-button").should("exist").click();
-        cy.get("button.mdi-check").should("exist");
-        cy.get(field).should("exist").clear().should("be.empty");
-        if (isRequired !== false) {
-          cy.get(field).assertInputInvalid("Pflichtfeld");
-        } else {
-          cy.get(field).assertInputValid().type("test");
-        }
-        cy.get("button.mdi-undo-variant").should("exist").click();
-        cy.get(field).should("not.be.empty");
-        cy.get(".editable-button").should("exist").click();
-        cy.get(field).type("e2e:editable");
-        cy.get("button.mdi-check").click();
+Cypress.Commands.add("filterEventsByStatus", (status) => {
+  cy.location("pathname").should("equal", "/events/list");
+  // wait for initial loading
+  cy.getBy("event-list.data-table").should("not.have.class", "is-loading");
+  // apply filter
+  cy.getBy(`event.status.select.${status}`).click();
+  // wait for filtered loading
+  cy.getBy("event-list.data-table").should("not.have.class", "is-loading");
+  cy.getBy("event-list.data-table").then(($table) => {
+    if ($table.hasClass("is-empty")) {
+      cy.log(`list has no events with status '${status}'`);
+    } else {
+      cy.getBy("{event-list.data-table} tbody tr").each(($item) => {
+        cy.wrap($item).within(() => {
+          if (status === "all") {
+            cy.getByLike("event.status.").should("exist");
+          } else {
+            cy.getByLike("event.status.").should(
+              "have.attr",
+              "data-test",
+              `event.status.${status}`
+            );
+          }
+        });
       });
-    cy.getBy(selector).should("contain", "e2e:editable");
+    }
   });
+});
+
+Cypress.Commands.add("visitEventByStatus", (status) => {
+  cy.visit("/events/list");
+  cy.getBy("event-list.data-table").within(() => {
+    cy.getBy("event.status." + status)
+      .should("exist")
+      .first()
+      .closest("tr")
+      .within(() => {
+        cy.getBy("select.button").click();
+      });
+  });
+  cy.location("pathname").should("contain", "/events/details");
+});
+
+Cypress.Commands.add("checkEditableField", (selector, config) => {
+  const field = config?.field ?? "input";
+  const validation = config?.validation ?? ["defined", "sanitised"];
+  cy.getBy(selector)
+    .should("exist")
+    .within(() => {
+      // check display state of editable field (text, button)
+      cy.get(".editable-button_text").should("exist");
+      // trigger edit functionality
+      cy.get(".editable-button").should("exist").click();
+      // check if save button exists (checkmark)
+      cy.get("button.mdi-check").should("exist");
+      // check input field and access its value
+      cy.get(field)
+        .should("exist")
+        .invoke("val")
+        .then((value) => {
+          const hasValue = typeof value === "string" && value.length > 0;
+          // clear value and check if it is empty
+          cy.get(field).clear().should("be.empty");
+          // check if empty value validations works properly
+          if (validation.indexOf("defined") > -1) {
+            cy.get(field).assertInputInvalid("Pflichtfeld");
+          } else {
+            cy.get(field).assertInputValid();
+          }
+          // type an invalid character, check if validations works properly
+          if (validation.indexOf("sanitised") > -1) {
+            cy.get(field)
+              .type("-")
+              .assertInputInvalid(
+                "Aus Sicherheitsgründen ist ein Spezialcharakter nicht als erstes Symbol erlaubt."
+              )
+              .clear();
+          }
+          if (hasValue) {
+            // trigger undo and check if field has value if field was not empty
+            cy.get("button.mdi-undo-variant").should("exist").click();
+          } else {
+            // trigger save if field was empty - should exit edit mode without submitting the value
+            cy.get("button.mdi-check").click();
+          }
+          cy.root()
+            .get(".editable-button_text")
+            .invoke("text")
+            .should("match", new RegExp(`${value}\\s*$`));
+          // edit the field by appending the string: "e2e:editable" and check if new string exists after submitting
+          cy.get(".editable-button").click();
+          cy.get(field).type("e2e:editable");
+          cy.get("button.mdi-check").click();
+          cy.root()
+            .get(".editable-button_text")
+            .invoke("text")
+            .should("match", new RegExp(`${value}e2e:editable\\s*$`));
+          // edit the field by removing the appended string and check if original value is restored after submitting
+          cy.get(".editable-button").click();
+          cy.get(field).clear();
+          if (hasValue) {
+            cy.get(field).type(value);
+          }
+          cy.get("button.mdi-check").click();
+          cy.root()
+            .get(".editable-button_text")
+            .invoke("text")
+            .should("match", new RegExp(`${value}\\s*$`));
+        });
+    });
+});
 
 Cypress.Commands.add("fetchUser", () => {
   cy.getApp().then((app) => {

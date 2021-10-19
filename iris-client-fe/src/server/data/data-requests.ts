@@ -60,7 +60,7 @@ export const dummyDataRequests: Array<ExistingDataRequestClientWithLocation> = [
     requestedAt: hoursAgo(4),
   },
   {
-    externalRequestId: "e2e_test_123456789",
+    externalRequestId: "e2e_test 123456789",
     start: hoursAgo(4),
     end: hoursAgo(2),
     code: "E2E_TEST",

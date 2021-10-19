@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from "./../../../src/utils/date";
 
 describe("Events", () => {
   beforeEach(() => {
@@ -8,6 +8,14 @@ describe("Events", () => {
   });
   afterEach(() => {
     cy.logout();
+  });
+  it("should filter the event list based on event status", () => {
+    cy.visit("/events/list");
+    cy.filterEventsByStatus("requested");
+    cy.filterEventsByStatus("received");
+    cy.filterEventsByStatus("closed");
+    cy.filterEventsByStatus("aborted");
+    cy.filterEventsByStatus("all");
   });
   it("should display the new event link, navigate to the event creation page and cancel the event creation", () => {
     cy.visit("/events/list");
@@ -45,6 +53,7 @@ describe("Events", () => {
         cy.getBy("search.button").should("be.enabled").click();
         cy.get(".v-data-table")
           .contains("IRIS connect Demo")
+          .first()
           .should("exist")
           .closest("tr")
           .within(() => {
@@ -147,18 +156,24 @@ describe("Events", () => {
       });
   });
   it("should create a new event", () => {
+    const event = {
+      externalId: "e2e_test " + dayjs().valueOf(),
+      name: "E2E Test",
+      requestDetails: "Bitte ignorieren Sie diese Anfrage.",
+      start: dayjs().subtract(1, "day"),
+      end: dayjs().subtract(1, "day").endOf("day"),
+      location: "IRIS connect Demo",
+    };
     cy.visit("/events/new");
     cy.get("form")
       .should("exist")
       .within(() => {
-        cy.getBy("input{externalId}").type("e2e_test_" + dayjs().valueOf());
-        cy.getBy("input{name}").type("E2E Test");
-        cy.getBy("textarea{requestDetails}").type("E2E Test Details");
+        cy.getBy("input{externalId}").type(event.externalId);
+        cy.getBy("input{name}").type(event.name);
+        cy.getBy("textarea{requestDetails}").type(event.requestDetails);
         cy.getBy("start").within(() => {
-          cy.getBy("date-input-field").type(
-            dayjs().subtract(1, "day").format("DD.MM.YYYY")
-          );
-          cy.getBy("time-input-field").type(dayjs().format("HH:mm"));
+          cy.getBy("date-input-field").type(event.start.format("DD.MM.YYYY"));
+          cy.getBy("time-input-field").type(event.start.format("HH:mm"));
         });
         cy.getBy("location-select.dialog.activator").click();
       });
@@ -168,7 +183,8 @@ describe("Events", () => {
         cy.getBy("search.input").type("iris");
         cy.getBy("search.button").click();
         cy.get(".v-data-table")
-          .contains("IRIS connect Demo")
+          .contains(event.location)
+          .first()
           .should("exist")
           .closest("tr")
           .within(() => {
@@ -179,11 +195,73 @@ describe("Events", () => {
       cy.getBy("button{submit}").click();
     });
     cy.location("pathname").should("contain", "/events/details");
+    cy.getBy("editable-field.externalRequestId").should(
+      "contain",
+      event.externalId
+    );
+    cy.getBy("editable-field.name").should("contain", event.name);
+    cy.getBy("event.duration")
+      .should("contain", event.start.format("LLL"))
+      .and("contain", event.end.format("LLL"));
+    cy.getBy("event.location").should("contain", event.location);
+    cy.getBy("event.requestDetails").should("contain", event.requestDetails);
+  });
+  it("event status: requested: should trigger the cancel dialog", () => {
+    cy.visitEventByStatus("requested");
+    cy.getBy("event.status")
+      .should("contain", "Angefragt")
+      .within(() => {
+        cy.getBy("button{event.cancel}").should("exist").click();
+      });
+    cy.getBy("confirm.dialog")
+      .should("exist")
+      .and("contain", "Anfrage abbrechen")
+      .within(() => {
+        cy.getBy("button{cancel}").should("exist").click();
+      });
+    cy.getBy("confirm.dialog").should("not.be.visible");
+  });
+  it("event status: received: should mark and unmark as edited / closed", () => {
+    cy.visitEventByStatus("received");
+    cy.getBy("event.status")
+      .should("contain", "Geliefert")
+      .within(() => {
+        cy.getBy("button{event.close}").should("exist").click();
+      });
+    cy.getBy("event.status")
+      .should("contain", "Bearbeitet")
+      .within(() => {
+        cy.getBy("button{event.resume}").should("exist").click();
+      });
+    cy.getBy("event.status")
+      .should("contain", "Geliefert")
+      .within(() => {
+        cy.getBy("button{event.close}").should("exist");
+      });
+  });
+  it("event status: closed: should mark and unmark as edited / closed", () => {
+    cy.visitEventByStatus("closed");
+    cy.getBy("event.status")
+      .should("contain", "Bearbeitet")
+      .within(() => {
+        cy.getBy("button{event.resume}").should("exist").click();
+      });
+    cy.getBy("event.status")
+      .should("contain", "Geliefert")
+      .within(() => {
+        cy.getBy("button{event.close}").should("exist").click();
+      });
+    cy.getBy("event.status")
+      .should("contain", "Bearbeitet")
+      .within(() => {
+        cy.getBy("button{event.resume}").should("exist");
+      });
   });
   it("should edit an existing event", () => {
     cy.visit("/events/list");
     cy.getBy("event-list.data-table")
-      .contains("e2e_test_")
+      .contains("e2e_test")
+      .first()
       .closest("tr")
       .within(() => {
         cy.getBy("select.button").click();
@@ -191,17 +269,13 @@ describe("Events", () => {
     cy.location("pathname").should("contain", "/events/details");
     cy.checkEditableField("editable-field.externalRequestId");
     cy.checkEditableField("editable-field.name");
-    cy.checkEditableField("editable-field.comment", "textarea", false);
+    cy.checkEditableField("editable-field.comment", {
+      field: "textarea",
+      validation: ["sanitised"],
+    });
   });
   it("should export event data as csv file", () => {
-    cy.visit("/events/list");
-    cy.getBy("event-list.data-table")
-      .contains("Geliefert")
-      .closest("tr")
-      .within(() => {
-        cy.getBy("select.button").click();
-      });
-    cy.location("pathname").should("contain", "/events/details");
+    cy.visitEventByStatus("received");
     cy.getBy("button{export.standard}").should("be.disabled");
     cy.getBy("button{export-dialog.activator}").should("be.disabled");
     cy.getBy("event-details.contacts.data-table")
