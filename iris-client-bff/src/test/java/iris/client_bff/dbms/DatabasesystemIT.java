@@ -4,14 +4,16 @@ import static org.assertj.core.api.Assertions.*;
 
 import iris.client_bff.cases.CaseDataRequestDataInitializer;
 import iris.client_bff.cases.CaseDataRequestRepository;
+import iris.client_bff.cases.CaseDataRequestService;
 import iris.client_bff.cases.CaseDataSubmissionRepository;
+import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.EventDataRequestRepository;
+import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataRequestsDataInitializer;
 import iris.client_bff.events.EventDataSubmissionRepository;
 
 import java.time.Instant;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +32,16 @@ abstract class DatabasesystemIT {
 	private CaseDataRequestRepository caseRequests;
 	@Autowired
 	private CaseDataSubmissionRepository caseSubmissions;
+	@Autowired
+	private EventDataRequestService eventReqService;
+	@Autowired
+	private CaseDataRequestService caseReqService;
 
 	@Test
 	void eventRequests() {
 
 		assertThat(eventRequests.findAll()).hasSize(3)
-				.extracting(it -> it.getRefId()).contains(EventDataRequestsDataInitializer.REQ_ID_1.toString(),
+				.extracting(EventDataRequest::getRefId).contains(EventDataRequestsDataInitializer.REQ_ID_1.toString(),
 						EventDataRequestsDataInitializer.REQ_ID_2.toString(), EventDataRequestsDataInitializer.REQ_ID_3.toString());
 
 		assertThat(eventRequests.getCountSinceDate(Instant.ofEpochMilli(0l))).isEqualTo(3);
@@ -43,22 +49,22 @@ abstract class DatabasesystemIT {
 		assertThat(eventRequests.getCountWithStatus(Status.DATA_REQUESTED)).isEqualTo(3);
 
 		assertThat(eventRequests.findByStatus(Status.DATA_REQUESTED, Pageable.ofSize(10)).getTotalElements()).isEqualTo(3);
+	}
 
-		assertThat(eventRequests.findByRefIdContainsOrNameContainsAllIgnoreCase(
-				EventDataRequestsDataInitializer.REQ_ID_1.toString(), "aaa", Pageable.ofSize(10)).getTotalElements())
+	@Test
+	void eventRequestSearch() {
+
+		assertThat(eventReqService.search(EventDataRequestsDataInitializer.REQ_ID_1.toString(), Pageable.ofSize(10))
+				.getTotalElements())
 						.isEqualTo(1);
-		assertThat(eventRequests.findByRefIdContainsOrNameContainsAllIgnoreCase(
-				UUID.randomUUID().toString(), "Anfrage", Pageable.ofSize(10)).getTotalElements())
-						.isEqualTo(3);
-		assertThat(eventRequests.findByRefIdContainsOrNameContainsAllIgnoreCase(
-				UUID.randomUUID().toString(), "aaa", Pageable.ofSize(10)).getTotalElements())
-						.isZero();
+		assertThat(eventReqService.search("Anfrage", Pageable.ofSize(10)).getTotalElements()).isEqualTo(3);
+		assertThat(eventReqService.search("aaa", Pageable.ofSize(10)).getTotalElements()).isZero();
 
-		assertThat(eventRequests.findByStatusAndSearchByRefIdOrName(Status.DATA_REQUESTED, "Anfrage", Pageable.ofSize(10))
+		assertThat(eventReqService.search(Status.DATA_REQUESTED, "Anfrage", Pageable.ofSize(10))
 				.getTotalElements()).isEqualTo(3);
-		assertThat(eventRequests.findByStatusAndSearchByRefIdOrName(Status.DATA_REQUESTED, "aaa", Pageable.ofSize(10))
+		assertThat(eventReqService.search(Status.DATA_REQUESTED, "aaa", Pageable.ofSize(10))
 				.getTotalElements()).isZero();
-		assertThat(eventRequests.findByStatusAndSearchByRefIdOrName(Status.CLOSED, "Anfrage", Pageable.ofSize(10))
+		assertThat(eventReqService.search(Status.CLOSED, "Anfrage", Pageable.ofSize(10))
 				.getTotalElements()).isZero();
 	}
 
@@ -83,28 +89,24 @@ abstract class DatabasesystemIT {
 		assertThat(
 				caseRequests.findByStatus(iris.client_bff.cases.CaseDataRequest.Status.DATA_REQUESTED, Pageable.ofSize(10))
 						.getTotalElements()).isEqualTo(3);
+	}
 
-		assertThat(caseRequests.findByRefIdContainsOrNameContainsAllIgnoreCase(
-				CaseDataRequestDataInitializer.REQ_ID_1.toString(), "aaa", Pageable.ofSize(10)).getTotalElements())
-						.isEqualTo(1);
-		assertThat(caseRequests.findByRefIdContainsOrNameContainsAllIgnoreCase(
-				UUID.randomUUID().toString(), "Anfrage", Pageable.ofSize(10)).getTotalElements())
-						.isEqualTo(3);
-		assertThat(caseRequests.findByRefIdContainsOrNameContainsAllIgnoreCase(
-				UUID.randomUUID().toString(), "aaa", Pageable.ofSize(10)).getTotalElements())
-						.isZero();
+	@Test
+	void caseRequestSearch() {
 
-		assertThat(caseRequests
-				.findByStatusAndSearchByRefIdOrName(iris.client_bff.cases.CaseDataRequest.Status.DATA_REQUESTED, "Anfrage",
-						Pageable.ofSize(10))
+		assertThat(caseReqService.search(CaseDataRequestDataInitializer.REQ_ID_1.toString(), Pageable.ofSize(10))
+				.getTotalElements()).isEqualTo(1);
+		assertThat(caseReqService.search("Anfrage", Pageable.ofSize(10)).getTotalElements()).isEqualTo(3);
+		assertThat(caseReqService.search("aaa", Pageable.ofSize(10)).getTotalElements()).isZero();
+
+		assertThat(caseReqService.search(iris.client_bff.cases.CaseDataRequest.Status.DATA_REQUESTED, "Anfrage",
+				Pageable.ofSize(10))
 				.getTotalElements()).isEqualTo(3);
-		assertThat(caseRequests
-				.findByStatusAndSearchByRefIdOrName(iris.client_bff.cases.CaseDataRequest.Status.DATA_REQUESTED, "aaa",
-						Pageable.ofSize(10))
+		assertThat(caseReqService.search(iris.client_bff.cases.CaseDataRequest.Status.DATA_REQUESTED, "aaa",
+				Pageable.ofSize(10))
 				.getTotalElements()).isZero();
-		assertThat(caseRequests
-				.findByStatusAndSearchByRefIdOrName(iris.client_bff.cases.CaseDataRequest.Status.CLOSED, "Anfrage",
-						Pageable.ofSize(10))
+		assertThat(caseReqService.search(iris.client_bff.cases.CaseDataRequest.Status.CLOSED, "Anfrage",
+				Pageable.ofSize(10))
 				.getTotalElements()).isZero();
 	}
 

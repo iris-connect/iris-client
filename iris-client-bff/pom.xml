@@ -30,6 +30,7 @@
 		<vavr-version>0.10.4</vavr-version>
 		<greenmail-version>1.6.5</greenmail-version>
 		<testcontainers-version>1.16.0</testcontainers-version>
+		<hibernate-search-version>6.0.6.Final</hibernate-search-version>
 	</properties>
 
 	<profiles>
@@ -284,6 +285,18 @@
 			<artifactId>jaxws-ri</artifactId>
 			<version>2.3.5</version><!-- Must be <3 because jsonrpc4j need javax.jws.WebParam! -->
 			<type>pom</type>
+		</dependency>
+
+		<!-- fuzzy search -->
+		<dependency>
+			<groupId>org.hibernate.search</groupId>
+			<artifactId>hibernate-search-mapper-orm</artifactId>
+			<version>${hibernate-search-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.search</groupId>
+			<artifactId>hibernate-search-backend-lucene</artifactId>
+			<version>${hibernate-search-version}</version>
 		</dependency>
 
 		<!--Spring Docs -->

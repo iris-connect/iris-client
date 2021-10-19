@@ -10,6 +10,7 @@ import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.Transient;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -30,6 +31,7 @@ public abstract class Aggregate<T extends Aggregate<T, ID>, ID extends Id> exten
 	@NonNull
 	protected @EmbeddedId ID id;
 
+	@IndexedEmbedded
 	private Metadata metadata = new Metadata();
 	private @Transient boolean isNew = true;
 

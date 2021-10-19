@@ -1,13 +1,13 @@
 package iris.client_bff.cases;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.config.DwConfig;
 import iris.client_bff.config.HealthDepartmentConfig;
+import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.proxy.ProxyServiceClient;
 
 import java.time.Instant;
@@ -25,6 +25,9 @@ public class CaseDataRequestServiceTest {
 	CaseDataRequestRepository repository;
 
 	@Mock
+	HibernateSearcher searcher;
+
+	@Mock
 	CaseEmailProvider emailProvider;
 
 	@Mock
@@ -37,7 +40,7 @@ public class CaseDataRequestServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		service = new CaseDataRequestService(repository, proxyServiceClient, dwConfig, hdConfig);
+		service = new CaseDataRequestService(repository, searcher, proxyServiceClient, dwConfig, hdConfig);
 	}
 
 	@Test

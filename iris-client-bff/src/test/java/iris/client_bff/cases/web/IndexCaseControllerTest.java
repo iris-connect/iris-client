@@ -1,13 +1,10 @@
 package iris.client_bff.cases.web;
 
-import static iris.client_bff.cases.web.IndexCaseMapper.map;
-import static iris.client_bff.cases.web.IndexCaseMapper.mapDetailed;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static iris.client_bff.cases.web.IndexCaseMapper.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
@@ -49,8 +46,7 @@ class IndexCaseControllerTest {
 
 	private final String baseUrl = "/data-requests-client/cases";
 
-	TypeReference<RestResponsePage<IndexCaseDTO>> PAGE_TYPE = new TypeReference<>() {
-	};
+	TypeReference<RestResponsePage<IndexCaseDTO>> PAGE_TYPE = new TypeReference<>() {};
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -74,9 +70,9 @@ class IndexCaseControllerTest {
 
 		when(service.findByStatus(any(Status.class), any(Pageable.class))).thenReturn(casesPage);
 
-		when(service.searchByRefIdOrName(any(String.class), any(Pageable.class))).thenReturn(casesPage);
+		when(service.search(any(String.class), any(Pageable.class))).thenReturn(casesPage);
 
-		when(service.findByStatusAndSearchByRefIdOrName(any(Status.class), any(String.class), any(Pageable.class))).thenReturn(casesPage);
+		when(service.search(any(Status.class), any(String.class), any(Pageable.class))).thenReturn(casesPage);
 
 		when(service.findDetailed(MOCK_CASE_ID)).thenReturn(Optional.of(MOCK_CASE));
 
@@ -114,7 +110,8 @@ class IndexCaseControllerTest {
 	@Order(3)
 	void getAllWithStatus() throws Exception {
 
-		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?status=DATA_REQUESTED")).andExpect(status().isOk()).andReturn();
+		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?status=DATA_REQUESTED")).andExpect(status().isOk())
+				.andReturn();
 
 		verify(service).findByStatus(eq(Status.DATA_REQUESTED), any(Pageable.class));
 		var allCases = om.readValue(res.getResponse().getContentAsString(), PAGE_TYPE);
@@ -126,9 +123,10 @@ class IndexCaseControllerTest {
 	@Order(4)
 	void getAllFiltered() throws Exception {
 
-		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test")).andExpect(status().isOk()).andReturn();
+		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test")).andExpect(status().isOk())
+				.andReturn();
 
-		verify(service).searchByRefIdOrName(eq("test"), any(Pageable.class));
+		verify(service).search(eq("test"), any(Pageable.class));
 		var allCases = om.readValue(res.getResponse().getContentAsString(), PAGE_TYPE);
 		assertEquals(List.of(MOCK_CASE_DTO), allCases.getContent());
 	}
@@ -138,9 +136,10 @@ class IndexCaseControllerTest {
 	@Order(5)
 	void getAllWithStatusAndFiltered() throws Exception {
 
-		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test&status=DATA_REQUESTED")).andExpect(status().isOk()).andReturn();
+		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test&status=DATA_REQUESTED"))
+				.andExpect(status().isOk()).andReturn();
 
-		verify(service).findByStatusAndSearchByRefIdOrName(eq(Status.DATA_REQUESTED), eq("test"), any(Pageable.class));
+		verify(service).search(eq(Status.DATA_REQUESTED), eq("test"), any(Pageable.class));
 		var allCases = om.readValue(res.getResponse().getContentAsString(), PAGE_TYPE);
 		assertEquals(List.of(MOCK_CASE_DTO), allCases.getContent());
 	}
@@ -152,8 +151,8 @@ class IndexCaseControllerTest {
 		var insert = om.writeValueAsString(IndexCaseInsertDTO.builder().start(Instant.now()).build());
 
 		mockMvc.perform(MockMvcRequestBuilders.post(baseUrl).content(insert).contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andReturn();
+				.andExpect(status().isOk())
+				.andReturn();
 	}
 
 	@Test
@@ -163,8 +162,8 @@ class IndexCaseControllerTest {
 		var insert = om.writeValueAsString(IndexCaseInsertDTO.builder().start(null).build());
 
 		mockMvc.perform(MockMvcRequestBuilders.post(baseUrl).content(insert).contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isBadRequest())
-			.andReturn();
+				.andExpect(status().isBadRequest())
+				.andReturn();
 	}
 
 	@Test
@@ -198,17 +197,18 @@ class IndexCaseControllerTest {
 		IndexCaseStatusDTO updatedStatus = IndexCaseStatusDTO.DATA_RECEIVED;
 
 		var payload = om.writeValueAsString(
-			IndexCaseUpdateDTO.builder()
-				.name(updatedName)
-				.status(updatedStatus)
-				.comment(updatedComment)
-				.externalCaseId(updatedExternalCaseId)
-				.build());
+				IndexCaseUpdateDTO.builder()
+						.name(updatedName)
+						.status(updatedStatus)
+						.comment(updatedComment)
+						.externalCaseId(updatedExternalCaseId)
+						.build());
 
 		var url = baseUrl + "/" + MOCK_CASE_ID.toString();
-		var res = mockMvc.perform(MockMvcRequestBuilders.patch(url).content(payload).contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andReturn();
+		var res = mockMvc
+				.perform(MockMvcRequestBuilders.patch(url).content(payload).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
 
 		var updated = om.readValue(res.getResponse().getContentAsString(), IndexCaseDetailsDTO.class);
 
@@ -230,16 +230,16 @@ class IndexCaseControllerTest {
 		IndexCaseStatusDTO updatedStatus = IndexCaseStatusDTO.DATA_RECEIVED;
 
 		var payload = om.writeValueAsString(
-			IndexCaseUpdateDTO.builder()
-				.name(updatedName)
-				.status(updatedStatus)
-				.comment(updatedComment)
-				.externalCaseId(updatedExternalCaseId)
-				.build());
+				IndexCaseUpdateDTO.builder()
+						.name(updatedName)
+						.status(updatedStatus)
+						.comment(updatedComment)
+						.externalCaseId(updatedExternalCaseId)
+						.build());
 
 		mockMvc.perform(MockMvcRequestBuilders.patch(url_404).content(payload).contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isNotFound())
-			.andReturn();
+				.andExpect(status().isNotFound())
+				.andReturn();
 	}
 
 	@Test
