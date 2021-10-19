@@ -97,7 +97,6 @@ Cypress.Commands.add("filterEventsByStatus", (status) => {
 });
 
 Cypress.Commands.add("visitEventByStatus", (status) => {
-  cy.visit("/events/list");
   cy.getBy("event-list.data-table").within(() => {
     cy.getBy("event.status." + status)
       .should("exist")

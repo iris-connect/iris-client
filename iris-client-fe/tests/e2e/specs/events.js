@@ -207,6 +207,8 @@ describe("Events", () => {
     cy.getBy("event.requestDetails").should("contain", event.requestDetails);
   });
   it("event status: requested: should trigger the cancel dialog", () => {
+    cy.visit("/events/list");
+    cy.filterEventsByStatus("requested");
     cy.visitEventByStatus("requested");
     cy.getBy("event.status")
       .should("contain", "Angefragt")
@@ -222,6 +224,8 @@ describe("Events", () => {
     cy.getBy("confirm.dialog").should("not.be.visible");
   });
   it("event status: received: should mark and unmark as edited / closed", () => {
+    cy.visit("/events/list");
+    cy.filterEventsByStatus("received");
     cy.visitEventByStatus("received");
     cy.getBy("event.status")
       .should("contain", "Geliefert")
@@ -240,6 +244,8 @@ describe("Events", () => {
       });
   });
   it("event status: closed: should mark and unmark as edited / closed", () => {
+    cy.visit("/events/list");
+    cy.filterEventsByStatus("closed");
     cy.visitEventByStatus("closed");
     cy.getBy("event.status")
       .should("contain", "Bearbeitet")
@@ -275,6 +281,8 @@ describe("Events", () => {
     });
   });
   it("should export event data as csv file", () => {
+    cy.visit("/events/list");
+    cy.filterEventsByStatus("received");
     cy.visitEventByStatus("received");
     cy.getBy("button{export.standard}").should("be.disabled");
     cy.getBy("button{export-dialog.activator}").should("be.disabled");
