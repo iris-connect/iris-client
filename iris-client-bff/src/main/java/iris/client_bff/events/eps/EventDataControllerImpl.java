@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,6 @@ public class EventDataControllerImpl implements EventDataController {
 	private final ValidationHelper validHelper;
 	private final JsonRpcDataValidator jsonRpcDataValidator;
 
-
 	@Override
 	public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
 		log.trace("Start submission {}", dataAuthorizationToken);
@@ -40,6 +40,8 @@ public class EventDataControllerImpl implements EventDataController {
 			validateGuestList(guestList);
 
 			jsonRpcDataValidator.validateData(guestList);
+
+			fixInvalidPhoneNumbersInGuestList(guestList);
 
 			return dataSubmissionService.findRequestAndSaveGuestList(dataAuthorizationToken, guestList);
 		}
@@ -94,6 +96,24 @@ public class EventDataControllerImpl implements EventDataController {
 						"guest.attendanceInformation.descriptionOfParticipation", true, 500));
 			}
 		}
+	}
+
+	// use mobile number as phone number if mobile number is valid and phone number is not
+	private void fixInvalidPhoneNumbersInGuestList(GuestList guestList) {
+		if(guestList.getGuests() != null) {
+			for (Guest guest : guestList.getGuests()) {
+				if (!isPossiblePhoneNumber(guest.getPhone()) && isPossiblePhoneNumber(guest.getMobilePhone())) {
+					guest.setPhone(guest.getMobilePhone());
+				}
+			}
+		}
+	}
+
+	private boolean isPossiblePhoneNumber(String phoneNumber) {
+		if (phoneNumber == null || phoneNumber.trim().length() <= 0) return false;
+		String number = phoneNumber.replaceAll("[\\s\\-_+#*.,:;()/|]", "");
+		Pattern NUMBER_REGEX = Pattern.compile("^\\d+$");
+		return NUMBER_REGEX.matcher(number).matches();
 	}
 
 	private String defuseInput(String input, String field, boolean obfuscateLogging, int maxLength) {
