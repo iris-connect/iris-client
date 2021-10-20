@@ -1,10 +1,8 @@
 package iris.client_bff.events.web;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
@@ -43,8 +41,7 @@ class EventDataRequestControllerTest {
 
 	private final String baseUrl = "/data-requests-client/events";
 
-	TypeReference<RestResponsePage<ExistingDataRequestClientWithLocation>> PAGE_TYPE = new TypeReference<>() {
-	};
+	TypeReference<RestResponsePage<ExistingDataRequestClientWithLocation>> PAGE_TYPE = new TypeReference<>() {};
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -64,21 +61,23 @@ class EventDataRequestControllerTest {
 
 		when(dataRequestManagement.findByStatus(any(Status.class), any(Pageable.class))).thenReturn(eventsPage);
 
-		when(dataRequestManagement.searchByRefIdOrName(any(String.class), any(Pageable.class))).thenReturn(eventsPage);
+		when(dataRequestManagement.search(any(String.class), any(Pageable.class))).thenReturn(eventsPage);
 
-		when(dataRequestManagement.findByStatusAndSearchByRefIdOrName(any(Status.class), any(String.class), any(Pageable.class)))
-			.thenReturn(eventsPage);
+		when(dataRequestManagement.search(any(Status.class), any(String.class), any(Pageable.class)))
+				.thenReturn(eventsPage);
 	}
 
 	@Test
 	public void endpointShouldBeProtected() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(MockMvcResultMatchers.status().isForbidden()).andReturn();
+		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(MockMvcResultMatchers.status().isForbidden())
+				.andReturn();
 	}
 
 	@Test
 	@WithMockUser()
 	public void getDataRequests() throws Exception {
-		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
 
 		verify(dataRequestManagement).findAll(any(Pageable.class));
 
@@ -91,8 +90,8 @@ class EventDataRequestControllerTest {
 	@WithMockUser()
 	public void getAllWithStatus() throws Exception {
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?status=DATA_REQUESTED"))
-			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andReturn();
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
 
 		verify(dataRequestManagement).findByStatus(eq(Status.DATA_REQUESTED), any(Pageable.class));
 
@@ -104,9 +103,10 @@ class EventDataRequestControllerTest {
 	@Test
 	@WithMockUser()
 	public void getAllFiltered() throws Exception {
-		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test")).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test"))
+				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
-		verify(dataRequestManagement).searchByRefIdOrName(eq("test"), any(Pageable.class));
+		verify(dataRequestManagement).search(eq("test"), any(Pageable.class));
 
 		var dataRequests = om.readValue(res.getResponse().getContentAsString(), PAGE_TYPE);
 
@@ -117,10 +117,10 @@ class EventDataRequestControllerTest {
 	@WithMockUser()
 	public void getAllWithStatusAndFiltered() throws Exception {
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test&status=DATA_REQUESTED"))
-			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andReturn();
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
 
-		verify(dataRequestManagement).findByStatusAndSearchByRefIdOrName(eq(Status.DATA_REQUESTED), eq("test"), any(Pageable.class));
+		verify(dataRequestManagement).search(eq(Status.DATA_REQUESTED), eq("test"), any(Pageable.class));
 
 		var dataRequests = om.readValue(res.getResponse().getContentAsString(), PAGE_TYPE);
 
@@ -133,8 +133,8 @@ class EventDataRequestControllerTest {
 		postNewDataRequest();
 
 		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/d1893f10-b6e3-11eb-8529-0242ac130003"))
-			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andReturn();
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
 	}
 
 	@Test
@@ -142,27 +142,27 @@ class EventDataRequestControllerTest {
 	public void updateDataRequestByCode() throws Exception {
 		String REFID = "refId";
 		var eventDataRequest = EventDataRequest.builder()
-			.refId(REFID)
-			.name("name")
-			.requestStart(Instant.now())
-			.requestEnd(Instant.now())
-			.comment("")
-			.requestDetails("requestDetails")
-			.hdUserId("")
-			.location(new Location())
-			.build();
+				.refId(REFID)
+				.name("name")
+				.requestStart(Instant.now())
+				.requestEnd(Instant.now())
+				.comment("")
+				.requestDetails("requestDetails")
+				.hdUserId("")
+				.location(new Location())
+				.build();
 		var dataRequest = Mockito.spy(eventDataRequest);
 
 		var dataRequestUpdated = EventDataRequest.builder()
-			.refId(REFID)
-			.name("name")
-			.requestStart(Instant.now())
-			.requestEnd(Instant.now())
-			.comment("This is a test comment")
-			.requestDetails("requestDetails")
-			.hdUserId("")
-			.location(new Location())
-			.build();
+				.refId(REFID)
+				.name("name")
+				.requestStart(Instant.now())
+				.requestEnd(Instant.now())
+				.comment("This is a test comment")
+				.requestDetails("requestDetails")
+				.hdUserId("")
+				.location(new Location())
+				.build();
 
 		dataRequestUpdated.setComment("Different test comment");
 		dataRequestUpdated.setName("NameSecond");
@@ -172,22 +172,22 @@ class EventDataRequestControllerTest {
 		Mockito.when(dataRequestManagement.findById(any(UUID.class))).thenReturn(Optional.of(dataRequest));
 
 		EventUpdateDTO patch = EventUpdateDTO.builder()
-			.name("new name")
-			.externalRequestId("new external ref id")
-			.comment("a great new comment")
-			.status(EventStatusDTO.ABORTED)
-			.build();
+				.name("new name")
+				.externalRequestId("new external ref id")
+				.comment("a great new comment")
+				.status(EventStatusDTO.ABORTED)
+				.build();
 		var patchBody = om.writeValueAsString(patch);
 
 		Mockito.when(dataRequestManagement.update(dataRequest, patch)).thenReturn(dataRequestUpdated);
 
 		mockMvc
-			.perform(
-				MockMvcRequestBuilders.patch(baseUrl + "/d1893f10-b6e3-11eb-8529-0242ac130003")
-					.content(patchBody)
-					.contentType(MediaType.APPLICATION_JSON))
-			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andReturn();
+				.perform(
+						MockMvcRequestBuilders.patch(baseUrl + "/d1893f10-b6e3-11eb-8529-0242ac130003")
+								.content(patchBody)
+								.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
 	}
 
 	@Test
@@ -202,22 +202,22 @@ class EventDataRequestControllerTest {
 		when(dataRequestManagement.createDataRequest(any())).thenThrow(new IRISDataRequestException("Data request failed"));
 
 		mockMvc.perform(
-						MockMvcRequestBuilders.post(baseUrl).content(TestData.DATA_REQUEST)
-								.contentType(MediaType.APPLICATION_JSON))
+				MockMvcRequestBuilders.post(baseUrl).content(TestData.DATA_REQUEST)
+						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
 	}
 
 	private void postNewDataRequest() throws Exception {
 		var eventDataRequest = EventDataRequest.builder()
-			.refId("refId")
-			.name("name")
-			.requestStart(Instant.now())
-			.requestEnd(Instant.now())
-			.comment("This is a test comment")
-			.requestDetails("requestDetails")
-			.hdUserId("")
-			.location(new Location())
-			.build();
+				.refId("refId")
+				.name("name")
+				.requestStart(Instant.now())
+				.requestEnd(Instant.now())
+				.comment("This is a test comment")
+				.requestDetails("requestDetails")
+				.hdUserId("")
+				.location(new Location())
+				.build();
 		var dataRequest = Mockito.spy(eventDataRequest);
 
 		// set by JPA on live calls, needs to be mocked here
@@ -228,22 +228,24 @@ class EventDataRequestControllerTest {
 
 		Mockito.when(dataRequestManagement.findById(any(UUID.class))).thenReturn(Optional.of(dataRequest));
 
-		mockMvc.perform(MockMvcRequestBuilders.post(baseUrl).content(TestData.DATA_REQUEST).contentType(MediaType.APPLICATION_JSON))
-			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andReturn();
+		mockMvc
+				.perform(
+						MockMvcRequestBuilders.post(baseUrl).content(TestData.DATA_REQUEST).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
 	}
 
 	private EventDataRequest getEventDataRequest() {
 		return EventDataRequest.builder()
-			.refId("refId")
-			.name("name")
-			.requestStart(Instant.now())
-			.requestEnd(Instant.now())
-			.comment("This is a test comment")
-			.requestDetails("requestDetails")
-			.hdUserId("")
-			.location(getTestLocation())
-			.build();
+				.refId("refId")
+				.name("name")
+				.requestStart(Instant.now())
+				.requestEnd(Instant.now())
+				.comment("This is a test comment")
+				.requestDetails("requestDetails")
+				.hdUserId("")
+				.location(getTestLocation())
+				.build();
 	}
 
 	private Location getTestLocation() {

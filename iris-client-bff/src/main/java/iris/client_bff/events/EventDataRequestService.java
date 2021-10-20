@@ -1,9 +1,10 @@
 package iris.client_bff.events;
 
-import static iris.client_bff.search_client.eps.LocationMapper.map;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static iris.client_bff.search_client.eps.LocationMapper.*;
+import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.core.log.LogHelper;
+import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.eps.DataProviderClient;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +36,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EventDataRequestService {
 
+	private static final String[] FIELDS = { "refId", "name", "location.location_name", "location.contactOfficialName",
+			"location.contactAddressStreet", "location.contactAddressCity", "location.contactAddressZip" };
+
 	private final EventDataRequestRepository repository;
+	private final HibernateSearcher searcher;
 	private final SearchClient searchClient;
 	private final ProxyServiceClient proxyClient;
 	private final DataProviderClient epsDataRequestClient;
@@ -47,12 +53,20 @@ public class EventDataRequestService {
 		return repository.findByStatus(status, pageable);
 	}
 
-	public Page<EventDataRequest> findByStatusAndSearchByRefIdOrName(Status status, String search, Pageable pageable) {
-		return repository.findByStatusAndSearchByRefIdOrName(status, search, pageable);
+	public Page<EventDataRequest> search(Status status, String searchString, Pageable pageable) {
+
+		var result = searcher.search(
+				searchString,
+				pageable,
+				FIELDS,
+				it -> status != null ? it.must(f2 -> f2.match().field("status").matching(status)) : it,
+				EventDataRequest.class);
+
+		return new PageImpl<>(result.hits(), pageable, result.total().hitCount());
 	}
 
-	public Page<EventDataRequest> searchByRefIdOrName(String search, Pageable pageable) {
-		return repository.findByRefIdContainsOrNameContainsAllIgnoreCase(search, search, pageable);
+	public Page<EventDataRequest> search(String search, Pageable pageable) {
+		return search(null, search, pageable);
 	}
 
 	public Optional<EventDataRequest> findById(UUID uuid) {
@@ -89,15 +103,15 @@ public class EventDataRequestService {
 		}
 
 		var dataRequest = new EventDataRequest(
-			request.getExternalRequestId(),
-			request.getName(),
-			request.getStart(),
-			request.getEnd(),
-			request.getComment(),
-			request.getRequestDetails(),
-			null,
-			location,
-			announcementToken);
+				request.getExternalRequestId(),
+				request.getName(),
+				request.getStart(),
+				request.getEnd(),
+				request.getComment(),
+				request.getRequestDetails(),
+				null,
+				location,
+				announcementToken);
 
 		try {
 			dataRequest.setStatus(Status.DATA_REQUESTED);

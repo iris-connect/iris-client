@@ -8,6 +8,7 @@ import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.config.DwConfig;
 import iris.client_bff.config.HealthDepartmentConfig;
 import iris.client_bff.core.log.LogHelper;
+import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AllArgsConstructor
 public class CaseDataRequestService {
 
-	CaseDataRequestRepository repository;
+	private static final String[] FIELDS = { "refId", "name" };
+
+	private final CaseDataRequestRepository repository;
+	private final HibernateSearcher searcher;
 	private final ProxyServiceClient proxyClient;
 	private final DwConfig dwConfig;
 	private final HealthDepartmentConfig hdConfig;
@@ -44,12 +49,20 @@ public class CaseDataRequestService {
 		return repository.findByStatus(status, pageable);
 	}
 
-	public Page<CaseDataRequest> findByStatusAndSearchByRefIdOrName(Status status, String search, Pageable pageable) {
-		return repository.findByStatusAndSearchByRefIdOrName(status, search, pageable);
+	public Page<CaseDataRequest> search(Status status, String searchString, Pageable pageable) {
+
+		var result = searcher.search(
+				searchString,
+				pageable,
+				FIELDS,
+				it -> status != null ? it.must(f2 -> f2.match().field("status").matching(status)) : it,
+				CaseDataRequest.class);
+
+		return new PageImpl<>(result.hits(), pageable, result.total().hitCount());
 	}
 
-	public Page<CaseDataRequest> searchByRefIdOrName(String search, Pageable pageable) {
-		return repository.findByRefIdContainsOrNameContainsAllIgnoreCase(search, search, pageable);
+	public Page<CaseDataRequest> search(String search, Pageable pageable) {
+		return search(null, search, pageable);
 	}
 
 	public Optional<CaseDataRequest> findDetailed(UUID uuid) {
@@ -68,10 +81,10 @@ public class CaseDataRequestService {
 			indexCase.setRefId(update.getExternalCaseId());
 		}
 		if (update.getStatus() != null) {
-			
+
 			var status = Status.valueOf(update.getStatus().name());
 			if (indexCase.getStatus() != status) {
-			
+
 				indexCase.setStatus(status);
 
 				try {
@@ -81,7 +94,7 @@ public class CaseDataRequestService {
 				}
 			}
 		}
-		
+
 		return repository.save(indexCase);
 	}
 
@@ -95,13 +108,13 @@ public class CaseDataRequestService {
 		}
 
 		var dataRequest = CaseDataRequest.builder()
-			.comment(insert.getComment())
-			.refId(insert.getExternalCaseId())
-			.name(insert.getName())
-			.requestStart(insert.getStart())
-			.requestEnd(insert.getEnd())
-			.announcementToken(announcementToken)
-			.build();
+				.comment(insert.getComment())
+				.refId(insert.getExternalCaseId())
+				.name(insert.getName())
+				.requestStart(insert.getStart())
+				.requestEnd(insert.getEnd())
+				.announcementToken(announcementToken)
+				.build();
 
 		dataRequest.setDwSubmissionUri(generateDwUrl(dataRequest));
 		CaseDataRequest savedDataRequest = repository.save(dataRequest);
@@ -121,8 +134,8 @@ public class CaseDataRequestService {
 		String paramsAsJsonBase64;
 
 		try {
-			DwUrlParamDto dwUrlParamDto =
-				new DwUrlParamDto(dataRequest.getId().toString(), dataRequest.getAnnouncementToken(), hdConfig.getZipCode());
+			DwUrlParamDto dwUrlParamDto = new DwUrlParamDto(dataRequest.getId().toString(),
+					dataRequest.getAnnouncementToken(), hdConfig.getZipCode());
 			String paramsAsJson = new ObjectMapper().writeValueAsString(dwUrlParamDto);
 			paramsAsJsonBase64 = Base64.getEncoder().encodeToString(paramsAsJson.getBytes());
 			log.debug("Generated Base64 encoded params: {}", dwUrlParamDto.toStringWithObfuscation());

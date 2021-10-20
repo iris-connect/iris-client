@@ -25,91 +25,108 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.search.engine.backend.types.Sortable;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
+
 /**
  * @author Jens Kutzsche
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "event_data_request")
+@Indexed
+@Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class EventDataRequest extends Aggregate<EventDataRequest, EventDataRequest.DataRequestIdentifier> {
 
-  {
-	id = DataRequestIdentifier.of(UUID.randomUUID());
-  }
-
-  private @Setter String refId;
-  private String hdUserId;
-
-  private @Setter String name;
-  private @Setter String comment;
-  private Instant requestStart;
-  private Instant requestEnd;
-
-  @Column(nullable = false) @Enumerated(EnumType.STRING)
-  private Status status = Status.DATA_REQUESTED;
-
-  private String requestDetails = null;
-
-  @OneToOne(orphanRemoval = true, cascade = { CascadeType.ALL }) @JoinColumn(name = "location_id")
-  private Location location;
-
-  private String announcementToken;
-
-  @Builder
-  public EventDataRequest(String refId, String name, Instant requestStart, Instant requestEnd, String comment,
-	  String requestDetails, String hdUserId, Location location, String announcementToken) {
-
-	super();
-
-	this.refId = refId;
-	this.name = name;
-	this.requestStart = requestStart;
-	this.requestEnd = requestEnd;
-	this.hdUserId = hdUserId;
-	this.comment = comment;
-	this.requestDetails = requestDetails;
-	this.location = location;
-	this.announcementToken = announcementToken;
-  }
-
-  public Instant getLastModifiedAt() {
-	return this.getMetadata().getLastModified();
-  }
-
-  public Instant getCreatedAt() {
-	return this.getMetadata().getCreated();
-  }
-
-  @Embeddable
-  @EqualsAndHashCode
-  @RequiredArgsConstructor(staticName = "of")
-  @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-  public static class DataRequestIdentifier implements Id, Serializable {
-
-	private static final long serialVersionUID = -8254677010830428881L;
-
-	final UUID requestId;
-
-	/**
-	 * for JSON deserialization
-	 */
-	public static DataRequestIdentifier of(String uuid) {
-	  return of(UUID.fromString(uuid));
+	{
+		id = DataRequestIdentifier.of(UUID.randomUUID());
 	}
 
-	@Override
-	public String toString() {
-	  return requestId.toString();
-	}
-	
-	public UUID toUUID() {
-		return requestId;
-	}
-  }
+	@KeywordField(sortable = Sortable.YES, normalizer = "german")
+	private @Setter String refId;
+	private String hdUserId;
 
-  public enum Status {
-	DATA_REQUESTED, DATA_RECEIVED, CLOSED, ABORTED
-  }
+	@KeywordField(sortable = Sortable.YES, normalizer = "german")
+	private @Setter String name;
+	private @Setter String comment;
+
+	@GenericField(sortable = Sortable.YES)
+	private Instant requestStart;
+
+	@GenericField(sortable = Sortable.YES)
+	private Instant requestEnd;
+
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	@GenericField(sortable = Sortable.YES)
+	private Status status = Status.DATA_REQUESTED;
+
+	private String requestDetails = null;
+
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "location_id")
+	@IndexedEmbedded
+	private Location location;
+
+	private String announcementToken;
+
+	@Builder
+	public EventDataRequest(String refId, String name, Instant requestStart, Instant requestEnd, String comment,
+			String requestDetails, String hdUserId, Location location, String announcementToken) {
+
+		super();
+
+		this.refId = refId;
+		this.name = name;
+		this.requestStart = requestStart;
+		this.requestEnd = requestEnd;
+		this.hdUserId = hdUserId;
+		this.comment = comment;
+		this.requestDetails = requestDetails;
+		this.location = location;
+		this.announcementToken = announcementToken;
+	}
+
+	public Instant getLastModifiedAt() {
+		return this.getMetadata().getLastModified();
+	}
+
+	public Instant getCreatedAt() {
+		return this.getMetadata().getCreated();
+	}
+
+	@Embeddable
+	@EqualsAndHashCode
+	@RequiredArgsConstructor(staticName = "of")
+	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+	public static class DataRequestIdentifier implements Id, Serializable {
+
+		private static final long serialVersionUID = -8254677010830428881L;
+
+		final UUID requestId;
+
+		/**
+		 * for JSON deserialization
+		 */
+		public static DataRequestIdentifier of(String uuid) {
+			return of(UUID.fromString(uuid));
+		}
+
+		@Override
+		public String toString() {
+			return requestId.toString();
+		}
+
+		public UUID toUUID() {
+			return requestId;
+		}
+	}
+
+	public enum Status {
+		DATA_REQUESTED, DATA_RECEIVED, CLOSED, ABORTED
+	}
 }
