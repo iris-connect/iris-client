@@ -7,6 +7,7 @@
             class="float-right"
             color="primary"
             :to="{ name: 'admin-user-create' }"
+            data-test="admin-user-list.link.user-create"
             >Neues Konto anlegen
           </v-btn>
         </div>
@@ -25,6 +26,7 @@
                   label="Search"
                   single-line
                   hide-details
+                  data-test="search"
                 ></v-text-field>
                 <v-data-table
                   :loading="isBusy"
@@ -33,6 +35,7 @@
                   :items-per-page="5"
                   class="elevation-1 mt-5"
                   :search="tableData.search"
+                  data-test="admin-user-list.data-table"
                 >
                   <template #item.actions="{ item }">
                     <v-btn
@@ -41,6 +44,7 @@
                       class="ml-3 text-decoration-none"
                       :to="{ name: 'admin-user-edit', params: { id: item.id } }"
                       :disabled="isBusy"
+                      data-test="edit"
                     >
                       <v-icon> mdi-pencil </v-icon>
                     </v-btn>
@@ -55,6 +59,7 @@
                         $store.getters['userLogin/isCurrentUser'](item.id)
                       "
                       :user-name="item.userName"
+                      data-test="delete"
                     >
                       <v-icon> mdi-delete </v-icon>
                     </user-delete-button>

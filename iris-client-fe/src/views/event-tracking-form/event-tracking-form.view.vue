@@ -51,7 +51,7 @@
                     v-bind="attrs"
                     v-on="on"
                     :disabled="eventCreationOngoing"
-                    data-test="location-select.dialog.activator"
+                    data-test="location-select-dialog.activator"
                   >
                     {{
                       form.model.location
@@ -120,7 +120,8 @@
         <v-btn
           color="secondary"
           plain
-          @click="$router.back()"
+          :to="{ name: 'event-list' }"
+          replace
           data-test="cancel"
         >
           Abbrechen
@@ -305,7 +306,7 @@ export default class EventTrackingFormView extends Vue {
         "eventTrackingForm/createEventTracking",
         payload
       );
-      router.push({
+      router.replace({
         name: `event-details`,
         params: {
           id: created.code || "",

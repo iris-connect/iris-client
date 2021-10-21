@@ -95,7 +95,7 @@
                 name: 'event-details',
                 params: { id: item.code },
               }"
-              data-test="select.button"
+              data-test="select"
             >
               Details
             </v-btn>

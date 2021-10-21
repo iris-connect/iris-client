@@ -164,7 +164,9 @@
         </v-tabs>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="white" @click="$router.back()"> Zurück </v-btn>
+        <v-btn color="white" :to="{ name: 'index-list' }" replace>
+          Zurück
+        </v-btn>
         <v-spacer />
         <v-btn
           v-if="currentTab === 0"

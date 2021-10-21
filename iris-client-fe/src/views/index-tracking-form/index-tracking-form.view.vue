@@ -65,7 +65,7 @@
         }}</v-alert>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="secondary" plain @click="$router.back()">
+        <v-btn color="secondary" plain :to="{ name: 'index-list' }" replace>
           Abbrechen
         </v-btn>
         <v-spacer></v-spacer>
@@ -194,7 +194,7 @@ export default class IndexTrackingFormView extends Vue {
         "indexTrackingForm/createIndexTracking",
         payload
       );
-      router.push({
+      router.replace({
         name: `index-details`,
         params: {
           caseId: created.caseId || "",

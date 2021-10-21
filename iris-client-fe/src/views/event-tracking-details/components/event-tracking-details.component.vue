@@ -131,7 +131,7 @@
           single-expand
           :expanded.sync="tableData.expanded"
           @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
-          data-test="event-details.contacts.data-table"
+          data-test="event.contacts.data-table"
         >
           <template v-if="isStatusRequested" #no-data>
             <span class="black--text">
@@ -170,7 +170,9 @@
         <error-message-alert :errors="errors" />
       </v-card-text>
       <v-card-actions>
-        <v-btn color="white" @click="$router.back()"> Zurück</v-btn>
+        <v-btn color="white" :to="{ name: 'event-list' }" replace>
+          Zurück
+        </v-btn>
         <v-spacer />
         <v-btn
           color="primary"

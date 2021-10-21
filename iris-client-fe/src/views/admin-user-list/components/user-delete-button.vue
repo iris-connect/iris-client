@@ -5,17 +5,28 @@
         <slot />
       </v-btn>
     </template>
-    <v-card>
+    <v-card data-test="user-delete.confirm-dialog">
       <v-card-title> Konto {{ userName }} löschen? </v-card-title>
       <v-card-text>
         Sind Sie sicher, dass Sie das Konto {{ userName }} löschen möchten?
       </v-card-text>
       <v-card-actions>
-        <v-btn color="secondary" text @click="confirmDialog = false">
+        <v-btn
+          color="secondary"
+          text
+          @click="confirmDialog = false"
+          data-test="cancel"
+        >
           Abbrechen
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="primary" @click="() => deleteUser(true)"> Löschen </v-btn>
+        <v-btn
+          color="primary"
+          @click="() => deleteUser(true)"
+          data-test="confirm"
+        >
+          Löschen
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

@@ -4,6 +4,7 @@ import {
   DataRequestDetails,
   ExistingDataRequestClientWithLocation,
   User,
+  UserRole,
 } from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
 import {
@@ -20,10 +21,16 @@ import {
   dummyUserList,
   getDummyUserFromRequest,
 } from "@/server/data/dummy-userlist";
-import { remove, findIndex, some } from "lodash";
+import { findIndex, remove, some } from "lodash";
 import { paginated } from "@/server/utils/pagination";
 import dayjs from "@/utils/date";
 import _defaults from "lodash/defaults";
+
+const loginResponse = (role: UserRole): Response => {
+  return new Response(200, {
+    "Authentication-Info": `Bearer TOKEN.${role}`,
+  });
+};
 
 // @todo: find better solution for data type
 const authResponse = (
@@ -36,13 +43,7 @@ const authResponse = (
       return new Response(401, { error: "not authorized" });
     }
   }
-  return new Response(
-    200,
-    {
-      "Authentication-Info": "Bearer TOKEN123",
-    },
-    data
-  );
+  return new Response(200, undefined, data);
 };
 
 const validateAuthHeader = (request: Request): boolean => {
@@ -86,7 +87,9 @@ export function makeMockAPIServer() {
             );
           }
         }
-        return authResponse();
+        return loginResponse(
+          credentials.userName === "user" ? UserRole.User : UserRole.Admin
+        );
       });
 
       this.get("/user/logout", () => {
@@ -94,7 +97,12 @@ export function makeMockAPIServer() {
       });
 
       this.get("/user-profile", (schema, request) => {
-        const user = dummyUserList.users?.[0];
+        const role =
+          request?.requestHeaders?.Authorization.match(/(USER|ADMIN)$/)?.[0] ||
+          "ADMIN";
+        const user = dummyUserList.users?.find((usr) => {
+          return usr.role === role;
+        });
         return authResponse(request, user);
       });
 

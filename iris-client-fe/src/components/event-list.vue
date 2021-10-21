@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-card class="v-card-table" data-test="data-table.open-events">
+  <v-card class="v-card-table">
     <v-card-title
       ><h2 class="light-font mb-6">Offene Ereignisse</h2></v-card-title
     >
@@ -11,6 +11,7 @@
         :hide-default-footer="true"
         :disable-sort="true"
         class="elevation-1 mt-5"
+        data-test="open-events.data-table"
       >
         <template v-slot:[itemActionSlotName]="{ item }">
           <v-btn

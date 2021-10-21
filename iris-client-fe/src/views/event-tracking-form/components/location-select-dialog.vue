@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
     </template>
-    <v-card data-test="location-select.dialog">
+    <v-card data-test="location-select-dialog">
       <v-card-title> Ereignisort auswählen </v-card-title>
       <v-card-text>
         <div class="my-6">
@@ -56,7 +56,7 @@
             <v-btn
               color="primary"
               @click="handleSelect(item)"
-              data-test="select.button"
+              data-test="select"
             >
               Wählen
             </v-btn>

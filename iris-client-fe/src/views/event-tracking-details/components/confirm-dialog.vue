@@ -3,7 +3,7 @@
     <template v-slot:activator="scope">
       <slot name="activator" v-bind="scope" />
     </template>
-    <v-card data-test="confirm.dialog">
+    <v-card data-test="confirm-dialog">
       <v-card-title>
         <slot name="title" />
       </v-card-title>

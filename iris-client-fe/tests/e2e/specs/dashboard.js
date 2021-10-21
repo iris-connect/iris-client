@@ -53,9 +53,6 @@ describe("Dashboard", () => {
     cy.location("pathname").should("equal", "/cases/new");
   });
   it("should display a data table with new events", () => {
-    cy.getBy("data-table.open-events").within(() => {
-      cy.contains("Offene Ereignisse").should("exist");
-      cy.get(".v-data-table").should("exist");
-    });
+    cy.getBy("open-events.data-table").should("exist");
   });
 });

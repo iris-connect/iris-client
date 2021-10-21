@@ -24,27 +24,27 @@ describe("Events", () => {
       .click();
     cy.location("pathname").should("equal", "/events/new");
     cy.get("form").within(() => {
-      cy.getBy("button{cancel}").should("exist").click();
+      cy.getBy(".v-btn{cancel}").should("exist").click();
     });
     cy.location("pathname").should("equal", "/events/list");
   });
   it("should validate and open the location select dialog, select a location and cancel selection", () => {
     cy.visit("/events/new");
     cy.location("pathname").should("equal", "/events/new");
-    cy.getBy("location-select.dialog").should("not.exist");
+    cy.getBy("location-select-dialog").should("not.exist");
     cy.getBy("location-info").should("not.exist");
     cy.get("form")
       .should("exist")
       .within(() => {
-        cy.getBy("button{submit}").click();
-        cy.assertInputInvalid(
-          "location-select.dialog.activator",
-          "Bitte wählen Sie einen Ereignisort aus"
+        cy.getBy(".v-btn{submit}").click();
+        cy.assertInputInvalidByRule(
+          "location-select-dialog.activator",
+          "location"
         )
           .should("contain", "Ereignisort auswählen")
           .click();
       });
-    cy.getBy("location-select.dialog")
+    cy.getBy("location-select-dialog")
       .should("be.visible")
       .within(() => {
         cy.getBy("search.input").type("iri");
@@ -57,24 +57,24 @@ describe("Events", () => {
           .should("exist")
           .closest("tr")
           .within(() => {
-            cy.getBy("select.button").click();
+            cy.getBy(".v-btn{select}").click();
           });
       });
-    cy.getBy("location-select.dialog").should("not.be.visible");
+    cy.getBy("location-select-dialog").should("not.be.visible");
     cy.getBy("location-info")
       .should("exist")
       .and("contain.text", "IRIS connect Demo");
-    cy.getBy("location-select.dialog.activator")
+    cy.getBy("location-select-dialog.activator")
       .assertInputValid()
       .should("contain", "Ereignisort ändern")
       .click();
-    cy.getBy("location-select.dialog")
+    cy.getBy("location-select-dialog")
       .should("be.visible")
       .within(() => {
         cy.get(".v-data-table").contains("IRIS connect Demo").should("exist");
-        cy.getBy("cancel").should("exist").click();
+        cy.getBy(".v-btn{cancel}").should("exist").click();
       });
-    cy.getBy("location-select.dialog").should("not.be.visible");
+    cy.getBy("location-select-dialog").should("not.be.visible");
   });
   it("should validate and auto-fill the event creation form", () => {
     cy.visit("/events/new");
@@ -82,34 +82,28 @@ describe("Events", () => {
     cy.get("form")
       .should("exist")
       .within(() => {
-        cy.getBy("button{submit}").click();
-        cy.assertInputInvalid("input{externalId}", "Pflichtfeld");
+        cy.getBy(".v-btn{submit}").click();
+        cy.assertInputInvalidByRule("input{externalId}");
         cy.assertInputValid("input{name}");
         cy.assertInputValid("textarea{requestDetails}");
-        cy.assertInputInvalid(
-          "location-select.dialog.activator",
-          "Bitte wählen Sie einen Ereignisort aus"
+        cy.assertInputInvalidByRule(
+          "location-select-dialog.activator",
+          "location"
         );
         cy.getBy("start")
-          .assertInputInvalid(
-            "Bitte geben Sie einen Zeitpunkt in der Vergangenheit an"
-          )
+          .assertInputInvalidByRule("dateStart")
           .within(() => {
             cy.getBy("date-input-field")
-              .assertInputInvalid("Bitte geben Sie ein Datum an")
+              .assertInputInvalidByRule("date")
               .type("1234")
-              .assertInputInvalid(
-                "Bitte geben Sie ein Datum im Format DD.MM.YYYY ein"
-              )
+              .assertInputInvalidByRule("dateFormat")
               .clear()
               .type(dayjs().subtract(1, "day").format("DD.MM.YYYY"))
               .assertInputValid();
             cy.getBy("time-input-field")
-              .assertInputInvalid("Bitte geben Sie eine Uhrzeit an")
+              .assertInputInvalidByRule("time")
               .type("1234")
-              .assertInputInvalid(
-                "Bitte geben Sie eine Uhrzeit im Format HH:mm an"
-              )
+              .assertInputInvalidByRule("timeFormat")
               .clear()
               .type(dayjs().format("HH:mm"))
               .assertInputValid();
@@ -122,9 +116,7 @@ describe("Events", () => {
               .type(dayjs().add(1, "day").format("DD.MM.YYYY"));
           });
         cy.getBy("start")
-          .assertInputInvalid(
-            "Bitte geben Sie einen Zeitpunkt in der Vergangenheit an"
-          )
+          .assertInputInvalidByRule("dateStart")
           .within(() => {
             cy.getBy("date-input-field")
               .clear()
@@ -139,20 +131,16 @@ describe("Events", () => {
             .should("have.value", "23:59")
             .assertInputValid()
             .clear()
-            .assertInputInvalid("Bitte geben Sie eine Uhrzeit an")
+            .assertInputInvalidByRule("time")
             .type("1234")
-            .assertInputInvalid(
-              "Bitte geben Sie eine Uhrzeit im Format HH:mm an"
-            )
+            .assertInputInvalidByRule("timeFormat")
             .clear()
             .type("23:59");
           cy.getBy("date-input-field")
             .clear()
             .type(dayjs().subtract(2, "day").format("DD.MM.YYYY"));
         });
-        cy.getBy("end").assertInputInvalid(
-          "Bitte geben Sie einen Zeitpunkt an, der nach dem Beginn liegt"
-        );
+        cy.getBy("end").assertInputInvalidByRule("dateEnd");
       });
   });
   it("should create a new event", () => {
@@ -175,9 +163,9 @@ describe("Events", () => {
           cy.getBy("date-input-field").type(event.start.format("DD.MM.YYYY"));
           cy.getBy("time-input-field").type(event.start.format("HH:mm"));
         });
-        cy.getBy("location-select.dialog.activator").click();
+        cy.getBy("location-select-dialog.activator").click();
       });
-    cy.getBy("location-select.dialog")
+    cy.getBy("location-select-dialog")
       .should("be.visible")
       .within(() => {
         cy.getBy("search.input").type("iris");
@@ -188,11 +176,11 @@ describe("Events", () => {
           .should("exist")
           .closest("tr")
           .within(() => {
-            cy.getBy("select.button").click();
+            cy.getBy(".v-btn{select}").click();
           });
       });
     cy.get("form").within(() => {
-      cy.getBy("button{submit}").click();
+      cy.getBy(".v-btn{submit}").click();
     });
     cy.location("pathname").should("contain", "/events/details");
     cy.getBy("editable-field.externalRequestId").should(
@@ -213,15 +201,15 @@ describe("Events", () => {
     cy.getBy("event.status")
       .should("contain", "Angefragt")
       .within(() => {
-        cy.getBy("button{event.cancel}").should("exist").click();
+        cy.getBy(".v-btn{event.cancel}").should("exist").click();
       });
-    cy.getBy("confirm.dialog")
+    cy.getBy("confirm-dialog")
       .should("exist")
       .and("contain", "Anfrage abbrechen")
       .within(() => {
-        cy.getBy("button{cancel}").should("exist").click();
+        cy.getBy(".v-btn{cancel}").should("exist").click();
       });
-    cy.getBy("confirm.dialog").should("not.be.visible");
+    cy.getBy("confirm-dialog").should("not.be.visible");
   });
   it("event status: received: should mark and unmark as edited / closed", () => {
     cy.visit("/events/list");
@@ -230,17 +218,17 @@ describe("Events", () => {
     cy.getBy("event.status")
       .should("contain", "Geliefert")
       .within(() => {
-        cy.getBy("button{event.close}").should("exist").click();
+        cy.getBy(".v-btn{event.close}").should("exist").click();
       });
     cy.getBy("event.status")
       .should("contain", "Bearbeitet")
       .within(() => {
-        cy.getBy("button{event.resume}").should("exist").click();
+        cy.getBy(".v-btn{event.resume}").should("exist").click();
       });
     cy.getBy("event.status")
       .should("contain", "Geliefert")
       .within(() => {
-        cy.getBy("button{event.close}").should("exist");
+        cy.getBy(".v-btn{event.close}").should("exist");
       });
   });
   it("event status: closed: should mark and unmark as edited / closed", () => {
@@ -250,17 +238,17 @@ describe("Events", () => {
     cy.getBy("event.status")
       .should("contain", "Bearbeitet")
       .within(() => {
-        cy.getBy("button{event.resume}").should("exist").click();
+        cy.getBy(".v-btn{event.resume}").should("exist").click();
       });
     cy.getBy("event.status")
       .should("contain", "Geliefert")
       .within(() => {
-        cy.getBy("button{event.close}").should("exist").click();
+        cy.getBy(".v-btn{event.close}").should("exist").click();
       });
     cy.getBy("event.status")
       .should("contain", "Bearbeitet")
       .within(() => {
-        cy.getBy("button{event.resume}").should("exist");
+        cy.getBy(".v-btn{event.resume}").should("exist");
       });
   });
   it("should edit an existing event", () => {
@@ -270,7 +258,7 @@ describe("Events", () => {
       .first()
       .closest("tr")
       .within(() => {
-        cy.getBy("select.button").click();
+        cy.getBy(".v-btn{select}").click();
       });
     cy.location("pathname").should("contain", "/events/details");
     cy.checkEditableField("editable-field.externalRequestId");
@@ -284,9 +272,9 @@ describe("Events", () => {
     cy.visit("/events/list");
     cy.filterEventsByStatus("received");
     cy.visitEventByStatus("received");
-    cy.getBy("button{export.standard}").should("be.disabled");
-    cy.getBy("button{export-dialog.activator}").should("be.disabled");
-    cy.getBy("event-details.contacts.data-table")
+    cy.getBy(".v-btn{export.standard}").should("be.disabled");
+    cy.getBy(".v-btn{export-dialog.activator}").should("be.disabled");
+    cy.getBy("event.contacts.data-table")
       .should("exist")
       .within(() => {
         cy.get("tbody tr").should("have.length.at.least", 2);
@@ -294,7 +282,7 @@ describe("Events", () => {
       });
     cy.getBy("export.standard").should("not.be.disabled").click();
     cy.getBy("export-dialog").should("not.exist");
-    cy.getBy("button{export-dialog.activator}")
+    cy.getBy(".v-btn{export-dialog.activator}")
       .should("not.be.disabled")
       .click();
     cy.getBy("export-dialog")
@@ -304,7 +292,7 @@ describe("Events", () => {
         cy.getBy("export.standard-alternative").should("exist").click();
         cy.getBy("export.sormas-participants").should("exist").click();
         cy.getBy("export.sormas-contact-person").should("exist").click();
-        cy.getBy("button{close}").should("exist").click();
+        cy.getBy(".v-btn{close}").should("exist").click();
       });
     cy.getBy("export-dialog").should("not.exist");
   });

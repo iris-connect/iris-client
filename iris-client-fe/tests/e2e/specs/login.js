@@ -17,9 +17,9 @@ describe("Login", () => {
   });
   it("should display login form validation errors", () => {
     cy.get("form").within(() => {
-      cy.getBy("button{submit}").click();
-      cy.assertInputInvalid("input{userName}", "Pflichtfeld");
-      cy.assertInputInvalid("input{password}", "Pflichtfeld");
+      cy.getBy(".v-btn{submit}").click();
+      cy.assertInputInvalidByRule("input{userName}");
+      cy.assertInputInvalidByRule("input{password}");
     });
   });
   it("should display authentication error message if user tries to sign-in with invalid credentials", () => {

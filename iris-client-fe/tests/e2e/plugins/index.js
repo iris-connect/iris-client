@@ -18,6 +18,8 @@ module.exports = (on, config) => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   require("cypress-fail-fast/plugin")(on, config);
 
+  config.env.MOCK_SERVER = process.env.VUE_APP_ENABLE_MOCK_SERVER === "true";
+
   return Object.assign({}, config, {
     fixturesFolder: "tests/e2e/fixtures",
     integrationFolder: "tests/e2e/specs",

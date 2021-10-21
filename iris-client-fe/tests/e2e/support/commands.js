@@ -24,6 +24,25 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+import _escapeRegExp from "lodash/escapeRegExp";
+
+const validationRules = {
+  defined: "Pflichtfeld",
+  minLength: /Mindestens \d+ Zeichen/,
+  maxLength: /Höchstens \d+ Zeichen/,
+  password: "Bitte geben Sie ein gültiges Passwort an",
+  sanitised: "Aus Sicherheitsgründen ist",
+  nameConventions:
+    "Aus Sicherheitsgründen ist die Verwendung von Spezialcharakter in Namen eingeschränkt.",
+  date: "Bitte geben Sie ein Datum an",
+  dateFormat: "Bitte geben Sie ein Datum im Format DD.MM.YYYY ein",
+  time: "Bitte geben Sie eine Uhrzeit an",
+  timeFormat: "Bitte geben Sie eine Uhrzeit im Format HH:mm an",
+  dateStart: "Bitte geben Sie einen Zeitpunkt in der Vergangenheit an",
+  dateEnd: "Bitte geben Sie einen Zeitpunkt an, der nach dem Beginn liegt",
+  location: "Bitte wählen Sie einen Ereignisort aus",
+};
+
 Cypress.Commands.add("getBy", (selector, options) => {
   let alias = selector.replace(/{(\S+)}/g, '[data-test="$1"]');
   if (!/data-test/.test(alias)) {
@@ -56,12 +75,12 @@ Cypress.Commands.add("logout", () => {
   cy.clearLocalStorage();
 });
 
-Cypress.Commands.add("login", () => {
+Cypress.Commands.add("login", (credentials) => {
   cy.getApp().then((app) => {
     cy.log("authenticate user");
     return app.$store.dispatch("userLogin/authenticate", {
-      userName: Cypress.env("auth_username"),
-      password: Cypress.env("auth_password"),
+      userName: credentials?.userName ?? Cypress.env("auth_username"),
+      password: credentials?.password ?? Cypress.env("auth_password"),
     });
   });
   cy.visit("/");
@@ -97,16 +116,99 @@ Cypress.Commands.add("filterEventsByStatus", (status) => {
 });
 
 Cypress.Commands.add("visitEventByStatus", (status) => {
+  cy.location("pathname").should("equal", "/events/list");
   cy.getBy("event-list.data-table").within(() => {
     cy.getBy("event.status." + status)
       .should("exist")
       .first()
       .closest("tr")
       .within(() => {
-        cy.getBy("select.button").click();
+        cy.getBy(".v-btn{select}").click();
       });
   });
   cy.location("pathname").should("contain", "/events/details");
+});
+
+Cypress.Commands.add("getDataTableRow", (accessor, table) => {
+  cy.getBy("input{search}")
+    .should("exist")
+    .clear()
+    .type(accessor, { log: false });
+  return cy
+    .getBy(table || ".v-data-table")
+    .contains(accessor, { log: false })
+    .closest("tr");
+});
+
+Cypress.Commands.add("visitUserByAccessor", (accessor) => {
+  cy.location("pathname").should("equal", "/admin/user/list");
+  cy.getDataTableRow(accessor, "admin-user-list.data-table").within(() => {
+    cy.getBy(".v-btn{edit}")
+      .within(() => {
+        cy.root()
+          .should("have.attr", "href")
+          .and("match", /\/admin\/user\/edit\/\w+/);
+      })
+      .click();
+  });
+  cy.location("pathname").should("contain", "/admin/user/edit");
+});
+
+Cypress.Commands.add(
+  "selectInputValue",
+  { prevSubject: "optional" },
+  (subject, selector, menu, value) => {
+    if (subject) {
+      cy.get(subject, { log: false }).as("field");
+    } else {
+      cy.getBy(selector, { log: false }).as("field");
+    }
+    cy.get("@field")
+      .closest(".v-input")
+      .click()
+      .closest("#app")
+      .find(menu)
+      .should("exist")
+      .contains(value)
+      .click();
+    cy.get("@field")
+      .assertInputValid()
+      .closest(".v-select__selections")
+      .should("contain", value);
+  }
+);
+
+Cypress.Commands.add("editInputField", (selector, config) => {
+  const validation = config?.validation ?? ["sanitised"];
+  const action = config?.action ?? "add";
+  const text = config?.text ?? "e2e.input";
+  cy.getBy(selector)
+    .as("field")
+    .should("exist")
+    .invoke("val")
+    .then((value) => {
+      cy.get("@field").clear().should("be.empty");
+      if (validation.indexOf("defined") > -1) {
+        cy.get("@field").assertInputInvalidByRule("defined");
+      } else {
+        cy.get("@field").assertInputValid();
+      }
+      if (validation.indexOf("sanitised") > -1) {
+        cy.get("@field")
+          .type("-")
+          .assertInputInvalidByRule("sanitised")
+          .clear();
+      }
+      if (action === "add") {
+        cy.get("@field").type((value || "") + text, { log: false });
+      } else if (action === "remove") {
+        const textMatch = new RegExp(`${_escapeRegExp(text)}$`);
+        cy.get("@field").type((value || "").replace(textMatch, ""), {
+          log: false,
+        });
+      }
+      cy.get("@field").assertInputValid();
+    });
 });
 
 Cypress.Commands.add("checkEditableField", (selector, config) => {
@@ -131,7 +233,7 @@ Cypress.Commands.add("checkEditableField", (selector, config) => {
           cy.get(field).clear().should("be.empty");
           // check if empty value validations works properly
           if (validation.indexOf("defined") > -1) {
-            cy.get(field).assertInputInvalid("Pflichtfeld");
+            cy.get(field).assertInputInvalidByRule("defined");
           } else {
             cy.get(field).assertInputValid();
           }
@@ -139,9 +241,7 @@ Cypress.Commands.add("checkEditableField", (selector, config) => {
           if (validation.indexOf("sanitised") > -1) {
             cy.get(field)
               .type("-")
-              .assertInputInvalid(
-                "Aus Sicherheitsgründen ist ein Spezialcharakter nicht als erstes Symbol erlaubt."
-              )
+              .assertInputInvalidByRule("sanitised")
               .clear();
           }
           if (hasValue) {
@@ -222,6 +322,19 @@ Cypress.Commands.add(
         }
       });
     return cy.get("@input", { log: false });
+  }
+);
+
+Cypress.Commands.add(
+  "assertInputInvalidByRule",
+  { prevSubject: "optional" },
+  (subject, selector, rule) => {
+    const message = validationRules[rule] || validationRules.defined;
+    if (subject) {
+      cy.get(subject).assertInputInvalid(message);
+    } else {
+      cy.assertInputInvalid(selector, message);
+    }
   }
 );
 
