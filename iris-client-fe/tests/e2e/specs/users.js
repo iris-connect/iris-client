@@ -116,7 +116,7 @@ describe("Users", () => {
       .type(user.userName, { log: false });
     cy.get(".v-data-table").should("contain", user.userName, { log: false });
   });
-  it("should edit a user, revert changes and set a new password", () => {
+  it("should edit a user, revert changes", () => {
     const editText = "e2e.input.edit";
     const editMatch = new RegExp(`${_escapeRegExp(editText)}$`);
     cy.login();
@@ -134,6 +134,10 @@ describe("Users", () => {
           ".select-menu-role",
           "Administration"
         );
+        cy.getBy("input{password}")
+          .should("not.have.value")
+          .type(generateRandomPassword(), { log: false })
+          .assertInputValid();
         cy.getBy(".v-btn{submit}").click();
       });
     cy.location("pathname").should("equal", "/admin/user/list");
@@ -162,7 +166,8 @@ describe("Users", () => {
         });
         cy.selectInputValue("input{role}", ".select-menu-role", "Nutzung");
         cy.getBy("input{password}")
-          .type(generateRandomPassword(), { log: false })
+          .should("not.have.value")
+          .type(user.password, { log: false })
           .assertInputValid();
         cy.getBy(".v-btn{submit}").click();
       });
@@ -180,7 +185,7 @@ describe("Users", () => {
       });
     cy.location("pathname").should("equal", "/admin/user/list");
   });
-  it("as user: should navigate to user profile page and ensure that protected input fields are disabled", () => {
+  it("as user: should login and navigate to user profile page and ensure that protected input fields are disabled", () => {
     const credentials = {
       userName: Cypress.env("MOCK_SERVER") ? "user" : user.userName,
       password: user.password,
@@ -225,7 +230,6 @@ describe("Users", () => {
         );
         cy.getBy(".v-btn{confirm}").click();
       });
-    cy.getBy("user-delete.confirm-dialog").should("not.be.visible");
     cy.getBy("input{search}").clear().type(userAccessor);
     cy.getBy("admin-user-list.data-table").should("not.contain", userAccessor);
   });
