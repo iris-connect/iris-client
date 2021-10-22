@@ -18,9 +18,26 @@ declare namespace Cypress {
       rule?: string
     ): Chainable<Subject>;
     getApp(): Chainable<Vue | undefined>;
-    filterEventsByStatus(status: string): Chainable<Subject>;
-    visitEventByStatus(status: string): Chainable<Subject>;
+    filterDataTableByStatus(status: string): Chainable<Subject>;
+    filterDataTableByStatus(
+      selector: string,
+      status: string
+    ): Chainable<Subject>;
+    visitByStatus(status: string): Chainable<Subject>;
+    visitByStatus(selector: string, status: string): Chainable<Subject>;
     visitUserByAccessor(accessor: string): Chainable<Subject>;
+    checkTooltip(tooltip: string): Chainable<Subject>;
+    checkTooltip(selector: string, tooltip: string): Chainable<Subject>;
+    validateDateTimeField(required?: boolean): Chainable<Subject>;
+    validateDateTimeField(
+      selector: string,
+      required?: boolean
+    ): Chainable<Subject>;
+    setDateTimeFieldValue(date: dayjs.ConfigType): Chainable<Subject>;
+    setDateTimeFieldValue(
+      selector: string,
+      date: dayjs.ConfigType
+    ): Chainable<Subject>;
     getDataTableRow(accessor: string, table?: string): Chainable<Subject>;
     editInputField(
       selector: string,
@@ -30,8 +47,8 @@ declare namespace Cypress {
         validation?: Array<"defined" | "sanitised">;
       }
     ): Chainable<Subject>;
-    selectInputValue(menu: string, value: string): Chainable<Subject>;
-    selectInputValue(
+    selectFieldValue(menu: string, value: string): Chainable<Subject>;
+    selectFieldValue(
       selector: string,
       menu: string,
       value: string

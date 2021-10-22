@@ -1,7 +1,9 @@
 import {
   Credentials,
-  DataRequestCaseDetails,
+  DataRequestCaseClient,
+  DataRequestCaseData,
   DataRequestDetails,
+  DataRequestStatus,
   ExistingDataRequestClientWithLocation,
   User,
   UserRole,
@@ -14,6 +16,7 @@ import {
 import { createServer, Request, Response } from "miragejs";
 import {
   dummyDataRequestsCases,
+  dummySubmissionUrl,
   getDummyDetailsCases,
 } from "@/server/data/data-requests-cases";
 import router from "@/router";
@@ -170,8 +173,8 @@ export function makeMockAPIServer() {
         return authResponse(
           request,
           paginated(
-            dummyDataRequests.filter((r) =>
-              status ? r.status === status : true
+            dummyDataRequests.filter((item) =>
+              status ? item.status === status : true
             ),
             page
           )
@@ -202,15 +205,28 @@ export function makeMockAPIServer() {
       });
 
       this.post("/data-requests-client/cases", (schema, request) => {
-        const created: Partial<DataRequestCaseDetails> = {
-          caseId: "NEWCASE123",
+        const data: DataRequestCaseClient = JSON.parse(request.requestBody);
+        const created: DataRequestCaseData = {
+          caseId: data.externalCaseId,
+          status: DataRequestStatus.DataRequested,
+          submissionUri: dummySubmissionUrl,
+          ...data,
         };
+        dummyDataRequestsCases.push(created);
         return authResponse(request, created);
       });
 
       this.get("/data-requests-client/cases", (schema, request) => {
-        const { page } = request.queryParams;
-        return authResponse(request, paginated(dummyDataRequestsCases, page));
+        const { page, status } = request.queryParams;
+        return authResponse(
+          request,
+          paginated(
+            dummyDataRequestsCases.filter((item) =>
+              status ? item.status === status : true
+            ),
+            page
+          )
+        );
       });
 
       this.get("/data-requests-client/cases/:caseId", (schema, request) => {

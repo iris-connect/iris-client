@@ -104,7 +104,7 @@ describe("Users", () => {
         cy.getBy("input{userName}")
           .should("exist")
           .type(user.userName, { log: false });
-        cy.selectInputValue("input{role}", ".select-menu-role", "Nutzung");
+        cy.selectFieldValue("input{role}", ".select-menu-role", "Nutzung");
         cy.getBy("input{password}")
           .should("exist")
           .type(user.password, { log: false });
@@ -129,7 +129,7 @@ describe("Users", () => {
         cy.editInputField("input{firstName}", { text: editText });
         cy.editInputField("input{lastName}", { text: editText });
         cy.editInputField("input{userName}", { text: editText });
-        cy.selectInputValue(
+        cy.selectFieldValue(
           "input{role}",
           ".select-menu-role",
           "Administration"
@@ -164,7 +164,7 @@ describe("Users", () => {
           text: editText,
           action: "remove",
         });
-        cy.selectInputValue("input{role}", ".select-menu-role", "Nutzung");
+        cy.selectFieldValue("input{role}", ".select-menu-role", "Nutzung");
         cy.getBy("input{password}")
           .should("not.have.value")
           .type(user.password, { log: false })

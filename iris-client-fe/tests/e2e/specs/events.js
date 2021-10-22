@@ -11,15 +11,16 @@ describe("Events", () => {
   });
   it("should filter the event list based on event status", () => {
     cy.visit("/events/list");
-    cy.filterEventsByStatus("requested");
-    cy.filterEventsByStatus("received");
-    cy.filterEventsByStatus("closed");
-    cy.filterEventsByStatus("aborted");
-    cy.filterEventsByStatus("all");
+    cy.getBy("view.data-table")
+      .filterDataTableByStatus("requested")
+      .filterDataTableByStatus("received")
+      .filterDataTableByStatus("closed")
+      .filterDataTableByStatus("aborted")
+      .filterDataTableByStatus("all");
   });
   it("should display the new event link, navigate to the event creation page and cancel the event creation", () => {
     cy.visit("/events/list");
-    cy.getBy("event-list.link.event-create")
+    cy.getBy("view.link.create")
       .should("have.attr", "href", "/events/new")
       .click();
     cy.location("pathname").should("equal", "/events/new");
@@ -77,70 +78,50 @@ describe("Events", () => {
     cy.getBy("location-select-dialog").should("not.be.visible");
   });
   it("should validate and auto-fill the event creation form", () => {
+    const validStartDate = dayjs().subtract(1, "day");
+    const invalidStartDate = dayjs().add(1, "day");
     cy.visit("/events/new");
     cy.location("pathname").should("equal", "/events/new");
     cy.get("form")
       .should("exist")
       .within(() => {
         cy.getBy(".v-btn{submit}").click();
-        cy.assertInputInvalidByRule("input{externalId}");
-        cy.assertInputValid("input{name}");
-        cy.assertInputValid("textarea{requestDetails}");
+        cy.getBy("input{externalId}")
+          .assertInputInvalidByRule()
+          .type("-")
+          .assertInputInvalidByRule("sanitised");
+        cy.getBy("input{name}")
+          .assertInputValid()
+          .type("-")
+          .assertInputInvalidByRule("sanitised");
+        cy.getBy("textarea{requestDetails}")
+          .assertInputValid()
+          .type("-")
+          .assertInputInvalidByRule("sanitised");
         cy.assertInputInvalidByRule(
           "location-select-dialog.activator",
           "location"
         );
         cy.getBy("start")
           .assertInputInvalidByRule("dateStart")
-          .within(() => {
-            cy.getBy("date-input-field")
-              .assertInputInvalidByRule("date")
-              .type("1234")
-              .assertInputInvalidByRule("dateFormat")
-              .clear()
-              .type(dayjs().subtract(1, "day").format("DD.MM.YYYY"))
-              .assertInputValid();
-            cy.getBy("time-input-field")
-              .assertInputInvalidByRule("time")
-              .type("1234")
-              .assertInputInvalidByRule("timeFormat")
-              .clear()
-              .type(dayjs().format("HH:mm"))
-              .assertInputValid();
-          });
-        cy.getBy("start")
-          .assertInputValid()
-          .within(() => {
-            cy.getBy("date-input-field")
-              .clear()
-              .type(dayjs().add(1, "day").format("DD.MM.YYYY"));
-          });
-        cy.getBy("start")
+          .validateDateTimeField()
+          .setDateTimeFieldValue(invalidStartDate)
           .assertInputInvalidByRule("dateStart")
+          .setDateTimeFieldValue(validStartDate)
+          .assertInputValid();
+        cy.getBy("end")
           .within(() => {
-            cy.getBy("date-input-field")
-              .clear()
-              .type(dayjs().subtract(1, "day").format("DD.MM.YYYY"));
-          });
-        cy.getBy("end").within(() => {
-          cy.getBy("date-input-field").should(
-            "have.value",
-            dayjs().subtract(1, "day").format("DD.MM.YYYY")
-          );
-          cy.getBy("time-input-field")
-            .should("have.value", "23:59")
-            .assertInputValid()
-            .clear()
-            .assertInputInvalidByRule("time")
-            .type("1234")
-            .assertInputInvalidByRule("timeFormat")
-            .clear()
-            .type("23:59");
-          cy.getBy("date-input-field")
-            .clear()
-            .type(dayjs().subtract(2, "day").format("DD.MM.YYYY"));
-        });
-        cy.getBy("end").assertInputInvalidByRule("dateEnd");
+            cy.getBy("date-input-field").should(
+              "have.value",
+              validStartDate.format("DD.MM.YYYY")
+            );
+            cy.getBy("time-input-field").should("have.value", "23:59");
+          })
+          .validateDateTimeField()
+          .setDateTimeFieldValue(dayjs(validStartDate).subtract(1, "day"))
+          .assertInputInvalidByRule("dateEnd")
+          .setDateTimeFieldValue(dayjs(validStartDate).add(1, "day"))
+          .assertInputValid();
       });
   });
   it("should create a new event", () => {
@@ -159,10 +140,8 @@ describe("Events", () => {
         cy.getBy("input{externalId}").type(event.externalId);
         cy.getBy("input{name}").type(event.name);
         cy.getBy("textarea{requestDetails}").type(event.requestDetails);
-        cy.getBy("start").within(() => {
-          cy.getBy("date-input-field").type(event.start.format("DD.MM.YYYY"));
-          cy.getBy("time-input-field").type(event.start.format("HH:mm"));
-        });
+        cy.setDateTimeFieldValue("start", event.start);
+        cy.setDateTimeFieldValue("end", event.end);
         cy.getBy("location-select-dialog.activator").click();
       });
     cy.getBy("location-select-dialog")
@@ -196,8 +175,9 @@ describe("Events", () => {
   });
   it("event status: requested: should trigger the cancel dialog", () => {
     cy.visit("/events/list");
-    cy.filterEventsByStatus("requested");
-    cy.visitEventByStatus("requested");
+    cy.getBy("view.data-table")
+      .filterDataTableByStatus("requested")
+      .visitByStatus("requested");
     cy.getBy("event.status")
       .should("contain", "Angefragt")
       .within(() => {
@@ -213,8 +193,9 @@ describe("Events", () => {
   });
   it("event status: received: should mark and unmark as edited / closed", () => {
     cy.visit("/events/list");
-    cy.filterEventsByStatus("received");
-    cy.visitEventByStatus("received");
+    cy.getBy("view.data-table")
+      .filterDataTableByStatus("received")
+      .visitByStatus("received");
     cy.getBy("event.status")
       .should("contain", "Geliefert")
       .within(() => {
@@ -233,8 +214,9 @@ describe("Events", () => {
   });
   it("event status: closed: should mark and unmark as edited / closed", () => {
     cy.visit("/events/list");
-    cy.filterEventsByStatus("closed");
-    cy.visitEventByStatus("closed");
+    cy.getBy("view.data-table")
+      .filterDataTableByStatus("closed")
+      .visitByStatus("closed");
     cy.getBy("event.status")
       .should("contain", "Bearbeitet")
       .within(() => {
@@ -253,7 +235,7 @@ describe("Events", () => {
   });
   it("should edit an existing event", () => {
     cy.visit("/events/list");
-    cy.getBy("event-list.data-table")
+    cy.getBy("view.data-table")
       .contains("e2e_test")
       .first()
       .closest("tr")
@@ -270,14 +252,16 @@ describe("Events", () => {
   });
   it("should export event data as csv file", () => {
     cy.visit("/events/list");
-    cy.filterEventsByStatus("received");
-    cy.visitEventByStatus("received");
+    cy.getBy("view.data-table")
+      .filterDataTableByStatus("received")
+      .visitByStatus("received");
     cy.getBy(".v-btn{export.standard}").should("be.disabled");
     cy.getBy(".v-btn{export-dialog.activator}").should("be.disabled");
     cy.getBy("event.contacts.data-table")
       .should("exist")
+      .should("not.have.class", "is-loading")
       .within(() => {
-        cy.get("tbody tr").should("have.length.at.least", 2);
+        cy.get("tbody tr").should("have.length.at.least", 1);
         cy.get("thead .v-simple-checkbox").click();
       });
     cy.getBy("export.standard").should("not.be.disabled").click();

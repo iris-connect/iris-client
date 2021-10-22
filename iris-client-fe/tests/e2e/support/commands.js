@@ -25,6 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 import _escapeRegExp from "lodash/escapeRegExp";
+import dayjs from "../../../src/utils/date";
 
 const validationRules = {
   defined: "Pflichtfeld",
@@ -86,56 +87,92 @@ Cypress.Commands.add("login", (credentials) => {
   cy.visit("/");
 });
 
-Cypress.Commands.add("filterEventsByStatus", (status) => {
-  cy.location("pathname").should("equal", "/events/list");
-  // wait for initial loading
-  cy.getBy("event-list.data-table").should("not.have.class", "is-loading");
-  // apply filter
-  cy.getBy(`event.status.select.${status}`).click();
-  // wait for filtered loading
-  cy.getBy("event-list.data-table").should("not.have.class", "is-loading");
-  cy.getBy("event-list.data-table").then(($table) => {
-    if ($table.hasClass("is-empty")) {
-      cy.log(`list has no events with status '${status}'`);
+Cypress.Commands.add(
+  "filterDataTableByStatus",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2) => {
+    const status = subject ? arg1 : arg2;
+    if (subject) {
+      cy.wrap(subject).as("dataTable");
     } else {
-      cy.getBy("{event-list.data-table} tbody tr").each(($item) => {
-        cy.wrap($item).within(() => {
-          if (status === "all") {
-            cy.getByLike("event.status.").should("exist");
-          } else {
-            cy.getByLike("event.status.").should(
-              "have.attr",
-              "data-test",
-              `event.status.${status}`
-            );
-          }
-        });
-      });
+      cy.getBy(arg1).as("dataTable");
     }
-  });
-});
+    // wait for initial loading
+    cy.get("@dataTable").should("not.have.class", "is-loading");
+    // apply filter
+    cy.getBy(`status.select.${status}`).click();
+    // wait for filtered loading
+    cy.get("@dataTable").should("not.have.class", "is-loading");
+    cy.get("@dataTable").then(($table) => {
+      if ($table.hasClass("is-empty")) {
+        cy.log(`data-table has no items with status '${status}'`);
+      } else {
+        cy.get("@dataTable").within(() => {
+          cy.get("tbody tr").each(($item) => {
+            cy.wrap($item).within(() => {
+              if (status === "all") {
+                cy.getByLike("status.").should("exist");
+              } else {
+                cy.getByLike("status.").should(
+                  "have.attr",
+                  "data-test",
+                  `status.${status}`
+                );
+              }
+            });
+          });
+        });
+      }
+    });
+  }
+);
 
-Cypress.Commands.add("visitEventByStatus", (status) => {
-  cy.location("pathname").should("equal", "/events/list");
-  cy.getBy("event-list.data-table").within(() => {
-    cy.getBy("event.status." + status)
-      .should("exist")
-      .first()
-      .closest("tr")
-      .within(() => {
-        cy.getBy(".v-btn{select}").click();
-      });
-  });
-  cy.location("pathname").should("contain", "/events/details");
-});
+Cypress.Commands.add(
+  "visitByStatus",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2) => {
+    const status = subject ? arg1 : arg2;
+    if (subject) {
+      cy.wrap(subject).as("dataTable");
+    } else {
+      cy.getBy(arg1).as("dataTable");
+    }
+    cy.get("@dataTable").within(() => {
+      cy.getBy("status." + status)
+        .should("exist")
+        .first()
+        .closest("tr")
+        .within(() => {
+          cy.getBy(".v-btn{select}").click();
+        });
+    });
+  }
+);
+
+Cypress.Commands.add(
+  "checkTooltip",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2) => {
+    const tooltip = subject ? arg1 : arg2;
+    if (subject) {
+      cy.wrap(subject).as("activator");
+    } else {
+      cy.getBy(arg1).as("activator");
+    }
+    cy.get("@activator").trigger("mouseenter");
+    cy.root().closest("#app").find(tooltip).should("be.visible");
+    cy.get("@activator").trigger("mouseleave");
+    cy.root().closest("#app").find(tooltip).should("not.be.visible");
+    return cy.get("@activator");
+  }
+);
 
 Cypress.Commands.add("getDataTableRow", (accessor, table) => {
   cy.getBy("input{search}")
     .should("exist")
     .clear()
     .type(accessor, { log: false });
-  return cy
-    .getBy(table || ".v-data-table")
+  cy.getBy(table || ".v-data-table")
     .contains(accessor, { log: false })
     .closest("tr");
 });
@@ -155,13 +192,16 @@ Cypress.Commands.add("visitUserByAccessor", (accessor) => {
 });
 
 Cypress.Commands.add(
-  "selectInputValue",
+  "selectFieldValue",
   { prevSubject: "optional" },
-  (subject, selector, menu, value) => {
+  (subject, arg1, arg2, arg3) => {
+    // arg1 = selector, arg2 = menu, arg3 = value
+    const menu = subject ? arg1 : arg2;
+    const value = subject ? arg2 : arg3;
     if (subject) {
-      cy.get(subject, { log: false }).as("field");
+      cy.wrap(subject).as("field");
     } else {
-      cy.getBy(selector, { log: false }).as("field");
+      cy.getBy(arg1).as("field");
     }
     cy.get("@field")
       .closest(".v-input")
@@ -175,6 +215,7 @@ Cypress.Commands.add(
       .assertInputValid()
       .closest(".v-select__selections")
       .should("contain", value);
+    return cy.get("@field");
   }
 );
 
@@ -276,7 +317,88 @@ Cypress.Commands.add("checkEditableField", (selector, config) => {
             .should("match", new RegExp(`${value}\\s*$`));
         });
     });
+  return cy.getBy(selector);
 });
+
+Cypress.Commands.add(
+  "setDateTimeFieldValue",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2) => {
+    const date = subject ? arg1 : arg2;
+    if (subject) {
+      cy.wrap(subject).as("field");
+    } else {
+      cy.getBy(arg1).as("field");
+    }
+    cy.get("@field").within(() => {
+      cy.getBy("date-input-field")
+        .clear()
+        .type(dayjs(date).format("DD.MM.YYYY"))
+        .type("{esc}");
+      cy.getBy("time-input-field")
+        .clear()
+        .type(dayjs(date).format("HH:mm"))
+        .type("{esc}");
+    });
+  }
+);
+
+Cypress.Commands.add(
+  "validateDateTimeField",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2) => {
+    const required = (subject ? arg1 : arg2) !== false;
+    if (subject) {
+      cy.wrap(subject).as("field");
+    } else {
+      cy.getBy(arg1).as("field");
+    }
+    cy.get("@field")
+      .should("exist")
+      .within(() => {
+        cy.getBy("date-input-field")
+          .as("date")
+          .invoke("val")
+          .then((value) => {
+            cy.get("@date").clear();
+            if (required) {
+              cy.get("@date").assertInputInvalidByRule("date");
+            } else {
+              cy.get("@date").assertInputValid();
+            }
+            cy.get("@date")
+              .type("1234")
+              .type("{esc}")
+              .assertInputInvalidByRule("dateFormat")
+              .clear();
+            if (value && typeof value === "string") {
+              cy.get("@date").type(value);
+            }
+            cy.get("@date").type("{esc}");
+          });
+        cy.getBy("time-input-field")
+          .as("time")
+          .invoke("val")
+          .then((value) => {
+            cy.get("@time").clear();
+            if (required) {
+              cy.get("@time").assertInputInvalidByRule("time");
+            } else {
+              cy.get("@time").assertInputValid();
+            }
+            cy.get("@time")
+              .type("1234")
+              .type("{esc}")
+              .assertInputInvalidByRule("timeFormat")
+              .clear();
+            if (value && typeof value === "string") {
+              cy.get("@time").type(value);
+            }
+            cy.get("@time").type("{esc}");
+          });
+      });
+  }
+);
 
 Cypress.Commands.add("fetchUser", () => {
   cy.getApp().then((app) => {
@@ -290,9 +412,9 @@ Cypress.Commands.add(
   { prevSubject: "optional" },
   (subject, selector) => {
     if (subject) {
-      cy.get(subject, { log: false }).as("input");
+      cy.wrap(subject).as("input");
     } else {
-      cy.getBy(selector, { log: false }).as("input");
+      cy.getBy(selector).as("input");
     }
     cy.get("@input", { log: false })
       .closest(".v-input")
@@ -305,11 +427,12 @@ Cypress.Commands.add(
 Cypress.Commands.add(
   "assertInputInvalid",
   { prevSubject: "optional" },
-  (subject, selector, message) => {
+  (subject, arg1, arg2) => {
+    const message = subject ? arg1 : arg2;
     if (subject) {
-      cy.get(subject, { log: false }).as("input");
+      cy.wrap(subject).as("input");
     } else {
-      cy.getBy(selector, { log: false }).as("input");
+      cy.getBy(arg1).as("input");
     }
     cy.get("@input", { log: false })
       .closest(".v-input")
@@ -328,12 +451,13 @@ Cypress.Commands.add(
 Cypress.Commands.add(
   "assertInputInvalidByRule",
   { prevSubject: "optional" },
-  (subject, selector, rule) => {
+  (subject, arg1, arg2) => {
+    const rule = subject ? arg1 : arg2;
     const message = validationRules[rule] || validationRules.defined;
     if (subject) {
-      cy.get(subject).assertInputInvalid(message);
+      cy.wrap(subject).assertInputInvalid(message);
     } else {
-      cy.assertInputInvalid(selector, message);
+      cy.assertInputInvalid(arg1, message);
     }
   }
 );

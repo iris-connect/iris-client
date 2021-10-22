@@ -7,8 +7,9 @@
             class="float-right"
             color="primary"
             :to="{ name: 'event-new' }"
-            data-test="event-list.link.event-create"
-            >Neue Ereignisverfolgung starten
+            data-test="view.link.create"
+          >
+            Neue Ereignisverfolgung starten
           </v-btn>
         </div>
       </v-col>
@@ -27,7 +28,7 @@
             @click="filterStatus(selectableStatus[status])"
             v-for="status in Object.keys(selectableStatus)"
             :key="status"
-            :data-test="`event.status.select.${getStatusTestLabel(
+            :data-test="`status.select.${getStatusTestLabel(
               selectableStatus[status]
             )}`"
           >
@@ -37,7 +38,7 @@
           <v-btn
             text
             @click="filterStatus(undefined)"
-            data-test="event.status.select.all"
+            data-test="status.select.all"
           >
             Alle
           </v-btn>
@@ -56,24 +57,18 @@
           hide-details
           @keyup="triggerSearch(search)"
         ></v-text-field>
-        <v-data-table
+        <iris-data-table
           :loading="dataTableModel.loading"
           :page="dataTableModel.page"
           :server-items-length="dataTableModel.itemsLength"
           :headers="dataTableModel.headers"
           :items="dataTableModel.data"
           :items-per-page="dataTableModel.itemsPerPage"
-          :class="`elevation-1 mt-5 twolineTable ${
-            dataTableModel.loading
-              ? 'is-loading'
-              : dataTableModel.itemsLength <= 0
-              ? 'is-empty'
-              : ''
-          }`"
+          class="elevation-1 mt-5 twolineTable"
           :search="search"
           :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
           @update:options="updatePagination"
-          data-test="event-list.data-table"
+          data-test="view.data-table"
         >
           <template v-slot:[itemAddressSlotName]="{ item }">
             <span class="text-pre-wrap"> {{ item.address }} </span>
@@ -82,7 +77,7 @@
             <v-chip
               :color="getStatusColor(item.status)"
               dark
-              :data-test="`event.status.${getStatusTestLabel(item.status)}`"
+              :data-test="`status.${getStatusTestLabel(item.status)}`"
             >
               {{ getStatusName(item.status) }}
             </v-chip>
@@ -100,7 +95,7 @@
               Details
             </v-btn>
           </template>
-        </v-data-table>
+        </iris-data-table>
       </v-card-text>
     </v-card>
   </div>
@@ -128,6 +123,8 @@ import {
 } from "@/utils/pagination";
 import { Dictionary } from "vue-router/types/router";
 import { join } from "@/utils/misc";
+import StatusTestLabel from "@/constants/StatusTestLabel";
+import IrisDataTable from "@/components/iris-data-table.vue";
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
@@ -154,6 +151,7 @@ function getFormattedDate(date?: string): string {
 
 @Component({
   components: {
+    IrisDataTable,
     EventTrackingFormView: EventTrackingFormView,
   },
   beforeRouteLeave(to, from, next) {
@@ -339,18 +337,7 @@ export default class EventTrackingListView extends Vue {
   }
 
   getStatusTestLabel(status: DataRequestStatus): string {
-    switch (status) {
-      case DataRequestStatus.DataRequested:
-        return "requested";
-      case DataRequestStatus.DataReceived:
-        return "received";
-      case DataRequestStatus.Closed:
-        return "closed";
-      case DataRequestStatus.Aborted:
-        return "aborted";
-      default:
-        return "unknown"; // TODO find better name
-    }
+    return StatusTestLabel.getStatusTestLabel(status);
   }
 
   getStatusSelectLabel(status: DataRequestStatus | null): string {

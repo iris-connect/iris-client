@@ -28,7 +28,7 @@
                   hide-details
                   data-test="search"
                 ></v-text-field>
-                <v-data-table
+                <iris-data-table
                   :loading="isBusy"
                   :headers="tableData.headers"
                   :items="userList"
@@ -64,7 +64,7 @@
                       <v-icon> mdi-delete </v-icon>
                     </user-delete-button>
                   </template>
-                </v-data-table>
+                </iris-data-table>
               </v-col>
             </v-row>
             <v-row v-if="hasError">
@@ -90,6 +90,7 @@ import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
 import { User, UserRole } from "@/api";
 import UserDeleteButton from "@/views/admin-user-list/components/user-delete-button.vue";
+import IrisDataTable from "@/components/iris-data-table.vue";
 
 // @todo: check if id is really optional! Handle, edit & delete actions + vue :key accordingly
 type TableRow = {
@@ -106,7 +107,7 @@ const UserRoleName = new Map<UserRole, string>([
 ]);
 
 @Component({
-  components: { UserDeleteButton },
+  components: { IrisDataTable, UserDeleteButton },
   async beforeRouteEnter(to, from, next) {
     next();
     await store.dispatch("adminUserList/fetchUserList");

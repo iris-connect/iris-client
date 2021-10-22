@@ -118,7 +118,7 @@
           single-line
           hide-details
         ></v-text-field>
-        <v-data-table
+        <iris-data-table
           :loading="loading"
           :headers="tableData.headers"
           :items="tableRows"
@@ -166,7 +166,7 @@
               </v-row>
             </td>
           </template>
-        </v-data-table>
+        </iris-data-table>
         <error-message-alert :errors="errors" />
       </v-card-text>
       <v-card-actions>
@@ -211,6 +211,7 @@ import { DataRequestStatus, DataRequestStatusUpdateByUser } from "@/api";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import { ErrorMessage } from "@/utils/axios";
+import IrisDataTable from "@/components/iris-data-table.vue";
 
 const EventTrackingDetailsComponentProps = Vue.extend({
   props: {
@@ -239,6 +240,7 @@ const EventTrackingDetailsComponentProps = Vue.extend({
 
 @Component({
   components: {
+    IrisDataTable,
     ErrorMessageAlert,
     EventTrackingDetailsLocationInfo,
     EventTrackingStatusChange,

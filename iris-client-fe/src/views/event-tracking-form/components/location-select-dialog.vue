@@ -38,7 +38,7 @@
             <strong>alle Suchkriterien erfüllen</strong>.
           </p>
         </div>
-        <v-data-table
+        <iris-data-table
           :loading="disabled"
           :page="dataTableModel.page"
           :server-items-length="dataTableModel.itemsLength"
@@ -61,7 +61,7 @@
               Wählen
             </v-btn>
           </template>
-        </v-data-table>
+        </iris-data-table>
         <v-alert v-if="error" text type="error">{{ error }}</v-alert>
       </v-card-text>
       <v-divider />
@@ -85,6 +85,7 @@ import { LocationAddress, LocationInformation, LocationList } from "@/api";
 import { join } from "@/utils/misc";
 import { DataQuery, getSortAttribute } from "@/api/common";
 import { DataOptions } from "node_modules/vuetify/types";
+import IrisDataTable from "@/components/iris-data-table.vue";
 
 const getFormattedAddress = (address: LocationAddress): string => {
   if (!address) {
@@ -124,8 +125,11 @@ const EventTrackingFormLocationSelectProps = Vue.extend({
     },
   },
 });
-
-@Component
+@Component({
+  components: {
+    IrisDataTable,
+  },
+})
 export default class EventTrackingFormLocationSelect extends EventTrackingFormLocationSelectProps {
   dialog = false;
   search = "";
