@@ -7,7 +7,7 @@
             class="float-right"
             color="primary"
             :to="{ name: 'admin-user-create' }"
-            data-test="admin-user-list.link.user-create"
+            data-test="view.link.create"
             >Neues Konto anlegen
           </v-btn>
         </div>
@@ -35,7 +35,7 @@
                   :items-per-page="5"
                   class="elevation-1 mt-5"
                   :search="tableData.search"
-                  data-test="admin-user-list.data-table"
+                  data-test="view.data-table"
                 >
                   <template #item.actions="{ item }">
                     <v-btn

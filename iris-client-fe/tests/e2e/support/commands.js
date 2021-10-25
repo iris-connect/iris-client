@@ -179,7 +179,7 @@ Cypress.Commands.add("getDataTableRow", (accessor, table) => {
 
 Cypress.Commands.add("visitUserByAccessor", (accessor) => {
   cy.location("pathname").should("equal", "/admin/user/list");
-  cy.getDataTableRow(accessor, "admin-user-list.data-table").within(() => {
+  cy.getDataTableRow(accessor, "view.data-table").within(() => {
     cy.getBy(".v-btn{edit}")
       .within(() => {
         cy.root()

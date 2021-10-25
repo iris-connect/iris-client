@@ -50,7 +50,7 @@ describe("Users", () => {
     cy.login();
     cy.fetchUser();
     cy.visit("/admin/user/list");
-    cy.getBy("admin-user-list.link.user-create")
+    cy.getBy("view.link.create")
       .should("have.attr", "href", "/admin/user/create")
       .click();
     cy.location("pathname").should("equal", "/admin/user/create");
@@ -216,11 +216,9 @@ describe("Users", () => {
     cy.login();
     cy.fetchUser();
     cy.visit("/admin/user/list");
-    cy.getDataTableRow(userAccessor, "admin-user-list.data-table").within(
-      () => {
-        cy.getBy(".v-btn{delete}").click();
-      }
-    );
+    cy.getDataTableRow(userAccessor, "view.data-table").within(() => {
+      cy.getBy(".v-btn{delete}").click();
+    });
     cy.getBy("user-delete.confirm-dialog")
       .should("exist")
       .within(() => {
@@ -231,6 +229,6 @@ describe("Users", () => {
         cy.getBy(".v-btn{confirm}").click();
       });
     cy.getBy("input{search}").clear().type(userAccessor);
-    cy.getBy("admin-user-list.data-table").should("not.contain", userAccessor);
+    cy.getBy("view.data-table").should("not.contain", userAccessor);
   });
 });
