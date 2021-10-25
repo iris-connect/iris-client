@@ -94,7 +94,7 @@ jobs:
           images: inoeg/iris-client-bff
       
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.0.20
         with:
           image-ref: '${{ steps.meta.outputs.tags }}'
           format: 'template'
