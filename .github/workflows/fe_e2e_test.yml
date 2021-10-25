@@ -39,3 +39,20 @@ jobs:
           CYPRESS_auth_password: ${{ secrets.FE_TEST_AUTH_PASSWORD }}
           VUE_APP_API_BASE_URL: ${{ secrets.FE_TEST_API_BASE_URL }}
           VUE_APP_ENABLE_MOCK_SERVER: false
+      
+      # NOTE: screenshots will be generated only if E2E test failed thus we store screenshots only on failures
+      - name: Store screenshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: |
+            **/tests/e2e/screenshots/**/*
+      # Test run video was always captured, so this action uses "always()" condition
+      - name: Store videos 
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos
+          path: |
+            **/tests/e2e/videos/*
