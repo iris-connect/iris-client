@@ -14,6 +14,7 @@
               v-model="form.model.externalId"
               :rules="validationRules.sanitisedAndDefined"
               label="Externe ID"
+              data-test="externalId"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6">
@@ -21,6 +22,7 @@
               v-model="form.model.name"
               label="Name"
               :rules="validationRules.sanitised"
+              data-test="name"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -30,6 +32,7 @@
               v-model="form.model.comment"
               label="Kommentar"
               :rules="validationRules.sanitised"
+              data-test="comment"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -45,6 +48,7 @@
               }"
               :rules="validationRules.start"
               required
+              data-test="start"
             />
           </v-col>
           <v-col cols="12" md="6">
@@ -57,6 +61,8 @@
                 label: 'Uhrzeit (Ende)',
               }"
               :rules="validationRules.end"
+              required
+              data-test="end"
             />
           </v-col>
         </v-row>
@@ -65,11 +71,22 @@
         }}</v-alert>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="secondary" plain @click="$router.back()">
+        <v-btn
+          color="secondary"
+          plain
+          :to="{ name: 'index-list' }"
+          replace
+          data-test="cancel"
+        >
           Abbrechen
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn :disabled="indexCreationOngoing" color="primary" @click="submit">
+        <v-btn
+          :disabled="indexCreationOngoing"
+          color="primary"
+          @click="submit"
+          data-test="submit"
+        >
           Daten senden
         </v-btn>
       </v-card-actions>
@@ -194,7 +211,7 @@ export default class IndexTrackingFormView extends Vue {
         "indexTrackingForm/createIndexTracking",
         payload
       );
-      router.push({
+      router.replace({
         name: `index-details`,
         params: {
           caseId: created.caseId || "",

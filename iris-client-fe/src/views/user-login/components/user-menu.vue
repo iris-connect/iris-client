@@ -1,24 +1,33 @@
 <template>
   <v-menu left bottom>
     <template v-slot:activator="{ on, attrs }">
-      <v-btn plain v-bind="attrs" v-on="on">
+      <v-btn plain v-bind="attrs" v-on="on" data-test="user-menu.activator">
         <span class="mr-3">{{ displayName }}</span>
         <v-icon large right> mdi-account-circle </v-icon>
       </v-btn>
     </template>
-    <v-list>
-      <v-list-item v-if="isAdmin" :to="{ name: 'admin-user-list' }">
+    <v-list data-test="user-menu">
+      <v-list-item
+        v-if="isAdmin"
+        :to="{ name: 'admin-user-list' }"
+        data-test="user-menu.item.admin-user-list"
+      >
         <v-list-item-title> Kontoverwaltung </v-list-item-title>
       </v-list-item>
       <v-list-item
         v-if="isUser"
         :to="{ name: 'admin-user-edit', params: { id } }"
+        data-test="user-menu.item.user-profile"
       >
         <v-list-item-title> Mein Profil </v-list-item-title>
       </v-list-item>
       <v-dialog max-width="400" v-model="logoutConfirmDialog">
         <template v-slot:activator="{ on, attrs }">
-          <v-list-item v-bind="attrs" v-on="on">
+          <v-list-item
+            v-bind="attrs"
+            v-on="on"
+            data-test="logout-confirm-dialog.activator"
+          >
             <v-list-item-title> Abmelden </v-list-item-title>
           </v-list-item>
         </template>
@@ -32,7 +41,11 @@
               Abbrechen
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="() => logout(true)">
+            <v-btn
+              color="primary"
+              @click="() => logout(true)"
+              data-test="logout-confirm-dialog.action.confirm"
+            >
               Abmelden
             </v-btn>
           </v-card-actions>

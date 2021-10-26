@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-alert v-if="errorMessage" text type="error">
+    <v-alert v-if="errorMessage" text type="error" data-test="user-login-error">
       {{ errorMessage }}
     </v-alert>
     <v-progress-linear

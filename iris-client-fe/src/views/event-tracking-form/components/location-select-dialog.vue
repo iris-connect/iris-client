@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
     </template>
-    <v-card>
+    <v-card data-test="location-select-dialog">
       <v-card-title> Ereignisort auswählen </v-card-title>
       <v-card-text>
         <div class="my-6">
@@ -17,12 +17,14 @@
                 single-line
                 hide-details
                 @keydown.enter="handleSearch(search)"
+                data-test="search.input"
               />
             </v-col>
             <v-col cols="12" sm="6" class="d-flex align-end">
               <v-btn
                 :disabled="disabled || search.length < 4"
                 @click="handleSearch(search)"
+                data-test="search.button"
               >
                 Ereignisort suchen
               </v-btn>
@@ -36,7 +38,7 @@
             <strong>alle Suchkriterien erfüllen</strong>.
           </p>
         </div>
-        <v-data-table
+        <iris-data-table
           :loading="disabled"
           :page="dataTableModel.page"
           :server-items-length="dataTableModel.itemsLength"
@@ -51,14 +53,25 @@
             <span class="text-pre-wrap"> {{ item.name }} </span>
           </template>
           <template v-slot:[itemActionsSlotName]="{ item }">
-            <v-btn color="primary" @click="handleSelect(item)"> Wählen </v-btn>
+            <v-btn
+              color="primary"
+              @click="handleSelect(item)"
+              data-test="select"
+            >
+              Wählen
+            </v-btn>
           </template>
-        </v-data-table>
+        </iris-data-table>
         <v-alert v-if="error" text type="error">{{ error }}</v-alert>
       </v-card-text>
       <v-divider />
       <v-card-actions>
-        <v-btn color="secondary" text @click="dialog = false">
+        <v-btn
+          color="secondary"
+          text
+          @click="dialog = false"
+          data-test="cancel"
+        >
           Abbrechen
         </v-btn>
       </v-card-actions>
@@ -72,6 +85,7 @@ import { LocationAddress, LocationInformation, LocationList } from "@/api";
 import { join } from "@/utils/misc";
 import { DataQuery, getSortAttribute } from "@/api/common";
 import { DataOptions } from "node_modules/vuetify/types";
+import IrisDataTable from "@/components/iris-data-table.vue";
 
 const getFormattedAddress = (address: LocationAddress): string => {
   if (!address) {
@@ -111,8 +125,11 @@ const EventTrackingFormLocationSelectProps = Vue.extend({
     },
   },
 });
-
-@Component
+@Component({
+  components: {
+    IrisDataTable,
+  },
+})
 export default class EventTrackingFormLocationSelect extends EventTrackingFormLocationSelectProps {
   dialog = false;
   search = "";

@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row data-test="event.location">
     <v-col
       cols="12"
       sm="6"

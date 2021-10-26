@@ -6,12 +6,12 @@
       </template>
     </alert-component>
     <v-card>
-      <v-card-title
-        >Details für Indexfall ID: {{ indexData.extID }}</v-card-title
-      >
+      <v-card-title data-test="case.externalId">
+        Details für Indexfall ID: {{ indexData.extID }}
+      </v-card-title>
       <v-card-text>
         <v-row class="align-center">
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" data-test="case.name">
             <strong> Index-Bezeichner: </strong>
             {{ indexData.name }}
           </v-col>
@@ -19,22 +19,26 @@
             <span class="d-inline-block mr-3">
               <strong> Status: </strong>
             </span>
-            <v-chip :color="getStatusColor(indexData.status)" dark>
+            <v-chip
+              :color="getStatusColor(indexData.status)"
+              dark
+              data-test="case.status"
+            >
               {{ getStatusName(indexData.status) }}
             </v-chip>
           </v-col>
         </v-row>
         <v-row class="align-center mb-3">
           <v-col>
-            <div>
+            <div data-test="case.duration">
               <strong> Zeitraum: </strong>
               {{ indexData.startTime }} - {{ indexData.endTime }}
             </div>
-            <div>
+            <div data-test="case.comment">
               <strong> Kommentar: </strong>
               {{ indexData.comment }}
             </div>
-            <div>
+            <div data-test="case.tan">
               <strong> TAN: </strong>
               {{ indexData.tan }}
             </div>
@@ -45,8 +49,12 @@
           </v-col>
         </v-row>
         <v-tabs @change="handleTabsChange">
-          <v-tab>Kontakte ({{ indexData.contactCount }})</v-tab>
-          <v-tab>Ereignisse ({{ indexData.eventCount }})</v-tab>
+          <v-tab data-test="case.contacts.tab">
+            Kontakte ({{ indexData.contactCount }})
+          </v-tab>
+          <v-tab data-test="case.events.tab">
+            Ereignisse ({{ indexData.eventCount }})
+          </v-tab>
           <v-tab-item>
             <v-row class="mt-3">
               <v-col>
@@ -61,7 +69,7 @@
               single-line
               hide-details
             ></v-text-field>
-            <v-data-table
+            <iris-data-table
               :loading="listLoading"
               :headers="tableDataContacts.headers"
               :items="contacts"
@@ -74,6 +82,7 @@
               single-expand
               :expanded.sync="tableDataContacts.expanded"
               @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
+              data-test="case.contacts.data-table"
             >
               <template v-slot:expanded-item="{ headers, item }">
                 <td></td>
@@ -104,7 +113,7 @@
                   </v-row>
                 </td>
               </template>
-            </v-data-table>
+            </iris-data-table>
           </v-tab-item>
           <v-tab-item>
             <v-row class="mt-3">
@@ -120,7 +129,7 @@
               single-line
               hide-details
             ></v-text-field>
-            <v-data-table
+            <iris-data-table
               :loading="listLoading"
               :headers="tableDataEvents.headers"
               :items="events"
@@ -129,6 +138,7 @@
               :search="tableDataEvents.search"
               show-select
               v-model="tableDataEvents.select"
+              data-test="case.events.data-table"
             >
               <template v-slot:expanded-item="{ headers, item }">
                 <td></td>
@@ -159,18 +169,21 @@
                   </v-row>
                 </td>
               </template>
-            </v-data-table>
+            </iris-data-table>
           </v-tab-item>
         </v-tabs>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="white" @click="$router.back()"> Zurück </v-btn>
+        <v-btn color="white" :to="{ name: 'index-list' }" replace>
+          Zurück
+        </v-btn>
         <v-spacer />
         <v-btn
           v-if="currentTab === 0"
           color="primary"
           :disabled="tableDataContacts.select.length <= 0"
           @click="handleContactsExport"
+          data-test="case.contacts.export"
         >
           Kontaktdaten exportieren
         </v-btn>
@@ -179,6 +192,7 @@
           color="primary"
           :disabled="tableDataEvents.select.length <= 0"
           @click="handleEventsExport"
+          data-test="case.events.export"
         >
           Ereignisdaten exportieren
         </v-btn>
@@ -206,6 +220,7 @@ import dayjs from "@/utils/date";
 import ContactCategories from "@/constants/ContactCategories";
 import AlertComponent from "@/components/alerts/alert.component.vue";
 import IndexTrackingSubmissionUrl from "@/views/index-tracking-details/components/index-tracking-submission-url.vue";
+import IrisDataTable from "@/components/iris-data-table.vue";
 
 type IndexData = {
   extID: string;
@@ -271,6 +286,7 @@ function getFormattedAddress(address?: Address | null): string {
 
 @Component({
   components: {
+    IrisDataTable,
     IndexTrackingSubmissionUrl,
     IndexTrackingDetailsView: IndexTrackingDetailsView,
     AlertComponent,

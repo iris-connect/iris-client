@@ -3,13 +3,18 @@
     <v-row class="align-center">
       <v-col v-on:dblclick="toggleUrl" class="toggle-url overflow-hidden py-0">
         <v-tooltip bottom>
-          <span v-if="expanded">URL minimieren per Doppelklick</span>
-          <span v-else>Vollständige URL anzeigen per Doppelklick</span>
+          <span v-if="expanded" data-test="submission-url.collapse.tooltip">
+            URL minimieren per Doppelklick
+          </span>
+          <span v-else data-test="submission-url.expand.tooltip">
+            Vollständige URL anzeigen per Doppelklick
+          </span>
           <template v-slot:activator="{ on, attrs }">
             <span
               v-on="on"
               v-bind="attrs"
               :class="['d-block', expanded ? '' : 'text-truncate']"
+              data-test="submission-url.url"
             >
               {{ url }}
             </span>
@@ -18,17 +23,22 @@
       </v-col>
       <v-col class="d-flex flex-nowrap flex-grow-0 flex-shrink-0 py-0">
         <v-tooltip bottom>
-          <span>URL in Zwischenablage kopieren</span>
+          <span data-test="submission-url.copy.tooltip">
+            URL in Zwischenablage kopieren
+          </span>
           <template v-slot:activator="{ on, attrs }">
             <index-tracking-submission-url-copy
               v-on="on"
               v-bind="attrs"
               :url="url"
+              data-test="submission-url.copy"
             />
           </template>
         </v-tooltip>
         <v-tooltip bottom>
-          <span>URL per E-Mail versenden</span>
+          <span data-test="submission-url.mail.tooltip">
+            URL per E-Mail versenden
+          </span>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               v-on="on"
@@ -36,6 +46,7 @@
               class="text-decoration-none"
               icon
               :href="`mailto:?subject=${subject}&body=${body}${url}`"
+              data-test="submission-url.mail"
             >
               <v-icon>mdi-email-edit-outline</v-icon>
             </v-btn>

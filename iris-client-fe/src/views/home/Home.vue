@@ -8,6 +8,7 @@
           actionlabel="Zur Ereignisübersicht"
           image="sketch_file_analysis.svg"
           actionlink="events/list"
+          data-test="counter-widget.events"
         ></counter-widget>
       </v-col>
       <v-col>
@@ -17,6 +18,7 @@
           actionlabel="Zur Indexübersicht"
           image="sketch_medicine.svg"
           actionlink="cases/list"
+          data-test="counter-widget.index-cases"
           :linkDisabled="
             // @todo indexTracking: remove linkDisabled once index cases are permanently activated again
             !$store.state.indexTrackingSettings.indexTrackingEnabled
@@ -29,6 +31,7 @@
           :count="statistics.sumStatus"
           actionlabel="Anzeigen"
           image="sketch_reviewed_docs.svg"
+          data-test="counter-widget.status"
           actionlink="events/list"
         ></counter-widget>
       </v-col>
@@ -48,6 +51,7 @@
                   color="primary"
                   :to="{ name: 'event-new' }"
                   class="mt-5 mb-3"
+                  data-test="link.new-event"
                   >Neue Ereignisverfolgung starten
                 </v-btn>
               </v-col>
@@ -58,6 +62,7 @@
                   color="primary"
                   :to="{ name: 'index-new' }"
                   class="mb-5"
+                  data-test="link.new-index-case"
                   :disabled="
                     // @todo indexTracking: remove disabled once index cases are permanently activated again
                     !$store.state.indexTrackingSettings.indexTrackingEnabled

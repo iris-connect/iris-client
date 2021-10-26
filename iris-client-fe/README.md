@@ -37,6 +37,30 @@ npm run build
 npm run test:unit
 ```
 
+### Run e2e tests (locally)
+
+```bash
+npm run test:e2e
+```
+
+Before running tests locally you have to create 2 files:
+- `.env.e2e_test_local` (based on `.env.e2e_test_local.dist`)
+- `cypress.env.json` (based on `cypress.env.json.dist`)
+
+You can use the script `test:e2e:prepare` to generate the files.
+If you are using Windows, please use the script `test:e2e:prepare:win`
+
+**Do not commit / push the generated files!**
+
+If you run the tests locally, the mock server is used for handling api requests.
+
+To test with a "real" api server you have to:
+1. Change the server address by editing the `VUE_APP_API_BASE_URL` parameter in the file `.env.e2e_test`.
+2. Disable the mockup server by setting `VUE_APP_ENABLE_MOCK_SERVER` to `false` in the file `.env.e2e_test`.
+3. Change the auth credentials for the app login in the file `cypress.env.json`.
+
+**Do not commit / push your changes / the generated files!**
+
 ### Lints and fixes files
 
 ```bash

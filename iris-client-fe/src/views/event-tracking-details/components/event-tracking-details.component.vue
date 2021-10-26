@@ -71,7 +71,7 @@
         <v-row>
           <v-col cols="12" md="6">
             <v-row>
-              <v-col cols="12">
+              <v-col cols="12" data-test="event.duration">
                 <strong> Zeitraum: </strong>
                 {{ eventData.startTime }} - {{ eventData.endTime }}
               </v-col>
@@ -79,7 +79,7 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-row>
-              <v-col cols="12">
+              <v-col cols="12" data-test="event.status">
                 <span class="d-inline-block mr-3">
                   <strong> Status: </strong>
                 </span>
@@ -106,7 +106,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col>
+          <v-col data-test="event.requestDetails">
             <strong> Anfragedetails: </strong>
             {{ eventData.additionalInformation }}
           </v-col>
@@ -118,7 +118,7 @@
           single-line
           hide-details
         ></v-text-field>
-        <v-data-table
+        <iris-data-table
           :loading="loading"
           :headers="tableData.headers"
           :items="tableRows"
@@ -131,6 +131,7 @@
           single-expand
           :expanded.sync="tableData.expanded"
           @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
+          data-test="event.contacts.data-table"
         >
           <template v-if="isStatusRequested" #no-data>
             <span class="black--text">
@@ -165,16 +166,19 @@
               </v-row>
             </td>
           </template>
-        </v-data-table>
+        </iris-data-table>
         <error-message-alert :errors="errors" />
       </v-card-text>
       <v-card-actions>
-        <v-btn color="white" @click="$router.back()"> Zurück</v-btn>
+        <v-btn color="white" :to="{ name: 'event-list' }" replace>
+          Zurück
+        </v-btn>
         <v-spacer />
         <v-btn
           color="primary"
           @click="handleStandardCsvExport"
           :disabled="tableData.select.length <= 0"
+          data-test="export.standard"
         >
           Auswahl exportieren
         </v-btn>
@@ -182,6 +186,7 @@
           color="white"
           @click="openExportModal"
           :disabled="tableData.select.length <= 0"
+          data-test="export-dialog.activator"
         >
           Exportformat wählen
         </v-btn>
@@ -206,6 +211,7 @@ import { DataRequestStatus, DataRequestStatusUpdateByUser } from "@/api";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import { ErrorMessage } from "@/utils/axios";
+import IrisDataTable from "@/components/iris-data-table.vue";
 
 const EventTrackingDetailsComponentProps = Vue.extend({
   props: {
@@ -234,6 +240,7 @@ const EventTrackingDetailsComponentProps = Vue.extend({
 
 @Component({
   components: {
+    IrisDataTable,
     ErrorMessageAlert,
     EventTrackingDetailsLocationInfo,
     EventTrackingStatusChange,
