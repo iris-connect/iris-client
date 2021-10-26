@@ -8,6 +8,7 @@ import { get as _get } from "lodash";
 import { parseError } from "@/utils/axios";
 import config from "@/config";
 import messages from "@/common/messages";
+import _set from "lodash/set";
 
 if (process.env.VUE_APP_ENABLE_MOCK_SERVER === "true") {
   // Not sure whether imported mockAPIServer ends up in bundle for deployment.
@@ -23,7 +24,9 @@ const authAxiosInstance = axios.create();
 
 authAxiosInstance.interceptors.request.use((config) => {
   const token = store.state.userLogin.session?.token;
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    _set(config, "headers.Authorization", `Bearer ${token}`);
+  }
   return config;
 });
 
