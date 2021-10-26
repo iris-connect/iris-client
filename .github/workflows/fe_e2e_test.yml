@@ -23,7 +23,7 @@ jobs:
 
       - name: Cypress run
         uses: cypress-io/github-action@v2.11.7
-        timeout-minutes: 10
+        timeout-minutes: 20
         with:
           browser: chrome
           headless: true
@@ -39,7 +39,7 @@ jobs:
           CYPRESS_auth_password: ${{ secrets.FE_TEST_AUTH_PASSWORD }}
           VUE_APP_API_BASE_URL: ${{ secrets.FE_TEST_API_BASE_URL }}
           VUE_APP_ENABLE_MOCK_SERVER: false
-      
+
       # NOTE: screenshots will be generated only if E2E test failed thus we store screenshots only on failures
       - name: Store screenshots
         uses: actions/upload-artifact@v2
@@ -49,7 +49,7 @@ jobs:
           path: |
             **/tests/e2e/screenshots/**/*
       # Test run video was always captured, so this action uses "always()" condition
-      - name: Store videos 
+      - name: Store videos
         uses: actions/upload-artifact@v2
         if: always()
         with:
