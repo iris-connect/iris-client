@@ -134,6 +134,19 @@ function sanitiseFieldForDisplay(text = ""): string {
   return text.replace(RE, " ");
 }
 
+function getValidPhoneNumber(
+  ...numbers: Array<string | undefined>
+): string | undefined {
+  const validNumber = numbers.find(isPossiblePhoneNumber);
+  return validNumber ? validNumber : numbers[0];
+}
+
+function isPossiblePhoneNumber(phoneNumber?: string): boolean {
+  if (!phoneNumber) return false;
+  const number = phoneNumber.replace(/[\s\-_+#*.,:;()/|]/g, "");
+  return /^\d+$/.test(number);
+}
+
 @Component({
   components: {
     EventTrackingDetailsComponent,
@@ -307,7 +320,10 @@ export default class EventTrackingDetailsView extends Vue {
           ) || "-",
         sex: guest.sex ? Genders.getName(guest.sex) : "-",
         email: sanitiseFieldForDisplay(guest.email) || "-",
-        phone: sanitiseFieldForDisplay(guest.phone) || "-",
+        phone:
+          sanitiseFieldForDisplay(
+            getValidPhoneNumber(guest.phone, guest.mobilePhone)
+          ) || "-",
         mobilePhone: sanitiseFieldForDisplay(guest.mobilePhone) || "-",
         address: getFormattedAddress(guest.address),
         raw: guest,

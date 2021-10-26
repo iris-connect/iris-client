@@ -90,7 +90,7 @@ export const dummyDataDetails: DataRequestDetails = {
         firstName: "Max",
         lastName: "Mustermann",
         email: "max@example.de",
-        phone: "01234 000000",
+        phone: "invalid",
         mobilePhone: "0123 0815",
         sex: Sex.Male,
         address: {
