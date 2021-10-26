@@ -3,9 +3,13 @@ name: FE e2e Test
 on:
   push:
     branches:
+      - main
+      - release
       - develop
+      - 1.**
   pull_request:
     branches:
+      - main
       - develop
 
 jobs:
