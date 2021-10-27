@@ -64,11 +64,7 @@ const eventTrackingList: EventTrackingListModule = {
       commit("setEventTrackingListLoading", true);
       try {
         eventTrackingList = normalizePageEvent(
-          (
-            await authClient.dataRequestsClientLocationsGet({
-              params: query,
-            })
-          ).data,
+          (await authClient.dataRequestsClientLocationsGet({ query })).data,
           true
         );
       } finally {

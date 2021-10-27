@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "serve:bff": "vue-cli-service serve --port 8081 --mode bff_local",
+    "serve:bff": "vue-cli-service serve --mode bff_local",
     "serve:int": "vue-cli-service serve --mode integration",
     "build": "vue-cli-service build --no-module",
     "test:e2e:prepare": "cp .env.e2e_test_local.dist .env.e2e_test_local && cp cypress.env.json.dist cypress.env.json",
