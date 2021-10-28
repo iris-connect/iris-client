@@ -1,5 +1,9 @@
 package iris.client_bff.status;
 
+import iris.client_bff.status.eps.StatusClient;
+import iris.client_bff.status.web.AppStatusResolver;
+import iris.client_bff.status.web.dto.AppStatus;
+import iris.client_bff.status.web.dto.AppStatusInfo;
 import iris.client_bff.status.eps.dto.DirectoryEntry;
 import iris.client_bff.status.eps.dto.Ping;
 import lombok.AllArgsConstructor;
@@ -14,20 +18,28 @@ import java.util.List;
 public class StatusService {
 
     private final StatusClient statusClient;
+    private final AppStatusResolver statusResolver;
 
-    public String getStati() {
-
-        List<DirectoryEntry> apps = statusClient.getAvailableApps();
-
-        for (DirectoryEntry app : apps) {
-            log.debug(app.getName());
-        }
-
-        return statusClient.getAppStati();
+    public List<DirectoryEntry> getApps() {
+        return statusClient.getAvailableApps();
     }
 
-    public Ping getEPSStatus(String epsEndpoint) {
-        return statusClient.queryEPSStatus(epsEndpoint);
+    public AppStatusInfo getAppStatusInfo(String appName) {
+        try {
+            Ping ping = statusClient.checkApp(appName);
+            AppStatus status = this.statusResolver.getStatusOk();
+            return AppStatusInfo.builder()
+                    .ping(ping)
+                    .status(status.getStatus())
+                    .message(status.getMessage())
+                    .build();
+        } catch (Throwable t) {
+            AppStatus status = this.statusResolver.getStatusByErrorMessage(t.getMessage());
+            return AppStatusInfo.builder()
+                    .status(status.getStatus())
+                    .message(status.getMessage())
+                    .build();
+        }
     }
 
 }
