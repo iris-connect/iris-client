@@ -15,6 +15,7 @@ import iris.client_bff.users.web.dto.UserInsertDTO;
 import iris.client_bff.users.web.dto.UserRoleDTO;
 import iris.client_bff.users.web.dto.UserUpdateDTO;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,6 +29,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -75,6 +77,7 @@ class UserControllerTests {
 					account.setRole(UserRole.valueOf(user.getRole().name()));
 					return account;
 				});
+		when(userService.isOldPasswordCorrect(any(UUID.class), anyString())).thenReturn(true);
 
 		userController = new UserController(userService, validationHelper, messages);
 	}
@@ -87,8 +90,11 @@ class UserControllerTests {
 		var dto = new UserInsertDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
 		Assertions.assertThrows(ResponseStatusException.class, () -> userController.createUser(dto));
 
-		var dto2 = new UserUpdateDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
-		var authentication = new UserAccountAuthentication("test", true, null);
+		var dto2 = new UserUpdateDTO().firstName("fn1").lastName("ln1").userName("un").password(pw).oldPassword(pw)
+				.role(UserRoleDTO.USER);
+		var authentication = new UserAccountAuthentication("fn", true,
+				List.of(new SimpleGrantedAuthority(UserRole.USER.name())));
+
 		Assertions.assertThrows(ResponseStatusException.class,
 				() -> userController.updateUser(UUID.randomUUID(), dto2, authentication));
 	}
@@ -103,8 +109,10 @@ class UserControllerTests {
 		verify(userService).create(dto);
 		assertThat(user).isNotNull();
 
-		var dto2 = new UserUpdateDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
-		var authentication = new UserAccountAuthentication("test", true, null);
+		var dto2 = new UserUpdateDTO().firstName("fn1").lastName("ln1").userName("un").password(pw).oldPassword(pw)
+				.role(UserRoleDTO.USER);
+		var authentication = new UserAccountAuthentication("fn", true,
+				List.of(new SimpleGrantedAuthority(UserRole.USER.name())));
 		var id = UUID.randomUUID();
 
 		var account = new UserAccount();
@@ -126,9 +134,10 @@ class UserControllerTests {
 	@Test
 	void testNewUserNameExist() {
 
-		var dto2 = new UserUpdateDTO().firstName("fn1").lastName("ln1").userName("un").password("abcde123")
-				.role(UserRoleDTO.USER);
-		var authentication = new UserAccountAuthentication("test", true, null);
+		var dto = new UserUpdateDTO().firstName("fn1").lastName("ln1").userName("un").password("abcde123")
+				.oldPassword("abcde123").role(UserRoleDTO.USER);
+		var authentication = new UserAccountAuthentication("test", true,
+				List.of(new SimpleGrantedAuthority(UserRole.ADMIN.name())));
 
 		var account = new UserAccount();
 		account.setUser_id(UUID.randomUUID());
@@ -141,6 +150,58 @@ class UserControllerTests {
 		when(userService.findByUsername(anyString())).thenReturn(Optional.of(account));
 
 		Assertions.assertThrows(ResponseStatusException.class,
-				() -> userController.updateUser(UUID.randomUUID(), dto2, authentication));
+				() -> userController.updateUser(UUID.randomUUID(), dto, authentication));
+	}
+
+	@Test
+	void testRootChangePW_ownWithOldPassword() {
+
+		var dto = new UserUpdateDTO().password("abcde1234").role(UserRoleDTO.ADMIN);
+		var authentication = new UserAccountAuthentication("test", true,
+				List.of(new SimpleGrantedAuthority(UserRole.ADMIN.name())));
+
+		var id = UUID.randomUUID();
+
+		var account = new UserAccount();
+		account.setUser_id(id);
+		account.setFirstName("fn");
+		account.setLastName("ln");
+		account.setPassword("abcde123");
+		account.setUserName("un");
+		account.setRole(UserRole.ADMIN);
+
+		when(userService.findByUsername(anyString())).thenReturn(Optional.of(account));
+		when(userService.isItCurrentUser(any(UUID.class), any(UserAccountAuthentication.class)))
+				.thenReturn(true);
+
+		Assertions.assertThrows(ResponseStatusException.class,
+				() -> userController.updateUser(id, dto, authentication));
+
+		var dto2 = dto.oldPassword("abcde123");
+		Assertions.assertDoesNotThrow(() -> userController.updateUser(id, dto2, authentication));
+	}
+
+	@Test
+	void testRootChangePW_foreignWithoutOldPassword() {
+
+		var dto = new UserUpdateDTO().password("abcde123").role(UserRoleDTO.ADMIN);
+		var authentication = new UserAccountAuthentication("test", true,
+				List.of(new SimpleGrantedAuthority(UserRole.ADMIN.name())));
+
+		var id = UUID.randomUUID();
+
+		var account = new UserAccount();
+		account.setUser_id(id);
+		account.setFirstName("fn");
+		account.setLastName("ln");
+		account.setPassword("abcde123");
+		account.setUserName("un");
+		account.setRole(UserRole.ADMIN);
+
+		when(userService.findByUsername(anyString())).thenReturn(Optional.of(account));
+		when(userService.isItCurrentUser(any(UUID.class), any(UserAccountAuthentication.class)))
+				.thenReturn(false);
+
+		Assertions.assertDoesNotThrow(() -> userController.updateUser(id, dto, authentication));
 	}
 }

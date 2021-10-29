@@ -77,8 +77,10 @@ public class UserController {
 			UserAccountAuthentication authentication) {
 
 		var userUpdateDTOValidated = validateUserUpdateDTO(userUpdateDTO);
+		var userName = userUpdateDTOValidated.getUserName();
 
-		checkUniqueUsername(userUpdateDTOValidated.getUserName(), id);
+		checkUniqueUsername(userName, id);
+		checkOldPassword(userUpdateDTOValidated.getOldPassword(), userUpdateDTOValidated.getPassword(), authentication, id);
 
 		return map(userService.update(id, userUpdateDTOValidated, authentication));
 	}
@@ -95,6 +97,7 @@ public class UserController {
 		if (userUpdateDTO == null
 				|| isToLong(userUpdateDTO.getUserName(), 50)
 				|| isToLong(userUpdateDTO.getPassword(), 200)
+				|| isToLong(userUpdateDTO.getOldPassword(), 200)
 				|| isToLong(userUpdateDTO.getFirstName(), 200)
 				|| isToLong(userUpdateDTO.getLastName(), 200)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
@@ -201,5 +204,19 @@ public class UserController {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 							messages.getMessage("UserController.username.notunique"));
 				});
+	}
+
+	private void checkOldPassword(String oldPassword, String password, UserAccountAuthentication authentication,
+			UUID id) {
+
+		if (isBlank(password)
+				|| (authentication.isAdmin() && !userService.isItCurrentUser(id, authentication))) {
+			return;
+		}
+
+		if (!userService.isOldPasswordCorrect(id, oldPassword)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					messages.getMessage("UserController.oldpassword.wrong"));
+		}
 	}
 }

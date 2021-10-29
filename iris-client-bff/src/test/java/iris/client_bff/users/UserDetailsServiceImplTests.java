@@ -168,6 +168,34 @@ class UserDetailsServiceImplTests {
 		verify(jwtService, times(2)).invalidateTokensOfUser("un");
 	}
 
+	@Test
+	void ok_isOldPasswordCorrect() {
+
+		mockUserFound();
+		mockEncodeToSame();
+
+		var value = userDetailsService.isOldPasswordCorrect(foundUser, "password");
+
+		assertTrue(value);
+
+		verify(userAccountsRepository).findById(foundUser);
+		verifyNoMoreInteractions(userAccountsRepository);
+	}
+
+	@Test
+	void fails_isOldPasswordCorrect() {
+
+		mockUserFound();
+		mockEncodeToSame();
+
+		var value = userDetailsService.isOldPasswordCorrect(foundUser, "pass");
+
+		assertFalse(value);
+
+		verify(userAccountsRepository).findById(foundUser);
+		verifyNoMoreInteractions(userAccountsRepository);
+	}
+
 	private UserAccount userAccountAdmin() {
 
 		var account = new UserAccount();
