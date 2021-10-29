@@ -21,6 +21,12 @@
       >
         <v-list-item-title> Mein Profil </v-list-item-title>
       </v-list-item>
+      <v-list-item
+        :to="{ name: 'checkin-app-status-list' }"
+        data-test="user-menu.item.checkin-app-status-list"
+      >
+        <v-list-item-title> CheckIn App Status </v-list-item-title>
+      </v-list-item>
       <v-dialog max-width="400" v-model="logoutConfirmDialog">
         <template v-slot:activator="{ on, attrs }">
           <v-list-item

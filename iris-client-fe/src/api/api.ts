@@ -1859,8 +1859,29 @@ export interface CheckinApp {
  * @export
  * @interface CheckinAppList
  */
-export interface CheckinAppList {
-  apps?: CheckinApp[];
+export type CheckinAppList = CheckinApp[];
+
+export enum CheckinAppStatus {
+  OK = "OK",
+  WARNING = "WARNING",
+  ERROR = "ERROR",
+  UNKNOWN = "UNKNOWN",
+}
+
+/**
+ *
+ * @export
+ * @interface CheckinAppStatusInfo
+ */
+export interface CheckinAppStatusInfo {
+  ping: {
+    version: string;
+    serverInfo?: {
+      name?: string;
+    };
+  };
+  status: CheckinAppStatus;
+  message: string;
 }
 
 /**
@@ -2132,5 +2153,33 @@ export class IrisClientFrontendApi extends BaseAPI {
       null,
       options
     );
+  }
+
+  /**
+   *
+   * @summary Get connected Checkin Apps
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public checkinAppsGet(options?: RequestOptions): ApiResponse<CheckinAppList> {
+    return this.apiRequest("GET", "/status/checkin-apps", null, options);
+  }
+
+  /**
+   *
+   * @summary Get Checkin App Status
+   * @param {string} name
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public checkinAppStatusGet(
+    name: string,
+    options?: RequestOptions
+  ): ApiResponse<CheckinAppStatusInfo> {
+    assertParamExists("checkinAppStatusGet", "name", name);
+    const path = `/status/checkin-apps/${encodeURIComponent(name)}`;
+    return this.apiRequest("GET", path, null, options);
   }
 }
