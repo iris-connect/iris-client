@@ -78,7 +78,7 @@ public class UserController {
 
 		var userUpdateDTOValidated = validateUserUpdateDTO(userUpdateDTO);
 
-		checkUniqueUsername(userUpdateDTOValidated.getUserName());
+		checkUniqueUsername(userUpdateDTOValidated.getUserName(), id);
 
 		return map(userService.update(id, userUpdateDTOValidated, authentication));
 	}
@@ -183,6 +183,20 @@ public class UserController {
 	private void checkUniqueUsername(String username) {
 
 		userService.findByUsername(username)
+				.ifPresent(__ -> {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							messages.getMessage("UserController.username.notunique"));
+				});
+	}
+
+	private void checkUniqueUsername(String username, UUID id) {
+
+		if (isBlank(username)) {
+			return;
+		}
+
+		userService.findByUsername(username)
+				.filter(it -> !it.getUser_id().equals(id))
 				.ifPresent(__ -> {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 							messages.getMessage("UserController.username.notunique"));

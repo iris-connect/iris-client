@@ -8,7 +8,6 @@ import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.config.HealthDepartmentConfig;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.utils.ValidationHelper;
-import iris.client_bff.ui.messages.ErrorMessages;
 import iris.client_bff.users.entities.UserAccount;
 import iris.client_bff.users.entities.UserRole;
 import iris.client_bff.users.web.UserController;
@@ -16,10 +15,12 @@ import iris.client_bff.users.web.dto.UserInsertDTO;
 import iris.client_bff.users.web.dto.UserRoleDTO;
 import iris.client_bff.users.web.dto.UserUpdateDTO;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -84,13 +85,12 @@ class UserControllerTests {
 	void testWrongPasswords(String pw) {
 
 		var dto = new UserInsertDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
-		Assertions.assertThrows(ResponseStatusException.class, () -> userController.createUser(dto),
-				ErrorMessages.PW_ERROR_MESSAGE);
+		Assertions.assertThrows(ResponseStatusException.class, () -> userController.createUser(dto));
 
 		var dto2 = new UserUpdateDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
 		var authentication = new UserAccountAuthentication("test", true, null);
 		Assertions.assertThrows(ResponseStatusException.class,
-				() -> userController.updateUser(UUID.randomUUID(), dto2, authentication), ErrorMessages.PW_ERROR_MESSAGE);
+				() -> userController.updateUser(UUID.randomUUID(), dto2, authentication));
 	}
 
 	@ParameterizedTest
@@ -106,9 +106,41 @@ class UserControllerTests {
 		var dto2 = new UserUpdateDTO().firstName("fn").lastName("ln").userName("un").password(pw).role(UserRoleDTO.USER);
 		var authentication = new UserAccountAuthentication("test", true, null);
 		var id = UUID.randomUUID();
+
+		var account = new UserAccount();
+		account.setUser_id(id);
+		account.setFirstName("fn");
+		account.setLastName("ln");
+		account.setPassword(pw);
+		account.setUserName("un");
+		account.setRole(UserRole.USER);
+
+		when(userService.findByUsername(anyString())).thenReturn(Optional.of(account));
+
 		userController.updateUser(id, dto2, authentication);
 
 		verify(userService).update(id, dto2, authentication);
 		assertThat(user).isNotNull();
+	}
+
+	@Test
+	void testNewUserNameExist() {
+
+		var dto2 = new UserUpdateDTO().firstName("fn1").lastName("ln1").userName("un").password("abcde123")
+				.role(UserRoleDTO.USER);
+		var authentication = new UserAccountAuthentication("test", true, null);
+
+		var account = new UserAccount();
+		account.setUser_id(UUID.randomUUID());
+		account.setFirstName("fn");
+		account.setLastName("ln");
+		account.setPassword("abcde123");
+		account.setUserName("un");
+		account.setRole(UserRole.USER);
+
+		when(userService.findByUsername(anyString())).thenReturn(Optional.of(account));
+
+		Assertions.assertThrows(ResponseStatusException.class,
+				() -> userController.updateUser(UUID.randomUUID(), dto2, authentication));
 	}
 }
