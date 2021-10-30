@@ -202,7 +202,7 @@ LOG_FOLDER
 
 ## Einrichtung Root Zertifikat ( veraltet )
 
-Bitte nicht mehr konfigurieren. Verwenden Sie stattdessen `Einrichtung IRIS Umgebung`.
+Bitte nicht mehr konfigurieren. Verwenden Sie stattdessen [Einrichtung IRIS Umgebung](#einrichtung-iris-umgebung).
 
 ## Einrichtung IRIS Umgebung
 
