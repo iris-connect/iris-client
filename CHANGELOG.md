@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.1.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.1.0-rc.1...v1.1.0-rc.2) (2021-10-30)
+
+
+### Bug Fixes
+
+* **build:** The image tags in the composite files are now correct with ([9146a1f](https://github.com/iris-connect/iris-client/commit/9146a1f11602506bcf2a16c0c94be84afa58ff89))
+
 # [1.1.0-rc.1](https://github.com/iris-connect/iris-client/compare/v1.0.1...v1.1.0-rc.1) (2021-10-26)
 
 
