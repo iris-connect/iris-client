@@ -5,8 +5,8 @@ import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.core.log.LogHelper;
-import iris.client_bff.core.IdentifierToken;
-import iris.client_bff.core.service.TokenGenerator;
+import iris.client_bff.core.token.IdentifierToken;
+import iris.client_bff.core.token.TokenGenerator;
 import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.proxy.IRISAnnouncementException;
@@ -94,23 +94,31 @@ public class CaseDataRequestService {
 	}
 
 	public CaseDataRequest create(IndexCaseInsertDTO insert) throws IRISDataRequestException {
+
 		IdentifierToken idToken;
 		String announcedDomain;
 
 		try {
+
 			idToken = tokenGenerator.generateIdentifierToken();
 			log.debug("Generated tokens for case request {}", idToken.toStringWithObfuscation());
-		} catch(Exception e) {
+
+		} catch (Exception e) {
+
 			log.error("Failed to generate identifying tokens.");
 			throw new IRISDataRequestException(e);
 		}
 
 		try {
+
 			announcedDomain = proxyClient.announceExplicitToken(idToken.getConnectionAuthorizationToken());
+
 			log.debug("Announced incoming connection on domain {} for readable token {}",
 					LogHelper.obfuscateAtStart20(announcedDomain),
 					LogHelper.obfuscateAtStart20(idToken.getReadableToken()));
+
 		} catch (IRISAnnouncementException e) {
+
 			log.error("Announcement failed: ", e);
 			throw new IRISDataRequestException(e);
 		}
@@ -122,10 +130,12 @@ public class CaseDataRequestService {
 				.requestStart(insert.getStart())
 				.requestEnd(insert.getEnd())
 				.identifierToken(idToken)
+				.announcementToken(announcedDomain)
 				.build();
 
 		CaseDataRequest savedDataRequest = repository.save(dataRequest);
 		log.info(LogHelper.CASE_DATA_REQUEST);
+
 		return savedDataRequest;
 	}
 

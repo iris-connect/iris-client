@@ -48,7 +48,7 @@ public class LogHelper {
     }
 
     public static String obfuscateAtStart20(String s) {
-        return obfuscate(s, false, 16);
+        return obfuscate(s, false, 20);
     }
 
     public static String obfuscate(String s, boolean fromEnd, int obfuscateAmount) {

@@ -5,9 +5,9 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import io.vavr.control.Try;
-import iris.client_bff.core.IdentifierToken;
 import iris.client_bff.core.mail.EmailSenderReal;
 import iris.client_bff.core.mail.EmailTemplates;
+import iris.client_bff.core.token.IdentifierToken;
 
 import java.time.Instant;
 

@@ -14,8 +14,6 @@ import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.UUID;
-
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -54,9 +52,7 @@ public class CaseDataControllerImpl implements CaseDataController {
 			@Valid Events events,
 			@Valid CaseDataProvider dataProvider) {
 
-		if (ValidationHelper
-				.isUUIDInputValid(dataAuthorizationToken.toString(), FIELD_DATA_AUTHORIZATION_TOKEN)
-				&& validateEvents(events)
+		if (validateEvents(events)
 				&& validateContacts(contacts)
 				&& validateCaseDataProvider(dataProvider)) {
 			log.trace("Start submission {}", dataAuthorizationToken);
