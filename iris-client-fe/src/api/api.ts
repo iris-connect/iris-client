@@ -1854,13 +1854,6 @@ export interface CheckinApp {
   groups?: string[];
 }
 
-/**
- *
- * @export
- * @interface CheckinAppList
- */
-export type CheckinAppList = CheckinApp[];
-
 export enum CheckinAppStatus {
   OK = "OK",
   WARNING = "WARNING",
@@ -1874,8 +1867,8 @@ export enum CheckinAppStatus {
  * @interface CheckinAppStatusInfo
  */
 export interface CheckinAppStatusInfo {
-  ping: {
-    version: string;
+  info?: {
+    version?: string;
     serverInfo?: {
       name?: string;
     };
@@ -2162,7 +2155,7 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof IrisClientFrontendApi
    */
-  public checkinAppsGet(options?: RequestOptions): ApiResponse<CheckinAppList> {
+  public checkinAppsGet(options?: RequestOptions): ApiResponse<CheckinApp[]> {
     return this.apiRequest("GET", "/status/checkin-apps", null, options);
   }
 

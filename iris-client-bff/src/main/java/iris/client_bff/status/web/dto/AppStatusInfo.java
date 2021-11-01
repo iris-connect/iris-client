@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class AppStatusInfo {
 
-    private Ping ping;
+    private Ping info;
 
     private AppStatus.Status status;
 

@@ -1,4 +1,4 @@
-import { CheckinAppList, CheckinAppStatus } from "@/api";
+import { CheckinApp, CheckinAppStatus } from "@/api";
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
@@ -14,7 +14,7 @@ export interface AppWithStatus {
 export type AppWithStatusList = Record<string, AppWithStatus>;
 
 export type CheckinAppStatusListState = {
-  list: CheckinAppList | null;
+  list: CheckinApp[] | null;
   listLoading: boolean;
   listLoadingError: ErrorMessage;
   appWithStatusList: AppWithStatusList;
@@ -23,7 +23,7 @@ export type CheckinAppStatusListState = {
 export interface CheckinAppStatusListModule
   extends Module<CheckinAppStatusListState, RootState> {
   mutations: {
-    setList(state: CheckinAppStatusListState, payload: CheckinAppList): void;
+    setList(state: CheckinAppStatusListState, payload: CheckinApp[]): void;
     setListLoading(state: CheckinAppStatusListState, payload: boolean): void;
     setListLoadingError(
       state: CheckinAppStatusListState,
@@ -58,7 +58,7 @@ const checkinAppStatusList: CheckinAppStatusListModule = {
     return { ...defaultState };
   },
   mutations: {
-    setList(state: CheckinAppStatusListState, payload: CheckinAppList) {
+    setList(state: CheckinAppStatusListState, payload: CheckinApp[]) {
       state.list = payload;
     },
     setListLoading(state: CheckinAppStatusListState, payload: boolean) {
@@ -94,7 +94,7 @@ const checkinAppStatusList: CheckinAppStatusListModule = {
   },
   actions: {
     async fetchList({ commit }) {
-      let list: CheckinAppList | null = null;
+      let list: CheckinApp[] | null = null;
       commit("setListLoadingError", null);
       commit("setListLoading", true);
       try {
@@ -116,6 +116,7 @@ const checkinAppStatusList: CheckinAppStatusListModule = {
         const statusInfo = (await authClient.checkinAppStatusGet(name)).data;
         commit("setAppStatus", {
           name,
+          loading: false,
           ...statusInfo,
         });
       } catch (e) {

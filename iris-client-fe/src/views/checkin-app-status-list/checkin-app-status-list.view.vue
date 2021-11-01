@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-row class="mt-4">
+    <v-row class="my-4">
       <v-col>
         <v-card>
-          <v-card-title>Aktueller Status der CheckIn Apps</v-card-title>
+          <v-card-title>CheckIn Apps: Statusübersicht</v-card-title>
           <v-card-text>
             <v-text-field
               v-model="tableData.search"
@@ -17,8 +17,8 @@
               :loading="listLoading"
               :headers="tableData.headers"
               :custom-sort="sort"
-              :sort-by="['status', 'name']"
-              :sort-desc="[true, false]"
+              :sort-by="['status']"
+              :sort-desc="[true]"
               multi-sort
               item-key="name"
               :items="appList"
@@ -45,6 +45,14 @@
                 </td>
               </template>
             </iris-data-table>
+            <v-alert
+              class="mt-5 mb-0"
+              v-if="listLoadingError"
+              text
+              type="error"
+            >
+              {{ listLoadingError }}
+            </v-alert>
           </v-card-text>
         </v-card>
       </v-col>
@@ -56,7 +64,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
-import { CheckinApp, CheckinAppList, CheckinAppStatus } from "@/api";
+import { CheckinApp, CheckinAppStatus } from "@/api";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import CheckinAppStatusIndicator from "@/views/checkin-app-status-list/components/checkin-app-status-indicator.vue";
 import { AppWithStatusList } from "@/views/checkin-app-status-list/checkin-app-status-list.store";
@@ -115,11 +123,11 @@ export default class CheckinAppStatusListView extends Vue {
           switch (status) {
             case CheckinAppStatus.OK:
               return 1;
-            case CheckinAppStatus.UNKNOWN:
-              return 2;
             case CheckinAppStatus.WARNING:
-              return 3;
+              return 2;
             case CheckinAppStatus.ERROR:
+              return 3;
+            case CheckinAppStatus.UNKNOWN:
               return 4;
             default:
               return 5;
@@ -140,12 +148,12 @@ export default class CheckinAppStatusListView extends Vue {
     return this.$store.state.checkinAppStatusList.listLoadingError;
   }
 
-  get appList(): CheckinAppList {
+  get appList(): CheckinApp[] {
     return this.$store.state.checkinAppStatusList.list || [];
   }
 
   @Watch("appList")
-  onAppListChange(list: CheckinAppList): void {
+  onAppListChange(list: CheckinApp[]): void {
     this.$store.commit("checkinAppStatusList/setAppWithStatusList", {});
     list.forEach((item) => {
       this.$store.dispatch("checkinAppStatusList/fetchStatus", item.name);

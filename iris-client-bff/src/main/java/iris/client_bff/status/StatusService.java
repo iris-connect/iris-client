@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -21,7 +22,9 @@ public class StatusService {
     private final AppStatusResolver statusResolver;
 
     public List<DirectoryEntry> getApps() {
-        return statusClient.getAvailableApps();
+        List <DirectoryEntry> entryList = statusClient.getAvailableApps();
+        entryList.sort(Comparator.comparing(DirectoryEntry::getName, String.CASE_INSENSITIVE_ORDER));
+        return entryList;
     }
 
     public AppStatusInfo getAppStatusInfo(String appName) {
@@ -29,7 +32,7 @@ public class StatusService {
             Ping ping = statusClient.checkApp(appName);
             AppStatus status = this.statusResolver.getStatusOk();
             return AppStatusInfo.builder()
-                    .ping(ping)
+                    .info(ping)
                     .status(status.getStatus())
                     .message(status.getMessage())
                     .build();

@@ -27,7 +27,11 @@ public class AppStatusController {
 	@GetMapping()
 	@ResponseStatus(OK)
 	public List<DirectoryEntry> getApps() {
-		return statusService.getApps();
+		try {
+			return statusService.getApps();
+		} catch (Throwable e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
 	}
 
 	@GetMapping("/{appName}")
