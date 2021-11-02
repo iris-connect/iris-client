@@ -31,16 +31,16 @@
             >
               <template #item.status="{ item }">
                 <checkin-app-status-indicator
-                  :loading="appWithStatus(item.name).loading"
-                  :status="appWithStatus(item.name).status"
+                  :loading="appStatusInfo(item.name).loading"
+                  :status="appStatusInfo(item.name).status"
                 />
               </template>
               <template v-slot:expanded-item="{ headers, item }">
                 <td :colspan="headers.length">
                   {{
-                    appWithStatus(item.name).loading
+                    appStatusInfo(item.name).loading
                       ? "Bitte warten..."
-                      : appWithStatus(item.name).message
+                      : appStatusInfo(item.name).message
                   }}
                 </td>
               </template>
@@ -67,14 +67,11 @@ import { ErrorMessage } from "@/utils/axios";
 import { CheckinApp, CheckinAppStatus } from "@/api";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import CheckinAppStatusIndicator from "@/views/checkin-app-status-list/components/checkin-app-status-indicator.vue";
-import { AppWithStatusList } from "@/views/checkin-app-status-list/checkin-app-status-list.store";
+import {
+  AppStatusInfo,
+  AppStatusInfoList,
+} from "@/views/checkin-app-status-list/checkin-app-status-list.store";
 import _orderBy from "lodash/orderBy";
-
-interface AppWithStatus {
-  loading?: boolean;
-  message?: string | null;
-  status?: CheckinAppStatus;
-}
 
 @Component({
   components: {
@@ -119,7 +116,7 @@ export default class CheckinAppStatusListView extends Vue {
       if (s === "status") {
         return (item: CheckinApp) => {
           const status =
-            this.appWithStatus(item.name).status || CheckinAppStatus.UNKNOWN;
+            this.appStatusInfo(item.name).status || CheckinAppStatus.UNKNOWN;
           switch (status) {
             case CheckinAppStatus.OK:
               return 1;
@@ -154,18 +151,18 @@ export default class CheckinAppStatusListView extends Vue {
 
   @Watch("appList")
   onAppListChange(list: CheckinApp[]): void {
-    this.$store.commit("checkinAppStatusList/setAppWithStatusList", {});
+    this.$store.commit("checkinAppStatusList/setAppStatusInfoList", {});
     list.forEach((item) => {
-      this.$store.dispatch("checkinAppStatusList/fetchStatus", item.name);
+      this.$store.dispatch("checkinAppStatusList/fetchStatusInfo", item.name);
     });
   }
 
-  get appWithStatusList(): AppWithStatusList {
-    return this.$store.state.checkinAppStatusList.appWithStatusList || {};
+  get appStatusInfoList(): AppStatusInfoList {
+    return this.$store.state.checkinAppStatusList.appStatusInfoList || {};
   }
 
-  appWithStatus(name: string): AppWithStatus {
-    return this.appWithStatusList[name] || {};
+  appStatusInfo(name: string): AppStatusInfo {
+    return this.appStatusInfoList[name] || {};
   }
 }
 </script>

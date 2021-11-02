@@ -31,11 +31,11 @@ export const dummyCheckinAppStatus: Record<string, CheckinAppStatusInfo> = {
       },
     },
     status: CheckinAppStatus.OK,
-    message: "Die Status Prüfung für diesen App Anbieter war erfolgreich.",
+    message: "Die Status Prüfung war erfolgreich.",
   },
   ["test.checkin.app"]: {
     status: CheckinAppStatus.WARNING,
-    message: "Die Status Anfrage für diesen App Anbieter wurde abgelehnt.",
+    message: "Die Status Anfrage wurde abgelehnt.",
   },
   ["App.Checkin.test"]: {
     status: CheckinAppStatus.ERROR,
@@ -43,12 +43,12 @@ export const dummyCheckinAppStatus: Record<string, CheckinAppStatusInfo> = {
   },
   ["App.Checkin.empty-group"]: {
     status: CheckinAppStatus.OK,
-    message: "Die Status Prüfung für diesen App Anbieter war erfolgreich.",
+    message: "Die Status Prüfung war erfolgreich.",
   },
   ["Checkin.no-group"]: {
     status: CheckinAppStatus.ERROR,
     message:
-      "Die Status Anfrage für diesen App Anbieter ist derzeit nicht möglich.",
+      "Bei der Prüfung des Status ist ein unbekannter Fehler aufgetreten.",
   },
 };
 

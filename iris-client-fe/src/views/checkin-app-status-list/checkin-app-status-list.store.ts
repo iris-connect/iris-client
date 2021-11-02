@@ -5,19 +5,20 @@ import { Commit, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import authClient from "@/api-client";
 
-export interface AppWithStatus {
+export interface AppStatusInfo {
+  name?: string;
   loading?: boolean;
   message?: string | null;
   status?: CheckinAppStatus;
 }
 
-export type AppWithStatusList = Record<string, AppWithStatus>;
+export type AppStatusInfoList = Record<string, AppStatusInfo>;
 
 export type CheckinAppStatusListState = {
   list: CheckinApp[] | null;
   listLoading: boolean;
   listLoadingError: ErrorMessage;
-  appWithStatusList: AppWithStatusList;
+  appStatusInfoList: AppStatusInfoList;
 };
 
 export interface CheckinAppStatusListModule
@@ -30,18 +31,21 @@ export interface CheckinAppStatusListModule
       payload: ErrorMessage
     ): void;
     reset(state: CheckinAppStatusListState): void;
-    setAppWithStatusList(
+    setAppStatusInfoList(
       state: CheckinAppStatusListState,
-      payload: AppWithStatusList
+      payload: AppStatusInfoList
     ): void;
-    setAppStatus(
+    setAppStatusInfo(
       state: CheckinAppStatusListState,
-      payload: { name: string & AppWithStatus }
+      payload: AppStatusInfo
     ): void;
   };
   actions: {
     fetchList({ commit }: { commit: Commit }): Promise<void>;
-    fetchStatus({ commit }: { commit: Commit }, payload: string): Promise<void>;
+    fetchStatusInfo(
+      { commit }: { commit: Commit },
+      payload: string
+    ): Promise<void>;
   };
 }
 
@@ -49,7 +53,7 @@ const defaultState: CheckinAppStatusListState = {
   list: null,
   listLoading: false,
   listLoadingError: null,
-  appWithStatusList: {},
+  appStatusInfoList: {},
 };
 
 const checkinAppStatusList: CheckinAppStatusListModule = {
@@ -70,26 +74,26 @@ const checkinAppStatusList: CheckinAppStatusListModule = {
     ) {
       state.listLoadingError = payload;
     },
-    setAppWithStatusList(
+    setAppStatusInfoList(
       state: CheckinAppStatusListState,
-      payload: AppWithStatusList
+      payload: AppStatusInfoList
     ) {
-      state.appWithStatusList = payload;
+      state.appStatusInfoList = payload;
     },
-    setAppStatus(
+    setAppStatusInfo(
       state: CheckinAppStatusListState,
-      payload: { name: string & AppWithStatus }
+      payload: { name: string } & AppStatusInfo
     ) {
-      const { name, ...rest } = payload;
-      state.appWithStatusList = {
-        ...state.appWithStatusList,
-        [name]: rest,
+      state.appStatusInfoList = {
+        ...state.appStatusInfoList,
+        [payload.name]: payload,
       };
     },
     reset(state: CheckinAppStatusListState) {
       state.list = null;
       state.listLoading = false;
       state.listLoadingError = null;
+      state.appStatusInfoList = {};
     },
   },
   actions: {
@@ -106,21 +110,21 @@ const checkinAppStatusList: CheckinAppStatusListModule = {
         commit("setListLoading", false);
       }
     },
-    async fetchStatus({ commit }, name) {
-      commit("setAppStatus", {
+    async fetchStatusInfo({ commit }, name) {
+      commit("setAppStatusInfo", {
         name,
         loading: true,
         message: "",
       });
       try {
         const statusInfo = (await authClient.checkinAppStatusGet(name)).data;
-        commit("setAppStatus", {
+        commit("setAppStatusInfo", {
           name,
           loading: false,
           ...statusInfo,
         });
       } catch (e) {
-        commit("setAppStatus", {
+        commit("setAppStatusInfo", {
           name,
           loading: false,
           message: getErrorMessage(e) || "",
