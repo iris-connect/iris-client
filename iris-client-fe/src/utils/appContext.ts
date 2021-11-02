@@ -9,7 +9,7 @@ const initAppContext = (): void => {
       }
     }
   } catch (e) {
-    console.error(e);
+    // console.error(e);
   }
 };
 
