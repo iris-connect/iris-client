@@ -4,6 +4,12 @@ import { RootState } from "@/store/types";
 import { Commit, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import authClient from "@/api-client";
+import _unionBy from "lodash/unionBy";
+import _find from "lodash/find";
+import {
+  normalizeCheckinAppList,
+  normalizeCheckinAppStatusInfo,
+} from "@/views/checkin-app-status-list/checkin-app-status-list.data";
 
 export interface AppStatusInfo {
   name?: string;
@@ -12,19 +18,22 @@ export interface AppStatusInfo {
   status?: CheckinAppStatus;
 }
 
-export type AppStatusInfoList = Record<string, AppStatusInfo>;
+export type AppStatusInfoList = AppStatusInfo[];
 
 export type CheckinAppStatusListState = {
   list: CheckinApp[] | null;
   listLoading: boolean;
   listLoadingError: ErrorMessage;
-  appStatusInfoList: AppStatusInfoList;
+  appStatusInfoList: AppStatusInfo[] | null;
 };
 
 export interface CheckinAppStatusListModule
   extends Module<CheckinAppStatusListState, RootState> {
   mutations: {
-    setList(state: CheckinAppStatusListState, payload: CheckinApp[]): void;
+    setList(
+      state: CheckinAppStatusListState,
+      payload: CheckinApp[] | null
+    ): void;
     setListLoading(state: CheckinAppStatusListState, payload: boolean): void;
     setListLoadingError(
       state: CheckinAppStatusListState,
@@ -33,7 +42,7 @@ export interface CheckinAppStatusListModule
     reset(state: CheckinAppStatusListState): void;
     setAppStatusInfoList(
       state: CheckinAppStatusListState,
-      payload: AppStatusInfoList
+      payload: AppStatusInfo[] | null
     ): void;
     setAppStatusInfo(
       state: CheckinAppStatusListState,
@@ -47,13 +56,18 @@ export interface CheckinAppStatusListModule
       payload: string
     ): Promise<void>;
   };
+  getters: {
+    appStatusInfo(
+      state: CheckinAppStatusListState
+    ): (name: string) => AppStatusInfo;
+  };
 }
 
 const defaultState: CheckinAppStatusListState = {
   list: null,
   listLoading: false,
   listLoadingError: null,
-  appStatusInfoList: {},
+  appStatusInfoList: null,
 };
 
 const checkinAppStatusList: CheckinAppStatusListModule = {
@@ -62,7 +76,7 @@ const checkinAppStatusList: CheckinAppStatusListModule = {
     return { ...defaultState };
   },
   mutations: {
-    setList(state: CheckinAppStatusListState, payload: CheckinApp[]) {
+    setList(state: CheckinAppStatusListState, payload: CheckinApp[] | null) {
       state.list = payload;
     },
     setListLoading(state: CheckinAppStatusListState, payload: boolean) {
@@ -76,7 +90,7 @@ const checkinAppStatusList: CheckinAppStatusListModule = {
     },
     setAppStatusInfoList(
       state: CheckinAppStatusListState,
-      payload: AppStatusInfoList
+      payload: AppStatusInfo[] | null
     ) {
       state.appStatusInfoList = payload;
     },
@@ -84,16 +98,17 @@ const checkinAppStatusList: CheckinAppStatusListModule = {
       state: CheckinAppStatusListState,
       payload: { name: string } & AppStatusInfo
     ) {
-      state.appStatusInfoList = {
-        ...state.appStatusInfoList,
-        [payload.name]: payload,
-      };
+      state.appStatusInfoList = _unionBy(
+        [payload],
+        state.appStatusInfoList || [],
+        "name"
+      );
     },
     reset(state: CheckinAppStatusListState) {
       state.list = null;
       state.listLoading = false;
       state.listLoadingError = null;
-      state.appStatusInfoList = {};
+      state.appStatusInfoList = null;
     },
   },
   actions: {
@@ -102,7 +117,10 @@ const checkinAppStatusList: CheckinAppStatusListModule = {
       commit("setListLoadingError", null);
       commit("setListLoading", true);
       try {
-        list = (await authClient.checkinAppsGet()).data;
+        list = normalizeCheckinAppList(
+          (await authClient.checkinAppsGet()).data,
+          true
+        );
       } catch (e) {
         commit("setListLoadingError", getErrorMessage(e));
       } finally {
@@ -117,7 +135,10 @@ const checkinAppStatusList: CheckinAppStatusListModule = {
         message: "",
       });
       try {
-        const statusInfo = (await authClient.checkinAppStatusGet(name)).data;
+        const statusInfo = normalizeCheckinAppStatusInfo(
+          (await authClient.checkinAppStatusGet(name)).data,
+          true
+        );
         commit("setAppStatusInfo", {
           name,
           loading: false,
@@ -131,6 +152,12 @@ const checkinAppStatusList: CheckinAppStatusListModule = {
         });
         return Promise.reject(e);
       }
+    },
+  },
+  getters: {
+    appStatusInfo: (state) => (name: string) => {
+      const list = state.appStatusInfoList;
+      return _find(list, ["name", name]) || {};
     },
   },
 };

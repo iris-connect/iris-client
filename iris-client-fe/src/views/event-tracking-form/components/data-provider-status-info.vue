@@ -3,8 +3,9 @@
     class="my-3"
     v-if="!!statusInfo.loading"
     indeterminate
+    data-test="status-info.loading"
   ></v-progress-linear>
-  <div v-else>
+  <div v-else data-test="status-info.resolved">
     <v-alert v-if="alertType" text :type="alertType" class="text-body-2 my-3">
       <p>
         Eine Anfrage über den App Anbieter dieses Ereignisortes ist derzeit ggf.

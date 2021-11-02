@@ -1,62 +1,69 @@
 <template>
   <div>
-    <v-row class="my-4">
-      <v-col>
-        <v-card>
-          <v-card-title>CheckIn Apps: Statusübersicht</v-card-title>
-          <v-card-text>
-            <v-text-field
-              v-model="tableData.search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-              data-test="search"
-            ></v-text-field>
-            <iris-data-table
-              :loading="listLoading"
-              :headers="tableData.headers"
-              :custom-sort="sort"
-              :sort-by="['status']"
-              :sort-desc="[true]"
-              multi-sort
-              item-key="name"
-              :items="appList"
-              :items-per-page="10"
-              :expanded.sync="tableData.expanded"
-              show-expand
-              class="elevation-1 mt-5"
-              :search="tableData.search"
-              data-test="view.data-table"
-            >
-              <template #item.status="{ item }">
-                <checkin-app-status-indicator
-                  :loading="appStatusInfo(item.name).loading"
-                  :status="appStatusInfo(item.name).status"
-                />
-              </template>
-              <template v-slot:expanded-item="{ headers, item }">
-                <td :colspan="headers.length">
-                  {{
-                    appStatusInfo(item.name).loading
-                      ? "Bitte warten..."
-                      : appStatusInfo(item.name).message
-                  }}
-                </td>
-              </template>
-            </iris-data-table>
-            <v-alert
-              class="mt-5 mb-0"
-              v-if="listLoadingError"
-              text
-              type="error"
-            >
-              {{ listLoadingError }}
-            </v-alert>
-          </v-card-text>
-        </v-card>
+    <v-row class="my-6">
+      <v-col cols="12">
+        Status:
+        <v-btn-toggle dense mandatory class="flex-wrap" v-model="statusFilter">
+          <v-btn
+            text
+            v-for="status in Object.keys(statusFilterSelect)"
+            :key="status"
+            :value="status"
+            :data-test="`status.select.${getStatusTestLabel(
+              statusFilterSelect[status]
+            )}`"
+          >
+            {{ getStatusFilterLabel(statusFilterSelect[status]) }}
+          </v-btn>
+          <v-btn text value="ALL" data-test="status.select.all"> Alle </v-btn>
+        </v-btn-toggle>
       </v-col>
     </v-row>
+    <v-card>
+      <v-card-title>CheckIn Apps: Statusübersicht</v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="tableData.search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+          data-test="search"
+        ></v-text-field>
+        <iris-data-table
+          :loading="listLoading"
+          :headers="tableData.headers"
+          :custom-sort="sort"
+          :sort-by="['status']"
+          :sort-desc="[true]"
+          multi-sort
+          item-key="name"
+          :items="filteredRows"
+          :items-per-page="10"
+          :expanded.sync="tableData.expanded"
+          show-expand
+          class="elevation-1 mt-5"
+          :search="tableData.search"
+          data-test="view.data-table"
+        >
+          <template #item.status="{ item }">
+            <checkin-app-status-indicator
+              :loading="item.loading"
+              :status="item.status"
+              :data-test="`status.${getStatusTestLabel(item.status)}`"
+            />
+          </template>
+          <template v-slot:expanded-item="{ headers, item }">
+            <td :colspan="headers.length">
+              {{ item.loading ? "Bitte warten..." : item.message }}
+            </td>
+          </template>
+        </iris-data-table>
+        <v-alert class="mt-5 mb-0" v-if="listLoadingError" text type="error">
+          {{ listLoadingError }}
+        </v-alert>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -67,11 +74,15 @@ import { ErrorMessage } from "@/utils/axios";
 import { CheckinApp, CheckinAppStatus } from "@/api";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import CheckinAppStatusIndicator from "@/views/checkin-app-status-list/components/checkin-app-status-indicator.vue";
-import {
-  AppStatusInfo,
-  AppStatusInfoList,
-} from "@/views/checkin-app-status-list/checkin-app-status-list.store";
 import _orderBy from "lodash/orderBy";
+import _filter from "lodash/filter";
+
+interface TableRow {
+  name: string;
+  loading?: boolean;
+  message?: string | null;
+  status?: CheckinAppStatus;
+}
 
 @Component({
   components: {
@@ -107,17 +118,57 @@ export default class CheckinAppStatusListView extends Vue {
     ],
   };
 
+  statusFilterSelect = CheckinAppStatus;
+
+  statusFilterSelect2 = ["Ok", "Warnung", "Fehler", "Unbekannt", "Alle"];
+  statusFilter = "ALL";
+
+  getStatusFilterLabel(status: CheckinAppStatus): string {
+    switch (status) {
+      case CheckinAppStatus.OK:
+        return "Ok";
+      case CheckinAppStatus.ERROR:
+        return "Fehler";
+      case CheckinAppStatus.WARNING:
+        return "Warnung";
+      case CheckinAppStatus.UNKNOWN:
+      default:
+        return "Unbekannt";
+    }
+  }
+
+  getStatusTestLabel(status: CheckinAppStatus & { ALL: "ALL" }): string {
+    switch (status) {
+      case "ALL":
+        return "all";
+      case CheckinAppStatus.ERROR:
+        return "error";
+      case CheckinAppStatus.OK:
+        return "ok";
+      case CheckinAppStatus.WARNING:
+        return "warning";
+      case CheckinAppStatus.UNKNOWN:
+      default:
+        return "unknown";
+    }
+  }
+
+  get filteredRows(): TableRow[] {
+    if (!this.statusFilter || this.statusFilter === "ALL") {
+      return this.tableRows;
+    }
+    return _filter(this.tableRows, ["status", this.statusFilter]);
+  }
+
   sort = (
-    items: CheckinApp[],
+    items: TableRow[],
     sortBy: string[],
     sortDesc: boolean[]
-  ): CheckinApp[] => {
+  ): TableRow[] => {
     const sortItems = sortBy.map((s: string) => {
       if (s === "status") {
-        return (item: CheckinApp) => {
-          const status =
-            this.appStatusInfo(item.name).status || CheckinAppStatus.UNKNOWN;
-          switch (status) {
+        return (item: TableRow) => {
+          switch (item.status) {
             case CheckinAppStatus.OK:
               return 1;
             case CheckinAppStatus.WARNING:
@@ -151,18 +202,22 @@ export default class CheckinAppStatusListView extends Vue {
 
   @Watch("appList")
   onAppListChange(list: CheckinApp[]): void {
-    this.$store.commit("checkinAppStatusList/setAppStatusInfoList", {});
+    this.$store.commit("checkinAppStatusList/setAppStatusInfoList", null);
     list.forEach((item) => {
       this.$store.dispatch("checkinAppStatusList/fetchStatusInfo", item.name);
     });
   }
 
-  get appStatusInfoList(): AppStatusInfoList {
-    return this.$store.state.checkinAppStatusList.appStatusInfoList || {};
-  }
-
-  appStatusInfo(name: string): AppStatusInfo {
-    return this.appStatusInfoList[name] || {};
+  get tableRows(): TableRow[] {
+    return this.appList.map((item) => {
+      const info = this.$store.getters["checkinAppStatusList/appStatusInfo"](
+        item.name
+      );
+      return {
+        ...item,
+        ...info,
+      };
+    });
   }
 }
 </script>

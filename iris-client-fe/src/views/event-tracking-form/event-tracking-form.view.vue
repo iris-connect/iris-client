@@ -290,10 +290,9 @@ export default class EventTrackingFormView extends Vue {
     this.$store.dispatch("checkinAppStatusList/fetchStatusInfo", newValue);
   }
 
-  get appStatusInfo(): AppStatusInfo | undefined {
-    const list = this.$store.state.checkinAppStatusList.appStatusInfoList || {};
+  get appStatusInfo(): AppStatusInfo {
     const name = this.form.model?.location?.providerId;
-    return name ? _get(list, name) : undefined;
+    return this.$store.getters["checkinAppStatusList/appStatusInfo"](name);
   }
 
   mounted(): void {

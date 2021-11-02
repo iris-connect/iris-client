@@ -5,7 +5,7 @@
       indeterminate
       color="primary"
     ></v-progress-circular>
-    <span v-else>
+    <span v-else :data-test="dataTest">
       <v-icon v-if="status === appStatus.ERROR" color="error">
         mdi-alert-octagon
       </v-icon>
@@ -34,6 +34,10 @@ const CheckinAppStatusIndicatorProps = Vue.extend({
     status: {
       type: String as () => CheckinAppStatus,
       default: CheckinAppStatus.UNKNOWN,
+    },
+    dataTest: {
+      type: String,
+      default: "",
     },
   },
 });

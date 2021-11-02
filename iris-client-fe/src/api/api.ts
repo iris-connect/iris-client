@@ -1861,6 +1861,15 @@ export enum CheckinAppStatus {
   UNKNOWN = "UNKNOWN",
 }
 
+export interface CheckinAppServerInfo {
+  name?: string;
+}
+
+export interface CheckinAppInfo {
+  version?: string;
+  serverInfo?: CheckinAppServerInfo;
+}
+
 /**
  *
  * @export

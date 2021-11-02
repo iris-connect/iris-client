@@ -27,7 +27,7 @@ export const dummyCheckinAppStatus: Record<string, CheckinAppStatusInfo> = {
     info: {
       version: "1.0.0",
       serverInfo: {
-        name: "server.test",
+        name: "checkin.app.test",
       },
     },
     status: CheckinAppStatus.OK,
