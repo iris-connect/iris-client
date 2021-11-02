@@ -1,7 +1,4 @@
-FROM caddy:2.4.5-alpine
-
-# install node + npm
-RUN apk add --update nodejs npm
+FROM node:14-alpine as builder
 
 # make the 'app' folder the current working directory
 WORKDIR /app
@@ -21,9 +18,11 @@ ARG VUE_APP_BUILD_ID=local
 # build app for production with minification
 RUN npm run build
 
+FROM caddy:2.4.5-alpine
+
 # copy build artifacts to webserver root
 RUN rm -rf /usr/share/caddy
-RUN mv dist /usr/share/caddy
+COPY --from=builder /app/dist /usr/share/caddy
 
 # copy webserver configuration
 COPY ./Caddyfile /etc/caddy/Caddyfile
