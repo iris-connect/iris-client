@@ -1,9 +1,18 @@
 <template>
   <v-menu left bottom>
     <template v-slot:activator="{ on, attrs }">
-      <v-btn plain v-bind="attrs" v-on="on" data-test="user-menu.activator">
-        <span class="mr-3">{{ displayName }}</span>
-        <v-icon large right> mdi-account-circle </v-icon>
+      <v-btn
+        text
+        rounded
+        plain
+        large
+        v-bind="attrs"
+        v-on="on"
+        data-test="user-menu.activator"
+        class="d-flex align-center"
+      >
+        <v-icon large left> mdi-account-circle </v-icon>
+        <span class="ml-3">{{ displayName }}</span>
       </v-btn>
     </template>
     <v-list data-test="user-menu">
@@ -20,12 +29,6 @@
         data-test="user-menu.item.user-profile"
       >
         <v-list-item-title> Mein Profil </v-list-item-title>
-      </v-list-item>
-      <v-list-item
-        :to="{ name: 'checkin-app-status-list' }"
-        data-test="user-menu.item.checkin-app-status-list"
-      >
-        <v-list-item-title> CheckIn App Status </v-list-item-title>
       </v-list-item>
       <v-dialog max-width="400" v-model="logoutConfirmDialog">
         <template v-slot:activator="{ on, attrs }">
