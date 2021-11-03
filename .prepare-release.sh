@@ -140,11 +140,18 @@ export VUE_APP_CSV_EXPORT_STANDARD_ATOMIC_ADDRESS=""
 npm run build
 cd dist && zip -qq -r ../../release/iris-client-fe-$VERSION.zip *
 
+
+cd ../../infrastructure/deployment
+
+if (( ! $RELEASE )); then
+	printf "\n  Adds -latest to the image tags in Compose files because the build is a pre release \n\n"
+	sed -i 's/\(inoeg\/iris-client.*\)/\1-latest/' docker-compose.yml docker-compose-ext-postgres.yml
+fi
+
 printf "\n  Create ZIP of deployment scripts and instructions  \n\n"
-cd ../../infrastructure/deployment && zip -qr ../../release/deployment-$VERSION.zip * .[a-zA-Z0-9_-]*
+zip -qr ../../release/deployment-$VERSION.zip * .[a-zA-Z0-9_-]*
 
 printf "\n  Create ZIP of stand-alone-deployment  \n\n"
-
 cd ../../infrastructure/stand-alone-deployment && zip -qr ../../release/stand-alone-deployment-$VERSION.zip * .[a-zA-Z0-9_-]*
 
 
