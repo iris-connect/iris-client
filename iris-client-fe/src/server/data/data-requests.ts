@@ -108,7 +108,7 @@ export const dummyDataDetails: DataRequestDetails = {
         firstName: "Martina",
         lastName: "Mustermann",
         email: "a@b.de",
-        phone: "01234 567890",
+        phone: "+49 1234 567890",
         mobilePhone: "0123 456789",
         sex: Sex.Female,
         address: {

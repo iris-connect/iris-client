@@ -454,6 +454,12 @@ const sanitizeField = function (
   const regex_whitelist = /[^a-zA-Z0-9äüöÄÜÖß(): \-@+.;,]+/g; // Matches everything *not* in the group (the whitelist)
   field = field.replace(regex_whitelist, "");
 
+  // Prepend a single quote if string looks like an international phone number to mitigate Formula injection
+  const regex_phone = /^\+[ ]?[(]?[ ]?[0-9]{1,3}[ ]?[)]?[0-9 \-/]+$/g;
+  if (regex_phone.test(field)) {
+    field = `'${field}`;
+  }
+
   // Ensure beginning of string has no trigger characters (+,- and @ are allowed, but they should not start the string)
   const regex_beginning = /^[=+\-@\t\r \n]+/g;
   field = field.replace(regex_beginning, "");
