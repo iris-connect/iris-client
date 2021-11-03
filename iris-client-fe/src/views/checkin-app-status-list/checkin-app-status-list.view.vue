@@ -76,6 +76,7 @@ import IrisDataTable from "@/components/iris-data-table.vue";
 import CheckinAppStatusIndicator from "@/views/checkin-app-status-list/components/checkin-app-status-indicator.vue";
 import _orderBy from "lodash/orderBy";
 import _filter from "lodash/filter";
+import { AppStatusInfo } from "@/views/checkin-app-status-list/checkin-app-status-list.store";
 
 interface TableRow {
   name: string;
@@ -210,10 +211,11 @@ export default class CheckinAppStatusListView extends Vue {
 
   get tableRows(): TableRow[] {
     return this.appList.map((item) => {
-      const info = this.$store.getters["checkinAppStatusList/appStatusInfo"](
-        item.name
-      );
+      const info: AppStatusInfo = this.$store.getters[
+        "checkinAppStatusList/appStatusInfo"
+      ](item.name);
       return {
+        status: info.status || CheckinAppStatus.UNKNOWN,
         ...item,
         ...info,
       };
