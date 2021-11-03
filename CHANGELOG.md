@@ -1,5 +1,14 @@
 # Changelog
 
+# [1.1.0-rc.3](https://github.com/iris-connect/iris-client/compare/v1.1.0-rc.2...v1.1.0-rc.3) (2021-11-03)
+
+
+### Bug Fixes
+
+* An admin can now change a user's data again. An error occurred ([402baba](https://github.com/iris-connect/iris-client/commit/402babad6e1232bfff0eae8ed6fa5d2f5f2964e7))
+* Cleans the Docker image of the frontend from artifacts that are only needed for the build. This makes it more secure and greatly reduced in size. ([d62ca2a](https://github.com/iris-connect/iris-client/commit/d62ca2a15a59d680e9a913e2da71a6d7462917d0)), closes [#442](https://github.com/iris-connect/iris-client/issues/442)
+* Restricts the content of …deployment….zip to the folders and files ([d265238](https://github.com/iris-connect/iris-client/commit/d2652387828dc2f9ff238082e19d6352b4952623)), closes [#432](https://github.com/iris-connect/iris-client/issues/432) [#433](https://github.com/iris-connect/iris-client/issues/433)
+
 # [1.1.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.1.0-rc.1...v1.1.0-rc.2) (2021-10-30)
 
 
