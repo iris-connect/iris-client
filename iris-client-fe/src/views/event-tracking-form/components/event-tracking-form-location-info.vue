@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-test="location-info">
     <v-row>
       <v-col>
         <strong

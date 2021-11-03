@@ -52,4 +52,21 @@ export const dummyLocations: LocationInformation[] = [
       representative: "Martina Superbowl",
     },
   },
+  {
+    id: "id-iris-connect-demo",
+    name: "IRIS connect Demo",
+    providerId: "recover-app",
+    contact: {
+      address: {
+        city: "Musterstadt",
+        street: "Musterstraße. 3",
+        zip: "12345",
+      },
+      email: "iris-connect@example.com",
+      phone: "06973928393",
+      officialName: "IRIS connect Demo",
+      ownerEmail: "martina-muster@exmaple.com",
+      representative: "Martina Muster",
+    },
+  },
 ];

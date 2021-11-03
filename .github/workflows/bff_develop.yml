@@ -25,7 +25,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.5
     
       - name: Cache local Maven repository
         uses: actions/cache@v2
@@ -44,18 +44,48 @@ jobs:
       - name: build, package and publish the image
         run: |
           VER_TAG=$(echo ${{ steps.meta.outputs.tags }} | cut --delimiter=: --fields=2-3)
-          mvn -B clean package spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=$VER_TAG
+          mvn -B clean verify spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=$VER_TAG
         env:
           DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
           DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
+          
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: |
+            **/surefire-reports/*.xml
+            **/failsafe-reports/*.xml
+            !**/failsafe-reports/failsafe-summary.xml
+
+  publish-test-results:
+    name: Publish Test Results
+    needs: build
+    runs-on: ubuntu-latest
+    # the build-and-test job might be skipped, we don't need to run this job then
+    if: success() || failure()
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: test-reports
+          path: reports
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          files: reports/**/*.xml
+          report_individual_runs: true
+          check_run_annotations_branch: "*"
 
   container_scan:
     name: Trivy Container Scan
     needs: build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       
       - name: Create image tag
         id: meta

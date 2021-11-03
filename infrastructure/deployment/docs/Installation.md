@@ -94,3 +94,9 @@ Bei dieser Installationsvariante werden alle Komponenten vom IRIS Client von ein
 Unabhängig von der Installations Variante können Sie testen, ob die Installation erfolgreich war.
 
 [Test](Smoketest.md)
+
+## Upgrade Guides
+
+Unabhängig von der Installations Variante finden Sie hier Informationen über Upgrades auf eine neue Version. 
+
+[Upgrade Guides](Upgrade-Guides.md)

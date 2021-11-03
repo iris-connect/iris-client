@@ -4,6 +4,7 @@ import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
+import { normalizeDataRequestCaseExtendedDetails } from "@/views/index-tracking-form/index-tracking-form.data";
 
 export type IndexTrackingFormState = {
   indexCreationOngoing: boolean;
@@ -60,9 +61,12 @@ const indexTrackingForm: IndexTrackingFormModule = {
       commit("setIndexCreationError", null);
       commit("setIndexCreationOngoing", true);
       try {
-        return await (
-          await client.dataRequestClientCasesPost(dataRequestCaseClient)
-        ).data;
+        return await normalizeDataRequestCaseExtendedDetails(
+          (
+            await client.dataRequestClientCasesPost(dataRequestCaseClient)
+          ).data,
+          true
+        );
       } catch (e) {
         commit("setIndexCreationError", getErrorMessage(e));
         return Promise.reject(e);

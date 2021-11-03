@@ -3,7 +3,7 @@
     <template v-slot:activator="scope">
       <slot name="activator" v-bind="scope" />
     </template>
-    <v-card>
+    <v-card data-test="confirm-dialog">
       <v-card-title>
         <slot name="title" />
       </v-card-title>
@@ -12,11 +12,18 @@
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
-        <v-btn color="secondary" text @click="confirmDialog = false">
+        <v-btn
+          color="secondary"
+          text
+          @click="confirmDialog = false"
+          data-test="cancel"
+        >
           Zurück
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn :color="color" text @click="onConfirm"> Bestätigen </v-btn>
+        <v-btn :color="color" text @click="onConfirm" data-test="confirm">
+          Bestätigen
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

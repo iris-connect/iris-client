@@ -7,6 +7,7 @@
             class="float-right"
             color="primary"
             :to="{ name: 'admin-user-create' }"
+            data-test="view.link.create"
             >Neues Konto anlegen
           </v-btn>
         </div>
@@ -25,14 +26,16 @@
                   label="Search"
                   single-line
                   hide-details
+                  data-test="search"
                 ></v-text-field>
-                <v-data-table
+                <iris-data-table
                   :loading="isBusy"
                   :headers="tableData.headers"
                   :items="userList"
                   :items-per-page="5"
                   class="elevation-1 mt-5"
                   :search="tableData.search"
+                  data-test="view.data-table"
                 >
                   <template #item.actions="{ item }">
                     <v-btn
@@ -41,6 +44,7 @@
                       class="ml-3 text-decoration-none"
                       :to="{ name: 'admin-user-edit', params: { id: item.id } }"
                       :disabled="isBusy"
+                      data-test="edit"
                     >
                       <v-icon> mdi-pencil </v-icon>
                     </v-btn>
@@ -55,11 +59,12 @@
                         $store.getters['userLogin/isCurrentUser'](item.id)
                       "
                       :user-name="item.userName"
+                      data-test="delete"
                     >
                       <v-icon> mdi-delete </v-icon>
                     </user-delete-button>
                   </template>
-                </v-data-table>
+                </iris-data-table>
               </v-col>
             </v-row>
             <v-row v-if="hasError">
@@ -85,6 +90,7 @@ import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
 import { User, UserRole } from "@/api";
 import UserDeleteButton from "@/views/admin-user-list/components/user-delete-button.vue";
+import IrisDataTable from "@/components/iris-data-table.vue";
 
 // @todo: check if id is really optional! Handle, edit & delete actions + vue :key accordingly
 type TableRow = {
@@ -101,7 +107,7 @@ const UserRoleName = new Map<UserRole, string>([
 ]);
 
 @Component({
-  components: { UserDeleteButton },
+  components: { IrisDataTable, UserDeleteButton },
   async beforeRouteEnter(to, from, next) {
     next();
     await store.dispatch("adminUserList/fetchUserList");

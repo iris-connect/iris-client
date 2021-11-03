@@ -7,6 +7,7 @@
             class="float-right"
             color="primary"
             :to="{ name: 'index-new' }"
+            data-test="view.link.create"
           >
             Neuen Indexfall erstellen
           </v-btn>
@@ -14,19 +15,33 @@
       </v-col>
     </v-row>
     <v-row class="mb-6">
-      <v-col cols="8">
+      <v-col cols="12">
         Status:
-        <v-btn-toggle dense mandatory :value="statusButtonSelected">
+        <v-btn-toggle
+          dense
+          mandatory
+          :value="statusButtonSelected"
+          class="flex-wrap"
+        >
           <v-btn
             text
             @click="filterStatus(selectableStatus[status])"
             v-for="status in Object.keys(selectableStatus)"
             :key="status"
+            :data-test="`status.select.${getStatusTestLabel(
+              selectableStatus[status]
+            )}`"
           >
             {{ getStatusSelectLabel(selectableStatus[status]) }}
           </v-btn>
           <!-- this needs to come last, see statusButtonSelected() -->
-          <v-btn text @click="filterStatus(undefined)"> Alle </v-btn>
+          <v-btn
+            text
+            @click="filterStatus(undefined)"
+            data-test="status.select.all"
+          >
+            Alle
+          </v-btn>
         </v-btn-toggle>
       </v-col>
     </v-row>
@@ -42,7 +57,7 @@
           hide-details
           @keyup="triggerSearch(search)"
         ></v-text-field>
-        <v-data-table
+        <iris-data-table
           :loading="dataTableModel.loading"
           :page="dataTableModel.page"
           :server-items-length="dataTableModel.itemsLength"
@@ -53,9 +68,14 @@
           :search="search"
           :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
           @update:options="updatePagination"
+          data-test="view.data-table"
         >
           <template v-slot:[itemStatusSlotName]="{ item }">
-            <v-chip :color="getStatusColor(item.status)" dark>
+            <v-chip
+              :color="getStatusColor(item.status)"
+              dark
+              :data-test="`status.${getStatusTestLabel(item.status)}`"
+            >
               {{ getStatusName(item.status) }}
             </v-chip>
           </template>
@@ -67,11 +87,12 @@
                 name: 'index-details',
                 params: { caseId: item.caseId },
               }"
+              data-test="select"
             >
               Details
             </v-btn>
           </template>
-        </v-data-table>
+        </iris-data-table>
       </v-card-text>
     </v-card>
   </div>
@@ -95,6 +116,8 @@ import {
   getStringParamFromRouteWithOptionalFallback,
 } from "@/utils/pagination";
 import { Dictionary } from "vue-router/types/router";
+import StatusTestLabel from "@/constants/StatusTestLabel";
+import IrisDataTable from "@/components/iris-data-table.vue";
 
 function getFormattedDate(date?: string): string {
   return date
@@ -104,6 +127,7 @@ function getFormattedDate(date?: string): string {
 
 @Component({
   components: {
+    IrisDataTable,
     IndexTrackingFormView: IndexTrackingFormView,
   },
   beforeRouteLeave(to, from, next) {
@@ -186,16 +210,14 @@ export default class IndexTrackingListView extends Vue {
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   get dataTableModel() {
-    const {
-      indexTrackingList,
-      indexTrackingListLoading,
-    } = store.state.indexTrackingList;
+    const { indexTrackingList, indexTrackingListLoading } =
+      store.state.indexTrackingList;
     return {
       page: getPageFromRouteWithDefault(this.$route),
       itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
       loading: indexTrackingListLoading,
-      itemsLength: indexTrackingList.totalElements,
-      data: indexTrackingList.content.map((dataRequest) => {
+      itemsLength: indexTrackingList?.totalElements || 0,
+      data: (indexTrackingList?.content || []).map((dataRequest) => {
         return {
           endTime: getFormattedDate(dataRequest.end),
           startTime: getFormattedDate(dataRequest.start),
@@ -270,6 +292,10 @@ export default class IndexTrackingListView extends Vue {
 
   getStatusName(status: DataRequestStatus): string {
     return StatusMessages.getMessage(status);
+  }
+
+  getStatusTestLabel(status: DataRequestStatus): string {
+    return StatusTestLabel.getStatusTestLabel(status);
   }
 
   getStatusSelectLabel(status: DataRequestStatus | null): string {

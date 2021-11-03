@@ -30,7 +30,6 @@ public class ValidationHelper {
 	public static final Pattern PW_REGEX = Pattern
 			.compile(
 					"^(?=.*[0123456789_\\-#()@§!$].*[0123456789_\\-#()@§!$])(?=.*[ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞabcdefghijklmnopqrstuvwxyzäöüß])([ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞ]|[abcdefghijklmnopqrstuvwxyzäöüß]|[0123456789]|[_\\-#()@§!$]){8,}$");
-	public static final String PW_ERROR_MESSAGE = "The specified password does not follow the password policy (≥ 8 characters, no spaces, lowercase and uppercase letters, two numbers, one special character [_-#()@§!]).";
 	static final String[] PW_SYMBOLS = "_-#()@§!".split("(?!^)");
 	private static final String[] FORBIDDEN_SYMBOLS = {
 			"=",
@@ -163,6 +162,11 @@ public class ValidationHelper {
 
 		return isPossibleAttack(input, field, true, FORBIDDEN_KEYWORD_TUPLES,
 				ArrayUtils.removeElements(FORBIDDEN_SYMBOLS, PW_SYMBOLS));
+	}
+
+	public boolean isPossibleAttackForPhone(String input, String field, boolean obfuscateLogging) {
+		return isPossibleAttack(input, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES,
+				ArrayUtils.removeElement(FORBIDDEN_SYMBOLS, "+"));
 	}
 
 	/**

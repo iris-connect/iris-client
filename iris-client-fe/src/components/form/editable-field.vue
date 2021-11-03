@@ -1,5 +1,10 @@
 <template>
-  <v-form v-model="isValid" class="flex-fill" :disabled="disabled">
+  <v-form
+    v-model="isValid"
+    class="flex-fill"
+    :disabled="disabled"
+    :data-test="`editable-field.${name}`"
+  >
     <v-hover v-if="!isEditing" v-slot="{ hover }">
       <div
         @click="isEditing = true"
@@ -37,6 +42,7 @@ import { getErrorMessage } from "@/utils/axios";
 import { AxiosError } from "axios";
 
 const EditableFieldProps = Vue.extend({
+  inheritAttrs: false,
   props: {
     component: {
       type: String,

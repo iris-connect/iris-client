@@ -1,7 +1,7 @@
 package iris.client_bff.cases.web;
 
-import static iris.client_bff.cases.web.IndexCaseMapper.mapDetailed;
-import static org.springframework.http.HttpStatus.OK;
+import static iris.client_bff.cases.web.IndexCaseMapper.*;
+import static org.springframework.http.HttpStatus.*;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.CaseDataRequestService;
@@ -57,13 +57,13 @@ public class CaseDataRequestController {
 	@GetMapping
 	@ResponseStatus(OK)
 	public Page<IndexCaseDTO> getAll(
-		@RequestParam(required = false) Status status,
-		@RequestParam(required = false) String search,
-		Pageable pageable) {
+			@RequestParam(required = false) Status status,
+			@RequestParam(required = false) String search,
+			Pageable pageable) {
 		if (status != null && StringUtils.isNotEmpty(search)) {
-			return caseDataRequestService.findByStatusAndSearchByRefIdOrName(status, search, pageable).map(IndexCaseMapper::map);
+			return caseDataRequestService.search(status, search, pageable).map(IndexCaseMapper::map);
 		} else if (StringUtils.isNotEmpty(search)) {
-			return caseDataRequestService.searchByRefIdOrName(search, pageable).map(IndexCaseMapper::map);
+			return caseDataRequestService.search(search, pageable).map(IndexCaseMapper::map);
 		} else if (status != null) {
 			return caseDataRequestService.findByStatus(status, pageable).map(IndexCaseMapper::map);
 		}
@@ -101,7 +101,8 @@ public class CaseDataRequestController {
 
 	@PatchMapping("/{id}")
 	@ResponseStatus(OK)
-	public ResponseEntity<IndexCaseDetailsDTO> update(@PathVariable UUID id, @RequestBody @Valid IndexCaseUpdateDTO update) {
+	public ResponseEntity<IndexCaseDetailsDTO> update(@PathVariable UUID id,
+			@RequestBody @Valid IndexCaseUpdateDTO update) {
 		if (!ValidationHelper.isUUIDInputValid(id.toString(), FIELD_ID)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
@@ -109,10 +110,10 @@ public class CaseDataRequestController {
 		IndexCaseUpdateDTO updateValidated = validateIndexCaseUpdateDTO(update);
 
 		ResponseEntity<IndexCaseDetailsDTO> responseEntity = caseDataRequestService.findDetailed(id)
-			.map(it -> caseDataRequestService.update(it, updateValidated))
-			.map(IndexCaseMapper::mapDetailed)
-			.map(ResponseEntity::ok)
-			.orElseGet(ResponseEntity.notFound()::build);
+				.map(it -> caseDataRequestService.update(it, updateValidated))
+				.map(IndexCaseMapper::mapDetailed)
+				.map(ResponseEntity::ok)
+				.orElseGet(ResponseEntity.notFound()::build);
 
 		return responseEntity;
 	}
@@ -135,10 +136,10 @@ public class CaseDataRequestController {
 		}
 
 		if (update.getStatus() != null
-			&& !(update.getStatus() == IndexCaseStatusDTO.DATA_RECEIVED
-				|| update.getStatus() == IndexCaseStatusDTO.DATA_REQUESTED
-				|| update.getStatus() == IndexCaseStatusDTO.ABORTED
-				|| update.getStatus() == IndexCaseStatusDTO.CLOSED)) {
+				&& !(update.getStatus() == IndexCaseStatusDTO.DATA_RECEIVED
+						|| update.getStatus() == IndexCaseStatusDTO.DATA_REQUESTED
+						|| update.getStatus() == IndexCaseStatusDTO.ABORTED
+						|| update.getStatus() == IndexCaseStatusDTO.CLOSED)) {
 			log.warn(ErrorMessages.INVALID_INPUT + FIELD_STATUS + update.getStatus());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}

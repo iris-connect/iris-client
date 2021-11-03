@@ -2,15 +2,19 @@ import config from "@/config";
 import dayjs from "@/utils/date";
 import { some } from "lodash";
 
-const minLength = (min: number) => (v?: string): string | boolean => {
-  if (typeof v !== "string") return true; // we only check the length for strings
-  return v.length <= 0 || v.length >= min || `Mindestens ${min} Zeichen`;
-};
+const minLength =
+  (min: number) =>
+  (v?: string): string | boolean => {
+    if (typeof v !== "string") return true; // we only check the length for strings
+    return v.length <= 0 || v.length >= min || `Mindestens ${min} Zeichen`;
+  };
 
-const maxLength = (max: number) => (v?: string): string | boolean => {
-  if (typeof v !== "string") return true; // we only check the length for strings
-  return v.length <= max || `Höchstens ${max} Zeichen`;
-};
+const maxLength =
+  (max: number) =>
+  (v?: string): string | boolean => {
+    if (typeof v !== "string") return true; // we only check the length for strings
+    return v.length <= max || `Höchstens ${max} Zeichen`;
+  };
 
 const password = (v: string): string | boolean => {
   if (!v || config.passwordRegExp.test(v)) return true;
@@ -184,13 +188,15 @@ const dateStart = (v: string): string | boolean => {
   );
 };
 
-const dateEnd = (start: string) => (v: string): string | boolean => {
-  if (!start) return true;
-  return (
-    dayjs(v).isSameOrAfter(dayjs(start), "minute") ||
-    "Bitte geben Sie einen Zeitpunkt an, der nach dem Beginn liegt"
-  );
-};
+const dateEnd =
+  (start: string) =>
+  (v: string): string | boolean => {
+    if (!start) return true;
+    return (
+      dayjs(v).isSameOrAfter(dayjs(start), "minute") ||
+      "Bitte geben Sie einen Zeitpunkt an, der nach dem Beginn liegt"
+    );
+  };
 
 const rules = {
   defined,

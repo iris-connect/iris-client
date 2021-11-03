@@ -22,83 +22,98 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
+import org.hibernate.search.engine.backend.types.Sortable;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
+
 /**
  * @author Jens Kutzsche
  */
 @Entity
 @Table(name = "case_data_request")
+@Indexed
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.DataRequestIdentifier> {
 
-  {
-	id = DataRequestIdentifier.of(UUID.randomUUID());
-  }
-
-  private @Setter String refId;
-  private String hdUserId;
-
-  private @Setter String name;
-  private Instant requestStart;
-  private Instant requestEnd;
-  private @Setter String comment;
-  private String announcementToken;
-  private @Setter String dwSubmissionUri;
-
-  @Column(nullable = false) @Enumerated(EnumType.STRING)
-  private Status status = Status.DATA_REQUESTED;
-
-  @Builder
-  public CaseDataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
-	  String hdUserId, String comment, String announcementToken) {
-
-	super();
-
-	id = DataRequestIdentifier.of(UUID.randomUUID());
-
-	this.refId = refId;
-	this.name = name;
-	this.requestStart = requestStart;
-	this.requestEnd = requestEnd;
-	this.hdUserId = hdUserId;
-	this.comment = comment;
-	this.announcementToken = announcementToken;
-  }
-
-  public Instant getLastModifiedAt() {
-	return this.getMetadata().getLastModified();
-  }
-
-  public Instant getCreatedAt() {
-	return this.getMetadata().getCreated();
-  }
-
-  @Embeddable
-  @EqualsAndHashCode
-  @RequiredArgsConstructor(staticName = "of")
-  @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-  public static class DataRequestIdentifier implements Id, Serializable {
-
-	private static final long serialVersionUID = -8254677010830428881L;
-
-	@Getter
-	final UUID requestId;
-
-	/**
-	 * for JSON deserialization
-	 */
-	public static DataRequestIdentifier of(String uuid) {
-	  return of(UUID.fromString(uuid));
+	{
+		id = DataRequestIdentifier.of(UUID.randomUUID());
 	}
 
-	@Override
-	public String toString() {
-	  return requestId.toString();
-	}
-  }
+	@KeywordField(sortable = Sortable.YES, normalizer = "german")
+	private @Setter String refId;
+	private String hdUserId;
 
-  public enum Status {
-	DATA_REQUESTED, DATA_RECEIVED, CLOSED, ABORTED
-  }
+	@KeywordField(sortable = Sortable.YES, normalizer = "german")
+	private @Setter String name;
+
+	@GenericField(sortable = Sortable.YES)
+	private Instant requestStart;
+
+	@GenericField(sortable = Sortable.YES)
+	private Instant requestEnd;
+
+	private @Setter String comment;
+	private String announcementToken;
+	private @Setter String dwSubmissionUri;
+
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	@GenericField(sortable = Sortable.YES)
+	private Status status = Status.DATA_REQUESTED;
+
+	@Builder
+	public CaseDataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
+			String hdUserId, String comment, String announcementToken) {
+
+		super();
+
+		id = DataRequestIdentifier.of(UUID.randomUUID());
+
+		this.refId = refId;
+		this.name = name;
+		this.requestStart = requestStart;
+		this.requestEnd = requestEnd;
+		this.hdUserId = hdUserId;
+		this.comment = comment;
+		this.announcementToken = announcementToken;
+	}
+
+	public Instant getLastModifiedAt() {
+		return this.getMetadata().getLastModified();
+	}
+
+	public Instant getCreatedAt() {
+		return this.getMetadata().getCreated();
+	}
+
+	@Embeddable
+	@EqualsAndHashCode
+	@RequiredArgsConstructor(staticName = "of")
+	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+	public static class DataRequestIdentifier implements Id, Serializable {
+
+		private static final long serialVersionUID = -8254677010830428881L;
+
+		@Getter
+		final UUID requestId;
+
+		/**
+		 * for JSON deserialization
+		 */
+		public static DataRequestIdentifier of(String uuid) {
+			return of(UUID.fromString(uuid));
+		}
+
+		@Override
+		public String toString() {
+			return requestId.toString();
+		}
+	}
+
+	public enum Status {
+		DATA_REQUESTED, DATA_RECEIVED, CLOSED, ABORTED
+	}
 }

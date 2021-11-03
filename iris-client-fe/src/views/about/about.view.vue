@@ -8,14 +8,18 @@
       <v-list-item two-line>
         <v-list-item-content>
           <v-list-item-title>Version</v-list-item-title>
-          <v-list-item-subtitle>{{ version }}</v-list-item-subtitle>
+          <v-list-item-subtitle data-test="install.version">
+            {{ version }}
+          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
 
       <v-list-item two-line>
         <v-list-item-content>
           <v-list-item-title>Build</v-list-item-title>
-          <v-list-item-subtitle>{{ build }}</v-list-item-subtitle>
+          <v-list-item-subtitle data-test="install.build">
+            {{ build }}
+          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
 
@@ -57,7 +61,11 @@
       <v-list-item two-line v-if="contact.length">
         <v-list-item-content>
           <v-list-item-title>Lokaler Ansprechpartner</v-list-item-title>
-          <v-list-item-subtitle v-for="(item, i) in contact" :key="i">
+          <v-list-item-subtitle
+            v-for="(item, i) in contact"
+            :key="i"
+            data-test="contact"
+          >
             {{ item }}
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -76,6 +84,7 @@
                 height="150"
                 width="300"
                 max-width="600"
+                data-test="logo.inoeg"
               />
             </a>
           </v-row>
@@ -92,6 +101,7 @@
                 height="150"
                 width="300"
                 max-width="600"
+                data-test="logo.bss"
               />
             </a>
           </v-row>

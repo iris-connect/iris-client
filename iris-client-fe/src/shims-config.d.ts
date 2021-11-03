@@ -1,6 +1,8 @@
 declare global {
   interface Window {
     irisAppContext?: IRISAppContext;
+    Cypress?: unknown;
+    irisApp?: Vue;
   }
 }
 

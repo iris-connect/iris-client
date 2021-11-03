@@ -24,6 +24,13 @@ export const dummyUserList: UserList = {
       userName: "TestUser",
       role: UserRole.User,
     },
+    {
+      id: "321654",
+      lastName: "E2EUser",
+      firstName: "E2ETest",
+      userName: "E2ETestUser",
+      role: UserRole.User,
+    },
   ],
 };
 

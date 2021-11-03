@@ -11,6 +11,7 @@ import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.web.CaseDataRequestController;
 import iris.client_bff.cases.web.submission_dto.ContactPersonList;
 import iris.client_bff.cases.web.submission_dto.EventList;
+import iris.client_bff.ui.messages.ErrorMessages;
 import iris.client_bff.utils.DtoSupplier;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @IrisWebIntegrationTest
@@ -85,6 +87,8 @@ class CaseDataControllerIntegrationTest {
 		assertEquals(2, submissionData.getContacts().getContactPersons().size());
 		assertEquals(2, submissionData.getEvents().getEvents().size());
 
+		assertThat(submissionData.getContacts()).asString().doesNotContain(ErrorMessages.INVALID_INPUT_STRING);
+		
 		// test repeated data submission is rejected
 		contacts.setContactPersons(dtoSupplier.getContactPersonList(2,3));
 		events.setEvents(dtoSupplier.getEventList(2,3));

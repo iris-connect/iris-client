@@ -3,26 +3,45 @@
     <v-row>
       <v-col cols="12">
         <div class="mb-6">
-          <v-btn class="float-right" color="primary" :to="{ name: 'event-new' }"
-            >Neue Ereignisverfolgung starten
+          <v-btn
+            class="float-right"
+            color="primary"
+            :to="{ name: 'event-new' }"
+            data-test="view.link.create"
+          >
+            Neue Ereignisverfolgung starten
           </v-btn>
         </div>
       </v-col>
     </v-row>
     <v-row class="mb-6">
-      <v-col cols="8">
+      <v-col cols="12">
         Status:
-        <v-btn-toggle dense mandatory :value="statusButtonSelected">
+        <v-btn-toggle
+          dense
+          mandatory
+          :value="statusButtonSelected"
+          class="flex-wrap"
+        >
           <v-btn
             text
             @click="filterStatus(selectableStatus[status])"
             v-for="status in Object.keys(selectableStatus)"
             :key="status"
+            :data-test="`status.select.${getStatusTestLabel(
+              selectableStatus[status]
+            )}`"
           >
             {{ getStatusSelectLabel(selectableStatus[status]) }}
           </v-btn>
           <!-- this needs to come last, see statusButtonSelected() -->
-          <v-btn text @click="filterStatus(undefined)"> Alle </v-btn>
+          <v-btn
+            text
+            @click="filterStatus(undefined)"
+            data-test="status.select.all"
+          >
+            Alle
+          </v-btn>
         </v-btn-toggle>
       </v-col>
     </v-row>
@@ -38,7 +57,7 @@
           hide-details
           @keyup="triggerSearch(search)"
         ></v-text-field>
-        <v-data-table
+        <iris-data-table
           :loading="dataTableModel.loading"
           :page="dataTableModel.page"
           :server-items-length="dataTableModel.itemsLength"
@@ -49,12 +68,17 @@
           :search="search"
           :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
           @update:options="updatePagination"
+          data-test="view.data-table"
         >
           <template v-slot:[itemAddressSlotName]="{ item }">
             <span class="text-pre-wrap"> {{ item.address }} </span>
           </template>
           <template v-slot:[itemStatusSlotName]="{ item }">
-            <v-chip :color="getStatusColor(item.status)" dark>
+            <v-chip
+              :color="getStatusColor(item.status)"
+              dark
+              :data-test="`status.${getStatusTestLabel(item.status)}`"
+            >
               {{ getStatusName(item.status) }}
             </v-chip>
           </template>
@@ -66,11 +90,12 @@
                 name: 'event-details',
                 params: { id: item.code },
               }"
+              data-test="select"
             >
               Details
             </v-btn>
           </template>
-        </v-data-table>
+        </iris-data-table>
       </v-card-text>
     </v-card>
   </div>
@@ -98,6 +123,8 @@ import {
 } from "@/utils/pagination";
 import { Dictionary } from "vue-router/types/router";
 import { join } from "@/utils/misc";
+import StatusTestLabel from "@/constants/StatusTestLabel";
+import IrisDataTable from "@/components/iris-data-table.vue";
 
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
@@ -124,6 +151,7 @@ function getFormattedDate(date?: string): string {
 
 @Component({
   components: {
+    IrisDataTable,
     EventTrackingFormView: EventTrackingFormView,
   },
   beforeRouteLeave(to, from, next) {
@@ -208,10 +236,8 @@ export default class EventTrackingListView extends Vue {
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   get dataTableModel() {
-    const {
-      eventTrackingList,
-      eventTrackingListLoading,
-    } = store.state.eventTrackingList;
+    const { eventTrackingList, eventTrackingListLoading } =
+      store.state.eventTrackingList;
     return {
       page: getPageFromRouteWithDefault(this.$route),
       itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
@@ -308,6 +334,10 @@ export default class EventTrackingListView extends Vue {
 
   getStatusName(status: DataRequestStatus): string {
     return StatusMessages.getMessage(status);
+  }
+
+  getStatusTestLabel(status: DataRequestStatus): string {
+    return StatusTestLabel.getStatusTestLabel(status);
   }
 
   getStatusSelectLabel(status: DataRequestStatus | null): string {

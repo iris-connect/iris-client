@@ -116,7 +116,7 @@ Antragsstrecke:
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
 
-7. Es öffnet sich ein Webformular, mit dessen Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder, die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. auf dem vorausgefüllten Wert. 
+7. Es öffnet sich ein Webformular, mit dessen Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder, die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. auf dem vorausgefüllten Wert. Bei den einzutragenden Domains in den Feldern ist darauf zu achten, dass die Groß- oder Kleinschreibung der Domains korrekt ist, meist sind die Domains klein geschrieben.
 
    | Feld | Wert | Beispiel |
    | - | - | - |
@@ -187,7 +187,7 @@ Führen Sie bitte Schritte 1-5 aus dem vorhergehenden Abschnitt aus.
 
    ![Ansicht "Neues Zertifikat - Schritt 2 / 4)" im CSM](images/certificate_service_manager/mycsm_Neues_Zertifikat.png)
 
-7. Es öffnet sich ein Webformular, mit dessen Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder, die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert. 
+7. Es öffnet sich ein Webformular, mit dessen Hilfe Sie Ihre Daten für den CSR angeben können. Tragen Sie bitte folgende Daten ein. Felder, die in der Tabelle nicht erwähnt sind, lassen Sie bitte leer bzw. mit dem vorausgefüllten Wert.  Bei den einzutragenden Domains in den Feldern ist darauf zu achten, dass die Groß- oder Kleinschreibung der Domains korrekt ist, meist sind die Domains klein geschrieben.
 
    ### Achtung: CN und SAN unterscheiden sich zu Zertifikat #1
 
@@ -236,6 +236,13 @@ Sie können die Zertifikate dann einfach im CSM herunterladen.
    Klicken Sie auf "Download", um die zwei Zertifikate herunterzuladen.
    ![Ansicht "Zertifikate" im CSM](images/certificate_service_manager/mycsm_Zertifikate.png)
 
+4. Die Bundesdruckerei übermittelt die Zertifikate mit einer durchlaufenden Nummerierung versehen, bspw. <b>myCert_1016059.cer</b>. Um nun zu überprüfen, welches Zertifikat das `TLS-Zertifikat - Private Proxy #1` und welches das `mTLS-Zertifikat - EPS #3` ist, kann folgender Befehl verwendet werden:
+
+   ```
+   openssl x509 -in myCert_1016059.cer -noout -subject
+   ```
+
+   Als Ergebnis erhält man eine kompakte Liste von Einträgen, von denen zur Identifikation der Zertifikate der Common Name (CN) interessant ist. Das `mTLS-Zertifikat - EPS #3` sollte hier einen Eintrag in der Form `CN = eps.[DOMAIN_NAME]` enthalten.
 ### Fingerprints von Zertifikat Nr. 3 an das IRIS Team übermitteln.
 
 Damit Ihr GA mit den im IRIS System befindlichen Akteuren kommunizieren kann, muss Ihr GA im IRIS Service Directory eingetragen werden. Führen Sie dafür die folgenden Schritte durch. 

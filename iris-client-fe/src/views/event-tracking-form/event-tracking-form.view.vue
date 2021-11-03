@@ -14,6 +14,7 @@
               v-model="form.model.externalId"
               :rules="validationRules.sanitisedAndDefined"
               label="Externe ID"
+              data-test="externalId"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6">
@@ -21,6 +22,7 @@
               v-model="form.model.name"
               label="Name"
               :rules="validationRules.sanitised"
+              data-test="name"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -32,7 +34,7 @@
           @search="handleLocationSearch"
         >
           <template v-slot:activator="{ on, attrs }">
-            <v-row>
+            <v-row data-test="location-select">
               <v-col v-if="form.model.location">
                 <event-tracking-form-location-info
                   :location="form.model.location"
@@ -49,6 +51,7 @@
                     v-bind="attrs"
                     v-on="on"
                     :disabled="eventCreationOngoing"
+                    data-test="location-select-dialog.activator"
                   >
                     {{
                       form.model.location
@@ -75,6 +78,7 @@
               }"
               :rules="validationRules.start"
               required
+              data-test="start"
             />
           </v-col>
           <v-col cols="12" md="6">
@@ -89,6 +93,7 @@
               }"
               :rules="validationRules.end"
               required
+              data-test="end"
             />
           </v-col>
         </v-row>
@@ -103,6 +108,7 @@
               value=""
               hint="Datenschutz-Hinweis: Die Anfragendetails werden an den Betrieb übermittelt!"
               :rules="validationRules.sanitised"
+              data-test="requestDetails"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -111,11 +117,22 @@
         }}</v-alert>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="secondary" plain @click="$router.back()">
+        <v-btn
+          color="secondary"
+          plain
+          :to="{ name: 'event-list' }"
+          replace
+          data-test="cancel"
+        >
           Abbrechen
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn :disabled="eventCreationOngoing" color="primary" @click="submit">
+        <v-btn
+          :disabled="eventCreationOngoing"
+          color="primary"
+          @click="submit"
+          data-test="submit"
+        >
           Anfrage senden
         </v-btn>
       </v-card-actions>
@@ -289,7 +306,7 @@ export default class EventTrackingFormView extends Vue {
         "eventTrackingForm/createEventTracking",
         payload
       );
-      router.push({
+      router.replace({
         name: `event-details`,
         params: {
           id: created.code || "",

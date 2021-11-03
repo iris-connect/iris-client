@@ -97,7 +97,7 @@ mvn versions:set -DnewVersion=$VERSION -DprocessAllModules=true
 
 # Package the new version and copy it to release folder
 # These files will be upload to github by @semantic-release/github
-mvn -B clean package spring-boot:repackage spring-boot:build-image -Dspring-boot.build-image.publish=false
+mvn -B clean verify spring-boot:repackage spring-boot:build-image -Dspring-boot.build-image.publish=false
 mkdir release && cp ./iris-client-bff/target/*.jar release
 
 BFF_IMAGE_NAME="$NAMESPACE/iris-client-bff"
@@ -140,12 +140,19 @@ export VUE_APP_CSV_EXPORT_STANDARD_ATOMIC_ADDRESS=""
 npm run build
 cd dist && zip -qq -r ../../release/iris-client-fe-$VERSION.zip *
 
+
+cd ../../infrastructure/deployment
+
+if (( ! $RELEASE )); then
+	printf "\n  Adds -latest to the image tags in Compose files because the build is a pre release \n\n"
+	sed -i 's/\(inoeg\/iris-client.*\)/\1-latest/' docker-compose.yml docker-compose-ext-postgres.yml
+fi
+
 printf "\n  Create ZIP of deployment scripts and instructions  \n\n"
-cd ../../infrastructure/deployment && zip -qq -r ../../release/deployment-$VERSION.zip * .*
+zip -qr ../../release/deployment-$VERSION.zip * .[a-zA-Z0-9_-]*
 
 printf "\n  Create ZIP of stand-alone-deployment  \n\n"
-
-cd ../../infrastructure/stand-alone-deployment && zip -qq -r ../../release/stand-alone-deployment-$VERSION.zip * .*
+cd ../../infrastructure/stand-alone-deployment && zip -qr ../../release/stand-alone-deployment-$VERSION.zip * .[a-zA-Z0-9_-]*
 
 
 cd ../../

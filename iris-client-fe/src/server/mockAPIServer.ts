@@ -1,9 +1,12 @@
 import {
   Credentials,
-  DataRequestCaseDetails,
+  DataRequestCaseClient,
+  DataRequestCaseData,
   DataRequestDetails,
+  DataRequestStatus,
   ExistingDataRequestClientWithLocation,
   User,
+  UserRole,
 } from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
 import {
@@ -13,6 +16,7 @@ import {
 import { createServer, Request, Response } from "miragejs";
 import {
   dummyDataRequestsCases,
+  dummySubmissionUrl,
   getDummyDetailsCases,
 } from "@/server/data/data-requests-cases";
 import router from "@/router";
@@ -20,10 +24,16 @@ import {
   dummyUserList,
   getDummyUserFromRequest,
 } from "@/server/data/dummy-userlist";
-import { remove, findIndex, some } from "lodash";
+import { findIndex, remove, some } from "lodash";
 import { paginated } from "@/server/utils/pagination";
 import dayjs from "@/utils/date";
 import _defaults from "lodash/defaults";
+
+const loginResponse = (role: UserRole): Response => {
+  return new Response(200, {
+    "Authentication-Info": `Bearer TOKEN.${role}`,
+  });
+};
 
 // @todo: find better solution for data type
 const authResponse = (
@@ -36,13 +46,7 @@ const authResponse = (
       return new Response(401, { error: "not authorized" });
     }
   }
-  return new Response(
-    200,
-    {
-      "Authentication-Info": "Bearer TOKEN123",
-    },
-    data
-  );
+  return new Response(200, undefined, data);
 };
 
 const validateAuthHeader = (request: Request): boolean => {
@@ -65,8 +69,14 @@ export function makeMockAPIServer() {
        */
       this.post("/login", (schema, request) => {
         const credentials: Credentials = JSON.parse(request.requestBody);
-        if (credentials.userName === "admin") {
-          if (credentials.password === "auth") {
+        if (
+          credentials.userName === "admin" ||
+          credentials.userName === "e2e_test_invalid_userName"
+        ) {
+          if (
+            credentials.password === "auth" ||
+            credentials.password === "e2e_test_invalid_password"
+          ) {
             return new Response(401, {}, { message: "Unauthorized" });
           }
           if (credentials.password === "block") {
@@ -80,7 +90,9 @@ export function makeMockAPIServer() {
             );
           }
         }
-        return authResponse();
+        return loginResponse(
+          credentials.userName === "user" ? UserRole.User : UserRole.Admin
+        );
       });
 
       this.get("/user/logout", () => {
@@ -88,7 +100,12 @@ export function makeMockAPIServer() {
       });
 
       this.get("/user-profile", (schema, request) => {
-        const user = dummyUserList.users?.[0];
+        const role =
+          request?.requestHeaders?.Authorization.match(/(USER|ADMIN)$/)?.[0] ||
+          "ADMIN";
+        const user = dummyUserList.users?.find((usr) => {
+          return usr.role === role;
+        });
         return authResponse(request, user);
       });
 
@@ -138,16 +155,30 @@ export function makeMockAPIServer() {
         return authResponse(request);
       });
 
-      this.post("/data-requests-client/events", () => {
+      this.post("/data-requests-client/events", (schema, request) => {
+        const { locationId, ...data } = JSON.parse(request.requestBody);
         const created: Partial<DataRequestDetails> = {
-          code: "NEWREQUEST123",
+          code: "NEWREQUEST_" + dayjs().valueOf(),
+          ...data,
+          locationInformation: dummyLocations.find(
+            (location) => location.id === locationId
+          ),
         };
+        dummyDataRequests.push(created);
         return created;
       });
 
       this.get("/data-requests-client/events", (schema, request) => {
-        const { page } = request.queryParams;
-        return authResponse(request, paginated(dummyDataRequests, page));
+        const { page, status } = request.queryParams;
+        return authResponse(
+          request,
+          paginated(
+            dummyDataRequests.filter((item) =>
+              status ? item.status === status : true
+            ),
+            page
+          )
+        );
       });
 
       this.get("/data-requests-client/events/:id", (schema, request) => {
@@ -174,15 +205,28 @@ export function makeMockAPIServer() {
       });
 
       this.post("/data-requests-client/cases", (schema, request) => {
-        const created: Partial<DataRequestCaseDetails> = {
-          caseId: "NEWCASE123",
+        const data: DataRequestCaseClient = JSON.parse(request.requestBody);
+        const created: DataRequestCaseData = {
+          caseId: data.externalCaseId,
+          status: DataRequestStatus.DataRequested,
+          submissionUri: dummySubmissionUrl,
+          ...data,
         };
+        dummyDataRequestsCases.push(created);
         return authResponse(request, created);
       });
 
       this.get("/data-requests-client/cases", (schema, request) => {
-        const { page } = request.queryParams;
-        return authResponse(request, paginated(dummyDataRequestsCases, page));
+        const { page, status } = request.queryParams;
+        return authResponse(
+          request,
+          paginated(
+            dummyDataRequestsCases.filter((item) =>
+              status ? item.status === status : true
+            ),
+            page
+          )
+        );
       });
 
       this.get("/data-requests-client/cases/:caseId", (schema, request) => {
@@ -219,7 +263,18 @@ export function makeMockAPIServer() {
           };
         }
 
-        return authResponse(request, data);
+        if (searchMatches(searchQuery, ["iris"])) {
+          data = {
+            locations: [dummyLocations[3]],
+          };
+        }
+
+        return authResponse(request, {
+          ...data,
+          totalElements: dummyLocations.length,
+          page: 1,
+          size: 20,
+        });
       });
     },
   });

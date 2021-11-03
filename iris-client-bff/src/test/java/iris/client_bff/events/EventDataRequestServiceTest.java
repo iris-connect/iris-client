@@ -1,10 +1,10 @@
 package iris.client_bff.events;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
+import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.eps.DataProviderClient;
 import iris.client_bff.proxy.ProxyServiceClient;
@@ -25,6 +25,9 @@ public class EventDataRequestServiceTest {
 	EventDataRequestRepository repository;
 
 	@Mock
+	HibernateSearcher searcher;
+
+	@Mock
 	SearchClient searchClient;
 
 	@Mock
@@ -40,7 +43,7 @@ public class EventDataRequestServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		service = new EventDataRequestService(repository, searchClient, proxyServiceClient, epsDataRequestClient);
+		service = new EventDataRequestService(repository, searcher, searchClient, proxyServiceClient, epsDataRequestClient);
 	}
 
 	@Test

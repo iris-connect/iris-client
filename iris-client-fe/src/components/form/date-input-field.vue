@@ -16,6 +16,7 @@
             prepend-icon="mdi-calendar"
             v-bind="$attrs"
             @blur="date = parseDate(dateFormatted)"
+            data-test="date-input-field"
           ></v-text-field>
         </div>
         <v-icon v-if="model" @click="model = ''"> mdi-close </v-icon>
@@ -36,6 +37,7 @@
     prepend-icon="mdi-calendar"
     v-bind="$attrs"
     v-on="$listeners"
+    data-test="date-input-field"
   ></v-text-field>
 </template>
 
@@ -44,6 +46,7 @@ import dayjs from "@/utils/date";
 import { Component, Vue } from "vue-property-decorator";
 
 const DateInputFieldProps = Vue.extend({
+  inheritAttrs: false,
   props: {
     value: {
       type: String,

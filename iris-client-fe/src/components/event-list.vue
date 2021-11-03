@@ -4,13 +4,14 @@
       ><h2 class="light-font mb-6">Offene Ereignisse</h2></v-card-title
     >
     <v-card-text>
-      <v-data-table
+      <iris-data-table
         :headers="tableData.headers"
         :items="tableRowData"
         :items-per-page="10"
         :hide-default-footer="true"
         :disable-sort="true"
         class="elevation-1 mt-5"
+        data-test="open-events.data-table"
       >
         <template v-slot:[itemActionSlotName]="{ item }">
           <v-btn
@@ -20,13 +21,14 @@
             Details
           </v-btn>
         </template>
-      </v-data-table>
+      </iris-data-table>
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import IrisDataTable from "./iris-data-table.vue";
 
 export type TableRow = {
   address: string;
@@ -49,7 +51,11 @@ const EventTrackingListProps = Vue.extend({
   },
 });
 
-@Component
+@Component({
+  components: {
+    IrisDataTable,
+  },
+})
 export default class EventTrackingList extends EventTrackingListProps {
   tableData = {
     search: "",

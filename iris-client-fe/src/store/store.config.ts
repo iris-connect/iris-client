@@ -10,7 +10,9 @@ import indexTrackingForm from "../views/index-tracking-form/index-tracking-form.
 import indexTrackingList from "../views/index-tracking-list/index-tracking-list.store";
 import indexTrackingDetails from "@/views/index-tracking-details/index-tracking-details.store";
 // @todo - indexTracking: optional remove next line once index cases are permanently activated again
-import indexTrackingSettings from "@/views/index-tracking-settings/index-tracking-settings.store";
+import indexTrackingSettings from "@/views/app-settings/index-tracking-settings.store";
+import normalizeSettings from "@/views/app-settings/normalize-settings.store";
+import chunkLoader from "@/views/app-settings/chunk-loader.store";
 
 import { StoreOptions } from "vuex";
 import { RootState } from "@/store/types";
@@ -36,14 +38,18 @@ export const storeOptions: StoreOptions<RootState> = {
     indexTrackingDetails,
     // @todo - indexTracking: optional remove next line once index cases are permanently activated again
     indexTrackingSettings,
+    normalizeSettings,
+    chunkLoader,
   },
   plugins: [
     createPersistedState({
       key: "iris-client-frontend",
       paths: [
         "userLogin.session",
+        "normalizeSettings.logEnabled",
         // @todo - indexTracking: optional remove next line once index cases are permanently activated again
         "indexTrackingSettings.indexTrackingEnabled",
+        "chunkLoader.reloadedAt",
       ],
       getState(key: string, storage) {
         try {

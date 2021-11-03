@@ -19,6 +19,6 @@ Copyright: Copyright 2007-present the original author or authors.
 License: Apache-2.0
 
 # From Swagger generated Code
-Files: iris-sormas-api-client/**
-Copyright: No Copyright
-License: CC0-1.0
+#Files: iris-sormas-api-client/**
+#Copyright: No Copyright
+#License: CC0-1.0

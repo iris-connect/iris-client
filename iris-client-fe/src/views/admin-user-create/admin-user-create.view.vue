@@ -15,6 +15,7 @@
               label="Vorname"
               :rules="validationRules.names"
               maxlength="50"
+              data-test="firstName"
             ></v-text-field>
           </v-col>
           <v-col cols="12" md="6">
@@ -23,6 +24,7 @@
               label="Nachname"
               :rules="validationRules.names"
               maxlength="50"
+              data-test="lastName"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -33,6 +35,7 @@
               label="Anmeldename"
               :rules="validationRules.userName"
               maxlength="50"
+              data-test="userName"
             ></v-text-field>
           </v-col>
           <v-col cols="12" md="6">
@@ -41,6 +44,8 @@
               label="Rolle"
               :items="roleSelectOptions"
               :rules="validationRules.defined"
+              data-test="role"
+              :menu-props="{ contentClass: 'select-menu-role' }"
             ></v-select>
           </v-col>
         </v-row>
@@ -50,6 +55,7 @@
               v-model="form.model.password"
               label="Passwort"
               :rules="validationRules.password"
+              data-test="password"
             />
           </v-col>
         </v-row>
@@ -62,7 +68,9 @@
           color="secondary"
           :disabled="userCreationOngoing"
           plain
-          @click="$router.back()"
+          :to="{ name: 'admin-user-list' }"
+          replace
+          data-test="cancel"
         >
           Abbrechen
         </v-btn>
@@ -71,6 +79,7 @@
           :disabled="userCreationOngoing"
           color="primary"
           @click="createUser"
+          data-test="submit"
         >
           Konto anlegen
         </v-btn>
@@ -153,7 +162,7 @@ export default class AdminUserCreateView extends Vue {
     if (valid) {
       const payload: UserInsert = this.form.model;
       await store.dispatch("adminUserCreate/createUser", payload);
-      this.$router.back();
+      this.$router.replace({ name: "admin-user-list" });
     }
   }
 }

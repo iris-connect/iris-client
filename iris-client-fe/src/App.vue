@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="white" flat>
+    <v-app-bar app color="white" flat data-test="app-bar">
       <v-img
         alt="IRIS Logo"
         class="shrink mt-3 mr-4"
@@ -19,6 +19,7 @@
             :exact="link.meta.menuExact"
             :disabled="isLinkDisabled(link)"
             text
+            :data-test="`app-bar.nav.link.${link.name}`"
           >
             {{ link.meta.menuName }}
           </v-btn>
@@ -121,7 +122,7 @@ export default Vue.extend({
           return true;
         }
       }
-      return link.meta.disabled;
+      return link.meta?.disabled;
     },
     logoutUser() {
       this.$store.dispatch("userLogin/logout");

@@ -1,6 +1,12 @@
 <template>
   <v-card class="my-3">
-    <v-form ref="form" v-model="form.valid" lazy-validation :disabled="isBusy">
+    <v-form
+      ref="form"
+      v-model="form.valid"
+      lazy-validation
+      :disabled="isBusy"
+      :class="{ 'is-loading': userLoading }"
+    >
       <v-card-title>Konto bearbeiten</v-card-title>
       <v-card-text>
         <v-row>
@@ -15,6 +21,7 @@
                 v-model="form.model.firstName"
                 label="Vorname"
                 maxlength="50"
+                data-test="firstName"
               ></v-text-field>
             </conditional-field>
           </v-col>
@@ -29,6 +36,7 @@
                 v-model="form.model.lastName"
                 label="Nachname"
                 maxlength="50"
+                data-test="lastName"
               ></v-text-field>
             </conditional-field>
           </v-col>
@@ -45,6 +53,7 @@
                 v-model="form.model.userName"
                 label="Anmeldename"
                 maxlength="50"
+                data-test="userName"
               ></v-text-field>
             </conditional-field>
           </v-col>
@@ -55,6 +64,8 @@
                 v-model="form.model.role"
                 label="Rolle"
                 :items="roleSelectOptions"
+                data-test="role"
+                :menu-props="{ contentClass: 'select-menu-role' }"
               ></v-select>
             </conditional-field>
           </v-col>
@@ -65,6 +76,7 @@
               v-model="form.model.password"
               label="Passwort"
               :rules="validationRules.password"
+              data-test="password"
             />
           </v-col>
         </v-row>
@@ -84,12 +96,19 @@
           color="secondary"
           :disabled="isBusy"
           plain
-          @click="$router.back()"
+          :to="{ name: 'admin-user-list' }"
+          replace
+          data-test="cancel"
         >
           Abbrechen
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn :disabled="isBusy" color="primary" @click="editUser">
+        <v-btn
+          :disabled="isBusy"
+          color="primary"
+          @click="editUser"
+          data-test="submit"
+        >
           Änderungen übernehmen
         </v-btn>
       </v-card-actions>
@@ -106,6 +125,7 @@ import PasswordInputField from "@/components/form/password-input-field.vue";
 import rules from "@/common/validation-rules";
 import { omitBy } from "lodash";
 import ConditionalField from "@/views/admin-user-edit/components/conditional-field.vue";
+import _defaults from "lodash/defaults";
 
 type AdminUserEditForm = {
   model: UserUpdate;
@@ -242,12 +262,11 @@ export default class AdminUserEditView extends Vue {
 
   @Watch("user")
   onUserChanged(newValue: User | null): void {
-    const { id, ...restProps } = newValue || {};
-    this.userId = id || "";
-    this.form.model = {
-      ...this.form.model,
-      ...restProps,
-    };
+    if (newValue) {
+      const { id, ...restProps } = newValue;
+      this.userId = id || "";
+      this.form.model = _defaults({}, restProps, this.form.model);
+    }
     this.$refs.form.resetValidation();
   }
   get user(): User | null {
@@ -266,7 +285,7 @@ export default class AdminUserEditView extends Vue {
         data: ensureIntegrityOfUserUpsert(this.form.model, protectedFields),
       };
       await store.dispatch("adminUserEdit/editUser", payload);
-      this.$router.back();
+      this.$router.replace({ name: "admin-user-list" });
       // fetch the user profile after changing the current user to update the user`s display name in the main navigation bar
       // can be ignored if it fails because no business logic is affected if the user profile is not up to date as the user`s access token is invalidated by the Backend if anything of relevance (e.g. userName, password) changes
       if (store.getters["userLogin/isCurrentUser"](this.userId)) {

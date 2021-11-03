@@ -8,6 +8,7 @@
           actionlabel="Zur Ereignisübersicht"
           image="sketch_file_analysis.svg"
           actionlink="events/list"
+          data-test="counter-widget.events"
         ></counter-widget>
       </v-col>
       <v-col>
@@ -17,6 +18,7 @@
           actionlabel="Zur Indexübersicht"
           image="sketch_medicine.svg"
           actionlink="cases/list"
+          data-test="counter-widget.index-cases"
           :linkDisabled="
             // @todo indexTracking: remove linkDisabled once index cases are permanently activated again
             !$store.state.indexTrackingSettings.indexTrackingEnabled
@@ -29,6 +31,7 @@
           :count="statistics.sumStatus"
           actionlabel="Anzeigen"
           image="sketch_reviewed_docs.svg"
+          data-test="counter-widget.status"
           actionlink="events/list"
         ></counter-widget>
       </v-col>
@@ -48,6 +51,7 @@
                   color="primary"
                   :to="{ name: 'event-new' }"
                   class="mt-5 mb-3"
+                  data-test="link.new-event"
                   >Neue Ereignisverfolgung starten
                 </v-btn>
               </v-col>
@@ -58,6 +62,7 @@
                   color="primary"
                   :to="{ name: 'index-new' }"
                   class="mb-5"
+                  data-test="link.new-index-case"
                   :disabled="
                     // @todo indexTracking: remove disabled once index cases are permanently activated again
                     !$store.state.indexTrackingSettings.indexTrackingEnabled
@@ -113,6 +118,7 @@ import { TableRow } from "@/components/event-list.vue";
 import { ErrorMessage } from "@/utils/axios";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
+import { join } from "@/utils/misc";
 
 const tableRowMapper = (
   dataRequest: ExistingDataRequestClientWithLocation
@@ -135,14 +141,16 @@ const tableRowMapper = (
 function getFormattedAddress(
   data?: ExistingDataRequestClientWithLocation
 ): string {
-  if (data) {
-    const contact = data.locationInformation?.contact;
-    if (contact) {
-      return `${data.name}, ${contact.address.street}, ${contact.address.zip} ${contact.address.city}`;
-    }
-    return data.name || "-"; // TODO repeating - improve
-  }
-  return "-";
+  const contact = data?.locationInformation?.contact;
+  if (!contact) return data?.locationInformation?.name || data?.name || "-";
+  return join(
+    [
+      contact?.officialName,
+      contact?.address?.street,
+      join([contact?.address?.zip, contact?.address?.city], " "),
+    ],
+    ", "
+  );
 }
 
 function getFormattedDate(date?: string): string {

@@ -21,8 +21,8 @@ public class DtoSupplier {
         addressList.add(Address.builder().street("Bahnhofstrasse").houseNumber("9").city("Altheim").zipCode("34567").build());
         addressList.add(Address.builder().street("Hauptstrasse").houseNumber("163").city("Musterhausen").zipCode("23456").build());
 
-        contactPersonList.add(ContactPerson.builder().firstName("Heinz").lastName("Huber").build());
-        contactPersonList.add(ContactPerson.builder().firstName("Harald").lastName("Meier").build());
+        contactPersonList.add(ContactPerson.builder().firstName("Heinz").lastName("Huber").phone("035204 22222").mobilePhone("01515 67890").build());
+        contactPersonList.add(ContactPerson.builder().firstName("Harald").lastName("Meier").phone("+49 35204 22222").mobilePhone("+49 1515 67890").build());
         contactPersonList.add(ContactPerson.builder().firstName("Vera").lastName("Kleinschmidt").build());
         contactPersonList.add(ContactPerson.builder().firstName("Katja").lastName("Zimmermann").build());
 

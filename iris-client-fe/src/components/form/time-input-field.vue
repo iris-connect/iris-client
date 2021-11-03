@@ -16,6 +16,7 @@
             v-model="model"
             prepend-icon="mdi-clock"
             v-bind="$attrs"
+            data-test="time-input-field"
           ></v-text-field>
         </div>
         <v-icon v-if="model" @click="model = ''"> mdi-close </v-icon>
@@ -38,6 +39,7 @@
     prepend-icon="mdi-clock"
     v-bind="$attrs"
     v-on="$listeners"
+    data-test="time-input-field"
   ></v-text-field>
 </template>
 
@@ -45,6 +47,7 @@
 import { Component, Vue } from "vue-property-decorator";
 
 const TimeInputFieldProps = Vue.extend({
+  inheritAttrs: false,
   props: {
     value: {
       type: String,

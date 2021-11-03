@@ -9,6 +9,7 @@ import VueRouter, {
 import Home from "../views/home/Home.vue";
 import { getAuthenticatedUser } from "@/views/user-login/utils/store";
 import { UserRole } from "@/api";
+import dayjs from "@/utils/date";
 
 Vue.use(VueRouter);
 
@@ -189,6 +190,16 @@ export const setInterceptRoute = (route: Route): void => {
 };
 
 router.beforeEach(async (to, from, next) => {
+  if (to.query.normalizeLog) {
+    const normalizeLogEnabled = to.query.normalizeLog;
+    if (normalizeLogEnabled === "enabled") {
+      store.commit("normalizeSettings/setLogEnabled", true);
+    } else if (normalizeLogEnabled === "disabled") {
+      store.commit("normalizeSettings/setLogEnabled", false);
+    }
+    delete to.query.normalizeLog;
+    return next(locationFromRoute(to));
+  }
   // @todo: remove indexTracking enabled / disabled query functionality once index cases are permanently activated again
   if (to.query.indexTracking) {
     const indexTrackingQuery = to.query.indexTracking;
@@ -211,12 +222,12 @@ router.beforeEach(async (to, from, next) => {
       return next("/");
     }
   }
-  if (to.meta.auth !== false && !store.getters["userLogin/isAuthenticated"]) {
+  if (to.meta?.auth !== false && !store.getters["userLogin/isAuthenticated"]) {
     // this is triggered if a user is not logged in and tries to deep link into the application
     setInterceptRoute(to);
     return next("/user/login");
   }
-  if (to.meta.admin === true) {
+  if (to.meta?.admin === true) {
     const user = await getAuthenticatedUser();
     if (user?.role !== UserRole.Admin) {
       return next("/");
@@ -226,6 +237,31 @@ router.beforeEach(async (to, from, next) => {
     return next("/");
   }
   next();
+});
+
+/**
+ * Webpack splits files (assets, code, etc.) into hashed chunks to improve loading performance and to handle outdated / cached files.
+ * Some of the hashed chunks are not loaded initially with the index.html file but only if they are used / required.
+ * If new code (-> new chunks with new file-hashes) is deployed to the server the old files are deleted and the references to the old chunk file hashes are no longer valid.
+ * The router views are imported as hashed chunks which means that the router wont be able to navigate to the view-chunk after a deployment.
+ * There are many solutions for that problem (not deleting old files from the server, removing the hash from the output files, etc.)
+ * To keep it simple - the following approach is used:
+ * - if a router error is thrown, check if it is caused by a missing chunk
+ * - reload the page which should update the file paths to the chunks
+ * - to avoid infinite reload loops: check the last time the page was reloaded due to a missing chunk.
+ * - trigger the reload only after 30 minutes have passed since the last reload (or if it is the first reload).
+ */
+router.onError((error) => {
+  const pattern = /Loading chunk.*failed/g;
+  if (pattern.test(error.message)) {
+    const reloadedAt = store.state.chunkLoader.reloadedAt;
+    if (!reloadedAt || Math.abs(dayjs().diff(reloadedAt, "minutes")) > 30) {
+      store.commit("chunkLoader/setReloadedAt", dayjs().valueOf());
+      window.location.reload();
+      return;
+    }
+  }
+  throw error;
 });
 
 export default router;

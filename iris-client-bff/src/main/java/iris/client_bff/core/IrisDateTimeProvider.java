@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAmount;
@@ -42,7 +42,7 @@ public class IrisDateTimeProvider implements DateTimeProvider {
 	 */
 	@Override
 	public Optional<TemporalAccessor> getNow() {
-		return Optional.of(Instant.now().plus(delta));
+		return Optional.of(LocalDateTime.now().plus(delta));
 	}
 
 	@ConstructorBinding
