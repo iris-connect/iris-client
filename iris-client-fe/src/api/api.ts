@@ -1667,6 +1667,12 @@ export interface UserUpdate {
   password?: string;
   /**
    *
+   * @type {string}
+   * @memberof UserUpdate
+   */
+  oldPassword?: string;
+  /**
+   *
    * @type {UserRole}
    * @memberof UserUpdate
    */

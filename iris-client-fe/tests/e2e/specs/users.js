@@ -36,6 +36,9 @@ describe("Users", () => {
     userName: generateRandomUserName("User"),
     password: generateRandomPassword(),
   };
+  const userEdit = {
+    password: generateRandomPassword(),
+  };
   const userAccessor = Cypress.env("MOCK_SERVER")
     ? "E2ETestUser"
     : user.userName;
@@ -211,6 +214,58 @@ describe("Users", () => {
       cy.visit("/admin/user/list");
       cy.location("pathname").should("not.equal", "/admin/user/list");
     });
+  });
+  it("as admin: should change the password of a different user - no old password confirmation required", () => {
+    cy.login();
+    cy.fetchUser();
+    cy.visit("/admin/user/list");
+    cy.visitUserByAccessor(userAccessor);
+    cy.get("form")
+      .should("not.have.class", "is-loading")
+      .within(() => {
+        cy.getBy("input{oldPassword}").should("not.exist");
+        cy.getBy("input{password}")
+          .type(userEdit.password, { log: false })
+          .assertInputValid();
+        cy.getBy("input{oldPassword}").should("not.exist");
+        cy.getBy(".v-btn{submit}").click();
+      });
+    cy.location("pathname").should("equal", "/admin/user/list");
+  });
+  it("as user: should change the own password - old password confirmation required", () => {
+    const credentials = {
+      userName: Cypress.env("MOCK_SERVER") ? "user" : user.userName,
+      password: userEdit.password,
+    };
+    cy.changeOwnPassword(credentials, user.password);
+  });
+  it("as admin: should change the role of a user to admin", () => {
+    cy.login();
+    cy.fetchUser();
+    cy.visit("/admin/user/list");
+    cy.visitUserByAccessor(userAccessor);
+    cy.get("form")
+      .should("not.have.class", "is-loading")
+      .within(() => {
+        cy.selectFieldValue(
+          "input{role}",
+          ".select-menu-role",
+          "Administration"
+        );
+        cy.getBy(".v-btn{submit}").click();
+      });
+    cy.location("pathname").should("equal", "/admin/user/list");
+    cy.getDataTableRow(userAccessor, "view.data-table").should(
+      "contain",
+      "Administration"
+    );
+  });
+  it("as admin: should change the own password - old password confirmation required", () => {
+    const credentials = {
+      userName: Cypress.env("MOCK_SERVER") ? "admin" : user.userName,
+      password: user.password,
+    };
+    cy.changeOwnPassword(credentials, userEdit.password);
   });
   it("should delete a user", () => {
     cy.login();
