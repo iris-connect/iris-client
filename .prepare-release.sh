@@ -141,11 +141,11 @@ npm run build
 cd dist && zip -qq -r ../../release/iris-client-fe-$VERSION.zip *
 
 printf "\n  Create ZIP of deployment scripts and instructions  \n\n"
-cd ../../infrastructure/deployment && zip -qq -r ../../release/deployment-$VERSION.zip * .*
+cd ../../infrastructure/deployment && zip -qr ../../release/deployment-$VERSION.zip * .[a-zA-Z0-9_-]*
 
 printf "\n  Create ZIP of stand-alone-deployment  \n\n"
 
-cd ../../infrastructure/stand-alone-deployment && zip -qq -r ../../release/stand-alone-deployment-$VERSION.zip * .*
+cd ../../infrastructure/stand-alone-deployment && zip -qr ../../release/stand-alone-deployment-$VERSION.zip * .[a-zA-Z0-9_-]*
 
 
 cd ../../
