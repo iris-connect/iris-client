@@ -59,7 +59,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		return userAccountsRepository.findById(id)
 				.map(UserAccount::getPassword)
-				.filter(it -> StringUtils.equals(it, passwordEncoder.encode(oldPassword)))
+				.filter(it -> passwordEncoder.matches(oldPassword, it))
 				.isPresent();
 	}
 
@@ -129,8 +129,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 
 		var newPassword = userUpdateDTO.getPassword();
-		if (isNotBlank(newPassword)
-				&& !StringUtils.equals(userAccount.getPassword(), passwordEncoder.encode(newPassword))) {
+		if (isNotBlank(newPassword) && !passwordEncoder.matches(newPassword, userAccount.getPassword())) {
 
 			userAccount.setPassword(passwordEncoder.encode(newPassword));
 			invalidateTokens = true;
