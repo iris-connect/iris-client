@@ -126,13 +126,13 @@ export const dummyDataDetails: DataRequestDetails = {
         firstName: " Must\"er'm'an´;=,n",
         lastName: "=?+-@!*/\\%€%=@+µMaxßüäö;",
         email: "=max@e\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nxample.@.de",
-        phone: "=01234 000000",
-        mobilePhone: "=0123 0815",
+        phone: " =01234 000000",
+        mobilePhone: "  =0123 0815",
         sex: Sex.Male,
         address: {
-          street: "=Universitätsplatz",
+          street: '=Univ"ersit;"@ät;+splatz',
           houseNumber: "=1",
-          zipCode: "=39104",
+          zipCode: "  =39104",
           city: "=Magdeburg",
         },
         attendanceInformation: {
