@@ -99,12 +99,17 @@
         </v-row>
         <v-row v-if="hasError">
           <v-col>
-            <v-alert v-if="userLoadingError" text type="error">{{
-              userLoadingError
-            }}</v-alert>
-            <v-alert v-if="userSavingError" text type="error">{{
-              userSavingError
-            }}</v-alert>
+            <v-alert v-if="userLoadingError" text type="error">
+              {{ userLoadingError }}
+            </v-alert>
+            <v-alert
+              v-if="userSavingError"
+              text
+              type="error"
+              data-test="error.edit"
+            >
+              {{ userSavingError }}
+            </v-alert>
           </v-col>
         </v-row>
       </v-card-text>
