@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,7 +48,6 @@ public class UserController {
 	private static final String FIELD_FIRST_NAME = "firstName";
 	private final UserDetailsServiceImpl userService;
 	private final ValidationHelper validationHelper;
-	private final MessageSourceAccessor messages;
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
@@ -187,8 +185,7 @@ public class UserController {
 
 		userService.findByUsername(username)
 				.ifPresent(__ -> {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-							messages.getMessage("UserController.username.notunique"));
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UserController.username.notunique");
 				});
 	}
 
@@ -201,8 +198,7 @@ public class UserController {
 		userService.findByUsername(username)
 				.filter(it -> !it.getUser_id().equals(id))
 				.ifPresent(__ -> {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-							messages.getMessage("UserController.username.notunique"));
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UserController.username.notunique");
 				});
 	}
 
@@ -215,8 +211,7 @@ public class UserController {
 		}
 
 		if (!userService.isOldPasswordCorrect(id, oldPassword)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					messages.getMessage("UserController.oldpassword.wrong"));
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UserController.oldpassword.wrong");
 		}
 	}
 }

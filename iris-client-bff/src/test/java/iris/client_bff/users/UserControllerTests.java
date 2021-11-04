@@ -28,7 +28,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -44,8 +43,6 @@ class UserControllerTests {
 	AlertService alertService;
 	@Mock(lenient = true)
 	HealthDepartmentConfig hdConfig;
-	@Mock(lenient = true)
-	MessageSourceAccessor messages;
 
 	@InjectMocks
 	ValidationHelper validationHelper;
@@ -79,7 +76,7 @@ class UserControllerTests {
 				});
 		when(userService.isOldPasswordCorrect(any(UUID.class), anyString())).thenReturn(true);
 
-		userController = new UserController(userService, validationHelper, messages);
+		userController = new UserController(userService, validationHelper);
 	}
 
 	@ParameterizedTest
