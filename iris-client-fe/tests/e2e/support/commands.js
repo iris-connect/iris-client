@@ -505,7 +505,7 @@ Cypress.Commands.add("changeOwnPassword", (credentials, password) => {
           .type("p", { log: false })
           .assertInputValid();
         cy.getBy(".v-btn{submit}").click();
-        cy.contains("Das bisherige Passwort stimmt nicht!").should("exist");
+        cy.getBy("error.edit").should("exist");
         cy.getBy("input{oldPassword}")
           .clear()
           .type(credentials.password, { log: false })
