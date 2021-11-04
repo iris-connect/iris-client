@@ -9,7 +9,6 @@ on:
       - develop
     paths:
       - iris-client-bff/**
-      - iris-sormas-api-client/**
       - .github/workflows/bff_develop.yml
   pull_request:
     branches:
@@ -20,8 +19,13 @@ defaults:
     shell: bash
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
+  build_and_push:
+    name: Build and push to docker.io
+    runs-on: ubuntu-latest
+    
+    # Map a step output to a job output
+    outputs:
+      image-ref: ${{ steps.meta.outputs.tags }}
     
     steps:
       - name: Checkout code
@@ -43,8 +47,7 @@ jobs:
 
       - name: build, package and publish the image
         run: |
-          VER_TAG=$(echo ${{ steps.meta.outputs.tags }} | cut --delimiter=: --fields=2-3)
-          mvn -B clean verify spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=$VER_TAG
+          mvn -B clean verify spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=${{ steps.meta.outputs.version }}
         env:
           DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
           DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
@@ -61,10 +64,12 @@ jobs:
 
   publish-test-results:
     name: Publish Test Results
-    needs: build
+    needs: build_and_push
     runs-on: ubuntu-latest
+    
     # the build-and-test job might be skipped, we don't need to run this job then
     if: success() || failure()
+    
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -80,30 +85,8 @@ jobs:
           check_run_annotations_branch: "*"
 
   container_scan:
-    name: Trivy Container Scan
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2.3.5
-      
-      - name: Create image tag
-        id: meta
-        uses: docker/metadata-action@v3
-        with:
-          images: inoeg/iris-client-bff
-      
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: '${{ steps.meta.outputs.tags }}'
-          format: 'template'
-          template: '@/contrib/sarif.tpl'
-          output: 'trivy-results.sarif'
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH,MEDIUM'
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: 'trivy-results.sarif'
+    name: Container Scan
+    needs: build_and_push
+    uses: iris-connect/iris-client/.github/workflows/trivy_container_scan.yml@develop
+    with:
+      image-refs: "[ '${{needs.build_and_push.outputs.image-ref}}' ]"
