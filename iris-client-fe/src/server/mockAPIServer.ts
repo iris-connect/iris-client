@@ -137,7 +137,7 @@ export function makeMockAPIServer() {
             );
           }
         } catch (e) {
-          // ignored
+          return new Response(400, undefined, (e as Error).message);
         }
         return authResponse(request);
       });

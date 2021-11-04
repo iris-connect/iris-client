@@ -23,6 +23,7 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -34,8 +35,7 @@ class UserDetailsServiceImplTests {
 	@Mock
 	UserAccountsRepository userAccountsRepository;
 
-	@Mock
-	PasswordEncoder passwordEncoder;
+	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	@Mock
 	JWTService jwtService;
@@ -128,14 +128,14 @@ class UserDetailsServiceImplTests {
 
 		mockUserFound();
 		mockSaveUser();
-		mockEncodeToSame();
 
 		var dto = new UserUpdateDTO().firstName("fn").lastName("ln").userName("un").password("pw").role(UserRoleDTO.ADMIN);
 
 		var ret = userDetailsService.update(foundUser, dto, adminAuth);
 
-		assertThat(ret).extracting("firstName", "lastName", "userName", "password", "role")
-				.containsExactly("fn", "ln", "un", "pw", UserRole.ADMIN);
+		assertThat(ret).extracting("firstName", "lastName", "userName", "role")
+				.containsExactly("fn", "ln", "un", UserRole.ADMIN);
+		assertThat(ret).extracting(UserAccount::getPassword).matches(it -> passwordEncoder.matches("pw", it));
 
 		verify(jwtService).invalidateTokensOfUser("tm");
 		verify(userAccountsRepository).save(user);
@@ -147,7 +147,6 @@ class UserDetailsServiceImplTests {
 
 		mockUserFound();
 		mockSaveUser();
-		mockEncodeToSame();
 
 		var dto = new UserUpdateDTO().userName("un");
 
@@ -168,6 +167,32 @@ class UserDetailsServiceImplTests {
 		verify(jwtService, times(2)).invalidateTokensOfUser("un");
 	}
 
+	@Test
+	void ok_isOldPasswordCorrect() {
+
+		mockUserFound();
+
+		var value = userDetailsService.isOldPasswordCorrect(foundUser, "password");
+
+		assertTrue(value);
+
+		verify(userAccountsRepository).findById(foundUser);
+		verifyNoMoreInteractions(userAccountsRepository);
+	}
+
+	@Test
+	void fails_isOldPasswordCorrect() {
+
+		mockUserFound();
+
+		var value = userDetailsService.isOldPasswordCorrect(foundUser, "pass");
+
+		assertFalse(value);
+
+		verify(userAccountsRepository).findById(foundUser);
+		verifyNoMoreInteractions(userAccountsRepository);
+	}
+
 	private UserAccount userAccountAdmin() {
 
 		var account = new UserAccount();
@@ -175,7 +200,7 @@ class UserDetailsServiceImplTests {
 		account.setFirstName("Max");
 		account.setLastName("Muster");
 		account.setUserName("mm");
-		account.setPassword("password");
+		account.setPassword(passwordEncoder.encode("password"));
 		account.setRole(UserRole.ADMIN);
 
 		return account;
@@ -188,7 +213,7 @@ class UserDetailsServiceImplTests {
 		account.setFirstName("Thomas");
 		account.setLastName("Müller");
 		account.setUserName("tm");
-		account.setPassword("password");
+		account.setPassword(passwordEncoder.encode("password"));
 		account.setRole(UserRole.USER);
 
 		return account;
@@ -212,9 +237,5 @@ class UserDetailsServiceImplTests {
 
 	private void mockSaveUser() {
 		when(userAccountsRepository.save(any(UserAccount.class))).then(AdditionalAnswers.returnsFirstArg());
-	}
-
-	private void mockEncodeToSame() {
-		when(passwordEncoder.encode(anyString())).then(AdditionalAnswers.returnsFirstArg());
 	}
 }
