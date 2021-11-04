@@ -11,6 +11,7 @@ import iris.client_bff.users.web.dto.UserInsertDTO;
 import iris.client_bff.users.web.dto.UserRoleDTO;
 import iris.client_bff.users.web.dto.UserUpdateDTO;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userAccountsRepository.findByUserName(username);
 	}
 
-	public boolean isOldPasswordCorrect(UUID id, String oldPassword) {
+	public boolean isOldPasswordCorrect(@NonNull UUID id, @NonNull String oldPassword) {
 
 		return userAccountsRepository.findById(id)
 				.map(UserAccount::getPassword)
