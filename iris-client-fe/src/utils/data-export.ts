@@ -443,6 +443,8 @@ const sanitizeField = function (
     return "";
   }
 
+  let quote = false;
+
   // Replace newlines and other line breaks with a space
   const regex_linebreaks = /\r?\n|\r/g; // Recognizes /r (CR), /n (LF) and /r/n (CRLF)
   field = field.replace(regex_linebreaks, " ");
@@ -454,15 +456,16 @@ const sanitizeField = function (
   const regex_whitelist = /[^a-zA-Z0-9äüöÄÜÖß(): \-@+.;,]+/g; // Matches everything *not* in the group (the whitelist)
   field = field.replace(regex_whitelist, "");
 
-  // Prepend a single quote if string looks like an international phone number to mitigate Formula injection
+  // Prepend a single space and wrap it in quotes if string looks like an international phone number to mitigate Formula injection
   const regex_phone = /^\+[ ]?[(]?[ ]?[0-9]{1,3}[ ]?[)]?[0-9 \-/]+$/g;
   if (regex_phone.test(field)) {
-    field = `'${field}`;
+    field = ` ${field}`;
+    quote = true;
   }
 
-  // Ensure beginning of string has no trigger characters (+,- and @ are allowed, but they should not start the string)
-  const regex_beginning = /^[=+\-@\t\r \n]+/g;
-  field = field.replace(regex_beginning, "");
+  // Ensure the string has no trigger characters at the beginning or preceded by a delimiter character to mitigate Formula injection
+  const regex_trigger = /(^|(?<=[,;]))[=+\-@\t\r\n]+/g;
+  field = field.replace(regex_trigger, "");
 
   /**
    * json2csv uses a delimiter to split table columns. We currently are using ; and , as those.
@@ -475,15 +478,18 @@ const sanitizeField = function (
    */
 
   if (window.irisAppContext?.csvExportStandardAtomicAddress === "true") {
-    if (!quoted) {
-      const regex_delimiter = new RegExp(`${delimiter}+`, "g");
-      if (regex_delimiter.test(field)) {
-        field = `"${field}"`;
-      }
+    const regex_delimiter = new RegExp(`${delimiter}+`, "g");
+    if (regex_delimiter.test(field)) {
+      quote = true;
     }
   } else {
     const regex_separator = /[,;]+/g;
     field = field.replace(regex_separator, "/");
+  }
+
+  // quote the field value if required ( quote = true ) - but only if the field isn't quoted by the json2csv Parser.
+  if (quote && !quoted) {
+    field = `"${field}"`;
   }
 
   return field;
