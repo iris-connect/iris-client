@@ -1,0 +1,32 @@
+name: Publish Test Results
+
+on:
+  workflow_call:
+    inputs:
+      artifact:
+        description: 'Name of the artifact'
+        required: false
+        type: string
+        default: 'test-reports'
+
+jobs:
+  publish-test-results:
+    name: Download and Publish
+    runs-on: ubuntu-latest
+    
+    # the previous job might be skipped, we don't need to run this job then
+    if: success() || failure()
+    
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{inputs.artifact}}
+          path: reports
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          files: reports/**/*.xml
+          report_individual_runs: true
+          check_run_annotations_branch: "*"
