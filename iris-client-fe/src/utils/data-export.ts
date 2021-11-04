@@ -457,7 +457,8 @@ const sanitizeField = function (
   field = field.replace(regex_whitelist, "");
 
   // Prepend a single space and wrap it in quotes if string looks like an international phone number to mitigate Formula injection
-  const regex_phone = /^\+[ ]?[(]?[ ]?[0-9]{1,3}[ ]?[)]?[0-9 \-/]+$/g;
+  const regex_phone =
+    /^\+[ ]?[(]?[ ]?[0123456789]{1,3}[ ]?[)]?[0123456789 \-/]+$/g;
   if (regex_phone.test(field)) {
     field = ` ${field}`;
     quote = true;
