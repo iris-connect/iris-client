@@ -8,13 +8,9 @@ on:
         required: true
         type: string
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   container_scan:
-    name: Scan and publish
+    name: Scan and Publish
     runs-on: ubuntu-latest
     
     strategy:

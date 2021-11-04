@@ -82,22 +82,7 @@ jobs:
   publish-test-results:
     name: Publish Test Results
     needs: release-client
-    runs-on: ubuntu-latest
-    # the build-and-test job might be skipped, we don't need to run this job then
-    if: success() || failure()
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: test-reports
-          path: reports
-
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        with:
-          files: reports/**/*.xml
-          report_individual_runs: true
-          check_run_annotations_branch: "*"
+    uses: iris-connect/iris-client/.github/workflows/publish_test_results.yml@chore/reuse_test_result_upload_job
 
   container_scan:
     name: Container Scan
