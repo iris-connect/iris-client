@@ -1,9 +1,13 @@
 name: Trivy Repo Scan
+
 on:
   push:
-    branches: [ develop, release ]
+    branches: [ develop, release, main ]
   pull_request:
     branches: [ develop, release ]
+  schedule:
+    - cron: '10 4 * * *'
+    
 jobs:
   repo_scan:
     name: Trivy Repo Scan
