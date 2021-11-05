@@ -9,6 +9,12 @@ on:
     paths:    
       - infrastructure/docker/iris-client-proxy/**
       - .github/workflows/iris-client-proxy_develop.yml
+  pull_request:
+    branches:
+      - develop
+    paths:    
+      - infrastructure/docker/iris-client-proxy/**
+      - .github/workflows/iris-client-proxy_develop.yml
 
 jobs:
   build_and_push:

@@ -9,6 +9,12 @@ on:
     paths:
       - infrastructure/docker/nginx/**
       - .github/workflows/nginx_develop.yml
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - infrastructure/docker/nginx/**
+      - .github/workflows/nginx_develop.yml
 
 jobs:
   build_and_push:

@@ -9,6 +9,12 @@ on:
     paths:    
       - infrastructure/docker/iris-client-eps/**
       - .github/workflows/iris-client-eps_develop.yml
+  pull_request:
+    branches:
+      - develop
+    paths:    
+      - infrastructure/docker/iris-client-eps/**
+      - .github/workflows/iris-client-eps_develop.yml
 
 jobs:
   build_and_push:

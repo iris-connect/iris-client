@@ -9,6 +9,12 @@ on:
     paths:    
       - infrastructure/docker/app-eps/**
       - .github/workflows/app-eps_develop.yml
+  pull_request:
+    branches:
+      - develop
+    paths:    
+      - infrastructure/docker/app-eps/**
+      - .github/workflows/app-eps_develop.yml
 
 jobs:
   build_and_push:
