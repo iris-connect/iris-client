@@ -9,7 +9,6 @@ on:
       - 1.**
   pull_request:
     branches:
-      - main
       - develop
 
 jobs:
