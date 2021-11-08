@@ -36,7 +36,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
-    "@vue/cli-plugin-babel": "~5.0.0-beta.7",
+    "@vue/cli-plugin-babel": "~5.0.0-rc.0",
     "@vue/cli-plugin-e2e-cypress": "~5.0.0-beta.7",
     "@vue/cli-plugin-eslint": "~5.0.0-beta.7",
     "@vue/cli-plugin-router": "~5.0.0-beta.7",
