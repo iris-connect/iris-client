@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -58,7 +59,8 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 
 		http.cors().and().csrf().disable()
 				.authorizeRequests()
-				.mvcMatchers("/error").permitAll()
+				.mvcMatchers(HttpMethod.GET, "/error").permitAll()
+				.requestMatchers(EndpointRequest.to(HealthEndpoint.class)).permitAll()
 				.antMatchers(SWAGGER_WHITELIST).permitAll()
 				.requestMatchers(EndpointRequest.toAnyEndpoint()).hasAuthority(UserRole.ADMIN.name())
 				.antMatchers(HttpMethod.POST, DATA_SUBMISSION_ENDPOINT).permitAll()
