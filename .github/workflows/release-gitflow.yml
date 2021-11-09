@@ -82,11 +82,11 @@ jobs:
   publish-test-results:
     name: Publish Test Results
     needs: release-client
-    uses: iris-connect/iris-client/.github/workflows/publish_test_results.yml@develop
+    uses: iris-connect/iris-client/.github/workflows/publish-test-results.yml@develop
 
   container_scan:
     name: Container Scan
     needs: release-client
-    uses: iris-connect/iris-client/.github/workflows/trivy_container_scan.yml@develop
+    uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
     with:
         image-refs: "[ 'inoeg/iris-client-bff:latest', 'inoeg/iris-client-frontend:latest', 'inoeg/iris-client-nginx:latest', 'inoeg/iris-client-eps:latest', 'inoeg/iris-client-proxy:latest', 'inoeg/app-eps:latest']"

@@ -71,11 +71,11 @@ jobs:
   publish-test-results:
     name: Publish Test Results
     needs: build_and_push
-    uses: iris-connect/iris-client/.github/workflows/publish_test_results.yml@develop
+    uses: iris-connect/iris-client/.github/workflows/publish-test-results.yml@develop
 
   container_scan:
     name: Container Scan
     needs: build_and_push
-    uses: iris-connect/iris-client/.github/workflows/trivy_container_scan.yml@develop
+    uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
     with:
       image-refs: "[ '${{needs.build_and_push.outputs.image-ref}}' ]"
