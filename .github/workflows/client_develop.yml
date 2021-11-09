@@ -38,8 +38,7 @@ jobs:
           skip_after_successful_duplicate: 'false'
           concurrent_skipping: 'never'
           cancel_others: 'true'
-          paths: '["iris-client-bff/**", ".github/workflows/bff_develop.yml"]'
-          paths_ignore: '["**/README.md", "**/docs/**", "**/postman/**"]'
+          paths: '["iris-client-bff/**", ".github/workflows/bff_develop.yml", "!**/README.md", "!**/Readme.md", "!**/docs/**", "!**/postman/**"]'
   
   bff:
     name: Build BFF
