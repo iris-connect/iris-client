@@ -1,0 +1,31 @@
+name: Job Conditionals
+
+on: workflow_dispatch
+
+jobs:
+  a:
+    if: true
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Hello world a"
+  b:
+    if: false
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Hello world b"
+  c:
+    if: false
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Hello world c"
+  
+  d:
+   needs: [a, b, c]
+   if: ${{ contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure') }}
+   runs-on: ubuntu-latest
+
+   steps:
+    - run: echo "Hello world d"
