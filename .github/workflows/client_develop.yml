@@ -23,9 +23,28 @@ jobs:
         with:
           images: inoeg/iris-client-bff,inoeg/iris-client-frontend
   
+  skip_check_bff:
+    name: Determines BFF Job skipping
+    continue-on-error: true # Uncomment once integration is finished
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          # All of these options are optional, so you can remove them if you are happy with the defaults
+          skip_after_successful_duplicate: 'false'
+          concurrent_skipping: 'never'
+          cancel_others: 'true'
+          paths: '["iris-client-bff/**", ".github/workflows/bff_develop.yml"]'
+          paths_ignore: '["**/README.md", "**/docs/**", "**/postman/**"]'
+  
   bff:
     name: Build BFF
-    needs: determine_tag
+    needs: [determine_tag, skip_check_bff]
+    if: ${{ needs.skip_check_bff.outputs.should_skip != 'true' }}
     uses: iris-connect/iris-client/.github/workflows/bff_develop.yml@chore/optimized_build
     with:
       image_tag: ${{needs.determine_tag.outputs.image_tag}}
@@ -41,6 +60,11 @@ jobs:
         run: echo "${{ toJSON(needs) }}"
       - name: "Hello 2"
         run: echo "${{ join(needs.*.result, ', ') }}"
-      - name: "Hello 3"
-        run: echo "${{ needs }}"
   
+  publish-test-results:
+    name: Publish Test Results
+    needs: bff
+    # the previous job might be skipped, we don't need to run this job then
+    if: success() || failure()
+    uses: iris-connect/iris-client/.github/workflows/publish-test-results.yml@develop
+
