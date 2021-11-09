@@ -41,7 +41,7 @@ public class CaseDataRequestServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		service = new CaseDataRequestService(repository, searcher, proxyServiceClient, hdConfig, tokenGenerator);
+		service = new CaseDataRequestService(repository, searcher, proxyServiceClient, tokenGenerator);
 	}
 
 	@Test
