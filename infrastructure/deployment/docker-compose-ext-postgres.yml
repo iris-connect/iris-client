@@ -28,6 +28,12 @@ services:
       IRIS_CLIENT_BASEPATH: "https://${IRIS_CLIENT_DOMAIN}"
       EXT_APP_DW_BASEURL:
     restart: unless-stopped
+    healthcheck:
+      test: "/cnb/lifecycle/launcher java -cp /workspace/BOOT-INF/classes:/workspace/BOOT-INF/lib/* iris.tools.HealthChecker || exit 1"
+      interval: 20s
+      timeout: 3s
+      retries: 2
+      start_period: 10s
 
   # IRIS Client Frontend for users
   iris-frontend:
