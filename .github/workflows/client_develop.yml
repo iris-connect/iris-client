@@ -15,7 +15,7 @@ jobs:
     # Map a step output to a job output
     outputs:
       image_tag: ${{ steps.meta.outputs.version }}
-      images: ${{ steps.meta.outputs.tags }}
+      images: ${{ steps.meta.outputs.json }}
     steps:
       - name: Determines Image Tag
         id: meta
@@ -25,48 +25,12 @@ jobs:
 #          sep-tags: ","
       - name: "Hello "
         run: echo "${{ steps.meta.outputs.tags }}"
+      - name: "Hello 2"
+        run: echo "${{ toJSON(fromJSON(steps.meta.outputs.json).tags) }}"
   
-  bff:
-    name: Build BFF
+  container_scan2:
+    name: Container Scan 2
     needs: determine_tag
-    uses: iris-connect/iris-client/.github/workflows/bff_develop.yml@chore/optimized_build
-    with:
-      image_tag: ${{needs.determine_tag.outputs.image_tag}}
-    secrets:
-      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}     
-      DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}     
-
-  publish-test-results:
-    name: Publish Test Results
-    needs: bff
-    uses: iris-connect/iris-client/.github/workflows/publish-test-results.yml@develop
-
-  fe:
-    name: Build FE
-    needs: determine_tag
-    uses: iris-connect/iris-client/.github/workflows/fe_develop.yml@chore/optimized_build
-    with:
-      image_tag: ${{needs.determine_tag.outputs.image_tag}}
-    secrets:
-      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}     
-      DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
-
-  e2e_test:
-    name: Run E2E Tests
-    needs: [bff, fe]
-    if: ${{ always() && contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure') }}
-    uses: iris-connect/iris-client/.github/workflows/fe-e2e-test.yml@chore/optimized_build
-
-  container_scan:
-    name: Container Scan
-    needs: [bff, fe]
     uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
     with:
-      image-refs: "[ 'inoeg/iris-client-bff:${{needs.determine_tag.outputs.image_tag}}', 'inoeg/iris-client-frontend:${{needs.determine_tag.outputs.image_tag}}' ]"
-
-#  container_scan2:
-#    name: Container Scan 2
-#    needs: [bff, fe]
-#    uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
-#    with:
-#      image-refs: "[ ${{needs.determine_tag.outputs.images}} ]"
+      image-refs: ${{ toJSON(fromJSON(needs.determine_tag.outputs.images).tags) }}
