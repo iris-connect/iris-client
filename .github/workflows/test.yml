@@ -1,6 +1,10 @@
 name: Job Conditionals
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - chore/optimized_build
 
 jobs:
   a:
