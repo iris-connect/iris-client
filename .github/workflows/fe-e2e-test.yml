@@ -29,7 +29,8 @@ jobs:
   cypress-run:
     name: Run Cypress E2E Tests
     needs: pre_job
-    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+#    if: ${{ always() && contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure') }}
+#     || needs.pre_job.outputs.should_skip != 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
