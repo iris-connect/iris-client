@@ -59,7 +59,7 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 
 		http.cors().and().csrf().disable()
 				.authorizeRequests()
-				.mvcMatchers(HttpMethod.GET, "/error").permitAll()
+				.mvcMatchers("/error").permitAll()
 				.requestMatchers(EndpointRequest.to(HealthEndpoint.class)).permitAll()
 				.antMatchers(SWAGGER_WHITELIST).permitAll()
 				.requestMatchers(EndpointRequest.toAnyEndpoint()).hasAuthority(UserRole.ADMIN.name())
