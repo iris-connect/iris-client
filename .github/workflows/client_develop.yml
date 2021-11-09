@@ -15,10 +15,15 @@ jobs:
     # Map a step output to a job output
     outputs:
       image_tag: ${{ steps.meta.outputs.version }}
+      images: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Determines Image Tag
         id: meta
         uses: docker/metadata-action@v3
+        with:
+          images: inoeg/iris-client-bff, inoeg/iris-client-frontend
+      - name: "Hello world when it's Monday"
+        run: echo "${{ steps.meta.outputs.tags }}"
   
   bff:
     name: Build BFF
@@ -56,3 +61,10 @@ jobs:
     uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
     with:
       image-refs: "[ 'inoeg/iris-client-bff:${{needs.determine_tag.outputs.image_tag}}', 'inoeg/iris-client-frontend:${{needs.determine_tag.outputs.image_tag}}' ]"
+
+  container_scan2:
+    name: Container Scan 2
+    needs: [bff, fe]
+    uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
+    with:
+      image-refs: "[ ${{needs.determine_tag.outputs.images}} ]"
