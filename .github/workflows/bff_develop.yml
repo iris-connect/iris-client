@@ -4,23 +4,40 @@
 name: BFF Develop
 
 on:
-  push:
-    branches:
-      - develop
-    paths:
-      - iris-client-bff/**
-      - .github/workflows/bff_develop.yml
-  pull_request:
-    branches:
-      - develop
+  workflow_call:
+    secrets:
+      DOCKER_HUB_USER:
+        required: true
+      DOCKER_HUB_PW:
+        required: true
 
 defaults:
   run:
     shell: bash
 
 jobs:
+  pre_job:
+    name: Determines job skipping
+    # continue-on-error: true # Uncomment once integration is finished
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          # All of these options are optional, so you can remove them if you are happy with the defaults
+          skip_after_successful_duplicate: 'false'
+          concurrent_skipping: 'never'
+          cancel_others: 'true'
+          paths: '["iris-client-bff/**", ".github/workflows/bff_develop.yml"]'
+          paths_ignore: '["**/README.md", "**/docs/**", "**/postman/**"]'
+
   build_and_push:
     name: Build and push to docker.io
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     runs-on: ubuntu-latest
     
     # Map a step output to a job output
@@ -67,15 +84,3 @@ jobs:
             **/surefire-reports/*.xml
             **/failsafe-reports/*.xml
             !**/failsafe-reports/failsafe-summary.xml
-
-  publish-test-results:
-    name: Publish Test Results
-    needs: build_and_push
-    uses: iris-connect/iris-client/.github/workflows/publish-test-results.yml@develop
-
-  container_scan:
-    name: Container Scan
-    needs: build_and_push
-    uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
-    with:
-      image-refs: "[ '${{needs.build_and_push.outputs.image-ref}}' ]"

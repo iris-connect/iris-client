@@ -5,15 +5,32 @@ on:
     branches:
       - main
       - release
-      - develop
       - 1.**
-  pull_request:
-    branches:
-      - develop
+  workflow_call:
 
 jobs:
+  pre_job:
+    name: Determines job skipping
+    # continue-on-error: true # Uncomment once integration is finished
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          # All of these options are optional, so you can remove them if you are happy with the defaults
+          skip_after_successful_duplicate: 'true'
+          concurrent_skipping: 'never'
+          cancel_others: 'true'
+          paths_ignore: '["**/README.md", "**/docs/**", "**/postman/**", ".reuse/**", "infrastructure/**", "LICENSES/**", "iris-client-eps/**"]'
+
   cypress-run:
-    runs-on: ubuntu-20.04
+    name: Run Cypress E2E Tests
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2.4.0

@@ -1,0 +1,41 @@
+name: Client Develop
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  bff:
+    name: Build BFF
+    uses: iris-connect/iris-client/.github/workflows/bff_develop.yml@chore/optimized_build
+    secrets:
+      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}     
+      DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}     
+
+  publish-test-results:
+    name: Publish Test Results
+    needs: bff
+    uses: iris-connect/iris-client/.github/workflows/publish-test-results.yml@develop
+
+  fe:
+    name: Build FE
+    uses: iris-connect/iris-client/.github/workflows/fe_develop.yml@chore/optimized_build
+    secrets:
+      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}     
+      DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
+
+  e2e_test:
+    name: Run E2E Tests
+    needs: bff
+    uses: iris-connect/iris-client/.github/workflows/fe-e2e-test.yml@chore/optimized_build
+
+  container_scan:
+    name: Container Scan
+    needs: [bff, fe]
+    uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
+    with:
+      image-refs: "[ '${{needs.bff.outputs.image-ref}}', '${{needs.fe.outputs.image-ref}}' ]"
