@@ -212,7 +212,6 @@ import {
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import dataExport from "@/utils/data-export";
 import Genders from "@/constants/Genders";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
@@ -221,6 +220,8 @@ import ContactCategories from "@/constants/ContactCategories";
 import AlertComponent from "@/components/alerts/alert.component.vue";
 import IndexTrackingSubmissionUrl from "@/views/index-tracking-details/components/index-tracking-submission-url.vue";
 import IrisDataTable from "@/components/iris-data-table.vue";
+import exportCsvStandardEvents from "@/views/index-tracking-details/components/data-export/utils/exportCsvStandardEvents";
+import exportCsvStandardContacts from "@/views/index-tracking-details/components/data-export/utils/exportCsvStandardContacts";
 
 type IndexData = {
   extID: string;
@@ -525,17 +526,21 @@ export default class IndexTrackingDetailsView extends Vue {
     return Genders.getName(sex);
   }
 
+  getFileName() {
+    return [this.indexData.extID, Date.now()].join("_");
+  }
+
   handleContactsExport(): void {
-    dataExport.exportStandardCsvForIndexTrackingContacts(
+    exportCsvStandardContacts.exportData(
       this.tableDataContacts.select,
-      [this.indexData.extID, Date.now()].join("_")
+      this.getFileName()
     );
   }
 
   handleEventsExport(): void {
-    dataExport.exportStandardCsvForIndexTrackingEvents(
-      this.tableDataEvents.select,
-      [this.indexData.extID, Date.now()].join("_")
+    exportCsvStandardEvents.exportData(
+      this.tableDataContacts.select,
+      this.getFileName()
     );
   }
 }

@@ -255,7 +255,7 @@ describe("Events", () => {
     cy.getBy("view.data-table")
       .filterDataTableByStatus("received")
       .visitByStatus("received");
-    cy.getBy(".v-btn{export.standard}").should("be.disabled");
+    cy.getBy(".v-btn{export.csv.standard}").should("be.disabled");
     cy.getBy(".v-btn{export-dialog.activator}").should("be.disabled");
     cy.getBy("event.contacts.data-table")
       .should("exist")
@@ -264,7 +264,7 @@ describe("Events", () => {
         cy.get("tbody tr").should("have.length.at.least", 1);
         cy.get("thead .v-simple-checkbox").click();
       });
-    cy.getBy("export.standard").should("not.be.disabled").click();
+    cy.getBy("export.csv.standard").should("not.be.disabled").click();
     cy.getBy("export-dialog").should("not.exist");
     cy.getBy(".v-btn{export-dialog.activator}")
       .should("not.be.disabled")
@@ -272,12 +272,15 @@ describe("Events", () => {
     cy.getBy("export-dialog")
       .should("be.visible")
       .within(() => {
-        cy.getBy("export.standard").should("exist").click();
-        cy.getBy("export.standard-alternative").should("exist").click();
-        cy.getBy("export.sormas-participants").should("exist").click();
-        cy.getBy("export.sormas-contact-person").should("exist").click();
+        cy.getBy("export.csv.standard").should("exist").click();
+        cy.getBy("export.csv.standard-alternative").should("exist").click();
+        cy.getBy("export.csv.sormas-event-participants")
+          .should("exist")
+          .click();
+        cy.getBy("export.csv.sormas-contact-persons").should("exist").click();
+        cy.getBy("export.xlsx.octoware").should("exist").click();
         cy.getBy(".v-btn{close}").should("exist").click();
       });
-    cy.getBy("export-dialog").should("not.exist");
+    cy.getBy("export-dialog").should("not.be.visible");
   });
 });

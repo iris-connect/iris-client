@@ -89,6 +89,7 @@ export const dummyDataDetails: DataRequestDetails = {
       {
         firstName: "Max",
         lastName: "Mustermann",
+        dateOfBirth: "2001-03-13",
         email: "max@example.de",
         phone: "invalid",
         mobilePhone: "0123 0815",
@@ -107,6 +108,7 @@ export const dummyDataDetails: DataRequestDetails = {
       {
         firstName: "Martina",
         lastName: "Mustermann",
+        dateOfBirth: "1995-04-03",
         email: "a@b.de",
         phone: "+49 1234 567890",
         mobilePhone: "0123 456789",
