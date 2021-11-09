@@ -58,8 +58,6 @@ jobs:
     steps:
       - name: "Hello "
         run: echo "${{ toJSON(needs) }}"
-      - name: "Hello 2"
-        run: echo "${{ join(needs.*.result, ', ') }}"
   
   publish-test-results:
     name: Publish Test Results
