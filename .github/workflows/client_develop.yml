@@ -48,16 +48,9 @@ jobs:
     with:
       image_tag: ${{needs.determine_tag.outputs.image_tag}}
     secrets:
-      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}     
-      DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}     
+      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+      DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
 
-  xxx:
-    needs: bff
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Hello "
-        run: echo "${{ toJSON(needs) }}"
-  
   publish-test-results:
     name: Publish Test Results
     needs: bff
