@@ -21,16 +21,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: inoeg/iris-client-bff, inoeg/iris-client-frontend
+          images: inoeg/iris-client-bff,inoeg/iris-client-frontend
           sep-tags: ","
-          flavor: |
-            latest=auto
-            prefix= '
-            suffix= '
       - name: "Hello "
         run: echo "${{ steps.meta.outputs.tags }}"
-      - name: "Hello world when it's Monday"
-        run: echo "${{ steps.meta.outputs.json }}"
   
   bff:
     name: Build BFF
