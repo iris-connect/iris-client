@@ -25,8 +25,8 @@ jobs:
           sep-tags: ","
           flavor: |
             latest=auto
-            prefix= "'"
-            suffix= "'"
+            prefix= '
+            suffix= '
       - name: "Hello "
         run: echo "${{ steps.meta.outputs.tags }}"
       - name: "Hello world when it's Monday"
