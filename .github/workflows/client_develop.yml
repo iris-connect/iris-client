@@ -38,23 +38,5 @@ jobs:
           skip_after_successful_duplicate: 'false'
           concurrent_skipping: 'never'
           cancel_others: 'true'
-          paths: '["iris-client-bff/**", ".github/workflows/bff_develop.yml", "!**/README.md", "!**/Readme.md", "!**/docs/**", "!**/postman/**"]'
+          paths: '[".github/workflows/bff_develop.yml", "iris-client-bff/**", "!**/Readme.md"]'
   
-  bff:
-    name: Build BFF
-    needs: [determine_tag, skip_check_bff]
-    if: ${{ needs.skip_check_bff.outputs.should_skip != 'true' }}
-    uses: iris-connect/iris-client/.github/workflows/bff_develop.yml@chore/optimized_build
-    with:
-      image_tag: ${{needs.determine_tag.outputs.image_tag}}
-    secrets:
-      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
-      DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
-
-  publish-test-results:
-    name: Publish Test Results
-    needs: bff
-    # the previous job might be skipped, we don't need to run this job then
-    if: success() || failure()
-    uses: iris-connect/iris-client/.github/workflows/publish-test-results.yml@develop
-
