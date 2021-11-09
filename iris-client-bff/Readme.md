@@ -19,4 +19,4 @@ security.jwt.jwt-shared-secret=thissecretshouldbeusedfortestingpurposesonly
 
 Using this setting, the authentication is activated for all calls towards the client need to be authorized.
 
-aaa
+a
