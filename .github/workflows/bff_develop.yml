@@ -5,6 +5,11 @@ name: BFF Develop
 
 on:
   workflow_call:
+    inputs:
+      image_tag:
+        description: 'Tag that will be added to the image name'
+        required: true
+        type: string
     secrets:
       DOCKER_HUB_USER:
         required: true
@@ -18,7 +23,7 @@ defaults:
 jobs:
   pre_job:
     name: Determines job skipping
-    # continue-on-error: true # Uncomment once integration is finished
+    continue-on-error: true # Uncomment once integration is finished
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
@@ -40,10 +45,6 @@ jobs:
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     runs-on: ubuntu-latest
     
-    # Map a step output to a job output
-    outputs:
-      image-ref: ${{ steps.meta.outputs.tags }}
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2.4.0
@@ -62,15 +63,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Create image tag
-        id: meta
-        uses: docker/metadata-action@v3
-        with:
-          images: inoeg/iris-client-bff
-
       - name: build, package and publish the image
         run: |
-          mvn -B clean verify spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=${{ steps.meta.outputs.version }}
+          mvn -B clean verify spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=${{ inputs.image_tag }}
         env:
           DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
           DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
