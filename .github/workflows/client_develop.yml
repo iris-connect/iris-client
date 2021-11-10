@@ -38,5 +38,61 @@ jobs:
           skip_after_successful_duplicate: 'false'
           concurrent_skipping: 'never'
           cancel_others: 'true'
-          paths: '["iris-client-bff/**", "!iris-client-bff/Readme.md", ".github/workflows/bff_develop.yml"]'
+          paths: '[".github/workflows/bff_develop.yml", "iris-client-bff/**", "!**/README.md", "!**/Readme.md", "!**/docs/**", "!**/postman/**"]'
   
+  skip_check_fe:
+    name: Determines FE Job skipping
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          skip_after_successful_duplicate: 'false'
+          concurrent_skipping: 'never'
+          cancel_others: 'true'
+          paths: '[".github/workflows/fe_develop.yml", "iris-client-fe/**", "!**/README.md", "!**/Readme.md", "!**/docs/**", "!**/postman/**"]'
+  
+  bff:
+    name: Build BFF
+    needs: [determine_tag, skip_check_bff]
+    if: ${{ needs.skip_check_bff.outputs.should_skip != 'true' }}
+    uses: iris-connect/iris-client/.github/workflows/bff_develop.yml@chore/optimized_build
+    with:
+      image_tag: ${{needs.determine_tag.outputs.image_tag}}
+    secrets:
+      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+      DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
+
+  publish-test-results:
+    name: Publish Test Results
+    needs: bff
+    # the previous job might be skipped, we don't need to run this job then
+    if: success() || failure()
+    uses: iris-connect/iris-client/.github/workflows/publish-test-results.yml@develop
+
+  fe:
+    name: Build FE
+    needs: [determine_tag, skip_check_fe]
+    if: ${{ needs.skip_check_fe.outputs.should_skip != 'true' }}
+    uses: iris-connect/iris-client/.github/workflows/fe_develop.yml@chore/optimized_build
+    with:
+      image_tag: ${{needs.determine_tag.outputs.image_tag}}
+    secrets:
+      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+      DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
+
+  e2e_test:
+    name: Run E2E Tests
+    needs: [bff, fe]
+    if: ${{ always() && contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure') }}
+    uses: iris-connect/iris-client/.github/workflows/fe-e2e-test.yml@chore/optimized_build
+
+  container_scan:
+    name: Container Scan
+    needs: [bff, fe]
+    uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
+    with:
+      image-refs: ${{ toJSON(fromJSON(needs.determine_tag.outputs.image_json).tags) }}
