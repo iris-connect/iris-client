@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -67,8 +68,8 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 	private Status status = Status.DATA_REQUESTED;
 
   @Builder
-  public CaseDataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
-	  String hdUserId, String comment, IdentifierToken identifierToken) {
+	public CaseDataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
+			String hdUserId, String comment, @NonNull IdentifierToken identifierToken) {
 
 	super();
 

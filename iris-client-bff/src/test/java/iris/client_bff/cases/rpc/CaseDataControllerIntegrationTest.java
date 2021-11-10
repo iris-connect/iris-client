@@ -11,6 +11,7 @@ import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.web.CaseDataRequestController;
 import iris.client_bff.cases.web.submission_dto.ContactPersonList;
 import iris.client_bff.cases.web.submission_dto.EventList;
+import iris.client_bff.core.IdentifierToken;
 import iris.client_bff.ui.messages.ErrorMessages;
 import iris.client_bff.utils.DtoSupplier;
 import org.junit.jupiter.api.Test;
@@ -46,10 +47,7 @@ class CaseDataControllerIntegrationTest {
 		String refId = "submit_ok";
 		Instant requestStart = Instant.now().minus(14, ChronoUnit.DAYS);
 		Instant requestEnd = Instant.now();
-		CaseDataRequest dataRequest = CaseDataRequest.builder()
-				.refId(refId).requestStart(requestStart).requestEnd(requestEnd)
-				.build();
-		requestRepo.save(dataRequest);
+		CaseDataRequest dataRequest = createRequest(refId, requestStart, requestEnd);
 
 		// prepare data
 		var contactPersonList = dtoSupplier.getContactPersonList(0, 2);
@@ -94,7 +92,6 @@ class CaseDataControllerIntegrationTest {
 		events.setEvents(dtoSupplier.getEventList(2,3));
 		result = controller.submitContactAndEventData(dataRequest.getId().getRequestId().toString(), contacts, events, dataProvider);
 		assertNotEquals("OK", result);
-
 	}
 
 	@Test
@@ -103,10 +100,7 @@ class CaseDataControllerIntegrationTest {
 		String refId = "submit_ok_with_empty_events_and_empty_contacts";
 		Instant requestStart = Instant.now().minus(14, ChronoUnit.DAYS);
 		Instant requestEnd = Instant.now();
-		CaseDataRequest dataRequest = CaseDataRequest.builder()
-				.refId(refId).requestStart(requestStart).requestEnd(requestEnd)
-				.build();
-		requestRepo.save(dataRequest);
+		CaseDataRequest dataRequest = createRequest(refId, requestStart, requestEnd);
 
 		// prepare data
 		//var contactPersonList = dtoSupplier.getContactPersonList(0, 2);
@@ -147,4 +141,23 @@ class CaseDataControllerIntegrationTest {
 		assertNotEquals("OK", result);
 	}
 
+	private CaseDataRequest createRequest(String refId, Instant requestStart, Instant requestEnd) {
+
+		var token = IdentifierToken.builder()
+				.readableToken(refId)
+				.connectionAuthorizationToken("CAT")
+				.dataAuthorizationToken("DAT")
+				.build();
+
+		var dataRequest = CaseDataRequest.builder()
+				.refId(refId)
+				.requestStart(requestStart)
+				.requestEnd(requestEnd)
+				.identifierToken(token)
+				.build();
+
+		requestRepo.save(dataRequest);
+
+		return dataRequest;
+	}
 }
