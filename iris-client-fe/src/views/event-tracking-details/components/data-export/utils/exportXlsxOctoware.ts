@@ -81,21 +81,12 @@ const mapData = (
     const guest = row.raw;
     const guestAddress = guest.address;
     data.push({
-      // @todo: clarify: is this the externalRequestId?
-      ID: "",
-      // ID: event?.externalRequestId || "",
-      // @todo: clarify: shouldn't this be "IRIS connect"?
-      ART_ERFASSUNG: "IRIS-Gateway",
+      ID: event?.externalRequestId || "",
+      ART_ERFASSUNG: "IRIS connect",
       TN_R_UMGEBUNGART: "",
       UMGEBUNG: locationName.substr(0, 100),
       BEMERKUNG: locationInfo.substr(0, 248),
-      // @todo: clarify: is this the creation date of the event tracking?
-      DAT_MELDE: "",
-      // DAT_MELDE: getFormattedDate(
-      //   this.eventTrackingDetails?.requestedAt,
-      //   "DD.MM.YYYY",
-      //   ""
-      // ),
+      DAT_MELDE: getFormattedDate(event?.requestedAt, "DD.MM.YYYY", ""),
       TN_R_KONTAKT_KAT: "",
       TN_R_KONT_INDXPERS: "",
       NAME: guest.lastName || "",
@@ -105,20 +96,16 @@ const mapData = (
       DAT_GEBURT: getFormattedDate(guest.dateOfBirth, "DD.MM.YYYY", ""),
       GEB_ORT: "",
       GebLand_ISO_KENNZ: "",
-      // @todo: clarify: is this the checkInTime?
-      DAT_ERST_KONTAKT: "",
-      // DAT_ERST_KONTAKT: getFormattedDate(
-      //   row.checkInTime,
-      //   "DD.MM.YYYY HH:mm",
-      //   ""
-      // ),
-      // @todo: clarify: is this the checkOutTime?
-      DAT_LETZT_KONTAKT: "",
-      // DAT_LETZT_KONTAKT: getFormattedDate(
-      //   row.checkOutTime,
-      //   "DD.MM.YYYY HH:mm",
-      //   ""
-      // ),
+      DAT_ERST_KONTAKT: getFormattedDate(
+        row.checkInTime,
+        "DD.MM.YYYY HH:mm",
+        ""
+      ),
+      DAT_LETZT_KONTAKT: getFormattedDate(
+        row.checkOutTime,
+        "DD.MM.YYYY HH:mm",
+        ""
+      ),
       Wohn_STRASSE: guestAddress?.street || "",
       Wohn_HAUSNR_OD_PF_NR: guestAddress?.houseNumber || "",
       Wohn_PLZ: guestAddress?.zipCode || "",

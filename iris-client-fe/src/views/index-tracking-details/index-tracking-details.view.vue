@@ -539,7 +539,7 @@ export default class IndexTrackingDetailsView extends Vue {
 
   handleEventsExport(): void {
     exportCsvStandardEvents.exportData(
-      this.tableDataContacts.select,
+      this.tableDataEvents.select,
       this.getFileName()
     );
   }
