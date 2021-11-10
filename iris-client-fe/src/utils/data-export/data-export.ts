@@ -37,11 +37,21 @@ const exportCsv = (
       const delimiter = forceQuotes ? "," : ";";
       const replaceDelimiters =
         window.irisAppContext?.csvExportStandardAtomicAddress !== "true";
-      const sanitizedRows = sanitization.sanitizeRows(
+      let sanitizedRows = sanitization.sanitizeRows(
         rows,
         headers,
         replaceDelimiters
       );
+      // sheetjs doesn't apply quotes for empty cells. => ("a","b",,"c",,)
+      // We have to do it ourself to ensure backwards compatibility => ("a","b","","c","","")
+      // To achieve this we set a quote as cell value and undo it after the csv is generated.
+      // sheetjs will automatically enclose it in quotes and escape it by preceding it with another quote resulting in """".
+      // """" as field value should be safe to use as a placeholder because it cannot be confused with a sanitized field value as quotes are removed by the sanitizer.
+      if (forceQuotes) {
+        sanitizedRows = sanitizedRows.map((row) => {
+          return row.map((field) => (field ? field : '"'));
+        });
+      }
       const ws = XLSX.utils.aoa_to_sheet([
         getHeaderRow(headers),
         ...sanitizedRows,
@@ -50,13 +60,9 @@ const exportCsv = (
         FS: delimiter,
         forceQuotes,
       });
-      // sheetjs doesn't apply quotes for empty cells. => ("a","b",,"c")
-      // We have to do it ourself to ensure backwards compatibility => ("a","b","","c")
+      // Replace the enclosed and escaped placeholder quote ("""") with a blank value that is enclosed in quotes ("").
       if (forceQuotes) {
-        csv = csv.replace(
-          new RegExp(`"${delimiter}{2}"`, "g"),
-          `"${delimiter}""${delimiter}"`
-        );
+        csv = csv.replace(/"{4}/g, '""');
       }
       downloadCsvFile(fileName, csv);
       resolve(csv);
