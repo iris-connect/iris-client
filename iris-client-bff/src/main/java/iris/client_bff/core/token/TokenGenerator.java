@@ -66,10 +66,10 @@ public class TokenGenerator {
 		SecureRandom secureRandom = new SecureRandom(tokenConfig.getGeneratorSalt().getBytes());
 
 		return IntStream.generate(() -> secureRandom.nextInt(dict.size()))
-				.distinct()
-				.limit(numberOfElements)
 				.mapToObj(dict::get)
 				.map(String::toLowerCase)
+				.distinct() // select only different words; the list can contains equal words in different capitalization
+				.limit(numberOfElements)
 				.collect(Collectors.joining("-"));
 	}
 }
