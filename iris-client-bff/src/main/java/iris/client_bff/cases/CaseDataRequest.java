@@ -79,8 +79,8 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 		this.requestEnd = requestEnd;
 		this.hdUserId = hdUserId;
 		this.comment = comment;
-		this.dataAuthorizationToken = identifierToken.getDataAuthorizationToken();
-		this.readableToken = identifierToken.getReadableToken();
+		this.dataAuthorizationToken = identifierToken.dataAuthorizationToken();
+		this.readableToken = identifierToken.readableToken();
 		this.announcementToken = announcementToken;
 	}
 

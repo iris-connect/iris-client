@@ -111,11 +111,11 @@ public class CaseDataRequestService {
 
 		try {
 
-			announcedDomain = proxyClient.announceExplicitToken(idToken.getConnectionAuthorizationToken());
+			announcedDomain = proxyClient.announceExplicitToken(idToken.connectionAuthorizationToken());
 
 			log.debug("Announced incoming connection on domain {} for readable token {}",
 					LogHelper.obfuscateAtStart20(announcedDomain),
-					LogHelper.obfuscateAtStart20(idToken.getReadableToken()));
+					LogHelper.obfuscateAtStart20(idToken.readableToken()));
 
 		} catch (IRISAnnouncementException e) {
 
