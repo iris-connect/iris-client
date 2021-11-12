@@ -27,6 +27,7 @@ services:
       IRIS_BACKEND_SERVICE_ENDPOINT: ${EPS_LS_NAME}
       IRIS_CLIENT_BASEPATH: "https://${IRIS_CLIENT_DOMAIN}"
       EXT_APP_DW_BASEURL:
+      EPS_OP:
     restart: unless-stopped
     healthcheck:
       test: "/cnb/lifecycle/launcher java -cp /workspace/BOOT-INF/classes:/workspace/BOOT-INF/lib/* iris.tools.HealthChecker || exit 1"
