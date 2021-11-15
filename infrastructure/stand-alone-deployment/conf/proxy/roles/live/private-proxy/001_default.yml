@@ -27,6 +27,10 @@ vars:
     source: env
     variable: IRIS_CLIENT_BFF_ENDPOINT
     type: string
+  PRIVATE_PROXY_EPS_ENDPOINT:     
+    source: env
+    variable: PRIVATE_PROXY_EPS_ENDPOINT
+    type: string
 
 private:
   name: "$PROXY_OP"
@@ -48,7 +52,7 @@ private:
       key_file: "$DIR/../../../certs/$PROXY_TLS_CERT_KEY"
 
   jsonrpc_client:
-    endpoint: https://private-proxy-eps:7766/jsonrpc
+    endpoint: "$PRIVATE_PROXY_EPS_ENDPOINT"
     tls:
       server_name: "$PROXY_OP"
       ca_certificate_files: 
