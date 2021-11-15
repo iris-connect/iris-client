@@ -57,6 +57,7 @@ services:
       IRIS_CLIENT_BASEPATH: "https://${IRIS_CLIENT_DOMAIN}"
       EXT_APP_DW_BASEURL:
       EPS_OP:
+      HD_ABBREVIATION:
     depends_on:
       - postgres
     restart: unless-stopped

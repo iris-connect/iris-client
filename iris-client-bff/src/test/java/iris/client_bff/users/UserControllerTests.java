@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.auth.db.UserAccountAuthentication;
-import iris.client_bff.config.HealthDepartmentConfig;
+import iris.client_bff.config.HealthDepartmentProperties;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.users.entities.UserAccount;
@@ -42,7 +42,7 @@ class UserControllerTests {
 	@Mock(lenient = true)
 	AlertService alertService;
 	@Mock(lenient = true)
-	HealthDepartmentConfig hdConfig;
+	HealthDepartmentProperties hdConfig;
 
 	@InjectMocks
 	ValidationHelper validationHelper;
@@ -52,7 +52,7 @@ class UserControllerTests {
 	@BeforeEach
 	public void init() {
 
-		when(hdConfig.getZipCode()).thenReturn("01665");
+		when(hdConfig.getAbbreviation()).thenReturn("1A9");
 		when(userService.create(any(UserInsertDTO.class))).thenAnswer(it -> {
 			var user = it.getArgument(0, UserInsertDTO.class);
 			var account = new UserAccount();

@@ -1,5 +1,6 @@
 package iris.client_bff.core.token;
 
+import iris.client_bff.config.HealthDepartmentProperties;
 import iris.client_bff.config.TokenConfig;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,7 @@ public class TokenGenerator {
 
 	private final Dictionary dictionary;
 	private final TokenConfig tokenConfig;
+	private final HealthDepartmentProperties hdProperties;
 
 	public IdentifierToken generateIdentifierToken() {
 
@@ -65,11 +67,13 @@ public class TokenGenerator {
 
 		SecureRandom secureRandom = new SecureRandom(tokenConfig.getGeneratorSalt().getBytes());
 
-		return IntStream.generate(() -> secureRandom.nextInt(dict.size()))
+		String tokenPart = IntStream.generate(() -> secureRandom.nextInt(dict.size()))
 				.mapToObj(dict::get)
 				.map(String::toLowerCase)
 				.distinct() // select only different words; the list can contains equal words in different capitalization
 				.limit(numberOfElements)
 				.collect(Collectors.joining("-"));
+
+		return tokenPart + "-" + hdProperties.getAbbreviation();
 	}
 }
