@@ -23,6 +23,10 @@ vars:
     source: env
     variable: PROXY_TLS_CERT_KEY
     type: string
+  IRIS_CLIENT_BFF_ENDPOINT:
+    source: env
+    variable: IRIS_CLIENT_BFF_ENDPOINT
+    type: string
 
 private:
   name: "$PROXY_OP"
