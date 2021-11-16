@@ -1,6 +1,6 @@
 package iris.client_bff.proxy;
 
-import iris.client_bff.config.ProxyServiceConfig;
+import iris.client_bff.config.ProxyServiceProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +21,7 @@ import com.googlecode.jsonrpc4j.IJsonRpcClient;
 @AllArgsConstructor
 public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 
-	private final ProxyServiceConfig config;
+	private final ProxyServiceProperties config;
 
 	private final IJsonRpcClient proxyRpcClient;
 
@@ -64,7 +64,7 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 	public String announceExplicitToken(String connectionAuthorizationToken) throws IRISAnnouncementException {
 		var domain = connectionAuthorizationToken
 				+ "."
-				+ config.getPublicProxyDomain();
+				+ config.getTargetSubdomain();
 		var oneWeekFromNow = Instant.now().plus(Period.ofWeeks(1));
 		return this.sendAnnouncement(domain, oneWeekFromNow);
 	}

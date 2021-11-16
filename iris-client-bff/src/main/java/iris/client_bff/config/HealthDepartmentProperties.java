@@ -1,8 +1,8 @@
 package iris.client_bff.config;
 
 import iris.client_bff.core.utils.ValidatedProperties;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.Validator;
 import javax.validation.constraints.NotBlank;
@@ -11,8 +11,8 @@ import javax.validation.constraints.Pattern;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("hd")
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class HealthDepartmentProperties extends ValidatedProperties {
 
 	HealthDepartmentProperties(Validator validator) {
