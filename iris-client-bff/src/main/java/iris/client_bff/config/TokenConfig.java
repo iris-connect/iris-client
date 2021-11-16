@@ -27,7 +27,7 @@ public class TokenConfig {
 	private int catLength = 40;
 
 	/**
-	 * Reason for the default hear in code:
+	 * Reason for the default here in the code:
 	 * <p>
 	 * Determining the tokens with PBKDF2 (10000 iterations) for our possible 1e21 combinations of the initial token is a
 	 * lot of effort for the limited benefit of possible data deliveries. On the other hand, since the salt must be the
@@ -39,7 +39,7 @@ public class TokenConfig {
 	private String datSalt;
 
 	/**
-	 * Reason for the default hear in code: lock at {@link TokenConfig#datSalt}
+	 * Reason for the default here in the code: lock at {@link TokenConfig#datSalt}
 	 */
 	@Value("${tokens.catSalt: VtXKYoNmvme86V2zrjdWg9NglGQfAAUB}")
 	private String catSalt;
