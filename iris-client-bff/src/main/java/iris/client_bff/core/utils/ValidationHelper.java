@@ -2,7 +2,7 @@ package iris.client_bff.core.utils;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
-import iris.client_bff.config.HealthDepartmentProperties;
+import iris.client_bff.config.CentralConfigurationService;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.log.LogHelper;
 import iris.client_bff.ui.messages.ErrorMessages;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor()
 public class ValidationHelper {
 	private final AlertService alertService;
-	private final HealthDepartmentProperties hdConfig;
+	private final CentralConfigurationService configService;
 
 	public static final Pattern UUID_REGEX = Pattern
 			.compile("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})");
@@ -93,7 +93,8 @@ public class ValidationHelper {
 			"„" };
 
 	private static final String[][] FORBIDDEN_KEYWORD_TUPLES = {
-			{ "<SCRIPT" }, { "JAVASCRIPT:" }, { "SELECT", "FROM" }, { "INSERT", "INTO" }, { "UPDATE", "SET" }, { "DELETE", "FROM" },
+			{ "<SCRIPT" }, { "JAVASCRIPT:" }, { "SELECT", "FROM" }, { "INSERT", "INTO" }, { "UPDATE", "SET" },
+			{ "DELETE", "FROM" },
 			{ "CREATE", "TABLE" }, { "DROP", "TABLE" }, { "ALTER", "TABLE" },
 			{ "CREATE", "INDEX" }, { "DROP", "INDEX" }, { "CREATE", "VIEW" }, { "DROP", "VIEW" }
 	};
@@ -141,7 +142,7 @@ public class ValidationHelper {
 			alertService.createAlertMessage("Input validation - possible attack",
 					String.format(
 							"Input `%s` in health department with abbreviation `%s` contains the character or keyword `%s` that is a potential attack!",
-							field, hdConfig.getAbbreviation(), logString));
+							field, configService.getAbbreviation(), logString));
 
 			return true;
 		}

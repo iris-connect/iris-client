@@ -1,7 +1,7 @@
 package iris.client_bff.core.token;
 
-import iris.client_bff.config.HealthDepartmentProperties;
-import iris.client_bff.config.TokenConfig;
+import iris.client_bff.config.CentralConfigurationService;
+import iris.client_bff.config.TokenProperties;
 import lombok.RequiredArgsConstructor;
 
 import java.security.NoSuchAlgorithmException;
@@ -24,21 +24,21 @@ public class TokenGenerator {
 	public static final int ITERATIONS = 10000;
 
 	private final Dictionary dictionary;
-	private final TokenConfig tokenConfig;
-	private final HealthDepartmentProperties hdProperties;
+	private final TokenProperties tokenProperties;
+	private final CentralConfigurationService configService;
 
 	public IdentifierToken generateIdentifierToken() {
 
 		String readableToken = generateReadableToken(dictionary, 4);
 
-		int keyLength = tokenConfig.getCatLength() * 8;
+		int keyLength = configService.getCatLength() * 8;
 
-		byte[] connectionAuthorizationToken = hashPassword(readableToken.toCharArray(), tokenConfig.getCatSalt().getBytes(),
-				ITERATIONS, keyLength);
+		byte[] connectionAuthorizationToken = hashPassword(readableToken.toCharArray(),
+				configService.getCatSalt().getBytes(), ITERATIONS, keyLength);
 
-		keyLength = tokenConfig.getDatLength() * 8;
+		keyLength = configService.getDatLength() * 8;
 
-		byte[] dataAuthorizationToken = hashPassword(readableToken.toCharArray(), tokenConfig.getDatSalt().getBytes(),
+		byte[] dataAuthorizationToken = hashPassword(readableToken.toCharArray(), configService.getDatSalt().getBytes(),
 				ITERATIONS, keyLength);
 
 		return IdentifierToken.builder()
@@ -65,7 +65,7 @@ public class TokenGenerator {
 
 	private String generateReadableToken(Dictionary dict, int numberOfElements) {
 
-		SecureRandom secureRandom = new SecureRandom(tokenConfig.getGeneratorSalt().getBytes());
+		SecureRandom secureRandom = new SecureRandom(tokenProperties.getGeneratorSalt().getBytes());
 
 		String tokenPart = IntStream.generate(() -> secureRandom.nextInt(dict.size()))
 				.mapToObj(dict::get)
@@ -74,6 +74,6 @@ public class TokenGenerator {
 				.limit(numberOfElements)
 				.collect(Collectors.joining("-"));
 
-		return tokenPart + "-" + hdProperties.getAbbreviation();
+		return tokenPart + "-" + configService.getAbbreviation();
 	}
 }

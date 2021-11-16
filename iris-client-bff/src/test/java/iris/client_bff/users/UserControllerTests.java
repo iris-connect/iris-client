@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.auth.db.UserAccountAuthentication;
-import iris.client_bff.config.HealthDepartmentProperties;
+import iris.client_bff.config.CentralConfigurationService;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.users.entities.UserAccount;
@@ -42,7 +42,7 @@ class UserControllerTests {
 	@Mock(lenient = true)
 	AlertService alertService;
 	@Mock(lenient = true)
-	HealthDepartmentProperties hdConfig;
+	CentralConfigurationService hdConfig;
 
 	@InjectMocks
 	ValidationHelper validationHelper;
