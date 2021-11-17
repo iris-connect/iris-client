@@ -18,7 +18,7 @@ const sanitizeWhitespaces = (field: string): string => {
 
 const sanitizeWhitelist = (field: string): string => {
   // Remove everything not whitelisted (this restriction may be relaxed at some point)
-  const regex_whitelist = /[^a-zA-Z0-9äüöÄÜÖß(): \-@+.;,]+/g; // Matches everything *not* in the group (the whitelist)
+  const regex_whitelist = /[^\p{sc=Latin}0123456789(): \-@+.;,]+/gu; // Matches everything *not* in the group (the whitelist)
   return field.replace(regex_whitelist, "");
 };
 
