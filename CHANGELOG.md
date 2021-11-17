@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.1](https://github.com/iris-connect/iris-client/compare/v1.1.0...v1.1.1) (2021-11-17)
+
+
+### Bug Fixes
+
+* The configuration for the private proxy now contains the necessary variable declarations again. Thanks to [@jl-sitnrw](https://github.com/jl-sitnrw) ([71ea823](https://github.com/iris-connect/iris-client/commit/71ea8239b07729729c9b4916e0b8ba28eef1222d)), closes [#467](https://github.com/iris-connect/iris-client/issues/467)
+* The endpoint of the JSONRPC client is set to the right variable now. ([9d598bc](https://github.com/iris-connect/iris-client/commit/9d598bc3267f69ceeaa4e84d34d8abfe4f0ffd33))
+* With the stand alone installation, there is no longer an error at startup because a property is set with the wrong name. Thanks to [@jl-sitnrw](https://github.com/jl-sitnrw) ([8aa669d](https://github.com/iris-connect/iris-client/commit/8aa669d392db703828b3e588ab708ef5e74fb073)), closes [#466](https://github.com/iris-connect/iris-client/issues/466)
+
 # [1.1.0](https://github.com/iris-connect/iris-client/compare/v1.0.1...v1.1.0) (2021-11-03)
 
 
