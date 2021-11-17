@@ -1,5 +1,6 @@
-import XLSX from "xlsx";
+import XLSX, { FullProperties } from "xlsx";
 import sanitization from "@/utils/data-export/sanitization";
+import appConfig from "@/config";
 
 export type Row = Record<string, unknown>;
 export type Header =
@@ -10,6 +11,16 @@ export type Header =
       compose?: (row: Row, header?: Header) => string;
     };
 
+export interface ExportConfig {
+  fileName: string;
+}
+
+export interface ExportConfigCSV extends ExportConfig {
+  quoted?: boolean;
+}
+
+export type ExportConfigXLSX = ExportConfig & FullProperties;
+
 const getHeaderRow = (headers: Header[]): string[] => {
   return headers.map((header) => {
     if (typeof header === "string") return header;
@@ -17,23 +28,35 @@ const getHeaderRow = (headers: Header[]): string[] => {
   });
 };
 
-const exportXlsx = (headers: Header[], rows: Row[], fileName: string) => {
+const exportXlsx = (
+  headers: Header[],
+  rows: Row[],
+  config: ExportConfigXLSX
+) => {
   const sanitizedRows = sanitization.sanitizeRows(rows, headers, false);
   const wb = XLSX.utils.book_new();
+  if (!wb.Props) {
+    wb.Props = {
+      Version: appConfig.appVersionId,
+    };
+  }
+  wb.Props = new Proxy(wb.Props, {
+    get: (o, p: keyof FullProperties) =>
+      p === "Application" ? "IRIS connect" : o[p],
+  });
   const ws = XLSX.utils.aoa_to_sheet([getHeaderRow(headers), ...sanitizedRows]);
-  XLSX.utils.book_append_sheet(wb, ws);
-  XLSX.writeFile(wb, `${fileName}.xlsx`);
+  XLSX.utils.book_append_sheet(wb, ws, "Tabelle1");
+  XLSX.writeFile(wb, `${config.fileName}.xlsx`);
 };
 
 const exportCsv = (
   headers: Header[],
   rows: Row[],
-  fileName: string,
-  quoted?: boolean
+  config: ExportConfigCSV
 ): Promise<string> => {
   return new Promise((resolve, reject) => {
     try {
-      const forceQuotes = quoted !== false;
+      const forceQuotes = config.quoted !== false;
       const delimiter = forceQuotes ? "," : ";";
       const replaceDelimiters =
         window.irisAppContext?.csvExportStandardAtomicAddress !== "true";
@@ -64,7 +87,7 @@ const exportCsv = (
       if (forceQuotes) {
         csv = csv.replace(/"{4}/g, '""');
       }
-      downloadCsvFile(fileName, csv);
+      downloadCsvFile(config.fileName, csv);
       resolve(csv);
     } catch (error) {
       reject(error);

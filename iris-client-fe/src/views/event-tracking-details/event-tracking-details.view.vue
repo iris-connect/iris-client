@@ -17,6 +17,7 @@
       <template #data-export="{ selection }">
         <event-tracking-details-data-export
           :event="eventTrackingDetails"
+          :items-length="guests.length"
           :selection="selection"
         />
       </template>

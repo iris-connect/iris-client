@@ -250,7 +250,7 @@ describe("Events", () => {
       validation: ["sanitised"],
     });
   });
-  it("should export event data as csv file", () => {
+  it("should export event data as csv or xlsx file", () => {
     cy.visit("/events/list");
     cy.getBy("view.data-table")
       .filterDataTableByStatus("received")
@@ -273,11 +273,16 @@ describe("Events", () => {
       .should("be.visible")
       .within(() => {
         cy.getBy("export.csv.standard").should("exist").click();
+        cy.getBy("export.xlsx.standard").should("exist").click();
         cy.getBy("export.csv.standard-alternative").should("exist").click();
+        cy.getBy("export.xlsx.standard-alternative").should("not.exist");
         cy.getBy("export.csv.sormas-event-participants")
           .should("exist")
           .click();
+        cy.getBy("export.xlsx.sormas-event-participants").should("not.exist");
         cy.getBy("export.csv.sormas-contact-persons").should("exist").click();
+        cy.getBy("export.xlsx.sormas-contact-participants").should("not.exist");
+        cy.getBy("export.csv.octoware").should("not.exist");
         cy.getBy("export.xlsx.octoware").should("exist").click();
         cy.getBy(".v-btn{close}").should("exist").click();
       });

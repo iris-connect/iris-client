@@ -1,10 +1,13 @@
 <template>
   <export-dialog
-    @export-csv-standard="handleExportCsvStandard"
-    @export-csv-alternative-standard="handleExportCsvAlternativeStandard"
-    @export-csv-sormas-event="handleExportCsvSormasEventParticipants"
-    @export-csv-sormas-contact="handleExportCsvSormasContactPersons"
-    @export-xlsx-octoware="handleXlsxExportOctoware"
+    :title="exportLabel"
+    :items="exportList"
+    @export-csv-standard="exportStandard('csv')"
+    @export-csv-standard-alternative="exportCsvStandardAlternative"
+    @export-csv-sormas-event="exportSormasEventParticipants"
+    @export-csv-sormas-contact="exportSormasContactPersons"
+    @export-xlsx-standard="exportStandard('xlsx')"
+    @export-xlsx-octoware="handleExportXlsxOctoware"
   >
     <template #activator="{ attrs, on }">
       <v-btn
@@ -18,11 +21,11 @@
       </v-btn>
       <v-btn
         color="primary"
-        @click="handleExportCsvStandard"
+        @click="exportStandard('csv')"
         :disabled="selection.length <= 0"
         data-test="export.csv.standard"
       >
-        Auswahl exportieren
+        {{ exportLabel }}
       </v-btn>
     </template>
   </export-dialog>
@@ -33,21 +36,73 @@ import { Component, Vue } from "vue-property-decorator";
 import { TableRow } from "@/views/event-tracking-details/event-tracking-details.view.vue";
 import { PropType } from "vue";
 import { DataRequestDetails } from "@/api";
-import ExportDialog from "@/views/event-tracking-details/components/data-export/export-dialog.vue";
-import exportCsvStandard from "@/views/event-tracking-details/components/data-export/utils/exportCsvStandard";
-import exportXlsxOctoware from "@/views/event-tracking-details/components/data-export/utils/exportXlsxOctoware";
-import exportCsvSormasEventParticipants from "@/views/event-tracking-details/components/data-export/utils/exportCsvSormasEventParticipants";
-import exportCsvSormasContactPersons from "@/views/event-tracking-details/components/data-export/utils/exportCsvSormasContactPersons";
+import ExportDialog, {
+  DataExportItem,
+} from "@/views/event-tracking-details/components/data-export/export-dialog.vue";
+import exportStandard from "@/views/event-tracking-details/components/data-export/utils/exportStandard";
+import exportOctoware from "@/views/event-tracking-details/components/data-export/utils/exportOctoware";
+import exportSormasEventParticipants from "@/views/event-tracking-details/components/data-export/utils/exportSormasEventParticipants";
+import exportSormasContactPersons from "@/views/event-tracking-details/components/data-export/utils/exportSormasContactPersons";
+import { getExportLabel } from "@/utils/data-export/common";
+
+type FileType = "csv" | "xlsx";
+
+const exportList: DataExportItem[] = [
+  {
+    label: "Standard",
+    csv: {
+      action: "export-csv-standard",
+      test: "export.csv.standard",
+    },
+    xlsx: {
+      action: "export-xlsx-standard",
+      test: "export.xlsx.standard",
+    },
+  },
+  {
+    label: "Standard (Alternativ)",
+    csv: {
+      action: "export-csv-standard-alternative",
+      test: "export.csv.standard-alternative",
+    },
+  },
+  {
+    label: "SORMAS (Ereignisteilnehmer-Format)",
+    csv: {
+      action: "export-csv-sormas-event",
+      test: "export.csv.sormas-event-participants",
+    },
+  },
+  {
+    label: "SORMAS (Kontaktpersonen-Format)",
+    csv: {
+      action: "export-csv-sormas-contact",
+      test: "export.csv.sormas-contact-persons",
+    },
+  },
+  {
+    label: "OctoWare®",
+    xlsx: {
+      action: "export-xlsx-octoware",
+      test: "export.xlsx.octoware",
+    },
+  },
+];
 
 const EventTrackingDetailsDataExportProps = Vue.extend({
+  inheritAttrs: false,
   props: {
+    event: {
+      type: Object as PropType<DataRequestDetails | null>,
+      default: null,
+    },
     selection: {
       type: Array as PropType<TableRow[]>,
       default: () => [],
     },
-    event: {
-      type: Object as PropType<DataRequestDetails | null>,
-      default: null,
+    itemsLength: {
+      type: Number,
+      default: 0,
     },
   },
 });
@@ -61,30 +116,35 @@ export default class EventTrackingDetailsDataExport extends EventTrackingDetails
     return [this.event?.externalRequestId || "Export", Date.now()].join("_");
   }
 
-  handleExportCsvStandard(): void {
-    exportCsvStandard.exportData(this.selection, this.getFileName());
+  exportList = exportList;
+
+  get exportLabel(): string {
+    return getExportLabel(this.selection.length, this.itemsLength);
   }
 
-  handleExportCsvAlternativeStandard(): void {
-    exportCsvStandard.exportData(this.selection, this.getFileName(), false);
+  exportStandard(type: FileType): void {
+    const exporter =
+      type === "xlsx" ? exportStandard.exportXlsx : exportStandard.exportCsv;
+    exporter(this.selection, this.getFileName());
   }
 
-  handleExportCsvSormasEventParticipants(): void {
-    const data = exportCsvSormasEventParticipants.mapData(this.selection);
-    exportCsvSormasEventParticipants.exportData(data, this.getFileName());
+  exportCsvStandardAlternative(): void {
+    exportStandard.exportCsv(this.selection, this.getFileName(), false);
   }
 
-  handleExportCsvSormasContactPersons(): void {
-    const data = exportCsvSormasContactPersons.mapData(
-      this.event,
-      this.selection
-    );
-    exportCsvSormasContactPersons.exportData(data, this.getFileName());
+  exportSormasEventParticipants(): void {
+    const data = exportSormasEventParticipants.mapData(this.selection);
+    exportSormasEventParticipants.exportCsv(data, this.getFileName());
   }
 
-  handleXlsxExportOctoware(): void {
-    const data = exportXlsxOctoware.mapData(this.event, this.selection);
-    exportXlsxOctoware.exportData(data, this.getFileName());
+  exportSormasContactPersons(): void {
+    const data = exportSormasContactPersons.mapData(this.event, this.selection);
+    exportSormasContactPersons.exportCsv(data, this.getFileName());
+  }
+
+  handleExportXlsxOctoware(): void {
+    const data = exportOctoware.mapData(this.event, this.selection);
+    exportOctoware.exportXlsx(data, this.getFileName());
   }
 }
 </script>

@@ -56,13 +56,13 @@ const getHeaders = () => {
   ];
 };
 
-const exportData = (rows: Row[], fileName: string): Promise<unknown> => {
+const exportCsv = (rows: Row[], fileName: string): Promise<unknown> => {
   const headers = getHeaders();
-  return dataExport.exportCsv(headers, rows, fileName);
+  return dataExport.exportCsv(headers, rows, { fileName });
 };
 
-const exportCsvStandardContacts = {
-  exportData,
+const exportStandardContacts = {
+  exportCsv,
 };
 
-export default exportCsvStandardContacts;
+export default exportStandardContacts;

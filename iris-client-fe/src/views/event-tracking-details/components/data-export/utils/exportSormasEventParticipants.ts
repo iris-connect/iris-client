@@ -1,9 +1,8 @@
 import dataExport from "@/utils/data-export/data-export";
 import { TableRow } from "@/views/event-tracking-details/event-tracking-details.view.vue";
-import { DataRequestDetails } from "@/api";
 
-export type ContactCaseData = {
-  description: string;
+export type EventParticipantData = {
+  involvementDescription: string;
   firstName: string;
   lastName: string;
   sex: string;
@@ -17,57 +16,66 @@ export type ContactCaseData = {
 
 const getHeaders = () => [
   {
-    text: "description",
-    value: "description",
+    text: "EventParticipant",
+    value: "involvementDescription",
   },
   {
-    text: "person.firstName",
+    text: "Person",
     value: "firstName",
   },
   {
-    text: "person.lastName",
+    text: "Person",
     value: "lastName",
   },
   {
-    text: "person.sex",
+    text: "Person",
     value: "sex",
   },
   {
-    text: "person.phone",
+    text: "Person",
     value: "phone",
   },
   {
-    text: "person.emailAddress",
+    text: "Person",
     value: "email",
   },
   {
-    text: "person.address.postalCode",
+    text: "Person",
     value: "postalCode",
   },
   {
-    text: "person.address.city",
+    text: "Person",
     value: "city",
   },
   {
-    text: "person.address.street",
+    text: "Person",
     value: "street",
   },
   {
-    text: "person.address.houseNumber",
+    text: "Person",
     value: "houseNumber",
   },
 ];
 
-const mapData = (
-  event: DataRequestDetails | null,
-  tableRows: TableRow[]
-): ContactCaseData[] => {
-  const data: ContactCaseData[] = [];
+const mapData = (tableRows: TableRow[]): EventParticipantData[] => {
+  const data: EventParticipantData[] = [];
+
+  const headerInstance: EventParticipantData = {
+    involvementDescription: "involvementDescription",
+    firstName: "person.firstName",
+    lastName: "person.lastName",
+    sex: "person.sex",
+    phone: "person.phone",
+    email: "person.emailAddress",
+    postalCode: "person.address.postalCode",
+    city: "person.address.city",
+    street: "person.address.street",
+    houseNumber: "person.address.houseNumber",
+  };
+  data.push(headerInstance);
+
   tableRows.forEach((element) => {
-    const description =
-      "Aus Ereignis " +
-      (event?.externalRequestId || "-") +
-      ": " +
+    const involvementDescription =
       element.comment +
       " // " +
       element.checkInTime +
@@ -76,8 +84,9 @@ const mapData = (
       " Uhr (Maximale Kontaktdauer " +
       element.maxDuration +
       ")";
-    const dataInstance: ContactCaseData = {
-      description: description,
+
+    const dataInstance: EventParticipantData = {
+      involvementDescription: involvementDescription,
       firstName: element.firstName,
       lastName: element.lastName,
       sex: element.raw.sex || "",
@@ -93,16 +102,16 @@ const mapData = (
   return data;
 };
 
-const exportData = (
-  rows: Array<ContactCaseData>,
+const exportCsv = (
+  rows: EventParticipantData[],
   fileName: string
 ): Promise<unknown> => {
-  return dataExport.exportCsv(getHeaders(), rows, fileName, false);
+  return dataExport.exportCsv(getHeaders(), rows, { fileName, quoted: false });
 };
 
-const exportCsvSormasContactPersons = {
+const exportSormasEventParticipants = {
   mapData,
-  exportData,
+  exportCsv,
 };
 
-export default exportCsvSormasContactPersons;
+export default exportSormasEventParticipants;

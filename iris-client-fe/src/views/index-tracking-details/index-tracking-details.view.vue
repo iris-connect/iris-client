@@ -77,6 +77,7 @@
               class="elevation-1 mt-5"
               :search="tableDataContacts.search"
               show-select
+              show-select-all
               v-model="tableDataContacts.select"
               show-expand
               single-expand
@@ -137,6 +138,7 @@
               class="elevation-1 mt-5"
               :search="tableDataEvents.search"
               show-select
+              show-select-all
               v-model="tableDataEvents.select"
               data-test="case.events.data-table"
             >
@@ -185,7 +187,7 @@
           @click="handleContactsExport"
           data-test="case.contacts.export"
         >
-          Kontaktdaten exportieren
+          {{ contactsExportLabel }}
         </v-btn>
         <v-btn
           v-if="currentTab === 1"
@@ -194,7 +196,7 @@
           @click="handleEventsExport"
           data-test="case.events.export"
         >
-          Ereignisdaten exportieren
+          {{ eventsExportLabel }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -220,8 +222,9 @@ import ContactCategories from "@/constants/ContactCategories";
 import AlertComponent from "@/components/alerts/alert.component.vue";
 import IndexTrackingSubmissionUrl from "@/views/index-tracking-details/components/index-tracking-submission-url.vue";
 import IrisDataTable from "@/components/iris-data-table.vue";
-import exportCsvStandardEvents from "@/views/index-tracking-details/components/data-export/utils/exportCsvStandardEvents";
-import exportCsvStandardContacts from "@/views/index-tracking-details/components/data-export/utils/exportCsvStandardContacts";
+import exportStandardEvents from "@/views/index-tracking-details/components/data-export/utils/exportStandardEvents";
+import exportStandardContacts from "@/views/index-tracking-details/components/data-export/utils/exportStandardContacts";
+import { getExportLabel } from "@/utils/data-export/common";
 
 type IndexData = {
   extID: string;
@@ -530,15 +533,31 @@ export default class IndexTrackingDetailsView extends Vue {
     return [this.indexData.extID, Date.now()].join("_");
   }
 
+  get contactsExportLabel(): string {
+    return getExportLabel(
+      this.tableDataContacts.select.length,
+      this.contacts.length,
+      ["Kontaktdaten", "Kontaktdaten"]
+    );
+  }
+
+  get eventsExportLabel(): string {
+    return getExportLabel(
+      this.tableDataEvents.select.length,
+      this.events.length,
+      ["Ereignisdaten", "Ereignisdaten"]
+    );
+  }
+
   handleContactsExport(): void {
-    exportCsvStandardContacts.exportData(
+    exportStandardContacts.exportCsv(
       this.tableDataContacts.select,
       this.getFileName()
     );
   }
 
   handleEventsExport(): void {
-    exportCsvStandardEvents.exportData(
+    exportStandardEvents.exportCsv(
       this.tableDataEvents.select,
       this.getFileName()
     );

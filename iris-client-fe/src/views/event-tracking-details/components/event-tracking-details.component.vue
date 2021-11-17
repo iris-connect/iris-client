@@ -111,6 +111,7 @@
         class="elevation-1 mt-5"
         :search="tableData.search"
         show-select
+        show-select-all
         v-model="tableData.select"
         show-expand
         single-expand
