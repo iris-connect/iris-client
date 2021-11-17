@@ -22,7 +22,6 @@
     "chart.js": "^2.9.4",
     "core-js": "^3.19.1",
     "dayjs": "^1.10.7",
-    "json2csv": "^5.0.6",
     "lodash": "^4.17.21",
     "vue": "^2.6.14",
     "vue-chartjs": "^3.5.1",
@@ -31,7 +30,8 @@
     "vue-router": "^3.5.3",
     "vuetify": "^2.6.0",
     "vuex": "^3.6.2",
-    "vuex-persistedstate": "^4.1.0"
+    "vuex-persistedstate": "^4.1.0",
+    "xlsx": "^0.17.3"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.3.1",
