@@ -97,7 +97,7 @@ Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installa
 
 #### EPS
 
-1. Laden Sie sich die [aktuelle EPS Version 0.1.66](https://github.com/iris-connect/eps/releases/tag/v0.1.66) herunter. Sie benötigen die Binaries `eps` und `proxy` für Ihre Ziel-Plattform. 
+1. Laden Sie sich die [aktuelle EPS Version 0.1.67](https://github.com/iris-connect/eps/releases/tag/v0.1.67) herunter. Sie benötigen die Binaries `eps` und `proxy` für Ihre Ziel-Plattform. 
 
 2. Stellen Sie sicher, dass `eps` und `proxy` in Ihrem Pfad liegen. 
 
