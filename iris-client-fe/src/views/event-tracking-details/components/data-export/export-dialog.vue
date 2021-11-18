@@ -4,30 +4,41 @@
       <slot name="activator" v-bind="scope" />
     </template>
     <v-card data-test="export-dialog">
-      <v-card-title> Daten exportieren </v-card-title>
-      <v-list
-        class="px-2"
-        v-for="(list, listIndex) in exportLists"
-        :key="listIndex"
-      >
-        <v-subheader>{{ list.title }}</v-subheader>
-        <v-list-item
-          v-for="(item, index) in list.items"
-          :key="index"
-          @click="$emit(item.action)"
-          class="mx-n2 px-6"
-          :data-test="item.test"
-        >
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title">
-              {{ item.title }}
-            </v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-icon>
-            <v-icon> mdi-download </v-icon>
-          </v-list-item-icon>
-        </v-list-item>
-      </v-list>
+      <v-card-title> {{ title }} </v-card-title>
+      <v-simple-table class="px-2 pb-2">
+        <thead>
+          <tr>
+            <th class="text-left">Daten</th>
+            <th class="text-center">CSV</th>
+            <th class="text-center">Excel</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in items" :key="index">
+            <td>{{ item.label }}</td>
+            <td class="text-center">
+              <v-btn
+                v-if="item.csv"
+                icon
+                @click="$emit(item.csv.action)"
+                :data-test="item.csv.test"
+              >
+                <v-icon> mdi-download </v-icon>
+              </v-btn>
+            </td>
+            <td class="text-center">
+              <v-btn
+                v-if="item.xlsx"
+                icon
+                @click="$emit(item.xlsx.action)"
+                :data-test="item.xlsx.test"
+              >
+                <v-icon> mdi-download </v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </v-simple-table>
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -41,62 +52,34 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { PropType } from "vue";
 
-export interface ExportList {
-  title: string;
-  items: {
-    title: string;
-    action: string;
-  };
+export interface DataExportFormat {
+  action: string;
+  test: string;
 }
 
-const exportListCSV = [
-  {
-    title: "Standard",
-    action: "export-csv-standard",
-    test: "export.csv.standard",
-  },
-  {
-    title: "Standard (Alternativ)",
-    action: "export-csv-alternative-standard",
-    test: "export.csv.standard-alternative",
-  },
-  {
-    title: "SORMAS (Ereignisteilnehmer-Format)",
-    action: "export-csv-sormas-event",
-    test: "export.csv.sormas-event-participants",
-  },
-  {
-    title: "SORMAS (Kontaktpersonen-Format)",
-    action: "export-csv-sormas-contact",
-    test: "export.csv.sormas-contact-persons",
-  },
-];
-
-const exportListXLSX = [
-  {
-    title: "OctoWare®",
-    action: "export-xlsx-octoware",
-    test: "export.xlsx.octoware",
-  },
-];
+export interface DataExportItem {
+  label: string;
+  csv?: DataExportFormat;
+  xlsx?: DataExportFormat;
+}
 
 const ExportDialogProps = Vue.extend({
   inheritAttrs: false,
+  props: {
+    title: {
+      type: String,
+      default: "Daten exportieren",
+    },
+    items: {
+      type: Array as PropType<DataExportItem[]>,
+      default: () => [],
+    },
+  },
 });
-
 @Component
 export default class ExportDialog extends ExportDialogProps {
   dialog = false;
-  exportLists = [
-    {
-      title: "CSV",
-      items: exportListCSV,
-    },
-    {
-      title: "XLSX",
-      items: exportListXLSX,
-    },
-  ];
 }
 </script>

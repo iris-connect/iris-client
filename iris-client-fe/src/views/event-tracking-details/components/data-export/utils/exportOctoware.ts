@@ -120,13 +120,13 @@ const mapData = (
   return data;
 };
 
-const exportData = (rows: Row[], fileName: string) => {
-  dataExport.exportXlsx(getHeaders(), rows, fileName);
+const exportXlsx = (rows: Row[], fileName: string) => {
+  dataExport.exportXlsx(getHeaders(), rows, { fileName });
 };
 
-const exportXlsxOctoware = {
+const exportOctoware = {
   mapData,
-  exportData,
+  exportXlsx,
 };
 
-export default exportXlsxOctoware;
+export default exportOctoware;

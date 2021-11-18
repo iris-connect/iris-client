@@ -47,17 +47,26 @@ const getHeaders = () => {
   ];
 };
 
-const exportData = (
+const exportCsv = (
   rows: Row[],
   fileName: string,
   quoted?: boolean
 ): Promise<unknown> => {
   const headers = getHeaders();
-  return dataExport.exportCsv(headers, rows, fileName, quoted !== false);
+  return dataExport.exportCsv(headers, rows, {
+    fileName,
+    quoted: quoted !== false,
+  });
+};
+
+const exportXlsx = (rows: Row[], fileName: string) => {
+  const headers = getHeaders();
+  return dataExport.exportXlsx(headers, rows, { fileName });
 };
 
 const exportCsvStandard = {
-  exportData,
+  exportCsv,
+  exportXlsx,
 };
 
 export default exportCsvStandard;

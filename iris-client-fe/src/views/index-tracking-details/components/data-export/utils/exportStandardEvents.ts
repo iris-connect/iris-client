@@ -19,13 +19,13 @@ const getHeaders = () => {
   ];
 };
 
-const exportData = (rows: Row[], fileName: string): Promise<unknown> => {
+const exportCsv = (rows: Row[], fileName: string): Promise<unknown> => {
   const headers = getHeaders();
-  return dataExport.exportCsv(headers, rows, fileName);
+  return dataExport.exportCsv(headers, rows, { fileName });
 };
 
-const exportCsvStandardEvents = {
-  exportData,
+const exportStandardEvents = {
+  exportCsv,
 };
 
-export default exportCsvStandardEvents;
+export default exportStandardEvents;
