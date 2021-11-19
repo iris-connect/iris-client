@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - develop
+      - main
 
 jobs:
   determine_tag:
@@ -23,42 +24,53 @@ jobs:
         with:
           images: inoeg/iris-client-bff,inoeg/iris-client-frontend
   
-  skip_check_bff:
-    name: Determines BFF Job skipping
+  skip_check:
+    name: Determines Job skipping
     continue-on-error: true # Uncomment once integration is finished
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+      should_skip_bff: ${{ steps.skip_check_bff.outputs.should_skip }}
+      should_skip_fe: ${{ steps.skip_check_fe.outputs.should_skip }}
     steps:
-      - id: skip_check
+      - id: skip_check_bff
+        name: Skip Check BFF
         uses: fkirc/skip-duplicate-actions@master
         with:
           # All of these options are optional, so you can remove them if you are happy with the defaults
           skip_after_successful_duplicate: 'false'
-          concurrent_skipping: 'never'
           cancel_others: 'true'
-          paths: '[".github/workflows/bff_develop.yml", "iris-client-bff/**", "!**/README.md", "!**/Readme.md", "!**/docs/**", "!**/postman/**"]'
-  
-  skip_check_fe:
-    name: Determines FE Job skipping
-    continue-on-error: true
-    runs-on: ubuntu-latest
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
+          paths_ignore: '["**/README.md", "**/Readme.md", "**/docs/**", "**/postman/**"]'
+          paths: '[".github/workflows/bff_develop.yml", "iris-client-bff/**"]'
+
+      - id: skip_check_fe
+        name: Skip Check FE
         uses: fkirc/skip-duplicate-actions@master
         with:
           skip_after_successful_duplicate: 'false'
-          concurrent_skipping: 'never'
           cancel_others: 'true'
-          paths: '[".github/workflows/fe_develop.yml", "iris-client-fe/**", "!**/README.md", "!**/Readme.md", "!**/docs/**", "!**/postman/**"]'
+          paths_ignore: '["**/README.md", "**/Readme.md", "**/docs/**", "**/postman/**"]'
+          paths: '[".github/workflows/fe_develop.yml", "iris-client-fe/**"]'
+  
+  test:
+    name: Test
+    needs: [determine_tag, skip_check]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output
+        run: |
+          echo $SKIP_BFF
+          echo $IMAGE_JSON
+          echo $IMAGE_OBJ
+        env:
+          SKIP_BFF: ${{ needs.skip_check.outputs.should_skip_bff }}
+          IMAGE_JSON: ${{ needs.determine_tag.outputs.image_json }}
+          IMAGE_OBJ: ${{ fromJSON(needs.determine_tag.outputs.image_json).tags }}
   
   bff:
     name: Build BFF
-    needs: [determine_tag, skip_check_bff]
-    if: ${{ needs.skip_check_bff.outputs.should_skip != 'true' }}
+    needs: [determine_tag, skip_check]
+    if: ${{ needs.skip_check.outputs.should_skip_bff != 'true' }}
     uses: iris-connect/iris-client/.github/workflows/bff_develop.yml@chore/optimized_build
     with:
       image_tag: ${{needs.determine_tag.outputs.image_tag}}
@@ -75,8 +87,8 @@ jobs:
 
   fe:
     name: Build FE
-    needs: [determine_tag, skip_check_fe]
-    if: ${{ needs.skip_check_fe.outputs.should_skip != 'true' }}
+    needs: [determine_tag, skip_check]
+    if: ${{ needs.skip_check_fe.outputs.should_skip_fe != 'true' }}
     uses: iris-connect/iris-client/.github/workflows/fe_develop.yml@chore/optimized_build
     with:
       image_tag: ${{needs.determine_tag.outputs.image_tag}}

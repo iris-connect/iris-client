@@ -12,6 +12,11 @@ jobs:
   repo_scan:
     name: Trivy Repo Scan
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v2.4.0
