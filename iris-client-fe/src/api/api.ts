@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ApiResponse, assertParamExists, RequestOptions } from "./common";
+import {
+  ApiResponse,
+  assertParamExists,
+  DataQuery,
+  RequestOptions,
+} from "./common";
 import { BaseAPI } from "./base";
 import { UserSession } from "@/views/user-login/user-login.store";
 
@@ -1883,6 +1888,56 @@ export interface CheckinAppStatusInfo {
   message: string;
 }
 
+export interface Sort {
+  empty?: boolean;
+  sorted?: boolean;
+  unsorted?: boolean;
+}
+
+export interface Page<Content> {
+  totalElements?: number;
+  totalPages?: number;
+  size?: number;
+  content: Content[];
+  number?: number;
+  sort?: Sort;
+  first?: boolean;
+  last?: boolean;
+  numberOfElements?: number;
+  pageable?: Pageable;
+  empty?: boolean;
+}
+
+export type IrisMessageQuery = DataQuery & {
+  folder: string;
+};
+
+export type PageIrisMessages = Page<IrisMessage>;
+
+export enum IrisMessageContext {
+  Inbox = "inbox",
+  Outbox = "outbox",
+}
+
+export interface IrisMessage {
+  name?: string;
+  folder: string;
+  id: string;
+  subject: string;
+  body: string;
+  author?: string;
+  recipient?: string;
+  createdAt?: string;
+  isRead?: boolean;
+}
+
+export type IrisMessageFolder = {
+  id: string;
+  name: string;
+  items?: IrisMessageFolder[];
+  context?: IrisMessageContext;
+};
+
 /**
  * IrisClientFrontendApi - object-oriented interface
  * @export
@@ -2180,5 +2235,41 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("checkinAppStatusGet", "name", name);
     const path = `/status/checkin-apps/${encodeURIComponent(name)}`;
     return this.apiRequest("GET", path, null, options);
+  }
+
+  /**
+   * @summary Fetches iris messages
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessagesGet(
+    options?: RequestOptions
+  ): ApiResponse<PageIrisMessages> {
+    return this.apiRequest("GET", "/iris-messages", null, options);
+  }
+
+  /**
+   * @summary Fetches iris message folders
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessageFoldersGet(
+    options?: RequestOptions
+  ): ApiResponse<IrisMessageFolder[]> {
+    return this.apiRequest("GET", "/iris-messages/folders", null, options);
+  }
+
+  /**
+   * @summary Fetches number of unread messages
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisUnreadMessageCountGet(
+    options?: RequestOptions
+  ): ApiResponse<number> {
+    return this.apiRequest("GET", "/iris-messages/unread/count", null, options);
   }
 }
