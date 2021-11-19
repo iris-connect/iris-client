@@ -1,6 +1,6 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import store from "@/store";
-import { Configuration, IrisClientFrontendApiFactory } from "@/api";
+import { IrisClientFrontendApi } from "@/api";
 
 import { makeMockAPIServer } from "@/server/mockAPIServer";
 import { UserSession } from "@/views/user-login/user-login.store";
@@ -16,11 +16,26 @@ if (process.env.VUE_APP_ENABLE_MOCK_SERVER === "true") {
 }
 
 const { apiBaseURL } = config;
-export const clientConfig = new Configuration({
-  basePath: apiBaseURL,
-});
 
-const authAxiosInstance = axios.create();
+const clientConfig: AxiosRequestConfig = {
+  baseURL: apiBaseURL,
+  transformRequest: (data) => {
+    return JSON.stringify(data !== undefined ? data : {});
+  },
+};
+
+const applyDefaultContentHeaders = (axiosInstance: AxiosInstance) => {
+  const contentType = "application/json; charset=UTF-8";
+  axiosInstance.defaults.headers.post["Content-Type"] = contentType;
+  axiosInstance.defaults.headers.put["Content-Type"] = contentType;
+  axiosInstance.defaults.headers.patch["Content-Type"] = contentType;
+};
+
+const baseAxiosInstance = axios.create(clientConfig);
+applyDefaultContentHeaders(baseAxiosInstance);
+
+const authAxiosInstance = axios.create(clientConfig);
+applyDefaultContentHeaders(authAxiosInstance);
 
 authAxiosInstance.interceptors.request.use((config) => {
   const token = store.state.userLogin.session?.token;
@@ -59,10 +74,8 @@ export const sessionFromResponse = (response: AxiosResponse): UserSession => {
   };
 };
 
-const authClient = IrisClientFrontendApiFactory(
-  clientConfig,
-  undefined,
-  authAxiosInstance
-);
+export const baseClient = new IrisClientFrontendApi(baseAxiosInstance);
+
+const authClient = new IrisClientFrontendApi(authAxiosInstance);
 
 export default authClient;

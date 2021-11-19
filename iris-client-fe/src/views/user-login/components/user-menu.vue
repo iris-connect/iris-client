@@ -1,9 +1,18 @@
 <template>
   <v-menu left bottom>
     <template v-slot:activator="{ on, attrs }">
-      <v-btn plain v-bind="attrs" v-on="on" data-test="user-menu.activator">
-        <span class="mr-3">{{ displayName }}</span>
-        <v-icon large right> mdi-account-circle </v-icon>
+      <v-btn
+        text
+        rounded
+        plain
+        large
+        v-bind="attrs"
+        v-on="on"
+        data-test="user-menu.activator"
+        class="d-flex align-center"
+      >
+        <v-icon large left> mdi-account-circle </v-icon>
+        <span class="ml-3">{{ displayName }}</span>
       </v-btn>
     </template>
     <v-list data-test="user-menu">

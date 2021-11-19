@@ -50,6 +50,8 @@ public class RPCClientConfig {
 
 	private final @NonNull String proxyClientUrl;
 
+	private final @NonNull String ownEndpoint;
+
 	@Bean
 	public JsonRpcHttpClient epsRpcClient()
 			throws NoSuchAlgorithmException, KeyManagementException, MalformedURLException {
@@ -62,7 +64,7 @@ public class RPCClientConfig {
 		return epsRpcClient(proxyClientUrl);
 	}
 
-	public JsonRpcHttpClient epsRpcClient(String clientUrl)
+	private JsonRpcHttpClient epsRpcClient(String clientUrl)
 			throws MalformedURLException, NoSuchAlgorithmException, KeyManagementException {
 
 		var jacksonObjectMapper = new ObjectMapper();

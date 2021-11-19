@@ -25,6 +25,7 @@
           </v-btn>
         </template>
         <v-spacer></v-spacer>
+        <app-menu />
         <user-menu
           :display-name="userDisplayName"
           :role="userRole"
@@ -48,11 +49,13 @@ import { routes, setInterceptRoute } from "@/router";
 import UserMenu from "@/views/user-login/components/user-menu.vue";
 import { RouteConfig } from "vue-router";
 import { UserRole } from "@/api";
+import AppMenu from "@/components/app-menu.vue";
 
 // @todo: move user functionality to a dedicated user-module?
 export default Vue.extend({
   name: "App",
   components: {
+    AppMenu,
     UserMenu,
   },
   created() {
