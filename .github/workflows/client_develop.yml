@@ -65,7 +65,7 @@ jobs:
         env:
           SKIP_BFF: ${{ needs.skip_check.outputs.should_skip_bff }}
           IMAGE_JSON: ${{ needs.determine_tag.outputs.image_json }}
-          IMAGE_OBJ: ${{ fromJSON(needs.determine_tag.outputs.image_json).tags }}
+          IMAGE_OBJ: ${{ fromJSON(needs.determine_tag.outputs.image_json) }}
   
   bff:
     name: Build BFF
@@ -104,7 +104,7 @@ jobs:
 
   container_scan:
     name: Container Scan
-    needs: [bff, fe]
+    needs: [determine_tag, bff, fe]
     uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
     with:
       image-refs: ${{ toJSON(fromJSON(needs.determine_tag.outputs.image_json).tags) }}
