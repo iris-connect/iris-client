@@ -63,6 +63,7 @@ jobs:
   determine_tag:
     name: Determines Image Tag
     needs: determine_images
+    if: ${{ needs.determine_images.outputs.images != '' }}
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
