@@ -11,6 +11,9 @@ import java.util.regex.Pattern;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Jens Kutzsche
+ */
 @Getter
 public enum AppStatus implements MessageSourceResolvable {
 
