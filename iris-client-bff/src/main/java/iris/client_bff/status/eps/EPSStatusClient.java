@@ -1,41 +1,49 @@
 package iris.client_bff.status.eps;
 
-import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import iris.client_bff.config.RPCClientConfig;
-import iris.client_bff.status.eps.dto.*;
+import iris.client_bff.status.AppStatusException;
+import iris.client_bff.status.eps.dto.Directory;
+import iris.client_bff.status.eps.dto.DirectoryEntry;
+import iris.client_bff.status.eps.dto.Ping;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
+import java.net.ConnectException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
 
-@Slf4j
+import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
+
 @Service
 @AllArgsConstructor
-public class EPSStatusClient implements StatusClient {
+public class EPSStatusClient {
 
-    private final JsonRpcHttpClient epsRpcClient;
-    private final RPCClientConfig rpcClientConfig;
+	private final JsonRpcHttpClient epsRpcClient;
+	private final RPCClientConfig rpcClientConfig;
 
-    @Override
-    public List<DirectoryEntry> getAvailableApps() throws RuntimeException {
-        var methodName = rpcClientConfig.getOwnEndpoint()+"._directory";
-        try {
-            return epsRpcClient.invoke(methodName, null, Directory.class).getEntries().stream().filter(directoryEntry -> directoryEntry.getGroups().contains("checkin-apps")).collect(Collectors.toList());
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
+	public List<DirectoryEntry> getAvailableApps() {
 
-    public Ping checkApp(String epsEndpoint) throws RuntimeException {
-        var methodName = epsEndpoint+"._ping";
-        try {
-            return epsRpcClient.invoke(methodName, null, Ping.class);
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
+		var methodName = rpcClientConfig.getOwnEndpoint() + "._directory";
 
+		try {
+			return epsRpcClient.invoke(methodName, null, Directory.class).getEntries().stream()
+					.filter(directoryEntry -> directoryEntry.getGroups().contains("checkin-apps")).collect(Collectors.toList());
+		} catch (Throwable t) {
+			throw new AppStatusException(t.getMessage(), false);
+		}
+	}
+
+	public Ping checkApp(String epsEndpoint) {
+
+		var methodName = epsEndpoint + "._ping";
+
+		try {
+			return epsRpcClient.invoke(methodName, null, Ping.class);
+		} catch (ConnectException e) {
+			throw new AppStatusException(e.getMessage(), true);
+		} catch (Throwable t) {
+			throw new AppStatusException(t.getMessage(), false);
+		}
+	}
 }

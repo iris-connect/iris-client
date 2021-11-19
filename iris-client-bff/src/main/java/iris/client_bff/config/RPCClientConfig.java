@@ -64,7 +64,7 @@ public class RPCClientConfig {
 		return epsRpcClient(proxyClientUrl);
 	}
 
-	public JsonRpcHttpClient epsRpcClient(String clientUrl)
+	private JsonRpcHttpClient epsRpcClient(String clientUrl)
 			throws MalformedURLException, NoSuchAlgorithmException, KeyManagementException {
 
 		var jacksonObjectMapper = new ObjectMapper();
