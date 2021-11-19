@@ -168,6 +168,22 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
+    path: "/iris-message-list",
+    name: "message-list" /* Caution: This acts as an identifier! */,
+    meta: {
+      menu: true,
+      menuName: "Nachrichten",
+      menuComponent: () =>
+        import(
+          /* webpackChunkName: "iris-message-list-nav-link" */ "../views/iris-message-list/components/iris-message-list-nav-link.vue"
+        ),
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "iris-message-list" */ "../views/iris-message-list/iris-message-list.view.vue"
+      ),
+  },
+  {
     path: "/about",
     name: "about" /* Caution: This acts as an identifier! */,
     meta: {
@@ -185,7 +201,7 @@ const router = new VueRouter({
   routes,
 });
 
-const locationFromRoute = (route: Route): Location => {
+export const locationFromRoute = (route: Route): Location => {
   const { name, path, hash, query, params } = route;
   return {
     ...(name ? { name } : {}),

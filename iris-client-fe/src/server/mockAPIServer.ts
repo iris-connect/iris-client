@@ -5,6 +5,7 @@ import {
   DataRequestDetails,
   DataRequestStatus,
   ExistingDataRequestClientWithLocation,
+  IrisMessageQuery,
   User,
   UserRole,
 } from "@/api";
@@ -25,13 +26,17 @@ import {
   getDummyUserFromRequest,
 } from "@/server/data/dummy-userlist";
 import { findIndex, remove, some } from "lodash";
-import { paginated } from "@/server/utils/pagination";
+import { paginated, queriedPage } from "@/server/utils/pagination";
 import dayjs from "@/utils/date";
 import _defaults from "lodash/defaults";
 import {
   dummyCheckinApps,
   getDummyCheckinAppStatus,
 } from "@/server/data/status-checkin-apps";
+import {
+  dummyIrisMessageFolders,
+  dummyIrisMessageList,
+} from "@/server/data/dummy-iris-messages";
 
 const loginResponse = (role: UserRole): Response => {
   return new Response(200, {
@@ -289,6 +294,22 @@ export function makeMockAPIServer() {
         return authResponse(
           request,
           getDummyCheckinAppStatus(request.params.name)
+        );
+      });
+
+      this.get("/iris-messages", (schema, request) => {
+        const query: Partial<IrisMessageQuery> = request.queryParams;
+        return authResponse(request, queriedPage(dummyIrisMessageList, query));
+      });
+
+      this.get("/iris-messages/folders", (schema, request) => {
+        return authResponse(request, dummyIrisMessageFolders);
+      });
+
+      this.get("/iris-messages/unread/count", (schema, request) => {
+        return authResponse(
+          request,
+          dummyIrisMessageList.filter((item) => !item.isRead).length
         );
       });
     },

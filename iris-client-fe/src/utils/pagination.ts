@@ -1,7 +1,7 @@
 import { Route } from "vue-router";
 import { DataRequestStatus } from "@/api";
 
-const DEFAULT_PAGE_SIZE = 20;
+export const DEFAULT_PAGE_SIZE = 20;
 
 export function getStringParamFromRouteWithOptionalFallback(
   param: "page" | "sort" | "search" | "status" | "size",

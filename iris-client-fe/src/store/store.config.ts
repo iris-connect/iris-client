@@ -13,13 +13,14 @@ import indexTrackingDetails from "@/views/index-tracking-details/index-tracking-
 import indexTrackingSettings from "@/views/app-settings/index-tracking-settings.store";
 import normalizeSettings from "@/views/app-settings/normalize-settings.store";
 import chunkLoader from "@/views/app-settings/chunk-loader.store";
+import checkinAppStatusList from "@/views/checkin-app-status-list/checkin-app-status-list.store";
+import irisMessageList from "@/views/iris-message-list/iris-message-list.store";
 
 import { StoreOptions } from "vuex";
 import { RootState } from "@/store/types";
 import home from "@/views/home/home.store";
 
 import createPersistedState from "vuex-persistedstate";
-import checkinAppStatusList from "@/views/checkin-app-status-list/checkin-app-status-list.store";
 
 export const storeOptions: StoreOptions<RootState> = {
   state: {} as RootState,
@@ -42,6 +43,7 @@ export const storeOptions: StoreOptions<RootState> = {
     normalizeSettings,
     chunkLoader,
     checkinAppStatusList,
+    irisMessageList,
   },
   plugins: [
     createPersistedState({
