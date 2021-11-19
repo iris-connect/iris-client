@@ -61,11 +61,9 @@ jobs:
         run: |
           echo $SKIP_BFF
           echo $IMAGE_JSON
-          echo $IMAGE_OBJ
         env:
           SKIP_BFF: ${{ needs.skip_check.outputs.should_skip_bff }}
           IMAGE_JSON: ${{ needs.determine_tag.outputs.image_json }}
-          IMAGE_OBJ: ${{ fromJSON(needs.determine_tag.outputs.image_json) }}
   
   bff:
     name: Build BFF
