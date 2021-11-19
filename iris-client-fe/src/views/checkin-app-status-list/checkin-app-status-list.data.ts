@@ -1,28 +1,10 @@
 import {
   CheckinApp,
   CheckinAppInfo,
-  CheckinAppServerInfo,
   CheckinAppStatus,
   CheckinAppStatusInfo,
 } from "@/api";
 import { Complete, normalizeData } from "@/utils/data";
-
-const normalizeCheckinAppServerInfo = (
-  source?: CheckinAppServerInfo,
-  parse?: boolean
-): CheckinAppServerInfo => {
-  return normalizeData(
-    source,
-    (normalizer) => {
-      const normalized: Complete<CheckinAppServerInfo> = {
-        name: normalizer("name", undefined),
-      };
-      return normalized;
-    },
-    parse,
-    "CheckinAppServerInfo"
-  );
-};
 
 const normalizeCheckinAppInfo = (
   source?: CheckinAppInfo,
@@ -33,9 +15,7 @@ const normalizeCheckinAppInfo = (
     (normalizer) => {
       const normalized: Complete<CheckinAppInfo> = {
         version: normalizer("version", undefined),
-        serverInfo: source?.serverInfo
-          ? normalizeCheckinAppServerInfo(source?.serverInfo)
-          : source?.serverInfo,
+        name: normalizer("name", undefined),
       };
       return normalized;
     },

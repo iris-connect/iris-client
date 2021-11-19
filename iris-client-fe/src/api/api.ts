@@ -1861,13 +1861,9 @@ export enum CheckinAppStatus {
   UNKNOWN = "UNKNOWN",
 }
 
-export interface CheckinAppServerInfo {
-  name?: string;
-}
-
 export interface CheckinAppInfo {
   version?: string;
-  serverInfo?: CheckinAppServerInfo;
+  name?: string;
 }
 
 /**
@@ -1876,12 +1872,7 @@ export interface CheckinAppInfo {
  * @interface CheckinAppStatusInfo
  */
 export interface CheckinAppStatusInfo {
-  info?: {
-    version?: string;
-    serverInfo?: {
-      name?: string;
-    };
-  };
+  info?: CheckinAppInfo;
   status: CheckinAppStatus;
   message: string;
 }
