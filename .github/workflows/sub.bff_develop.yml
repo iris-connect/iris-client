@@ -16,10 +16,6 @@ on:
       DOCKER_HUB_PW:
         required: true
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   build_and_push:
     name: Build and push to docker.io

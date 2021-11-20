@@ -1,11 +1,6 @@
 name: FE e2e Test
 
 on:
-  push:
-    branches:
-      - main
-      - release
-      - 1.**
   workflow_call:
 
 jobs:
