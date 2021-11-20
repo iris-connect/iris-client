@@ -4,28 +4,22 @@
 name: BFF Develop
 
 on:
-  push:
-    branches:
-      - develop
-    paths:
-      - iris-client-bff/**
-      - .github/workflows/bff_develop.yml
-  pull_request:
-    branches:
-      - develop
-
-defaults:
-  run:
-    shell: bash
+  workflow_call:
+    inputs:
+      image_tag:
+        description: 'Tag that will be added to the image name'
+        required: true
+        type: string
+    secrets:
+      DOCKER_HUB_USER:
+        required: true
+      DOCKER_HUB_PW:
+        required: true
 
 jobs:
   build_and_push:
     name: Build and push to docker.io
     runs-on: ubuntu-latest
-    
-    # Map a step output to a job output
-    outputs:
-      image-ref: ${{ steps.meta.outputs.tags }}
     
     steps:
       - name: Checkout code
@@ -45,15 +39,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Create image tag
-        id: meta
-        uses: docker/metadata-action@v3
-        with:
-          images: inoeg/iris-client-bff
-
       - name: build, package and publish the image
         run: |
-          mvn -B clean verify spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=${{ steps.meta.outputs.version }}
+          mvn -B clean verify spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=${{ inputs.image_tag }}
         env:
           DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
           DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
@@ -67,15 +55,3 @@ jobs:
             **/surefire-reports/*.xml
             **/failsafe-reports/*.xml
             !**/failsafe-reports/failsafe-summary.xml
-
-  publish-test-results:
-    name: Publish Test Results
-    needs: build_and_push
-    uses: iris-connect/iris-client/.github/workflows/publish-test-results.yml@develop
-
-  container_scan:
-    name: Container Scan
-    needs: build_and_push
-    uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
-    with:
-      image-refs: "[ '${{needs.build_and_push.outputs.image-ref}}' ]"

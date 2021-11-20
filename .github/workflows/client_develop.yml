@@ -1,0 +1,123 @@
+name: Client Develop
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  skip_check:
+    name: Determines Job skipping
+    continue-on-error: true # Uncomment once integration is finished
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip_bff: ${{ steps.skip_check_bff.outputs.should_skip }}
+      should_skip_fe: ${{ steps.skip_check_fe.outputs.should_skip }}
+    steps:
+      - id: skip_check_bff
+        name: Skip Check BFF
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          # All of these options are optional, so you can remove them if you are happy with the defaults
+          skip_after_successful_duplicate: 'false'
+          cancel_others: 'true'
+          paths_ignore: '["**/README.md", "**/Readme.md", "**/docs/**", "**/postman/**"]'
+          paths: '[".github/workflows/sub.bff_develop.yml", "iris-client-bff/**"]'
+
+      - id: skip_check_fe
+        name: Skip Check FE
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          skip_after_successful_duplicate: 'false'
+          cancel_others: 'true'
+          paths_ignore: '["**/README.md", "**/Readme.md", "**/docs/**", "**/postman/**"]'
+          paths: '[".github/workflows/sub.fe_develop.yml", "iris-client-fe/**"]'
+  
+  determine_images:
+    name: Determines Relevant Images
+    needs: skip_check
+    runs-on: ubuntu-latest
+    outputs:
+      images: ${{ env.IMAGES }}
+    steps:
+      - id: step
+        name: Determines Relevant Images
+        run: |
+          declare -a image_array
+          
+          if [ ${{ needs.skip_check.outputs.should_skip_bff }} != 'true' ]; then
+            image_array+=(inoeg/iris-client-bff)
+          fi
+          if [ ${{ needs.skip_check.outputs.should_skip_fe }} != 'true' ]; then
+            image_array+=(inoeg/iris-client-frontend)
+          fi
+          
+          echo "IMAGES=$(IFS=,; echo "${image_array[*]}")" >> $GITHUB_ENV
+#          echo "tags=$(echo $IMAGE_JSON | jq -c '[.tags[] | select(test("bff|fr"))]')" >> $GITHUB_ENV
+  
+  determine_tag:
+    name: Determines Image Tag
+    needs: determine_images
+    if: ${{ needs.determine_images.outputs.images != '' }}
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      image_tag: ${{ steps.step.outputs.version }}
+      image_json: ${{ steps.step.outputs.json }}
+    steps:
+      - name: Determines Image Tag
+        id: step
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{needs.determine_images.outputs.images}}
+
+  bff:
+    name: Build BFF
+    needs: [skip_check, determine_tag]
+    if: ${{ needs.skip_check.outputs.should_skip_bff != 'true' }}
+    uses: iris-connect/iris-client/.github/workflows/sub.bff_develop.yml@chore/optimized_build
+    with:
+      image_tag: ${{needs.determine_tag.outputs.image_tag}}
+    secrets:
+      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+      DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
+
+  publish-test-results:
+    name: Publish Test Results
+    needs: bff
+    # the previous job might be skipped, we don't need to run this job then
+    if: success() || failure()
+    uses: iris-connect/iris-client/.github/workflows/sub.publish-test-results.yml@chore/optimized_build
+
+  fe:
+    name: Build FE
+    needs: [skip_check, determine_tag]
+    if: ${{ needs.skip_check.outputs.should_skip_fe != 'true' }}
+    uses: iris-connect/iris-client/.github/workflows/sub.fe_develop.yml@chore/optimized_build
+    with:
+      image_tag: ${{needs.determine_tag.outputs.image_tag}}
+    secrets:
+      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+      DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
+
+  e2e_test:
+    name: Run E2E Tests
+    needs: [bff, fe]
+    if: ${{ !failure() && !cancelled() && (success('bff') || success('fe')) }}
+#    if: ${{ always() && contains(needs.*.result, 'success') && !(contains(needs.*.result, 'failure')) }} 
+#     from: https://github.community/t/run-a-job-if-at-least-one-of-the-previous-ones-succeeded/163777/2
+#     Does not work! See also for the solution above: https://github.com/actions/runner/issues/491
+    uses: iris-connect/iris-client/.github/workflows/sub.fe-e2e-test.yml@chore/optimized_build
+
+  container_scan:
+    name: Container Scan
+    needs: [determine_tag, bff, fe]
+    if: ${{ !failure() && !cancelled() }}
+    uses: iris-connect/iris-client/.github/workflows/sub.trivy-container-scan.yml@chore/optimized_build
+    with:
+      image-refs: ${{ toJSON(fromJSON(needs.determine_tag.outputs.image_json).tags) }}

@@ -14,9 +14,6 @@ jobs:
     name: Download and Publish
     runs-on: ubuntu-latest
     
-    # the previous job might be skipped, we don't need to run this job then
-    if: success() || failure()
-    
     steps:
       - name: Download Artifact
         uses: actions/download-artifact@v2

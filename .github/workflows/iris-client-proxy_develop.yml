@@ -56,6 +56,6 @@ jobs:
   container_scan:
     name: Container Scan
     needs: build_and_push
-    uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
+    uses: iris-connect/iris-client/.github/workflows/sub.trivy-container-scan.yml@develop
     with:
       image-refs: "[ '${{needs.build_and_push.outputs.image-ref}}' ]"
