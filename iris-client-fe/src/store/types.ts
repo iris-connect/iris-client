@@ -15,6 +15,7 @@ import { NormalizeSettingsState } from "@/views/app-settings/normalize-settings.
 import { ChunkLoaderState } from "@/views/app-settings/chunk-loader.store";
 import { CheckinAppStatusListState } from "@/views/checkin-app-status-list/checkin-app-status-list.store";
 import { IrisMessageListState } from "@/views/iris-message-list/iris-message-list.store";
+import { IrisMessageDetailsState } from "@/views/iris-message-details/iris-message-details.store";
 
 export type RootState = {
   home: HomeState;
@@ -34,4 +35,5 @@ export type RootState = {
   chunkLoader: ChunkLoaderState;
   checkinAppStatusList: CheckinAppStatusListState;
   irisMessageList: IrisMessageListState;
+  irisMessageDetails: IrisMessageDetailsState;
 };

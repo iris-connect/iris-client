@@ -168,8 +168,8 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: "/iris-message-list",
-    name: "message-list" /* Caution: This acts as an identifier! */,
+    path: "/iris-messages/list",
+    name: "iris-message-list" /* Caution: This acts as an identifier! */,
     meta: {
       menu: true,
       menuName: "Nachrichten",
@@ -181,6 +181,17 @@ export const routes: Array<RouteConfig> = [
     component: () =>
       import(
         /* webpackChunkName: "iris-message-list" */ "../views/iris-message-list/iris-message-list.view.vue"
+      ),
+  },
+  {
+    path: "/iris-messages/details/:messageId",
+    name: "iris-message-details" /* Caution: This acts as an identifier! */,
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "iris-message-details" */ "../views/iris-message-details/iris-message-details.view.vue"
       ),
   },
   {

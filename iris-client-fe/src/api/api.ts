@@ -1919,6 +1919,12 @@ export enum IrisMessageContext {
   Outbox = "outbox",
 }
 
+export interface IrisMessageAttachment {
+  name?: string;
+  type?: string;
+  link?: string;
+}
+
 export interface IrisMessage {
   name?: string;
   folder: string;
@@ -1929,6 +1935,10 @@ export interface IrisMessage {
   recipient?: string;
   createdAt?: string;
   isRead?: boolean;
+}
+
+export interface IrisMessageDetails extends IrisMessage {
+  attachments?: IrisMessageAttachment[];
 }
 
 export type IrisMessageFolder = {
@@ -2248,6 +2258,22 @@ export class IrisClientFrontendApi extends BaseAPI {
     options?: RequestOptions
   ): ApiResponse<PageIrisMessages> {
     return this.apiRequest("GET", "/iris-messages", null, options);
+  }
+
+  /**
+   * @summary Fetches iris message details
+   * @param {string} messageId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessageDetailsGet(
+    messageId: string,
+    options?: RequestOptions
+  ): ApiResponse<IrisMessageDetails> {
+    assertParamExists("irisMessageDetailsGet", "messageId", messageId);
+    const path = `/iris-messages/${encodeURIComponent(messageId)}`;
+    return this.apiRequest("GET", path, null, options);
   }
 
   /**
