@@ -10,6 +10,12 @@ const sanitizeLineBreaks = (field: string): string => {
   return field.replace(regex_linebreaks, " ").trim();
 };
 
+const sanitizeWhitespaces = (field: string): string => {
+  // Replace tabs and other whitespace characters with a space
+  const regex_whitespace = /\s+/g;
+  return field.replace(regex_whitespace, " ");
+};
+
 const sanitizeWhitelist = (field: string): string => {
   // Remove everything not whitelisted (this restriction may be relaxed at some point)
   const regex_whitelist = /[^a-zA-Z0-9äüöÄÜÖß(): \-@+.;,]+/g; // Matches everything *not* in the group (the whitelist)
@@ -30,8 +36,7 @@ const sanitizeTrigger = (field: string): string => {
 };
 
 const isPhoneNumberLike = (field: string): boolean => {
-  const regex_phone =
-    /^\+[ ]?[(]?[ ]?[0123456789]{1,3}[ ]?[)]?[0123456789 \-/]+$/g;
+  const regex_phone = /^\+?[0-9][/.() \-0-9]{6,}?[0-9]$/g;
   return regex_phone.test(field);
 };
 
@@ -48,6 +53,7 @@ const sanitizeField = (
   }
 
   field = sanitizeLineBreaks(field);
+  field = sanitizeWhitespaces(field);
   field = sanitizeWhitelist(field);
   field = sanitizeTrigger(field);
 
