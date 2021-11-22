@@ -31,7 +31,7 @@ const sanitizeTrigger = (field: string): string => {
 
 const isPhoneNumberLike = (field: string): boolean => {
   const regex_phone =
-    /^\+[ ]?[(]?[ ]?[0123456789]{1,3}[ ]?[)]?[0123456789 \-/]+$/g;
+    /^\+[ ]?[(]?[ ]?[0123456789]{1,10}[ ]?[)]?[0123456789 \-/]+$/g;
   return regex_phone.test(field);
 };
 
