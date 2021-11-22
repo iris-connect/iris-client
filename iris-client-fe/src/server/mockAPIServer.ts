@@ -302,6 +302,13 @@ export function makeMockAPIServer() {
         return authResponse(request, queriedPage(dummyIrisMessageList, query));
       });
 
+      this.get("/iris-messages/:messageId", (schema, request) => {
+        const message = dummyIrisMessageList.find(
+          (msg) => msg.id === request.params.messageId
+        );
+        return authResponse(request, message);
+      });
+
       this.get("/iris-messages/folders", (schema, request) => {
         return authResponse(request, dummyIrisMessageFolders);
       });

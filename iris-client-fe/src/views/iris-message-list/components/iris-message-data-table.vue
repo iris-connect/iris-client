@@ -1,75 +1,98 @@
 <template>
-  <iris-data-table
-    v-bind="$attrs"
-    v-on="$listeners"
-    :sort-by.sync="sortBy"
-    :sort-desc.sync="sortDesc"
-  >
-    <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
-      <slot :name="slot" v-bind="scope" />
-    </template>
-  </iris-data-table>
+  <div>
+    <sortable-data-table
+      v-if="context"
+      class="mt-5"
+      v-bind="{ ...dataTable, ...$attrs }"
+      v-on="$listeners"
+      :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
+      :item-class="itemClass"
+    >
+      <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
+        <slot :name="slot" v-bind="scope" />
+      </template>
+    </sortable-data-table>
+    <div v-else>Bitte wählen Sie einen Ordner aus</div>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { IrisMessageContext, PageIrisMessages } from "@/api";
+import { DataTableHeader } from "vuetify";
+import { getFormattedDate } from "@/utils/date";
 import { PropType } from "vue";
-import IrisDataTable from "@/components/iris-data-table.vue";
-import { TableSort, TableSortDirection } from "@/server/utils/pagination";
-
-export const getSortDir = (dir: unknown): TableSortDirection | undefined => {
-  switch (dir) {
-    case "asc":
-      return TableSortDirection.ASC;
-    case "desc":
-      return TableSortDirection.DESC;
-    default:
-      return undefined;
-  }
-};
+import SortableDataTable from "@/components/sortable-data-table.vue";
 
 const IrisMessageDataTableProps = Vue.extend({
   inheritAttrs: false,
   props: {
-    sort: {
-      type: Object as PropType<TableSort | null>,
+    messageList: {
+      type: Object as PropType<PageIrisMessages | null>,
+      default: null,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+    context: {
+      type: String as PropType<IrisMessageContext | null>,
       default: null,
     },
   },
 });
+
 @Component({
   components: {
-    IrisDataTable,
+    SortableDataTable,
   },
 })
 export default class IrisMessageDataTable extends IrisMessageDataTableProps {
-  get sortBy(): string[] {
-    return this.sort?.col ? [this.sort.col] : [];
+  get tableHeaders(): DataTableHeader[] {
+    if (this.context === IrisMessageContext.Inbox) {
+      return [
+        { text: "Von", value: "author", sortable: true },
+        {
+          text: "Betreff",
+          value: "subject",
+          sortable: true,
+        },
+        { text: "Datum", value: "createdAt", sortable: true },
+      ];
+    }
+    if (this.context === IrisMessageContext.Outbox) {
+      return [
+        { text: "An", value: "recipient", sortable: true },
+        {
+          text: "Betreff",
+          value: "subject",
+          sortable: true,
+        },
+        { text: "Datum", value: "createdAt", sortable: true },
+      ];
+    }
+    return [];
   }
-
-  set sortBy(value: string[]) {
-    const sort: TableSort | null =
-      value.length > 0
-        ? {
-            col: value[0],
-            dir: this.sort?.dir || TableSortDirection.ASC,
-          }
-        : null;
-    this.$emit("update:sort", sort);
+  get dataTable() {
+    const items = (this.messageList?.content || []).map((message) => {
+      return {
+        id: message.id,
+        author: message.author || "-",
+        recipient: message.recipient || "-",
+        subject: message.subject || "-",
+        createdAt: getFormattedDate(message.createdAt, "L LT"),
+        isRead: message.isRead,
+      };
+    });
+    return {
+      loading: this.loading,
+      serverItemsLength: this.messageList?.totalElements || 0,
+      items: items,
+      headers: this.tableHeaders,
+    };
   }
-
-  get sortDesc(): boolean | undefined {
-    return this.sort?.dir === TableSortDirection.DESC;
-  }
-
-  set sortDesc(value: boolean | undefined) {
-    const sort: TableSort | null = this.sort?.col
-      ? {
-          col: this.sort.col,
-          dir: value ? TableSortDirection.DESC : TableSortDirection.ASC,
-        }
-      : null;
-    this.$emit("update:sort", sort);
+  itemClass(item: { isRead: boolean }) {
+    return item.isRead ? "" : "font-weight-bold";
   }
 }
 </script>

@@ -5,6 +5,7 @@
     :label="`Suchbegriff (min. ${minLength} Buchstaben)`"
     single-line
     hide-details
+    v-bind="$attrs"
   ></v-text-field>
 </template>
 

@@ -1,5 +1,9 @@
 import { daysAgo } from "@/server/utils/date";
-import { IrisMessage, IrisMessageContext, IrisMessageFolder } from "@/api";
+import {
+  IrisMessageContext,
+  IrisMessageDetails,
+  IrisMessageFolder,
+} from "@/api";
 
 export const dummyIrisMessageFolders: IrisMessageFolder[] = [
   {
@@ -39,7 +43,7 @@ export const dummyIrisMessageFolders: IrisMessageFolder[] = [
   },
 ];
 
-export const dummyIrisMessageList: Array<IrisMessage> = [
+export const dummyIrisMessageList: Array<IrisMessageDetails> = [
   {
     author: "Amt 1",
     recipient: "Amt 3",
@@ -49,6 +53,18 @@ export const dummyIrisMessageList: Array<IrisMessage> = [
     body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     createdAt: daysAgo(3),
     isRead: false,
+    attachments: [
+      {
+        name: "anhang 1",
+        type: "pdf",
+        link: "testlink",
+      },
+      {
+        name: "Liste 2",
+        type: "csv",
+        link: "testlink_2",
+      },
+    ],
   },
   {
     author: "Gesundheitsamt 1",

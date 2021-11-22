@@ -1,11 +1,11 @@
 <template>
   <v-row>
-    <v-col cols="3">
+    <v-col cols="auto" class="mt-3">
       <v-skeleton-loader :loading="loading" type="sentences">
         <data-tree :item="{ items: folders }" v-model="model" />
       </v-skeleton-loader>
     </v-col>
-    <v-col cols="9">
+    <v-col>
       <slot
         v-if="!loading"
         name="data-table"
