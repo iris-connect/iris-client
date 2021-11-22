@@ -4,7 +4,7 @@ import { DataRequestStatus } from "@/api";
 export const DEFAULT_PAGE_SIZE = 20;
 
 export function getStringParamFromRouteWithOptionalFallback(
-  param: "page" | "sort" | "search" | "status" | "size",
+  param: "page" | "sort" | "search" | "status" | "size" | "folder",
   route: Route,
   fallback?: string
 ): string | undefined {
