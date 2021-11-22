@@ -3,7 +3,15 @@ import { DataQuery } from "@/api/common";
 import { DEFAULT_PAGE_SIZE } from "@/utils/pagination";
 import _orderBy from "lodash/orderBy";
 import _get from "lodash/get";
-import { TableSortDirection } from "@/views/iris-message-list/components/iris-message-data-table.vue";
+
+export enum TableSortDirection {
+  ASC = "asc",
+  DESC = "desc",
+}
+export type TableSort = {
+  col: string;
+  dir: TableSortDirection;
+};
 
 type Named = {
   name?: string;
@@ -50,8 +58,8 @@ export const queriedPage = <T, Q extends Partial<DataQuery>>(
     });
   });
   return {
-    totalElements: items.length,
-    totalPages: Math.ceil(items.length / qSize),
+    totalElements: filteredItems.length,
+    totalPages: Math.ceil(filteredItems.length / qSize),
     size: qSize,
     number: qPage,
     content: filteredItems.slice(qPage * qSize, qPage * qSize + qSize),

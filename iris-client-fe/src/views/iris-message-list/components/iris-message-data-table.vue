@@ -15,15 +15,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { PropType } from "vue";
 import IrisDataTable from "@/components/iris-data-table.vue";
-
-export enum TableSortDirection {
-  ASC = "asc",
-  DESC = "desc",
-}
-export type TableSort = {
-  col: string;
-  dir: TableSortDirection;
-};
+import { TableSort, TableSortDirection } from "@/server/utils/pagination";
 
 export const getSortDir = (dir: unknown): TableSortDirection | undefined => {
   switch (dir) {

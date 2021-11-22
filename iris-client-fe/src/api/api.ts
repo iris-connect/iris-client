@@ -1909,7 +1909,7 @@ export interface Page<Content> {
 }
 
 export type IrisMessageQuery = DataQuery & {
-  folder: string;
+  folder?: string;
 };
 
 export type PageIrisMessages = Page<IrisMessage>;
@@ -1936,6 +1936,7 @@ export type IrisMessageFolder = {
   name: string;
   items?: IrisMessageFolder[];
   context?: IrisMessageContext;
+  default?: boolean;
 };
 
 /**

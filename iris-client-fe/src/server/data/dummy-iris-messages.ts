@@ -6,6 +6,7 @@ export const dummyIrisMessageFolders: IrisMessageFolder[] = [
     id: "inbox",
     name: "Posteingang",
     context: IrisMessageContext.Inbox,
+    default: true,
     items: [
       {
         id: "inbox_1",
@@ -62,7 +63,7 @@ export const dummyIrisMessageList: Array<IrisMessage> = [
   {
     author: "Gesundheitsamt 2",
     recipient: "Amt 3",
-    folder: "inbox",
+    folder: "inbox_2_1",
     id: "5",
     subject: "Anfrage",
     body: "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
@@ -73,7 +74,7 @@ export const dummyIrisMessageList: Array<IrisMessage> = [
   {
     author: "Gesundheit 1",
     recipient: "Amt 1",
-    folder: "inbox",
+    folder: "outbox",
     id: "asdf",
     subject: "Lorem ipsum gubergren, no sea takimata ",
     body: "Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
