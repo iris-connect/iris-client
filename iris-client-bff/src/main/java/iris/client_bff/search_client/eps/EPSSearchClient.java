@@ -2,8 +2,6 @@ package iris.client_bff.search_client.eps;
 
 import static iris.client_bff.core.log.LogHelper.*;
 
-import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
-
 import iris.client_bff.config.BackendServiceProperties;
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.eps.dto.IdSearch;
@@ -17,11 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
 @Slf4j
 @Service
@@ -32,36 +30,27 @@ public class EPSSearchClient implements SearchClient {
 
 	private final JsonRpcHttpClient epsRpcClient;
 
+	@Override
 	public LocationInformation findByProviderIdAndLocationId(String providerId, String locationId)
 			throws IRISSearchException {
+
+		var methodName = config.getEndpoint() + ".getLocationDetails";
 
 		var payload = IdSearch.builder()
 				.providerId(providerId)
 				.locationId(locationId)
 				.build();
 
-		LocationInformation locationInformation;
-		var methodName = config.getEndpoint() + ".getLocationDetails";
+		log.info(LOCATION_DETAILS);
+
 		try {
-			log.info(LOCATION_DETAILS);
-			locationInformation = epsRpcClient.invoke(methodName, payload, LocationInformation.class);
+			return epsRpcClient.invoke(methodName, payload, LocationInformation.class);
 		} catch (Throwable t) {
 			throw new IRISSearchException(methodName, t);
 		}
-
-		// TODO check: why do we need to do this?
-
-		if (StringUtils.isEmpty(locationInformation.getProviderId())) {
-			locationInformation.setProviderId(providerId);
-		}
-
-		if (StringUtils.isEmpty(locationInformation.getId())) {
-			locationInformation.setId(locationId);
-		}
-
-		return locationInformation;
 	}
 
+	@Override
 	public LocationQueryResult search(String keyword, Pageable pageable) throws IRISSearchException {
 		PageableDto pageableDto = PageableDto.builder().build();
 		if (pageable != null && pageable.isPaged()) {

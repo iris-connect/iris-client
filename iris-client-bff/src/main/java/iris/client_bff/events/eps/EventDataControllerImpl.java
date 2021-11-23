@@ -40,17 +40,18 @@ public class EventDataControllerImpl implements EventDataController {
 	public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
 		log.trace("Start submission {}", dataAuthorizationToken);
 
-		if (dataAuthorizationToken != null) {
-			validateGuestList(guestList);
-
-			jsonRpcDataValidator.validateData(guestList);
-
-			fixInvalidPhoneNumbersInGuestList(guestList);
-
-			return dataSubmissionService.findRequestAndSaveGuestList(dataAuthorizationToken, guestList);
+		if (dataAuthorizationToken == null) {
+			// token invalid
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT + ": data auth token");
 		}
-		// token invalid
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT + ": data auth token");
+
+		validateGuestList(guestList);
+
+		jsonRpcDataValidator.validateData(guestList);
+
+		fixInvalidPhoneNumbersInGuestList(guestList);
+
+		return dataSubmissionService.findRequestAndSaveGuestList(dataAuthorizationToken, client.getName(), guestList);
 	}
 
 	private void validateGuestList(GuestList guestList) {

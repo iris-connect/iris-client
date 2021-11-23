@@ -9,6 +9,7 @@ import iris.client_bff.events.model.GuestListDataProvider;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
+import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +17,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Slf4j
@@ -34,8 +37,12 @@ public class EventDataSubmissionService {
 	private final ProxyServiceClient proxyClient;
 	private final AlertService alertService;
 
-	public String findRequestAndSaveGuestList(UUID dataAuthorizationToken, GuestList guestList) {
+	public String findRequestAndSaveGuestList(UUID dataAuthorizationToken, String clientName, GuestList guestList) {
 		return requestService.findById(dataAuthorizationToken).map(dataRequest -> {
+
+			if (!dataRequest.getLocation().getProviderId().equals(clientName)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT + ": client name");
+			}
 
 			switch (dataRequest.getStatus()) {
 				case ABORTED: {
@@ -65,7 +72,8 @@ public class EventDataSubmissionService {
 			try {
 				proxyClient.abortAnnouncement(dataRequest.getAnnouncementToken());
 			} catch (IRISAnnouncementException e) {
-				log.error("Abort announcement failed for {}", LogHelper.obfuscateAtStart8(dataRequest.getAnnouncementToken()), e);
+				log.error("Abort announcement failed for {}", LogHelper.obfuscateAtStart8(dataRequest.getAnnouncementToken()),
+						e);
 			}
 			return "OK";
 
@@ -89,12 +97,12 @@ public class EventDataSubmissionService {
 		var dataProvider = mapper.map(guestList.getDataProvider(), GuestListDataProvider.class);
 
 		var submission = new EventDataSubmission(
-			dataRequest,
-			guests,
-			dataProvider,
-			guestList.getAdditionalInformation(),
-			guestList.getStartDate(),
-			guestList.getEndDate());
+				dataRequest,
+				guests,
+				dataProvider,
+				guestList.getAdditionalInformation(),
+				guestList.getStartDate(),
+				guestList.getEndDate());
 
 		guests.forEach(it -> it.setSubmission(submission));
 
