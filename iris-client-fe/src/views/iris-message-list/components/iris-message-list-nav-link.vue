@@ -12,6 +12,7 @@
       color="blue"
       :content="unreadMessageCount"
       :value="unreadMessageCount > 0"
+      class="badge"
     >
       {{ link.meta.menuName }}
     </v-badge>
@@ -43,3 +44,9 @@ export default class IrisMessageListNavLink extends IrisMessageListNavLinkProps 
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.badge {
+  line-height: inherit;
+}
+</style>

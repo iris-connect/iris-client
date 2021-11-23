@@ -36,6 +36,8 @@ import {
 import {
   dummyIrisMessageFolders,
   dummyIrisMessageList,
+  dummyIrisMessageContacts,
+  getDummyMessageFromRequest,
 } from "@/server/data/dummy-iris-messages";
 
 const loginResponse = (role: UserRole): Response => {
@@ -309,8 +311,23 @@ export function makeMockAPIServer() {
         return authResponse(request, message);
       });
 
+      this.post("/iris-messages", (schema, request) => {
+        try {
+          if (validateAuthHeader(request)) {
+            dummyIrisMessageList.push(getDummyMessageFromRequest(request));
+          }
+        } catch (e) {
+          // ignored
+        }
+        return authResponse(request);
+      });
+
       this.get("/iris-messages/folders", (schema, request) => {
         return authResponse(request, dummyIrisMessageFolders);
+      });
+
+      this.get("/iris-messages/contacts", (schema, request) => {
+        return authResponse(request, dummyIrisMessageContacts);
       });
 
       this.get("/iris-messages/unread/count", (schema, request) => {

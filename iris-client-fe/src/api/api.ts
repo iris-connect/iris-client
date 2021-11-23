@@ -1914,11 +1914,6 @@ export type IrisMessageQuery = DataQuery & {
 
 export type PageIrisMessages = Page<IrisMessage>;
 
-export enum IrisMessageContext {
-  Inbox = "inbox",
-  Outbox = "outbox",
-}
-
 export interface IrisMessageAttachment {
   name?: string;
   type?: string;
@@ -1931,14 +1926,26 @@ export interface IrisMessage {
   id: string;
   subject: string;
   body: string;
-  author?: string;
-  recipient?: string;
-  createdAt?: string;
+  author: IrisMessageContact;
+  recipient: IrisMessageContact;
+  createdAt: string;
   isRead?: boolean;
 }
 
 export interface IrisMessageDetails extends IrisMessage {
   attachments?: IrisMessageAttachment[];
+}
+
+export interface IrisMessageInsert {
+  recipient: string;
+  subject: string;
+  body: string;
+  attachments?: File[];
+}
+
+export enum IrisMessageContext {
+  Inbox = "inbox",
+  Outbox = "outbox",
 }
 
 export type IrisMessageFolder = {
@@ -1948,6 +1955,11 @@ export type IrisMessageFolder = {
   context?: IrisMessageContext;
   default?: boolean;
 };
+
+export interface IrisMessageContact {
+  id: string;
+  name: string;
+}
 
 /**
  * IrisClientFrontendApi - object-oriented interface
@@ -2277,6 +2289,25 @@ export class IrisClientFrontendApi extends BaseAPI {
   }
 
   /**
+   *
+   * @summary Create IRIS message
+   * @param {IrisMessageInsert} data
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessagesPost(
+    data: IrisMessageInsert,
+    options?: RequestOptions
+  ): ApiResponse {
+    assertParamExists("irisMessagesPost", "data", data);
+    return this.apiRequest("POST", "/iris-messages", data, {
+      ...options,
+      formData: true,
+    });
+  }
+
+  /**
    * @summary Fetches iris message folders
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -2289,6 +2320,18 @@ export class IrisClientFrontendApi extends BaseAPI {
   }
 
   /**
+   * @summary Fetches iris message contacts
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessageContactsGet(
+    options?: RequestOptions
+  ): ApiResponse<IrisMessageContact[]> {
+    return this.apiRequest("GET", "/iris-messages/contacts", null, options);
+  }
+
+  /**
    * @summary Fetches number of unread messages
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -2298,5 +2341,26 @@ export class IrisClientFrontendApi extends BaseAPI {
     options?: RequestOptions
   ): ApiResponse<number> {
     return this.apiRequest("GET", "/iris-messages/unread/count", null, options);
+  }
+
+  /**
+   *
+   * @summary Mark IRIS message as read
+   * @param {string} messageId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessagesMarkRead(
+    messageId: string,
+    options?: RequestOptions
+  ): ApiResponse {
+    assertParamExists("irisMessagesMarkRead", "messageId", messageId);
+    return this.apiRequest(
+      "POST",
+      "/iris-messages/:messageId/mark-read",
+      messageId,
+      options
+    );
   }
 }

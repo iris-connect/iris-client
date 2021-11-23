@@ -3,7 +3,9 @@ import {
   IrisMessageContext,
   IrisMessageDetails,
   IrisMessageFolder,
+  IrisMessageContact,
 } from "@/api";
+import { Request } from "miragejs";
 
 export const dummyIrisMessageFolders: IrisMessageFolder[] = [
   {
@@ -43,10 +45,33 @@ export const dummyIrisMessageFolders: IrisMessageFolder[] = [
   },
 ];
 
-export const dummyIrisMessageList: Array<IrisMessageDetails> = [
+export const dummyIrisMessageContacts: IrisMessageContact[] = [
   {
-    author: "Amt 1",
-    recipient: "Amt 3",
+    id: "1",
+    name: "Eigenes GA",
+  },
+  {
+    id: "2",
+    name: "Kontakt 2",
+  },
+  {
+    id: "3",
+    name: "Kontakt 3",
+  },
+  {
+    id: "4",
+    name: "Kontakt 4",
+  },
+  {
+    id: "5",
+    name: "Kontakt 5",
+  },
+];
+
+export const dummyIrisMessageList: IrisMessageDetails[] = [
+  {
+    author: dummyIrisMessageContacts[1],
+    recipient: dummyIrisMessageContacts[0],
     folder: "inbox",
     id: "m1",
     subject: "Indexfall-Anfrage consetetur sadipscing elitr",
@@ -67,8 +92,8 @@ export const dummyIrisMessageList: Array<IrisMessageDetails> = [
     ],
   },
   {
-    author: "Gesundheitsamt 1",
-    recipient: "Gesundheitsamt 3",
+    author: dummyIrisMessageContacts[0],
+    recipient: dummyIrisMessageContacts[4],
     folder: "outbox",
     id: "2",
     subject: "Austausch",
@@ -77,8 +102,8 @@ export const dummyIrisMessageList: Array<IrisMessageDetails> = [
     isRead: true,
   },
   {
-    author: "Gesundheitsamt 2",
-    recipient: "Amt 3",
+    author: dummyIrisMessageContacts[2],
+    recipient: dummyIrisMessageContacts[0],
     folder: "inbox_2_1",
     id: "5",
     subject: "Anfrage",
@@ -88,8 +113,8 @@ export const dummyIrisMessageList: Array<IrisMessageDetails> = [
   },
 
   {
-    author: "Gesundheit 1",
-    recipient: "Amt 1",
+    author: dummyIrisMessageContacts[0],
+    recipient: dummyIrisMessageContacts[2],
     folder: "outbox",
     id: "asdf",
     subject: "Lorem ipsum gubergren, no sea takimata ",
@@ -98,9 +123,9 @@ export const dummyIrisMessageList: Array<IrisMessageDetails> = [
     isRead: true,
   },
   {
-    author: "Muster",
-    recipient: "Amt 5",
-    folder: "outbox",
+    author: dummyIrisMessageContacts[3],
+    recipient: dummyIrisMessageContacts[0],
+    folder: "inbox",
     id: "271",
     subject: "Test",
     body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et",
@@ -108,3 +133,33 @@ export const dummyIrisMessageList: Array<IrisMessageDetails> = [
     isRead: true,
   },
 ];
+
+export const getDummyMessageFromRequest = (
+  request: Request,
+  id?: string
+): IrisMessageDetails => {
+  const form = request.requestBody as unknown as FormData;
+  const subject = form.get("subject") as string;
+  const body = form.get("body") as string;
+  const recipient = form.get("recipient") as string;
+  const attachments = form.getAll("attachments");
+  return {
+    id: id || new Date().getTime() + "",
+    subject,
+    body,
+    folder: "outbox",
+    author: dummyIrisMessageContacts[0],
+    recipient:
+      dummyIrisMessageContacts.find((c) => c.id === recipient) ||
+      dummyIrisMessageContacts[1],
+    createdAt: new Date().getTime() + "",
+    attachments: attachments.map((attachment) => {
+      const a = attachment as File;
+      return {
+        name: a.name,
+        type: a.type,
+        link: a.name,
+      };
+    }),
+  };
+};

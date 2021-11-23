@@ -2,7 +2,7 @@
   <div>
     <v-card :loading="messageLoading">
       <v-card-subtitle class="pb-0 text-right">
-        {{ getFormattedDate(message.createdAt) }}
+        {{ message.createdAt }}
       </v-card-subtitle>
       <v-card-title>
         {{ message.subject }}
@@ -11,18 +11,18 @@
         <v-row no-gutters>
           <v-col cols="12" md="6">
             <span class="font-weight-bold">Von:</span>
-            {{ message.author || "-" }}
+            {{ message.author }}
           </v-col>
           <v-col cols="12" md="6">
             <span class="font-weight-bold">An:</span>
-            {{ message.recipient || "-" }}
+            {{ message.recipient }}
           </v-col>
         </v-row>
         <v-divider class="my-4" />
         <div class="body-1">
           {{ message.body }}
         </div>
-        <div v-if="message.attachments && message.attachments.length > 0">
+        <div v-if="message.attachments.length > 0">
           <v-divider class="my-4" />
           <p class="font-weight-bold">Anhang</p>
           <div class="elevation-1 mt-4">
@@ -65,9 +65,18 @@
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { IrisMessageDetails } from "@/api";
+import { IrisMessageAttachment, IrisMessageDetails } from "@/api";
 import { ErrorMessage } from "@/utils/axios";
 import { getFormattedDate } from "@/utils/date";
+
+type MessageData = {
+  author: string;
+  recipient: string;
+  createdAt: string;
+  subject: string;
+  body: string;
+  attachments: IrisMessageAttachment[];
+};
 
 @Component({
   components: {
@@ -83,9 +92,19 @@ import { getFormattedDate } from "@/utils/date";
   },
 })
 export default class IrisMessageDetailsView extends Vue {
-  getFormattedDate = getFormattedDate;
-  get message(): IrisMessageDetails {
-    return this.$store.state.irisMessageDetails.message || {};
+  get message(): MessageData {
+    const message: IrisMessageDetails | null =
+      this.$store.state.irisMessageDetails.message;
+    return {
+      author: message?.author?.name || "-",
+      recipient: message?.recipient?.name || "-",
+      createdAt: message?.createdAt
+        ? getFormattedDate(message?.createdAt)
+        : "-",
+      subject: message?.subject || "-",
+      body: message?.body || "-",
+      attachments: message?.attachments || [],
+    };
   }
   get messageLoading(): boolean {
     return this.$store.state.irisMessageDetails.messageLoading;

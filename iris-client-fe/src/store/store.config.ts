@@ -16,6 +16,7 @@ import chunkLoader from "@/views/app-settings/chunk-loader.store";
 import checkinAppStatusList from "@/views/checkin-app-status-list/checkin-app-status-list.store";
 import irisMessageList from "@/views/iris-message-list/iris-message-list.store";
 import irisMessageDetails from "@/views/iris-message-details/iris-message-details.store";
+import irisMessageCreate from "@/views/iris-message-create/iris-message-create.store";
 
 import { StoreOptions } from "vuex";
 import { RootState } from "@/store/types";
@@ -46,6 +47,7 @@ export const storeOptions: StoreOptions<RootState> = {
     checkinAppStatusList,
     irisMessageList,
     irisMessageDetails,
+    irisMessageCreate,
   },
   plugins: [
     createPersistedState({

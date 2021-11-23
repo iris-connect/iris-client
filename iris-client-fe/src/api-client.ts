@@ -19,7 +19,11 @@ const { apiBaseURL } = config;
 
 const clientConfig: AxiosRequestConfig = {
   baseURL: apiBaseURL,
-  transformRequest: (data) => {
+  transformRequest: (data, headers) => {
+    if (data instanceof FormData) {
+      if (headers) headers["Content-Type"] = "multipart/form-data";
+      return data;
+    }
     return JSON.stringify(data !== undefined ? data : {});
   },
 };
