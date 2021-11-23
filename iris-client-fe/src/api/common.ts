@@ -7,7 +7,6 @@ import globalAxios, {
   AxiosResponse,
   Method,
 } from "axios";
-
 /**
  *
  * @export
@@ -27,6 +26,7 @@ export type RequestQuery = {
 
 export interface RequestOptions<D = any> extends AxiosRequestConfig<D> {
   query?: RequestQuery;
+  formData?: boolean;
 }
 
 export type ApiResponse<T = any> = Promise<AxiosResponse<T>>;
@@ -121,10 +121,32 @@ export const apiRequestBuilder =
   ): ApiResponse<T> => {
     const url = new URL(path, "https://example.com");
     url.search = createSearchParams(url, options?.query || {});
+    const requestData =
+      options?.formData && data
+        ? createFormData(data as Record<string, any>)
+        : data;
     return axiosInstance.request({
       url: toPathString(url),
-      data,
+      data: requestData,
       method,
       ...options,
     });
   };
+
+const createFormData = (
+  data: Record<string, string | Blob | File | File[]>
+): FormData => {
+  const formData = new FormData();
+  let key: keyof typeof data;
+  for (key in data) {
+    const entry = data[key];
+    if (Array.isArray(entry)) {
+      entry.forEach((item) => {
+        formData.append(`${key}`, item);
+      });
+    } else {
+      formData.append(key, entry);
+    }
+  }
+  return formData;
+};

@@ -51,7 +51,7 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
   get tableHeaders(): DataTableHeader[] {
     if (this.context === IrisMessageContext.Inbox) {
       return [
-        { text: "Von", value: "author", sortable: true },
+        { text: "Von", value: "author.name", sortable: true },
         {
           text: "Betreff",
           value: "subject",
@@ -62,7 +62,7 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
     }
     if (this.context === IrisMessageContext.Outbox) {
       return [
-        { text: "An", value: "recipient", sortable: true },
+        { text: "An", value: "recipient.name", sortable: true },
         {
           text: "Betreff",
           value: "subject",
@@ -92,7 +92,7 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
     };
   }
   itemClass(item: { isRead: boolean }) {
-    return item.isRead ? "" : "font-weight-bold";
+    return item.isRead ? "cursor-pointer" : "cursor-pointer font-weight-bold";
   }
 }
 </script>

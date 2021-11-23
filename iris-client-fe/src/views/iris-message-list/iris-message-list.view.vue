@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div class="pb-6 text-right">
+      <v-btn color="primary" :to="{ name: 'iris-message-create' }">
+        Nachricht schreiben
+      </v-btn>
+    </div>
     <v-card>
       <v-card-title>Nachrichten</v-card-title>
       <v-card-text>

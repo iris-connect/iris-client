@@ -195,6 +195,17 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
+    path: "/iris-messages/create",
+    name: "iris-message-create" /* Caution: This acts as an identifier! */,
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "iris-message-create" */ "../views/iris-message-create/iris-message-create.view.vue"
+      ),
+  },
+  {
     path: "/about",
     name: "about" /* Caution: This acts as an identifier! */,
     meta: {
