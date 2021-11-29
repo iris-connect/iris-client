@@ -64,6 +64,7 @@ services:
       SECURITY_AUTH_DB_ADMIN_USER_NAME:
       SECURITY_AUTH_DB_ADMIN_USER_PASSWORD:
       SERVER_ERROR_INCLUDE-MESSAGE: ALWAYS
+      DICTIONARY_SALT:
     restart: unless-stopped
     depends_on:
       postgres:
