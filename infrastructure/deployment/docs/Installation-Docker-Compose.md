@@ -279,11 +279,11 @@ Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüsse
 
 ```
 # Beispiel
-├── conf
+.
+├── certs
 │   ├── eps
-│   │   ├── certs
-│   │   │   ├── ga-client.crt
-│   │   │   └── ga-client.key
+│   │   ├── ga-client.crt
+│   │   └── ga-client.key
 ```
 
 Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist derselbe wie der CN Name aus dem Zertifikats-Prozess.
@@ -307,11 +307,10 @@ Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüsse
 ```
 # Beispiel
 .
-├── conf
-│   └── proxy
-│       ├── certs
-│       │   ├── ga-client-proxy.crt
-│       │   └── ga-client-proxy.key
+├── certs
+│   └── eps
+│       ├── ga-client-proxy.crt
+│       └── ga-client-proxy.key
 ```
 Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist derselbe wie der CN Name aus dem Zertifikats-Prozess.
 
