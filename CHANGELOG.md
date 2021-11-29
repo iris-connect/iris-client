@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.2.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.2.0-rc.1...v1.2.0-rc.2) (2021-11-29)
+
+
+### Bug Fixes
+
+* Clearing case_data_request before adding new not-null fields. Not critical, because feature is not in use yet. ([9389239](https://github.com/iris-connect/iris-client/commit/9389239d094676b0643746d91d1c4c4543261241)), closes [#490](https://github.com/iris-connect/iris-client/issues/490)
+
 # [1.2.0-rc.1](https://github.com/iris-connect/iris-client/compare/v1.1.1...v1.2.0-rc.1) (2021-11-29)
 
 
