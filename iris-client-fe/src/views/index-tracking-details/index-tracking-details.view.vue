@@ -42,10 +42,6 @@
               <strong> TAN: </strong>
               {{ indexData.tan }}
             </div>
-            <div>
-              <strong> Übermittlungs-URL: </strong>
-              <index-tracking-submission-url :url="indexData.submissionUri" />
-            </div>
           </v-col>
         </v-row>
         <v-tabs @change="handleTabsChange">
@@ -415,7 +411,7 @@ export default class IndexTrackingDetailsView extends Vue {
       contactCount: contacts.length,
       eventCount: events.length,
       comment: dataRequest?.comment || "-",
-      tan: "-", // TODO: TAN needed
+      tan: dataRequest?.readableToken || "-",
       submissionUri: dataRequest?.submissionUri || "-",
       status: dataRequest?.status || "",
     };

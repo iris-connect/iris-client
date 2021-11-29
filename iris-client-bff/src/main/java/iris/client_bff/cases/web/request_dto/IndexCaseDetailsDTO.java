@@ -21,5 +21,5 @@ public class IndexCaseDetailsDTO {
 	private Instant end;
 	private IndexCaseStatusDTO status;
 	private ContactsAndEvents submissionData;
-	private String submissionUri;
+	private String readableToken;
 }

@@ -1,15 +1,13 @@
 package iris.client_bff.cases;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import io.vavr.control.Try;
 import iris.client_bff.core.mail.EmailSenderReal;
 import iris.client_bff.core.mail.EmailTemplates;
+import iris.client_bff.core.token.IdentifierToken;
 
 import java.time.Instant;
 
@@ -33,7 +31,7 @@ public class CaseEmailProviderTest {
 
 	@Mock
 	MessageSourceAccessor messageSourceAccessor;
-	
+
 	@Mock
 	MailProperties mailProperties;
 
@@ -47,14 +45,7 @@ public class CaseEmailProviderTest {
 	@Test
 	void sendDataReceivedEmailWithCorrectData() {
 		String subject = "Neue Index Case Daten sind verfügbar auf dem IRIS Portal";
-		String caseName = "CaseName";
-		String caseExternalCaseId = "externalCaseId";
-		String caseId = "caseId";
-		Instant caseStart = Instant.now();
-		Instant caseEnd = Instant.now();
-
-		CaseDataRequest caseData =
-			CaseDataRequest.builder().name(caseName).refId(caseExternalCaseId).requestStart(caseStart).requestEnd(caseEnd).build();
+		CaseDataRequest caseData = createRequest();
 
 		when(messageSourceAccessor.getMessage("CaseDataReceivedEmail.subject")).thenReturn(subject);
 
@@ -78,18 +69,12 @@ public class CaseEmailProviderTest {
 	@Test
 	void sendDataReceivedEmailAndTriggerEmailSenderFailuresBeforeSuccess() {
 		String subject = "Neue Index Case Daten sind verfügbar auf dem IRIS Portal";
-		String caseName = "CaseName";
-		String caseExternalCaseId = "externalCaseId";
-		String caseId = "caseId";
-		Instant caseStart = Instant.now();
-		Instant caseEnd = Instant.now();
-
-		CaseDataRequest caseData =
-			CaseDataRequest.builder().name(caseName).refId(caseExternalCaseId).requestStart(caseStart).requestEnd(caseEnd).build();
+		CaseDataRequest caseData = createRequest();
 
 		when(messageSourceAccessor.getMessage("CaseDataReceivedEmail.subject")).thenReturn(subject);
 
-		when(emailSender.sendMail(any())).thenReturn(Try.failure(new Exception()), Try.failure(new Exception()), Try.success(null));
+		when(emailSender.sendMail(any())).thenReturn(Try.failure(new Exception()), Try.failure(new Exception()),
+				Try.success(null));
 
 		systemUnderTest.sendDataReceivedEmailAsynchronously(caseData);
 
@@ -99,28 +84,45 @@ public class CaseEmailProviderTest {
 	@Test
 	void sendDataReceivedEmailAndTriggerEmailSenderFailuresTillLimitIsReached() {
 		String subject = "Neue Index Case Daten sind verfügbar auf dem IRIS Portal";
-		String caseName = "CaseName";
-		String caseExternalCaseId = "externalCaseId";
-		String caseId = "caseId";
-		Instant caseStart = Instant.now();
-		Instant caseEnd = Instant.now();
-
-		CaseDataRequest caseData =
-			CaseDataRequest.builder().name(caseName).refId(caseExternalCaseId).requestStart(caseStart).requestEnd(caseEnd).build();
+		CaseDataRequest caseData = createRequest();
 
 		when(messageSourceAccessor.getMessage("CaseDataReceivedEmail.subject")).thenReturn(subject);
 
 		when(emailSender.sendMail(any())).thenReturn(
-			Try.failure(new Exception()),
-			Try.failure(new Exception()),
-			Try.failure(new Exception()),
-			Try.failure(new Exception()),
-			Try.failure(new Exception()),
-			Try.failure(new Exception()));
+				Try.failure(new Exception()),
+				Try.failure(new Exception()),
+				Try.failure(new Exception()),
+				Try.failure(new Exception()),
+				Try.failure(new Exception()),
+				Try.failure(new Exception()));
 
 		systemUnderTest.sendDataReceivedEmailAsynchronously(caseData);
 
 		verify(emailSender, times(6)).sendMail(any());
 		Assertions.assertThrows(Exception.class, null);
+	}
+
+	private CaseDataRequest createRequest() {
+
+		String caseName = "CaseName";
+		String caseExternalCaseId = "externalCaseId";
+		Instant caseStart = Instant.now();
+		Instant caseEnd = Instant.now();
+
+		var token = IdentifierToken.builder()
+				.readableToken("readableToken")
+				.connectionAuthorizationToken("CAT")
+				.dataAuthorizationToken("DAT")
+				.build();
+
+		CaseDataRequest caseData = CaseDataRequest.builder()
+				.name(caseName)
+				.refId(caseExternalCaseId)
+				.requestStart(caseStart)
+				.requestEnd(caseEnd)
+				.identifierToken(token)
+				.build();
+
+		return caseData;
 	}
 }

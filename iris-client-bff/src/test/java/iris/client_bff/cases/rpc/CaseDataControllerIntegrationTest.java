@@ -1,29 +1,27 @@
 package iris.client_bff.cases.rpc;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequestRepository;
 import iris.client_bff.cases.eps.CaseDataController;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
 import iris.client_bff.cases.eps.dto.Contacts;
-import iris.client_bff.cases.eps.dto.Event;
 import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.web.CaseDataRequestController;
 import iris.client_bff.cases.web.submission_dto.ContactPersonList;
 import iris.client_bff.cases.web.submission_dto.EventList;
+import iris.client_bff.core.token.IdentifierToken;
 import iris.client_bff.ui.messages.ErrorMessages;
 import iris.client_bff.utils.DtoSupplier;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @IrisWebIntegrationTest
 class CaseDataControllerIntegrationTest {
@@ -46,10 +44,7 @@ class CaseDataControllerIntegrationTest {
 		String refId = "submit_ok";
 		Instant requestStart = Instant.now().minus(14, ChronoUnit.DAYS);
 		Instant requestEnd = Instant.now();
-		CaseDataRequest dataRequest = CaseDataRequest.builder()
-				.refId(refId).requestStart(requestStart).requestEnd(requestEnd)
-				.build();
-		requestRepo.save(dataRequest);
+		CaseDataRequest dataRequest = createRequest(refId, requestStart, requestEnd);
 
 		// prepare data
 		var contactPersonList = dtoSupplier.getContactPersonList(0, 2);
@@ -72,7 +67,7 @@ class CaseDataControllerIntegrationTest {
 				.build();
 
 		// test
-		var result = controller.submitContactAndEventData(dataRequest.getId().getRequestId(), contacts, events, dataProvider);
+		var result = controller.submitContactAndEventData(dataRequest.getId().toString(), contacts, events, dataProvider);
 		assertEquals("OK", result);
 
 		// compare
@@ -88,13 +83,12 @@ class CaseDataControllerIntegrationTest {
 		assertEquals(2, submissionData.getEvents().getEvents().size());
 
 		assertThat(submissionData.getContacts()).asString().doesNotContain(ErrorMessages.INVALID_INPUT_STRING);
-		
-		// test repeated data submission is rejected
-		contacts.setContactPersons(dtoSupplier.getContactPersonList(2,3));
-		events.setEvents(dtoSupplier.getEventList(2,3));
-		result = controller.submitContactAndEventData(dataRequest.getId().getRequestId(), contacts, events, dataProvider);
-		assertNotEquals("OK", result);
 
+		// test repeated data submission is rejected
+		contacts.setContactPersons(dtoSupplier.getContactPersonList(2, 3));
+		events.setEvents(dtoSupplier.getEventList(2, 3));
+		result = controller.submitContactAndEventData(dataRequest.getId().toString(), contacts, events, dataProvider);
+		assertNotEquals("OK", result);
 	}
 
 	@Test
@@ -103,19 +97,16 @@ class CaseDataControllerIntegrationTest {
 		String refId = "submit_ok_with_empty_events_and_empty_contacts";
 		Instant requestStart = Instant.now().minus(14, ChronoUnit.DAYS);
 		Instant requestEnd = Instant.now();
-		CaseDataRequest dataRequest = CaseDataRequest.builder()
-				.refId(refId).requestStart(requestStart).requestEnd(requestEnd)
-				.build();
-		requestRepo.save(dataRequest);
+		CaseDataRequest dataRequest = createRequest(refId, requestStart, requestEnd);
 
 		// prepare data
-		//var contactPersonList = dtoSupplier.getContactPersonList(0, 2);
+		// var contactPersonList = dtoSupplier.getContactPersonList(0, 2);
 		Contacts contacts = Contacts.builder().build();
-//		Contacts contacts = Contacts.builder()
-//				.contactPersons(contactPersonList)
-//				.startDate(requestStart)
-//				.endDate(requestEnd)
-//				.build();
+		// Contacts contacts = Contacts.builder()
+		// .contactPersons(contactPersonList)
+		// .startDate(requestStart)
+		// .endDate(requestEnd)
+		// .build();
 
 		Events events = Events.builder().build();
 
@@ -125,7 +116,7 @@ class CaseDataControllerIntegrationTest {
 				.build();
 
 		// test
-		var result = controller.submitContactAndEventData(dataRequest.getId().getRequestId(), contacts, events, dataProvider);
+		var result = controller.submitContactAndEventData(dataRequest.getId().toString(), contacts, events, dataProvider);
 		assertEquals("OK", result);
 
 		// compare
@@ -141,10 +132,29 @@ class CaseDataControllerIntegrationTest {
 		assertEquals(EventList.builder().build(), submissionData.getEvents());
 
 		// test repeated data submission is rejected
-		contacts.setContactPersons(dtoSupplier.getContactPersonList(2,3));
-		events.setEvents(dtoSupplier.getEventList(2,3));
-		result = controller.submitContactAndEventData(dataRequest.getId().getRequestId(), contacts, events, dataProvider);
+		contacts.setContactPersons(dtoSupplier.getContactPersonList(2, 3));
+		events.setEvents(dtoSupplier.getEventList(2, 3));
+		result = controller.submitContactAndEventData(dataRequest.getId().toString(), contacts, events, dataProvider);
 		assertNotEquals("OK", result);
 	}
 
+	private CaseDataRequest createRequest(String refId, Instant requestStart, Instant requestEnd) {
+
+		var token = IdentifierToken.builder()
+				.readableToken(refId)
+				.connectionAuthorizationToken("CAT")
+				.dataAuthorizationToken("DAT")
+				.build();
+
+		var dataRequest = CaseDataRequest.builder()
+				.refId(refId)
+				.requestStart(requestStart)
+				.requestEnd(requestEnd)
+				.identifierToken(token)
+				.build();
+
+		requestRepo.save(dataRequest);
+
+		return dataRequest;
+	}
 }

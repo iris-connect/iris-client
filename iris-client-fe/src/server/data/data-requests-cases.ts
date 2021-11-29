@@ -18,6 +18,7 @@ export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
     comment: "leerer Kommentar",
     submissionUri: dummySubmissionUrl,
     status: DataRequestStatus.DataReceived,
+    readableToken: "test-test-test-test",
   },
   {
     caseId: "1111",
@@ -28,6 +29,7 @@ export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
     comment: "das könnte ihr Kommentar sein",
     submissionUri: dummySubmissionUrl,
     status: DataRequestStatus.DataRequested,
+    readableToken: "test-test-test-test",
   },
   {
     caseId: "2233",
@@ -37,6 +39,7 @@ export const dummyDataRequestsCases: Array<DataRequestCaseData> = [
     comment: "leer",
     submissionUri: dummySubmissionUrl,
     status: DataRequestStatus.Closed,
+    readableToken: "test-test-test-test",
   },
 ];
 
@@ -47,6 +50,7 @@ export const dummyDataCaseDetails: DataRequestCaseData = {
   start: hoursAgo(15),
   end: hoursAgo(1),
   submissionUri: "https://12345.proxy.exampleUrl.de",
+  readableToken: "test-test-test-test",
   submissionData: {
     contacts: {
       contactPersons: [

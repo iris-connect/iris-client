@@ -29,7 +29,7 @@ public class IndexCaseMapper {
                 .status(IndexCaseStatusDTO.valueOf(indexCase.getStatus().name()))
                 .start(indexCase.getRequestStart())
                 .end(indexCase.getRequestEnd())
-                .submissionUri(indexCase.getDwSubmissionUri())
+                .readableToken(indexCase.getReadableToken())
                 .build();
     }
 

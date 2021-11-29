@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.Pageable;
 
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
@@ -31,7 +31,8 @@ class EPSSearchClientTests {
 	private final String LOCATION_ID = "locationId";
 	private final String NAME = "name";
 
-	@MockBean @Qualifier("epsRpcClient")
+	@SpyBean
+	@Qualifier("epsRpcClient")
 	private JsonRpcHttpClient rpcClient;
 
 	@Test
@@ -48,8 +49,8 @@ class EPSSearchClientTests {
 
 		var payload = KeywordSearch.builder().searchKeyword("Test").pageable(PageableDto.builder().build()).build();
 
-		when(rpcClient.invoke(matches(".*\\.searchForLocation"), eq(payload), eq(LocationQueryResult.class)))
-				.thenReturn(mockedSearchResult);
+		doReturn(mockedSearchResult).when(rpcClient)
+				.invoke(matches(".*\\.searchForLocation"), eq(payload), eq(LocationQueryResult.class));
 
 		// when
 		LocationQueryResult actualSearchResults = systemUnderTest.search("Test", Pageable.unpaged());
@@ -69,8 +70,8 @@ class EPSSearchClientTests {
 
 		var payload = IdSearch.builder().locationId(LOCATION_ID).providerId(PROVIDER_ID).build();
 
-		when(rpcClient.invoke(matches(".*\\.getLocationDetails"), eq(payload), eq(LocationInformation.class)))
-				.thenReturn(mockedSearchResult);
+		doReturn(mockedSearchResult).when(rpcClient)
+				.invoke(matches(".*\\.getLocationDetails"), eq(payload), eq(LocationInformation.class));
 
 		// when
 		var actualSearchResults = systemUnderTest.findByProviderIdAndLocationId(PROVIDER_ID, LOCATION_ID);

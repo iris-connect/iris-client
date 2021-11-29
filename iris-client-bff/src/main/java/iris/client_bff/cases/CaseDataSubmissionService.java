@@ -50,21 +50,21 @@ public class CaseDataSubmissionService {
 		return submission.map(IndexCaseMapper::mapDataSubmission);
 	}
 
-	public String validateAndSaveData(UUID dataAuthorizationToken, Contacts contacts, Events events, CaseDataProvider dataProvider) {
+	public String validateAndSaveData(String dataAuthorizationToken, Contacts contacts, Events events, CaseDataProvider dataProvider) {
 		// Todo check client.getName() vs. providerIdø
 
-		return requestRepo.findById(CaseDataRequest.DataRequestIdentifier.of(dataAuthorizationToken)).map(dataRequest -> {
+		return requestRepo.findByIdOrDataAuthorizationToken(CaseDataRequest.DataRequestIdentifier.of(dataAuthorizationToken), dataAuthorizationToken).map(dataRequest -> {
 
 			var requestStatus = dataRequest.getStatus();
 			if (requestStatus.equals(ABORTED)) {
 				log.trace("Submission {} for aborted case {}", dataAuthorizationToken, dataRequest.getId());
-				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString() + ". Request was aborted.";
+				return "Error: Submission not allowed for case " + dataAuthorizationToken + ". Request was aborted.";
 			} else if (requestStatus.equals(CLOSED)) {
 				log.trace("Submission {} for closed case {}", dataAuthorizationToken, dataRequest.getId());
-				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString() + ". Request already closed.";
+				return "Error: Submission not allowed for case " + dataAuthorizationToken + ". Request already closed.";
 			} else if (requestStatus.equals(DATA_RECEIVED)) {
 				log.trace("Submission {} for received case {}", dataAuthorizationToken, dataRequest.getId());
-				return "Error: Submission not allowed for case " + dataAuthorizationToken.toString() + ". Data already received.";
+				return "Error: Submission not allowed for case " + dataAuthorizationToken + ". Data already received.";
 			}
 
 			save(dataRequest, contacts, events, dataProvider);
@@ -85,9 +85,9 @@ public class CaseDataSubmissionService {
 
 			alertService.createAlertMessage("Submission for unknown Token - possible attack",
 					String.format("Case data submission for unknown data request occurred: (Data Authorization Token = %s)",
-							LogHelper.obfuscateAtStart8(dataAuthorizationToken.toString())));
+							LogHelper.obfuscateAtStart8(dataAuthorizationToken)));
 
-			return "Unknown dataAuthorizationToken: " + dataAuthorizationToken.toString();
+			return "Unknown dataAuthorizationToken: " + dataAuthorizationToken;
 		});
 
 	}

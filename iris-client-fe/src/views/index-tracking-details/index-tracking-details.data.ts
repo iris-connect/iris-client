@@ -209,6 +209,7 @@ export const normalizeDataRequestCaseData = (
         caseId: normalizer("caseId", undefined),
         status: normalizer("status", undefined),
         nonce: normalizer("nonce", undefined),
+        readableToken: normalizer("readableToken", ""),
         submissionUri: normalizer("submissionUri", ""),
         submissionData: source?.submissionData
           ? normalizeContactsAndEvents(source?.submissionData)

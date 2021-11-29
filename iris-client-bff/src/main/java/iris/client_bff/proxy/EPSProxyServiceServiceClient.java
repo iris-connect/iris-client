@@ -1,6 +1,6 @@
 package iris.client_bff.proxy;
 
-import iris.client_bff.config.ProxyServiceConfig;
+import iris.client_bff.config.ProxyServiceProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.time.Period;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import com.googlecode.jsonrpc4j.IJsonRpcClient;
 @AllArgsConstructor
 public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 
-	private final ProxyServiceConfig config;
+	private final ProxyServiceProperties config;
 
 	private final IJsonRpcClient proxyRpcClient;
 
@@ -56,13 +56,22 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 		var domain = UUID.randomUUID()
 				+ "."
 				+ config.getTargetSubdomain();
-		var oneWeekFromNow = Instant.now().plus(7, ChronoUnit.DAYS);
+		var oneWeekFromNow = Instant.now().plus(Period.ofWeeks(1));
+		return this.sendAnnouncement(domain, oneWeekFromNow);
+	}
+
+	@Override
+	public String announceExplicitToken(String connectionAuthorizationToken) throws IRISAnnouncementException {
+		var domain = connectionAuthorizationToken
+				+ "."
+				+ config.getTargetSubdomain();
+		var oneWeekFromNow = Instant.now().plus(Period.ofWeeks(1));
 		return this.sendAnnouncement(domain, oneWeekFromNow);
 	}
 
 	@Override
 	public String abortAnnouncement(String domain) throws IRISAnnouncementException {
-		var oneWeekAgo = Instant.now().minus(7, ChronoUnit.DAYS);
+		var oneWeekAgo = Instant.now().minus(Period.ofWeeks(1));
 		return this.sendAnnouncement(domain, oneWeekAgo);
 	}
 

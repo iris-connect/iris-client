@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.cases.model.CaseDataSubmission;
 import iris.client_bff.core.IrisDateTimeProvider;
+import iris.client_bff.core.token.IdentifierToken;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
@@ -65,11 +66,15 @@ class CaseDeleteJobIntegrationTests {
 
 	private CaseDataRequest createRequest(String name, String refId, Instant date) {
 
+		var token = IdentifierToken.builder().readableToken("readableToken")
+				.connectionAuthorizationToken(refId).dataAuthorizationToken(refId).build();
+
 		return caseRequests.save(CaseDataRequest.builder()
 				.name(name)
 				.refId(refId)
 				.requestStart(date)
 				.requestEnd(date.plus(6, ChronoUnit.HOURS))
+				.identifierToken(token)
 				.build());
 	}
 
