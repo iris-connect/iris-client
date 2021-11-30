@@ -96,8 +96,8 @@ export default class IrisMessageDetailsView extends Vue {
     const message: IrisMessageDetails | null =
       this.$store.state.irisMessageDetails.message;
     return {
-      author: message?.author?.name || "-",
-      recipient: message?.recipient?.name || "-",
+      author: message?.authorHd?.name || "-",
+      recipient: message?.recipientHd?.name || "-",
       createdAt: message?.createdAt
         ? getFormattedDate(message?.createdAt)
         : "-",

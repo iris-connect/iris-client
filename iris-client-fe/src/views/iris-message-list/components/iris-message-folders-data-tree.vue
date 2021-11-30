@@ -64,7 +64,7 @@ export default class IrisMessageFoldersDataTree extends IrisMessageFoldersDataTr
   }
   get defaultFolder(): IrisMessageFolder | undefined {
     const folders = this.$store.state.irisMessageList.messageFolders || [];
-    return extractFolder(folders, ["default", true]);
+    return extractFolder(folders, ["isDefault", true]);
   }
   get model() {
     return this.value;
