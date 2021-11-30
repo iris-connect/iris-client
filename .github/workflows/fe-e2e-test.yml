@@ -18,11 +18,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.4.0
 
-      - name: Setup Node.js
+      - name: Setup node from node version file
         uses: actions/setup-node@v2.5.0
         with:
-          # Version Spec of the version to use.  Examples: 12.x, 10.15.1, >=10.15.0
-          node-version: 16.x
+          node-version-file: 'iris-client-fe/.nvmrc'
 
       - name: Cypress run
         uses: cypress-io/github-action@v2.11.7
