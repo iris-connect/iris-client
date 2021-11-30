@@ -1915,21 +1915,22 @@ export type IrisMessageQuery = DataQuery & {
 export type PageIrisMessages = Page<IrisMessage>;
 
 export interface IrisMessageAttachment {
-  name?: string;
+  name: string;
+  link: string;
   type?: string;
-  link?: string;
 }
 
 export interface IrisMessage {
-  name?: string;
-  folder: string;
   id: string;
+  folder: string;
+  context: IrisMessageContext;
   subject: string;
   body: string;
-  author: IrisMessageContact;
-  recipient: IrisMessageContact;
+  authorHd: IrisMessageContact;
+  recipientHd: IrisMessageContact;
   createdAt: string;
   isRead?: boolean;
+  hasAttachments?: boolean;
 }
 
 export interface IrisMessageDetails extends IrisMessage {
@@ -1937,15 +1938,15 @@ export interface IrisMessageDetails extends IrisMessage {
 }
 
 export interface IrisMessageInsert {
-  recipient: string;
+  recipientHd: string;
   subject: string;
   body: string;
   attachments?: File[];
 }
 
 export enum IrisMessageContext {
-  Inbox = "inbox",
-  Outbox = "outbox",
+  Inbox = "INBOX",
+  Outbox = "OUTBOX",
 }
 
 export type IrisMessageFolder = {
@@ -1953,7 +1954,7 @@ export type IrisMessageFolder = {
   name: string;
   items?: IrisMessageFolder[];
   context?: IrisMessageContext;
-  default?: boolean;
+  isDefault?: boolean;
 };
 
 export interface IrisMessageContact {
@@ -2340,7 +2341,7 @@ export class IrisClientFrontendApi extends BaseAPI {
   public irisUnreadMessageCountGet(
     options?: RequestOptions
   ): ApiResponse<number> {
-    return this.apiRequest("GET", "/iris-messages/unread/count", null, options);
+    return this.apiRequest("GET", "/iris-messages/count/unread", null, options);
   }
 
   /**

@@ -77,7 +77,7 @@ export default class IrisMessageListView extends Vue {
     folder: getStringParamFromRouteWithOptionalFallback("folder", this.$route),
   };
 
-  @Watch("query", { deep: true, immediate: true })
+  @Watch("query", { deep: true })
   onQueryChange(newValue: IrisMessageQuery) {
     this.updateRoute(newValue);
     this.$store.dispatch("irisMessageList/fetchMessages", newValue);

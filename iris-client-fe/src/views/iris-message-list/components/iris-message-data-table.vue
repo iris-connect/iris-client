@@ -8,6 +8,12 @@
       :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
       :item-class="itemClass"
     >
+      <template v-slot:header.hasAttachments>
+        <v-icon dense>mdi-paperclip</v-icon>
+      </template>
+      <template v-slot:item.hasAttachments="{ item }">
+        <v-icon dense v-if="item.hasAttachments">mdi-paperclip</v-icon>
+      </template>
       <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
         <slot :name="slot" v-bind="scope" />
       </template>
@@ -51,7 +57,8 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
   get tableHeaders(): DataTableHeader[] {
     if (this.context === IrisMessageContext.Inbox) {
       return [
-        { text: "Von", value: "author.name", sortable: true },
+        { text: "", value: "hasAttachments", sortable: false, width: 0 },
+        { text: "Von", value: "authorHd.name", sortable: true },
         {
           text: "Betreff",
           value: "subject",
@@ -62,7 +69,8 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
     }
     if (this.context === IrisMessageContext.Outbox) {
       return [
-        { text: "An", value: "recipient.name", sortable: true },
+        { text: "", value: "hasAttachments", sortable: false, width: 0 },
+        { text: "An", value: "recipientHd.name", sortable: true },
         {
           text: "Betreff",
           value: "subject",
@@ -77,11 +85,12 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
     const items = (this.messageList?.content || []).map((message) => {
       return {
         id: message.id,
-        author: message.author || "-",
-        recipient: message.recipient || "-",
+        authorHd: message.authorHd || "-",
+        recipientHd: message.recipientHd || "-",
         subject: message.subject || "-",
         createdAt: getFormattedDate(message.createdAt, "L LT"),
         isRead: message.isRead,
+        hasAttachments: message.hasAttachments,
       };
     });
     return {

@@ -1,9 +1,9 @@
 import { daysAgo } from "@/server/utils/date";
 import {
+  IrisMessageContact,
   IrisMessageContext,
   IrisMessageDetails,
   IrisMessageFolder,
-  IrisMessageContact,
 } from "@/api";
 import { Request } from "miragejs";
 
@@ -12,7 +12,7 @@ export const dummyIrisMessageFolders: IrisMessageFolder[] = [
     id: "inbox",
     name: "Posteingang",
     context: IrisMessageContext.Inbox,
-    default: true,
+    isDefault: true,
     items: [
       {
         id: "inbox_1",
@@ -70,14 +70,16 @@ export const dummyIrisMessageContacts: IrisMessageContact[] = [
 
 export const dummyIrisMessageList: IrisMessageDetails[] = [
   {
-    author: dummyIrisMessageContacts[1],
-    recipient: dummyIrisMessageContacts[0],
+    authorHd: dummyIrisMessageContacts[1],
+    recipientHd: dummyIrisMessageContacts[0],
     folder: "inbox",
+    context: IrisMessageContext.Inbox,
     id: "m1",
     subject: "Indexfall-Anfrage consetetur sadipscing elitr",
     body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     createdAt: daysAgo(3),
     isRead: false,
+    hasAttachments: true,
     attachments: [
       {
         name: "anhang 1",
@@ -92,9 +94,10 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     ],
   },
   {
-    author: dummyIrisMessageContacts[0],
-    recipient: dummyIrisMessageContacts[4],
+    authorHd: dummyIrisMessageContacts[0],
+    recipientHd: dummyIrisMessageContacts[4],
     folder: "outbox",
+    context: IrisMessageContext.Outbox,
     id: "2",
     subject: "Austausch",
     body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
@@ -102,9 +105,10 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     isRead: true,
   },
   {
-    author: dummyIrisMessageContacts[2],
-    recipient: dummyIrisMessageContacts[0],
+    authorHd: dummyIrisMessageContacts[2],
+    recipientHd: dummyIrisMessageContacts[0],
     folder: "inbox_2_1",
+    context: IrisMessageContext.Inbox,
     id: "5",
     subject: "Anfrage",
     body: "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
@@ -113,8 +117,9 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
   },
 
   {
-    author: dummyIrisMessageContacts[0],
-    recipient: dummyIrisMessageContacts[2],
+    authorHd: dummyIrisMessageContacts[0],
+    recipientHd: dummyIrisMessageContacts[2],
+    context: IrisMessageContext.Outbox,
     folder: "outbox",
     id: "asdf",
     subject: "Lorem ipsum gubergren, no sea takimata ",
@@ -123,8 +128,9 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     isRead: true,
   },
   {
-    author: dummyIrisMessageContacts[3],
-    recipient: dummyIrisMessageContacts[0],
+    authorHd: dummyIrisMessageContacts[3],
+    recipientHd: dummyIrisMessageContacts[0],
+    context: IrisMessageContext.Inbox,
     folder: "inbox",
     id: "271",
     subject: "Test",
@@ -148,8 +154,9 @@ export const getDummyMessageFromRequest = (
     subject,
     body,
     folder: "outbox",
-    author: dummyIrisMessageContacts[0],
-    recipient:
+    context: IrisMessageContext.Outbox,
+    authorHd: dummyIrisMessageContacts[0],
+    recipientHd:
       dummyIrisMessageContacts.find((c) => c.id === recipient) ||
       dummyIrisMessageContacts[1],
     createdAt: new Date().getTime() + "",

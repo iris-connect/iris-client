@@ -5,6 +5,7 @@ import {
   DataRequestDetails,
   DataRequestStatus,
   ExistingDataRequestClientWithLocation,
+  IrisMessage,
   IrisMessageQuery,
   User,
   UserRole,
@@ -301,7 +302,10 @@ export function makeMockAPIServer() {
 
       this.get("/iris-messages", (schema, request) => {
         const query: Partial<IrisMessageQuery> = request.queryParams;
-        return authResponse(request, queriedPage(dummyIrisMessageList, query));
+        return authResponse(
+          request,
+          queriedPage(dummyIrisMessageList as IrisMessage[], query)
+        );
       });
 
       this.get("/iris-messages/:messageId", (schema, request) => {
@@ -330,7 +334,7 @@ export function makeMockAPIServer() {
         return authResponse(request, dummyIrisMessageContacts);
       });
 
-      this.get("/iris-messages/unread/count", (schema, request) => {
+      this.get("/iris-messages/count/unread", (schema, request) => {
         return authResponse(
           request,
           dummyIrisMessageList.filter((item) => !item.isRead).length

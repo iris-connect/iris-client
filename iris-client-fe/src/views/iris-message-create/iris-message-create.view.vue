@@ -11,7 +11,7 @@
         <v-card-text>
           <v-select
             v-if="recipients"
-            v-model="form.model.recipient"
+            v-model="form.model.recipientHd"
             label="Empfänger"
             :items="recipients"
             :rules="validationRules.defined"
@@ -115,7 +115,7 @@ export default class IrisMessageCreateView extends Vue {
     model: {
       subject: "",
       body: "",
-      recipient: "",
+      recipientHd: "",
       attachments: [],
     },
     valid: false,
