@@ -33,11 +33,10 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
           
-      - name: Setup Node.js
-        uses: actions/setup-node@v2.4.1
+      - name: Setup node from node version file
+        uses: actions/setup-node@v2.5.0
         with:
-          # Version Spec of the version to use.  Examples: 12.x, 10.15.1, >=10.15.0
-          node-version: 16.x
+          node-version-file: 'iris-client-fe/.nvmrc'
 
       - name: Cache local Maven repository
         uses: actions/cache@v2.1.6
