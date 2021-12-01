@@ -3,14 +3,17 @@ package iris.client_bff.iris_messages;
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
 import lombok.*;
+import org.hibernate.search.engine.backend.types.Sortable;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Table(name = "iris_message")
+@Indexed
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -21,21 +24,29 @@ public class IrisMessage extends Aggregate<IrisMessage, IrisMessage.IrisMessageI
     }
 
     @ManyToOne
-    @JoinColumn(name="folder_id", insertable = false, updatable = false)
+    @JoinColumn(name="folder_id", nullable=false)
+    @IndexedEmbedded(includeEmbeddedObjectId = true)
     private IrisMessageFolder folder;
 
+    @Column(nullable = false)
+    @KeywordField(sortable = Sortable.YES, normalizer = "german")
     private String subject;
 
+    @Column(nullable = false)
     private String body;
 
+    @Column(nullable = false)
     @Embedded
+    @IndexedEmbedded
     @AttributeOverrides({
             @AttributeOverride( name = "id", column = @Column(name = "author_hd_id")),
             @AttributeOverride( name = "name", column = @Column(name = "author_hd_name"))
     })
     private IrisMessageContact authorHd;
 
+    @Column(nullable = false)
     @Embedded
+    @IndexedEmbedded
     @AttributeOverrides({
             @AttributeOverride( name = "id", column = @Column(name = "recipient_hd_id")),
             @AttributeOverride( name = "name", column = @Column(name = "recipient_hd_name"))
@@ -46,19 +57,16 @@ public class IrisMessage extends Aggregate<IrisMessage, IrisMessage.IrisMessageI
 
     private Boolean hasAttachments;
 
-    public Instant getCreatedAt() {
-        return this.getMetadata().getCreated();
-    }
-
     @Embeddable
     @EqualsAndHashCode
     @RequiredArgsConstructor(staticName = "of")
     @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
     public static class IrisMessageIdentifier implements Id, Serializable {
 
-        private static final long serialVersionUID = -8254677010830428881L;
+        @Serial
+        private static final long serialVersionUID = 1140444389070674189L;
 
-        final UUID id;
+        private final UUID id;
 
         /**
          * for JSON deserialization

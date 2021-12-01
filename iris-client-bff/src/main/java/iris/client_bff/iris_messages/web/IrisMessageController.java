@@ -1,8 +1,8 @@
 package iris.client_bff.iris_messages.web;
 
 import iris.client_bff.core.utils.ValidationHelper;
-import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageFolder;
+import iris.client_bff.iris_messages.IrisMessageInsert;
 import iris.client_bff.iris_messages.IrisMessageService;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,19 +26,41 @@ public class IrisMessageController {
     private static final String FIELD_SEARCH = "search";
     private static final String MESSAGE_ID = "messageId";
 
+    private static final String FIELD_RECIPIENT_HD = "recipientHd";
+    private static final String FIELD_SUBJECT = "subject";
+    private static final String FIELD_BODY = "body";
+
     private IrisMessageService irisMessageService;
     private final ValidationHelper validationHelper;
 
     @GetMapping()
-    public Page<IrisMessage> getMessages(
+    public Page<IrisMessageListItemDto> getMessages(
             @RequestParam() String folder,
             @RequestParam(required = false) String search,
             Pageable pageable
     ) {
         validateField(folder, FIELD_FOLDER);
-        //@todo: implement search & DTO
         validateField(search, FIELD_SEARCH);
-        return this.irisMessageService.findAllByFolderId(folder, pageable);
+        return this.irisMessageService.search(folder, search, pageable).map(IrisMessageListItemDto::fromEntity);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> createMessage(@Valid @RequestBody IrisMessageInsert irisMessageInsert) {
+        this.validateIrisMessageInsert(irisMessageInsert);
+
+        irisMessageService.createMessage(irisMessageInsert);
+
+        return ResponseEntity.ok(irisMessageInsert);
+    }
+
+    private void validateIrisMessageInsert(IrisMessageInsert irisMessageInsert) {
+        if (irisMessageInsert == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+        }
+        this.validateField(irisMessageInsert.getRecipientHd(), FIELD_RECIPIENT_HD);
+        this.validateField(irisMessageInsert.getSubject(), FIELD_SUBJECT);
+        this.validateField(irisMessageInsert.getBody(), FIELD_BODY);
     }
 
 //    @GetMapping("/{messageId}")
@@ -48,9 +71,9 @@ public class IrisMessageController {
 //    }
 
     @GetMapping("/folders")
-    public ResponseEntity<List<IrisMessageFolderMapper.IrisMessageFolderDto>> getMessageFolders() {
+    public ResponseEntity<List<IrisMessageFolderDto>> getMessageFolders() {
         List<IrisMessageFolder> irisMessageFolders = irisMessageService.getFolders();
-        return ResponseEntity.ok(IrisMessageFolderMapper.map(irisMessageFolders));
+        return ResponseEntity.ok(IrisMessageFolderDto.fromEntity(irisMessageFolders));
     }
 
     @GetMapping("/count/unread")

@@ -40,7 +40,7 @@ public class HibernateSearcher {
 	}
 
 	private PredicateFinalStep createQuery(String keyword, String[] fields,
-			UnaryOperator<BooleanPredicateClausesStep<?>> statusMatchFunc, SearchPredicateFactory f) {
+			UnaryOperator<BooleanPredicateClausesStep<?>> searchInterceptor, SearchPredicateFactory f) {
 
 		var boolPred = f.bool();
 
@@ -48,7 +48,7 @@ public class HibernateSearcher {
 			boolPred = boolPred.must(f2 -> createQueryPart(keywordPart, fields, f2));
 		}
 
-		return statusMatchFunc.apply(boolPred);
+		return searchInterceptor.apply(boolPred);
 	}
 
 	private PredicateFinalStep createQueryPart(String keyword, String[] fields, SearchPredicateFactory f) {

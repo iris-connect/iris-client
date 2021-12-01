@@ -21,7 +21,8 @@
               :loading="messageListLoading"
               :search.sync="query.search"
               :sort.sync="query.sort"
-              :page.sync="query.page"
+              :page="query.page"
+              @update:page="query.page = $event - 1"
               :items-per-page.sync="query.size"
               @click:row="handleRowClick"
             />
@@ -47,6 +48,7 @@ import DataTree from "@/components/data-tree/data-tree.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import IrisMessageFoldersDataTree from "@/views/iris-message-list/components/iris-message-folders-data-tree.vue";
 import IrisMessageDataTable from "@/views/iris-message-list/components/iris-message-data-table.vue";
+import _mapValues from "lodash/mapValues";
 
 @Component({
   components: {
@@ -71,27 +73,27 @@ export default class IrisMessageListView extends Vue {
 
   query: IrisMessageQuery = {
     size: getPageSizeFromRouteWithDefault(this.$route),
-    page: getPageFromRouteWithDefault(this.$route),
+    page: getPageFromRouteWithDefault(this.$route) - 1,
     sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
     search: getStringParamFromRouteWithOptionalFallback("search", this.$route),
     folder: getStringParamFromRouteWithOptionalFallback("folder", this.$route),
   };
-
-  @Watch("query", { deep: true })
-  onQueryChange(newValue: IrisMessageQuery) {
-    this.updateRoute(newValue);
-    this.$store.dispatch("irisMessageList/fetchMessages", newValue);
-  }
 
   @Watch("query.folder", { immediate: true })
   onFolderChange() {
     this.$store.commit("irisMessageList/setMessageList", null);
     this.query = {
       ...this.query,
-      page: 1,
+      page: 0,
       sort: undefined,
       search: undefined,
     };
+  }
+
+  @Watch("query", { immediate: true, deep: true })
+  onQueryChange(newValue: IrisMessageQuery) {
+    this.updateRoute(newValue);
+    this.$store.dispatch("irisMessageList/fetchMessages", newValue);
   }
 
   get messageList(): IrisMessageFolder[] | null {
@@ -115,15 +117,18 @@ export default class IrisMessageListView extends Vue {
     });
   }
 
-  updateRoute(query: Record<string, unknown>): void {
+  updateRoute(query: IrisMessageQuery): void {
+    const routeQuery: Record<string, unknown> = {
+      ...this.$route.query,
+      ...query,
+      page: `${(query?.page || 0) + 1}`,
+    };
     this.$router
       .replace({
         name: this.$route.name as string | undefined,
-        query: {
-          ...this.$route.query,
-          page: "1",
-          ...query,
-        },
+        query: _mapValues(routeQuery, (val) => {
+          return val ? `${val}` : undefined;
+        }),
       })
       .catch(() => {
         // ignored

@@ -2270,6 +2270,7 @@ export class IrisClientFrontendApi extends BaseAPI {
   public irisMessagesGet(
     options?: RequestOptions
   ): ApiResponse<PageIrisMessages> {
+    assertParamExists("irisMessagesGet", "folder", options?.params?.folder);
     return this.apiRequest("GET", "/iris-messages", null, options);
   }
 
@@ -2304,7 +2305,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("irisMessagesPost", "data", data);
     return this.apiRequest("POST", "/iris-messages", data, {
       ...options,
-      formData: true,
+      multipart: false,
     });
   }
 
