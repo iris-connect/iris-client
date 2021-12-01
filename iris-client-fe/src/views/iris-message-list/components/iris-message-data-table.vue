@@ -64,7 +64,7 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
           value: "subject",
           sortable: true,
         },
-        { text: "Datum", value: "createdAt", sortable: true },
+        { text: "Datum", value: "metadata.created", sortable: true },
       ];
     }
     if (this.context === IrisMessageContext.Outbox) {
@@ -76,7 +76,7 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
           value: "subject",
           sortable: true,
         },
-        { text: "Datum", value: "createdAt", sortable: true },
+        { text: "Datum", value: "metadata.created", sortable: true },
       ];
     }
     return [];
@@ -88,7 +88,9 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
         authorHd: message.authorHd || "-",
         recipientHd: message.recipientHd || "-",
         subject: message.subject || "-",
-        createdAt: getFormattedDate(message.createdAt, "L LT"),
+        metadata: {
+          created: getFormattedDate(message.createdAt, "L LT"),
+        },
         isRead: message.isRead,
         hasAttachments: message.hasAttachments,
       };

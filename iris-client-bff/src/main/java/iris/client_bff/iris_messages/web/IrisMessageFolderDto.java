@@ -7,16 +7,14 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IrisMessageFolderMapper {
+@Data
+public class IrisMessageFolderDto {
 
-    @Data
-    public static class IrisMessageFolderDto {
-        private String id;
-        private String name;
-        private IrisMessageContext context;
-        private List<IrisMessageFolderDto> items = new ArrayList<>();
-        private Boolean isDefault;
-    }
+    private String id;
+    private String name;
+    private IrisMessageContext context;
+    private List<IrisMessageFolderDto> items;
+    private Boolean isDefault;
 
     private static IrisMessageFolderDto findParentFolderDto(List<IrisMessageFolderDto> folderDtoList, IrisMessageFolder folder) {
         if (folder.getParentFolder() == null) {
@@ -27,7 +25,7 @@ public class IrisMessageFolderMapper {
                 return folderDto;
             }
             if(!folderDto.items.isEmpty()) {
-                IrisMessageFolderDto parentFolderDto = IrisMessageFolderMapper.findParentFolderDto(folderDto.items, folder);
+                IrisMessageFolderDto parentFolderDto = IrisMessageFolderDto.findParentFolderDto(folderDto.items, folder);
                 if (parentFolderDto != null) {
                     return parentFolderDto;
                 }
@@ -36,19 +34,20 @@ public class IrisMessageFolderMapper {
         return null;
     }
 
-    private static IrisMessageFolderDto map(IrisMessageFolder folder) {
+    public static IrisMessageFolderDto fromEntity(IrisMessageFolder folder) {
         return new IrisMessageFolderDto()
                 .setId(folder.getId().toString())
                 .setName(folder.getName())
                 .setContext(folder.getContext())
-                .setIsDefault(folder.getIsDefault());
+                .setIsDefault(folder.getIsDefault())
+                .setItems(new ArrayList<>());
     }
 
-    public static List<IrisMessageFolderDto> map(List<IrisMessageFolder> folderList) {
+    public static List<IrisMessageFolderDto> fromEntity(List<IrisMessageFolder> folderList) {
         List<IrisMessageFolderDto> folderDtoList = new ArrayList<>();
         for ( IrisMessageFolder folder : folderList ) {
-            IrisMessageFolderDto folderDto = IrisMessageFolderMapper.map(folder);
-            IrisMessageFolderDto parentFolderDto = IrisMessageFolderMapper.findParentFolderDto(folderDtoList, folder);
+            IrisMessageFolderDto folderDto = IrisMessageFolderDto.fromEntity(folder);
+            IrisMessageFolderDto parentFolderDto = IrisMessageFolderDto.findParentFolderDto(folderDtoList, folder);
             if (parentFolderDto != null) {
                 parentFolderDto.items.add(folderDto);
             } else {

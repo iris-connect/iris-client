@@ -26,7 +26,7 @@ export type RequestQuery = {
 
 export interface RequestOptions<D = any> extends AxiosRequestConfig<D> {
   query?: RequestQuery;
-  formData?: boolean;
+  multipart?: boolean;
 }
 
 export type ApiResponse<T = any> = Promise<AxiosResponse<T>>;
@@ -122,7 +122,7 @@ export const apiRequestBuilder =
     const url = new URL(path, "https://example.com");
     url.search = createSearchParams(url, options?.query || {});
     const requestData =
-      options?.formData && data
+      options?.multipart && data
         ? createFormData(data as Record<string, any>)
         : data;
     return axiosInstance.request({

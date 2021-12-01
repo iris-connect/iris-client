@@ -8,6 +8,7 @@ CREATE TABLE  iris_message_folder (
     last_modified timestamp NOT NULL,
     CONSTRAINT iris_message_folder_pkey PRIMARY KEY (id)
 );
+CREATE INDEX iris_message_folder_id ON iris_message_folder (id);
 
 CREATE TABLE  iris_message_folder_default
 (
@@ -40,3 +41,4 @@ CREATE TABLE  iris_message (
     CONSTRAINT iris_message_pkey PRIMARY KEY (id),
     CONSTRAINT iris_message_folder_fk FOREIGN KEY (folder_id) REFERENCES iris_message_folder(id)
 );
+CREATE INDEX iris_message_id ON iris_message (id);

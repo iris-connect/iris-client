@@ -4,4 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IrisMessageFolderRepository extends JpaRepository<IrisMessageFolder, IrisMessageFolder.IrisMessageFolderIdentifier> {
 
+    IrisMessageFolder findFirstByContextAndParentFolderIsNull(IrisMessageContext context);
+
 }

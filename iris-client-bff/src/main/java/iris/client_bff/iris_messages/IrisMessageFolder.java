@@ -5,7 +5,9 @@ import iris.client_bff.core.Id;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -20,8 +22,8 @@ public class IrisMessageFolder extends Aggregate<IrisMessageFolder, IrisMessageF
         id = IrisMessageFolder.IrisMessageFolderIdentifier.of(UUID.randomUUID());
     }
 
-//    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<IrisMessage> messages;
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<IrisMessage> messages;
 
     @Column(nullable = false)
     private String name;
@@ -44,7 +46,8 @@ public class IrisMessageFolder extends Aggregate<IrisMessageFolder, IrisMessageF
     @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
     public static class IrisMessageFolderIdentifier implements Id, Serializable {
 
-        private static final long serialVersionUID = -8254677010830428881L;
+        @Serial
+        private static final long serialVersionUID = -8255216015747810442L;
 
         final UUID id;
 
