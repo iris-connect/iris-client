@@ -9,11 +9,13 @@ import iris.client_bff.users.UserDetailsServiceImpl;
 import iris.client_bff.users.entities.UserRole;
 import lombok.AllArgsConstructor;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -44,6 +46,9 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private CustomLogoutHandler logoutHandler;
 
+	@Autowired
+	private Environment env;
+
 	private PasswordEncoder passwordEncoder;
 
 	private JWTVerifier jwtVerifier;
@@ -57,9 +62,14 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
+		if (StringUtils.equalsAny("dev", env.getActiveProfiles())) {
+			http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
+			http.headers().frameOptions().sameOrigin();
+		}
+
 		http.cors().and().csrf().disable()
 				.authorizeRequests()
-				.mvcMatchers("/error").permitAll()
+				.antMatchers("/error").permitAll()
 				.requestMatchers(EndpointRequest.to(HealthEndpoint.class)).permitAll()
 				.antMatchers(SWAGGER_WHITELIST).permitAll()
 				.requestMatchers(EndpointRequest.toAnyEndpoint()).hasAuthority(UserRole.ADMIN.name())
