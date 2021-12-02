@@ -64,7 +64,7 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 
 		if (StringUtils.equalsAny("dev", env.getActiveProfiles())) {
 			http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
-			http.headers().frameOptions().disable();
+			http.headers().frameOptions().sameOrigin();
 		}
 
 		http.cors().and().csrf().disable()
