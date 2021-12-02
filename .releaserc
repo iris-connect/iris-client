@@ -37,6 +37,8 @@
                 "assets": [
                     "CHANGELOG.md",
                     "**/pom.xml",
+                    "iris-client-fe/package.json",
+                    "iris-client-fe/package-lock.json",
                     "infrastructure/deployment/docker-compose.yml",
                     "infrastructure/deployment/docker-compose-ext-postgres.yml",
                     "FE-THIRD-PARTY-LICENSES-PROD.md",
