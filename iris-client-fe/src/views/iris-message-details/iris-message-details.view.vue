@@ -54,7 +54,7 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn text :to="{ name: 'iris-message-list' }" replace> Zurück </v-btn>
+        <v-btn text @click="goBack"> Zurück </v-btn>
       </v-card-actions>
     </v-card>
     <error-message-alert :errors="errors" />
@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { IrisMessageAttachment, IrisMessageDetails } from "@/api";
@@ -96,8 +96,8 @@ export default class IrisMessageDetailsView extends Vue {
     const message: IrisMessageDetails | null =
       this.$store.state.irisMessageDetails.message;
     return {
-      author: message?.authorHd?.name || "-",
-      recipient: message?.recipientHd?.name || "-",
+      author: message?.hdAuthor?.name || "-",
+      recipient: message?.hdRecipient?.name || "-",
       createdAt: message?.createdAt
         ? getFormattedDate(message?.createdAt)
         : "-",
@@ -107,14 +107,39 @@ export default class IrisMessageDetailsView extends Vue {
     };
   }
   get messageLoading(): boolean {
-    return this.$store.state.irisMessageDetails.messageLoading;
+    return (
+      this.$store.state.irisMessageDetails.messageLoading ||
+      this.$store.state.irisMessageDetails.messageSaving
+    );
   }
   get errors(): ErrorMessage[] {
-    return [this.$store.state.irisMessageDetails.messageLoadingError];
+    return [
+      this.$store.state.irisMessageDetails.messageLoadingError,
+      this.$store.state.irisMessageDetails.messageSavingError,
+    ];
+  }
+  get messageLoaded(): boolean {
+    return (
+      this.$store.state.irisMessageDetails.messageLoading !== true &&
+      this.$store.state.irisMessageDetails.messageLoadingError === null &&
+      this.$store.state.irisMessageDetails.message !== null
+    );
+  }
+  @Watch("messageLoaded")
+  onMessageLoaded(newValue: boolean) {
+    if (newValue) {
+      this.$store.dispatch(
+        "irisMessageDetails/markAsRead",
+        this.$route.params.messageId
+      );
+    }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   openAttachment(link: string) {
     // @todo: handle link opening
+  }
+  goBack() {
+    this.$router.replace({ name: "iris-message-list" });
   }
 }
 </script>

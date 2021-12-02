@@ -3,12 +3,12 @@ import { RootState } from "@/store/types";
 import { Commit, Module } from "vuex";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
-import { IrisMessageInsert, IrisMessageContact } from "@/api";
+import { IrisMessageInsert, IrisMessageHdContact } from "@/api";
 
 export type IrisMessageCreateState = {
   messageCreationOngoing: boolean;
   messageCreationError: ErrorMessage;
-  contacts: IrisMessageContact[] | null;
+  contacts: IrisMessageHdContact[] | null;
   contactsLoading: boolean;
   contactsLoadingError: ErrorMessage;
 };
@@ -26,7 +26,7 @@ export interface IrisMessageDetailsModule
     ): void;
     setContacts(
       state: IrisMessageCreateState,
-      payload: IrisMessageContact[]
+      payload: IrisMessageHdContact[]
     ): void;
     setContactsLoading(state: IrisMessageCreateState, payload: boolean): void;
     setContactsLoadingError(
@@ -91,11 +91,11 @@ const irisMessageCreate: IrisMessageDetailsModule = {
       }
     },
     async fetchRecipients({ commit }) {
-      let list: IrisMessageContact[] | null = null;
+      let list: IrisMessageHdContact[] | null = null;
       commit("setContactsLoading", true);
       commit("setContactsLoadingError", null);
       try {
-        list = (await authClient.irisMessageContactsGet()).data;
+        list = (await authClient.irisMessageHdContactsGet()).data;
       } catch (e) {
         commit("setContactsLoadingError", getErrorMessage(e));
       } finally {

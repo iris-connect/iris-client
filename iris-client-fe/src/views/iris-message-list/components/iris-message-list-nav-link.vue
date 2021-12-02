@@ -36,11 +36,29 @@ const IrisMessageListNavLinkProps = Vue.extend({
 
 @Component
 export default class IrisMessageListNavLink extends IrisMessageListNavLinkProps {
-  mounted() {
-    this.$store.dispatch("irisMessageList/fetchUnreadMessageCount");
-  }
+  pollingTimeout = -1;
+  isMounted = false;
   get unreadMessageCount() {
     return this.$store.state.irisMessageList.unreadMessageCount || 0;
+  }
+  mounted() {
+    this.isMounted = true;
+    this.fetchMessageCount();
+  }
+  beforeDestroy() {
+    this.isMounted = false;
+    clearTimeout(this.pollingTimeout);
+  }
+  fetchMessageCount() {
+    clearTimeout(this.pollingTimeout);
+    if (this.isMounted) {
+      this.$store
+        .dispatch("irisMessageList/fetchUnreadMessageCount")
+        .catch(() => {
+          // ignored
+        });
+      this.pollingTimeout = setTimeout(this.fetchMessageCount, 30000);
+    }
   }
 }
 </script>

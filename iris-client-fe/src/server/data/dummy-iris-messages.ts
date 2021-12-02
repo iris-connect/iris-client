@@ -1,6 +1,6 @@
 import { daysAgo } from "@/server/utils/date";
 import {
-  IrisMessageContact,
+  IrisMessageHdContact,
   IrisMessageContext,
   IrisMessageDetails,
   IrisMessageFolder,
@@ -45,7 +45,7 @@ export const dummyIrisMessageFolders: IrisMessageFolder[] = [
   },
 ];
 
-export const dummyIrisMessageContacts: IrisMessageContact[] = [
+export const dummyIrisMessageHdContacts: IrisMessageHdContact[] = [
   {
     id: "1",
     name: "Eigenes GA",
@@ -70,8 +70,8 @@ export const dummyIrisMessageContacts: IrisMessageContact[] = [
 
 export const dummyIrisMessageList: IrisMessageDetails[] = [
   {
-    authorHd: dummyIrisMessageContacts[1],
-    recipientHd: dummyIrisMessageContacts[0],
+    hdAuthor: dummyIrisMessageHdContacts[1],
+    hdRecipient: dummyIrisMessageHdContacts[0],
     folder: "inbox",
     context: IrisMessageContext.Inbox,
     id: "m1",
@@ -94,8 +94,8 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     ],
   },
   {
-    authorHd: dummyIrisMessageContacts[0],
-    recipientHd: dummyIrisMessageContacts[4],
+    hdAuthor: dummyIrisMessageHdContacts[0],
+    hdRecipient: dummyIrisMessageHdContacts[4],
     folder: "outbox",
     context: IrisMessageContext.Outbox,
     id: "2",
@@ -105,8 +105,8 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     isRead: true,
   },
   {
-    authorHd: dummyIrisMessageContacts[2],
-    recipientHd: dummyIrisMessageContacts[0],
+    hdAuthor: dummyIrisMessageHdContacts[2],
+    hdRecipient: dummyIrisMessageHdContacts[0],
     folder: "inbox_2_1",
     context: IrisMessageContext.Inbox,
     id: "5",
@@ -117,8 +117,8 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
   },
 
   {
-    authorHd: dummyIrisMessageContacts[0],
-    recipientHd: dummyIrisMessageContacts[2],
+    hdAuthor: dummyIrisMessageHdContacts[0],
+    hdRecipient: dummyIrisMessageHdContacts[2],
     context: IrisMessageContext.Outbox,
     folder: "outbox",
     id: "asdf",
@@ -128,8 +128,8 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     isRead: true,
   },
   {
-    authorHd: dummyIrisMessageContacts[3],
-    recipientHd: dummyIrisMessageContacts[0],
+    hdAuthor: dummyIrisMessageHdContacts[3],
+    hdRecipient: dummyIrisMessageHdContacts[0],
     context: IrisMessageContext.Inbox,
     folder: "inbox",
     id: "271",
@@ -155,10 +155,10 @@ export const getDummyMessageFromRequest = (
     body,
     folder: "outbox",
     context: IrisMessageContext.Outbox,
-    authorHd: dummyIrisMessageContacts[0],
-    recipientHd:
-      dummyIrisMessageContacts.find((c) => c.id === recipient) ||
-      dummyIrisMessageContacts[1],
+    hdAuthor: dummyIrisMessageHdContacts[0],
+    hdRecipient:
+      dummyIrisMessageHdContacts.find((c) => c.id === recipient) ||
+      dummyIrisMessageHdContacts[1],
     createdAt: new Date().getTime() + "",
     attachments: attachments.map((attachment) => {
       const a = attachment as File;

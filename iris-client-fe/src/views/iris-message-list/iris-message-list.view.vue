@@ -21,8 +21,7 @@
               :loading="messageListLoading"
               :search.sync="query.search"
               :sort.sync="query.sort"
-              :page="query.page"
-              @update:page="query.page = $event - 1"
+              :page.sync="query.page"
               :items-per-page.sync="query.size"
               @click:row="handleRowClick"
             />
@@ -73,7 +72,7 @@ export default class IrisMessageListView extends Vue {
 
   query: IrisMessageQuery = {
     size: getPageSizeFromRouteWithDefault(this.$route),
-    page: getPageFromRouteWithDefault(this.$route) - 1,
+    page: Math.max(0, getPageFromRouteWithDefault(this.$route) - 1),
     sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
     search: getStringParamFromRouteWithOptionalFallback("search", this.$route),
     folder: getStringParamFromRouteWithOptionalFallback("folder", this.$route),

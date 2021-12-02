@@ -39,19 +39,19 @@ public class IrisMessage extends Aggregate<IrisMessage, IrisMessage.IrisMessageI
     @Embedded
     @IndexedEmbedded
     @AttributeOverrides({
-            @AttributeOverride( name = "id", column = @Column(name = "author_hd_id")),
-            @AttributeOverride( name = "name", column = @Column(name = "author_hd_name"))
+            @AttributeOverride( name = "id", column = @Column(name = "hd_author_id")),
+            @AttributeOverride( name = "name", column = @Column(name = "hd_author_name"))
     })
-    private IrisMessageContact authorHd;
+    private IrisMessageHdContact hdAuthor;
 
     @Column(nullable = false)
     @Embedded
     @IndexedEmbedded
     @AttributeOverrides({
-            @AttributeOverride( name = "id", column = @Column(name = "recipient_hd_id")),
-            @AttributeOverride( name = "name", column = @Column(name = "recipient_hd_name"))
+            @AttributeOverride( name = "id", column = @Column(name = "hd_recipient_id")),
+            @AttributeOverride( name = "name", column = @Column(name = "hd_recipient_name"))
     })
-    private IrisMessageContact recipientHd;
+    private IrisMessageHdContact hdRecipient;
 
     private Boolean isRead;
 

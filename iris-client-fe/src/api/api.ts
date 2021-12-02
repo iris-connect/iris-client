@@ -1926,8 +1926,8 @@ export interface IrisMessage {
   context: IrisMessageContext;
   subject: string;
   body: string;
-  authorHd: IrisMessageContact;
-  recipientHd: IrisMessageContact;
+  hdAuthor: IrisMessageHdContact;
+  hdRecipient: IrisMessageHdContact;
   createdAt: string;
   isRead?: boolean;
   hasAttachments?: boolean;
@@ -1938,7 +1938,7 @@ export interface IrisMessageDetails extends IrisMessage {
 }
 
 export interface IrisMessageInsert {
-  recipientHd: string;
+  hdRecipient: string;
   subject: string;
   body: string;
   attachments?: File[];
@@ -1957,7 +1957,7 @@ export type IrisMessageFolder = {
   isDefault?: boolean;
 };
 
-export interface IrisMessageContact {
+export interface IrisMessageHdContact {
   id: string;
   name: string;
 }
@@ -2327,10 +2327,10 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof IrisClientFrontendApi
    */
-  public irisMessageContactsGet(
+  public irisMessageHdContactsGet(
     options?: RequestOptions
-  ): ApiResponse<IrisMessageContact[]> {
-    return this.apiRequest("GET", "/iris-messages/contacts", null, options);
+  ): ApiResponse<IrisMessageHdContact[]> {
+    return this.apiRequest("GET", "/iris-messages/hd-contacts", null, options);
   }
 
   /**
@@ -2353,16 +2353,12 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof IrisClientFrontendApi
    */
-  public irisMessagesMarkRead(
+  public irisMessagesSetIsRead(
     messageId: string,
     options?: RequestOptions
   ): ApiResponse {
-    assertParamExists("irisMessagesMarkRead", "messageId", messageId);
-    return this.apiRequest(
-      "POST",
-      "/iris-messages/:messageId/mark-read",
-      messageId,
-      options
-    );
+    assertParamExists("irisMessagesSetIsRead", "messageId", messageId);
+    const path = `/iris-messages/${encodeURIComponent(messageId)}`;
+    return this.apiRequest("PATCH", path, { isRead: true }, options);
   }
 }
