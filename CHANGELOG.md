@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.2.0-rc.4](https://github.com/iris-connect/iris-client/compare/v1.2.0-rc.3...v1.2.0-rc.4) (2021-12-02)
+
+
+### Bug Fixes
+
+* new pre release ([e81866c](https://github.com/iris-connect/iris-client/commit/e81866cfae3fb6aac2529b58db5b28af8a465c58))
+
 # [1.2.0-rc.3](https://github.com/iris-connect/iris-client/compare/v1.2.0-rc.2...v1.2.0-rc.3) (2021-11-29)
 
 
