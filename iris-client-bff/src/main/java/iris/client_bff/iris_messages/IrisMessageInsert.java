@@ -7,7 +7,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class IrisMessageInsert {
 
-    private String recipientHd;
+    @NotBlank
+    private String hdRecipient;
 
     @NotBlank
     private String subject;

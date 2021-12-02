@@ -4,8 +4,9 @@
       v-if="context"
       class="mt-5"
       v-bind="{ ...dataTable, ...$attrs }"
-      v-on="$listeners"
-      :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
+      v-on="listeners"
+      :page.sync="tablePage"
+      :footer-props="{ 'items-per-page-options': [2, 10, 20, 30, 50] }"
       :item-class="itemClass"
     >
       <template v-slot:header.hasAttachments>
@@ -29,6 +30,7 @@ import { DataTableHeader } from "vuetify";
 import { getFormattedDate } from "@/utils/date";
 import { PropType } from "vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
+import _omit from "lodash/omit";
 
 const IrisMessageDataTableProps = Vue.extend({
   inheritAttrs: false,
@@ -45,6 +47,10 @@ const IrisMessageDataTableProps = Vue.extend({
       type: String as PropType<IrisMessageContext | null>,
       default: null,
     },
+    page: {
+      type: Number,
+      default: 0,
+    },
   },
 });
 
@@ -54,11 +60,20 @@ const IrisMessageDataTableProps = Vue.extend({
   },
 })
 export default class IrisMessageDataTable extends IrisMessageDataTableProps {
+  get listeners(): Record<string, unknown> {
+    return _omit(this.$listeners, ["update:page"]);
+  }
+  get tablePage(): number {
+    return this.page + 1;
+  }
+  set tablePage(value: number) {
+    this.$emit("update:page", Math.max(0, value - 1));
+  }
   get tableHeaders(): DataTableHeader[] {
     if (this.context === IrisMessageContext.Inbox) {
       return [
         { text: "", value: "hasAttachments", sortable: false, width: 0 },
-        { text: "Von", value: "authorHd.name", sortable: true },
+        { text: "Von", value: "hdAuthor.name", sortable: true },
         {
           text: "Betreff",
           value: "subject",
@@ -70,7 +85,7 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
     if (this.context === IrisMessageContext.Outbox) {
       return [
         { text: "", value: "hasAttachments", sortable: false, width: 0 },
-        { text: "An", value: "recipientHd.name", sortable: true },
+        { text: "An", value: "hdRecipient.name", sortable: true },
         {
           text: "Betreff",
           value: "subject",
@@ -85,8 +100,8 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
     const items = (this.messageList?.content || []).map((message) => {
       return {
         id: message.id,
-        authorHd: message.authorHd || "-",
-        recipientHd: message.recipientHd || "-",
+        hdAuthor: message.hdAuthor || "-",
+        hdRecipient: message.hdRecipient || "-",
         subject: message.subject || "-",
         metadata: {
           created: getFormattedDate(message.createdAt, "L LT"),

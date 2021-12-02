@@ -1,6 +1,7 @@
 package iris.client_bff.iris_messages;
 
 import iris.client_bff.core.utils.HibernateSearcher;
+import iris.client_bff.iris_messages.eps.IrisMessageClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -10,60 +11,74 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class IrisMessageService {
 
-    private static final String[] SEARCH_FIELDS = { "subject", "authorHd.name", "recipientHd.name" };
+    private static final String[] SEARCH_FIELDS = { "subject", "hdAuthor.name", "hdRecipient.name" };
 
     private final IrisMessageRepository messageRepository;
     private final IrisMessageFolderRepository folderRepository;
     private final HibernateSearcher searcher;
+    private final IrisMessageClient irisMessageClient;
 
-    public Page<IrisMessage> search(String folder, String searchString, Pageable pageable) {
-        var folderId = IrisMessageFolder.IrisMessageFolderIdentifier.of(folder);
+    public Optional<IrisMessage> findById(UUID messageId) {
+        return messageRepository.findById(IrisMessage.IrisMessageIdentifier.of(messageId));
+    }
+
+    public Page<IrisMessage> search(UUID folderId, String searchString, Pageable pageable) {
+        var folderIdentifier = IrisMessageFolder.IrisMessageFolderIdentifier.of(folderId);
         if (StringUtils.isEmpty(searchString)) {
-            return messageRepository.findAllByFolderId(folderId, pageable);
+            return messageRepository.findAllByFolderId(folderIdentifier, pageable);
         }
         var result = searcher.search(
                 searchString,
                 pageable,
                 SEARCH_FIELDS,
-                it -> it.must(f2 -> f2.match().field("folder.id").matching(folderId)),
+                it -> it.must(f2 -> f2.match().field("folder.id").matching(folderIdentifier)),
                 IrisMessage.class);
         return new PageImpl<>(result.hits(), pageable, result.total().hitCount());
     }
 
-    public int getCountUnread(String folder) {
-        return messageRepository.getCountUnread(folder);
+    public int getCountUnreadByFolderId(UUID folderId) {
+        return messageRepository.getCountUnreadByFolderId(IrisMessageFolder.IrisMessageFolderIdentifier.of(folderId));
+    }
+
+    public int getCountUnread() {
+        return messageRepository.countByIsReadFalseOrIsReadIsNull();
     }
 
     public List<IrisMessageFolder> getFolders() {
         return folderRepository.findAll();
     }
 
+    public IrisMessage updateMessage(IrisMessage message, IrisMessageUpdate messageUpdate) {
+        message.setIsRead(messageUpdate.getIsRead());
+        return this.messageRepository.save(message);
+    }
+
+    public List<IrisMessageHdContact> getHdContacts() {
+        return this.irisMessageClient.getIrisMessageHdContacts();
+    }
+
     //@todo: implement epsClient message create functionality and save message only if eps call was successful
-    //@todo: implement return value (DTO) that isn't void
-    public void createMessage(IrisMessageInsert irisMessageInsert) {
+    public IrisMessage createMessage(IrisMessageInsert messageInsert) {
         IrisMessageFolder outboxRoot = folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
-        //@todo: Replace dummy IrisMessageContact code with EpsClient data
-        IrisMessageContact author = new IrisMessageContact()
-                .setId("replace_this_dummy_author_id")
-                .setName("replace_this_dummy_author_name");
-        IrisMessageContact recipient = new IrisMessageContact()
-                .setId("replace_this_dummy_recipient_id")
-                .setName("replace_this_dummy_recipient_name");
+        IrisMessageHdContact hdAuthor = this.irisMessageClient.getOwnIrisMessageHdContact();
+        IrisMessageHdContact hdRecipient = this.irisMessageClient.findIrisMessageHdContactById(messageInsert.getHdRecipient());
         IrisMessage message = new IrisMessage();
         message
-                .setAuthorHd(author)
-                .setRecipientHd(recipient)
-                .setSubject(irisMessageInsert.getSubject())
-                .setBody(irisMessageInsert.getBody())
+                .setHdAuthor(hdAuthor)
+                .setHdRecipient(hdRecipient)
+                .setSubject(messageInsert.getSubject())
+                .setBody(messageInsert.getBody())
                 .setFolder(outboxRoot)
                 .setIsRead(true)
                 .setHasAttachments(false);
-        messageRepository.save(message);
+        return messageRepository.save(message);
     }
 }

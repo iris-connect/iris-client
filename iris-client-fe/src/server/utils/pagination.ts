@@ -40,7 +40,7 @@ export const queriedPage = <T, Q extends Partial<DataQuery>>(
   // @todo: add search functionality if possible
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { page, size, sort, search, ...filters } = query;
-  const qPage = Number(page || 1) - 1;
+  const qPage = Number(page || 0);
   const qSize = Number(size || DEFAULT_PAGE_SIZE);
   const qSort = (sort || "").split(",");
   const sortedItems =

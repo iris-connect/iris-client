@@ -11,7 +11,7 @@
         <v-card-text>
           <v-select
             v-if="recipients"
-            v-model="form.model.recipientHd"
+            v-model="form.model.hdRecipient"
             label="Empfänger"
             :items="recipients"
             :rules="validationRules.defined"
@@ -84,7 +84,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { IrisMessageInsert, IrisMessageContact } from "@/api";
+import { IrisMessageInsert, IrisMessageHdContact } from "@/api";
 import rules from "@/common/validation-rules";
 import _unionBy from "lodash/unionBy";
 import { ErrorMessage } from "@/utils/axios";
@@ -115,7 +115,7 @@ export default class IrisMessageCreateView extends Vue {
     model: {
       subject: "",
       body: "",
-      recipientHd: "",
+      hdRecipient: "",
       attachments: [],
     },
     valid: false,
@@ -143,7 +143,7 @@ export default class IrisMessageCreateView extends Vue {
     this.form.model.attachments = [];
   }
 
-  get recipients(): IrisMessageContact[] {
+  get recipients(): IrisMessageHdContact[] {
     return this.$store.state.irisMessageCreate.contacts;
   }
 

@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface IrisMessageRepository extends JpaRepository<IrisMessage, IrisMessage.IrisMessageIdentifier> {
 
-    @Query("select count(m) from IrisMessage m where (m.isRead is null or m.isRead = false) and (:folder is null or m.folder = :folder)")
-    int getCountUnread(String folder);
+    @Query("select count(m) from IrisMessage m where (m.isRead is null or m.isRead = false) and m.folder.id = :folderId")
+    int getCountUnreadByFolderId(IrisMessageFolder.IrisMessageFolderIdentifier folderId);
+
+    int countByIsReadFalseOrIsReadIsNull();
 
     Page<IrisMessage> findAllByFolderId(IrisMessageFolder.IrisMessageFolderIdentifier folder, Pageable pageable);
 

@@ -37,7 +37,7 @@ import {
 import {
   dummyIrisMessageFolders,
   dummyIrisMessageList,
-  dummyIrisMessageContacts,
+  dummyIrisMessageHdContacts,
   getDummyMessageFromRequest,
 } from "@/server/data/dummy-iris-messages";
 
@@ -315,6 +315,17 @@ export function makeMockAPIServer() {
         return authResponse(request, message);
       });
 
+      this.patch("/iris-messages/:messageId", (schema, request) => {
+        const message = dummyIrisMessageList.find((msg) => {
+          if (msg.id === request.params.messageId) {
+            msg.isRead = true;
+            return true;
+          }
+          return false;
+        });
+        return authResponse(request, message);
+      });
+
       this.post("/iris-messages", (schema, request) => {
         try {
           if (validateAuthHeader(request)) {
@@ -330,8 +341,8 @@ export function makeMockAPIServer() {
         return authResponse(request, dummyIrisMessageFolders);
       });
 
-      this.get("/iris-messages/contacts", (schema, request) => {
-        return authResponse(request, dummyIrisMessageContacts);
+      this.get("/iris-messages/hd-contacts", (schema, request) => {
+        return authResponse(request, dummyIrisMessageHdContacts);
       });
 
       this.get("/iris-messages/count/unread", (schema, request) => {
