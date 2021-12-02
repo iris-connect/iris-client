@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import com.googlecode.jsonrpc4j.JsonRpcClientException;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
 @Service
@@ -23,7 +24,7 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 @Slf4j
 public class CentralConfigurationService {
 
-	private static final Duration WAITING = Duration.ofSeconds(5);
+	private static final Duration CACHING_TIME = Duration.ofSeconds(5);
 
 	private final BackendServiceProperties bsProperties;
 	private final JsonRpcHttpClient epsRpcClient;
@@ -64,21 +65,30 @@ public class CentralConfigurationService {
 		if (Arrays.stream(env.getActiveProfiles())
 				.anyMatch(it -> equalsAny(it, "local", "dev_env", "inttest"))) {
 
-			config = new Configuration("000", "proxy.test-gesundheitsamt.de", RandomStringUtils.randomAlphanumeric(32),
+			// Fallback for local dev and integration tests without a running backend system. However, an existing OS can also
+			// overwrite the default during development.
+			config = new Configuration("000", "proxy.dev.test-gesundheitsamt.de", RandomStringUtils.randomAlphanumeric(32),
 					RandomStringUtils.randomAlphanumeric(32), 40, 40);
 			ignoreConnectionErrors = true;
-
 		}
 
-		if (!StringUtils.equals(proxyProperties.getTargetSubdomain(), getProxyUrl())) {
-			throw new CentralConfigurationException(
-					"The proxy target subdomain is configured differend in this client (via environment variable) and in backend service (by the IRIS team)!");
+		try {
+			if (!StringUtils.equals(proxyProperties.getTargetSubdomain(), getProxyUrl())) {
+				throw new CentralConfigurationException(
+						"The proxy target subdomain is configured differend in this client (via environment variable) and in backend service (by the IRIS team)!");
+			}
+		} catch (MissingCentralConfigurationException e) {
+
+			// We ignore this exception at startup time so that the clients in the health departments continue to start even
+			// if the central configuration is not yet complete. The functions for index cases are currently not yet enabled.
+			log.warn(e.getLocalizedMessage());
 		}
 	}
 
 	private Configuration fetchConfig() {
 
-		if (lastFetch.plus(WAITING).isAfter(Instant.now())) {
+		// Use the cache if the CACHING_TIME has not expired yet.
+		if (lastFetch.plus(CACHING_TIME).isAfter(Instant.now())) {
 			return config;
 		}
 
@@ -91,17 +101,28 @@ public class CentralConfigurationService {
 
 			return config;
 
-		} catch (Throwable e) {
+		} catch (JsonRpcClientException e) {
 
-			if (ignoreConnectionErrors) {
-
-				log.debug("Ignore connection error of central connection service.");
-
-				return config;
-
+			if (e.getCode() == -1111) {
+				throw new MissingCentralConfigurationException(e.getLocalizedMessage());
 			} else {
-				throw new CentralConfigurationException("Can't fetch the central configuration from backend service!", e);
+				return handleException(e);
 			}
+
+		} catch (Throwable e) {
+			return handleException(e);
+		}
+	}
+
+	private Configuration handleException(Throwable e) {
+		if (ignoreConnectionErrors) {
+
+			log.debug("Ignore connection error of central connection service.");
+
+			return config;
+
+		} else {
+			throw new CentralConfigurationException("Can't fetch the central configuration from backend service!", e);
 		}
 	}
 
@@ -118,6 +139,15 @@ public class CentralConfigurationService {
 
 		CentralConfigurationException(String message, Throwable cause) {
 			super(message, cause);
+		}
+	}
+
+	class MissingCentralConfigurationException extends CentralConfigurationException {
+
+		private static final long serialVersionUID = 918855771353238027L;
+
+		MissingCentralConfigurationException(String message) {
+			super(message);
 		}
 	}
 }
