@@ -92,7 +92,9 @@ export default class IrisMessageListView extends Vue {
   @Watch("query", { immediate: true, deep: true })
   onQueryChange(newValue: IrisMessageQuery) {
     this.updateRoute(newValue);
-    this.$store.dispatch("irisMessageList/fetchMessages", newValue);
+    if (newValue.folder) {
+      this.$store.dispatch("irisMessageList/fetchMessages", newValue);
+    }
   }
 
   get messageList(): IrisMessageFolder[] | null {
