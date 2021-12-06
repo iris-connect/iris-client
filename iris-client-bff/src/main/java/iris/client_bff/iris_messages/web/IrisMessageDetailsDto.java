@@ -5,6 +5,7 @@ import iris.client_bff.iris_messages.IrisMessageHdContact;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 
 @Value
 public class IrisMessageDetailsDto {
@@ -16,9 +17,11 @@ public class IrisMessageDetailsDto {
     private IrisMessageHdContact hdRecipient;
     private Instant createdAt;
     private Boolean isRead;
-    private Boolean hasAttachments2;
+    private List<IrisMessageFileDto> attachments;
+    private Boolean hasAttachments;
 
     public static IrisMessageDetailsDto fromEntity(IrisMessage message) {
+        List<IrisMessageFileDto> attachments = message.getAttachments().stream().map(IrisMessageFileDto::fromEntity).toList();
         return new IrisMessageDetailsDto(
                 message.getId().toString(),
                 message.getSubject(),
@@ -27,7 +30,8 @@ public class IrisMessageDetailsDto {
                 message.getHdRecipient(),
                 message.getMetadata().getCreated(),
                 message.getIsRead(),
-                message.getHasAttachments()
+                attachments,
+                attachments.size() > 0
         );
     }
 }

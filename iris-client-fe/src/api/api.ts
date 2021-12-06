@@ -1915,8 +1915,8 @@ export type IrisMessageQuery = DataQuery & {
 export type PageIrisMessages = Page<IrisMessage>;
 
 export interface IrisMessageAttachment {
+  id: string;
   name: string;
-  link: string;
   type?: string;
 }
 
@@ -2305,7 +2305,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("irisMessagesPost", "data", data);
     return this.apiRequest("POST", "/iris-messages", data, {
       ...options,
-      multipart: false,
+      multipart: true,
     });
   }
 
@@ -2360,5 +2360,17 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("irisMessagesSetIsRead", "messageId", messageId);
     const path = `/iris-messages/${encodeURIComponent(messageId)}`;
     return this.apiRequest("PATCH", path, { isRead: true }, options);
+  }
+
+  public irisMessageFileDownload(
+    fileId: string,
+    options?: RequestOptions
+  ): ApiResponse {
+    assertParamExists("irisMessageFileDownload", "fileId", fileId);
+    const path = `/iris-messages/files/${encodeURIComponent(fileId)}`;
+    return this.apiRequest("GET", path, null, {
+      ...options,
+      responseType: "blob",
+    });
   }
 }

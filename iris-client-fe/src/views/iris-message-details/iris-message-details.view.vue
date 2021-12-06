@@ -30,7 +30,7 @@
               <v-list-item
                 dense
                 :key="`item_${index}`"
-                @click="openAttachment(attachment.link)"
+                @click="openAttachment(attachment.id)"
               >
                 <v-list-item-icon>
                   <v-icon>mdi-download</v-icon>
@@ -40,7 +40,7 @@
                     {{ attachment.name }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                    {{ attachment.link }} ({{ attachment.type }})
+                    {{ attachment.type }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -139,9 +139,8 @@ export default class IrisMessageDetailsView extends Vue {
       );
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  openAttachment(link: string) {
-    // @todo: handle link opening
+  openAttachment(id: string) {
+    this.$store.dispatch("irisMessageDetails/downloadAttachment", id);
   }
   goBack() {
     if (this.prevLocation === "iris-message-list") {

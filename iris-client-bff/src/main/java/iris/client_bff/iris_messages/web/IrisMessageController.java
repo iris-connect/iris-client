@@ -7,12 +7,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +28,7 @@ public class IrisMessageController {
 
     private static final String FOLDER_ID = "folderId";
     private static final String MESSAGE_ID = "messageId";
+    private static final String FILE_ID = "fileId";
 
     private static final String FIELD_SEARCH = "search";
 
@@ -46,12 +50,16 @@ public class IrisMessageController {
         return this.irisMessageService.search(folder, search, pageable).map(IrisMessageListItemDto::fromEntity);
     }
 
-    @PostMapping
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<IrisMessageDetailsDto> createMessage(@Valid @RequestBody IrisMessageInsert irisMessageInsert) {
+    public ResponseEntity<IrisMessageDetailsDto> createMessage(@Valid @ModelAttribute IrisMessageInsert irisMessageInsert) {
         this.validateIrisMessageInsert(irisMessageInsert);
-        IrisMessage message = irisMessageService.createMessage(irisMessageInsert);
-        return ResponseEntity.ok(IrisMessageDetailsDto.fromEntity(message));
+        try {
+            IrisMessage message = irisMessageService.createMessage(irisMessageInsert);
+            return ResponseEntity.ok(IrisMessageDetailsDto.fromEntity(message));
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+        }
     }
 
     private void validateIrisMessageInsert(IrisMessageInsert irisMessageInsert) {
@@ -102,6 +110,22 @@ public class IrisMessageController {
     public ResponseEntity<List<IrisMessageFolderDto>> getMessageFolders() {
         List<IrisMessageFolder> irisMessageFolders = irisMessageService.getFolders();
         return ResponseEntity.ok(IrisMessageFolderDto.fromEntity(irisMessageFolders));
+    }
+
+    @GetMapping("/files/{id}")
+    public ResponseEntity<byte[]> getMessageFile(@PathVariable UUID id) {
+        this.validateUUID(id, FILE_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FILE_ID);
+        Optional<IrisMessageFile> file = this.irisMessageService.getFile(id);
+        if (file.isPresent()) {
+            IrisMessageFile messageFile = file.get();
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + messageFile.getName() + "\"")
+                    .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION)
+                    .contentLength(messageFile.getContent().length)
+                    .contentType(MediaType.valueOf(messageFile.getContentType()))
+                    .body(messageFile.getContent());
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/hd-contacts")
