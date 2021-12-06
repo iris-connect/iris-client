@@ -84,7 +84,11 @@ type MessageData = {
   },
   beforeRouteEnter(to, from, next) {
     store.dispatch("irisMessageDetails/fetchMessage", to.params.messageId);
-    next();
+    next((vm) => {
+      if (typeof from.name === "string") {
+        (vm as IrisMessageDetailsView).prevLocation = from.name;
+      }
+    });
   },
   beforeRouteLeave(to, from, next) {
     store.commit("irisMessageDetails/reset");
@@ -92,6 +96,7 @@ type MessageData = {
   },
 })
 export default class IrisMessageDetailsView extends Vue {
+  prevLocation: null | string = null;
   get message(): MessageData {
     const message: IrisMessageDetails | null =
       this.$store.state.irisMessageDetails.message;
@@ -139,6 +144,9 @@ export default class IrisMessageDetailsView extends Vue {
     // @todo: handle link opening
   }
   goBack() {
+    if (this.prevLocation === "iris-message-list") {
+      return this.$router.back();
+    }
     this.$router.replace({ name: "iris-message-list" });
   }
 }
