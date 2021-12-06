@@ -9,7 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +26,7 @@ public class IrisMessageService {
 
     private final IrisMessageRepository messageRepository;
     private final IrisMessageFolderRepository folderRepository;
+    private final IrisMessageFileRepository fileRepository;
     private final HibernateSearcher searcher;
     private final IrisMessageClient irisMessageClient;
 
@@ -61,16 +65,33 @@ public class IrisMessageService {
         return this.messageRepository.save(message);
     }
 
+    public Optional<IrisMessageFile> getFile(UUID fileId) {
+        return this.fileRepository.findById(IrisMessageFile.IrisMessageFileIdentifier.of(fileId));
+    }
+
     public List<IrisMessageHdContact> getHdContacts() {
         return this.irisMessageClient.getIrisMessageHdContacts();
     }
 
-    //@todo: implement epsClient message create functionality and save message only if eps call was successful
-    public IrisMessage createMessage(IrisMessageInsert messageInsert) {
+    public IrisMessage createMessage(IrisMessageInsert messageInsert) throws IOException {
         IrisMessageFolder outboxRoot = folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
         IrisMessageHdContact hdAuthor = this.irisMessageClient.getOwnIrisMessageHdContact();
         IrisMessageHdContact hdRecipient = this.irisMessageClient.findIrisMessageHdContactById(messageInsert.getHdRecipient());
+
         IrisMessage message = new IrisMessage();
+
+        List<IrisMessageFile> files = new ArrayList<>();
+        if (messageInsert.getAttachments() != null) {
+            for ( MultipartFile file : messageInsert.getAttachments() ) {
+                IrisMessageFile messageFile = new IrisMessageFile()
+                        .setMessage(message)
+                        .setContent(file.getBytes())
+                        .setContentType(file.getContentType())
+                        .setName(file.getOriginalFilename());
+                files.add(messageFile);
+            }
+        }
+
         message
                 .setHdAuthor(hdAuthor)
                 .setHdRecipient(hdRecipient)
@@ -78,7 +99,10 @@ public class IrisMessageService {
                 .setBody(messageInsert.getBody())
                 .setFolder(outboxRoot)
                 .setIsRead(true)
-                .setHasAttachments(false);
+                .setAttachments(files);
+
+        //@todo: implement epsClient message create functionality and save message only if eps call was successful
+
         return messageRepository.save(message);
     }
 }

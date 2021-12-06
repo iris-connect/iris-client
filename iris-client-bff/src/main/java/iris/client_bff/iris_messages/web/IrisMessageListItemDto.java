@@ -25,7 +25,7 @@ public class IrisMessageListItemDto {
                 message.getHdRecipient(),
                 message.getMetadata().getCreated(),
                 message.getIsRead(),
-                message.getHasAttachments()
+                message.getAttachments().size() > 0
         );
     }
 }

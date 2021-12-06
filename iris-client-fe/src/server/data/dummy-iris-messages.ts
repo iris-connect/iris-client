@@ -82,14 +82,14 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     hasAttachments: true,
     attachments: [
       {
+        id: "testlink",
         name: "anhang 1",
         type: "pdf",
-        link: "testlink",
       },
       {
+        id: "testlink_2",
         name: "Liste 2",
         type: "csv",
-        link: "testlink_2",
       },
     ],
   },
@@ -163,9 +163,9 @@ export const getDummyMessageFromRequest = (
     attachments: attachments.map((attachment) => {
       const a = attachment as File;
       return {
+        id: new Date().getTime() + "",
         name: a.name,
         type: a.type,
-        link: a.name,
       };
     }),
   };

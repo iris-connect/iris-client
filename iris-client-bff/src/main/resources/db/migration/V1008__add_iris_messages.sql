@@ -35,10 +35,22 @@ CREATE TABLE  iris_message (
     hd_recipient_id varchar(200) NOT NULL,
     hd_recipient_name varchar(200) NOT NULL,
     is_read bool NULL,
-    has_attachments bool NULL,
     created timestamp NOT NULL,
     last_modified timestamp NOT NULL,
     CONSTRAINT iris_message_pkey PRIMARY KEY (id),
     CONSTRAINT iris_message_folder_fk FOREIGN KEY (folder_id) REFERENCES iris_message_folder(id)
 );
 CREATE INDEX iris_message_id ON iris_message (id);
+
+CREATE TABLE  iris_message_file (
+    id uuid NOT NULL,
+    message_id uuid NOT NULL,
+    name varchar(255) NOT NULL,
+    content blob NOT NULL,
+    content_type varchar(50) NULL,
+    created timestamp NOT NULL,
+    last_modified timestamp NOT NULL,
+    CONSTRAINT iris_message_file_pkey PRIMARY KEY (id),
+    CONSTRAINT iris_message_fk FOREIGN KEY (message_id) REFERENCES iris_message(id)
+);
+CREATE INDEX iris_message_file_id ON iris_message_file (id);

@@ -4,6 +4,7 @@ import { Commit, Module } from "vuex";
 import { IrisMessageDetails } from "@/api";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
+import fileDownload from "@/utils/fileDownload";
 
 export type IrisMessageDetailsState = {
   message: IrisMessageDetails | null;
@@ -41,6 +42,7 @@ export interface IrisMessageDetailsModule
       { commit }: { commit: Commit },
       messageId: string
     ): Promise<void>;
+    downloadAttachment(context: unknown, fileId: string): Promise<void>;
   };
 }
 
@@ -104,6 +106,15 @@ const irisMessageDetails: IrisMessageDetailsModule = {
       } finally {
         commit("setMessageSaving", false);
       }
+    },
+    async downloadAttachment(context, fileId: string) {
+      //@todo: add error & loading handler
+      const response = await authClient.irisMessageFileDownload(fileId);
+      const fileName = response.headers["content-disposition"]
+        .split("filename=")[1]
+        .split(";")[0]
+        .replace(/['"]/g, "");
+      fileDownload.download(response.data, fileName);
     },
   },
 };

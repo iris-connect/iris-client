@@ -16,4 +16,6 @@ public class ErrorMessages {
 	public static final String PW_ERROR_MESSAGE = "The specified password does not follow the password policy (≥ 8 characters, no spaces, lowercase and uppercase letters, two numbers or special character [_-#()@§!$]).";
 	public static final String INVALID_IRIS_MESSAGE_ID = "Fehler: Nachrichten ID ist ungültig";
 	public static final String INVALID_IRIS_MESSAGE_FOLDER_ID = "Fehler: Nachrichten-Ordner ID ist ungültig";
+	public static final String INVALID_IRIS_MESSAGE_FILE_ID = "Fehler: Nachrichten Datei ID ist ungültig";
+	public static final String MAX_UPLOAD_FILE_SIZE = "Fehler: Die Maximalgröße für Dateien ist auf {{max}} beschränkt.";
 }
