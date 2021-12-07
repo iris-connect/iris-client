@@ -9,7 +9,7 @@
       <v-card>
         <v-card-title>Nachricht schreiben</v-card-title>
         <v-card-text>
-          <v-select
+          <v-autocomplete
             v-if="recipients"
             v-model="form.model.hdRecipient"
             label="Empfänger"
@@ -18,7 +18,7 @@
             :menu-props="{ contentClass: 'select-menu-recipient' }"
             item-text="name"
             item-value="id"
-          ></v-select>
+          ></v-autocomplete>
           <v-text-field
             v-model="form.model.subject"
             label="Betreff"
