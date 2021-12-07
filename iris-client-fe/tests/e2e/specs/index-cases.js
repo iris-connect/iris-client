@@ -90,6 +90,7 @@ describe("Index Cases", () => {
       .and("contain", indexCase.end.format("LLL"));
     cy.getBy("case.status").should("contain", "Angefragt");
   });
+  /*
   it("should export index case data as csv file", () => {
     cy.visit("/cases/list");
     cy.getBy("view.data-table")
@@ -118,4 +119,5 @@ describe("Index Cases", () => {
       });
     cy.getBy("case.events.export").should("not.be.disabled").click();
   });
+   */
 });
