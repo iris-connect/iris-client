@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.2.0-rc.5](https://github.com/iris-connect/iris-client/compare/v1.2.0-rc.4...v1.2.0-rc.5) (2021-12-07)
+
+
+### Bug Fixes
+
+* Increases burst and delay to allow a large number of status requests for the apps. ([9945be5](https://github.com/iris-connect/iris-client/commit/9945be5a3194de0214859535e161aac3e18de8a3)), closes [#500](https://github.com/iris-connect/iris-client/issues/500)
+
 # [1.2.0-rc.4](https://github.com/iris-connect/iris-client/compare/v1.2.0-rc.3...v1.2.0-rc.4) (2021-12-02)
 
 
