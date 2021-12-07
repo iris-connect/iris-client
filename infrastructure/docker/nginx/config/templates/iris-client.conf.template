@@ -34,8 +34,15 @@ server {
 
     location /api/ {
         # Two-stage limiting at a low rate, since critical features such as login reside here
+        # https://www.nginx.com/blog/rate-limiting-nginx/#Two-Stage-Rate-Limiting
         limit_req   zone=api burst=12 delay=8;
         proxy_pass  http://iris-client:8092/;
+    }
+
+    location /api/status/ {
+        # Increases burst and delay to allow a large number of status requests for the apps
+        limit_req   zone=api burst=100 delay=20;
+        proxy_pass  http://iris-client:8092/status/;
     }
 
     # SECURITY
