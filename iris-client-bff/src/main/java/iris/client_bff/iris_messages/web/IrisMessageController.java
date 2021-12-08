@@ -2,6 +2,8 @@ package iris.client_bff.iris_messages.web;
 
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.*;
+import iris.client_bff.iris_messages.IrisMessage;
+import iris.client_bff.iris_messages.IrisMessageFile;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,7 +46,7 @@ public class IrisMessageController {
             @RequestParam(required = false) String search,
             Pageable pageable
     ) {
-        this.validateUUID(folder, FOLDER_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FOLDER_ID);
+        this.validateUUID(folder, FOLDER_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FOLDER);
         this.validateField(search, FIELD_SEARCH);
         return this.irisMessageService.search(folder, search, pageable).map(IrisMessageListItemDto::fromEntity);
     }
@@ -55,16 +56,19 @@ public class IrisMessageController {
     public ResponseEntity<IrisMessageDetailsDto> createMessage(@Valid @ModelAttribute IrisMessageInsert irisMessageInsert) {
         this.validateIrisMessageInsert(irisMessageInsert);
         try {
-            IrisMessage message = irisMessageService.createMessage(irisMessageInsert);
+            IrisMessage message = irisMessageService.sendMessage(irisMessageInsert);
             return ResponseEntity.ok(IrisMessageDetailsDto.fromEntity(message));
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+        } catch (Throwable e) {
+            String errorMessage = e instanceof IrisMessageException
+                    ? ((IrisMessageException) e).getErrorMessage()
+                    : ErrorMessages.IRIS_MESSAGE_SUBMISSION;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         }
     }
 
     private void validateIrisMessageInsert(IrisMessageInsert irisMessageInsert) {
         if (irisMessageInsert == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.IRIS_MESSAGE_SUBMISSION);
         }
         this.validateField(irisMessageInsert.getHdRecipient(), FIELD_HD_RECIPIENT);
         this.validateField(irisMessageInsert.getSubject(), FIELD_SUBJECT);
@@ -114,7 +118,7 @@ public class IrisMessageController {
 
     @GetMapping("/files/{id}")
     public ResponseEntity<byte[]> getMessageFile(@PathVariable UUID id) {
-        this.validateUUID(id, FILE_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FILE_ID);
+        this.validateUUID(id, FILE_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FILE);
         Optional<IrisMessageFile> file = this.irisMessageService.getFile(id);
         if (file.isPresent()) {
             IrisMessageFile messageFile = file.get();
@@ -129,9 +133,13 @@ public class IrisMessageController {
     }
 
     @GetMapping("/hd-contacts")
-    public ResponseEntity<List<IrisMessageHdContact>> getMessageContacts() {
-        List<IrisMessageHdContact> irisMessageContacts = irisMessageService.getHdContacts();
-        return ResponseEntity.ok(irisMessageContacts);
+    public ResponseEntity<List<IrisMessageHdContact>> getMessageHdContacts() {
+        try {
+            List<IrisMessageHdContact> irisMessageContacts = irisMessageService.getHdContacts();
+            return ResponseEntity.ok(irisMessageContacts);
+        } catch (Throwable e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.MISSING_IRIS_MESSAGE_HD_CONTACTS);
+        }
     }
 
     @GetMapping("/count/unread")
@@ -141,7 +149,7 @@ public class IrisMessageController {
         if (folder == null) {
             return ResponseEntity.ok(irisMessageService.getCountUnread());
         }
-        this.validateUUID(folder, FOLDER_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FOLDER_ID);
+        this.validateUUID(folder, FOLDER_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FOLDER);
         return ResponseEntity.ok(irisMessageService.getCountUnreadByFolderId(folder));
     }
 

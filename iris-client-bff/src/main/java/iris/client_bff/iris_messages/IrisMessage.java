@@ -16,9 +16,12 @@ import java.util.UUID;
 @Table(name = "iris_message")
 @Indexed
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "folder")
 @NoArgsConstructor
 public class IrisMessage extends Aggregate<IrisMessage, IrisMessage.IrisMessageIdentifier> {
+
+    public static final int SUBJECT_MAX_LENGTH = 500;
+    public static final int BODY_MAX_LENGTH = 6000;
 
     {
         id = IrisMessage.IrisMessageIdentifier.of(UUID.randomUUID());

@@ -15,6 +15,10 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IrisMessageHdContact {
+
+    public static final int ID_MAX_LENGTH = 255;
+    public static final int NAME_MAX_LENGTH = 255;
+
     private String id;
     @KeywordField(sortable = Sortable.YES, normalizer = "german")
     private String name;

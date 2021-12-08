@@ -14,7 +14,7 @@ import java.util.UUID;
 @Table(name = "iris_message_folder")
 @SecondaryTable(name = "iris_message_folder_default")
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "messages")
 @NoArgsConstructor
 public class IrisMessageFolder extends Aggregate<IrisMessageFolder, IrisMessageFolder.IrisMessageFolderIdentifier> {
 

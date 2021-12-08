@@ -1,7 +1,7 @@
 package iris.client_bff.iris_messages;
 
 import iris.client_bff.core.utils.HibernateSearcher;
-import iris.client_bff.iris_messages.eps.IrisMessageClient;
+import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -9,10 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,7 +24,9 @@ public class IrisMessageService {
     private final IrisMessageFolderRepository folderRepository;
     private final IrisMessageFileRepository fileRepository;
     private final HibernateSearcher searcher;
-    private final IrisMessageClient irisMessageClient;
+    private final EPSIrisMessageClient irisMessageClient;
+
+    private final IrisMessageBuilder messageBuilder;
 
     public Optional<IrisMessage> findById(UUID messageId) {
         return messageRepository.findById(IrisMessage.IrisMessageIdentifier.of(messageId));
@@ -69,40 +67,24 @@ public class IrisMessageService {
         return this.fileRepository.findById(IrisMessageFile.IrisMessageFileIdentifier.of(fileId));
     }
 
-    public List<IrisMessageHdContact> getHdContacts() {
+    public List<IrisMessageHdContact> getHdContacts() throws IrisMessageException {
         return this.irisMessageClient.getIrisMessageHdContacts();
     }
 
-    public IrisMessage createMessage(IrisMessageInsert messageInsert) throws IOException {
-        IrisMessageFolder outboxRoot = folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
-        IrisMessageHdContact hdAuthor = this.irisMessageClient.getOwnIrisMessageHdContact();
-        IrisMessageHdContact hdRecipient = this.irisMessageClient.findIrisMessageHdContactById(messageInsert.getHdRecipient());
+    public IrisMessage sendMessage(IrisMessageInsert messageInsert) throws IrisMessageException {
 
-        IrisMessage message = new IrisMessage();
+        IrisMessage message = this.messageBuilder.build(messageInsert);
 
-        List<IrisMessageFile> files = new ArrayList<>();
-        if (messageInsert.getAttachments() != null) {
-            for ( MultipartFile file : messageInsert.getAttachments() ) {
-                IrisMessageFile messageFile = new IrisMessageFile()
-                        .setMessage(message)
-                        .setContent(file.getBytes())
-                        .setContentType(file.getContentType())
-                        .setName(file.getOriginalFilename());
-                files.add(messageFile);
-            }
-        }
+        this.irisMessageClient.createIrisMessage(message);
 
-        message
-                .setHdAuthor(hdAuthor)
-                .setHdRecipient(hdRecipient)
-                .setSubject(messageInsert.getSubject())
-                .setBody(messageInsert.getBody())
-                .setFolder(outboxRoot)
-                .setIsRead(true)
-                .setAttachments(files);
-
-        //@todo: implement epsClient message create functionality and save message only if eps call was successful
-
-        return messageRepository.save(message);
+        return this.messageRepository.save(message);
     }
+
+    public void receiveMessage(IrisMessagePayload messagePayload) throws IrisMessageException {
+
+        IrisMessage message = this.messageBuilder.build(messagePayload);
+
+        this.messageRepository.save(message);
+    }
+
 }

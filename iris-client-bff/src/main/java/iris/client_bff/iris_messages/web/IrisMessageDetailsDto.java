@@ -1,11 +1,13 @@
 package iris.client_bff.iris_messages.web;
 
 import iris.client_bff.iris_messages.IrisMessage;
+import iris.client_bff.iris_messages.IrisMessageFile;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import lombok.*;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Value
 public class IrisMessageDetailsDto {
@@ -17,11 +19,11 @@ public class IrisMessageDetailsDto {
     private IrisMessageHdContact hdRecipient;
     private Instant createdAt;
     private Boolean isRead;
-    private List<IrisMessageFileDto> attachments;
+    private List<Attachment> attachments;
     private Boolean hasAttachments;
 
     public static IrisMessageDetailsDto fromEntity(IrisMessage message) {
-        List<IrisMessageFileDto> attachments = message.getAttachments().stream().map(IrisMessageFileDto::fromEntity).toList();
+        List<Attachment> attachments = Attachment.fromEntity(message.getAttachments());
         return new IrisMessageDetailsDto(
                 message.getId().toString(),
                 message.getSubject(),
@@ -34,4 +36,25 @@ public class IrisMessageDetailsDto {
                 attachments.size() > 0
         );
     }
+
+    @Value
+    public static class Attachment {
+
+        private String id;
+        private String name;
+        private String type;
+
+        public static List<Attachment> fromEntity(List<IrisMessageFile> files) {
+            return files.stream().map(Attachment::fromEntity).collect(Collectors.toList());
+        }
+
+        public static Attachment fromEntity(IrisMessageFile file) {
+            return new Attachment(
+                    file.getId().toString(),
+                    file.getName(),
+                    file.getContentType()
+            );
+        }
+    }
+
 }
