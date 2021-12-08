@@ -1,5 +1,7 @@
 package iris.client_bff.iris_messages;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import java.io.Serial;
 
 public class IrisMessageException extends RuntimeException {
@@ -10,7 +12,15 @@ public class IrisMessageException extends RuntimeException {
         super("Call to '" + failedMethod + "' failed", cause);
     }
 
+    public IrisMessageException(String message) {
+        super(message);
+    }
+
     public IrisMessageException(Throwable cause) {
         super(cause);
+    }
+
+    public String getErrorMessage() {
+        return ExceptionUtils.getRootCause(this).getMessage();
     }
 }

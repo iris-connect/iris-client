@@ -1,6 +1,7 @@
 package iris.client_bff.iris_messages;
 
 import iris.client_bff.core.Aggregate;
+import iris.client_bff.core.Id;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,6 +15,9 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class IrisMessageFile extends Aggregate<IrisMessageFile, IrisMessageFile.IrisMessageFileIdentifier> {
+
+    public static final int NAME_MAX_LENGTH = 255;
+    public static final int CONTENT_TYPE_MAX_LENGTH = 50;
 
     {
         id = IrisMessageFileIdentifier.of(UUID.randomUUID());
@@ -37,7 +41,7 @@ public class IrisMessageFile extends Aggregate<IrisMessageFile, IrisMessageFile.
     @EqualsAndHashCode
     @RequiredArgsConstructor(staticName = "of")
     @NoArgsConstructor(force = true, access = AccessLevel.PROTECTED)
-    public static class IrisMessageFileIdentifier implements iris.client_bff.core.Id, Serializable {
+    public static class IrisMessageFileIdentifier implements Id, Serializable {
 
         @Serial
         private static final long serialVersionUID = -7602440129090196288L;

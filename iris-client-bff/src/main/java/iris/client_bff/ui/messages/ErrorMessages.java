@@ -14,8 +14,12 @@ public class ErrorMessages {
 	public static final String INVALID_INPUT_STRING = "INVALID";
 	public static final String MISSING_REQUIRED_INPUT = "Die übergebenen Daten dürfen nicht leer sein";
 	public static final String PW_ERROR_MESSAGE = "The specified password does not follow the password policy (≥ 8 characters, no spaces, lowercase and uppercase letters, two numbers or special character [_-#()@§!$]).";
+	public static final String IRIS_MESSAGE_SUBMISSION = "Fehler: Nachricht konnte nicht gesendet werden";
 	public static final String INVALID_IRIS_MESSAGE_ID = "Fehler: Nachrichten ID ist ungültig";
-	public static final String INVALID_IRIS_MESSAGE_FOLDER_ID = "Fehler: Nachrichten-Ordner ID ist ungültig";
-	public static final String INVALID_IRIS_MESSAGE_FILE_ID = "Fehler: Nachrichten Datei ID ist ungültig";
+	public static final String INVALID_IRIS_MESSAGE_RECIPIENT = "Fehler: Ungültiger Empfänger";
+	public static final String MISSING_IRIS_MESSAGE_HD_CONTACTS = "Fehler: Gesundheitsamt-Kontakte konnten nicht geladen werden.";
+	public static final String INVALID_IRIS_MESSAGE_FOLDER = "Fehler: Nachrichten-Ordner ist ungültig";
+	public static final String INVALID_IRIS_MESSAGE_FILE = "Fehler: Nachrichten Datei ist ungültig";
 	public static final String MAX_UPLOAD_FILE_SIZE = "Fehler: Die Maximalgröße für Dateien ist auf {{max}} beschränkt.";
+
 }
