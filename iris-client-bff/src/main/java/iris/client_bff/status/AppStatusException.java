@@ -1,21 +1,13 @@
 package iris.client_bff.status;
 
-import lombok.EqualsAndHashCode;
-import lombok.Value;
-
 /**
  * @author Jens Kutzsche
  */
-@Value
-@EqualsAndHashCode(callSuper = true)
 public class AppStatusException extends RuntimeException {
 
-	private static final long serialVersionUID = -7919796135106115932L;
+	private static final long serialVersionUID = 3580183974567793366L;
 
-	boolean local;
-
-	public AppStatusException(String message, boolean local) {
+	public AppStatusException(String message) {
 		super(message);
-		this.local = local;
 	}
 }
