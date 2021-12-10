@@ -47,6 +47,9 @@ const IndexTrackingSubmissionUrlCopyProps = Vue.extend({
   },
 });
 
+/**
+ * @deprecated
+ */
 @Component
 export default class IndexTrackingSubmissionUrlCopy extends IndexTrackingSubmissionUrlCopyProps {
   copyFeedbackMessage = "";

@@ -78,6 +78,9 @@ const IndexTrackingSubmissionUrlProps = Vue.extend({
   },
 });
 
+/**
+ * @deprecated
+ */
 @Component({
   components: {
     IndexTrackingSubmissionUrlCopy,
