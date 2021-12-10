@@ -1,7 +1,7 @@
 package iris.client_bff.iris_messages.eps;
 
 import iris.client_bff.iris_messages.IrisMessageException;
-import iris.client_bff.iris_messages.IrisMessagePayload;
+import iris.client_bff.iris_messages.IrisMessageTransfer;
 import iris.client_bff.iris_messages.IrisMessageService;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class IrisMessageDataControllerImpl implements IrisMessageDataController {
 
-    private final IrisMessagePayloadDefuse messagePayloadDefuse;
+    private final IrisMessageTransferDefuse messageTransferDefuse;
 
     //@todo: make it final as soon as the work around is removed
     private IrisMessageService irisMessageService;
@@ -31,12 +31,12 @@ public class IrisMessageDataControllerImpl implements IrisMessageDataController 
     }
 
     @Override
-    public void createIrisMessage(IrisMessagePayload message) throws ResponseStatusException {
-        if (message == null) {
+    public void createIrisMessage(IrisMessageTransfer messageTransfer) throws ResponseStatusException {
+        if (messageTransfer == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.IRIS_MESSAGE_SUBMISSION);
         }
         try {
-            this.irisMessageService.receiveMessage(this.messagePayloadDefuse.defuse(message));
+            this.irisMessageService.receiveMessage(this.messageTransferDefuse.defuse(messageTransfer));
         } catch (IrisMessageException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getErrorMessage());
         }

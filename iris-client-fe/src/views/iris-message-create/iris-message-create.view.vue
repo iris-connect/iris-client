@@ -10,7 +10,6 @@
         <v-card-title>Nachricht schreiben</v-card-title>
         <v-card-text>
           <v-autocomplete
-            v-if="recipients"
             v-model="form.model.hdRecipient"
             label="Empfänger"
             :items="recipients"
@@ -18,12 +17,15 @@
             :menu-props="{ contentClass: 'select-menu-recipient' }"
             item-text="name"
             item-value="id"
+            data-test="hdRecipient"
+            :loading="recipientsLoading"
           ></v-autocomplete>
           <v-text-field
             v-model="form.model.subject"
             label="Betreff"
             :rules="validationRules.sanitisedAndDefined"
             maxlength="50"
+            data-test="subject"
           ></v-text-field>
           <v-textarea
             v-model="form.model.body"
@@ -32,6 +34,7 @@
             rows="5"
             value=""
             :rules="validationRules.sanitisedAndDefined"
+            data-test="body"
           ></v-textarea>
           <v-file-input
             label="Datei(en) anfügen"
@@ -39,6 +42,7 @@
             @change="addAttachments"
             @click:clear="clearAttachments"
             multiple
+            data-test="attachments"
           >
             <template v-slot:selection="{ index, text }">
               <v-chip
@@ -47,6 +51,7 @@
                 color="blue"
                 close
                 @click:close="removeAttachment(index)"
+                data-test="attachments.remove"
               >
                 {{ text }}
               </v-chip>
@@ -145,6 +150,10 @@ export default class IrisMessageCreateView extends Vue {
 
   get recipients(): IrisMessageHdContact[] {
     return this.$store.state.irisMessageCreate.contacts;
+  }
+
+  get recipientsLoading(): boolean {
+    return this.$store.state.irisMessageCreate.contactsLoading;
   }
 
   get validationRules(): Record<string, Array<unknown>> {

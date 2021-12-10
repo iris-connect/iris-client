@@ -1,7 +1,11 @@
 <template>
   <div>
     <div v-if="!root" class="d-flex align-center">
-      <v-icon :disabled="!hasItems" @click="open = !open">
+      <v-icon
+        :disabled="!hasItems"
+        @click="open = !open"
+        data-test="toggle.children"
+      >
         {{ showItems ? "mdi-folder-open" : "mdi-folder" }}
       </v-icon>
       <v-btn
@@ -9,6 +13,7 @@
         text
         :input-value="value === item.id"
         @click="handleSelect(item.id)"
+        :data-test="`select.${item[dataTestKey] || 'item'}`"
       >
         {{ item.name }}
       </v-btn>
@@ -21,6 +26,7 @@
         :value="value"
         @input="handleSelect"
         :root="false"
+        :data-test-key="dataTestKey"
       />
     </div>
   </div>
@@ -50,6 +56,10 @@ const DataTreeProps = Vue.extend({
     root: {
       type: Boolean,
       default: true,
+    },
+    dataTestKey: {
+      type: String,
+      default: "",
     },
   },
 });

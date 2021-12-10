@@ -192,6 +192,57 @@ Cypress.Commands.add("visitUserByAccessor", (accessor) => {
 });
 
 Cypress.Commands.add(
+  "selectOwnIrisMessageContact",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2) => {
+    // arg1 = selector, arg2 = menu
+    const menu = subject ? arg1 : arg2;
+    if (subject) {
+      cy.wrap(subject).as("field");
+    } else {
+      cy.getBy(arg1).as("field");
+    }
+    cy.get("@field")
+      .closest(".v-input")
+      .should("not.have.class", "v-input--is-loading");
+    cy.getApp().then((app) => {
+      const contacts = app.$store.state.irisMessageCreate.contacts;
+      const ownContact = contacts.find((c) => c.isOwn === true);
+      cy.wrap(ownContact).should("not.be.empty");
+      cy.get("@field").selectAutocompleteValue(menu, ownContact.name);
+    });
+    return cy.get("@field");
+  }
+);
+
+Cypress.Commands.add(
+  "selectAutocompleteValue",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2, arg3) => {
+    // arg1 = selector, arg2 = menu, arg3 = value
+    const menu = subject ? arg1 : arg2;
+    const value = subject ? arg2 : arg3;
+    if (subject) {
+      cy.wrap(subject).as("field");
+    } else {
+      cy.getBy(arg1).as("field");
+    }
+    cy.get("@field")
+      .type(value)
+      .closest(".v-input")
+      .click()
+      .closest("#app")
+      .find(menu)
+      .should("exist")
+      .within(() => {
+        cy.contains(value).as("value").click();
+      });
+    cy.get("@field").assertInputValid().should("have.value", value);
+    return cy.get("@field");
+  }
+);
+
+Cypress.Commands.add(
   "selectFieldValue",
   { prevSubject: "optional" },
   (subject, arg1, arg2, arg3) => {

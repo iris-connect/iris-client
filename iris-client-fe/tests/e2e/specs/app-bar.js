@@ -5,6 +5,7 @@ describe("AppBar", () => {
     dashboard: "/",
     "event-list": "/events/list",
     "index-list": "/cases/list",
+    "iris-message-list": "/iris-messages/list",
     about: "/about",
   };
   beforeEach(() => {

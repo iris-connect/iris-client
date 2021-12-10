@@ -71,6 +71,10 @@ public class IrisMessageService {
         return this.irisMessageClient.getIrisMessageHdContacts();
     }
 
+    public IrisMessageHdContact getOwnHdContact() {
+        return this.irisMessageClient.getOwnIrisMessageHdContact();
+    }
+
     public IrisMessage sendMessage(IrisMessageInsert messageInsert) throws IrisMessageException {
 
         IrisMessage message = this.messageBuilder.build(messageInsert);
@@ -80,9 +84,9 @@ public class IrisMessageService {
         return this.messageRepository.save(message);
     }
 
-    public void receiveMessage(IrisMessagePayload messagePayload) throws IrisMessageException {
+    public void receiveMessage(IrisMessageTransfer messageTransfer) throws IrisMessageException {
 
-        IrisMessage message = this.messageBuilder.build(messagePayload);
+        IrisMessage message = this.messageBuilder.build(messageTransfer);
 
         this.messageRepository.save(message);
     }

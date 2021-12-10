@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class IrisMessagePayload {
+public class IrisMessageTransfer {
 
     // we send the name & id as we do not know if the author`s health department is accessible by the recipient
     @Valid
@@ -34,8 +34,8 @@ public class IrisMessagePayload {
     @Valid
     private List<Attachment> attachments;
 
-    public static IrisMessagePayload fromEntity(IrisMessage message) {
-        return IrisMessagePayload.builder()
+    public static IrisMessageTransfer fromEntity(IrisMessage message) {
+        return IrisMessageTransfer.builder()
                 .hdAuthor(HdContact.fromEntity(message.getHdAuthor()))
                 .hdRecipient(HdContact.fromEntity(message.getHdRecipient()))
                 .subject(message.getSubject())

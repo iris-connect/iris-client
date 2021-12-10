@@ -4,7 +4,7 @@ import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageFile;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
-import iris.client_bff.iris_messages.IrisMessagePayload;
+import iris.client_bff.iris_messages.IrisMessageTransfer;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -16,12 +16,12 @@ import static iris.client_bff.ui.messages.ErrorMessages.INVALID_INPUT_STRING;
 
 @Service
 @RequiredArgsConstructor
-public class IrisMessagePayloadDefuse {
+public class IrisMessageTransferDefuse {
 
     private final ValidationHelper validationHelper;
 
-    IrisMessagePayload defuse(IrisMessagePayload message) {
-        return IrisMessagePayload.builder()
+    IrisMessageTransfer defuse(IrisMessageTransfer message) {
+        return IrisMessageTransfer.builder()
                 .hdAuthor(this.defuse(message.getHdAuthor(), "author"))
                 .hdRecipient(this.defuse(message.getHdRecipient(), "recipient"))
                 .subject(this.defuse(message.getSubject(), "subject", IrisMessage.SUBJECT_MAX_LENGTH))
@@ -30,18 +30,18 @@ public class IrisMessagePayloadDefuse {
                 .build();
     }
 
-    private IrisMessagePayload.HdContact defuse(IrisMessagePayload.HdContact contact, String field) {
-        return new IrisMessagePayload.HdContact()
+    private IrisMessageTransfer.HdContact defuse(IrisMessageTransfer.HdContact contact, String field) {
+        return new IrisMessageTransfer.HdContact()
                 .setId(this.defuse(contact.getId(), field + ".id", IrisMessageHdContact.ID_MAX_LENGTH))
                 .setName(this.defuse(contact.getName(), field + ".id", IrisMessageHdContact.NAME_MAX_LENGTH));
     }
 
-    private List<IrisMessagePayload.Attachment> defuse(List<IrisMessagePayload.Attachment> attachments) {
+    private List<IrisMessageTransfer.Attachment> defuse(List<IrisMessageTransfer.Attachment> attachments) {
         return attachments.stream().map(this::defuse).collect(Collectors.toList());
     }
 
-    private IrisMessagePayload.Attachment defuse(IrisMessagePayload.Attachment attachment) {
-        return new IrisMessagePayload.Attachment()
+    private IrisMessageTransfer.Attachment defuse(IrisMessageTransfer.Attachment attachment) {
+        return new IrisMessageTransfer.Attachment()
                 .setName(this.defuse(attachment.getName(), "attachment.name", IrisMessageFile.NAME_MAX_LENGTH))
                 .setContent(attachment.getContent())
                 .setContentType(this.defuse(attachment.getContentType(), "attachment.contentType", IrisMessageFile.CONTENT_TYPE_MAX_LENGTH));
