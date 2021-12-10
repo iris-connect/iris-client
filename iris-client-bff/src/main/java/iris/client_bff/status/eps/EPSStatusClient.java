@@ -19,6 +19,7 @@ import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -31,6 +32,7 @@ public class EPSStatusClient {
 
 	private final JsonRpcHttpClient epsRpcClient;
 	private final RPCClientConfig rpcClientConfig;
+	private final MessageSourceAccessor messages;
 
 	public Apps getAvailableApps() {
 
@@ -59,7 +61,7 @@ public class EPSStatusClient {
 
 			var ping = epsRpcClient.invoke(methodName, null, Ping.class);
 
-			var name = ping.serverInfo != null ? ping.serverInfo.name : null;
+			var name = ping.serverInfo != null ? ping.serverInfo.name : messages.getMessage("StatusService.unknown_app_name");
 
 			return new AppInfo(name, ping.version);
 
