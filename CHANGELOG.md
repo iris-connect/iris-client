@@ -1,5 +1,16 @@
 # Changelog
 
+# [1.2.0-rc.6](https://github.com/iris-connect/iris-client/compare/v1.2.0-rc.5...v1.2.0-rc.6) (2021-12-10)
+
+
+### Bug Fixes
+
+* apply removal of the index-tracking-url to e2e tests and remove the csv data export test for index-tracking as there is no data to export ([0a2a029](https://github.com/iris-connect/iris-client/commit/0a2a0299e9b312e7d653ad4ca2cc450494d6e669))
+* Avoids readable but not writable announcement.db files for EPS by an update from EPS version v0.1.68 to v0.1.69. ([0ab8c9e](https://github.com/iris-connect/iris-client/commit/0ab8c9e310d4aec259cdacc314c968262863fe9c))
+* extend data export sanitization whitelist to allow a wider range of Latin Letters ([4082e5f](https://github.com/iris-connect/iris-client/commit/4082e5fb80860ccc678e0f96d1b7d91809cc13a8))
+* Improves timeouts in Client and extends the checks for the status (EPS version) to better determine the status. ([af73f61](https://github.com/iris-connect/iris-client/commit/af73f61e5c2e6fd0376a33a153f6786843d6dedd)), closes [#509](https://github.com/iris-connect/iris-client/issues/509)
+* update cypress to fix vulnerable dependencies and update the other npm packages to the latest versions ([38dc6c7](https://github.com/iris-connect/iris-client/commit/38dc6c7145bdb232e2d0c176890c70dc7c4d3031)), closes [#498](https://github.com/iris-connect/iris-client/issues/498)
+
 # [1.2.0-rc.5](https://github.com/iris-connect/iris-client/compare/v1.2.0-rc.4...v1.2.0-rc.5) (2021-12-07)
 
 

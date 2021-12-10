@@ -105,12 +105,12 @@ module name | license | repository
 @babel/template@7.16.0 | MIT | https://github.com/babel/babel
 @babel/traverse@7.16.0 | MIT | https://github.com/babel/babel
 @babel/types@7.16.0 | MIT | https://github.com/babel/babel
-@cypress/request@2.88.7 | Apache-2.0 | https://github.com/cypress-io/request
+@cypress/request@2.88.10 | Apache-2.0 | https://github.com/cypress-io/request
 @cypress/xvfb@1.2.4 | MIT | https://github.com/cypress-io/xvfb
-@eslint/eslintrc@1.0.4 | MIT | https://github.com/eslint/eslintrc
+@eslint/eslintrc@1.0.5 | MIT | https://github.com/eslint/eslintrc
 @hapi/hoek@9.2.1 | BSD-3-Clause | https://github.com/hapijs/hoek
 @hapi/topo@5.1.0 | BSD-3-Clause | https://github.com/hapijs/topo
-@humanwhocodes/config-array@0.6.0 | Apache-2.0 | https://github.com/humanwhocodes/config-array
+@humanwhocodes/config-array@0.9.2 | Apache-2.0 | https://github.com/humanwhocodes/config-array
 @humanwhocodes/object-schema@1.2.1 | BSD-3-Clause | https://github.com/humanwhocodes/object-schema
 @miragejs/pretender-node-polyfill@0.1.2 | MIT | 
 @nodelib/fs.scandir@2.1.5 | MIT | https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.scandir
@@ -151,13 +151,13 @@ module name | license | repository
 @types/webpack-dev-server@4.3.1 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/webpack-env@1.16.3 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/yauzl@2.9.2 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
-@typescript-eslint/eslint-plugin@5.4.0 | MIT | https://github.com/typescript-eslint/typescript-eslint
-@typescript-eslint/experimental-utils@5.4.0 | MIT | https://github.com/typescript-eslint/typescript-eslint
-@typescript-eslint/parser@5.4.0 | BSD-2-Clause | https://github.com/typescript-eslint/typescript-eslint
-@typescript-eslint/scope-manager@5.4.0 | MIT | https://github.com/typescript-eslint/typescript-eslint
-@typescript-eslint/types@5.4.0 | MIT | https://github.com/typescript-eslint/typescript-eslint
-@typescript-eslint/typescript-estree@5.4.0 | BSD-2-Clause | https://github.com/typescript-eslint/typescript-eslint
-@typescript-eslint/visitor-keys@5.4.0 | MIT | https://github.com/typescript-eslint/typescript-eslint
+@typescript-eslint/eslint-plugin@5.6.0 | MIT | https://github.com/typescript-eslint/typescript-eslint
+@typescript-eslint/experimental-utils@5.6.0 | MIT | https://github.com/typescript-eslint/typescript-eslint
+@typescript-eslint/parser@5.6.0 | BSD-2-Clause | https://github.com/typescript-eslint/typescript-eslint
+@typescript-eslint/scope-manager@5.6.0 | MIT | https://github.com/typescript-eslint/typescript-eslint
+@typescript-eslint/types@5.6.0 | MIT | https://github.com/typescript-eslint/typescript-eslint
+@typescript-eslint/typescript-estree@5.6.0 | BSD-2-Clause | https://github.com/typescript-eslint/typescript-eslint
+@typescript-eslint/visitor-keys@5.6.0 | MIT | https://github.com/typescript-eslint/typescript-eslint
 @vue/babel-helper-vue-jsx-merge-props@1.2.1 | MIT | https://github.com/vuejs/jsx/tree/master/packages/babel-helper-vue-jsx-merge-props
 @vue/babel-helper-vue-transform-on@1.0.2 | MIT | 
 @vue/babel-plugin-jsx@1.1.1 | MIT | https://github.com/vuejs/jsx-next
@@ -358,7 +358,7 @@ csso@4.2.0 | MIT | https://github.com/css/csso
 csv-parse@4.15.4 | MIT | https://github.com/wdavidw/node-csv-parse
 csv2md@1.1.0 | MIT | https://github.com/pstaender/csv2md
 cypress-fail-fast@3.3.0 | MIT | https://github.com/javierbrea/cypress-fail-fast
-cypress@9.1.0 | MIT | https://github.com/cypress-io/cypress
+cypress@9.1.1 | MIT | https://github.com/cypress-io/cypress
 dashdash@1.14.1 | MIT | https://github.com/trentm/node-dashdash
 de-indent@1.0.2 | MIT | https://github.com/yyx990803/de-indent
 debug@2.6.9 | MIT | https://github.com/visionmedia/debug
@@ -418,7 +418,7 @@ escape-string-regexp@4.0.0 | MIT | https://github.com/sindresorhus/escape-string
 eslint-config-prettier@8.3.0 | MIT | https://github.com/prettier/eslint-config-prettier
 eslint-plugin-cypress@2.12.1 | MIT | https://github.com/cypress-io/eslint-plugin-cypress
 eslint-plugin-prettier@4.0.0 | MIT | https://github.com/prettier/eslint-plugin-prettier
-eslint-plugin-vue@8.1.1 | MIT | https://github.com/vuejs/eslint-plugin-vue
+eslint-plugin-vue@8.2.0 | MIT | https://github.com/vuejs/eslint-plugin-vue
 eslint-scope@5.1.1 | BSD-2-Clause | https://github.com/eslint/eslint-scope
 eslint-scope@6.0.0 | BSD-2-Clause | https://github.com/eslint/eslint-scope
 eslint-scope@7.1.0 | BSD-2-Clause | https://github.com/eslint/eslint-scope
@@ -426,8 +426,8 @@ eslint-utils@3.0.0 | MIT | https://github.com/mysticatea/eslint-utils
 eslint-visitor-keys@2.1.0 | Apache-2.0 | https://github.com/eslint/eslint-visitor-keys
 eslint-visitor-keys@3.1.0 | Apache-2.0 | https://github.com/eslint/eslint-visitor-keys
 eslint-webpack-plugin@3.1.0 | MIT | https://github.com/webpack-contrib/eslint-webpack-plugin
-eslint@8.3.0 | MIT | https://github.com/eslint/eslint
-espree@9.1.0 | BSD-2-Clause | https://github.com/eslint/espree
+eslint@8.4.0 | MIT | https://github.com/eslint/eslint
+espree@9.2.0 | BSD-2-Clause | https://github.com/eslint/espree
 esquery@1.4.0 | BSD-3-Clause | https://github.com/estools/esquery
 esrecurse@4.3.0 | BSD-2-Clause | https://github.com/estools/esrecurse
 estraverse@4.3.0 | BSD-2-Clause | https://github.com/estools/estraverse
@@ -501,8 +501,6 @@ globby@11.0.4 | MIT | https://github.com/sindresorhus/globby
 graceful-fs@4.2.6 | ISC | https://github.com/isaacs/node-graceful-fs
 gzip-size@6.0.0 | MIT | https://github.com/sindresorhus/gzip-size
 handle-thing@2.0.1 | MIT | https://github.com/indutny/handle-thing
-har-schema@2.0.0 | ISC | https://github.com/ahmadnassri/har-schema
-har-validator@5.1.5 | MIT | https://github.com/ahmadnassri/node-har-validator
 has-flag@3.0.0 | MIT | https://github.com/sindresorhus/has-flag
 has-flag@4.0.0 | MIT | https://github.com/sindresorhus/has-flag
 has-flag@5.0.1 | MIT | https://github.com/sindresorhus/has-flag
@@ -527,7 +525,7 @@ http-errors@1.7.2 | MIT | https://github.com/jshttp/http-errors
 http-parser-js@0.5.3 | MIT | https://github.com/creationix/http-parser-js
 http-proxy-middleware@2.0.1 | MIT | https://github.com/chimurai/http-proxy-middleware
 http-proxy@1.18.1 | MIT | https://github.com/http-party/node-http-proxy
-http-signature@1.2.0 | MIT | https://github.com/joyent/node-http-signature
+http-signature@1.3.6 | MIT | https://github.com/joyent/node-http-signature
 human-signals@1.1.1 | Apache-2.0 | https://github.com/ehmicky/human-signals
 human-signals@2.1.0 | Apache-2.0 | https://github.com/ehmicky/human-signals
 husky@7.0.4 | MIT | https://github.com/typicode/husky
@@ -536,6 +534,7 @@ icss-utils@5.1.0 | ISC | https://github.com/css-modules/icss-utils
 ieee754@1.2.1 | BSD-3-Clause | https://github.com/feross/ieee754
 ignore@4.0.6 | MIT | https://github.com/kaelzhang/node-ignore
 ignore@5.1.9 | MIT | https://github.com/kaelzhang/node-ignore
+immutable@4.0.0 | MIT | https://github.com/immutable-js/immutable-js
 import-fresh@3.3.0 | MIT | https://github.com/sindresorhus/import-fresh
 imurmurhash@0.1.4 | MIT | https://github.com/jensyt/imurmurhash-js
 indent-string@4.0.0 | MIT | https://github.com/sindresorhus/indent-string
@@ -552,7 +551,7 @@ ip-regex@4.3.0 | MIT | https://github.com/sindresorhus/ip-regex
 ip@1.1.5 | MIT | https://github.com/indutny/node-ip
 ipaddr.js@1.9.1 | MIT | https://github.com/whitequark/ipaddr.js
 ipaddr.js@2.0.1 | MIT | https://github.com/whitequark/ipaddr.js
-iris-client-frontend@0.1.0 | UNLICENSED | 
+iris-client-frontend@1.2.0-rc.6-POST-RELEASE | UNLICENSED | 
 is-absolute-url@3.0.3 | MIT | https://github.com/sindresorhus/is-absolute-url
 is-arguments@1.1.1 | MIT | https://github.com/inspect-js/is-arguments
 is-arrayish@0.2.1 | MIT | https://github.com/qix-/node-is-arrayish
@@ -606,13 +605,13 @@ json-parse-better-errors@1.0.2 | MIT | https://github.com/zkat/json-parse-better
 json-parse-even-better-errors@2.3.1 | MIT | https://github.com/npm/json-parse-even-better-errors
 json-schema-traverse@0.4.1 | MIT | https://github.com/epoberezkin/json-schema-traverse
 json-schema-traverse@1.0.0 | MIT | https://github.com/epoberezkin/json-schema-traverse
-json-schema@0.2.3 | AFLv2.1,BSD | https://github.com/kriszyp/json-schema
+json-schema@0.4.0 | (AFL-2.1 OR BSD-3-Clause) | https://github.com/kriszyp/json-schema
 json-stable-stringify-without-jsonify@1.0.1 | MIT | https://github.com/samn/json-stable-stringify
 json-stringify-safe@5.0.1 | ISC | https://github.com/isaacs/json-stringify-safe
 json5@1.0.1 | MIT | https://github.com/json5/json5
 json5@2.2.0 | MIT | https://github.com/json5/json5
 jsonfile@6.1.0 | MIT | https://github.com/jprichardson/node-jsonfile
-jsprim@1.4.1 | MIT | https://github.com/joyent/node-jsprim
+jsprim@2.0.2 | MIT | https://github.com/joyent/node-jsprim
 kind-of@3.2.2 | MIT | https://github.com/jonschlinkert/kind-of
 kind-of@6.0.3 | MIT | https://github.com/jonschlinkert/kind-of
 klona@2.0.4 | MIT | https://github.com/lukeed/klona
@@ -692,7 +691,7 @@ minimalistic-assert@1.0.1 | ISC | https://github.com/calvinmetcalf/minimalistic-
 minimatch@3.0.4 | ISC | https://github.com/isaacs/minimatch
 minimist@1.2.5 | MIT | https://github.com/substack/minimist
 minipass@3.1.5 | ISC | https://github.com/isaacs/minipass
-miragejs@0.1.42 | MIT | https://github.com/miragejs/miragejs
+miragejs@0.1.43 | MIT | https://github.com/miragejs/miragejs
 mixme@0.5.4 | MIT | https://github.com/adaltas/node-mixme
 mkdirp@0.5.5 | MIT | https://github.com/substack/node-mkdirp
 module-alias@2.2.2 | MIT | https://github.com/ilearnio/module-alias
@@ -823,7 +822,7 @@ postcss@8.3.11 | MIT | https://github.com/postcss/postcss
 prelude-ls@1.2.1 | MIT | https://github.com/gkz/prelude-ls
 pretender@3.4.7 | MIT | https://github.com/pretenderjs/pretender
 prettier-linter-helpers@1.0.0 | MIT | https://github.com/prettier/prettier-linter-helpers
-prettier@2.4.1 | MIT | https://github.com/prettier/prettier
+prettier@2.5.1 | MIT | https://github.com/prettier/prettier
 pretty-bytes@5.6.0 | MIT | https://github.com/sindresorhus/pretty-bytes
 pretty-error@4.0.0 | MIT | https://github.com/AriaMinaei/pretty-error
 pretty@2.0.0 | MIT | https://github.com/jonschlinkert/pretty
@@ -885,7 +884,7 @@ safe-buffer@5.1.2 | MIT | https://github.com/feross/safe-buffer
 safe-buffer@5.2.1 | MIT | https://github.com/feross/safe-buffer
 safer-buffer@2.1.2 | MIT | https://github.com/ChALkeR/safer-buffer
 sass-loader@12.3.0 | MIT | https://github.com/webpack-contrib/sass-loader
-sass@1.43.4 | MIT | https://github.com/sass/dart-sass
+sass@1.44.0 | MIT | https://github.com/sass/dart-sass
 schema-utils@2.7.0 | MIT | https://github.com/webpack/schema-utils
 schema-utils@2.7.1 | MIT | https://github.com/webpack/schema-utils
 schema-utils@3.1.1 | MIT | https://github.com/webpack/schema-utils
@@ -1018,7 +1017,7 @@ validate-npm-package-license@3.0.4 | Apache-2.0 | https://github.com/kemitchell/
 vary@1.1.2 | MIT | https://github.com/jshttp/vary
 vendors@1.0.4 | MIT | https://github.com/wooorm/vendors
 verror@1.10.0 | MIT | https://github.com/davepacheco/node-verror
-vue-cli-plugin-vuetify@2.4.4 | MIT | https://github.com/vuetifyjs/vue-cli-plugin-vuetify
+vue-cli-plugin-vuetify@2.4.5 | MIT | https://github.com/vuetifyjs/vue-cli-plugin-vuetify
 vue-eslint-parser@8.0.1 | MIT | https://github.com/vuejs/vue-eslint-parser
 vue-hot-reload-api@2.3.4 | MIT | https://github.com/vuejs/vue-hot-reload-api
 vue-loader@15.9.8 | MIT | https://github.com/vuejs/vue-loader
@@ -1027,7 +1026,7 @@ vue-style-loader@4.1.3 | MIT | https://github.com/vuejs/vue-style-loader
 vue-template-compiler@2.6.14 | MIT | https://github.com/vuejs/vue
 vue-template-es2015-compiler@1.9.1 | MIT | https://github.com/vuejs/vue-template-es2015-compiler
 vuetify-loader@1.7.3 | MIT | https://github.com/vuetifyjs/vuetify-loader
-watchpack@2.2.0 | MIT | https://github.com/webpack/watchpack
+watchpack@2.3.1 | MIT | https://github.com/webpack/watchpack
 wbuf@1.7.3 | MIT | https://github.com/indutny/wbuf
 wcwidth@1.0.1 | MIT | https://github.com/timoxley/wcwidth
 webidl-conversions@3.0.1 | BSD-2-Clause | https://github.com/jsdom/webidl-conversions
@@ -1038,7 +1037,7 @@ webpack-dev-server@4.4.0 | MIT | https://github.com/webpack/webpack-dev-server
 webpack-merge@5.8.0 | MIT | https://github.com/survivejs/webpack-merge
 webpack-sources@3.2.2 | MIT | https://github.com/webpack/webpack-sources
 webpack-virtual-modules@0.4.3 | MIT | https://github.com/sysgears/webpack-virtual-modules
-webpack@5.64.3 | MIT | https://github.com/webpack/webpack
+webpack@5.65.0 | MIT | https://github.com/webpack/webpack
 websocket-driver@0.7.4 | Apache-2.0 | https://github.com/faye/websocket-driver-node
 websocket-extensions@0.1.4 | Apache-2.0 | https://github.com/faye/websocket-extensions-node
 whatwg-fetch@3.6.2 | MIT | https://github.com/github/fetch
