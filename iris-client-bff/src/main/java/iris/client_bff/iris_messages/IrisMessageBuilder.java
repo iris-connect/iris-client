@@ -17,7 +17,7 @@ public class IrisMessageBuilder {
     private final IrisMessageFolderRepository folderRepository;
     private final EPSIrisMessageClient irisMessageClient;
 
-    public IrisMessage build(IrisMessagePayload messagePayload) throws IrisMessageException {
+    public IrisMessage build(IrisMessageTransfer messageTransfer) throws IrisMessageException {
 
         IrisMessageFolder folder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
         if (folder == null) {
@@ -25,22 +25,22 @@ public class IrisMessageBuilder {
         }
 
         IrisMessageHdContact hdAuthor = new IrisMessageHdContact(
-                messagePayload.getHdAuthor().getId(),
-                messagePayload.getHdAuthor().getName()
+                messageTransfer.getHdAuthor().getId(),
+                messageTransfer.getHdAuthor().getName()
         );
 
         IrisMessageHdContact hdRecipient = this.irisMessageClient.getOwnIrisMessageHdContact();
         // ensure that the message was sent to the correct recipient
         // @todo: enable this when done with testing
-//        if (!Objects.equals(hdRecipient.getId(), messagePayload.getHdRecipient().getId())) {
+//        if (!Objects.equals(hdRecipient.getId(), messageTransfer.getHdRecipient().getId())) {
 //            throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_RECIPIENT);
 //        }
 
         IrisMessage message = new IrisMessage();
 
         List<IrisMessageFile> files = new ArrayList<>();
-        if (messagePayload.getAttachments() != null) {
-            for ( IrisMessagePayload.Attachment file : messagePayload.getAttachments() ) {
+        if (messageTransfer.getAttachments() != null) {
+            for ( IrisMessageTransfer.Attachment file : messageTransfer.getAttachments() ) {
                 IrisMessageFile messageFile = new IrisMessageFile()
                         .setMessage(message)
                         .setContent(file.getContent())
@@ -53,8 +53,8 @@ public class IrisMessageBuilder {
         message
                 .setHdAuthor(hdAuthor)
                 .setHdRecipient(hdRecipient)
-                .setSubject(messagePayload.getSubject())
-                .setBody(messagePayload.getBody())
+                .setSubject(messageTransfer.getSubject())
+                .setBody(messageTransfer.getBody())
                 .setFolder(folder)
                 .setIsRead(false)
                 .setAttachments(files);

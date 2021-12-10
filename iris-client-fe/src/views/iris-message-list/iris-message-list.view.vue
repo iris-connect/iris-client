@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="pb-6 text-right">
-      <v-btn color="primary" :to="{ name: 'iris-message-create' }">
+      <v-btn
+        color="primary"
+        :to="{ name: 'iris-message-create' }"
+        data-test="view.link.create"
+      >
         Nachricht schreiben
       </v-btn>
     </div>
@@ -14,7 +18,11 @@
           v-model="query.folder"
         >
           <template #data-table="{ context }">
-            <search-field :disabled="!context" v-model="query.search" />
+            <search-field
+              :disabled="!context"
+              v-model="query.search"
+              data-test="search"
+            />
             <iris-message-data-table
               :context="context"
               :message-list="messageList"
@@ -24,6 +32,7 @@
               :page.sync="query.page"
               :items-per-page.sync="query.size"
               @click:row="handleRowClick"
+              data-test="view.data-table"
             />
           </template>
         </iris-message-folders-data-tree>

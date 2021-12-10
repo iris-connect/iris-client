@@ -7,7 +7,7 @@ import iris.client_bff.config.RPCClientConfig;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
-import iris.client_bff.iris_messages.IrisMessagePayload;
+import iris.client_bff.iris_messages.IrisMessageTransfer;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,12 +34,12 @@ public class EPSIrisMessageClient {
 
     public IrisMessageHdContact getOwnIrisMessageHdContact() {
         String ownId = this.rpcClientConfig.getOwnEndpoint();
-        return new IrisMessageHdContact(ownId, ownId);
+        return new IrisMessageHdContact(ownId, ownId, true);
     }
 
     public IrisMessageHdContact findIrisMessageHdContactById(String contactId) throws IrisMessageException {
         // @todo: implement display name property for health-departments in the service-directory and fetch the hd by id to get the (display) name
-        // this is a placeholder until the EPS supports display names for health departments
+        // this is a placeholder until the EPS supports (ping for) display names for health departments
         return new IrisMessageHdContact(contactId, contactId);
     }
 
@@ -58,7 +58,7 @@ public class EPSIrisMessageClient {
 
     public void createIrisMessage(IrisMessage message) throws IrisMessageException {
         String methodName = message.getHdRecipient().getId() + ".handleIrisMessage";
-        Map<String, IrisMessagePayload> payload  = Map.of("irisMessage", IrisMessagePayload.fromEntity(message));
+        Map<String, IrisMessageTransfer> payload  = Map.of("irisMessage", IrisMessageTransfer.fromEntity(message));
         int defaultReadTimeout = this.epsRpcClient.getReadTimeoutMillis();
         try {
 
@@ -66,10 +66,9 @@ public class EPSIrisMessageClient {
             // dummy code: start
             // for testing, we are bypassing the EPS client, simulate the json encoding / decoding and call the controller directly to receive our own message
             ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(payload.get("irisMessage"));
-            log.info("msg string: " + json);
-            IrisMessagePayload mappedPayload = objectMapper.readValue(json, IrisMessagePayload.class);
-            this.irisMessageDataController.createIrisMessage(mappedPayload);
+            String messageJsonString = objectMapper.writeValueAsString(payload.get("irisMessage"));
+            IrisMessageTransfer parsedMessage = objectMapper.readValue(messageJsonString, IrisMessageTransfer.class);
+            this.irisMessageDataController.createIrisMessage(parsedMessage);
             // dummy code: end
 
             this.epsRpcClient.setReadTimeoutMillis(READ_TIMEOUT);

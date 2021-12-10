@@ -1,25 +1,25 @@
 <template>
   <div>
     <v-card :loading="messageLoading">
-      <v-card-subtitle class="pb-0 text-right">
+      <v-card-subtitle class="pb-0 text-right" data-test="message.createdAt">
         {{ message.createdAt }}
       </v-card-subtitle>
-      <v-card-title>
+      <v-card-title data-test="message.subject">
         {{ message.subject }}
       </v-card-title>
       <v-card-text>
         <v-row no-gutters>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" data-test="message.author">
             <span class="font-weight-bold">Von:</span>
             {{ message.author }}
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" data-test="message.recipient">
             <span class="font-weight-bold">An:</span>
             {{ message.recipient }}
           </v-col>
         </v-row>
         <v-divider class="my-4" />
-        <div class="body-1">
+        <div class="body-1" data-test="message.body">
           {{ message.body }}
         </div>
         <div v-if="message.attachments.length > 0">

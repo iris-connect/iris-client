@@ -1,8 +1,12 @@
 <template>
-  <v-row>
+  <v-row data-test="message-folders">
     <v-col cols="auto" class="mt-3">
       <v-skeleton-loader :loading="loading" type="sentences">
-        <data-tree :item="{ items: folders }" v-model="model" />
+        <data-tree
+          data-test-key="context"
+          :item="{ items: folders }"
+          v-model="model"
+        />
       </v-skeleton-loader>
     </v-col>
     <v-col>

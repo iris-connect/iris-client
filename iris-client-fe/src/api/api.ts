@@ -1960,6 +1960,7 @@ export type IrisMessageFolder = {
 export interface IrisMessageHdContact {
   id: string;
   name: string;
+  isOwn?: boolean;
 }
 
 /**
@@ -2367,7 +2368,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     options?: RequestOptions
   ): ApiResponse {
     assertParamExists("irisMessageFileDownload", "fileId", fileId);
-    const path = `/iris-messages/files/${encodeURIComponent(fileId)}`;
+    const path = `/iris-messages/files/${encodeURIComponent(fileId)}/download`;
     return this.apiRequest("GET", path, null, {
       ...options,
       responseType: "blob",

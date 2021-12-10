@@ -95,7 +95,11 @@ const irisMessageCreate: IrisMessageDetailsModule = {
       commit("setContactsLoading", true);
       commit("setContactsLoadingError", null);
       try {
-        list = (await authClient.irisMessageHdContactsGet()).data;
+        list = (
+          await authClient.irisMessageHdContactsGet({
+            params: { includeOwn: !!window.Cypress },
+          })
+        ).data;
       } catch (e) {
         commit("setContactsLoadingError", getErrorMessage(e));
       } finally {
