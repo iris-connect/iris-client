@@ -246,6 +246,17 @@
 			<artifactId>jsr305</artifactId>
 			<version>3.0.2</version>
 		</dependency>
+		<dependency>
+			<!-- Added to fix current vulnerability in versions <2.15.0 until Spring is adjusted. https://github.com/iris-connect/iris-client/security/code-scanning/1857?query=ref%3Arefs%2Fpull%2F509%2Fmerge -->
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.15.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-to-slf4j</artifactId>
+			<version>2.15.0</version>
+		</dependency>
 
 		<!-- Security -->
 		<dependency>
