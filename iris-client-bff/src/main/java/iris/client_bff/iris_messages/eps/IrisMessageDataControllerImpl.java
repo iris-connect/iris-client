@@ -6,7 +6,6 @@ import iris.client_bff.iris_messages.IrisMessageService;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,18 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class IrisMessageDataControllerImpl implements IrisMessageDataController {
 
     private final IrisMessageTransferDefuse messageTransferDefuse;
-
-    //@todo: make it final as soon as the work around is removed
-    private IrisMessageService irisMessageService;
-
-    //@todo: remove @Autowired getter & setter as this these are only needed to work around the circular dependency that is occurring due to the dummy functionality
-    @Autowired
-    public void setIrisMessageService(IrisMessageService irisMessageService) {
-        this.irisMessageService = irisMessageService;
-    }
-    public IrisMessageService getIrisMessageService() {
-        return irisMessageService;
-    }
+    private final IrisMessageService irisMessageService;
 
     @Override
     public void createIrisMessage(IrisMessageTransfer messageTransfer) throws ResponseStatusException {

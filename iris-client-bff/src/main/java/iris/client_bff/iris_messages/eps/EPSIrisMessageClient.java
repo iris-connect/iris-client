@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import iris.client_bff.config.RPCClientConfig;
-import iris.client_bff.iris_messages.IrisMessage;
-import iris.client_bff.iris_messages.IrisMessageException;
-import iris.client_bff.iris_messages.IrisMessageHdContact;
-import iris.client_bff.iris_messages.IrisMessageTransfer;
+import iris.client_bff.iris_messages.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,13 +18,13 @@ import java.util.Set;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EPSIrisMessageClient {
 
     private static final int READ_TIMEOUT = 12 * 1000;
 
-    //@todo: replace IrisMessageDataController with proper EPS call (remove next line)
-    private final IrisMessageDataController irisMessageDataController;
+    //@todo: replace DummyBridge with proper EPS call (remove next line)
+    private final IrisMessageDummyBridge irisMessageDummyBridge;
 
     private final JsonRpcHttpClient epsRpcClient;
     private final RPCClientConfig rpcClientConfig;
@@ -64,11 +61,11 @@ public class EPSIrisMessageClient {
 
             // @todo: replace controller call (dummy code) with EPS client call
             // dummy code: start
-            // for testing, we are bypassing the EPS client, simulate the json encoding / decoding and call the controller directly to receive our own message
+            // for testing, we are bypassing the EPS client, simulate the json encoding / decoding and call the dummy bridge directly to receive our own message
             ObjectMapper objectMapper = new ObjectMapper();
             String messageJsonString = objectMapper.writeValueAsString(payload.get("irisMessage"));
             IrisMessageTransfer parsedMessage = objectMapper.readValue(messageJsonString, IrisMessageTransfer.class);
-            this.irisMessageDataController.createIrisMessage(parsedMessage);
+            this.irisMessageDummyBridge.createMessage(parsedMessage);
             // dummy code: end
 
             this.epsRpcClient.setReadTimeoutMillis(READ_TIMEOUT);
