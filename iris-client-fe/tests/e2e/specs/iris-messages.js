@@ -2,8 +2,6 @@ import _shuffle from "lodash/shuffle";
 import _sampleSize from "lodash/sampleSize";
 import _random from "lodash/random";
 
-// @todo: add tests for message details & message mark read & unread message count
-
 const generateRandomText = (key = "", size) => {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".split("");
@@ -11,9 +9,10 @@ const generateRandomText = (key = "", size) => {
 };
 
 describe("IrisMessages", () => {
+  const timestamp = new Date().getTime();
   const message = {
-    subject: generateRandomText("Subject", _random(10, 15)),
-    body: generateRandomText("Body", _random(100, 150)),
+    subject: generateRandomText(`Subject_${timestamp}_`, _random(10, 15)),
+    body: generateRandomText(`Body_${timestamp}_`, _random(10, 150)),
   };
   beforeEach(() => {
     cy.clearLocalStorage();
@@ -90,22 +89,57 @@ describe("IrisMessages", () => {
         cy.getBy("textarea{body}").should("exist").type(message.body);
         cy.getBy(".v-btn{submit}").should("exist").click();
       });
-    cy.location("pathname").should("equal", "/iris-messages/list");
-    cy.getBy("{message-folders} {select.INBOX}").click();
-    cy.get(".v-data-table").should("not.have.class", "is-loading");
-    cy.getBy("input{search}").should("exist").type(message.subject);
-    cy.get(".v-data-table")
-      .should("not.have.class", "is-loading")
-      .contains(message.subject)
-      .should("exist")
-      .closest("tr")
-      .should("have.class", "font-weight-bold");
-    cy.getBy("{message-folders} {select.OUTBOX}").click();
-    cy.getBy("input{search}").should("exist").type(message.subject);
-    cy.get(".v-data-table")
-      .contains(message.subject)
-      .should("exist")
-      .closest("tr")
-      .should("not.have.class", "font-weight-bold");
+    cy.getMessageDataTableRow(message.subject, "INBOX").should(
+      "have.class",
+      "font-weight-bold"
+    );
+    cy.getMessageDataTableRow(message.subject, "OUTBOX").should(
+      "not.have.class",
+      "font-weight-bold"
+    );
+  });
+  it("should display the unread message count in a badge in the app-bar and and decrease it by opening an unread message", () => {
+    cy.visit("/iris-messages/list");
+    cy.getBy("app-bar.nav.link.iris-message-list")
+      .as("navLink")
+      .should("not.have.class", "is-loading");
+    cy.getBy("{iris-messages.unread.count} .v-badge__badge")
+      .as("badge")
+      .should("be.visible")
+      .invoke("text")
+      .then((textContent) => {
+        const count = parseInt(textContent);
+        expect(count).to.be.gte(1);
+        cy.getBy("{message-folders} {select.INBOX}").click();
+        cy.getBy("input{search}").should("exist").clear().type(message.subject);
+        cy.get(".v-data-table")
+          .contains(message.subject)
+          .should("exist")
+          .click();
+        cy.location("pathname").should("contain", "/iris-messages/details");
+        cy.getBy("view.iris-message-details").should(
+          "not.have.class",
+          "v-card--loading"
+        );
+        cy.get("@navLink").should("not.have.class", "is-loading");
+        cy.get("@badge").invoke("text").then(parseInt).should("be.lt", count);
+        if (count <= 1) {
+          cy.get("@badge").should("not.be.visible");
+        }
+      });
+  });
+  it("should display the message details", () => {
+    cy.visit("/iris-messages/list");
+    cy.getMessageDataTableRow(message.subject, "INBOX").click();
+    cy.location("pathname").should("contain", "/iris-messages/details");
+    cy.getBy("view.iris-message-details").should(
+      "not.have.class",
+      "v-card--loading"
+    );
+    cy.getBy("message.createdAt").should("not.be.empty");
+    cy.getBy("message.author").should("not.be.empty");
+    cy.getBy("message.recipient").should("not.be.empty");
+    cy.getBy("message.subject").should("contain", message.subject);
+    cy.getBy("message.body").should("contain", message.body);
   });
 });

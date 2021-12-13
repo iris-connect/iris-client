@@ -4,6 +4,7 @@ import {
   IrisMessageContext,
   IrisMessageDetails,
   IrisMessageFolder,
+  IrisMessageAttachment,
 } from "@/api";
 import { Request } from "miragejs";
 
@@ -68,6 +69,19 @@ export const dummyIrisMessageHdContacts: IrisMessageHdContact[] = [
   },
 ];
 
+export const dummyIrisMessageAttachments: IrisMessageAttachment[] = [
+  {
+    id: "file_1",
+    name: "Anhang 1",
+    type: "pdf",
+  },
+  {
+    id: "file_2",
+    name: "Liste 2",
+    type: "csv",
+  },
+];
+
 export const dummyIrisMessageList: IrisMessageDetails[] = [
   {
     hdAuthor: dummyIrisMessageHdContacts[1],
@@ -80,18 +94,7 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     createdAt: daysAgo(3),
     isRead: false,
     hasAttachments: true,
-    attachments: [
-      {
-        id: "testlink",
-        name: "anhang 1",
-        type: "pdf",
-      },
-      {
-        id: "testlink_2",
-        name: "Liste 2",
-        type: "csv",
-      },
-    ],
+    attachments: dummyIrisMessageAttachments,
   },
   {
     hdAuthor: dummyIrisMessageHdContacts[0],
@@ -114,8 +117,8 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     body: "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     createdAt: daysAgo(5),
     isRead: false,
+    attachments: dummyIrisMessageAttachments,
   },
-
   {
     hdAuthor: dummyIrisMessageHdContacts[0],
     hdRecipient: dummyIrisMessageHdContacts[2],

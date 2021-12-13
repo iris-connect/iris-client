@@ -5,6 +5,8 @@ import { IrisMessageDetails } from "@/api";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import fileDownload from "@/utils/fileDownload";
+import { normalizeIrisMessageDetails } from "@/views/iris-message-details/iris-message-details.data";
+import { AxiosResponse } from "axios";
 
 export type IrisMessageDetailsState = {
   message: IrisMessageDetails | null;
@@ -12,6 +14,8 @@ export type IrisMessageDetailsState = {
   messageLoadingError: ErrorMessage;
   messageSaving: boolean;
   messageSavingError: ErrorMessage;
+  attachmentLoading: boolean;
+  attachmentLoadingError: ErrorMessage;
 };
 
 export interface IrisMessageDetailsModule
@@ -31,6 +35,14 @@ export interface IrisMessageDetailsModule
       state: IrisMessageDetailsState,
       payload: ErrorMessage
     ): void;
+    setAttachmentLoading(
+      state: IrisMessageDetailsState,
+      payload: boolean
+    ): void;
+    setAttachmentLoadingError(
+      state: IrisMessageDetailsState,
+      payload: ErrorMessage
+    ): void;
     reset(state: IrisMessageDetailsState, payload: null): void;
   };
   actions: {
@@ -42,7 +54,10 @@ export interface IrisMessageDetailsModule
       { commit }: { commit: Commit },
       messageId: string
     ): Promise<void>;
-    downloadAttachment(context: unknown, fileId: string): Promise<void>;
+    downloadAttachment(
+      { commit }: { commit: Commit },
+      fileId: string
+    ): Promise<void>;
   };
 }
 
@@ -52,6 +67,8 @@ const defaultState: IrisMessageDetailsState = {
   messageLoadingError: null,
   messageSaving: false,
   messageSavingError: null,
+  attachmentLoading: false,
+  attachmentLoadingError: null,
 };
 
 const irisMessageDetails: IrisMessageDetailsModule = {
@@ -75,6 +92,12 @@ const irisMessageDetails: IrisMessageDetailsModule = {
     setMessageSavingError(state, payload) {
       state.messageSavingError = payload;
     },
+    setAttachmentLoading(state, payload) {
+      state.attachmentLoading = payload;
+    },
+    setAttachmentLoadingError(state, payload) {
+      state.attachmentLoadingError = payload;
+    },
     reset(state) {
       Object.assign(state, { ...defaultState });
     },
@@ -85,7 +108,10 @@ const irisMessageDetails: IrisMessageDetailsModule = {
       commit("setMessageLoading", true);
       commit("setMessageLoadingError", null);
       try {
-        data = (await authClient.irisMessageDetailsGet(messageId)).data;
+        data = normalizeIrisMessageDetails(
+          (await authClient.irisMessageDetailsGet(messageId)).data,
+          true
+        );
       } catch (e) {
         commit("setMessageLoadingError", getErrorMessage(e));
       } finally {
@@ -97,9 +123,10 @@ const irisMessageDetails: IrisMessageDetailsModule = {
       commit("setMessageSaving", true);
       commit("setMessageSavingError", null);
       try {
-        const data: IrisMessageDetails = (
-          await authClient.irisMessagesSetIsRead(messageId)
-        ).data;
+        const data: IrisMessageDetails = normalizeIrisMessageDetails(
+          (await authClient.irisMessagesSetIsRead(messageId)).data,
+          true
+        );
         commit("setMessage", data);
       } catch (e) {
         commit("setMessageLoadingError", getErrorMessage(e));
@@ -107,16 +134,31 @@ const irisMessageDetails: IrisMessageDetailsModule = {
         commit("setMessageSaving", false);
       }
     },
-    async downloadAttachment(context, fileId: string) {
-      //@todo: add error & loading handler
-      const response = await authClient.irisMessageFileDownload(fileId);
-      const fileName = response.headers["content-disposition"]
-        .split("filename=")[1]
-        .split(";")[0]
-        .replace(/['"]/g, "");
-      fileDownload.download(response.data, fileName);
+    async downloadAttachment({ commit }, fileId: string) {
+      commit("setAttachmentLoading", true);
+      commit("setAttachmentLoadingError", null);
+      try {
+        const response = await authClient.irisMessageFileDownload(fileId);
+        const fileName = extractFileName(response);
+        fileDownload.download(response.data, fileName);
+      } catch (e) {
+        commit("setAttachmentLoadingError", getErrorMessage(e));
+      } finally {
+        commit("setAttachmentLoading", false);
+      }
     },
   },
+};
+
+const extractFileName = (response: AxiosResponse): string => {
+  const fileName = (response.headers["content-disposition"] || "")
+    .split("filename=")[1]
+    .split(";")[0]
+    .replace(/['"]/g, "");
+  if (fileName.length <= 0) {
+    throw new Error("invalid file name");
+  }
+  return fileName;
 };
 
 export default irisMessageDetails;

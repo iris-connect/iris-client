@@ -39,6 +39,7 @@ import {
   dummyIrisMessageList,
   dummyIrisMessageHdContacts,
   getDummyMessageFromRequest,
+  dummyIrisMessageAttachments,
 } from "@/server/data/dummy-iris-messages";
 
 const loginResponse = (role: UserRole): Response => {
@@ -51,14 +52,15 @@ const loginResponse = (role: UserRole): Response => {
 const authResponse = (
   request?: Request,
   // eslint-disable-next-line @typescript-eslint/ban-types
-  data?: string | {} | undefined
+  data?: string | {} | undefined,
+  headers?: Record<string, string>
 ): Response => {
   if (request) {
     if (!validateAuthHeader(request)) {
-      return new Response(401, { error: "not authorized" });
+      return new Response(401, { error: "not authorized", ...headers });
     }
   }
-  return new Response(200, undefined, data);
+  return new Response(200, headers, data);
 };
 
 const validateAuthHeader = (request: Request): boolean => {
@@ -350,6 +352,18 @@ export function makeMockAPIServer() {
           request,
           dummyIrisMessageList.filter((item) => !item.isRead).length
         );
+      });
+
+      this.get("/iris-messages/files/:fileId/download", (schema, request) => {
+        let attachment = dummyIrisMessageAttachments.find(
+          (item) => item.id === request.params.fileId
+        );
+        if (!attachment) {
+          attachment = dummyIrisMessageAttachments[0];
+        }
+        return authResponse(request, "dummy file content", {
+          "content-disposition": `filename="${attachment.name}.txt"`,
+        });
       });
     },
   });

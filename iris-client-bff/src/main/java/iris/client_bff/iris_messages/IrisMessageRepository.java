@@ -12,6 +12,6 @@ public interface IrisMessageRepository extends JpaRepository<IrisMessage, IrisMe
 
     int countByIsReadFalseOrIsReadIsNull();
 
-    Page<IrisMessage> findAllByFolderId(IrisMessageFolder.IrisMessageFolderIdentifier folder, Pageable pageable);
+    Page<IrisMessage> findAllByFolderIdOrderByIsReadAsc(IrisMessageFolder.IrisMessageFolderIdentifier folder, Pageable pageable);
 
 }
