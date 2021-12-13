@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card :loading="messageLoading">
+    <v-card :loading="messageLoading" data-test="view.iris-message-details">
       <v-card-subtitle class="pb-0 text-right" data-test="message.createdAt">
         {{ message.createdAt }}
       </v-card-subtitle>
@@ -31,6 +31,7 @@
                 dense
                 :key="`item_${index}`"
                 @click="openAttachment(attachment.id)"
+                :disabled="attachmentLoading"
               >
                 <v-list-item-icon>
                   <v-icon>mdi-download</v-icon>
@@ -117,10 +118,14 @@ export default class IrisMessageDetailsView extends Vue {
       this.$store.state.irisMessageDetails.messageSaving
     );
   }
+  get attachmentLoading(): boolean {
+    return this.$store.state.irisMessageDetails.attachmentLoading;
+  }
   get errors(): ErrorMessage[] {
     return [
       this.$store.state.irisMessageDetails.messageLoadingError,
       this.$store.state.irisMessageDetails.messageSavingError,
+      this.$store.state.irisMessageDetails.attachmentLoadingError,
     ];
   }
   get messageLoaded(): boolean {
@@ -131,12 +136,14 @@ export default class IrisMessageDetailsView extends Vue {
     );
   }
   @Watch("messageLoaded")
-  onMessageLoaded(newValue: boolean) {
-    if (newValue) {
-      this.$store.dispatch(
+  async onMessageLoaded(newValue: boolean) {
+    const message = store.state.irisMessageDetails.message;
+    if (newValue && !message?.isRead) {
+      await this.$store.dispatch(
         "irisMessageDetails/markAsRead",
         this.$route.params.messageId
       );
+      await this.$store.dispatch("irisMessageList/fetchUnreadMessageCount");
     }
   }
   openAttachment(id: string) {

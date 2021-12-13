@@ -68,6 +68,7 @@ import _mapValues from "lodash/mapValues";
   },
   beforeRouteEnter(to, from, next) {
     store.dispatch("irisMessageList/fetchMessageFolders");
+    store.dispatch("irisMessageList/fetchUnreadMessageCount");
     next();
   },
 })

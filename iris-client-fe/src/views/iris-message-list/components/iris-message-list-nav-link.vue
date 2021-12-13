@@ -6,6 +6,7 @@
     :exact="link.meta.menuExact"
     :disabled="link.meta.disabled"
     text
+    :class="{ 'is-loading': unreadMessageCountLoading }"
     :data-test="`app-bar.nav.link.${link.name}`"
   >
     <v-badge
@@ -13,6 +14,7 @@
       :content="unreadMessageCount"
       :value="unreadMessageCount > 0"
       class="badge"
+      data-test="iris-messages.unread.count"
     >
       {{ link.meta.menuName }}
     </v-badge>
@@ -40,6 +42,9 @@ export default class IrisMessageListNavLink extends IrisMessageListNavLinkProps 
   isMounted = false;
   get unreadMessageCount() {
     return this.$store.state.irisMessageList.unreadMessageCount || 0;
+  }
+  get unreadMessageCountLoading() {
+    return this.$store.state.irisMessageList.unreadMessageCountLoading;
   }
   mounted() {
     this.isMounted = true;

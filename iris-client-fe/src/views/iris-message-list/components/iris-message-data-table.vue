@@ -6,7 +6,7 @@
       v-bind="{ ...dataTable, ...$attrs }"
       v-on="listeners"
       :page.sync="tablePage"
-      :footer-props="{ 'items-per-page-options': [2, 10, 20, 30, 50] }"
+      :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
       :item-class="itemClass"
     >
       <template v-slot:header.hasAttachments>

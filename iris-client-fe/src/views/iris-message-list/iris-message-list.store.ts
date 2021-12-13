@@ -4,6 +4,11 @@ import { Commit, Module } from "vuex";
 import { IrisMessageFolder, IrisMessageQuery, PageIrisMessages } from "@/api";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
+import {
+  normalizeIrisMessageFolders,
+  normalizePageIrisMessages,
+  normalizeUnreadIrisMessageCount,
+} from "@/views/iris-message-list/iris-message-list.data";
 
 export type IrisMessageListState = {
   messageList: PageIrisMessages | null;
@@ -13,6 +18,7 @@ export type IrisMessageListState = {
   messageFoldersLoading: boolean;
   messageFoldersLoadingError: ErrorMessage;
   unreadMessageCount: number;
+  unreadMessageCountLoading: boolean;
 };
 
 export interface IrisMessageListModule
@@ -40,6 +46,10 @@ export interface IrisMessageListModule
       payload: ErrorMessage
     ): void;
     setUnreadMessageCount(state: IrisMessageListState, payload: number): void;
+    setUnreadMessageCountLoading(
+      state: IrisMessageListState,
+      payload: boolean
+    ): void;
     reset(state: IrisMessageListState, payload: null): void;
   };
   actions: {
@@ -63,6 +73,7 @@ const defaultState: IrisMessageListState = {
   messageFoldersLoading: false,
   messageFoldersLoadingError: null,
   unreadMessageCount: 0,
+  unreadMessageCountLoading: false,
 };
 
 const irisMessageList: IrisMessageListModule = {
@@ -92,6 +103,9 @@ const irisMessageList: IrisMessageListModule = {
     setUnreadMessageCount(state, payload) {
       state.unreadMessageCount = payload;
     },
+    setUnreadMessageCountLoading(state, payload) {
+      state.unreadMessageCountLoading = payload;
+    },
     reset(state) {
       Object.assign(state, { ...defaultState });
     },
@@ -102,7 +116,10 @@ const irisMessageList: IrisMessageListModule = {
       commit("setMessageListLoading", true);
       commit("setMessageListLoadingError", null);
       try {
-        list = (await authClient.irisMessagesGet({ params: query })).data;
+        list = normalizePageIrisMessages(
+          (await authClient.irisMessagesGet({ params: query })).data,
+          true
+        );
       } catch (e) {
         commit("setMessageListLoadingError", getErrorMessage(e));
       } finally {
@@ -115,7 +132,10 @@ const irisMessageList: IrisMessageListModule = {
       commit("setMessageFoldersLoading", true);
       commit("setMessageFoldersLoadingError", null);
       try {
-        list = (await authClient.irisMessageFoldersGet()).data;
+        list = normalizeIrisMessageFolders(
+          (await authClient.irisMessageFoldersGet()).data,
+          true
+        );
       } catch (e) {
         commit("setMessageFoldersLoadingError", getErrorMessage(e));
       } finally {
@@ -125,10 +145,15 @@ const irisMessageList: IrisMessageListModule = {
     },
     async fetchUnreadMessageCount({ commit }) {
       let count = 0;
+      commit("setUnreadMessageCountLoading", true);
       try {
-        count = (await authClient.irisUnreadMessageCountGet()).data;
+        count = normalizeUnreadIrisMessageCount(
+          (await authClient.irisUnreadMessageCountGet()).data,
+          true
+        );
       } finally {
         commit("setUnreadMessageCount", count);
+        commit("setUnreadMessageCountLoading", false);
       }
     },
   },

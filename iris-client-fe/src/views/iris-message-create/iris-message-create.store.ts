@@ -4,6 +4,7 @@ import { Commit, Module } from "vuex";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import { IrisMessageInsert, IrisMessageHdContact } from "@/api";
+import { normalizeIrisMessageHdContacts } from "@/views/iris-message-create/iris-message-create.data";
 
 export type IrisMessageCreateState = {
   messageCreationOngoing: boolean;
@@ -95,11 +96,13 @@ const irisMessageCreate: IrisMessageDetailsModule = {
       commit("setContactsLoading", true);
       commit("setContactsLoadingError", null);
       try {
-        list = (
-          await authClient.irisMessageHdContactsGet({
-            params: { includeOwn: !!window.Cypress },
-          })
-        ).data;
+        const requestOptions = {
+          params: { includeOwn: !!window.Cypress },
+        };
+        list = normalizeIrisMessageHdContacts(
+          (await authClient.irisMessageHdContactsGet(requestOptions)).data,
+          true
+        );
       } catch (e) {
         commit("setContactsLoadingError", getErrorMessage(e));
       } finally {

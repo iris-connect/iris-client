@@ -35,7 +35,7 @@ public class IrisMessageService {
     public Page<IrisMessage> search(UUID folderId, String searchString, Pageable pageable) {
         var folderIdentifier = IrisMessageFolder.IrisMessageFolderIdentifier.of(folderId);
         if (StringUtils.isEmpty(searchString)) {
-            return messageRepository.findAllByFolderId(folderIdentifier, pageable);
+            return messageRepository.findAllByFolderIdOrderByIsReadAsc(folderIdentifier, pageable);
         }
         var result = searcher.search(
                 searchString,

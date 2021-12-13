@@ -1,11 +1,11 @@
 <template>
-  <span class="d-flex align-center justify-end">
+  <span class="d-flex align-center justify-end" :data-test="dataTest">
     <v-progress-circular
       v-if="loading"
       indeterminate
       color="primary"
     ></v-progress-circular>
-    <span v-else :data-test="dataTest">
+    <span v-else>
       <v-icon v-if="status === appStatus.ERROR" color="error">
         mdi-alert-octagon
       </v-icon>

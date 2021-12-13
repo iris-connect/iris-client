@@ -1947,6 +1947,7 @@ export interface IrisMessageInsert {
 export enum IrisMessageContext {
   Inbox = "INBOX",
   Outbox = "OUTBOX",
+  Unknown = "UNKNOWN",
 }
 
 export type IrisMessageFolder = {

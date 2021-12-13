@@ -168,11 +168,14 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("getDataTableRow", (accessor, table) => {
+  cy.getBy(table || ".v-data-table").as("dataTable");
+  cy.get("@dataTable").should("not.have.class", "is-loading");
   cy.getBy("input{search}")
     .should("exist")
     .clear()
     .type(accessor, { log: false });
-  cy.getBy(table || ".v-data-table")
+  cy.get("@dataTable")
+    .should("not.have.class", "is-loading")
     .contains(accessor, { log: false })
     .closest("tr");
 });
@@ -189,6 +192,12 @@ Cypress.Commands.add("visitUserByAccessor", (accessor) => {
       .click();
   });
   cy.location("pathname").should("contain", "/admin/user/edit");
+});
+
+Cypress.Commands.add("getMessageDataTableRow", (accessor, context) => {
+  cy.location("pathname").should("equal", "/iris-messages/list");
+  cy.getBy(`{message-folders} {select.${context}}`).should("exist").click();
+  cy.getDataTableRow(accessor, "view.data-table").should("exist");
 });
 
 Cypress.Commands.add(
@@ -208,7 +217,7 @@ Cypress.Commands.add(
     cy.getApp().then((app) => {
       const contacts = app.$store.state.irisMessageCreate.contacts;
       const ownContact = contacts.find((c) => c.isOwn === true);
-      cy.wrap(ownContact).should("not.be.empty");
+      cy.wrap(ownContact).should("exist").should("not.be.empty");
       cy.get("@field").selectAutocompleteValue(menu, ownContact.name);
     });
     return cy.get("@field");

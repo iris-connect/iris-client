@@ -149,7 +149,7 @@ export default class IrisMessageCreateView extends Vue {
   }
 
   get recipients(): IrisMessageHdContact[] {
-    return this.$store.state.irisMessageCreate.contacts;
+    return this.$store.state.irisMessageCreate.contacts || [];
   }
 
   get recipientsLoading(): boolean {
