@@ -89,6 +89,17 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
+    path: "/checkin-app-status/list",
+    name: "checkin-app-status-list",
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "checkin-app-status-list" */ "../views/checkin-app-status-list/checkin-app-status-list.view.vue"
+      ),
+  },
+  {
     path: "/events/new",
     name: "event-new",
     meta: {

@@ -5,8 +5,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
-import iris.client_bff.config.DwConfig;
-import iris.client_bff.config.HealthDepartmentConfig;
+import iris.client_bff.core.token.TokenGenerator;
 import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.proxy.ProxyServiceClient;
 
@@ -19,7 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class CaseDataRequestServiceTest {
+class CaseDataRequestServiceTest {
 
 	@Mock
 	CaseDataRequestRepository repository;
@@ -33,14 +32,13 @@ public class CaseDataRequestServiceTest {
 	@Mock
 	ProxyServiceClient proxyServiceClient;
 
-	DwConfig dwConfig;
-	HealthDepartmentConfig hdConfig;
+	TokenGenerator tokenGenerator;
 
 	CaseDataRequestService service;
 
 	@BeforeEach
 	void setUp() {
-		service = new CaseDataRequestService(repository, searcher, proxyServiceClient, dwConfig, hdConfig);
+		service = new CaseDataRequestService(repository, searcher, proxyServiceClient, tokenGenerator);
 	}
 
 	@Test
@@ -51,7 +49,7 @@ public class CaseDataRequestServiceTest {
 		var value = service.getCountSinceDate(now);
 
 		verify(repository).getCountSinceDate(now);
-		assertEquals(value, 10);
+		assertEquals(10, value);
 	}
 
 	@Test
@@ -62,6 +60,6 @@ public class CaseDataRequestServiceTest {
 		var value = service.getCountWithStatus(status);
 
 		verify(repository).getCountWithStatus(status);
-		assertEquals(value, 20);
+		assertEquals(20, value);
 	}
 }

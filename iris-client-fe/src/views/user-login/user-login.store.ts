@@ -1,10 +1,5 @@
-import {
-  Credentials,
-  IrisClientFrontendApiFactory,
-  User,
-  UserRole,
-} from "@/api";
-import authClient, { clientConfig, sessionFromResponse } from "@/api-client";
+import { Credentials, User, UserRole } from "@/api";
+import authClient, { baseClient, sessionFromResponse } from "@/api-client";
 import store from "@/store";
 import { RootState } from "@/store/types";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
@@ -105,8 +100,7 @@ const userLogin: UserLoginModule = {
       commit("setAuthenticating", true);
       let session: UserSession | null | unknown = null;
       try {
-        const client = IrisClientFrontendApiFactory(clientConfig);
-        const response = await client.login(credentials);
+        const response = await baseClient.login(credentials);
         session = sessionFromResponse(response);
       } catch (e) {
         commit("setAuthenticationError", getErrorMessage(e));

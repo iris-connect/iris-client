@@ -42,10 +42,6 @@
               <strong> TAN: </strong>
               {{ indexData.tan }}
             </div>
-            <div>
-              <strong> Übermittlungs-URL: </strong>
-              <index-tracking-submission-url :url="indexData.submissionUri" />
-            </div>
           </v-col>
         </v-row>
         <v-tabs @change="handleTabsChange">
@@ -77,6 +73,7 @@
               class="elevation-1 mt-5"
               :search="tableDataContacts.search"
               show-select
+              show-select-all
               v-model="tableDataContacts.select"
               show-expand
               single-expand
@@ -137,6 +134,7 @@
               class="elevation-1 mt-5"
               :search="tableDataEvents.search"
               show-select
+              show-select-all
               v-model="tableDataEvents.select"
               data-test="case.events.data-table"
             >
@@ -185,7 +183,7 @@
           @click="handleContactsExport"
           data-test="case.contacts.export"
         >
-          Kontaktdaten exportieren
+          {{ contactsExportLabel }}
         </v-btn>
         <v-btn
           v-if="currentTab === 1"
@@ -194,7 +192,7 @@
           @click="handleEventsExport"
           data-test="case.events.export"
         >
-          Ereignisdaten exportieren
+          {{ eventsExportLabel }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -212,7 +210,6 @@ import {
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import dataExport from "@/utils/data-export";
 import Genders from "@/constants/Genders";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
@@ -221,6 +218,9 @@ import ContactCategories from "@/constants/ContactCategories";
 import AlertComponent from "@/components/alerts/alert.component.vue";
 import IndexTrackingSubmissionUrl from "@/views/index-tracking-details/components/index-tracking-submission-url.vue";
 import IrisDataTable from "@/components/iris-data-table.vue";
+import exportStandardEvents from "@/views/index-tracking-details/components/data-export/utils/exportStandardEvents";
+import exportStandardContacts from "@/views/index-tracking-details/components/data-export/utils/exportStandardContacts";
+import { getExportLabel } from "@/utils/data-export/common";
 
 type IndexData = {
   extID: string;
@@ -411,7 +411,7 @@ export default class IndexTrackingDetailsView extends Vue {
       contactCount: contacts.length,
       eventCount: events.length,
       comment: dataRequest?.comment || "-",
-      tan: "-", // TODO: TAN needed
+      tan: dataRequest?.readableToken || "-",
       submissionUri: dataRequest?.submissionUri || "-",
       status: dataRequest?.status || "",
     };
@@ -525,17 +525,37 @@ export default class IndexTrackingDetailsView extends Vue {
     return Genders.getName(sex);
   }
 
+  getFileName() {
+    return [this.indexData.extID, Date.now()].join("_");
+  }
+
+  get contactsExportLabel(): string {
+    return getExportLabel(
+      this.tableDataContacts.select.length,
+      this.contacts.length,
+      ["Kontaktdaten", "Kontaktdaten"]
+    );
+  }
+
+  get eventsExportLabel(): string {
+    return getExportLabel(
+      this.tableDataEvents.select.length,
+      this.events.length,
+      ["Ereignisdaten", "Ereignisdaten"]
+    );
+  }
+
   handleContactsExport(): void {
-    dataExport.exportStandardCsvForIndexTrackingContacts(
+    exportStandardContacts.exportCsv(
       this.tableDataContacts.select,
-      [this.indexData.extID, Date.now()].join("_")
+      this.getFileName()
     );
   }
 
   handleEventsExport(): void {
-    dataExport.exportStandardCsvForIndexTrackingEvents(
+    exportStandardEvents.exportCsv(
       this.tableDataEvents.select,
-      [this.indexData.extID, Date.now()].join("_")
+      this.getFileName()
     );
   }
 }

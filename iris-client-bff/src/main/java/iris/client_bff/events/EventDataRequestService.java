@@ -84,9 +84,7 @@ public class EventDataRequestService {
 
 		Location location = null;
 		try {
-			if (isNotEmpty(providerId) && isNotEmpty(locationId)) {
-				location = map(searchClient.findByProviderIdAndLocationId(providerId, locationId));
-			}
+			location = map(searchClient.findByProviderIdAndLocationId(providerId, locationId));
 		} catch (IRISSearchException e) {
 			log.error("Location {} with provider {} could not be obtained: {}", locationId, providerId, e.getMessage());
 

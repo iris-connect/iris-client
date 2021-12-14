@@ -84,39 +84,13 @@ describe("Index Cases", () => {
     cy.getBy("case.externalId").should("contain", indexCase.externalId);
     cy.getBy("case.name").should("contain", indexCase.name);
     cy.getBy("case.comment").should("contain", indexCase.comment);
+    cy.getBy("case.tan").should("exist");
     cy.getBy("case.duration")
       .should("contain", indexCase.start.format("LLL"))
       .and("contain", indexCase.end.format("LLL"));
     cy.getBy("case.status").should("contain", "Angefragt");
-    cy.get(".index-tracking-submission-url").within(() => {
-      cy.getBy("submission-url.url").should(
-        "contain",
-        "digitales-wartezimmer.org/index-case?"
-      );
-    });
   });
-  it("should show tooltips, expand, collapse, copy the submission-url (skip mailing)", () => {
-    cy.visit("/cases/list");
-    cy.getBy("view.data-table")
-      .filterDataTableByStatus("requested")
-      .visitByStatus("requested");
-    cy.get(".index-tracking-submission-url").within(() => {
-      cy.getBy("submission-url.url")
-        .should("contain", "digitales-wartezimmer.org/index-case?")
-        .checkTooltip('[data-test="submission-url.expand.tooltip"]')
-        .dblclick()
-        .checkTooltip('[data-test="submission-url.collapse.tooltip"]');
-      cy.getBy("submission-url.copy")
-        .should("exist")
-        .checkTooltip('[data-test="submission-url.copy.tooltip"]')
-        .click()
-        .invoke("text")
-        .should("match", /URL erfolgreich kopiert|URL kopieren fehlgeschlagen/);
-      cy.getBy("submission-url.mail")
-        .should("exist")
-        .checkTooltip('[data-test="submission-url.mail.tooltip"]');
-    });
-  });
+  /*
   it("should export index case data as csv file", () => {
     cy.visit("/cases/list");
     cy.getBy("view.data-table")
@@ -145,4 +119,5 @@ describe("Index Cases", () => {
       });
     cy.getBy("case.events.export").should("not.be.disabled").click();
   });
+   */
 });

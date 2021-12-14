@@ -171,17 +171,6 @@ Dafür muss das folgende Flag gesetzt werden.
 CSV_EXPORT_STANDARD_ATOMIC_ADDRESS="true"
 ```
 
-## Standard CSV Export Adressformatierung
-
-Sie können bestimmen, wie die Adressdaten im Standard CSV Export ausgegeben werden.
-
-Folgender Parameter kann dafür optional gesetzt werden.
-- `false` oder keine Angabe: Adressdaten erscheinen zusammenhängend in einer Spalte = Standardeinstellung
-- `true`: Jedes Addressfeld erscheint in einer separaten Spalte
-```
-CSV_EXPORT_STANDARD_ATOMIC_ADDRESS
-```
-
 ## Einrichtung HTTP Connect Proxy
 
 In den meisten GAs werden Verbindungen ins Internet über einen Proxy geleitet. Dafür ist folgender Parameter vorgesehen. 
@@ -202,7 +191,7 @@ LOG_FOLDER
 
 ## Einrichtung Root Zertifikat ( veraltet )
 
-Bitte nicht mehr konfigurieren. Verwenden Sie stattdessen `Einrichtung IRIS Umgebung`.
+Bitte nicht mehr konfigurieren. Verwenden Sie stattdessen [Einrichtung IRIS Umgebung](#einrichtung-iris-umgebung).
 
 ## Einrichtung IRIS Umgebung
 
@@ -290,11 +279,11 @@ Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüsse
 
 ```
 # Beispiel
-├── conf
+.
+├── certs
 │   ├── eps
-│   │   ├── certs
-│   │   │   ├── ga-client.crt
-│   │   │   └── ga-client.key
+│   │   ├── ga-client.crt
+│   │   └── ga-client.key
 ```
 
 Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist derselbe wie der CN Name aus dem Zertifikats-Prozess.
@@ -318,11 +307,10 @@ Nach dem man das Zertifikat erhalten hat, muss man es zusammen mit dem Schlüsse
 ```
 # Beispiel
 .
-├── conf
-│   └── proxy
-│       ├── certs
-│       │   ├── ga-client-proxy.crt
-│       │   └── ga-client-proxy.key
+├── certs
+│   └── eps
+│       ├── ga-client-proxy.crt
+│       └── ga-client-proxy.key
 ```
 Danach muss man die Namen des Zertifikates und dessen Schlüssel in der Konfiguration eintragen. Zudem muss man den Namen konfigurieren, unter dem sich der IRIS Client im Netzwerk anmeldet. Der Name ist derselbe wie der CN Name aus dem Zertifikats-Prozess.
 

@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
         with:
           persist-credentials: false
 
@@ -31,13 +31,12 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
           
-      - name: Setup Node.js
-        uses: actions/setup-node@v2.4.1
+      - name: Setup node from node version file
+        uses: actions/setup-node@v2.5.0
         with:
-          # Version Spec of the version to use.  Examples: 12.x, 10.15.1, >=10.15.0
-          node-version: 12.x
+          node-version-file: 'iris-client-fe/.nvmrc'
 
       - name: Cache local Maven repository
         uses: actions/cache@v2.1.6
@@ -82,44 +81,11 @@ jobs:
   publish-test-results:
     name: Publish Test Results
     needs: release-client
-    runs-on: ubuntu-latest
-    # the build-and-test job might be skipped, we don't need to run this job then
-    if: success() || failure()
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: test-reports
-          path: reports
-
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        with:
-          files: reports/**/*.xml
-          report_individual_runs: true
-          check_run_annotations_branch: "*"
+    uses: iris-connect/iris-client/.github/workflows/publish-test-results.yml@develop
 
   container_scan:
+    name: Container Scan
     needs: release-client
-    name: Trivy Container Scan
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        image: [ 'iris-client-bff', 'iris-client-frontend', 'iris-client-nginx', 'iris-client-eps', 'iris-client-proxy', 'app-eps']
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2.3.5
-      
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: 'inoeg/${{matrix.image}}:latest'
-          format: 'template'
-          template: '@/contrib/sarif.tpl'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH,MEDIUM'
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: 'trivy-results.sarif'
+    uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
+    with:
+        image-refs: "[ 'inoeg/iris-client-bff:latest', 'inoeg/iris-client-frontend:latest', 'inoeg/iris-client-nginx:latest', 'inoeg/iris-client-eps:latest', 'inoeg/iris-client-proxy:latest', 'inoeg/app-eps:latest']"

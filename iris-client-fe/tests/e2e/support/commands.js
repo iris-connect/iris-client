@@ -484,3 +484,34 @@ Cypress.Commands.add("loginUsingUi", (username, password) => {
       cy.getBy("button{submit}").should("exist").click();
     });
 });
+
+Cypress.Commands.add("changeOwnPassword", (credentials, password) => {
+  cy.login(credentials);
+  cy.fetchUser();
+  cy.getApp().then((app) => {
+    cy.visit("/admin/user/edit/" + app.$store.state.userLogin.user?.id);
+    cy.get("form")
+      .should("not.have.class", "is-loading")
+      .within(() => {
+        cy.getBy("input{oldPassword}").should("not.exist");
+        cy.getBy("input{password}")
+          .type(password, { log: false })
+          .assertInputValid();
+        cy.getBy("input{oldPassword}").should("exist");
+        cy.getBy(".v-btn{submit}").click();
+        cy.getBy("input{oldPassword}")
+          .should("exist")
+          .assertInputInvalidByRule("defined")
+          .type("p", { log: false })
+          .assertInputValid();
+        cy.getBy(".v-btn{submit}").click();
+        cy.getBy("error.edit").should("exist");
+        cy.getBy("input{oldPassword}")
+          .clear()
+          .type(credentials.password, { log: false })
+          .assertInputValid();
+        cy.getBy(".v-btn{submit}").click();
+      });
+    cy.location("pathname").should("not.contain", "/admin/user/edit/");
+  });
+});

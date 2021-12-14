@@ -64,10 +64,18 @@ services:
       SECURITY_AUTH_DB_ADMIN_USER_NAME:
       SECURITY_AUTH_DB_ADMIN_USER_PASSWORD:
       SERVER_ERROR_INCLUDE-MESSAGE: ALWAYS
+      DICTIONARY_SALT:
+      TOKENS_GENERATOR_SALT:
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: "/cnb/lifecycle/launcher java -cp /workspace/BOOT-INF/classes:/workspace/BOOT-INF/lib/* iris.tools.HealthChecker -d || exit 1"
+      interval: 20s
+      timeout: 3s
+      retries: 2
+      start_period: 10s
 
   # IRIS Client Frontend (autoupdated by watchtower)
   iris-frontend:
@@ -81,7 +89,8 @@ services:
       CSV_EXPORT_STANDARD_ATOMIC_ADDRESS: "true"
     restart: unless-stopped
     depends_on:
-      - iris-client
+      iris-client:
+        condition: service_healthy
 
   eps:
     image: inoeg/eps:${EPS_VERSION}

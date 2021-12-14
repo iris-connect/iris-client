@@ -89,6 +89,7 @@ export const dummyDataDetails: DataRequestDetails = {
       {
         firstName: "Max",
         lastName: "Mustermann",
+        dateOfBirth: "2001-03-13",
         email: "max@example.de",
         phone: "invalid",
         mobilePhone: "0123 0815",
@@ -107,8 +108,9 @@ export const dummyDataDetails: DataRequestDetails = {
       {
         firstName: "Martina",
         lastName: "Mustermann",
+        dateOfBirth: "1995-04-03",
         email: "a@b.de",
-        phone: "01234 567890",
+        phone: "+49 1234 567890",
         mobilePhone: "0123 456789",
         sex: Sex.Female,
         address: {
@@ -123,16 +125,35 @@ export const dummyDataDetails: DataRequestDetails = {
         },
       },
       {
+        firstName: "\x3DMeðal-Jón \x3DAyşe",
+        lastName: "Miðalhampamaður Skočdopole",
+        dateOfBirth: "1992-04-03",
+        email: "a@c.de",
+        phone: "+49 1234 567890",
+        mobilePhone: "0123 456789",
+        sex: Sex.Male,
+        address: {
+          street: "Przeciętny Kowalski Straße",
+          houseNumber: "3",
+          zipCode: "39104",
+          city: "Magdeburg",
+        },
+        attendanceInformation: {
+          attendFrom: hoursAgo(10),
+          attendTo: hoursAgo(8),
+        },
+      },
+      {
         firstName: " Must\"er'm'an´;=,n",
         lastName: "=?+-@!*/\\%€%=@+µMaxßüäö;",
         email: "=max@e\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nxample.@.de",
-        phone: "=01234 000000",
-        mobilePhone: "=0123 0815",
+        phone: " =01234 000000",
+        mobilePhone: "  =0123 0815",
         sex: Sex.Male,
         address: {
-          street: "=Universitätsplatz",
+          street: '=Univ"ersit;"@ät;+splatz',
           houseNumber: "=1",
-          zipCode: "=39104",
+          zipCode: "  =39104",
           city: "=Magdeburg",
         },
         attendanceInformation: {

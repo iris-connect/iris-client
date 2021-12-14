@@ -46,9 +46,15 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 @Getter
 public class RPCClientConfig {
 
+	private static final int CONN_TIMEOUT = 3 * 1000;
+	private static final int READ_TIMEOUT = 0; // Is infinite here, since we rely on EPS's timeouts after a successful
+																							// connection.
+
 	private final @NonNull String epsClientUrl;
 
 	private final @NonNull String proxyClientUrl;
+
+	private final @NonNull String ownEndpoint;
 
 	@Bean
 	public JsonRpcHttpClient epsRpcClient()
@@ -62,7 +68,7 @@ public class RPCClientConfig {
 		return epsRpcClient(proxyClientUrl);
 	}
 
-	public JsonRpcHttpClient epsRpcClient(String clientUrl)
+	private JsonRpcHttpClient epsRpcClient(String clientUrl)
 			throws MalformedURLException, NoSuchAlgorithmException, KeyManagementException {
 
 		var jacksonObjectMapper = new ObjectMapper();
@@ -82,6 +88,8 @@ public class RPCClientConfig {
 		var sc = getAllCertsTrustedSSLContext();
 		client.setSslContext(sc);
 		client.setHostNameVerifier(new NoopHostnameVerifier());
+		client.setConnectionTimeoutMillis(CONN_TIMEOUT);
+		client.setReadTimeoutMillis(READ_TIMEOUT);
 
 		// This is SO! important
 		client.setContentType("application/json");

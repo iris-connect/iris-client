@@ -87,3 +87,4 @@ hs_err_pid*
 !root-staging.crt
 .env*
 !.env.sample
+/iris-client-bff/dict.txt

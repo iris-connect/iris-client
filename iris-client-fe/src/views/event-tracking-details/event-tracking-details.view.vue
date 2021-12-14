@@ -13,18 +13,15 @@
       :errors="errorMessages"
       @field-edit="handleEditableField"
       @status-update="updateRequestStatus"
-      @data-export="handleStandardCsvExport"
-      @handle-standard-csv-export="handleStandardCsvExport"
-      @handle-alternative-standard-csv-export="
-        handleAlternativeStandardCsvExport
-      "
-      @handle-sormas-csv-event-participants-export="
-        handleSormasCsvEventParticipantsExport
-      "
-      @handle-sormas-csv-contact-person-export="
-        handleSormasCsvContactPersonExport
-      "
-    />
+    >
+      <template #data-export="{ selection }">
+        <event-tracking-details-data-export
+          :event="eventTrackingDetails"
+          :items-length="guests.length"
+          :selection="selection"
+        />
+      </template>
+    </event-tracking-details-component>
   </div>
 </template>
 <style></style>
@@ -40,9 +37,8 @@ import {
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import dataExport, { Row } from "@/utils/data-export";
 import EventTrackingDetailsLocationInfo from "@/views/event-tracking-details/components/event-tracking-details-location-info.vue";
-import dayjs from "@/utils/date";
+import { getFormattedDate } from "@/utils/date";
 import Genders from "@/constants/Genders";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { ErrorMessage } from "@/utils/axios";
@@ -51,6 +47,8 @@ import StatusChangeConfirmDialog from "@/views/event-tracking-details/components
 import EventTrackingStatusChange from "@/views/event-tracking-details/components/event-tracking-status-change.vue";
 import EventTrackingDetailsComponent from "@/views/event-tracking-details/components/event-tracking-details.component.vue";
 import AlertComponent from "@/components/alerts/alert.component.vue";
+import EventTrackingDetailsDataExport from "@/views/event-tracking-details/components/data-export/event-tracking-details-data-export.vue";
+import { getValidPhoneNumber } from "@/utils/misc";
 
 export type FormData = {
   name?: string;
@@ -83,40 +81,6 @@ export type TableRow = {
   raw: Guest;
 };
 
-export type EventParticipantData = {
-  involvementDescription: string;
-  firstName: string;
-  lastName: string;
-  sex: string;
-  phone: string;
-  email: string;
-  postalCode: string;
-  city: string;
-  street: string;
-  houseNumber: string;
-};
-
-export type ContactCaseData = {
-  description: string;
-
-  firstName: string;
-  lastName: string;
-  sex: string;
-  phone: string;
-  email: string;
-  postalCode: string;
-  city: string;
-  street: string;
-  houseNumber: string;
-};
-
-function getFormattedDate(date?: string | Date): string {
-  if (date && dayjs(date).isValid()) {
-    return dayjs(date).format("LLL");
-  }
-  return "-";
-}
-
 function getFormattedAddress(address?: Address | null): string {
   if (address) {
     return `${sanitiseFieldForDisplay(
@@ -134,21 +98,9 @@ function sanitiseFieldForDisplay(text = ""): string {
   return text.replace(RE, " ");
 }
 
-function getValidPhoneNumber(
-  ...numbers: Array<string | undefined>
-): string | undefined {
-  const validNumber = numbers.find(isPossiblePhoneNumber);
-  return validNumber ? validNumber : numbers[0];
-}
-
-function isPossiblePhoneNumber(phoneNumber?: string): boolean {
-  if (!phoneNumber) return false;
-  const number = phoneNumber.replace(/[\s\-_+#*.,:;()/|]/g, "");
-  return /^\d+$/.test(number);
-}
-
 @Component({
   components: {
+    EventTrackingDetailsDataExport,
     EventTrackingDetailsComponent,
     EventTrackingStatusChange,
     StatusChangeConfirmDialog,
@@ -329,133 +281,6 @@ export default class EventTrackingDetailsView extends Vue {
         raw: guest,
       };
     });
-  }
-
-  handleStandardCsvExport(payload: Row[]): void {
-    dataExport.exportStandardCsvForEventTracking(
-      payload,
-      [
-        this.eventTrackingDetails?.externalRequestId || "Export",
-        Date.now(),
-      ].join("_")
-    );
-  }
-
-  handleAlternativeStandardCsvExport(payload: Row[]): void {
-    dataExport.exportAlternativeStandardCsvForEventTracking(
-      payload,
-      [
-        this.eventTrackingDetails?.externalRequestId || "Export",
-        Date.now(),
-      ].join("_")
-    );
-  }
-
-  handleSormasCsvEventParticipantsExport(payload: TableRow[]): void {
-    dataExport.exportSormasEventParticipantsCsv(
-      this.convertTableRowToEventParticipationData(payload),
-      [
-        this.eventTrackingDetails?.externalRequestId || "Export",
-        Date.now(),
-      ].join("_")
-    );
-  }
-
-  handleSormasCsvContactPersonExport(payload: TableRow[]): void {
-    dataExport.exportSormasContactPersonCsv(
-      this.convertTableRowToContactCaseData(
-        payload,
-        this.eventTrackingDetails?.externalRequestId || "-"
-      ),
-      [
-        this.eventTrackingDetails?.externalRequestId || "Export",
-        Date.now(),
-      ].join("_")
-    );
-  }
-
-  convertTableRowToContactCaseData(
-    tableRows: TableRow[],
-    externalId: string
-  ): ContactCaseData[] {
-    const data: ContactCaseData[] = [];
-
-    tableRows.forEach((element) => {
-      const description =
-        "Aus Ereignis " +
-        externalId +
-        ": " +
-        element.comment +
-        " // " +
-        element.checkInTime +
-        " Uhr bis " +
-        element.checkOutTime +
-        " Uhr (Maximale Kontaktdauer " +
-        element.maxDuration +
-        ")";
-
-      const dataInstance: ContactCaseData = {
-        description: description,
-        firstName: element.firstName,
-        lastName: element.lastName,
-        sex: element.raw.sex || "",
-        phone: element.phone,
-        email: element.email,
-        postalCode: element.raw.address?.zipCode || "",
-        city: element.raw.address?.city || "",
-        street: element.raw.address?.street || "",
-        houseNumber: element.raw.address?.houseNumber || "",
-      };
-      data.push(dataInstance);
-    });
-    return data;
-  }
-
-  convertTableRowToEventParticipationData(
-    tableRows: TableRow[]
-  ): EventParticipantData[] {
-    const data: EventParticipantData[] = [];
-
-    const headerInstance: EventParticipantData = {
-      involvementDescription: "involvementDescription",
-      firstName: "person.firstName",
-      lastName: "person.lastName",
-      sex: "person.sex",
-      phone: "person.phone",
-      email: "person.emailAddress",
-      postalCode: "person.address.postalCode",
-      city: "person.address.city",
-      street: "person.address.street",
-      houseNumber: "person.address.houseNumber",
-    };
-    data.push(headerInstance);
-
-    tableRows.forEach((element) => {
-      const involvementDescription =
-        element.comment +
-        " // " +
-        element.checkInTime +
-        " Uhr bis " +
-        element.checkOutTime +
-        " Uhr (Maximale Kontaktdauer " +
-        element.maxDuration +
-        ")";
-
-      const dataInstance: EventParticipantData = {
-        involvementDescription: involvementDescription,
-        firstName: element.firstName,
-        lastName: element.lastName,
-        sex: element.raw.sex || "",
-        phone: element.phone,
-        email: element.email,
-        postalCode: element.raw.address?.zipCode || "",
-        city: element.raw.address?.city || "",
-        street: element.raw.address?.street || "",
-        houseNumber: element.raw.address?.houseNumber || "",
-      };
-      data.push(dataInstance);
-    });
-    return data;
   }
 }
 </script>

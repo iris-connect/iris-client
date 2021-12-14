@@ -38,9 +38,12 @@ export const getDummyUserFromRequest = (
   request: Request,
   id?: string
 ): User => {
-  const { firstName, lastName, userName, role } = JSON.parse(
+  const { firstName, lastName, userName, role, oldPassword } = JSON.parse(
     request.requestBody
   );
+  if (oldPassword === "p") {
+    throw new Error("Das bisherige Passwort stimmt nicht!");
+  }
   return {
     id: id || new Date().getTime() + "",
     firstName,

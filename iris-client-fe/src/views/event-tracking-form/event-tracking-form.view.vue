@@ -26,21 +26,21 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <location-select-dialog
-          v-model="form.model.location"
-          :locationList="locationList"
-          :disabled="locationsLoading"
-          :error="locationsError"
-          @search="handleLocationSearch"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-row data-test="location-select">
-              <v-col v-if="form.model.location">
-                <event-tracking-form-location-info
-                  :location="form.model.location"
-                />
-              </v-col>
-              <v-col>
+        <v-row>
+          <v-col v-if="form.model.location">
+            <event-tracking-form-location-info
+              :location="form.model.location"
+            />
+          </v-col>
+          <v-col>
+            <location-select-dialog
+              v-model="form.model.location"
+              :locationList="locationList"
+              :disabled="locationsLoading"
+              :error="locationsError"
+              @search="handleLocationSearch"
+            >
+              <template v-slot:activator="{ on, attrs }">
                 <v-input
                   v-model="form.model.location"
                   :rules="validationRules.location"
@@ -60,10 +60,11 @@
                     }}
                   </v-btn>
                 </v-input>
-              </v-col>
-            </v-row>
-          </template>
-        </location-select-dialog>
+              </template>
+            </location-select-dialog>
+          </v-col>
+        </v-row>
+        <data-provider-status-info :status-info="appStatusInfo" />
         <v-row>
           <v-col cols="12" md="6">
             <date-time-input-field
@@ -158,6 +159,8 @@ import { get as _get, set as _set, has as _has } from "lodash";
 import EventTrackingFormLocationInfo from "@/views/event-tracking-form/components/event-tracking-form-location-info.vue";
 import rules from "@/common/validation-rules";
 import { DataQuery } from "@/api/common";
+import { AppStatusInfo } from "@/views/checkin-app-status-list/checkin-app-status-list.store";
+import DataProviderStatusInfo from "@/views/event-tracking-form/components/data-provider-status-info.vue";
 
 type EventTrackingForm = {
   model: EventTrackingFormModel;
@@ -179,6 +182,7 @@ type EventTrackingFormQueryParameters = Partial<
 
 @Component({
   components: {
+    DataProviderStatusInfo,
     EventTrackingFormLocationInfo,
     DateTimeInputField,
     LocationSelectDialog,
@@ -186,6 +190,7 @@ type EventTrackingFormQueryParameters = Partial<
   },
   beforeRouteLeave(to, from, next) {
     store.commit("eventTrackingForm/reset");
+    store.commit("checkinAppStatusList/setAppStatusInfoList", {});
     next();
   },
 })
@@ -278,6 +283,16 @@ export default class EventTrackingFormView extends Vue {
       .toISOString();
     this.minEndDate = dayjs(this.form.model.start).format("YYYY-MM-DD");
     this.validateField("end");
+  }
+
+  @Watch("form.model.location.providerId")
+  onLocationProviderChanged(newValue: string): void {
+    this.$store.dispatch("checkinAppStatusList/fetchStatusInfo", newValue);
+  }
+
+  get appStatusInfo(): AppStatusInfo {
+    const name = this.form.model?.location?.providerId;
+    return this.$store.getters["checkinAppStatusList/appStatusInfo"](name);
   }
 
   mounted(): void {

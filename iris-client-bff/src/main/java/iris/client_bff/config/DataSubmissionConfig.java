@@ -17,7 +17,6 @@ public class DataSubmissionConfig {
 
 	public static final String DATA_SUBMISSION_ENDPOINT_WITH_SLASH = "/data-submission-rpc/";
 
-
 	CaseDataController caseDataController;
 
 	EventDataController eventDataController;
@@ -32,15 +31,11 @@ public class DataSubmissionConfig {
 		return createCompositeJsonServiceExporter();
 	}
 
-	private CompositeJsonServiceExporter createCompositeJsonServiceExporter () {
+	private CompositeJsonServiceExporter createCompositeJsonServiceExporter() {
+
 		CompositeJsonServiceExporter compositeJsonServiceExporter = new CompositeJsonServiceExporter();
-		compositeJsonServiceExporter.setServices(
-				new Object[] { caseDataController, eventDataController });
-		compositeJsonServiceExporter.setServiceInterfaces(
-				new Class<?>[] { CaseDataController.class, EventDataController.class });
-		compositeJsonServiceExporter.setAllowMultipleInheritance(true);
+		compositeJsonServiceExporter.setServices(new Object[] { caseDataController, eventDataController });
+
 		return compositeJsonServiceExporter;
 	}
-
-
 }

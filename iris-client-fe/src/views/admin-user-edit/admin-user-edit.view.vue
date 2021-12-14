@@ -79,15 +79,37 @@
               data-test="password"
             />
           </v-col>
+          <v-col v-if="oldPasswordRequired" cols="12" md="6">
+            <password-input-field
+              v-model="form.model.oldPassword"
+              label="Altes Passwort"
+              :rules="validationRules.oldPassword"
+              data-test="oldPassword"
+            />
+            <v-alert
+              class="caption mt-3"
+              icon="mdi-shield-lock-outline"
+              text
+              type="info"
+            >
+              Bitte geben Sie zur Bestätigung der Änderung Ihr altes Passwort
+              ein.
+            </v-alert>
+          </v-col>
         </v-row>
         <v-row v-if="hasError">
           <v-col>
-            <v-alert v-if="userLoadingError" text type="error">{{
-              userLoadingError
-            }}</v-alert>
-            <v-alert v-if="userSavingError" text type="error">{{
-              userSavingError
-            }}</v-alert>
+            <v-alert v-if="userLoadingError" text type="error">
+              {{ userLoadingError }}
+            </v-alert>
+            <v-alert
+              v-if="userSavingError"
+              text
+              type="error"
+              data-test="error.edit"
+            >
+              {{ userSavingError }}
+            </v-alert>
           </v-col>
         </v-row>
       </v-card-text>
@@ -104,7 +126,7 @@
         </v-btn>
         <v-spacer></v-spacer>
         <v-btn
-          :disabled="isBusy"
+          :disabled="isBusy || !userId"
           color="primary"
           @click="editUser"
           data-test="submit"
@@ -126,6 +148,7 @@ import rules from "@/common/validation-rules";
 import { omitBy } from "lodash";
 import ConditionalField from "@/views/admin-user-edit/components/conditional-field.vue";
 import _defaults from "lodash/defaults";
+import _isEmpty from "lodash/isEmpty";
 
 type AdminUserEditForm = {
   model: UserUpdate;
@@ -242,6 +265,7 @@ export default class AdminUserEditView extends Vue {
   get validationRules(): Record<string, Array<unknown>> {
     return {
       password: [rules.password, rules.sanitised],
+      oldPassword: [rules.defined, rules.sanitised],
       userName: [rules.sanitised, rules.maxLength(50)],
       names: [rules.sanitised, rules.nameConventions, rules.maxLength(50)],
     };
@@ -254,7 +278,8 @@ export default class AdminUserEditView extends Vue {
       firstName: "",
       lastName: "",
       userName: "",
-      password: "",
+      password: undefined,
+      oldPassword: undefined,
       role: undefined,
     },
     valid: false,
@@ -273,6 +298,22 @@ export default class AdminUserEditView extends Vue {
     return store.state.adminUserEdit.user;
   }
 
+  @Watch("form.model.password")
+  onPasswordChanged(newValue: string): void {
+    if (_isEmpty(newValue)) {
+      this.form.model.oldPassword = undefined;
+    }
+  }
+
+  get oldPasswordRequired(): boolean {
+    if (_isEmpty(this.form.model.password)) return false;
+    return this.$store.getters["userLogin/isUser"] || this.isCurrentUser;
+  }
+
+  get isCurrentUser(): boolean {
+    return this.$store.getters["userLogin/isCurrentUser"](this.userId);
+  }
+
   async editUser(): Promise<void> {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
@@ -285,10 +326,18 @@ export default class AdminUserEditView extends Vue {
         data: ensureIntegrityOfUserUpsert(this.form.model, protectedFields),
       };
       await store.dispatch("adminUserEdit/editUser", payload);
-      this.$router.replace({ name: "admin-user-list" });
+      this.$router
+        .replace({
+          name: this.$store.getters["userLogin/isAdmin"]
+            ? "admin-user-list"
+            : "dashboard",
+        })
+        .catch(() => {
+          // ignored
+        });
       // fetch the user profile after changing the current user to update the user`s display name in the main navigation bar
       // can be ignored if it fails because no business logic is affected if the user profile is not up to date as the user`s access token is invalidated by the Backend if anything of relevance (e.g. userName, password) changes
-      if (store.getters["userLogin/isCurrentUser"](this.userId)) {
+      if (this.isCurrentUser) {
         store.dispatch("userLogin/fetchAuthenticatedUser", true).catch(() => {
           // ignored
         });

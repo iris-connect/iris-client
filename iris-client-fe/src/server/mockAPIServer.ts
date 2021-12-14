@@ -28,6 +28,10 @@ import { findIndex, remove, some } from "lodash";
 import { paginated } from "@/server/utils/pagination";
 import dayjs from "@/utils/date";
 import _defaults from "lodash/defaults";
+import {
+  dummyCheckinApps,
+  getDummyCheckinAppStatus,
+} from "@/server/data/status-checkin-apps";
 
 const loginResponse = (role: UserRole): Response => {
   return new Response(200, {
@@ -137,7 +141,7 @@ export function makeMockAPIServer() {
             );
           }
         } catch (e) {
-          // ignored
+          return new Response(400, undefined, (e as Error).message);
         }
         return authResponse(request);
       });
@@ -275,6 +279,17 @@ export function makeMockAPIServer() {
           page: 1,
           size: 20,
         });
+      });
+
+      this.get("/status/checkin-apps", (schema, request) => {
+        return authResponse(request, dummyCheckinApps);
+      });
+
+      this.get("/status/checkin-apps/:name", (schema, request) => {
+        return authResponse(
+          request,
+          getDummyCheckinAppStatus(request.params.name)
+        );
       });
     },
   });

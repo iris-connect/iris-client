@@ -11,13 +11,12 @@ import iris.client_bff.users.web.dto.UserInsertDTO;
 import iris.client_bff.users.web.dto.UserRoleDTO;
 import iris.client_bff.users.web.dto.UserUpdateDTO;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -57,8 +56,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userAccountsRepository.findByUserName(username);
 	}
 
+	public boolean isOldPasswordCorrect(@NonNull UUID id, @NonNull String oldPassword) {
+
+		return userAccountsRepository.findById(id)
+				.map(UserAccount::getPassword)
+				.filter(it -> passwordEncoder.matches(oldPassword, it))
+				.isPresent();
+	}
+
 	public List<UserAccount> loadAll() {
-		return StreamSupport.stream(userAccountsRepository.findAll().spliterator(), false).collect(Collectors.toList());
+		return userAccountsRepository.findAll();
 	}
 
 	public UserAccount create(UserInsertDTO userInsertDTO) {
@@ -71,12 +78,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		log.info("Update user: {}", userId);
 
-		var userAccount = userAccountsRepository.findById(userId)
-				.orElseThrow(() -> {
-					var error = "User not found: " + userId.toString();
-					log.error(error);
-					throw new RuntimeException(error);
-				});
+		var userAccount = findUser(userId);
 
 		var isAdmin = authentication.isAdmin();
 		var invalidateTokens = false;
@@ -128,8 +130,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 
 		var newPassword = userUpdateDTO.getPassword();
-		if (isNotBlank(newPassword)
-				&& !StringUtils.equals(userAccount.getPassword(), newPassword)) {
+		if (isNotBlank(newPassword) && !passwordEncoder.matches(newPassword, userAccount.getPassword())) {
 
 			userAccount.setPassword(passwordEncoder.encode(newPassword));
 			invalidateTokens = true;
@@ -157,6 +158,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				});
 
 		userAccountsRepository.deleteById(id);
+	}
+
+	public boolean isItCurrentUser(UUID userId, UserAccountAuthentication authentication) {
+
+		var userAccount = findUser(userId);
+
+		return authentication.getUserName().equals(userAccount.getUserName());
+	}
+
+	private UserAccount findUser(UUID userId) {
+
+		return userAccountsRepository.findById(userId)
+				.orElseThrow(() -> {
+					var error = "User not found: " + userId.toString();
+					log.error(error);
+					throw new RuntimeException(error);
+				});
 	}
 
 	private UserAccount map(UserInsertDTO userInsertDTO) {

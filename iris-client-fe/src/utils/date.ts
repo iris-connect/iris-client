@@ -13,3 +13,14 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
 export default dayjs;
+
+export const getFormattedDate = (
+  date?: string | Date,
+  format?: string,
+  defaultValue?: string
+): string => {
+  if (date && dayjs(date).isValid()) {
+    return dayjs(date).format(format || "LLL");
+  }
+  return defaultValue || "-";
+};

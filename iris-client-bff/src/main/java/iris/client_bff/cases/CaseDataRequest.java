@@ -2,12 +2,14 @@ package iris.client_bff.cases;
 
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
+import iris.client_bff.core.token.IdentifierToken;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -57,16 +59,15 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 
 	private @Setter String comment;
 	private String announcementToken;
-	private @Setter String dwSubmissionUri;
+	private String dataAuthorizationToken;
+	private String readableToken;
 
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	@GenericField(sortable = Sortable.YES)
+	@Column(nullable = false) @Enumerated(EnumType.STRING) @GenericField(sortable = Sortable.YES)
 	private Status status = Status.DATA_REQUESTED;
 
 	@Builder
 	public CaseDataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
-			String hdUserId, String comment, String announcementToken) {
+			String hdUserId, String comment, @NonNull IdentifierToken identifierToken, String announcementToken) {
 
 		super();
 
@@ -78,6 +79,8 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 		this.requestEnd = requestEnd;
 		this.hdUserId = hdUserId;
 		this.comment = comment;
+		this.dataAuthorizationToken = identifierToken.dataAuthorizationToken();
+		this.readableToken = identifierToken.readableToken();
 		this.announcementToken = announcementToken;
 	}
 

@@ -235,21 +235,6 @@ public class EventDataRequestController {
 		return mapped;
 	}
 
-	private ExistingDataRequestClientWithLocation mapExistingDataRequestClientWithLocation(EventDataRequest request) {
-		ExistingDataRequestClientWithLocation mapped = modelMapper.map(request,
-				ExistingDataRequestClientWithLocation.class);
-		mapped.setCode(request.getId().toString());
-		mapped.setStart(request.getRequestStart());
-		mapped.setEnd(request.getRequestEnd());
-		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
-		mapped.setLastUpdatedAt(request.getLastModifiedAt());
-		mapped.setRequestedAt(request.getCreatedAt());
-		mapped.setExternalRequestId(request.getRefId());
-		mapped.setRequestDetails(request.getRequestDetails());
-		mapped.setName(request.getName());
-		return mapped;
-	}
-
 	private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
 		submissionRepo.findAllByRequest(request).get().findFirst()
 				.ifPresent(it -> addSubmissionToRequest(requestDetails, it));

@@ -9,7 +9,7 @@ import javax.validation.Valid;
 
 public interface CaseDataController {
 	String submitContactAndEventData(
-			@JsonRpcParam(value = "dataAuthorizationToken") UUID dataAuthorizationToken,
+			@JsonRpcParam(value = "dataAuthorizationToken") String dataAuthorizationToken,
 			@Valid @JsonRpcParam(value = "contacts") Contacts contacts,
 			@Valid @JsonRpcParam(value = "events") Events events,
 			@Valid @JsonRpcParam(value = "dataProvider") CaseDataProvider dataProvider

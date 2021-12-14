@@ -8,7 +8,7 @@ version: "3.4"
 services:
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-bff:1.1
+    image: inoeg/iris-client-bff:1.2-latest
     expose:
       - 8092
     environment:
@@ -27,11 +27,18 @@ services:
       IRIS_BACKEND_SERVICE_ENDPOINT: ${EPS_LS_NAME}
       IRIS_CLIENT_BASEPATH: "https://${IRIS_CLIENT_DOMAIN}"
       EXT_APP_DW_BASEURL:
+      EPS_OP:
     restart: unless-stopped
+    healthcheck:
+      test: "/cnb/lifecycle/launcher java -cp /workspace/BOOT-INF/classes:/workspace/BOOT-INF/lib/* iris.tools.HealthChecker || exit 1"
+      interval: 20s
+      timeout: 3s
+      retries: 2
+      start_period: 10s
 
   # IRIS Client Frontend for users
   iris-frontend:
-    image: inoeg/iris-client-frontend:1.1
+    image: inoeg/iris-client-frontend:1.2-latest
     expose:
       - 28080
     environment:
@@ -46,7 +53,7 @@ services:
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: inoeg/iris-client-eps:1.1
+    image: inoeg/iris-client-eps:1.2-latest
     expose:
       - 4446
       - 5556
@@ -68,7 +75,7 @@ services:
 
   # Proxy for inbound connections.
   private-proxy:
-    image: inoeg/iris-client-proxy:1.1
+    image: inoeg/iris-client-proxy:1.2-latest
     expose:
       - 5545
       - 8877
@@ -93,7 +100,7 @@ services:
     restart: unless-stopped
 
   private-proxy-eps:
-    image: inoeg/iris-client-eps:1.1
+    image: inoeg/iris-client-eps:1.2-latest
     expose:
       - 7766
       - 7776
@@ -115,7 +122,7 @@ services:
 
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:1.1
+    image: inoeg/iris-client-nginx:1.2-latest
     ports:
       - ${IRIS_CLIENT_PORT:-443}:443
     environment:

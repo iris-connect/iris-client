@@ -68,5 +68,12 @@ declare namespace Cypress {
       selector: string,
       options?: Partial<Loggable & Timeoutable & Withinable & Shadow>
     ): Chainable<JQuery<HTMLElement>>;
+    changeOwnPassword(
+      credentials: {
+        userName: string;
+        password: string;
+      },
+      newPassword: string
+    ): Chainable<Subject>;
   }
 }

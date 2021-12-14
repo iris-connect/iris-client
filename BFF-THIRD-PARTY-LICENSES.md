@@ -8,18 +8,18 @@ List of third-party dependencies grouped by their license type.
 
     Apache 2:
 
-        * JavaEWAH (com.googlecode.javaewah:JavaEWAH:1.1.6 - https://github.com/lemire/javaewah)
+        * JavaEWAH (com.googlecode.javaewah:JavaEWAH:1.1.7 - https://github.com/lemire/javaewah)
 
     Apache 2.0:
 
         * == GreenMail Core == (com.icegreen:greenmail:1.6.5 - http://www.icegreen.com/greenmail/)
-        * json-path (io.rest-assured:json-path:4.3.3 - http://maven.apache.org)
-        * REST Assured (io.rest-assured:rest-assured:4.3.3 - http://code.google.com/p/rest-assured)
-        * rest-assured-common (io.rest-assured:rest-assured-common:4.3.3 - http://maven.apache.org)
-        * spring-commons (io.rest-assured:spring-commons:4.3.3 - http://maven.apache.org)
-        * spring-mock-mvc (io.rest-assured:spring-mock-mvc:4.3.3 - http://maven.apache.org)
-        * xml-path (io.rest-assured:xml-path:4.3.3 - http://code.google.com/p/rest-assured/xml-path)
-        * Swagger UI (org.webjars:swagger-ui:3.52.5 - http://webjars.org)
+        * json-path (io.rest-assured:json-path:4.4.0 - http://maven.apache.org)
+        * REST Assured (io.rest-assured:rest-assured:4.4.0 - http://code.google.com/p/rest-assured)
+        * rest-assured-common (io.rest-assured:rest-assured-common:4.4.0 - http://maven.apache.org)
+        * spring-commons (io.rest-assured:spring-commons:4.4.0 - http://maven.apache.org)
+        * spring-mock-mvc (io.rest-assured:spring-mock-mvc:4.4.0 - http://maven.apache.org)
+        * xml-path (io.rest-assured:xml-path:4.4.0 - http://code.google.com/p/rest-assured/xml-path)
+        * Swagger UI (org.webjars:swagger-ui:4.1.2 - http://webjars.org)
 
     Apache License 2.0:
 
@@ -31,7 +31,6 @@ List of third-party dependencies grouped by their license type.
         * Jakarta Bean Validation API (jakarta.validation:jakarta.validation-api:2.0.2 - https://beanvalidation.org)
         * TagSoup (org.ccil.cowan.tagsoup:tagsoup:1.2.1 - http://home.ccil.org/~cowan/XML/tagsoup/)
         * Hibernate Validator Engine (org.hibernate.validator:hibernate-validator:6.2.0.Final - http://hibernate.org/validator/hibernate-validator)
-        * Javassist (org.javassist:javassist:3.27.0-GA - http://www.javassist.org/)
 
     Apache License, Version 2.0:
 
@@ -41,10 +40,10 @@ List of third-party dependencies grouped by their license type.
         * Apache Commons BeanUtils (commons-beanutils:commons-beanutils:1.9.4 - https://commons.apache.org/proper/commons-beanutils/)
         * Apache Commons Codec (commons-codec:commons-codec:1.15 - https://commons.apache.org/proper/commons-codec/)
         * Apache Commons Collections (commons-collections:commons-collections:3.2.2 - http://commons.apache.org/collections/)
-        * Non-Blocking Reactive Foundation for the JVM (io.projectreactor:reactor-core:3.4.11 - https://github.com/reactor/reactor-core)
+        * Non-Blocking Reactive Foundation for the JVM (io.projectreactor:reactor-core:3.4.12 - https://github.com/reactor/reactor-core)
         * CDI APIs (javax.enterprise:cdi-api:1.0 - http://www.seamframework.org/Weld/cdi-api)
-        * Byte Buddy (without dependencies) (net.bytebuddy:byte-buddy:1.10.22 - https://bytebuddy.net/byte-buddy)
-        * Byte Buddy agent (net.bytebuddy:byte-buddy-agent:1.10.22 - https://bytebuddy.net/byte-buddy-agent)
+        * Byte Buddy (without dependencies) (net.bytebuddy:byte-buddy:1.11.22 - https://bytebuddy.net/byte-buddy)
+        * Byte Buddy agent (net.bytebuddy:byte-buddy-agent:1.11.22 - https://bytebuddy.net/byte-buddy-agent)
         * Apache Commons Compress (org.apache.commons:commons-compress:1.21 - https://commons.apache.org/proper/commons-compress/)
         * Apache Commons Lang (org.apache.commons:commons-lang3:3.12.0 - https://commons.apache.org/proper/commons-lang/)
         * Apache Commons Text (org.apache.commons:commons-text:1.9 - https://commons.apache.org/proper/commons-text)
@@ -52,8 +51,8 @@ List of third-party dependencies grouped by their license type.
         * Apache HttpCore (org.apache.httpcomponents:httpcore:4.4.14 - http://hc.apache.org/httpcomponents-core-ga)
         * Apache HttpCore NIO (org.apache.httpcomponents:httpcore-nio:4.4.14 - http://hc.apache.org/httpcomponents-core-ga)
         * Apache HttpClient Mime (org.apache.httpcomponents:httpmime:4.5.13 - http://hc.apache.org/httpcomponents-client)
-        * Apache Log4j API (org.apache.logging.log4j:log4j-api:2.14.1 - https://logging.apache.org/log4j/2.x/log4j-api/)
-        * Apache Log4j to SLF4J Adapter (org.apache.logging.log4j:log4j-to-slf4j:2.14.1 - https://logging.apache.org/log4j/2.x/log4j-to-slf4j/)
+        * Apache Log4j API (org.apache.logging.log4j:log4j-api:2.15.0 - https://logging.apache.org/log4j/2.x/log4j-api/)
+        * Apache Log4j to SLF4J Adapter (org.apache.logging.log4j:log4j-to-slf4j:2.15.0 - https://logging.apache.org/log4j/2.x/log4j-to-slf4j/)
         * Lucene Common Analyzers (org.apache.lucene:lucene-analyzers-common:8.7.0 - https://lucene.apache.org/lucene-parent/lucene-analyzers-common)
         * Lucene Core (org.apache.lucene:lucene-core:8.7.0 - https://lucene.apache.org/lucene-parent/lucene-core)
         * Lucene Facets (org.apache.lucene:lucene-facet:8.7.0 - https://lucene.apache.org/lucene-parent/lucene-facet)
@@ -62,89 +61,81 @@ List of third-party dependencies grouped by their license type.
         * Lucene QueryParsers (org.apache.lucene:lucene-queryparser:8.7.0 - https://lucene.apache.org/lucene-parent/lucene-queryparser)
         * Lucene Sandbox (org.apache.lucene:lucene-sandbox:8.7.0 - https://lucene.apache.org/lucene-parent/lucene-sandbox)
         * Maven Artifact Resolver API (org.apache.maven.resolver:maven-resolver-api:1.4.1 - https://maven.apache.org/resolver/maven-resolver-api/)
-        * tomcat-embed-core (org.apache.tomcat.embed:tomcat-embed-core:9.0.54 - https://tomcat.apache.org/)
-        * tomcat-embed-el (org.apache.tomcat.embed:tomcat-embed-el:9.0.54 - https://tomcat.apache.org/)
-        * tomcat-embed-websocket (org.apache.tomcat.embed:tomcat-embed-websocket:9.0.54 - https://tomcat.apache.org/)
-        * AssertJ fluent assertions (org.assertj:assertj-core:3.19.0 - https://assertj.github.io/doc/assertj-core/)
-        * flyway-core (org.flywaydb:flyway-core:7.7.3 - https://flywaydb.org/flyway-core)
+        * tomcat-embed-core (org.apache.tomcat.embed:tomcat-embed-core:9.0.55 - https://tomcat.apache.org/)
+        * tomcat-embed-el (org.apache.tomcat.embed:tomcat-embed-el:9.0.55 - https://tomcat.apache.org/)
+        * tomcat-embed-websocket (org.apache.tomcat.embed:tomcat-embed-websocket:9.0.55 - https://tomcat.apache.org/)
+        * AssertJ fluent assertions (org.assertj:assertj-core:3.21.0 - https://assertj.github.io/doc/assertj-core/)
+        * flyway-core (org.flywaydb:flyway-core:8.0.4 - https://flywaydb.org/flyway-core)
         * Apache FreeMarker (org.freemarker:freemarker:2.3.31 - https://freemarker.apache.org/)
         * Java Annotation Indexer (org.jboss:jandex:2.2.3.Final - http://www.jboss.org/jandex)
-        * ModelMapper (org.modelmapper:modelmapper:2.4.4 - http://modelmapper.org/modelmapper)
+        * ModelMapper (org.modelmapper:modelmapper:2.4.5 - http://modelmapper.org/modelmapper)
         * Objenesis (org.objenesis:objenesis:3.2 - http://objenesis.org/objenesis)
-        * Spring AOP (org.springframework:spring-aop:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring Aspects (org.springframework:spring-aspects:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring Beans (org.springframework:spring-beans:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring Context (org.springframework:spring-context:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring Context Support (org.springframework:spring-context-support:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring Core (org.springframework:spring-core:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring Expression Language (SpEL) (org.springframework:spring-expression:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring Commons Logging Bridge (org.springframework:spring-jcl:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring JDBC (org.springframework:spring-jdbc:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring Object/Relational Mapping (org.springframework:spring-orm:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring TestContext Framework (org.springframework:spring-test:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring Transaction (org.springframework:spring-tx:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring Web (org.springframework:spring-web:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * Spring Web MVC (org.springframework:spring-webmvc:5.3.12 - https://github.com/spring-projects/spring-framework)
-        * spring-boot (org.springframework.boot:spring-boot:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-actuator (org.springframework.boot:spring-boot-actuator:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-actuator-autoconfigure (org.springframework.boot:spring-boot-actuator-autoconfigure:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-autoconfigure (org.springframework.boot:spring-boot-autoconfigure:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-configuration-processor (org.springframework.boot:spring-boot-configuration-processor:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-devtools (org.springframework.boot:spring-boot-devtools:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter (org.springframework.boot:spring-boot-starter:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-actuator (org.springframework.boot:spring-boot-starter-actuator:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-aop (org.springframework.boot:spring-boot-starter-aop:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-data-jpa (org.springframework.boot:spring-boot-starter-data-jpa:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-freemarker (org.springframework.boot:spring-boot-starter-freemarker:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-hateoas (org.springframework.boot:spring-boot-starter-hateoas:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-jdbc (org.springframework.boot:spring-boot-starter-jdbc:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-json (org.springframework.boot:spring-boot-starter-json:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-logging (org.springframework.boot:spring-boot-starter-logging:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-mail (org.springframework.boot:spring-boot-starter-mail:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-security (org.springframework.boot:spring-boot-starter-security:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-test (org.springframework.boot:spring-boot-starter-test:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-tomcat (org.springframework.boot:spring-boot-starter-tomcat:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-validation (org.springframework.boot:spring-boot-starter-validation:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-web (org.springframework.boot:spring-boot-starter-web:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-test (org.springframework.boot:spring-boot-test:2.5.6 - https://spring.io/projects/spring-boot)
-        * spring-boot-test-autoconfigure (org.springframework.boot:spring-boot-test-autoconfigure:2.5.6 - https://spring.io/projects/spring-boot)
-        * Spring Cloud Contract Converters (org.springframework.cloud:spring-cloud-contract-converters:3.0.4 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-tools/spring-cloud-contract-converters)
-        * Spring Cloud Contract Shaded Dependencies (org.springframework.cloud:spring-cloud-contract-shade:3.0.4 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-shade)
-        * Spring Cloud Contract Spec (org.springframework.cloud:spring-cloud-contract-spec:3.0.4 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-spec)
-        * Spring Cloud Contract Spec Groovy (org.springframework.cloud:spring-cloud-contract-spec-groovy:3.0.4 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-spec-groovy)
-        * Spring Cloud Contract Spec Java (org.springframework.cloud:spring-cloud-contract-spec-java:3.0.4 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-spec-java)
-        * Spring Cloud Contract Stub Runner (org.springframework.cloud:spring-cloud-contract-stub-runner:3.0.4 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-stub-runner)
-        * Spring Cloud Contract Verifier (org.springframework.cloud:spring-cloud-contract-verifier:3.0.4 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-verifier)
-        * spring-cloud-contract-wiremock (org.springframework.cloud:spring-cloud-contract-wiremock:3.0.4 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-wiremock)
+        * Spring AOP (org.springframework:spring-aop:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring Aspects (org.springframework:spring-aspects:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring Beans (org.springframework:spring-beans:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring Context (org.springframework:spring-context:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring Context Support (org.springframework:spring-context-support:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring Core (org.springframework:spring-core:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring Expression Language (SpEL) (org.springframework:spring-expression:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring Commons Logging Bridge (org.springframework:spring-jcl:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring JDBC (org.springframework:spring-jdbc:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring Object/Relational Mapping (org.springframework:spring-orm:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring TestContext Framework (org.springframework:spring-test:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring Transaction (org.springframework:spring-tx:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring Web (org.springframework:spring-web:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * Spring Web MVC (org.springframework:spring-webmvc:5.3.13 - https://github.com/spring-projects/spring-framework)
+        * spring-boot (org.springframework.boot:spring-boot:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-actuator (org.springframework.boot:spring-boot-actuator:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-actuator-autoconfigure (org.springframework.boot:spring-boot-actuator-autoconfigure:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-autoconfigure (org.springframework.boot:spring-boot-autoconfigure:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-configuration-processor (org.springframework.boot:spring-boot-configuration-processor:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-devtools (org.springframework.boot:spring-boot-devtools:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter (org.springframework.boot:spring-boot-starter:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-actuator (org.springframework.boot:spring-boot-starter-actuator:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-aop (org.springframework.boot:spring-boot-starter-aop:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-data-jpa (org.springframework.boot:spring-boot-starter-data-jpa:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-freemarker (org.springframework.boot:spring-boot-starter-freemarker:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-hateoas (org.springframework.boot:spring-boot-starter-hateoas:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-jdbc (org.springframework.boot:spring-boot-starter-jdbc:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-json (org.springframework.boot:spring-boot-starter-json:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-logging (org.springframework.boot:spring-boot-starter-logging:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-mail (org.springframework.boot:spring-boot-starter-mail:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-security (org.springframework.boot:spring-boot-starter-security:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-test (org.springframework.boot:spring-boot-starter-test:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-tomcat (org.springframework.boot:spring-boot-starter-tomcat:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-validation (org.springframework.boot:spring-boot-starter-validation:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-web (org.springframework.boot:spring-boot-starter-web:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-test (org.springframework.boot:spring-boot-test:2.6.1 - https://spring.io/projects/spring-boot)
+        * spring-boot-test-autoconfigure (org.springframework.boot:spring-boot-test-autoconfigure:2.6.1 - https://spring.io/projects/spring-boot)
+        * Spring Cloud Contract Converters (org.springframework.cloud:spring-cloud-contract-converters:3.1.0 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-tools/spring-cloud-contract-converters)
+        * Spring Cloud Contract Shaded Dependencies (org.springframework.cloud:spring-cloud-contract-shade:3.1.0 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-shade)
+        * Spring Cloud Contract Spec (org.springframework.cloud:spring-cloud-contract-spec:3.1.0 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-spec)
+        * Spring Cloud Contract Spec Groovy (org.springframework.cloud:spring-cloud-contract-spec-groovy:3.1.0 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-spec-groovy)
+        * Spring Cloud Contract Spec Java (org.springframework.cloud:spring-cloud-contract-spec-java:3.1.0 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-spec-java)
+        * Spring Cloud Contract Stub Runner (org.springframework.cloud:spring-cloud-contract-stub-runner:3.1.0 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-stub-runner)
+        * Spring Cloud Contract Verifier (org.springframework.cloud:spring-cloud-contract-verifier:3.1.0 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-verifier)
+        * spring-cloud-contract-wiremock (org.springframework.cloud:spring-cloud-contract-wiremock:3.1.0 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-wiremock)
         * Spring Cloud Function Compiler (org.springframework.cloud:spring-cloud-function-compiler:3.0.6.RELEASE - https://spring.io/spring-cloud/spring-cloud-function-parent/spring-cloud-function-compiler)
-        * Spring Cloud Contract Stub Runner Starter (org.springframework.cloud:spring-cloud-starter-contract-stub-runner:3.0.4 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-starters/spring-cloud-starter-contract-stub-runner)
-        * Spring Data Core (org.springframework.data:spring-data-commons:2.5.6 - https://www.spring.io/spring-data/spring-data-commons)
-        * Spring Data JPA (org.springframework.data:spring-data-jpa:2.5.6 - https://projects.spring.io/spring-data-jpa)
-        * Spring HATEOAS (org.springframework.hateoas:spring-hateoas:1.3.5 - https://github.com/spring-projects/spring-hateoas)
+        * Spring Cloud Contract Stub Runner Starter (org.springframework.cloud:spring-cloud-starter-contract-stub-runner:3.1.0 - https://github.com/spring-cloud/spring-cloud-contract/spring-cloud-contract-starters/spring-cloud-starter-contract-stub-runner)
+        * Spring Data Core (org.springframework.data:spring-data-commons:2.6.0 - https://www.spring.io/spring-data/spring-data-commons)
+        * Spring Data JPA (org.springframework.data:spring-data-jpa:2.6.0 - https://projects.spring.io/spring-data-jpa)
+        * Spring HATEOAS (org.springframework.hateoas:spring-hateoas:1.4.0 - https://github.com/spring-projects/spring-hateoas)
         * Spring Plugin - Core (org.springframework.plugin:spring-plugin-core:2.0.0.RELEASE - https://github.com/spring-projects/spring-plugin/spring-plugin-core)
-        * spring-security-config (org.springframework.security:spring-security-config:5.5.3 - https://spring.io/projects/spring-security)
-        * spring-security-core (org.springframework.security:spring-security-core:5.5.3 - https://spring.io/projects/spring-security)
-        * spring-security-crypto (org.springframework.security:spring-security-crypto:5.5.3 - https://spring.io/projects/spring-security)
-        * spring-security-test (org.springframework.security:spring-security-test:5.5.3 - https://spring.io/projects/spring-security)
-        * spring-security-web (org.springframework.security:spring-security-web:5.5.3 - https://spring.io/projects/spring-security)
+        * spring-security-config (org.springframework.security:spring-security-config:5.6.0 - https://spring.io/projects/spring-security)
+        * spring-security-core (org.springframework.security:spring-security-core:5.6.0 - https://spring.io/projects/spring-security)
+        * spring-security-crypto (org.springframework.security:spring-security-crypto:5.6.0 - https://spring.io/projects/spring-security)
+        * spring-security-test (org.springframework.security:spring-security-test:5.6.0 - https://spring.io/projects/spring-security)
+        * spring-security-web (org.springframework.security:spring-security-web:5.6.0 - https://spring.io/projects/spring-security)
         * SnakeYAML (org.yaml:snakeyaml:1.23 - http://www.snakeyaml.org)
-        * SnakeYAML (org.yaml:snakeyaml:1.28 - http://www.snakeyaml.org)
+        * SnakeYAML (org.yaml:snakeyaml:1.29 - http://www.snakeyaml.org)
 
     Apache License, version 2.0:
 
         * JBoss Logging 3 (org.jboss.logging:jboss-logging:3.4.2.Final - http://www.jboss.org)
 
-    Apache Software License, Version 1.1:
-
-        * Bouncy Castle OpenPGP API (org.bouncycastle:bcpg-jdk15on:1.61 - http://www.bouncycastle.org/java.html)
-
     BSD:
 
         * Automaton (dk.brics.automaton:automaton:1.11-8 - http://www.brics.dk/automaton/)
-
-    BSD 3-clause New License:
-
-        * dom4j (org.dom4j:dom4j:2.1.3 - http://dom4j.github.io/)
 
     BSD License:
 
@@ -158,17 +149,11 @@ List of third-party dependencies grouped by their license type.
     BSD-2-Clause:
 
         * HdrHistogram (org.hdrhistogram:HdrHistogram:2.1.12 - http://hdrhistogram.github.io/HdrHistogram/)
-        * PostgreSQL JDBC Driver (org.postgresql:postgresql:42.2.24 - https://jdbc.postgresql.org)
+        * PostgreSQL JDBC Driver (org.postgresql:postgresql:42.3.1 - https://jdbc.postgresql.org)
 
     BSD-3-Clause:
 
         * asm (org.ow2.asm:asm:9.1 - http://asm.ow2.io/)
-
-    Bouncy Castle Licence:
-
-        * Bouncy Castle OpenPGP API (org.bouncycastle:bcpg-jdk15on:1.61 - http://www.bouncycastle.org/java.html)
-        * Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs (org.bouncycastle:bcpkix-jdk15on:1.61 - http://www.bouncycastle.org/java.html)
-        * Bouncy Castle Provider (org.bouncycastle:bcprov-jdk15on:1.61 - http://www.bouncycastle.org/java.html)
 
     CC0:
 
@@ -203,7 +188,8 @@ List of third-party dependencies grouped by their license type.
 
     Eclipse Distribution License (New BSD License):
 
-        * JGit - Core (org.eclipse.jgit:org.eclipse.jgit:5.5.1.201910021850-r - http://www.eclipse.org/jgit//org.eclipse.jgit)
+        * JGit - Core (org.eclipse.jgit:org.eclipse.jgit:5.12.0.202106070339-r - https://www.eclipse.org/jgit//org.eclipse.jgit)
+        * JGit - JSch-based SSH support (org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:5.12.0.202106070339-r - https://www.eclipse.org/jgit//org.eclipse.jgit.ssh.jsch)
 
     Eclipse Distribution License - v 1.0:
 
@@ -242,8 +228,8 @@ List of third-party dependencies grouped by their license type.
 
     Eclipse Public License - v 1.0:
 
-        * Logback Classic Module (ch.qos.logback:logback-classic:1.2.6 - http://logback.qos.ch/logback-classic)
-        * Logback Core Module (ch.qos.logback:logback-core:1.2.6 - http://logback.qos.ch/logback-core)
+        * Logback Classic Module (ch.qos.logback:logback-classic:1.2.7 - http://logback.qos.ch/logback-classic)
+        * Logback Core Module (ch.qos.logback:logback-core:1.2.7 - http://logback.qos.ch/logback-core)
 
     Eclipse Public License - v 2.0:
 
@@ -272,12 +258,12 @@ List of third-party dependencies grouped by their license type.
 
     Eclipse Public License v2.0:
 
-        * JUnit Jupiter (Aggregator) (org.junit.jupiter:junit-jupiter:5.7.2 - https://junit.org/junit5/)
-        * JUnit Jupiter API (org.junit.jupiter:junit-jupiter-api:5.7.2 - https://junit.org/junit5/)
-        * JUnit Jupiter Engine (org.junit.jupiter:junit-jupiter-engine:5.7.2 - https://junit.org/junit5/)
-        * JUnit Jupiter Params (org.junit.jupiter:junit-jupiter-params:5.7.2 - https://junit.org/junit5/)
-        * JUnit Platform Commons (org.junit.platform:junit-platform-commons:1.7.2 - https://junit.org/junit5/)
-        * JUnit Platform Engine API (org.junit.platform:junit-platform-engine:1.7.2 - https://junit.org/junit5/)
+        * JUnit Jupiter (Aggregator) (org.junit.jupiter:junit-jupiter:5.8.1 - https://junit.org/junit5/)
+        * JUnit Jupiter API (org.junit.jupiter:junit-jupiter-api:5.8.1 - https://junit.org/junit5/)
+        * JUnit Jupiter Engine (org.junit.jupiter:junit-jupiter-engine:5.8.1 - https://junit.org/junit5/)
+        * JUnit Jupiter Params (org.junit.jupiter:junit-jupiter-params:5.8.1 - https://junit.org/junit5/)
+        * JUnit Platform Commons (org.junit.platform:junit-platform-commons:1.8.1 - https://junit.org/junit5/)
+        * JUnit Platform Engine API (org.junit.platform:junit-platform-engine:1.8.1 - https://junit.org/junit5/)
 
     Eclipse Public License, Version 1.0:
 
@@ -288,8 +274,8 @@ List of third-party dependencies grouped by their license type.
 
     GNU Lesser General Public License:
 
-        * Logback Classic Module (ch.qos.logback:logback-classic:1.2.6 - http://logback.qos.ch/logback-classic)
-        * Logback Core Module (ch.qos.logback:logback-core:1.2.6 - http://logback.qos.ch/logback-core)
+        * Logback Classic Module (ch.qos.logback:logback-classic:1.2.7 - http://logback.qos.ch/logback-classic)
+        * Logback Core Module (ch.qos.logback:logback-core:1.2.7 - http://logback.qos.ch/logback-core)
 
     GNU Lesser General Public License v2.1 or later:
 
@@ -301,7 +287,7 @@ List of third-party dependencies grouped by their license type.
 
     GNU Library General Public License v2.1 or later:
 
-        * Hibernate ORM - hibernate-core (org.hibernate:hibernate-core:5.4.32.Final - http://hibernate.org/orm)
+        * Hibernate ORM - hibernate-core (org.hibernate:hibernate-core:5.6.1.Final - https://hibernate.org/orm)
         * Hibernate Commons Annotations (org.hibernate.common:hibernate-commons-annotations:5.1.2.Final - http://hibernate.org)
 
     GPL2 w/ CPE:
@@ -314,10 +300,6 @@ List of third-party dependencies grouped by their license type.
     ICU License:
 
         * ICU4J (com.ibm.icu:icu4j:4.6 - http://icu-project.org/)
-
-    LGPL 2.1:
-
-        * Javassist (org.javassist:javassist:3.27.0-GA - http://www.javassist.org/)
 
     LGPL, version 2.1:
 
@@ -339,17 +321,13 @@ List of third-party dependencies grouped by their license type.
         * Testcontainers :: JDBC :: MySQL (org.testcontainers:mysql:1.16.2 - https://testcontainers.org)
         * Testcontainers :: JDBC :: PostgreSQL (org.testcontainers:postgresql:1.16.2 - https://testcontainers.org)
         * Testcontainers Core (org.testcontainers:testcontainers:1.16.2 - https://testcontainers.org)
-        * webjars-locator-core (org.webjars:webjars-locator-core:0.46 - http://webjars.org)
+        * webjars-locator-core (org.webjars:webjars-locator-core:0.48 - http://webjars.org)
 
     MIT License:
 
-        * Microsoft JDBC Driver for SQL Server (com.microsoft.sqlserver:mssql-jdbc:9.2.1.jre8 - https://github.com/Microsoft/mssql-jdbc)
+        * Microsoft JDBC Driver for SQL Server (com.microsoft.sqlserver:mssql-jdbc:9.4.0.jre8 - https://github.com/Microsoft/mssql-jdbc)
         * JUL to SLF4J bridge (org.slf4j:jul-to-slf4j:1.7.32 - http://www.slf4j.org)
         * SLF4J API Module (org.slf4j:slf4j-api:1.7.32 - http://www.slf4j.org)
-
-    MPL 1.1:
-
-        * Javassist (org.javassist:javassist:3.27.0-GA - http://www.javassist.org/)
 
     MPL 2.0 or EPL 1.0:
 
@@ -376,22 +354,22 @@ List of third-party dependencies grouped by their license type.
     The Apache License, Version 2.0:
 
         * Woodstox (com.fasterxml.woodstox:woodstox-core:6.2.6 - https://github.com/FasterXML/woodstox)
-        * org.apiguardian:apiguardian-api (org.apiguardian:apiguardian-api:1.1.0 - https://github.com/apiguardian-team/apiguardian)
+        * org.apiguardian:apiguardian-api (org.apiguardian:apiguardian-api:1.1.2 - https://github.com/apiguardian-team/apiguardian)
         * org.opentest4j:opentest4j (org.opentest4j:opentest4j:1.2.0 - https://github.com/ota4j-team/opentest4j)
-        * springdoc-openapi-common (org.springdoc:springdoc-openapi-common:1.5.12 - https://springdoc.org/springdoc-openapi-common/)
-        * springdoc-openapi-ui (org.springdoc:springdoc-openapi-ui:1.5.12 - https://springdoc.org/springdoc-openapi-ui/)
-        * springdoc-openapi-webmvc-core (org.springdoc:springdoc-openapi-webmvc-core:1.5.12 - https://springdoc.org/springdoc-openapi-webmvc-core/)
+        * springdoc-openapi-common (org.springdoc:springdoc-openapi-common:1.5.13 - https://springdoc.org/springdoc-openapi-common/)
+        * springdoc-openapi-ui (org.springdoc:springdoc-openapi-ui:1.5.13 - https://springdoc.org/springdoc-openapi-ui/)
+        * springdoc-openapi-webmvc-core (org.springdoc:springdoc-openapi-webmvc-core:1.5.13 - https://springdoc.org/springdoc-openapi-webmvc-core/)
 
     The Apache Software License, Version 2.0:
 
         * HPPC Collections (com.carrotsearch:hppc:0.8.1 - http://labs.carrotsearch.com/hppc.html/hppc)
-        * Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.12.5 - http://github.com/FasterXML/jackson)
-        * Jackson-core (com.fasterxml.jackson.core:jackson-core:2.12.5 - https://github.com/FasterXML/jackson-core)
-        * jackson-databind (com.fasterxml.jackson.core:jackson-databind:2.12.5 - http://github.com/FasterXML/jackson)
-        * Jackson-dataformat-YAML (com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.12.5 - https://github.com/FasterXML/jackson-dataformats-text)
-        * Jackson datatype: jdk8 (com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.12.5 - https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jdk8)
-        * Jackson datatype: JSR310 (com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.5 - https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jsr310)
-        * Jackson-module-parameter-names (com.fasterxml.jackson.module:jackson-module-parameter-names:2.12.5 - https://github.com/FasterXML/jackson-modules-java8/jackson-module-parameter-names)
+        * Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.13.0 - http://github.com/FasterXML/jackson)
+        * Jackson-core (com.fasterxml.jackson.core:jackson-core:2.13.0 - https://github.com/FasterXML/jackson-core)
+        * jackson-databind (com.fasterxml.jackson.core:jackson-databind:2.13.0 - http://github.com/FasterXML/jackson)
+        * Jackson-dataformat-YAML (com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0 - https://github.com/FasterXML/jackson-dataformats-text)
+        * Jackson datatype: jdk8 (com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.0 - https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jdk8)
+        * Jackson datatype: JSR310 (com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0 - https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jsr310)
+        * Jackson-module-parameter-names (com.fasterxml.jackson.module:jackson-module-parameter-names:2.13.0 - https://github.com/FasterXML/jackson-modules-java8/jackson-module-parameter-names)
         * docker-java-api (com.github.docker-java:docker-java-api:3.2.12 - https://github.com/docker-java/docker-java)
         * docker-java-transport (com.github.docker-java:docker-java-transport:3.2.12 - https://github.com/docker-java/docker-java)
         * docker-java-transport-zerodep (com.github.docker-java:docker-java-transport-zerodep:3.2.12 - https://github.com/docker-java/docker-java)
@@ -401,19 +379,22 @@ List of third-party dependencies grouped by their license type.
         * WireMock (com.github.tomakehurst:wiremock-jre8-standalone:2.31.0 - http://wiremock.org)
         * FindBugs-jsr305 (com.google.code.findbugs:jsr305:3.0.2 - http://findbugs.sourceforge.net/)
         * Guava: Google Core Libraries for Java (com.google.guava:guava:16.0.1 - http://code.google.com/p/guava-libraries/guava)
-        * project ':json-path' (com.jayway.jsonpath:json-path:2.5.0 - https://github.com/jayway/JsonPath)
+        * project ':json-path' (com.jayway.jsonpath:json-path:2.6.0 - https://github.com/jayway/JsonPath)
         * HikariCP (com.zaxxer:HikariCP:4.0.3 - https://github.com/brettwooldridge/HikariCP)
         * Apache Commons Logging (commons-logging:commons-logging:1.2 - http://commons.apache.org/proper/commons-logging/)
-        * micrometer-core (io.micrometer:micrometer-core:1.7.5 - https://github.com/micrometer-metrics/micrometer)
-        * micrometer-registry-prometheus (io.micrometer:micrometer-registry-prometheus:1.7.5 - https://github.com/micrometer-metrics/micrometer)
-        * Prometheus Java Simpleclient (io.prometheus:simpleclient:0.10.0 - http://github.com/prometheus/client_java/simpleclient)
-        * Prometheus Java Simpleclient Common (io.prometheus:simpleclient_common:0.10.0 - http://github.com/prometheus/client_java/simpleclient_common)
+        * micrometer-core (io.micrometer:micrometer-core:1.8.0 - https://github.com/micrometer-metrics/micrometer)
+        * micrometer-registry-prometheus (io.micrometer:micrometer-registry-prometheus:1.8.0 - https://github.com/micrometer-metrics/micrometer)
+        * Prometheus Java Simpleclient (io.prometheus:simpleclient:0.12.0 - http://github.com/prometheus/client_java/simpleclient)
+        * Prometheus Java Simpleclient Common (io.prometheus:simpleclient_common:0.12.0 - http://github.com/prometheus/client_java/simpleclient_common)
+        * Prometheus Java Span Context Supplier - Common (io.prometheus:simpleclient_tracer_common:0.12.0 - http://github.com/prometheus/client_java/simpleclient_tracer/simpleclient_tracer_common)
+        * Prometheus Java Span Context Supplier - OpenTelemetry (io.prometheus:simpleclient_tracer_otel:0.12.0 - http://github.com/prometheus/client_java/simpleclient_tracer/simpleclient_tracer_otel)
+        * Prometheus Java Span Context Supplier - OpenTelemetry Agent (io.prometheus:simpleclient_tracer_otel_agent:0.12.0 - http://github.com/prometheus/client_java/simpleclient_tracer/simpleclient_tracer_otel_agent)
         * Vavr (io.vavr:vavr:0.10.4 - http://vavr.io)
         * Vavr Match (io.vavr:vavr-match:0.10.4 - http://vavr.io)
         * javax.inject (javax.inject:javax.inject:1 - http://code.google.com/p/atinject/)
-        * json-unit-assertj (net.javacrumbs.json-unit:json-unit-assertj:2.19.0 - https://github.com/lukas-krecan/JsonUnit/json-unit-assertj)
-        * json-unit-core (net.javacrumbs.json-unit:json-unit-core:2.19.0 - https://github.com/lukas-krecan/JsonUnit/json-unit-core)
-        * json-unit-json-path (net.javacrumbs.json-unit:json-unit-json-path:2.19.0 - https://github.com/lukas-krecan/JsonUnit/json-unit-json-path)
+        * json-unit-assertj (net.javacrumbs.json-unit:json-unit-assertj:2.27.0 - https://github.com/lukas-krecan/JsonUnit/json-unit-assertj)
+        * json-unit-core (net.javacrumbs.json-unit:json-unit-core:2.27.0 - https://github.com/lukas-krecan/JsonUnit/json-unit-core)
+        * json-unit-json-path (net.javacrumbs.json-unit:json-unit-json-path:2.27.0 - https://github.com/lukas-krecan/JsonUnit/json-unit-json-path)
         * ASM based accessors helper used by json-smart (net.minidev:accessors-smart:2.4.7 - https://urielch.github.io/)
         * JSON Small and Fast Parser (net.minidev:json-smart:2.4.7 - https://urielch.github.io/)
         * Apache Groovy (org.codehaus.groovy:groovy:3.0.9 - https://groovy-lang.org)
@@ -439,8 +420,8 @@ List of third-party dependencies grouped by their license type.
     The MIT License:
 
         * Checker Qual (org.checkerframework:checker-qual:3.5.0 - https://checkerframework.org)
-        * mockito-core (org.mockito:mockito-core:3.9.0 - https://github.com/mockito/mockito)
-        * mockito-junit-jupiter (org.mockito:mockito-junit-jupiter:3.9.0 - https://github.com/mockito/mockito)
+        * mockito-core (org.mockito:mockito-core:4.0.0 - https://github.com/mockito/mockito)
+        * mockito-junit-jupiter (org.mockito:mockito-junit-jupiter:4.0.0 - https://github.com/mockito/mockito)
         * Project Lombok (org.projectlombok:lombok:1.18.22 - https://projectlombok.org)
 
     The MIT License (MIT):

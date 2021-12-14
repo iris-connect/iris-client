@@ -80,8 +80,7 @@ const home: HomeModule = {
       };
       try {
         eventTrackingList = normalizePageEvent(
-          (await authClient.dataRequestsClientLocationsGet({ query: query }))
-            .data,
+          (await authClient.dataRequestsClientLocationsGet({ query })).data,
           true
         );
       } catch (e) {

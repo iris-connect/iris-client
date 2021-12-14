@@ -1,39 +1,26 @@
 package iris.client_bff.config;
 
-import javax.annotation.PostConstruct;
-import javax.validation.ConstraintViolationException;
+import iris.client_bff.core.utils.ValidatedProperties;
+
 import javax.validation.Validator;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.util.CollectionUtils;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@Configuration
-@Validated
-public class BackendServiceProperties {
+@ConfigurationProperties
+public class BackendServiceProperties extends ValidatedProperties {
+
+	BackendServiceProperties(Validator validator) {
+		super(BackendServiceProperties.class, validator);
+	}
 
 	@Value("${iris.backend-service.endpoint:#{null}}")
 	private String endpoint;
 
 	@Value("${iris.location-service.endpoint:#{null}}")
 	private String endpointOld;
-
-	@Autowired
-	private Validator validator;
-
-	@PostConstruct
-	void validate() {
-
-		var errors = validator.validate(this);
-
-		if (!CollectionUtils.isEmpty(errors)) {
-			throw new ConstraintViolationException(errors);
-		}
-	}
 
 	@NotBlank(message = "{missing.property.iris.backend-service.endpoint}")
 	public String getEndpoint() {
