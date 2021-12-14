@@ -1,5 +1,99 @@
 # Changelog
 
+# [1.2.0](https://github.com/iris-connect/iris-client/compare/v1.1.1...v1.2.0) (2021-12-14)
+
+
+### Bug Fixes
+
+* `+` at the beginning of phone numbers are now preserved during CSV export. So an international phone number now remains complete. ([3464165](https://github.com/iris-connect/iris-client/commit/346416561859d8bb102f0e7126ef75eb852c24bc)), closes [#443](https://github.com/iris-connect/iris-client/issues/443) [#445](https://github.com/iris-connect/iris-client/issues/445)
+* An admin can now change a user's data again. An error occurred ([0fda2b6](https://github.com/iris-connect/iris-client/commit/0fda2b6728f9441e30d4e9d7e7954e05990cf112))
+* apply removal of the index-tracking-url to e2e tests and remove the csv data export test for index-tracking as there is no data to export ([0a2a029](https://github.com/iris-connect/iris-client/commit/0a2a0299e9b312e7d653ad4ca2cc450494d6e669))
+* Avoids readable but not writable announcement.db files for EPS by an update from EPS version v0.1.68 to v0.1.69. ([0ab8c9e](https://github.com/iris-connect/iris-client/commit/0ab8c9e310d4aec259cdacc314c968262863fe9c))
+* Cleans the Docker image of the frontend from artifacts that are only needed for the build. This makes it more secure and greatly reduced in size. ([63051b1](https://github.com/iris-connect/iris-client/commit/63051b10ed5c0d6c6ba4128cf8d6f5df9a173584)), closes [#442](https://github.com/iris-connect/iris-client/issues/442)
+* Clearing case_data_request before adding new not-null fields. Not critical, because feature is not in use yet. ([9389239](https://github.com/iris-connect/iris-client/commit/9389239d094676b0643746d91d1c4c4543261241)), closes [#490](https://github.com/iris-connect/iris-client/issues/490)
+* **data export:** Allow more number variants in the phone number sanitization. ([a181c34](https://github.com/iris-connect/iris-client/commit/a181c34ff824d401b4f351996ea490564bfc30fe)), closes [#478](https://github.com/iris-connect/iris-client/issues/478) [#479](https://github.com/iris-connect/iris-client/issues/479)
+* extend data export sanitization whitelist to allow a wider range of Latin Letters ([4082e5f](https://github.com/iris-connect/iris-client/commit/4082e5fb80860ccc678e0f96d1b7d91809cc13a8))
+* Improves timeouts in Client and extends the checks for the status (EPS version) to better determine the status. ([af73f61](https://github.com/iris-connect/iris-client/commit/af73f61e5c2e6fd0376a33a153f6786843d6dedd)), closes [#509](https://github.com/iris-connect/iris-client/issues/509)
+* Increases burst and delay to allow a large number of status requests for the apps. ([9945be5](https://github.com/iris-connect/iris-client/commit/9945be5a3194de0214859535e161aac3e18de8a3)), closes [#500](https://github.com/iris-connect/iris-client/issues/500)
+* new pre release ([e81866c](https://github.com/iris-connect/iris-client/commit/e81866cfae3fb6aac2529b58db5b28af8a465c58))
+* new pre release ([3028f64](https://github.com/iris-connect/iris-client/commit/3028f64c7347ee3e83db9562955e35a924d4563a))
+* Restricts the content of …deployment….zip to the folders and files relevant for deployment. The previously included parent folder is now removed. ([580e551](https://github.com/iris-connect/iris-client/commit/580e551ea4181f16d7808e8fdad6139a2dbf8aed)), closes [#432](https://github.com/iris-connect/iris-client/issues/432) [#433](https://github.com/iris-connect/iris-client/issues/433)
+* update cypress to fix vulnerable dependencies and update the other npm packages to the latest versions ([38dc6c7](https://github.com/iris-connect/iris-client/commit/38dc6c7145bdb232e2d0c176890c70dc7c4d3031)), closes [#498](https://github.com/iris-connect/iris-client/issues/498)
+
+
+### Features
+
+* A readable code is now used for the data request to an index case. This consists of four random words and an abbreviation for the department. ([e913f8a](https://github.com/iris-connect/iris-client/commit/e913f8a3fd60fcfd70b422866048a38e26f64344)), closes [iris-connect/iris-backlog#245](https://github.com/iris-connect/iris-backlog/issues/245) [#460](https://github.com/iris-connect/iris-client/issues/460)
+* Add event tracking xlsx data export for octoware, refactor and unify the data export functionality ([b442014](https://github.com/iris-connect/iris-client/commit/b4420144c6569f9f2c1d53a46c63652be528325e))
+* **Admin:** Docker is now told the health status of the client backend (BFF) container. Administrators can build monitoring functions on this. ([8d262ac](https://github.com/iris-connect/iris-client/commit/8d262ace1ebaf34ac4460a9932cde46d23ed0e44)), closes [#451](https://github.com/iris-connect/iris-client/issues/451)
+* Display checkin app status information in the frontend to inform the user if there are problems with a connected data provider ([c0c21f1](https://github.com/iris-connect/iris-client/commit/c0c21f1a5617f0ea1e8047523374ca9a25b5c9f4)), closes [iris-connect/iris-backlog#221](https://github.com/iris-connect/iris-backlog/issues/221) [#444](https://github.com/iris-connect/iris-client/issues/444)
+* Provides excel export for event tracking standard format and improves table selection usability. ([5132b0a](https://github.com/iris-connect/iris-client/commit/5132b0a8edde6986b958e10f07d81b1316974d93)), closes [#266](https://github.com/iris-connect/iris-client/issues/266) [#476](https://github.com/iris-connect/iris-client/issues/476)
+* Updates EPS from version v0.1.66 to v0.1.68. ([c7afbf5](https://github.com/iris-connect/iris-client/commit/c7afbf5efe92cddfa18a136704385fd74c2f727b))
+* Uses and requires Java 17 (new long term support version) as baseline. ([558171b](https://github.com/iris-connect/iris-client/commit/558171ba2698c8cb8f4ea8df8e3c31548ed3602f)), closes [#393](https://github.com/iris-connect/iris-client/issues/393)
+* When a user changes his password, the old password is now also expected and checked to ensure it is correct. ([72af5dc](https://github.com/iris-connect/iris-client/commit/72af5dce9d8d2ac57f22e97d368586deba345f27)), closes [iris-connect/iris-backlog#250](https://github.com/iris-connect/iris-backlog/issues/250) [#431](https://github.com/iris-connect/iris-client/issues/431)
+
+# [1.2.0-rc.6](https://github.com/iris-connect/iris-client/compare/v1.2.0-rc.5...v1.2.0-rc.6) (2021-12-10)
+
+
+### Bug Fixes
+
+* apply removal of the index-tracking-url to e2e tests and remove the csv data export test for index-tracking as there is no data to export ([0a2a029](https://github.com/iris-connect/iris-client/commit/0a2a0299e9b312e7d653ad4ca2cc450494d6e669))
+* Avoids readable but not writable announcement.db files for EPS by an update from EPS version v0.1.68 to v0.1.69. ([0ab8c9e](https://github.com/iris-connect/iris-client/commit/0ab8c9e310d4aec259cdacc314c968262863fe9c))
+* extend data export sanitization whitelist to allow a wider range of Latin Letters ([4082e5f](https://github.com/iris-connect/iris-client/commit/4082e5fb80860ccc678e0f96d1b7d91809cc13a8))
+* Improves timeouts in Client and extends the checks for the status (EPS version) to better determine the status. ([af73f61](https://github.com/iris-connect/iris-client/commit/af73f61e5c2e6fd0376a33a153f6786843d6dedd)), closes [#509](https://github.com/iris-connect/iris-client/issues/509)
+* update cypress to fix vulnerable dependencies and update the other npm packages to the latest versions ([38dc6c7](https://github.com/iris-connect/iris-client/commit/38dc6c7145bdb232e2d0c176890c70dc7c4d3031)), closes [#498](https://github.com/iris-connect/iris-client/issues/498)
+
+# [1.2.0-rc.5](https://github.com/iris-connect/iris-client/compare/v1.2.0-rc.4...v1.2.0-rc.5) (2021-12-07)
+
+
+### Bug Fixes
+
+* Increases burst and delay to allow a large number of status requests for the apps. ([9945be5](https://github.com/iris-connect/iris-client/commit/9945be5a3194de0214859535e161aac3e18de8a3)), closes [#500](https://github.com/iris-connect/iris-client/issues/500)
+
+# [1.2.0-rc.4](https://github.com/iris-connect/iris-client/compare/v1.2.0-rc.3...v1.2.0-rc.4) (2021-12-02)
+
+
+### Bug Fixes
+
+* new pre release ([e81866c](https://github.com/iris-connect/iris-client/commit/e81866cfae3fb6aac2529b58db5b28af8a465c58))
+
+# [1.2.0-rc.3](https://github.com/iris-connect/iris-client/compare/v1.2.0-rc.2...v1.2.0-rc.3) (2021-11-29)
+
+
+### Bug Fixes
+
+* new pre release ([3028f64](https://github.com/iris-connect/iris-client/commit/3028f64c7347ee3e83db9562955e35a924d4563a))
+
+# [1.2.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.2.0-rc.1...v1.2.0-rc.2) (2021-11-29)
+
+
+### Bug Fixes
+
+* Clearing case_data_request before adding new not-null fields. Not critical, because feature is not in use yet. ([9389239](https://github.com/iris-connect/iris-client/commit/9389239d094676b0643746d91d1c4c4543261241)), closes [#490](https://github.com/iris-connect/iris-client/issues/490)
+
+# [1.2.0-rc.1](https://github.com/iris-connect/iris-client/compare/v1.1.1...v1.2.0-rc.1) (2021-11-29)
+
+
+### Bug Fixes
+
+* `+` at the beginning of phone numbers are now preserved during CSV export. So an international phone number now remains complete. ([3464165](https://github.com/iris-connect/iris-client/commit/346416561859d8bb102f0e7126ef75eb852c24bc)), closes [#443](https://github.com/iris-connect/iris-client/issues/443) [#445](https://github.com/iris-connect/iris-client/issues/445)
+* An admin can now change a user's data again. An error occurred ([0fda2b6](https://github.com/iris-connect/iris-client/commit/0fda2b6728f9441e30d4e9d7e7954e05990cf112))
+* Cleans the Docker image of the frontend from artifacts that are only needed for the build. This makes it more secure and greatly reduced in size. ([63051b1](https://github.com/iris-connect/iris-client/commit/63051b10ed5c0d6c6ba4128cf8d6f5df9a173584)), closes [#442](https://github.com/iris-connect/iris-client/issues/442)
+* **data export:** Allow more number variants in the phone number sanitization. ([a181c34](https://github.com/iris-connect/iris-client/commit/a181c34ff824d401b4f351996ea490564bfc30fe)), closes [#478](https://github.com/iris-connect/iris-client/issues/478) [#479](https://github.com/iris-connect/iris-client/issues/479)
+* Restricts the content of …deployment….zip to the folders and files relevant for deployment. The previously included parent folder is now removed. ([580e551](https://github.com/iris-connect/iris-client/commit/580e551ea4181f16d7808e8fdad6139a2dbf8aed)), closes [#432](https://github.com/iris-connect/iris-client/issues/432) [#433](https://github.com/iris-connect/iris-client/issues/433)
+
+
+### Features
+
+* A readable code is now used for the data request to an index case. This consists of four random words and an abbreviation for the department. ([e913f8a](https://github.com/iris-connect/iris-client/commit/e913f8a3fd60fcfd70b422866048a38e26f64344)), closes [iris-connect/iris-backlog#245](https://github.com/iris-connect/iris-backlog/issues/245) [#460](https://github.com/iris-connect/iris-client/issues/460)
+* Add event tracking xlsx data export for octoware, refactor and unify the data export functionality ([b442014](https://github.com/iris-connect/iris-client/commit/b4420144c6569f9f2c1d53a46c63652be528325e))
+* **Admin:** Docker is now told the health status of the client backend (BFF) container. Administrators can build monitoring functions on this. ([8d262ac](https://github.com/iris-connect/iris-client/commit/8d262ace1ebaf34ac4460a9932cde46d23ed0e44)), closes [#451](https://github.com/iris-connect/iris-client/issues/451)
+* Display checkin app status information in the frontend to inform the user if there are problems with a connected data provider ([c0c21f1](https://github.com/iris-connect/iris-client/commit/c0c21f1a5617f0ea1e8047523374ca9a25b5c9f4)), closes [iris-connect/iris-backlog#221](https://github.com/iris-connect/iris-backlog/issues/221) [#444](https://github.com/iris-connect/iris-client/issues/444)
+* Provides excel export for event tracking standard format and improves table selection usability. ([5132b0a](https://github.com/iris-connect/iris-client/commit/5132b0a8edde6986b958e10f07d81b1316974d93)), closes [#266](https://github.com/iris-connect/iris-client/issues/266) [#476](https://github.com/iris-connect/iris-client/issues/476)
+* Updates EPS from version v0.1.66 to v0.1.68. ([c7afbf5](https://github.com/iris-connect/iris-client/commit/c7afbf5efe92cddfa18a136704385fd74c2f727b))
+* Uses and requires Java 17 (new long term support version) as baseline. ([558171b](https://github.com/iris-connect/iris-client/commit/558171ba2698c8cb8f4ea8df8e3c31548ed3602f)), closes [#393](https://github.com/iris-connect/iris-client/issues/393)
+* When a user changes his password, the old password is now also expected and checked to ensure it is correct. ([72af5dc](https://github.com/iris-connect/iris-client/commit/72af5dce9d8d2ac57f22e97d368586deba345f27)), closes [iris-connect/iris-backlog#250](https://github.com/iris-connect/iris-backlog/issues/250) [#431](https://github.com/iris-connect/iris-client/issues/431)
+
 ## [1.1.1](https://github.com/iris-connect/iris-client/compare/v1.1.0...v1.1.1) (2021-11-17)
 
 
