@@ -7,7 +7,7 @@
 
     <groupId>iris-gateway</groupId>
     <artifactId>parent</artifactId>
-    <version>1.2.0-POST-RELEASE</version>
+    <version>1.2.1-POST-RELEASE</version>
     <packaging>pom</packaging>
 
     <name>IRIS Parent</name>

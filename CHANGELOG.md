@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/iris-connect/iris-client/compare/v1.2.0...v1.2.1) (2021-12-14)
+
+
+### Bug Fixes
+
+* Fixes incorrect use of random generators when selecting words for readable tokens and replaces it with a secure random generator. ([219ab0e](https://github.com/iris-connect/iris-client/commit/219ab0e289165d2412068049c47fc42ed420919d)), closes [#525](https://github.com/iris-connect/iris-client/issues/525)
+
 # [1.2.0](https://github.com/iris-connect/iris-client/compare/v1.1.1...v1.2.0) (2021-12-14)
 
 
