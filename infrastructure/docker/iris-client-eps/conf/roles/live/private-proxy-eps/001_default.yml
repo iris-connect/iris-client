@@ -36,19 +36,19 @@ directory:
     jsonrpc_client:
       proxy_url: "$PROXY_URL"
       tls:
-        certificate_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT"
-        key_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
+        certificate_file: "/$DIR/../../../certs/$PROXY_CLIENT_CERT"
+        key_file: "/$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
         ca_certificate_files: 
-          - "$DIR/../../../ca/live/root-x1.crt"
-          - "$DIR/../../../ca/live/root-x2.crt"
-          - "$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
+          - "/$DIR/../../../ca/live/root-x1.crt"
+          - "/$DIR/../../../ca/live/root-x2.crt"
+          - "/$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
     ca_certificate_files: 
-      - "$DIR/../../../ca/live/root-x1.crt"
-      - "$DIR/../../../ca/live/root-x2.crt"
-      - "$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
+      - "/$DIR/../../../ca/live/root-x1.crt"
+      - "/$DIR/../../../ca/live/root-x2.crt"
+      - "/$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
     ca_intermediate_certificate_files:
-      - "$DIR/../../../ca/live/inter-r1.crt"
-      - "$DIR/../../../ca/live/inter-r2.crt"
+      - "/$DIR/../../../ca/live/inter-r1.crt"
+      - "/$DIR/../../../ca/live/inter-r2.crt"
     endpoints: [ "$EPS_SD_ENDPOINT" ]
     server_names: [ "$EPS_SD_NAME" ]
 channels: # defines all the channels that we want to open when starting the server
@@ -58,11 +58,11 @@ channels: # defines all the channels that we want to open when starting the serv
       bind_address: "0.0.0.0:7776"
       tls:
         ca_certificate_files: 
-          - "$DIR/../../../ca/live/root-x1.crt"
-          - "$DIR/../../../ca/live/root-x2.crt"
-          - "$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
-        certificate_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT"
-        key_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
+          - "/$DIR/../../../ca/live/root-x1.crt"
+          - "/$DIR/../../../ca/live/root-x2.crt"
+          - "/$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
+        certificate_file: "/$DIR/../../../certs/$PROXY_CLIENT_CERT"
+        key_file: "/$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
   - name: main JSON-RPC client # creates outgoing JSONRPC connections to deliver and receive messages
     type: jsonrpc_client
     settings:
@@ -72,11 +72,11 @@ channels: # defines all the channels that we want to open when starting the serv
     settings:
       tls:
         ca_certificate_files: 
-          - "$DIR/../../../ca/live/root-x1.crt"
-          - "$DIR/../../../ca/live/root-x2.crt"
-          - "$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
-        certificate_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT"
-        key_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
+          - "/$DIR/../../../ca/live/root-x1.crt"
+          - "/$DIR/../../../ca/live/root-x2.crt"
+          - "/$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
+        certificate_file: "/$DIR/../../../certs/$PROXY_CLIENT_CERT"
+        key_file: "/$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
         server_name: "$PROXY_OP"
   - name: main JSON-RPC server # accepts incoming JSONRPC connections to deliver and receive messages
     type: jsonrpc_server
@@ -84,9 +84,9 @@ channels: # defines all the channels that we want to open when starting the serv
       bind_address: "0.0.0.0:7766"
       tls:
         ca_certificate_files: 
-          - "$DIR/../../../ca/live/root-x1.crt"
-          - "$DIR/../../../ca/live/root-x2.crt"
-          - "$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
-        certificate_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT"
-        key_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
+          - "/$DIR/../../../ca/live/root-x1.crt"
+          - "/$DIR/../../../ca/live/root-x2.crt"
+          - "/$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
+        certificate_file: "/$DIR/../../../certs/$PROXY_CLIENT_CERT"
+        key_file: "/$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
         verify_client: false
