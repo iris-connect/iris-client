@@ -21,7 +21,7 @@ deepmerge@4.2.2 | MIT | https://github.com/TehShrike/deepmerge
 exit-on-epipe@1.0.1 | Apache-2.0 | https://github.com/SheetJS/node-exit-on-epipe
 follow-redirects@1.14.4 | MIT | https://github.com/follow-redirects/follow-redirects
 frac@1.1.2 | Apache-2.0 | https://github.com/SheetJS/frac
-iris-client-frontend@1.2.0-rc.6-POST-RELEASE | UNLICENSED | 
+iris-client-frontend@1.2.0-POST-RELEASE | UNLICENSED | 
 lodash@4.17.21 | MIT | https://github.com/lodash/lodash
 moment@2.29.1 | MIT | https://github.com/moment/moment
 printj@1.1.2 | Apache-2.0 | https://github.com/SheetJS/printj
