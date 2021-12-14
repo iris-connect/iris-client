@@ -1,7 +1,6 @@
 package iris.client_bff.core.token;
 
 import iris.client_bff.config.CentralConfigurationService;
-import iris.client_bff.config.TokenProperties;
 import lombok.RequiredArgsConstructor;
 
 import java.security.NoSuchAlgorithmException;
@@ -24,7 +23,6 @@ public class TokenGenerator {
 	public static final int ITERATIONS = 10000;
 
 	private final Dictionary dictionary;
-	private final TokenProperties tokenProperties;
 	private final CentralConfigurationService configService;
 
 	public IdentifierToken generateIdentifierToken() {
@@ -65,7 +63,7 @@ public class TokenGenerator {
 
 	private String generateReadableToken(Dictionary dict, int numberOfElements) {
 
-		SecureRandom secureRandom = new SecureRandom(tokenProperties.getGeneratorSalt().getBytes());
+		SecureRandom secureRandom = new SecureRandom();
 
 		String tokenPart = IntStream.generate(() -> secureRandom.nextInt(dict.size()))
 				.mapToObj(dict::get)
