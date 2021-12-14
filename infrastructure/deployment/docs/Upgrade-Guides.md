@@ -127,6 +127,10 @@ Neben dem technischen Update muss noch ein weiterer Port geöffnet werden.
 
 Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installationsverzeichnis` installiert haben und dabei die Stand-Alone Ordner Struktur benutzen.
 
+#### Java Laufzeitumgebung
+
+**IRIS nutzt ab Version 1.2 Java 17 und setzt dieses voraus! Sorgen Sie dafür, dass eine aktuelle Version von Java 17 installiert ist!** Damit verwenden wir die neuste Version von Java mit Langzeitsupport.
+
 #### EPS
 
 1. Laden Sie sich die [aktuelle EPS Version 0.1.69](https://github.com/iris-connect/eps/releases/tag/v0.1.69) herunter. Sie benötigen die Binaries `eps` und `proxy` für Ihre Ziel-Plattform. 
