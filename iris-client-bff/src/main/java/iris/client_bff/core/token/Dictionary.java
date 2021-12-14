@@ -35,7 +35,7 @@ public class Dictionary extends ArrayList<String> {
 
 		ensureCapacity(size);
 
-		SecureRandom secureRandom = new SecureRandom(properties.getSalt().getBytes());
+		SecureRandom secureRandom = new SecureRandom();
 		List<String> shippedDictionary = readShippedDictionary();
 
 		IntStream.generate(() -> secureRandom.nextInt(shippedDictionary.size()))
