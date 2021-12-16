@@ -6,6 +6,7 @@ import iris.client_bff.iris_messages.IrisMessageHdContact;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,7 @@ public class IrisMessageDetailsDto {
         private String type;
 
         public static List<Attachment> fromEntity(List<IrisMessageFile> files) {
+            if (files == null) return new ArrayList<>();
             return files.stream().map(Attachment::fromEntity).collect(Collectors.toList());
         }
 
