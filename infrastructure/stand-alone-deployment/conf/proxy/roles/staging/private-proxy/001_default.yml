@@ -31,14 +31,17 @@ vars:
     source: env
     variable: PRIVATE_PROXY_EPS_ENDPOINT
     type: string
+  ANNOUNCEMENT_DB_FOLDER:     
+    source: env
+    variable: ANNOUNCEMENT_DB_FOLDER
+    type: string
     
-
 private:
   name: "$PROXY_OP"
   datastore:
     type: file
     settings:
-      filename: ./db/private-proxy-announcements.db
+      filename: "$ANNOUNCEMENT_DB_FOLDER/private-proxy-announcements.db"
   bind_address: 0.0.0.0:5545
   internal_endpoint:
     address: "$IRIS_CLIENT_BFF_ENDPOINT"
