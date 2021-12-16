@@ -122,9 +122,10 @@ describe("IrisMessages", () => {
           "v-card--loading"
         );
         cy.get("@navLink").should("not.have.class", "is-loading");
-        cy.get("@badge").invoke("text").then(parseInt).should("be.lt", count);
         if (count <= 1) {
           cy.get("@badge").should("not.be.visible");
+        } else {
+          cy.get("@badge").invoke("text").then(parseInt).should("be.lt", count);
         }
       });
   });

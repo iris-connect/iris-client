@@ -16,8 +16,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,11 +57,16 @@ public class IrisMessageController {
 
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<IrisMessageDetailsDto> createMessage(@Valid @ModelAttribute IrisMessageInsert irisMessageInsert) {
+    public ResponseEntity<URI> createMessage(@Valid @ModelAttribute IrisMessageInsert irisMessageInsert) {
         this.validateIrisMessageInsert(irisMessageInsert);
         try {
             IrisMessage message = irisMessageService.sendMessage(irisMessageInsert);
-            return ResponseEntity.ok(IrisMessageDetailsDto.fromEntity(message));
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(message.getId())
+                    .toUri();
+            return ResponseEntity.created(location).build();
         } catch (Throwable e) {
             String errorMessage = e instanceof IrisMessageException
                     ? ((IrisMessageException) e).getErrorMessage()
@@ -121,7 +128,7 @@ public class IrisMessageController {
     }
 
     @GetMapping("/files/{id}/download")
-    public ResponseEntity<byte[]> getMessageFile(@PathVariable UUID id) {
+    public ResponseEntity<byte[]> downloadMessageFile(@PathVariable UUID id) {
         this.validateUUID(id, FILE_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FILE_ID);
         Optional<IrisMessageFile> file = this.irisMessageService.getFile(id);
         if (file.isPresent()) {
@@ -147,11 +154,6 @@ public class IrisMessageController {
         } catch (Throwable e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.MISSING_IRIS_MESSAGE_HD_CONTACTS);
         }
-    }
-
-    @GetMapping("/hd-contacts/own")
-    public ResponseEntity<IrisMessageHdContact> getOwnMessageHdContact() {
-        return ResponseEntity.ok(irisMessageService.getOwnHdContact());
     }
 
     @GetMapping("/count/unread")

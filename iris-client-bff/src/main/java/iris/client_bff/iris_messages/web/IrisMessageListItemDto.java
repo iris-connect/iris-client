@@ -18,6 +18,7 @@ public class IrisMessageListItemDto {
     private Boolean hasAttachments;
 
     public static IrisMessageListItemDto fromEntity(IrisMessage message) {
+        Boolean hasAttachments = message.getAttachments() != null && message.getAttachments().size() > 0;
         return new IrisMessageListItemDto(
                 message.getId().toString(),
                 message.getSubject(),
@@ -25,7 +26,7 @@ public class IrisMessageListItemDto {
                 message.getHdRecipient(),
                 message.getMetadata().getCreated(),
                 message.getIsRead(),
-                message.getAttachments().size() > 0
+                hasAttachments
         );
     }
 }
