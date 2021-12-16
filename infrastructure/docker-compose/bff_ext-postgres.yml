@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  # IRIS Client backend for frontend
+  iris-client:
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}
+    depends_on: []

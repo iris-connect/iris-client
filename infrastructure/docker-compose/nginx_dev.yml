@@ -1,0 +1,9 @@
+########################################################
+# the IRIS NGINX volume config for Dev environment
+########################################################
+version: "3.9"
+services:
+  nginx:
+    volumes:
+      - ${LOCAL_MOUNT_DIR:?}/conf:/etc/iris
+      - ${LOCAL_MOUNT_DIR:?}/nginx:/etc/nginx/templates

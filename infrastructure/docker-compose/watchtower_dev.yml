@@ -1,0 +1,19 @@
+########################################################
+# uses Watchtower managing auto-updates in development
+# polling all 60s
+########################################################
+version: "3.9"
+services:
+  watchtower:
+    environment:
+      WATCHTOWER_SCHEDULE: 0 * * * * *
+      WATCHTOWER_NO_PULL: "false"
+      WATCHTOWER_LABEL_ENABLE: "true"
+
+  iris-client:
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  iris-frontend:
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"

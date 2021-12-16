@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  # IRIS Client backend for frontend
+  iris-client:
+    image: inoeg/iris-client-bff:${CLIENT_VERSION:?}
+    expose:
+      - 8092
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_USER:?}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:?}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?}
+      SPRING_PROFILES_ACTIVE: prod
+      SECURITY_AUTH_DB_ADMIN_USER_NAME: ${SECURITY_AUTH_DB_ADMIN_USER_NAME:?}
+      SECURITY_AUTH_DB_ADMIN_USER_PASSWORD: ${SECURITY_AUTH_DB_ADMIN_USER_PASSWORD:?}
+      SECURITY_JWT_JWT_SHARED_SECRET: ${SECURITY_JWT_JWT_SHARED_SECRET:?}
+      EPS_CLIENT_EPS_CLIENT_URL: https://eps:5556/jsonrpc
+      EPS_CLIENT_PROXY_CLIENT_URL: https://private-proxy-eps:7766/jsonrpc
+      PROXY_SERVICE_EPS_NAME: "${PROXY_OP}"
+      PROXY_SERVICE_TARGET_SUBDOMAIN: ${PROXY_SUBDOMAIN}
+      PROXY_SERVICE_TARGET_PROXY: ${EPS_PP_NAME}
+      IRIS_BACKEND_SERVICE_ENDPOINT: ${EPS_LS_NAME}
+      IRIS_CLIENT_BASEPATH: "https://${IRIS_CLIENT_DOMAIN}"
+      EPS_OP:
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    healthcheck:
+      test: "/cnb/lifecycle/launcher java -cp /workspace/BOOT-INF/classes:/workspace/BOOT-INF/lib/* iris.tools.HealthChecker || exit 1"
+      interval: 20s
+      timeout: 3s
+      retries: 2
+      start_period: 10s

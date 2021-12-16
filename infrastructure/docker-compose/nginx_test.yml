@@ -1,0 +1,8 @@
+########################################################
+# the IRIS NGINX volume config for Test environment
+########################################################
+version: "3.9"
+services:
+  nginx:
+    volumes:
+      - /home/iris/clients/ga-showcase/conf/nginx:/etc/iris

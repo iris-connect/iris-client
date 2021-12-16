@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  # IRIS Client Frontend for users
+  iris-frontend:
+    image: inoeg/iris-client-frontend:${CLIENT_VERSION}
+    expose:
+      - 28080
+    environment:
+      SORMAS_SIDECAR_BASE_URL: /api
+      LOCAL_CONTACT_PERSON_NAME:
+      LOCAL_CONTACT_PERSON_MAIL:
+      LOCAL_CONTACT_PERSON_PHONE:
+      CSV_EXPORT_STANDARD_ATOMIC_ADDRESS:
+    depends_on:
+      - iris-client
+    restart: unless-stopped

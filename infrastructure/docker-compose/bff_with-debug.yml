@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  iris-client:
+    healthcheck:
+      test: "/cnb/lifecycle/launcher java -cp /workspace/BOOT-INF/classes:/workspace/BOOT-INF/lib/* iris.tools.HealthChecker -d || exit 1"
+      

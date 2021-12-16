@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  # Endpoint server to communicate with Apps and IRIS Connect central services
+  eps:
+    image: inoeg/iris-client-eps:${CLIENT_VERSION}
+    expose:
+      - 4446
+      - 5556
+    depends_on:
+      - iris-client
+    volumes:
+      - ./certs/eps:/app/settings/certs
+    environment:
+      IRIS_CLIENT_BFF_HOSTNAME: iris-client
+      EPS_SETTINGS: "settings/roles/${IRIS_ENV}/hd"
+      HTTPS_PROXY: ${PROXY_URL}
+      PROXY_URL: ${PROXY_URL}
+      EPS_OP:
+      EPS_CLIENT_CERT:
+      EPS_CLIENT_CERT_KEY:
+      EPS_SD_ENDPOINT:
+      EPS_SD_NAME:
+    restart: unless-stopped

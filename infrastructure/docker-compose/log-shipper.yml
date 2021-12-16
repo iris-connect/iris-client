@@ -1,0 +1,28 @@
+########################################################
+# provides docker-logger to collect logs
+# sets the depends_on to the relevant services to start logger as first
+# Logger: folder = ${LOG_FOLDER} (Default = ./logs)
+########################################################
+version: "3.9"
+services:
+  logger:
+    image: umputun/docker-logger
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    env_file:
+    - ${IRIS_ENV:?}/xxx.env
+    environment:
+      DEBUG: ae
+      DEBUGx: ${IRIS_ENV}
+      DEBUGy: ${DEBUG}
+    volumes:
+      - ${LOG_FOLDER:-./logs}:/srv/logs
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  postgres:
+    depends_on:
+      - logger

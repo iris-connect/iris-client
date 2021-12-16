@@ -106,7 +106,7 @@ services:
 
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:develop
+    image: inoeg/iris-client-nginx:${CLIENT_VERSION}
     ports:
       - ${NGINX_PORT}:443
     labels:
