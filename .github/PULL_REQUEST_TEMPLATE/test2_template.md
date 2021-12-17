@@ -1,1 +1,0 @@
-Weiterer Test für die Verwendung von Templates für PRs
