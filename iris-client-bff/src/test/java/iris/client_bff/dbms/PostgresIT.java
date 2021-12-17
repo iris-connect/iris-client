@@ -8,7 +8,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 
 @ActiveProfiles({ "dev", "inttest", "test", "prod_db" })
-@SpringBootTest(properties = { "spring.datasource.url=jdbc:tc:postgresql:13.2-alpine:///db",
+@SpringBootTest(properties = { "spring.datasource.url=jdbc:tc:postgresql:14.1-alpine:///db",
 		"spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver" })
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @RequiredArgsConstructor
