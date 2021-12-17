@@ -2,6 +2,7 @@ package iris.client_bff.config;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
+import iris.client_bff.core.alert.AlertService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +31,7 @@ public class CentralConfigurationService {
 	private final JsonRpcHttpClient epsRpcClient;
 	private final ProxyServiceProperties proxyProperties;
 	private final Environment env;
+	private final AlertService alerts;
 
 	private Configuration config;
 	private Instant lastFetch = Instant.MIN;
@@ -73,9 +75,22 @@ public class CentralConfigurationService {
 		}
 
 		try {
-			if (!StringUtils.equals(proxyProperties.getTargetSubdomain(), getProxyUrl())) {
+
+			var proxyUrl = getProxyUrl();
+
+			if (!StringUtils.equals(proxyUrl, proxyProperties.getTargetSubdomain())) {
+
+				alerts.createAlertTicketAndMessage("Configuration mismatch of proxy target subdomain", String.format(
+						"""
+								The proxy target subdomain is configured different in this client (via environment variable) and in backend service (by the IRIS team)!
+
+								Client: %s
+								BS: %s
+								""",
+						proxyProperties.getTargetSubdomain(), proxyUrl));
+
 				throw new CentralConfigurationException(
-						"The proxy target subdomain is configured differend in this client (via environment variable) and in backend service (by the IRIS team)!");
+						"The proxy target subdomain is configured different in this client (via environment variable) and in backend service (by the IRIS team)!");
 			}
 		} catch (MissingCentralConfigurationException e) {
 
@@ -115,6 +130,7 @@ public class CentralConfigurationService {
 	}
 
 	private Configuration handleException(Throwable e) {
+
 		if (ignoreConnectionErrors) {
 
 			log.debug("Ignore connection error of central connection service.");
@@ -122,7 +138,12 @@ public class CentralConfigurationService {
 			return config;
 
 		} else {
-			throw new CentralConfigurationException("Can't fetch the central configuration from backend service!", e);
+
+			alerts.createAlertMessage("Fetch central configuration error", String.format(
+					"Can't fetch the central configuration from backend service. (Exception: %s)",
+					e.getClass().getCanonicalName()));
+
+			throw new CentralConfigurationException("Can't fetch the central configuration from backend service.", e);
 		}
 	}
 
