@@ -1,0 +1,1 @@
+Test für die Verwendung von Templates für Issues
