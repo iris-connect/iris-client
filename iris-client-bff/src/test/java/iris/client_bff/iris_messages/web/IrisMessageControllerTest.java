@@ -33,21 +33,10 @@ class IrisMessageControllerTest {
 
 	TypeReference<RestResponsePage<IrisMessageListItemDto>> PAGE_TYPE = new TypeReference<>() {};
 
-	private final IrisMessageFolder MOCK_DEFAULT_FOLDER = getTestDefaultMessageFolder();
-
-	private final IrisMessageFolder MOCK_INBOX_FOLDER = MOCK_DEFAULT_FOLDER;
-	private final IrisMessageFolder MOCK_OUTBOX_FOLDER = getTestMessageFolder(IrisMessageContext.OUTBOX, "outbox folder");
-
-	private final IrisMessageHdContact MOCK_CONTACT_OWN = getTestMessageHdContactOwn();
-	private final IrisMessageHdContact MOCK_CONTACT_OTHER = getTestMessageHdContactOther();
-
-	private final IrisMessage MOCK_INBOX_MESSAGE = getTestInboxMessage();
-	private final IrisMessage MOCK_OUTBOX_MESSAGE = getTestOutboxMessage();
-
-	private final IrisMessageFile MOCK_MESSAGE_FILE = getTestMessageFile();
-
 	private final MockMvc mockMvc;
 	private final ObjectMapper om;
+
+	private final IrisMessageTestData testData;
 
 	@MockBean
 	private IrisMessageService irisMessageService;
@@ -62,13 +51,13 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	void getInboxMessages() throws Exception {
-		this.getMessages(MOCK_INBOX_MESSAGE, MOCK_INBOX_FOLDER.getId().toUUID());
+		this.getMessages(testData.MOCK_INBOX_MESSAGE, testData.MOCK_INBOX_FOLDER.getId().toUUID());
 	}
 
 	@Test
 	@WithMockUser()
 	void getOutboxMessages() throws Exception {
-		this.getMessages(MOCK_OUTBOX_MESSAGE, MOCK_OUTBOX_FOLDER.getId().toUUID());
+		this.getMessages(testData.MOCK_OUTBOX_MESSAGE, testData.MOCK_OUTBOX_FOLDER.getId().toUUID());
 	}
 
 	@Test
@@ -82,7 +71,7 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	public void createMessage() throws Exception {
-		IrisMessage irisMessage = MOCK_OUTBOX_MESSAGE;
+		IrisMessage irisMessage = testData.MOCK_OUTBOX_MESSAGE;
 
 		when(irisMessageService.sendMessage(any())).thenReturn(irisMessage);
 		when(irisMessageService.findById(irisMessage.getId().toUUID())).thenReturn(Optional.of(irisMessage));
@@ -122,9 +111,9 @@ class IrisMessageControllerTest {
 	@WithMockUser()
 	void getMessageDetails() throws Exception {
 
-		UUID messageId = MOCK_INBOX_MESSAGE.getId().toUUID();
+		UUID messageId = testData.MOCK_INBOX_MESSAGE.getId().toUUID();
 
-		when(irisMessageService.findById(messageId)).thenReturn(Optional.of(MOCK_INBOX_MESSAGE));
+		when(irisMessageService.findById(messageId)).thenReturn(Optional.of(testData.MOCK_INBOX_MESSAGE));
 
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/" + messageId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -135,7 +124,7 @@ class IrisMessageControllerTest {
 		var messageDetailsDto = om.readValue(res.getResponse().getContentAsString(), IrisMessageDetailsDto.class);
 
 		assertThat(messageDetailsDto)
-				.isEqualTo(IrisMessageDetailsDto.fromEntity(MOCK_INBOX_MESSAGE));
+				.isEqualTo(IrisMessageDetailsDto.fromEntity(testData.MOCK_INBOX_MESSAGE));
 	}
 
 	@Test
@@ -159,14 +148,14 @@ class IrisMessageControllerTest {
 	@WithMockUser()
 	void updateMessage() throws Exception {
 		IrisMessageUpdate messageUpdate = new IrisMessageUpdate().setIsRead(true);
-		IrisMessage updatedMessage = this.getTestInboxMessage().setIsRead(true);
+		IrisMessage updatedMessage = testData.MOCK_MESSAGE_UPDATE.setIsRead(true);
 
-		when(irisMessageService.findById(any(UUID.class))).thenReturn(Optional.of(MOCK_INBOX_MESSAGE));
-		when(irisMessageService.updateMessage(MOCK_INBOX_MESSAGE, messageUpdate)).thenReturn(updatedMessage);
+		when(irisMessageService.findById(any(UUID.class))).thenReturn(Optional.of(testData.MOCK_INBOX_MESSAGE));
+		when(irisMessageService.updateMessage(testData.MOCK_INBOX_MESSAGE, messageUpdate)).thenReturn(updatedMessage);
 
 		var res = mockMvc
 				.perform(
-						MockMvcRequestBuilders.patch(baseUrl + "/" + MOCK_INBOX_MESSAGE.getId())
+						MockMvcRequestBuilders.patch(baseUrl + "/" + testData.MOCK_INBOX_MESSAGE.getId())
 								.content(om.writeValueAsString(messageUpdate))
 								.contentType(MediaType.APPLICATION_JSON)
 				)
@@ -203,7 +192,7 @@ class IrisMessageControllerTest {
 	@WithMockUser()
 	void getMessageFolders() throws Exception {
 
-		List<IrisMessageFolder> folderList = List.of(MOCK_INBOX_FOLDER, MOCK_OUTBOX_FOLDER);
+		List<IrisMessageFolder> folderList = List.of(testData.MOCK_INBOX_FOLDER, testData.MOCK_OUTBOX_FOLDER);
 
 		when(irisMessageService.getFolders()).thenReturn(folderList);
 
@@ -222,16 +211,16 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	void downloadMessageFile() throws Exception {
-		when(irisMessageService.getFile(any(UUID.class))).thenReturn(Optional.of(MOCK_MESSAGE_FILE));
+		when(irisMessageService.getFile(any(UUID.class))).thenReturn(Optional.of(testData.MOCK_MESSAGE_FILE));
 
 		var res = mockMvc
-				.perform(MockMvcRequestBuilders.get(baseUrl + "/files/{id}/download", MOCK_MESSAGE_FILE.getId()))
+				.perform(MockMvcRequestBuilders.get(baseUrl + "/files/{id}/download", testData.MOCK_MESSAGE_FILE.getId()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
 		verify(irisMessageService).getFile(any(UUID.class));
 
-		assertThat(res.getResponse().getHeader(HttpHeaders.CONTENT_DISPOSITION)).contains(MOCK_MESSAGE_FILE.getName());
+		assertThat(res.getResponse().getHeader(HttpHeaders.CONTENT_DISPOSITION)).contains(testData.MOCK_MESSAGE_FILE.getName());
 		assertThat(res.getResponse().getHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS)).isEqualTo(HttpHeaders.CONTENT_DISPOSITION);
 	}
 
@@ -239,7 +228,7 @@ class IrisMessageControllerTest {
 	@WithMockUser()
 	void getMessageHdContactsWithoutOwn() throws Exception {
 
-		when(irisMessageService.getHdContacts()).thenReturn(List.of(MOCK_CONTACT_OTHER));
+		when(irisMessageService.getHdContacts()).thenReturn(List.of(testData.MOCK_CONTACT_OTHER));
 
 		var res = mockMvc
 				.perform(MockMvcRequestBuilders.get(baseUrl + "/hd-contacts"))
@@ -251,16 +240,16 @@ class IrisMessageControllerTest {
 		List<IrisMessageHdContact> contacts = om.readValue(res.getResponse().getContentAsString(), new TypeReference<>() {});
 
 		assertEquals(1, contacts.size());
-		assertThat(contacts).contains(MOCK_CONTACT_OTHER);
-		assertThat(contacts).doesNotContain(MOCK_CONTACT_OWN);
+		assertThat(contacts).contains(testData.MOCK_CONTACT_OTHER);
+		assertThat(contacts).doesNotContain(testData.MOCK_CONTACT_OWN);
 	}
 
 	@Test
 	@WithMockUser()
 	void getMessageHdContactsIncludingOwn() throws Exception {
 
-		when(irisMessageService.getHdContacts()).thenReturn(List.of(MOCK_CONTACT_OTHER));
-		when(irisMessageService.getOwnHdContact()).thenReturn(MOCK_CONTACT_OWN);
+		when(irisMessageService.getHdContacts()).thenReturn(List.of(testData.MOCK_CONTACT_OTHER));
+		when(irisMessageService.getOwnHdContact()).thenReturn(testData.MOCK_CONTACT_OWN);
 
 		var res = mockMvc
 				.perform(MockMvcRequestBuilders.get(baseUrl + "/hd-contacts").queryParam("includeOwn", "true"))
@@ -273,8 +262,8 @@ class IrisMessageControllerTest {
 		List<IrisMessageHdContact> contacts = om.readValue(res.getResponse().getContentAsString(), new TypeReference<>() {});
 
 		assertEquals(2, contacts.size());
-		assertThat(contacts).contains(MOCK_CONTACT_OTHER);
-		assertThat(contacts).contains(MOCK_CONTACT_OWN);
+		assertThat(contacts).contains(testData.MOCK_CONTACT_OTHER);
+		assertThat(contacts).contains(testData.MOCK_CONTACT_OWN);
 	}
 
 	@Test
@@ -302,12 +291,12 @@ class IrisMessageControllerTest {
 		var res = mockMvc
 				.perform(MockMvcRequestBuilders
 						.get(baseUrl + "/count/unread")
-						.queryParam("folder", MOCK_INBOX_FOLDER.getId().toString())
+						.queryParam("folder", testData.MOCK_INBOX_FOLDER.getId().toString())
 				)
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
-		verify(irisMessageService).getCountUnreadByFolderId(MOCK_INBOX_FOLDER.getId().toUUID());
+		verify(irisMessageService).getCountUnreadByFolderId(testData.MOCK_INBOX_FOLDER.getId().toUUID());
 
 		Integer count = om.readValue(res.getResponse().getContentAsString(), new TypeReference<>() {});
 
@@ -332,59 +321,4 @@ class IrisMessageControllerTest {
 
 	}
 
-	private IrisMessageFile getTestMessageFile() {
-		return new IrisMessageFile()
-				.setName("test-file-name")
-				.setContent("test".getBytes())
-				.setContentType("text/plain");
-	}
-
-	private IrisMessageHdContact getTestMessageHdContactOwn() {
-		return new IrisMessageHdContact()
-				.setName("test-own-contact")
-				.setId("test-own-contact-id")
-				.setIsOwn(true);
-	}
-
-	private IrisMessageHdContact getTestMessageHdContactOther() {
-		return new IrisMessageHdContact()
-				.setName("test-other-contact")
-				.setId("test-other-contact-id")
-				.setIsOwn(false);
-	}
-
-	private IrisMessageFolder getTestDefaultMessageFolder() {
-		IrisMessageFolder folder = new IrisMessageFolder()
-				.setContext(IrisMessageContext.INBOX)
-				.setName("default folder");
-		folder.setDefaultFolder(folder.getId().toUUID());
-		return folder;
-	}
-
-	private IrisMessageFolder getTestMessageFolder(IrisMessageContext context, String name) {
-		return new IrisMessageFolder()
-				.setContext(context)
-				.setName(name)
-				.setDefaultFolder(MOCK_DEFAULT_FOLDER.getId().toUUID());
-	}
-
-	private IrisMessage getTestOutboxMessage() {
-		return new IrisMessage()
-				.setSubject("Test outbox subject")
-				.setBody("Test outbox body")
-				.setFolder(MOCK_OUTBOX_FOLDER)
-				.setHdAuthor(MOCK_CONTACT_OWN)
-				.setHdRecipient(MOCK_CONTACT_OTHER)
-				.setIsRead(true);
-	}
-
-	private IrisMessage getTestInboxMessage() {
-		return new IrisMessage()
-				.setSubject("Test inbox subject")
-				.setBody("Test inbox body")
-				.setFolder(MOCK_INBOX_FOLDER)
-				.setHdAuthor(MOCK_CONTACT_OTHER)
-				.setHdRecipient(MOCK_CONTACT_OWN)
-				.setIsRead(false);
-	}
 }

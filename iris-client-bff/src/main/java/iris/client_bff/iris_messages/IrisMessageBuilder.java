@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +20,8 @@ public class IrisMessageBuilder {
 
     public IrisMessage build(IrisMessageTransfer messageTransfer) throws IrisMessageException {
 
-        IrisMessageFolder folder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
-        if (folder == null) {
+        Optional<IrisMessageFolder> folder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
+        if (folder.isEmpty()) {
             throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_FOLDER);
         }
 
@@ -55,7 +56,7 @@ public class IrisMessageBuilder {
                 .setHdRecipient(hdRecipient)
                 .setSubject(messageTransfer.getSubject())
                 .setBody(messageTransfer.getBody())
-                .setFolder(folder)
+                .setFolder(folder.get())
                 .setIsRead(false)
                 .setAttachments(files);
 
@@ -64,8 +65,8 @@ public class IrisMessageBuilder {
 
     public IrisMessage build(IrisMessageInsert messageInsert) throws IrisMessageException {
 
-        IrisMessageFolder folder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
-        if (folder == null) {
+        Optional<IrisMessageFolder> folder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
+        if (folder.isEmpty()) {
             throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_FOLDER);
         }
 
@@ -99,7 +100,7 @@ public class IrisMessageBuilder {
                 .setHdRecipient(hdRecipient)
                 .setSubject(messageInsert.getSubject())
                 .setBody(messageInsert.getBody())
-                .setFolder(folder)
+                .setFolder(folder.get())
                 .setIsRead(true)
                 .setAttachments(files);
 

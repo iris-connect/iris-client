@@ -14,7 +14,10 @@ import iris.client_bff.events.EventDataRequestsDataInitializer;
 import iris.client_bff.events.EventDataSubmissionRepository;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 
+import iris.client_bff.iris_messages.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +39,10 @@ abstract class DatabasesystemIT {
 	private EventDataRequestService eventReqService;
 	@Autowired
 	private CaseDataRequestService caseReqService;
+	@Autowired
+	private IrisMessageService irisMessageService;
+	@Autowired
+	private IrisMessageFolderRepository irisMessageFolderRepository;
 
 	@Test
 	void eventRequests() {
@@ -114,6 +121,33 @@ abstract class DatabasesystemIT {
 	void caseSubmissions() {
 
 		assertThat(caseSubmissions.findAllByRequest(CaseDataRequestDataInitializer.DATA_REQUEST_1).toList()).hasSize(1);
+	}
+
+	@Test
+	void irisMessages() {
+
+		List<IrisMessageFolder> inboxRootFolders = irisMessageFolderRepository.findAll();
+		assertThat(inboxRootFolders).hasSize(3);
+
+		Optional<IrisMessageFolder> inboxRootFolder = irisMessageFolderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
+		assertThat(inboxRootFolder.isPresent()).isTrue();
+		assertThat(irisMessageService.search(inboxRootFolder.get().getId().toUUID(), null, null).toList()).hasSize(2);
+
+		Optional<IrisMessageFolder> outboxRootFolder = irisMessageFolderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
+		assertThat(outboxRootFolder.isPresent()).isTrue();
+		assertThat(irisMessageService.search(outboxRootFolder.get().getId().toUUID(), null, null).toList()).hasSize(1);
+
+		List<IrisMessageFolder> inboxNestedFolders = irisMessageFolderRepository.findAllByParentFolder(inboxRootFolder.get().getId().toUUID());
+		assertThat(inboxNestedFolders).hasSize(1);
+
+		assertThat(irisMessageService.search(inboxNestedFolders.get(0).getId().toUUID(), null, null).toList()).hasSize(1);
+
+		assertThat(irisMessageService.getCountUnread()).isEqualTo(3);
+
+		assertThat(irisMessageService.getCountUnreadByFolderId(inboxRootFolder.get().getId().toUUID())).isEqualTo(2);
+		assertThat(irisMessageService.getCountUnreadByFolderId(outboxRootFolder.get().getId().toUUID())).isEqualTo(0);
+		assertThat(irisMessageService.getCountUnreadByFolderId(inboxNestedFolders.get(0).getId().toUUID())).isEqualTo(1);
+
 	}
 
 }
