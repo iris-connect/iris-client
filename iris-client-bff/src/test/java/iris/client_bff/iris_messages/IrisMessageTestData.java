@@ -1,10 +1,7 @@
 package iris.client_bff.iris_messages;
 
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 
-@Component
 public class IrisMessageTestData {
 
     public final IrisMessageFile MOCK_MESSAGE_FILE = getTestMessageFile();
