@@ -84,11 +84,11 @@ public class IrisMessageService {
         return this.messageRepository.save(message);
     }
 
-    public void receiveMessage(IrisMessageTransfer messageTransfer) throws IrisMessageException {
+    public IrisMessage receiveMessage(IrisMessageTransfer messageTransfer) throws IrisMessageException {
 
         IrisMessage message = this.messageBuilder.build(messageTransfer);
 
-        this.messageRepository.save(message);
+        return this.messageRepository.save(message);
     }
 
 }

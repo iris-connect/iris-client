@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -72,8 +73,8 @@ public class IrisMessageBuilder {
 
         IrisMessageHdContact hdAuthor = this.irisMessageClient.getOwnIrisMessageHdContact();
 
-        IrisMessageHdContact hdRecipient = this.irisMessageClient.findIrisMessageHdContactById(messageInsert.getHdRecipient());
-        if (hdRecipient == null) {
+        Optional<IrisMessageHdContact> hdRecipient = this.irisMessageClient.findIrisMessageHdContactById(messageInsert.getHdRecipient());
+        if (hdRecipient.isEmpty()) {
             throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_RECIPIENT);
         }
 
@@ -97,7 +98,7 @@ public class IrisMessageBuilder {
 
         message
                 .setHdAuthor(hdAuthor)
-                .setHdRecipient(hdRecipient)
+                .setHdRecipient(hdRecipient.get())
                 .setSubject(messageInsert.getSubject())
                 .setBody(messageInsert.getBody())
                 .setFolder(folder.get())

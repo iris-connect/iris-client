@@ -7,7 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 
 public interface IrisMessageDataController {
-    void createIrisMessage(
+    IrisMessageTransfer createIrisMessage(
             @Valid @JsonRpcParam(value = "irisMessage") IrisMessageTransfer messageTransfer
     ) throws ResponseStatusException;
 }

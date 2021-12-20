@@ -63,11 +63,11 @@ public class IrisMessageTestData {
                 .setDefaultFolder(MOCK_DEFAULT_FOLDER.getId().toUUID());
     }
 
-    private IrisMessage getTestOutboxMessage() {
+    public IrisMessage getTestOutboxMessage() {
         return this.getTestOutboxMessage(MOCK_OUTBOX_FOLDER);
     }
 
-    private IrisMessage getTestInboxMessage() {
+    public IrisMessage getTestInboxMessage() {
         return this.getTestInboxMessage(MOCK_DEFAULT_FOLDER);
     }
 

@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -34,10 +31,9 @@ public class EPSIrisMessageClient {
         return new IrisMessageHdContact(ownId, ownId, true);
     }
 
-    public IrisMessageHdContact findIrisMessageHdContactById(String contactId) throws IrisMessageException {
-        // @todo: implement display name property for health-departments in the service-directory and fetch the hd by id to get the (display) name
-        // this is a placeholder until the EPS supports (ping for) display names for health departments
-        return new IrisMessageHdContact(contactId, contactId);
+    public Optional<IrisMessageHdContact> findIrisMessageHdContactById(String contactId) throws IrisMessageException {
+        List<IrisMessageHdContact> contacts = this.getIrisMessageHdContacts();
+        return contacts.stream().filter(contact -> contact.getId().equals(contactId)).findFirst();
     }
 
     public List<IrisMessageHdContact> getIrisMessageHdContacts() throws IrisMessageException {
