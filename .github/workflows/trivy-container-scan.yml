@@ -18,8 +18,11 @@ jobs:
         image-ref: ${{fromJson(inputs.image-refs)}}
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.3.4
+    
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.2.0
         with:
           image-ref: '${{ matrix.image-ref }}'
           format: 'template'
