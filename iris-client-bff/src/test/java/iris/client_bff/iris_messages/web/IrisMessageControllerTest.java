@@ -109,6 +109,27 @@ class IrisMessageControllerTest {
 
 	@Test
 	@WithMockUser()
+	public void createMessage_shouldFail() throws Exception {
+		IrisMessage irisMessage = testData.getTestOutboxMessage();
+
+		irisMessage.setSubject("S".repeat(Math.max(0, IrisMessage.SUBJECT_MAX_LENGTH + 1)));
+		irisMessage.setBody("B".repeat(Math.max(0, IrisMessage.BODY_MAX_LENGTH + 1)));
+
+		mockMvc
+				.perform(
+						MockMvcRequestBuilders
+								.multipart(baseUrl)
+								.param("hdRecipient", irisMessage.getHdRecipient().getId())
+								.param("subject", irisMessage.getSubject())
+								.param("body", irisMessage.getBody())
+				)
+				.andExpect(MockMvcResultMatchers.status().is4xxClientError())
+				.andReturn();
+
+	}
+
+	@Test
+	@WithMockUser()
 	void getMessageDetails() throws Exception {
 
 		UUID messageId = testData.MOCK_INBOX_MESSAGE.getId().toUUID();

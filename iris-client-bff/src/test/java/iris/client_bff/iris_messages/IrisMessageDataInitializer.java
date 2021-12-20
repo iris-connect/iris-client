@@ -27,21 +27,21 @@ public class IrisMessageDataInitializer implements DataInitializer {
 
 		log.debug("Test data: creating iris messages …");
 
-		Optional<IrisMessageFolder> inboxFolder = folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
+		Optional<IrisMessageFolder> inboxFolder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
 		assertThat(inboxFolder.isPresent()).isTrue();
-		IrisMessageFolder nestedInboxFolder = testData.getTestMessageFolder(inboxFolder.get(), "nested inbox");
+		IrisMessageFolder nestedInboxFolder = this.testData.getTestMessageFolder(inboxFolder.get(), "nested inbox");
 
-		folderRepository.save(nestedInboxFolder);
+		this.folderRepository.save(nestedInboxFolder);
 
-		Optional<IrisMessageFolder> outboxFolder = folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
+		Optional<IrisMessageFolder> outboxFolder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
 		assertThat(outboxFolder.isPresent()).isTrue();
 
-		messageRepository.save(testData.getTestInboxMessage(inboxFolder.get()));
-		messageRepository.save(testData.getTestInboxMessage(inboxFolder.get()));
+		this.messageRepository.save(this.testData.getTestInboxMessage(inboxFolder.get()));
+		this.messageRepository.save(this.testData.getTestInboxMessage(inboxFolder.get()));
 
-		messageRepository.save(testData.getTestInboxMessage(nestedInboxFolder));
+		this.messageRepository.save(this.testData.getTestInboxMessage(nestedInboxFolder));
 
-		messageRepository.save(testData.getTestOutboxMessage(outboxFolder.get()));
+		this.messageRepository.save(this.testData.getTestOutboxMessage(outboxFolder.get()));
 
 	}
 }
