@@ -37,7 +37,7 @@ CREATE TABLE iris_message_file (
     id binary(255) NOT NULL,
     message_id binary(255) NOT NULL,
     name varchar(255) NOT NULL,
-    content varbinary(max) NOT NULL,
+    content varbinary(max) NULL,
     content_type varchar(50) NULL,
     created datetime2 NOT NULL,
     last_modified datetime2 NOT NULL,
