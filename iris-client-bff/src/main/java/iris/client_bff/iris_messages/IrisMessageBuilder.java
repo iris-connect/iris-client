@@ -31,12 +31,19 @@ public class IrisMessageBuilder {
                 messageTransfer.getHdAuthor().getName()
         );
 
-        IrisMessageHdContact hdRecipient = this.irisMessageClient.getOwnIrisMessageHdContact();
+        IrisMessageHdContact hdRecipient = new IrisMessageHdContact(
+                messageTransfer.getHdRecipient().getId(),
+                messageTransfer.getHdRecipient().getName()
+        );
+
         // ensure that the message was sent to the correct recipient
-        // @todo: enable this when done with testing
-//        if (!Objects.equals(hdRecipient.getId(), messageTransfer.getHdRecipient().getId())) {
+        IrisMessageHdContact hdOwn = this.irisMessageClient.getOwnIrisMessageHdContact();
+        if (!Objects.equals(hdOwn.getId(), hdRecipient.getId())) {
+            // @todo: enable next line when done with testing
 //            throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_RECIPIENT);
-//        }
+            // @todo: remove next line when done with testing
+            hdRecipient = hdOwn;
+        }
 
         IrisMessage message = new IrisMessage();
 
@@ -88,7 +95,7 @@ public class IrisMessageBuilder {
                             .setMessage(message)
                             .setContent(file.getBytes())
                             .setContentType(file.getContentType())
-                            .setName(file.getOriginalFilename());
+                            .setName(file.getName());
                     files.add(messageFile);
                 }
             }

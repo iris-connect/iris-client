@@ -32,6 +32,7 @@ public class IrisMessageFile extends Aggregate<IrisMessageFile, IrisMessageFile.
     @Column(nullable = false)
     private String contentType;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name="message_id")
     private IrisMessage message;

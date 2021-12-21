@@ -22,6 +22,7 @@ public class IrisMessageFolder extends Aggregate<IrisMessageFolder, IrisMessageF
         id = IrisMessageFolder.IrisMessageFolderIdentifier.of(UUID.randomUUID());
     }
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<IrisMessage> messages;
 

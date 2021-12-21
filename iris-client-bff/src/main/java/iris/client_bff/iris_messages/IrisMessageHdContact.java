@@ -20,6 +20,7 @@ public class IrisMessageHdContact {
     @KeywordField(sortable = Sortable.YES, normalizer = "german")
     private String name;
 
+    @ToString.Exclude
     @Transient
     private Boolean isOwn;
 
