@@ -63,7 +63,7 @@ public class IrisMessageService {
         return this.messageRepository.save(message);
     }
 
-    public Optional<IrisMessageFile> getFile(UUID fileId) {
+    public Optional<IrisMessageFile> findFileById(UUID fileId) {
         return this.fileRepository.findById(IrisMessageFile.IrisMessageFileIdentifier.of(fileId));
     }
 

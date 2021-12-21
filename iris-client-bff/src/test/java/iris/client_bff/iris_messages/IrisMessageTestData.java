@@ -1,12 +1,18 @@
 package iris.client_bff.iris_messages;
 
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class IrisMessageTestData {
 
     public final IrisMessageFile MOCK_MESSAGE_FILE = getTestMessageFile();
 
-    public final IrisMessageFolder MOCK_DEFAULT_FOLDER = getTestDefaultMessageFolder();
+    private final IrisMessageFolder MOCK_DEFAULT_FOLDER = getTestDefaultMessageFolder();
 
     public final IrisMessageFolder MOCK_INBOX_FOLDER = MOCK_DEFAULT_FOLDER;
     public final IrisMessageFolder MOCK_OUTBOX_FOLDER = getTestMessageFolder(IrisMessageContext.OUTBOX, "outbox folder");
@@ -14,10 +20,11 @@ public class IrisMessageTestData {
     public final IrisMessageHdContact MOCK_CONTACT_OWN = getTestMessageHdContactOwn();
     public final IrisMessageHdContact MOCK_CONTACT_OTHER = getTestMessageHdContactOther();
 
-    public final IrisMessage MOCK_INBOX_MESSAGE = getTestInboxMessage();
-    public final IrisMessage MOCK_OUTBOX_MESSAGE = getTestOutboxMessage();
+    public final IrisMessage MOCK_INBOX_MESSAGE = getTestInboxMessage(MOCK_INBOX_FOLDER);
+    public final IrisMessage MOCK_OUTBOX_MESSAGE = getTestOutboxMessage(MOCK_OUTBOX_FOLDER);
 
-    public IrisMessage MOCK_MESSAGE_UPDATE = getTestInboxMessage();
+    public final static String INVALID_SUBJECT = "S".repeat(Math.max(0, IrisMessage.SUBJECT_MAX_LENGTH + 1));
+    public final static String INVALID_BODY = "B".repeat(Math.max(0, IrisMessage.BODY_MAX_LENGTH + 1));
 
     private IrisMessageFile getTestMessageFile() {
         return new IrisMessageFile()
@@ -60,12 +67,9 @@ public class IrisMessageTestData {
                 .setDefaultFolder(MOCK_DEFAULT_FOLDER.getId().toUUID());
     }
 
-    public IrisMessage getTestOutboxMessage() {
-        return this.getTestOutboxMessage(MOCK_OUTBOX_FOLDER);
-    }
-
     public IrisMessage getTestInboxMessage() {
-        return this.getTestInboxMessage(MOCK_DEFAULT_FOLDER);
+        IrisMessageFolder folder = this.getTestMessageFolder(IrisMessageContext.INBOX, "inbox folder");
+        return this.getTestInboxMessage(folder);
     }
 
     public IrisMessage getTestOutboxMessage(IrisMessageFolder folder) {
@@ -75,8 +79,8 @@ public class IrisMessageTestData {
                 .setSubject("Test outbox subject")
                 .setBody("Test outbox body")
                 .setFolder(folder)
-                .setHdAuthor(MOCK_CONTACT_OWN)
-                .setHdRecipient(MOCK_CONTACT_OTHER)
+                .setHdAuthor(this.getTestMessageHdContactOwn())
+                .setHdRecipient(this.getTestMessageHdContactOther())
                 .setAttachments(List.of(file))
                 .setIsRead(true);
         return message;
@@ -89,10 +93,29 @@ public class IrisMessageTestData {
                 .setSubject("Test inbox subject")
                 .setBody("Test inbox body")
                 .setFolder(folder)
-                .setHdAuthor(MOCK_CONTACT_OTHER)
-                .setHdRecipient(MOCK_CONTACT_OWN)
+                .setHdAuthor(this.getTestMessageHdContactOther())
+                .setHdRecipient(this.getTestMessageHdContactOwn())
                 .setAttachments(List.of(file))
                 .setIsRead(false);
         return message;
+    }
+
+    public IrisMessageInsert getTestMessageInsert(IrisMessage message) {
+        List<MultipartFile> files = new ArrayList<>();
+        for ( IrisMessageFile messageFile : message.getAttachments() ) {
+            files.add(
+                    new MockMultipartFile(
+                            messageFile.getName(),
+                            messageFile.getName() + "_orig",
+                            messageFile.getContentType(),
+                            messageFile.getContent()
+                    )
+            );
+        }
+        return new IrisMessageInsert()
+                .setSubject(message.getSubject())
+                .setBody(message.getBody())
+                .setHdRecipient(message.getHdRecipient().getId())
+                .setAttachments(files);
     }
 }
