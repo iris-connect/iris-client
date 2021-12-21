@@ -130,7 +130,7 @@ public class IrisMessageController {
     @GetMapping("/files/{id}/download")
     public ResponseEntity<byte[]> downloadMessageFile(@PathVariable UUID id) {
         this.validateUUID(id, FILE_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FILE_ID);
-        Optional<IrisMessageFile> file = this.irisMessageService.getFile(id);
+        Optional<IrisMessageFile> file = this.irisMessageService.findFileById(id);
         if (file.isPresent()) {
             IrisMessageFile messageFile = file.get();
             return ResponseEntity.ok()

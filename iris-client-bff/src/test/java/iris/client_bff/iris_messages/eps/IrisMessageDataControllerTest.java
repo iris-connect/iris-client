@@ -5,6 +5,7 @@ import iris.client_bff.iris_messages.*;
 import iris.client_bff.iris_messages.web.IrisMessageController;
 import iris.client_bff.ui.messages.ErrorMessages;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 
 @IrisWebIntegrationTest
 class IrisMessageDataControllerTest {
@@ -30,9 +32,6 @@ class IrisMessageDataControllerTest {
 
 	@Autowired
 	EPSIrisMessageClient messageClient;
-
-	@Autowired
-	IrisMessageTestData testData;
 
 	@Test
 	void createIrisMessage() {
@@ -58,9 +57,13 @@ class IrisMessageDataControllerTest {
 	@Test
 	void createIrisMessage_shouldFail_invalidData() {
 
-		IrisMessageTransfer localMessageTransfer = IrisMessageTransfer.fromEntity(this.getMessage());
-		localMessageTransfer.setSubject("S".repeat(Math.max(0, IrisMessage.SUBJECT_MAX_LENGTH + 1)));
-		localMessageTransfer.setBody("B".repeat(Math.max(0, IrisMessage.BODY_MAX_LENGTH + 1)));
+		IrisMessageTransfer localMessageTransfer = Mockito.spy(IrisMessageTransfer.fromEntity(this.getMessage()));
+
+		localMessageTransfer.setSubject(IrisMessageTestData.INVALID_SUBJECT);
+		verify(localMessageTransfer).setSubject(IrisMessageTestData.INVALID_SUBJECT);
+
+		localMessageTransfer.setBody(IrisMessageTestData.INVALID_BODY);
+		verify(localMessageTransfer).setBody(IrisMessageTestData.INVALID_BODY);
 
 		var e = assertThrows(ResponseStatusException.class, () -> this.dataController.createIrisMessage(localMessageTransfer));
 
@@ -70,14 +73,16 @@ class IrisMessageDataControllerTest {
 
 	private IrisMessage getMessage() {
 
+		IrisMessageTestData testData = new IrisMessageTestData();
+
 		Optional<IrisMessageFolder> outboxFolder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
 
 		assertThat(outboxFolder.isPresent()).isTrue();
 
-		IrisMessage message = this.testData.getTestOutboxMessage(outboxFolder.get());
+		IrisMessage message = testData.getTestOutboxMessage(outboxFolder.get());
 
 		// @todo: remove next line as soon as dummy loopback functionality is removed / EPS message endpoints are implemented
-		message.setHdRecipient(messageClient.getOwnIrisMessageHdContact());
+		message.setHdRecipient(this.messageClient.getOwnIrisMessageHdContact());
 
 		return message;
 	}

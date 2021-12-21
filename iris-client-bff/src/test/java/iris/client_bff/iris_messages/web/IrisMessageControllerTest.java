@@ -22,8 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @IrisWebIntegrationTest
 @RequiredArgsConstructor
@@ -51,13 +50,13 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	void getInboxMessages() throws Exception {
-		this.getMessages(testData.MOCK_INBOX_MESSAGE, testData.MOCK_INBOX_FOLDER.getId().toUUID());
+		this.getMessages(testData.MOCK_INBOX_MESSAGE, testData.MOCK_INBOX_MESSAGE.getFolder().getId().toUUID());
 	}
 
 	@Test
 	@WithMockUser()
 	void getOutboxMessages() throws Exception {
-		this.getMessages(testData.MOCK_OUTBOX_MESSAGE, testData.MOCK_OUTBOX_FOLDER.getId().toUUID());
+		this.getMessages(testData.MOCK_OUTBOX_MESSAGE, testData.MOCK_OUTBOX_MESSAGE.getFolder().getId().toUUID());
 	}
 
 	@Test
@@ -110,18 +109,14 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	public void createMessage_shouldFail() throws Exception {
-		IrisMessage irisMessage = testData.getTestOutboxMessage();
-
-		irisMessage.setSubject("S".repeat(Math.max(0, IrisMessage.SUBJECT_MAX_LENGTH + 1)));
-		irisMessage.setBody("B".repeat(Math.max(0, IrisMessage.BODY_MAX_LENGTH + 1)));
-
+		IrisMessage irisMessage = testData.MOCK_OUTBOX_MESSAGE;
 		mockMvc
 				.perform(
 						MockMvcRequestBuilders
 								.multipart(baseUrl)
 								.param("hdRecipient", irisMessage.getHdRecipient().getId())
-								.param("subject", irisMessage.getSubject())
-								.param("body", irisMessage.getBody())
+								.param("subject", IrisMessageTestData.INVALID_SUBJECT)
+								.param("body", IrisMessageTestData.INVALID_BODY)
 				)
 				.andExpect(MockMvcResultMatchers.status().is4xxClientError())
 				.andReturn();
@@ -168,15 +163,18 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	void updateMessage() throws Exception {
-		IrisMessageUpdate messageUpdate = new IrisMessageUpdate().setIsRead(true);
-		IrisMessage updatedMessage = testData.MOCK_MESSAGE_UPDATE.setIsRead(true);
+		IrisMessageUpdate messageUpdate = new IrisMessageUpdate(true);
 
-		when(irisMessageService.findById(any(UUID.class))).thenReturn(Optional.of(testData.MOCK_INBOX_MESSAGE));
-		when(irisMessageService.updateMessage(testData.MOCK_INBOX_MESSAGE, messageUpdate)).thenReturn(updatedMessage);
+		IrisMessage updatedMessage = spy(testData.getTestInboxMessage());
+		updatedMessage.setIsRead(true);
+		verify(updatedMessage).setIsRead(true);
+
+		when(irisMessageService.findById(any(UUID.class))).thenReturn(Optional.of(updatedMessage));
+		when(irisMessageService.updateMessage(updatedMessage, messageUpdate)).thenReturn(updatedMessage);
 
 		var res = mockMvc
 				.perform(
-						MockMvcRequestBuilders.patch(baseUrl + "/" + testData.MOCK_INBOX_MESSAGE.getId())
+						MockMvcRequestBuilders.patch(baseUrl + "/" + updatedMessage.getId())
 								.content(om.writeValueAsString(messageUpdate))
 								.contentType(MediaType.APPLICATION_JSON)
 				)
@@ -195,13 +193,15 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	void updateMessage_shouldFail() throws Exception {
-		IrisMessageUpdate messageUpdate = new IrisMessageUpdate().setIsRead(true);
+		UUID invalidId = UUID.randomUUID();
+
+		IrisMessageUpdate messageUpdate = new IrisMessageUpdate(true);
 
 		when(irisMessageService.findById(any(UUID.class))).thenReturn(Optional.empty());
 
 		mockMvc
 				.perform(
-						MockMvcRequestBuilders.patch(baseUrl + "/invalidId")
+						MockMvcRequestBuilders.patch(baseUrl + "/" + invalidId)
 								.content(om.writeValueAsString(messageUpdate))
 								.contentType(MediaType.APPLICATION_JSON)
 				)
@@ -232,14 +232,14 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	void downloadMessageFile() throws Exception {
-		when(irisMessageService.getFile(any(UUID.class))).thenReturn(Optional.of(testData.MOCK_MESSAGE_FILE));
+		when(irisMessageService.findFileById(any(UUID.class))).thenReturn(Optional.of(testData.MOCK_MESSAGE_FILE));
 
 		var res = mockMvc
 				.perform(MockMvcRequestBuilders.get(baseUrl + "/files/{id}/download", testData.MOCK_MESSAGE_FILE.getId()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
-		verify(irisMessageService).getFile(any(UUID.class));
+		verify(irisMessageService).findFileById(any(UUID.class));
 
 		assertThat(res.getResponse().getHeader(HttpHeaders.CONTENT_DISPOSITION)).contains(testData.MOCK_MESSAGE_FILE.getName());
 		assertThat(res.getResponse().getHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS)).isEqualTo(HttpHeaders.CONTENT_DISPOSITION);
