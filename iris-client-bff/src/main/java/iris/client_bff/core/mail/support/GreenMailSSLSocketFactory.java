@@ -88,7 +88,7 @@ public class GreenMailSSLSocketFactory extends SSLSocketFactory {
 	/**
 	 * Accepts only the certificate integrated in GreenMail
 	 */
-	public class GreenMailTrustManager implements X509TrustManager {
+	static class GreenMailTrustManager implements X509TrustManager {
 
 		@Override
 		public void checkClientTrusted(X509Certificate[] cert, String authType) throws CertificateException {
