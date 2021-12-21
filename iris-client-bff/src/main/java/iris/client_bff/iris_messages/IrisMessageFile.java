@@ -26,7 +26,7 @@ public class IrisMessageFile extends Aggregate<IrisMessageFile, IrisMessageFile.
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column()
     private byte[] content;
 
     @Column(nullable = false)

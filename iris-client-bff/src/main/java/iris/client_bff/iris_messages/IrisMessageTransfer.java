@@ -69,7 +69,6 @@ public class IrisMessageTransfer {
         @Size(max = IrisMessageFile.NAME_MAX_LENGTH)
         private String name;
 
-        @NotEmpty
         private byte[] content;
 
         @NotBlank
