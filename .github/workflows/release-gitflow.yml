@@ -32,19 +32,12 @@ jobs:
         with:
           distribution: 'liberica'
           java-version: '17'
+          cache: 'maven'
           
       - name: Setup node from node version file
         uses: actions/setup-node@v2.5.0
         with:
           node-version-file: 'iris-client-fe/.nvmrc'
-
-      - name: Cache local Maven repository
-        uses: actions/cache@v2.1.6
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
       
       - name: Login to DockerHub
         uses: docker/login-action@v1 
