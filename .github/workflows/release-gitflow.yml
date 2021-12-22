@@ -30,11 +30,6 @@ jobs:
           java-version: '17'
           cache: 'maven'
           
-      - name: Setup node from node version file
-        uses: actions/setup-node@v2.5.0
-        with:
-          node-version-file: 'iris-client-fe/.nvmrc'
-      
       - name: Login to DockerHub
         uses: docker/login-action@v1 
         with:
@@ -42,6 +37,8 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PW }}
       
       - run: chmod +x ./.prepare-release.sh
+
+      - run: node -v; npm -v
   
       - name: Build all and create release with semantic-release
         uses: cycjimmy/semantic-release-action@v2
