@@ -11,10 +11,6 @@ on:
       - next-major
       - 1.**
 
-defaults:
-  run:
-    shell: bash
-      
 jobs:
   release-client:
     name: Build and release Client
