@@ -12,6 +12,7 @@ export type IrisMessageCreateState = {
   contacts: IrisMessageHdContact[] | null;
   contactsLoading: boolean;
   contactsLoadingError: ErrorMessage;
+  allowedFileTypes: string[] | null;
 };
 
 export interface IrisMessageDetailsModule
@@ -34,6 +35,10 @@ export interface IrisMessageDetailsModule
       state: IrisMessageCreateState,
       payload: ErrorMessage
     ): void;
+    setAllowedFileTypes(
+      state: IrisMessageCreateState,
+      payload: string[] | null
+    ): void;
     reset(state: IrisMessageCreateState, payload: null): void;
   };
   actions: {
@@ -42,6 +47,7 @@ export interface IrisMessageDetailsModule
       data: IrisMessageInsert
     ): Promise<void>;
     fetchRecipients({ commit }: { commit: Commit }): Promise<void>;
+    fetchAllowedFileTypes({ commit }: { commit: Commit }): Promise<void>;
   };
 }
 
@@ -51,6 +57,7 @@ const defaultState: IrisMessageCreateState = {
   contacts: null,
   contactsLoading: false,
   contactsLoadingError: null,
+  allowedFileTypes: null,
 };
 
 const irisMessageCreate: IrisMessageDetailsModule = {
@@ -73,6 +80,9 @@ const irisMessageCreate: IrisMessageDetailsModule = {
     },
     setContactsLoadingError(state, payload) {
       state.contactsLoadingError = payload;
+    },
+    setAllowedFileTypes(state, payload) {
+      state.allowedFileTypes = payload;
     },
     reset(state) {
       Object.assign(state, { ...defaultState });
@@ -108,6 +118,16 @@ const irisMessageCreate: IrisMessageDetailsModule = {
       } finally {
         commit("setContacts", list);
         commit("setContactsLoading", false);
+      }
+    },
+    async fetchAllowedFileTypes({ commit }) {
+      let fileTypes: string[] | null = null;
+      try {
+        fileTypes = (await authClient.irisMessageAllowedFileTypesGet()).data;
+      } catch (e) {
+        // ignored
+      } finally {
+        commit("setAllowedFileTypes", fileTypes);
       }
     },
   },

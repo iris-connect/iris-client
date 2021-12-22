@@ -29,7 +29,10 @@ public class IrisMessageFile extends Aggregate<IrisMessageFile, IrisMessageFile.
     @Column(length = 16777215)
     private byte[] content;
 
-    @Column(nullable = false)
+    /**
+     * @deprecated
+     */
+    @Column
     private String contentType;
 
     @ToString.Exclude

@@ -2312,6 +2312,23 @@ export class IrisClientFrontendApi extends BaseAPI {
   }
 
   /**
+   * @summary Fetches allowed file types for iris message attachments
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessageAllowedFileTypesGet(
+    options?: RequestOptions
+  ): ApiResponse<string[]> {
+    return this.apiRequest(
+      "GET",
+      "/iris-messages/allowed-file-types",
+      null,
+      options
+    );
+  }
+
+  /**
    * @summary Fetches iris message folders
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}

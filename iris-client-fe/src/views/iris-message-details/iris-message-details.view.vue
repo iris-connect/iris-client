@@ -40,7 +40,7 @@
                   <v-list-item-title>
                     {{ attachment.name }}
                   </v-list-item-title>
-                  <v-list-item-subtitle>
+                  <v-list-item-subtitle v-if="attachment.type">
                     {{ attachment.type }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
