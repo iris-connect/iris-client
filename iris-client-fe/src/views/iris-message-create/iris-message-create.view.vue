@@ -43,6 +43,7 @@
             @click:clear="clearAttachments"
             multiple
             data-test="attachments"
+            :accept="allowedFileTypes.join(',')"
           >
             <template v-slot:selection="{ index, text }">
               <v-chip
@@ -105,6 +106,7 @@ type IrisMessageCreateForm = {
   },
   beforeRouteEnter(to, from, next) {
     store.dispatch("irisMessageCreate/fetchRecipients");
+    store.dispatch("irisMessageCreate/fetchAllowedFileTypes");
     next();
   },
   beforeRouteLeave(to, from, next) {
@@ -150,6 +152,10 @@ export default class IrisMessageCreateView extends Vue {
 
   get recipients(): IrisMessageHdContact[] {
     return this.$store.state.irisMessageCreate.contacts || [];
+  }
+
+  get allowedFileTypes(): string[] {
+    return this.$store.state.irisMessageCreate.allowedFileTypes || [];
   }
 
   get recipientsLoading(): boolean {

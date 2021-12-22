@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,7 +70,9 @@ public class IrisMessageTransfer {
 
         private byte[] content;
 
-        @NotBlank
+        /**
+         * @deprecated
+         */
         @Size(max = IrisMessageFile.CONTENT_TYPE_MAX_LENGTH)
         private String contentType;
 

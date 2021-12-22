@@ -21,7 +21,8 @@ public class ErrorMessages {
 	public static final String INVALID_IRIS_MESSAGE_FOLDER_ID = "Die ID des Nachrichten-Ordners ist ungültig.";
 	public static final String INVALID_IRIS_MESSAGE_FOLDER = "Der Nachrichten-Ordner ist ungültig.";
 	public static final String INVALID_IRIS_MESSAGE_FILE_ID = "Die ID des Nachrichten Anhangs ist ungültig.";
-	public static final String INVALID_IRIS_MESSAGE_FILE = "Ein Nachrichten Anhang konnte nicht verarbeitet werden.";
+	public static final String INVALID_IRIS_MESSAGE_FILE = "Der Nachrichten Anhang ist ungültig.";
+	public static final String INVALID_FILE_TYPE = "Der Dateityp ist ungültig.";
 	public static final String MAX_UPLOAD_FILE_SIZE = "Die Maximalgröße für Dateien von {{max}} wurde überschritten.";
 
 }

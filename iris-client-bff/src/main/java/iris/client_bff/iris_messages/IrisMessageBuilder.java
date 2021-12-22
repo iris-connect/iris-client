@@ -3,6 +3,7 @@ package iris.client_bff.iris_messages;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
+import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,15 +49,20 @@ public class IrisMessageBuilder {
         IrisMessage message = new IrisMessage();
 
         List<IrisMessageFile> files = new ArrayList<>();
-        if (messageTransfer.getAttachments() != null) {
-            for ( IrisMessageTransfer.Attachment file : messageTransfer.getAttachments() ) {
-                IrisMessageFile messageFile = new IrisMessageFile()
-                        .setMessage(message)
-                        .setContent(file.getContent())
-                        .setContentType(file.getContentType())
-                        .setName(file.getName());
-                files.add(messageFile);
+        try {
+            if (messageTransfer.getAttachments() != null) {
+                Tika tika = new Tika();
+                for ( IrisMessageTransfer.Attachment file : messageTransfer.getAttachments() ) {
+                    IrisMessageFile messageFile = new IrisMessageFile()
+                            .setMessage(message)
+                            .setContent(file.getContent())
+                            .setContentType(tika.detect(file.getContent(), file.getName()))
+                            .setName(file.getName());
+                    files.add(messageFile);
+                }
             }
+        } catch (Throwable e) {
+            throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_FILE);
         }
 
         message
@@ -90,12 +96,14 @@ public class IrisMessageBuilder {
         List<IrisMessageFile> files = new ArrayList<>();
         try {
             if (messageInsert.getAttachments() != null) {
+                Tika tika = new Tika();
                 for ( MultipartFile file : messageInsert.getAttachments() ) {
+                    String fileName = file.getOriginalFilename() == null ? file.getName() : file.getOriginalFilename();
                     IrisMessageFile messageFile = new IrisMessageFile()
                             .setMessage(message)
                             .setContent(file.getBytes())
-                            .setContentType(file.getContentType())
-                            .setName(file.getName());
+                            .setContentType(tika.detect(file.getInputStream(), fileName))
+                            .setName(fileName);
                     files.add(messageFile);
                 }
             }
