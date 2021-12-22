@@ -30,7 +30,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
-          distribution: 'zulu'
+          distribution: 'liberica'
           java-version: '17'
           
       - name: Setup node from node version file
