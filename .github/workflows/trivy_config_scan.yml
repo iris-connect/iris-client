@@ -1,4 +1,4 @@
-name: Trivy Repo Scan
+name: Trivy Config Scan
 
 on:
   push:
@@ -9,45 +9,35 @@ on:
     - cron: '10 4 * * *'
 
 jobs:
-  repo_scan:
-    name: Trivy Repo Scan
+  config_scan:
+    name: Trivy Config Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v2
 
-      - name: Setup Java
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'liberica'
-          java-version: '17'
-          cache: 'maven'
-
-      - name: Run Maven-Build
-        run: mvn -B package -DskipTests
-
-      - name: Run Trivy vulnerability scanner in fs mode
+      - name: Run Trivy config scanner
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
-          ignore-unfixed: true
+          scan-type: 'config'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH,MEDIUM'
+          hide-progress: false
           exit-code: '1'
-
+          
+# The upload is currently not working, but I'm leaving it in in case a later update to the Trivy action fixes it.
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v1
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
           
-      - name: Show Trivy vulnerability errors
+      - name: Show Trivy config errors
         uses: aquasecurity/trivy-action@master
         if: failure()
         with:
-          scan-type: 'fs'
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH,MEDIUM'
-          
+          scan-type: 'config'
+          severity: 'CRITICAL,HIGH,MEDIUM'          
+          hide-progress: false
