@@ -105,8 +105,8 @@ public class IrisMessageTestData {
         for ( IrisMessageFile messageFile : message.getAttachments() ) {
             files.add(
                     new MockMultipartFile(
+                            messageFile.getName() + "_form",
                             messageFile.getName(),
-                            messageFile.getName() + "_orig",
                             messageFile.getContentType(),
                             messageFile.getContent()
                     )
