@@ -36,7 +36,7 @@ public class JWTService implements JWTVerifier, JWTSigner {
 	}
 
 	private Algorithm getAlgorithm() {
-		return Algorithm.HMAC512(jwtProperties.getJwtSharedSecret());
+		return Algorithm.HMAC512(jwtProperties.getSharedSecret());
 	}
 
 	@Override
