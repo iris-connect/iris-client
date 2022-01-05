@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import iris.client_bff.IrisWireMockTest;
+import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.search_client.eps.dto.IdSearch;
 import iris.client_bff.search_client.eps.dto.KeywordSearch;
 import iris.client_bff.search_client.eps.dto.PageableDto;
@@ -21,7 +21,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
-@IrisWireMockTest
+@IrisWebIntegrationTest
 @RequiredArgsConstructor
 class EPSSearchClientTests {
 

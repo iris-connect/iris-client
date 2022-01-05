@@ -14,11 +14,10 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
-import org.springframework.test.context.TestPropertySource;
 
 @AutoConfigureWireMock(port = 0)
-@TestPropertySource(properties = { "iris.serverAddress=localhost", "iris.serverPort=${wiremock.server.port}",
-		"iris.location-service.endpoint=http://localhost:${wiremock.server.port}/search" })
+// @TestPropertySource(properties = { "iris.location-service.endpoint=http://localhost:${wiremock.server.port}/search"
+// })
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestConstructor(autowireMode = AutowireMode.ALL)
