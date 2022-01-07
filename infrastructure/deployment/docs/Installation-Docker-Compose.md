@@ -98,16 +98,6 @@ POSTGRES_DB
 ```
 Die DB muss vorher von Ihnen angelegt werden. Der User benötigt die Berechtigung, Tabellen zu erstellen und zu ändern. Das Datenbank-Schema wird von der Applikation verwaltet und eventuelle Änderungen werden für Sie transparent migriert.
 
-## Einrichtung der Benutzer-Authentifizierung
-
-Der IRIS Client stellt für die Benutzer [JSON Webtokens](https://de.wikipedia.org/wiki/JSON_Web_Token) aus. Dafür wird ein HMAC512 Algorithmus benutzt. Dieser Algorithmus verlangt ein starkes *Shared Secret*. Das kann wie folgt konfiguriert werden.
-
-```
-SECURITY_JWT_JWT_SHARED_SECRET
-```
-
-Wir empfehlen, einen Passwort-Generator zu benutzen (z.B. https://passwordsgenerator.net). 
-
 ## Einrichtung Ihrer lokalen Domain
 
 Der IRIS Client ist eine HTTPS basierte Webanwendung, die unter einer Domain betrieben wird. Diese Domain ist frei wählbar. Sie müssen für Ihre Domain ein validiertes Zertifikat und den entsprechenden Schlüssel konfigurieren. 
