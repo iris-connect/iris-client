@@ -2,7 +2,7 @@ package iris.client_bff.status.eps;
 
 import static java.util.stream.Collectors.*;
 
-import iris.client_bff.config.RPCClientConfig;
+import iris.client_bff.config.RPCClientProperties;
 import iris.client_bff.status.AppInfo;
 import iris.client_bff.status.AppStatusException;
 import iris.client_bff.status.AppStatusInternalException;
@@ -31,12 +31,12 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 public class EPSStatusClient {
 
 	private final JsonRpcHttpClient epsRpcClient;
-	private final RPCClientConfig rpcClientConfig;
+	private final RPCClientProperties rpcClientProps;
 	private final MessageSourceAccessor messages;
 
 	public Apps getAvailableApps() {
 
-		var methodName = rpcClientConfig.getOwnEndpoint() + "._directory";
+		var methodName = rpcClientProps.getOwnEndpoint() + "._directory";
 
 		try {
 

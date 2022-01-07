@@ -18,6 +18,7 @@ services:
       SPRING_PROFILES_ACTIVE: prod
       EPS_CLIENT_EPS_CLIENT_URL: https://eps:5556/jsonrpc
       EPS_CLIENT_PROXY_CLIENT_URL: https://private-proxy-eps:7766/jsonrpc
+      EPS_CLIENT_OWN_ENDPOINT: ${EPS_OP}
       PROXY_SERVICE_EPS_NAME: "${PROXY_OP}"
       PROXY_SERVICE_TARGET_SUBDOMAIN: ${PROXY_SUBDOMAIN}
       PROXY_SERVICE_TARGET_PROXY: ${EPS_PP_NAME}
@@ -26,7 +27,6 @@ services:
       IRIS_BACKEND_SERVICE_ENDPOINT: ${EPS_LS_NAME}
       IRIS_CLIENT_BASEPATH: "https://${IRIS_CLIENT_DOMAIN}"
       EXT_APP_DW_BASEURL:
-      EPS_OP:
     restart: unless-stopped
     healthcheck:
       test: "/cnb/lifecycle/launcher java -cp /workspace/BOOT-INF/classes:/workspace/BOOT-INF/lib/* iris.tools.HealthChecker || exit 1"
