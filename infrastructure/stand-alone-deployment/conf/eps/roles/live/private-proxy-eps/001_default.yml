@@ -68,8 +68,6 @@ channels: # defines all the channels that we want to open when starting the serv
     type: jsonrpc_client
     settings:
       endpoint: "$PRIVATE_PROXY_ENDPOINT"
-      #tls:
-      #  ca_certificate_files: ["$DIR/../../certs/$TRUSTED_CA_CRT"]
   - name: main gRPC client # creates outgoing gRPC connections to deliver and receive messages
     type: grpc_client
     settings:
