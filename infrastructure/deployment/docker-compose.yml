@@ -44,16 +44,14 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_USER}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: prod,stage_${IRIS_ENV}
       EPS_CLIENT_EPS_CLIENT_URL: https://eps:5556/jsonrpc
       EPS_CLIENT_PROXY_CLIENT_URL: https://private-proxy-eps:7766/jsonrpc
       EPS_CLIENT_OWN_ENDPOINT: ${EPS_OP}
       PROXY_SERVICE_EPS_NAME: ${PROXY_OP}
       PROXY_SERVICE_TARGET_SUBDOMAIN: ${PROXY_SUBDOMAIN}
-      PROXY_SERVICE_TARGET_PROXY: ${EPS_PP_NAME}
       SECURITY_AUTH_DB_ADMIN_USER_NAME:
       SECURITY_AUTH_DB_ADMIN_USER_PASSWORD:
-      IRIS_BACKEND_SERVICE_ENDPOINT: ${EPS_LS_NAME}
       IRIS_CLIENT_BASEPATH: https://${IRIS_CLIENT_DOMAIN}
       EXT_APP_DW_BASEURL:
     depends_on:
@@ -99,8 +97,6 @@ services:
       EPS_OP:
       EPS_CLIENT_CERT:
       EPS_CLIENT_CERT_KEY:
-      EPS_SD_ENDPOINT:
-      EPS_SD_NAME:
     restart: unless-stopped
 
   # Proxy for inbound connections.
@@ -142,8 +138,6 @@ services:
       PROXY_OP:
       PROXY_CLIENT_CERT:
       PROXY_CLIENT_CERT_KEY:
-      EPS_SD_ENDPOINT:
-      EPS_SD_NAME:
       HTTPS_PROXY: ${PROXY_URL}
       PROXY_URL: ${PROXY_URL}
     depends_on:
