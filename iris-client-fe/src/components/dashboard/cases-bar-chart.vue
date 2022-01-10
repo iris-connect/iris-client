@@ -1,34 +1,28 @@
-<script lang="js">
+<template>
+  <vue-chart :type="type" :data="data" :height="200" />
+</template>
 
-import {Line} from "vue-chartjs";
-
-export default {
-  extends: Line,
-  name: 'cases-bar-chart',
-  props: [],
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  data: () => ({
-    chartdata: {
-      labels: ['KW33', 'KW34', 'KW35', 'KW36', 'KW37'],
-      datasets: [
-        {
-          label: 'Indexfälle',
-          backgroundColor: '#46ff9f',
-          data: [12, 22, 9, 32, 11]
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false
-    }
-  }),
-
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  mounted() {
-    this.renderChart(this.chartdata, this.options)
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import { ChartData } from "chart.js";
+import VueChart from "@/components/vue-chart.vue";
+@Component({
+  components: {
+    VueChart,
   },
-  methods: {},
-  computed: {}
+})
+export default class CasesBarChart extends Vue {
+  type = "line";
+  data: ChartData = {
+    labels: ["KW33", "KW34", "KW35", "KW36", "KW37"],
+    datasets: [
+      {
+        label: "Indexfälle",
+        borderColor: "#46ff9f",
+        data: [12, 22, 9, 32, 11],
+        cubicInterpolationMode: "monotone",
+      },
+    ],
+  };
 }
 </script>
