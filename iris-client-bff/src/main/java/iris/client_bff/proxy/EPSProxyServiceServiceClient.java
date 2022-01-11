@@ -32,9 +32,7 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 				.proxy(config.getTargetProxy())
 				.build();
 
-		var methodName = config.getEpsName()
-				+ "."
-				+ "announceConnection";
+		var methodName = config.getEpsName() + ".announceConnection";
 
 		try {
 			proxyRpcClient.invoke(methodName, announcementDto);

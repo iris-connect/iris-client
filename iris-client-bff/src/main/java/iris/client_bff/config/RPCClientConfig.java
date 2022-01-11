@@ -1,7 +1,5 @@
 package iris.client_bff.config;
 
-import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
@@ -22,9 +20,8 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.springframework.boot.actuate.health.Status;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -40,32 +37,26 @@ import com.fasterxml.jackson.databind.ser.impl.StringArraySerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
-@ConstructorBinding
+@Configuration
 @RequiredArgsConstructor
-@ConfigurationProperties("eps-client")
-@Getter
 public class RPCClientConfig {
 
 	private static final int CONN_TIMEOUT = 3 * 1000;
 	private static final int READ_TIMEOUT = 0; // Is infinite here, since we rely on EPS's timeouts after a successful
 																							// connection.
 
-	private final @NonNull String epsClientUrl;
-
-	private final @NonNull String proxyClientUrl;
-
-	private final @NonNull String ownEndpoint;
+	private final RPCClientProperties properties;
 
 	@Bean
 	public JsonRpcHttpClient epsRpcClient()
 			throws NoSuchAlgorithmException, KeyManagementException, MalformedURLException {
-		return epsRpcClient(epsClientUrl);
+		return epsRpcClient(properties.getEpsClientUrl());
 	}
 
 	@Bean
 	public JsonRpcHttpClient proxyRpcClient()
 			throws NoSuchAlgorithmException, KeyManagementException, MalformedURLException {
-		return epsRpcClient(proxyClientUrl);
+		return epsRpcClient(properties.getProxyClientUrl());
 	}
 
 	private JsonRpcHttpClient epsRpcClient(String clientUrl)
