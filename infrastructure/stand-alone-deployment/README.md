@@ -216,37 +216,6 @@ IRIS_ENV=
 
 Von dieser Einstellung hänger unter anderem ab, zu welchem Service Directory sich Ihr IRIS-Client verbindet und welchen ROOT-Zertifikaten vertraut wird. 
 
-## Einrichtung des Service-Directory Endpunkts
-
-Wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben, benötigt der IRIS-Client Zugriff auf das IRIS Service-Directory, damit es weiß welche Services unter welcher Adresse zu erreichen sind. Die richtige Service-Directory-URL hängt von der Umgebung (Staging oder Live ab). 
-
-```
-# Staging: 
-EPS_SD_ENDPOINT=https://test.iris-gateway.de:32324/jsonrpc
-
-# Live: 
-EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
-```
-## Einrichtung vom IRIS Locations Service
-
-Wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben, benötigt der IRIS-Client Zugriff auf den IRIS Locations Service, damit die Mitarbeiter im GA u.a. nach Betrieben und Gastronomien suchen können. Es gibt zwei vordefinierte Werte für diesen Parameter. 
-
-```
-# staging:  ls-1
-# live:     locations-production-1
-EPS_LS_NAME=
-```
-
-## Einrichtung des IRIS Public-Proxy
-
-Wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben, benötigt der IRIS-Client Zugriff auf den IRIS Public-Proxy-Service, damit eingehende Daten wie z.B. Kontakttagebücher empfangen werden können. Es gibt zwei vordefinierte Werte für diesen Parameter. 
-
-```
-# staging:  public-proxy-1
-# live:     public-proxy-production-1
-EPS_PP_NAME=
-```
-
 
 ## Einrichtung: TLS-Zertifikat (Private-Proxy)
 
