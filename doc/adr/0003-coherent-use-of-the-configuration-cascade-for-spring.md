@@ -20,10 +20,10 @@ Ex: A scheduler for a delete job.
 2. If properties cannot be set in a general and meaningful way in `application.properties`, then they should be implemented in the code as mandatory properties, so that it is quickly obvious at startup if they are missing.  
 Ex: With Bean Validation in properties classes. 
 
-3. For deployments we generally use the Spring profile `prod` with its subprofiles `prod...`. Configurations for the deployment environments are to be made here.
+3. For deployments we generally use the Spring profile `prod` with its subprofiles `prod...`. Configurations for the deployment environments are to be made here.  
 Ex: PostgreSQL instead of a H2 DB
 
-4. For basic differences between the deployed installations respectively EPS networks (prod (live), test (staging), ...) we use additional profiles starting with `stage`, like `stage_live` and `stage_staging`.
+4. For basic differences between the deployed installations respectively EPS networks (prod (live), test (staging), ...) we use additional profiles starting with `stage`, like `stage_live` and `stage_staging`.  
 Ex: The name of the backend service and the public proxy within EPS network. 
 
 5. In the Docker Compose file, values should be set for environment variables that are uniform for all deployments with this file.  
@@ -39,4 +39,6 @@ Addendum:
 
 ## Consequences
 
-I don't think there is anything more to say about points 3 to 6. Points 1 and 2 ensure that necessary configurations are not overlooked during deployment and that incorrect default values are not used by mistake. Missing configurations are also quickly noticed when the application is started.
+Points 1 and 2 ensure that necessary configurations are not overlooked during deployment and that incorrect default values are not used by mistake. Missing configurations are also quickly noticed when the application is started.
+
+If we use this cascade correctly, then it is clear which settings/values belong where. Conversely, it is also clear in which context settings have an effect.
