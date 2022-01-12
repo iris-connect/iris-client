@@ -75,9 +75,7 @@ public class RPCClientConfig {
 				new URL(clientUrl),
 				new HashMap<>());
 
-		// Can be removed when we include the root certs
-		//var sc = getAllCertsTrustedSSLContext();
-		//client.setSslContext(sc);
+		// NoopHostnameVerifier is needed because the internal eps address is not necessarily part of certs SAN
 		client.setHostNameVerifier(new NoopHostnameVerifier());
 		client.setConnectionTimeoutMillis(CONN_TIMEOUT);
 		client.setReadTimeoutMillis(READ_TIMEOUT);
