@@ -344,6 +344,9 @@
 							<!-- embeds environment variables into an image: https://github.com/paketo-buildpacks/environment-variables -->
 							<!-- with GraalVM <BP_BOOT_NATIVE_IMAGE>true</BP_BOOT_NATIVE_IMAGE> -->
 						</env>
+						<bindings>
+							<binding>${basedir}/bindings/ca-certificates:/platform/bindings/ca-certificates</binding>
+						</bindings>
 					</image>
 					<docker>
 						<publishRegistry>
