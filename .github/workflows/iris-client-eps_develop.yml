@@ -6,13 +6,13 @@ on:
   push:
     branches:
       - develop
-    paths:    
+    paths:
       - infrastructure/docker/iris-client-eps/**
       - .github/workflows/iris-client-eps_develop.yml
   pull_request:
     branches:
       - develop
-    paths:    
+    paths:
       - infrastructure/docker/iris-client-eps/**
       - .github/workflows/iris-client-eps_develop.yml
 
@@ -20,7 +20,7 @@ jobs:
   build_and_push:
     name: Build and push Docker image
     runs-on: ubuntu-latest
-    
+
     # Map a step output to a job output
     outputs:
       image-ref: ${{ steps.meta.outputs.tags }}
@@ -49,9 +49,17 @@ jobs:
         with:
           context: ./infrastructure/docker/iris-client-eps/
           tags: ${{ steps.meta.outputs.tags }}
-          push: true
+          push: false
           labels: |
             iris.client-eps.image.revision=${{ github.sha }}
+
+      - name: Sign and push docker image
+        uses: sudo-bot/action-docker-sign@latest
+        with:
+          image-ref: ${{ steps.meta.outputs.tags }}
+          private-key-id: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}
+          private-key: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY }}
+          private-key-passphrase: ${{ secrets.DOCKER_HUB_DCT_PASSPHRASE }}
 
   container_scan:
     name: Container Scan
