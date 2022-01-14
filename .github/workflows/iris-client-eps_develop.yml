@@ -56,7 +56,7 @@ jobs:
       - name: Sign and push docker image
         uses: sudo-bot/action-docker-sign@latest
         with:
-          image-ref: ${{ steps.meta.outputs.tags }}
+          image-ref: ${{needs.build_and_push.outputs.image-ref}}
           private-key-id: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}
           private-key: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY }}
           private-key-passphrase: ${{ secrets.DOCKER_HUB_DCT_PASSPHRASE }}
