@@ -55,7 +55,7 @@ jobs:
             iris.client-eps.image.revision=${{ github.sha }}
 
       - name: Build result meta darta
-          run: echo "meta data ${{ steps.build_image.outputs.meta }}"
+        run: echo "meta data ${{ steps.build_image.outputs.meta }}"
 
       - name: Sign and push docker image
         uses: sudo-bot/action-docker-sign@latest
