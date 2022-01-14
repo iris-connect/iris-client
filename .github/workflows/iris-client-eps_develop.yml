@@ -45,7 +45,6 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PW }}
 
       - name: Build and push to docker.io
-        id: build_image
         uses: docker/build-push-action@v2.7.0
         with:
           context: ./infrastructure/docker/iris-client-eps/
@@ -55,13 +54,13 @@ jobs:
           labels: |
             iris.client-eps.image.revision=${{ github.sha }}
 
-      - name: Build result meta darta
-        run: echo "meta data ${{ steps.build_image.outputs.meta }}"
+      - name: Print metadata
+        run: echo "meta ${{needs.build_and_push.outputs.metadata.image.name}}"
 
       - name: Sign and push docker image
         uses: sudo-bot/action-docker-sign@latest
         with:
-          image-ref: ${{needs.build_and_push.outputs.image-ref}}
+          image-ref: ${{needs.build_and_push.outputs.metadata.image.name}}
           private-key-id: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}
           private-key: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY }}
           private-key-passphrase: ${{ secrets.DOCKER_HUB_DCT_PASSPHRASE }}
