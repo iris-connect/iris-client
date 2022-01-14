@@ -55,16 +55,13 @@ jobs:
           labels: |
             iris.client-eps.image.revision=${{ github.sha }}
 
-      - name: Print image ref
-        run: echo "imageref ${{outputs.image-ref}}"
-
       - name: Print metadata
         run: echo "meta ${{steps.meta.outputs.tags}}"
 
       - name: Sign and push docker image
         uses: sudo-bot/action-docker-sign@latest
         with:
-          image-ref: ${{steps.build_image.outputs.metadata.image.name}}
+          image-ref: ${{steps.meta.outputs.tags}}
           private-key-id: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}
           private-key: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY }}
           private-key-passphrase: ${{ secrets.DOCKER_HUB_DCT_PASSPHRASE }}
