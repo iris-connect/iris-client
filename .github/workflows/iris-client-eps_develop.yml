@@ -51,6 +51,7 @@ jobs:
           context: ./infrastructure/docker/iris-client-eps/
           tags: ${{ steps.meta.outputs.tags }}
           push: false
+          load: true
           labels: |
             iris.client-eps.image.revision=${{ github.sha }}
 
