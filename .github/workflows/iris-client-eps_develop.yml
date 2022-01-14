@@ -46,6 +46,7 @@ jobs:
 
       - name: Build and push to docker.io
         uses: docker/build-push-action@v2.7.0
+        id: build_image
         with:
           context: ./infrastructure/docker/iris-client-eps/
           tags: ${{ steps.meta.outputs.tags }}
@@ -55,7 +56,7 @@ jobs:
             iris.client-eps.image.revision=${{ github.sha }}
 
       - name: Print metadata
-        run: echo "meta ${{needs.build_and_push.outputs.metadata.image.name}}"
+        run: echo "meta ${{steps.build_image.outputs.metadata.image.name}}"
 
       - name: Sign and push docker image
         uses: sudo-bot/action-docker-sign@latest
