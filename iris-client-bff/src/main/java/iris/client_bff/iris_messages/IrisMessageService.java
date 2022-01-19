@@ -1,6 +1,8 @@
 package iris.client_bff.iris_messages;
 
 import iris.client_bff.core.utils.HibernateSearcher;
+import iris.client_bff.hd_search.HealthDepartment;
+import iris.client_bff.hd_search.eps.EPSHdSearchClient;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,6 +28,7 @@ public class IrisMessageService {
     private final IrisMessageFileRepository fileRepository;
     private final HibernateSearcher searcher;
     private final EPSIrisMessageClient irisMessageClient;
+    private final EPSHdSearchClient hdSearchClient;
 
     private final IrisMessageBuilder messageBuilder;
 
@@ -67,8 +71,25 @@ public class IrisMessageService {
         return this.fileRepository.findById(IrisMessageFile.IrisMessageFileIdentifier.of(fileId));
     }
 
-    public List<IrisMessageHdContact> getHdContacts() throws IrisMessageException {
-        return this.irisMessageClient.getIrisMessageHdContacts();
+    public List<IrisMessageHdContact> getHdContacts(String search) throws IrisMessageException {
+
+        List<IrisMessageHdContact> contacts = this.irisMessageClient.getIrisMessageHdContacts();
+
+        if (search == null || search.equals("")) {
+            return contacts;
+        }
+
+        List<HealthDepartment> healthDepartments = this.hdSearchClient.searchForHd(search);
+        List<String> hdEpsNames = healthDepartments
+                .stream()
+                .map(HealthDepartment::getEpsName)
+                .filter(Objects::nonNull)
+                .toList();
+
+        return contacts
+                .stream()
+                .filter(contact -> hdEpsNames.contains(contact.getId()) || contact.getName().contains(search) || contact.getId().contains(search))
+                .toList();
     }
 
     public IrisMessageHdContact getOwnHdContact() {

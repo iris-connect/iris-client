@@ -5,6 +5,7 @@ import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import { IrisMessageInsert, IrisMessageHdContact } from "@/api";
 import { normalizeIrisMessageHdContacts } from "@/views/iris-message-create/iris-message-create.data";
+import { cancelTokenProvider } from "@/api/common";
 
 export type IrisMessageCreateState = {
   messageCreationOngoing: boolean;
@@ -46,7 +47,10 @@ export interface IrisMessageDetailsModule
       { commit }: { commit: Commit },
       data: IrisMessageInsert
     ): Promise<void>;
-    fetchRecipients({ commit }: { commit: Commit }): Promise<void>;
+    fetchRecipients(
+      { commit }: { commit: Commit },
+      search?: string
+    ): Promise<void>;
     fetchAllowedFileTypes({ commit }: { commit: Commit }): Promise<void>;
   };
 }
@@ -59,6 +63,8 @@ const defaultState: IrisMessageCreateState = {
   contactsLoadingError: null,
   allowedFileTypes: null,
 };
+
+const cancel_fetchRecipients = cancelTokenProvider();
 
 const irisMessageCreate: IrisMessageDetailsModule = {
   namespaced: true,
@@ -101,13 +107,14 @@ const irisMessageCreate: IrisMessageDetailsModule = {
         commit("setMessageCreationOngoing", false);
       }
     },
-    async fetchRecipients({ commit }) {
+    async fetchRecipients({ commit }, search) {
       let list: IrisMessageHdContact[] | null = null;
       commit("setContactsLoading", true);
       commit("setContactsLoadingError", null);
       try {
         const requestOptions = {
-          params: { includeOwn: !!window.Cypress },
+          cancelToken: cancel_fetchRecipients(),
+          params: { includeOwn: !!window.Cypress, search },
         };
         list = normalizeIrisMessageHdContacts(
           (await authClient.irisMessageHdContactsGet(requestOptions)).data,

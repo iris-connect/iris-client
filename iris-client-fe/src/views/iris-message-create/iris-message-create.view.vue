@@ -11,6 +11,9 @@
         <v-card-text>
           <v-autocomplete
             v-model="form.model.hdRecipient"
+            :search-input="search"
+            @update:search-input="handleSearch"
+            :no-filter="true"
             label="Empfänger"
             :items="recipients"
             :rules="validationRules.defined"
@@ -94,6 +97,7 @@ import { IrisMessageInsert, IrisMessageHdContact } from "@/api";
 import rules from "@/common/validation-rules";
 import _unionBy from "lodash/unionBy";
 import { ErrorMessage } from "@/utils/axios";
+import { debounce } from "lodash";
 
 type IrisMessageCreateForm = {
   model: IrisMessageInsert;
@@ -105,7 +109,6 @@ type IrisMessageCreateForm = {
     ErrorMessageAlert,
   },
   beforeRouteEnter(to, from, next) {
-    store.dispatch("irisMessageCreate/fetchRecipients");
     store.dispatch("irisMessageCreate/fetchAllowedFileTypes");
     next();
   },
@@ -127,6 +130,12 @@ export default class IrisMessageCreateView extends Vue {
     },
     valid: false,
   };
+
+  search: string | null = "";
+  handleSearch = debounce(async (value: string | null) => {
+    this.search = value;
+    await store.dispatch("irisMessageCreate/fetchRecipients", value);
+  }, 500);
 
   get errors(): ErrorMessage[] {
     return [
