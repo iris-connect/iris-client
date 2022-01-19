@@ -17,12 +17,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @AllArgsConstructor
+@Validated
 @RequestMapping("/iris-messages")
 public class IrisMessageController {
 
@@ -175,9 +178,13 @@ public class IrisMessageController {
     }
 
     @GetMapping("/hd-contacts")
-    public ResponseEntity<List<IrisMessageHdContact>> getMessageHdContacts(@RequestParam(defaultValue = "false") boolean includeOwn) {
+    public ResponseEntity<List<IrisMessageHdContact>> getMessageHdContacts(
+            @Valid @Size(max = 100) @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "false") boolean includeOwn
+    ) {
+        validateField(search, FIELD_SEARCH);
         try {
-            ArrayList<IrisMessageHdContact> irisMessageContacts = new ArrayList<>(irisMessageService.getHdContacts());
+            ArrayList<IrisMessageHdContact> irisMessageContacts = new ArrayList<>(irisMessageService.getHdContacts(search));
             if (includeOwn) {
                 irisMessageContacts.add(irisMessageService.getOwnHdContact());
             }

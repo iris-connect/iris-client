@@ -1,6 +1,7 @@
 package iris.client_bff.iris_messages;
 
 import iris.client_bff.core.utils.HibernateSearcher;
+import iris.client_bff.hd_search.eps.EPSHdSearchClient;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,9 @@ public class IrisMessageServiceTest {
 	EPSIrisMessageClient irisMessageClient;
 
 	@Mock
+	EPSHdSearchClient hdSearchClient;
+
+	@Mock
 	IrisMessageBuilder irisMessageBuilder;
 
 	IrisMessageService service;
@@ -56,6 +60,7 @@ public class IrisMessageServiceTest {
 				this.fileRepository,
 				this.searcher,
 				this.irisMessageClient,
+				this.hdSearchClient,
 				this.irisMessageBuilder
 		);
 	}
@@ -191,7 +196,7 @@ public class IrisMessageServiceTest {
 
 		when(this.irisMessageClient.getIrisMessageHdContacts()).thenReturn(List.of(this.testData.MOCK_CONTACT_OTHER));
 
-		var contacts = this.service.getHdContacts();
+		var contacts = this.service.getHdContacts(null);
 
 		verify(this.irisMessageClient).getIrisMessageHdContacts();
 
