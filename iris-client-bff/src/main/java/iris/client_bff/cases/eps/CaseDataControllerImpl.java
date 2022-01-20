@@ -8,11 +8,14 @@ import iris.client_bff.cases.eps.dto.Contacts;
 import iris.client_bff.cases.eps.dto.Event;
 import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.eps.dto.WorkPlace;
+import iris.client_bff.config.SuspiciouslyCaseRequestProperties;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.core.web.dto.Address;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -44,6 +47,7 @@ public class CaseDataControllerImpl implements CaseDataController {
 
 	private final ValidationHelper validHelper;
 	private final CaseDataSubmissionService submissionService;
+	private final SuspiciouslyCaseRequestProperties suspiciouslyRequest;
 
 	@Override
 	public String submitContactAndEventData(
@@ -51,6 +55,9 @@ public class CaseDataControllerImpl implements CaseDataController {
 			@Valid Contacts contacts,
 			@Valid Events events,
 			@Valid CaseDataProvider dataProvider) {
+
+		validatePostLimit(contacts.getContactPersons(), "proxy", "contacts");
+		validatePostLimit(events.getEvents(), "proxy", "events");
 
 		if (validateEvents(events)
 				&& validateContacts(contacts)
@@ -61,6 +68,16 @@ public class CaseDataControllerImpl implements CaseDataController {
 
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+		}
+	}
+
+	private void validatePostLimit(List<?> list, String client, String type) {
+
+		if (validHelper.isPostOutOfLimit(list, client,
+				suspiciouslyRequest.getDataBlockingThreshold(), suspiciouslyRequest.getDataWarningThreshold(),
+				type)) {
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request content exceeded blocking limit!");
 		}
 	}
 

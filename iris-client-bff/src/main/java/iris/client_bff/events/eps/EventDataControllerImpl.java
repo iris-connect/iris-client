@@ -5,6 +5,7 @@ import static org.apache.commons.lang3.RegExUtils.replaceAll;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.config.JsonRpcDataValidator;
+import iris.client_bff.config.SuspiciouslyEventRequestProperties;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.core.web.dto.Address;
 import iris.client_bff.events.EventDataSubmissionService;
@@ -35,10 +36,18 @@ public class EventDataControllerImpl implements EventDataController {
 	private final EventDataSubmissionService dataSubmissionService;
 	private final ValidationHelper validHelper;
 	private final JsonRpcDataValidator jsonRpcDataValidator;
+	private final SuspiciouslyEventRequestProperties suspiciouslyRequest;
 
 	@Override
 	public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
+
 		log.trace("Start submission {}", dataAuthorizationToken);
+		
+		if (validHelper.isPostOutOfLimit(guestList.getGuests(), client.getName(),
+				suspiciouslyRequest.getDataBlockingThreshold(), suspiciouslyRequest.getDataWarningThreshold(),
+				"guests")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request content exceeded blocking limit!");
+		}
 
 		if (dataAuthorizationToken == null) {
 			// token invalid
