@@ -3,7 +3,7 @@ package iris.client_bff.iris_messages.eps;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
-import iris.client_bff.config.RPCClientConfig;
+import iris.client_bff.config.RPCClientProperties;
 import iris.client_bff.iris_messages.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +24,10 @@ public class EPSIrisMessageClient {
     private final IrisMessageDummyBridge irisMessageDummyBridge;
 
     private final JsonRpcHttpClient epsRpcClient;
-    private final RPCClientConfig rpcClientConfig;
+    private final RPCClientProperties rpcClientProps;
 
     public IrisMessageHdContact getOwnIrisMessageHdContact() {
-        String ownId = this.rpcClientConfig.getOwnEndpoint();
+        String ownId = rpcClientProps.getOwnEndpoint();
         return new IrisMessageHdContact(ownId, ownId, true);
     }
 
@@ -37,7 +37,7 @@ public class EPSIrisMessageClient {
     }
 
     public List<IrisMessageHdContact> getIrisMessageHdContacts() throws IrisMessageException {
-        var methodName = rpcClientConfig.getOwnEndpoint() + "._directory";
+        var methodName = rpcClientProps.getOwnEndpoint() + "._directory";
         try {
             return epsRpcClient.invoke(methodName, null, Directory.class).entries().stream()
                     .filter(directoryEntry -> directoryEntry.groups().contains("health-departments"))
