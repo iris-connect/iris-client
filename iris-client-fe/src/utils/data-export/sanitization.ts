@@ -2,6 +2,7 @@ import _toString from "lodash/toString";
 import { Header, Row } from "@/utils/data-export/data-export";
 import _isFunction from "lodash/isFunction";
 import _get from "lodash/get";
+import dayjs from "@/utils/date";
 
 const sanitizeLineBreaks = (field: string): string => {
   // Replace newlines and other line breaks with a space
@@ -38,6 +39,8 @@ const sanitizeTrigger = (field: string): string => {
 };
 
 const isPhoneNumberLike = (field: string): boolean => {
+  // skip if field is a localized date string of type yyyy/mm/dd (e.g. locale de: dd.mm.yyyy)
+  if (dayjs(field, "L", true).isValid()) return false;
   const regex_phone = /^\+?[0-9][/.() \-0-9]{6,}?[0-9]$/g;
   return regex_phone.test(field);
 };

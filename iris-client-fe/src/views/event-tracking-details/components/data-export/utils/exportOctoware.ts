@@ -63,6 +63,15 @@ const getHeaders = (): Array<keyof OctowareData> => {
   ];
 };
 
+const getColFormats = (): Partial<Record<keyof OctowareData, string>> => {
+  return {
+    DAT_MELDE: "DD.MM.YYYY",
+    DAT_GEBURT: "DD.MM.YYYY",
+    DAT_ERST_KONTAKT: "DD.MM.YYYY HH:mm",
+    DAT_LETZT_KONTAKT: "DD.MM.YYYY HH:mm",
+  };
+};
+
 const mapData = (
   event: DataRequestDetails | null,
   tableRows: TableRow[]
@@ -121,7 +130,10 @@ const mapData = (
 };
 
 const exportXlsx = (rows: Row[], fileName: string) => {
-  dataExport.exportXlsx(getHeaders(), rows, { fileName });
+  dataExport.exportXlsx(getHeaders(), rows, {
+    fileName,
+    colFormats: getColFormats(),
+  });
 };
 
 const exportOctoware = {
