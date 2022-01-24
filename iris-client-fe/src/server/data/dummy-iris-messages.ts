@@ -50,6 +50,7 @@ export const dummyIrisMessageHdContacts: IrisMessageHdContact[] = [
   {
     id: "1",
     name: "Eigenes GA",
+    isOwn: true,
   },
   {
     id: "2",
@@ -157,6 +158,7 @@ export const getDummyMessageFromRequest = (
     subject,
     body,
     folder: "outbox",
+    isRead: true,
     context: IrisMessageContext.Outbox,
     hdAuthor: dummyIrisMessageHdContacts[0],
     hdRecipient:

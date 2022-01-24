@@ -1,17 +1,17 @@
 <template>
   <v-row data-test="message-folders">
-    <v-col cols="auto" class="mt-3">
+    <v-col :cols="loading ? '12' : 'auto'" class="mt-3">
       <v-skeleton-loader :loading="loading" type="sentences">
         <data-tree
+          data-test="message-folders-data-tree"
           data-test-key="context"
           :item="{ items: folders }"
           v-model="model"
         />
       </v-skeleton-loader>
     </v-col>
-    <v-col>
+    <v-col v-if="!loading">
       <slot
-        v-if="!loading"
         name="data-table"
         v-bind="{ context: folder && folder.context }"
       ></slot>

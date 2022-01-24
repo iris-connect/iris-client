@@ -34,6 +34,7 @@ declare global {
       visitByStatus(status: string): Chainable<Subject>;
       visitByStatus(selector: string, status: string): Chainable<Subject>;
       visitUserByAccessor(accessor: string): Chainable<Subject>;
+      getRootMessageFolder(context: "INBOX" | "OUTBOX"): Chainable<Subject>;
       getMessageDataTableRow(
         accessor: string,
         context: "INBOX" | "OUTBOX"

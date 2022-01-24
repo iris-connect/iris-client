@@ -354,6 +354,10 @@ export function makeMockAPIServer() {
         );
       });
 
+      this.get("/iris-messages/allowed-file-types", (schema, request) => {
+        return authResponse(request, ["text/plain", "text/csv", "image/*"]);
+      });
+
       this.get("/iris-messages/files/:fileId/download", (schema, request) => {
         let attachment = dummyIrisMessageAttachments.find(
           (item) => item.id === request.params.fileId

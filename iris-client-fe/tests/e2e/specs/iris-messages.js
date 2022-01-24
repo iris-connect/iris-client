@@ -24,21 +24,15 @@ describe("IrisMessages", () => {
   });
   it("should display the message folders and change the context", () => {
     cy.visit("/iris-messages/list");
-    cy.getBy("message-folders").within(() => {
-      cy.getBy("select.INBOX")
-        .should("exist")
-        .should("have.class", "v-btn--active");
-      cy.getBy("select.OUTBOX")
-        .should("exist")
-        .should("not.have.class", "v-btn--active");
-    });
-    cy.getBy("{message-folders} {select.INBOX}").click();
+    cy.getRootMessageFolder("INBOX").should("have.class", "v-btn--active");
+    cy.getRootMessageFolder("OUTBOX").should("not.have.class", "v-btn--active");
+    cy.getRootMessageFolder("INBOX").click();
     cy.getBy("view.data-table")
       .should("exist")
       .get(".v-data-table-header")
       .should("contain", "Von")
       .should("not.contain", "An");
-    cy.getBy("{message-folders} {select.OUTBOX}").click();
+    cy.getRootMessageFolder("OUTBOX").click();
     cy.getBy("view.data-table")
       .should("exist")
       .get(".v-data-table-header")
@@ -76,7 +70,7 @@ describe("IrisMessages", () => {
         );
       });
   });
-  it("should create a new message", () => {
+  it("should create a new message and display the message details", () => {
     cy.visit("/iris-messages/create");
     cy.get("form")
       .should("exist")
@@ -89,14 +83,20 @@ describe("IrisMessages", () => {
         cy.getBy("textarea{body}").should("exist").type(message.body);
         cy.getBy(".v-btn{submit}").should("exist").click();
       });
-    cy.getMessageDataTableRow(message.subject, "INBOX").should(
-      "have.class",
-      "font-weight-bold"
-    );
-    cy.getMessageDataTableRow(message.subject, "OUTBOX").should(
+    cy.location("pathname").should("equal", "/iris-messages/list");
+    cy.getMessageDataTableRow(message.subject, "OUTBOX")
+      .should("not.have.class", "font-weight-bold")
+      .click();
+    cy.location("pathname").should("contain", "/iris-messages/details");
+    cy.getBy("view.iris-message-details").should(
       "not.have.class",
-      "font-weight-bold"
+      "v-card--loading"
     );
+    cy.getBy("message.createdAt").should("not.be.empty");
+    cy.getBy("message.author").should("not.be.empty");
+    cy.getBy("message.recipient").should("not.be.empty");
+    cy.getBy("message.subject").should("contain", message.subject);
+    cy.getBy("message.body").should("contain", message.body);
   });
   it("should display the unread message count in a badge in the app-bar and and decrease it by opening an unread message", () => {
     cy.visit("/iris-messages/list");
@@ -110,12 +110,8 @@ describe("IrisMessages", () => {
       .then((textContent) => {
         const count = parseInt(textContent);
         expect(count).to.be.gte(1);
-        cy.getBy("{message-folders} {select.INBOX}").click();
-        cy.getBy("input{search}").should("exist").clear().type(message.subject);
-        cy.get(".v-data-table")
-          .contains(message.subject)
-          .should("exist")
-          .click();
+        cy.getRootMessageFolder("INBOX").click();
+        cy.get(".v-data-table tr.font-weight-bold").should("exist").click();
         cy.location("pathname").should("contain", "/iris-messages/details");
         cy.getBy("view.iris-message-details").should(
           "not.have.class",
@@ -128,19 +124,5 @@ describe("IrisMessages", () => {
           cy.get("@badge").invoke("text").then(parseInt).should("be.lt", count);
         }
       });
-  });
-  it("should display the message details", () => {
-    cy.visit("/iris-messages/list");
-    cy.getMessageDataTableRow(message.subject, "INBOX").click();
-    cy.location("pathname").should("contain", "/iris-messages/details");
-    cy.getBy("view.iris-message-details").should(
-      "not.have.class",
-      "v-card--loading"
-    );
-    cy.getBy("message.createdAt").should("not.be.empty");
-    cy.getBy("message.author").should("not.be.empty");
-    cy.getBy("message.recipient").should("not.be.empty");
-    cy.getBy("message.subject").should("contain", message.subject);
-    cy.getBy("message.body").should("contain", message.body);
   });
 });
