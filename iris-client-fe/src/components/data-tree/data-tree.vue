@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :data-test="dataTest ? dataTest : false">
     <div v-if="!root" class="d-flex align-center">
       <v-icon
         :disabled="!hasItems"
@@ -56,6 +56,10 @@ const DataTreeProps = Vue.extend({
     root: {
       type: Boolean,
       default: true,
+    },
+    dataTest: {
+      type: String,
+      default: "",
     },
     dataTestKey: {
       type: String,

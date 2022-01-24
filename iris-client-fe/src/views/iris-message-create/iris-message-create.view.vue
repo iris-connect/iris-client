@@ -22,6 +22,10 @@
             item-value="id"
             data-test="hdRecipient"
             :loading="recipientsLoading"
+            :class="{
+              'is-loading': recipientsLoading,
+              'is-empty': recipients.length <= 0,
+            }"
           ></v-autocomplete>
           <v-text-field
             v-model="form.model.subject"

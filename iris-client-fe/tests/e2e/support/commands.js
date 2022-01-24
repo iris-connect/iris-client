@@ -194,9 +194,18 @@ Cypress.Commands.add("visitUserByAccessor", (accessor) => {
   cy.location("pathname").should("contain", "/admin/user/edit");
 });
 
+Cypress.Commands.add("getRootMessageFolder", (context) => {
+  cy.location("pathname").should("equal", "/iris-messages/list");
+  cy.getBy("message-folders-data-tree").should("exist");
+  return cy
+    .getBy(`{message-folders-data-tree} {select.${context}}`)
+    .should("exist")
+    .first();
+});
+
 Cypress.Commands.add("getMessageDataTableRow", (accessor, context) => {
   cy.location("pathname").should("equal", "/iris-messages/list");
-  cy.getBy(`{message-folders} {select.${context}}`).should("exist").click();
+  cy.getRootMessageFolder(context).click();
   cy.getDataTableRow(accessor, "view.data-table").should("exist");
 });
 
@@ -211,9 +220,7 @@ Cypress.Commands.add(
     } else {
       cy.getBy(arg1).as("field");
     }
-    cy.get("@field")
-      .closest(".v-input")
-      .should("not.have.class", "v-input--is-loading");
+    cy.get("@field").closest(".v-input").should("not.have.class", "is-empty");
     cy.getApp().then((app) => {
       const contacts = app.$store.state.irisMessageCreate.contacts;
       const ownContact = contacts.find((c) => c.isOwn === true);
