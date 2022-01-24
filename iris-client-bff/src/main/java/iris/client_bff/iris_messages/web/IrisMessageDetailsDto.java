@@ -24,7 +24,9 @@ public class IrisMessageDetailsDto {
     private Boolean hasAttachments;
 
     public static IrisMessageDetailsDto fromEntity(IrisMessage message) {
-        List<Attachment> attachments = Attachment.fromEntity(message.getAttachments());
+        // disabled file attachments
+//        List<Attachment> attachments = Attachment.fromEntity(message.getAttachments());
+        List<Attachment> attachments = new ArrayList<>();
         return new IrisMessageDetailsDto(
                 message.getId().toString(),
                 message.getSubject(),

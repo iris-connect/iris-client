@@ -74,33 +74,39 @@ public class IrisMessageTestData {
 
     public IrisMessage getTestOutboxMessage(IrisMessageFolder folder) {
         IrisMessage message = new IrisMessage();
-        IrisMessageFile file = getTestMessageFile().setMessage(message);
+        // disabled file attachments
+//        IrisMessageFile file = getTestMessageFile().setMessage(message);
         message
                 .setSubject("Test outbox subject")
                 .setBody("Test outbox body")
                 .setFolder(folder)
                 .setHdAuthor(this.getTestMessageHdContactOwn())
                 .setHdRecipient(this.getTestMessageHdContactOther())
-                .setAttachments(List.of(file))
+                // disabled file attachments
+//                .setAttachments(List.of(file))
                 .setIsRead(true);
         return message;
     }
 
     public IrisMessage getTestInboxMessage(IrisMessageFolder folder) {
         IrisMessage message = new IrisMessage();
-        IrisMessageFile file = getTestMessageFile().setMessage(message);
+        // disabled file attachments
+//        IrisMessageFile file = getTestMessageFile().setMessage(message);
         message
                 .setSubject("Test inbox subject")
                 .setBody("Test inbox body")
                 .setFolder(folder)
                 .setHdAuthor(this.getTestMessageHdContactOther())
                 .setHdRecipient(this.getTestMessageHdContactOwn())
-                .setAttachments(List.of(file))
+                // disabled file attachments
+//                .setAttachments(List.of(file))
                 .setIsRead(false);
         return message;
     }
 
     public IrisMessageInsert getTestMessageInsert(IrisMessage message) {
+        // disabled file attachments
+        /*
         List<MultipartFile> files = new ArrayList<>();
         for ( IrisMessageFile messageFile : message.getAttachments() ) {
             files.add(
@@ -112,10 +118,13 @@ public class IrisMessageTestData {
                     )
             );
         }
+         */
         return new IrisMessageInsert()
                 .setSubject(message.getSubject())
                 .setBody(message.getBody())
                 .setHdRecipient(message.getHdRecipient().getId())
-                .setAttachments(files);
+                // disabled file attachments
+//                .setAttachments(files)
+                ;
     }
 }

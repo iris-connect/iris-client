@@ -70,6 +70,9 @@ export const dummyIrisMessageHdContacts: IrisMessageHdContact[] = [
   },
 ];
 
+// disabled file attachments
+export const dummyIrisMessageAttachments: IrisMessageAttachment[] = [];
+/*
 export const dummyIrisMessageAttachments: IrisMessageAttachment[] = [
   {
     id: "file_1",
@@ -82,6 +85,7 @@ export const dummyIrisMessageAttachments: IrisMessageAttachment[] = [
     type: "csv",
   },
 ];
+ */
 
 export const dummyIrisMessageList: IrisMessageDetails[] = [
   {
@@ -94,7 +98,6 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     createdAt: daysAgo(3),
     isRead: false,
-    hasAttachments: true,
     attachments: dummyIrisMessageAttachments,
   },
   {
@@ -152,7 +155,8 @@ export const getDummyMessageFromRequest = (
   const subject = form.get("subject") as string;
   const body = form.get("body") as string;
   const recipient = form.get("recipient") as string;
-  const attachments = form.getAll("attachments");
+  // disabled file attachments
+  // const attachments = form.getAll("attachments");
   return {
     id: id || new Date().getTime() + "",
     subject,
@@ -165,6 +169,8 @@ export const getDummyMessageFromRequest = (
       dummyIrisMessageHdContacts.find((c) => c.id === recipient) ||
       dummyIrisMessageHdContacts[1],
     createdAt: new Date().getTime() + "",
+    // disabled file attachments
+    /*
     attachments: attachments.map((attachment) => {
       const a = attachment as File;
       return {
@@ -173,5 +179,6 @@ export const getDummyMessageFromRequest = (
         type: a.type,
       };
     }),
+     */
   };
 };

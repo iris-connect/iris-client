@@ -43,28 +43,28 @@
             :rules="validationRules.sanitisedAndDefined"
             data-test="body"
           ></v-textarea>
-          <v-file-input
-            label="Datei(en) anfügen"
-            :value="form.model.attachments"
-            @change="addAttachments"
-            @click:clear="clearAttachments"
-            multiple
-            data-test="attachments"
-            :accept="allowedFileTypes.join(',')"
-          >
-            <template v-slot:selection="{ index, text }">
-              <v-chip
-                :key="index"
-                dark
-                color="blue"
-                close
-                @click:close="removeAttachment(index)"
-                data-test="attachments.remove"
-              >
-                {{ text }}
-              </v-chip>
-            </template>
-          </v-file-input>
+          <!--          <v-file-input-->
+          <!--            label="Datei(en) anfügen"-->
+          <!--            :value="form.model.attachments"-->
+          <!--            @change="addAttachments"-->
+          <!--            @click:clear="clearAttachments"-->
+          <!--            multiple-->
+          <!--            data-test="attachments"-->
+          <!--            :accept="allowedFileTypes.join(',')"-->
+          <!--          >-->
+          <!--            <template v-slot:selection="{ index, text }">-->
+          <!--              <v-chip-->
+          <!--                :key="index"-->
+          <!--                dark-->
+          <!--                color="blue"-->
+          <!--                close-->
+          <!--                @click:close="removeAttachment(index)"-->
+          <!--                data-test="attachments.remove"-->
+          <!--              >-->
+          <!--                {{ text }}-->
+          <!--              </v-chip>-->
+          <!--            </template>-->
+          <!--          </v-file-input>-->
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -99,7 +99,8 @@ import store from "@/store";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { IrisMessageInsert, IrisMessageHdContact } from "@/api";
 import rules from "@/common/validation-rules";
-import _unionBy from "lodash/unionBy";
+// disabled file attachments
+// import _unionBy from "lodash/unionBy";
 import { ErrorMessage } from "@/utils/axios";
 import { debounce } from "lodash";
 
@@ -112,10 +113,13 @@ type IrisMessageCreateForm = {
   components: {
     ErrorMessageAlert,
   },
+  // disabled file attachments
+  /*
   beforeRouteEnter(to, from, next) {
     store.dispatch("irisMessageCreate/fetchAllowedFileTypes");
     next();
   },
+   */
   beforeRouteLeave(to, from, next) {
     store.commit("irisMessageCreate/reset");
     next();
@@ -130,7 +134,8 @@ export default class IrisMessageCreateView extends Vue {
       subject: "",
       body: "",
       hdRecipient: "",
-      attachments: [],
+      // disabled file attachments
+      // attachments: [],
     },
     valid: false,
   };
@@ -147,6 +152,8 @@ export default class IrisMessageCreateView extends Vue {
       this.$store.state.irisMessageCreate.messageCreationError,
     ];
   }
+  // disabled file attachments
+  /*
   addAttachments(files: File[]) {
     this.form.model.attachments = _unionBy(
       this.form.model.attachments,
@@ -162,13 +169,13 @@ export default class IrisMessageCreateView extends Vue {
   clearAttachments() {
     this.form.model.attachments = [];
   }
+  get allowedFileTypes(): string[] {
+    return this.$store.state.irisMessageCreate.allowedFileTypes || [];
+  }
+   */
 
   get recipients(): IrisMessageHdContact[] {
     return this.$store.state.irisMessageCreate.contacts || [];
-  }
-
-  get allowedFileTypes(): string[] {
-    return this.$store.state.irisMessageCreate.allowedFileTypes || [];
   }
 
   get recipientsLoading(): boolean {

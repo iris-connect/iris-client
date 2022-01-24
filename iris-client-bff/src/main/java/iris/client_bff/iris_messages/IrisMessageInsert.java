@@ -25,6 +25,7 @@ public class IrisMessageInsert {
     @Size(max = IrisMessage.BODY_MAX_LENGTH)
     private String body;
 
-    @Valid
-    private List<@IrisMessageFileConstraint @FileTypeConstraint MultipartFile> attachments;
+    // disabled file attachments
+//    @Valid
+//    private List<@IrisMessageFileConstraint @FileTypeConstraint MultipartFile> attachments;
 }

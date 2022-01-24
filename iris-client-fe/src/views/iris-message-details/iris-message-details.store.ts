@@ -4,9 +4,10 @@ import { Commit, Module } from "vuex";
 import { IrisMessageDetails } from "@/api";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
-import fileDownload from "@/utils/fileDownload";
 import { normalizeIrisMessageDetails } from "@/views/iris-message-details/iris-message-details.data";
-import { AxiosResponse } from "axios";
+// disabled file attachments
+// import fileDownload from "@/utils/fileDownload";
+// import { AxiosResponse } from "axios";
 
 export type IrisMessageDetailsState = {
   message: IrisMessageDetails | null;
@@ -54,10 +55,13 @@ export interface IrisMessageDetailsModule
       { commit }: { commit: Commit },
       messageId: string
     ): Promise<void>;
+    // disabled file attachments
+    /*
     downloadAttachment(
       { commit }: { commit: Commit },
       fileId: string
     ): Promise<void>;
+     */
   };
 }
 
@@ -134,6 +138,8 @@ const irisMessageDetails: IrisMessageDetailsModule = {
         commit("setMessageSaving", false);
       }
     },
+    // disabled file attachments
+    /*
     async downloadAttachment({ commit }, fileId: string) {
       commit("setAttachmentLoading", true);
       commit("setAttachmentLoadingError", null);
@@ -147,9 +153,11 @@ const irisMessageDetails: IrisMessageDetailsModule = {
         commit("setAttachmentLoading", false);
       }
     },
+     */
   },
 };
-
+// disabled file attachments
+/*
 const extractFileName = (response: AxiosResponse): string => {
   const fileName = (response.headers["content-disposition"] || "")
     .split("filename=")[1]
@@ -160,5 +168,6 @@ const extractFileName = (response: AxiosResponse): string => {
   }
   return fileName;
 };
+ */
 
 export default irisMessageDetails;

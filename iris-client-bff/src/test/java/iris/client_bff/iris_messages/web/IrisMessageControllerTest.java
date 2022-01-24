@@ -229,6 +229,8 @@ class IrisMessageControllerTest {
 		assertThat(folderDtoList).isEqualTo(IrisMessageFolderDto.fromEntity(folderList));
 	}
 
+	// disabled file attachments
+	/*
 	@Test
 	@WithMockUser()
 	void downloadMessageFile() throws Exception {
@@ -244,6 +246,7 @@ class IrisMessageControllerTest {
 		assertThat(res.getResponse().getHeader(HttpHeaders.CONTENT_DISPOSITION)).contains(testData.MOCK_MESSAGE_FILE.getName());
 		assertThat(res.getResponse().getHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS)).isEqualTo(HttpHeaders.CONTENT_DISPOSITION);
 	}
+	 */
 
 	@Test
 	@WithMockUser()

@@ -1941,7 +1941,8 @@ export interface IrisMessageInsert {
   hdRecipient: string;
   subject: string;
   body: string;
-  attachments?: File[];
+  // disabled file attachments
+  // attachments?: File[];
 }
 
 export enum IrisMessageContext {
@@ -2381,6 +2382,15 @@ export class IrisClientFrontendApi extends BaseAPI {
     return this.apiRequest("PATCH", path, { isRead: true }, options);
   }
 
+  // disabled file attachments
+  /**
+   * @ignore
+   * message attachments are not enabled for now
+   * @summary Download file
+   * @param {string} fileId
+   * @param {*} options Override http request option.
+   */
+  /*
   public irisMessageFileDownload(
     fileId: string,
     options?: RequestOptions
@@ -2392,4 +2402,5 @@ export class IrisClientFrontendApi extends BaseAPI {
       responseType: "blob",
     });
   }
+   */
 }

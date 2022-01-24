@@ -92,11 +92,14 @@ public class IrisMessageController {
         this.validateField(irisMessageInsert.getHdRecipient(), FIELD_HD_RECIPIENT);
         this.validateField(irisMessageInsert.getSubject(), FIELD_SUBJECT);
         this.validateField(irisMessageInsert.getBody(), FIELD_BODY);
+        // disabled file attachments
+        /*
         if (irisMessageInsert.getAttachments() != null) {
             for ( MultipartFile file : irisMessageInsert.getAttachments() ) {
                 this.validateField(file.getOriginalFilename(), FIELD_ATTACHMENT);
             }
         }
+         */
     }
 
     @GetMapping("/allowed-file-types")
@@ -149,6 +152,8 @@ public class IrisMessageController {
         return ResponseEntity.ok(IrisMessageFolderDto.fromEntity(irisMessageFolders));
     }
 
+    // disabled file attachments
+    /*
     @GetMapping("/files/{id}/download")
     public ResponseEntity<byte[]> downloadMessageFile(@PathVariable UUID id) {
         this.validateUUID(id, FILE_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FILE_ID);
@@ -176,6 +181,7 @@ public class IrisMessageController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+     */
 
     @GetMapping("/hd-contacts")
     public ResponseEntity<List<IrisMessageHdContact>> getMessageHdContacts(

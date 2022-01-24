@@ -11,7 +11,7 @@ import java.util.Objects;
 public class FileTypeValidator implements ConstraintValidator<FileTypeConstraint, MultipartFile> {
 
     //@todo: move ALLOWED_TYPES to a better place
-    public static final String[] ALLOWED_TYPES = {"text/plain", "text/csv", "image/*"};
+    public static final String[] ALLOWED_TYPES = {"image/*"};
 
     @Override
     public void initialize(FileTypeConstraint constraintAnnotation) {
