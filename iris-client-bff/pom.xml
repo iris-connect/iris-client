@@ -29,7 +29,7 @@
 		<version.tag>${project.version}</version.tag>
 		<vavr-version>0.10.4</vavr-version>
 		<greenmail-version>1.6.5</greenmail-version>
-		<testcontainers-version>1.16.2</testcontainers-version>
+		<testcontainers-version>1.16.3</testcontainers-version>
 		<hibernate-search-version>6.0.6.Final</hibernate-search-version>
 	</properties>
 
