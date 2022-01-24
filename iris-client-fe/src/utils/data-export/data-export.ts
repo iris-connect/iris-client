@@ -66,18 +66,31 @@ const formatXlsxCells = (
   }
 };
 
-/**
- * @todo: add additional date formats if needed!
- */
-const DATE_FORMAT = dayjs.localeData().longDateFormat("L");
-const DATE_TIME_FORMAT = DATE_FORMAT + " hh:mm";
-const autoFormatXlsxCell = (cell: CellObject) => {
-  if (typeof cell.v === "boolean") return;
-  if (dayjs(cell.v, DATE_TIME_FORMAT, true).isValid()) {
-    cell.z = DATE_TIME_FORMAT;
-  } else if (dayjs(cell.v, DATE_FORMAT, true).isValid()) {
-    cell.z = DATE_FORMAT;
-  }
+// DD.MM.YYYY
+const LOCALIZED_DATE_FORMAT = dayjs.localeData().longDateFormat("L");
+
+export const EXPORT_DATE_FORMAT = {
+  APP: LOCALIZED_DATE_FORMAT,
+  XLSX: LOCALIZED_DATE_FORMAT,
+};
+
+// 24hr time format: dayjs: HH:mm, xlsx: hh:mm
+export const EXPORT_DATE_TIME_FORMAT = {
+  APP: LOCALIZED_DATE_FORMAT + " HH:mm",
+  XLSX: LOCALIZED_DATE_FORMAT + " hh:mm",
+};
+
+const EXPORT_DATE_FORMATS = [EXPORT_DATE_TIME_FORMAT, EXPORT_DATE_FORMAT];
+
+const autoFormatXlsxCell = (cell: CellObject): void => {
+  const cellValue = cell.v;
+  if (typeof cellValue === "boolean") return;
+  EXPORT_DATE_FORMATS.forEach((format) => {
+    if (dayjs(cellValue, format.APP, true).isValid()) {
+      cell.z = format.XLSX;
+      return;
+    }
+  });
 };
 
 const exportXlsx = (
