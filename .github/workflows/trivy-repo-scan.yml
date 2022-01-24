@@ -16,16 +16,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2.4.0
 
-      - name: Setup Java
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'liberica'
-          java-version: '17'
-          cache: 'maven'
-
-      - name: Run Maven-Build
-        run: mvn -B clean package -DskipTests
-
       - name: Run Trivy vulnerability scanner in fs mode
         uses: aquasecurity/trivy-action@master
         with:
