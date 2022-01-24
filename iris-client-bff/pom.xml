@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.2</version>
+		<version>2.6.3</version>
 		<relativePath />
 		<!-- lookup parent from repository -->
 	</parent>
@@ -246,18 +246,6 @@
 			<artifactId>jsr305</artifactId>
 			<version>3.0.2</version>
 		</dependency>
-		<dependency>
-			<!-- Added to fix current vulnerability in versions ≤2.17.0 until Spring 
-				is adjusted. https://github.com/iris-connect/iris-client/security/code-scanning/1871?query=ref%3Arefs%2Fheads%2Fdevelop -->
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>2.17.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-to-slf4j</artifactId>
-			<version>2.17.1</version>
-		</dependency>
 
 		<!-- Security -->
 		<dependency>
@@ -340,10 +328,6 @@
 					</excludes>
 					<image>
 						<name>${docker.image.prefix}/${project.artifactId}:${version.tag}</name>
-						<env>
-							<!-- embeds environment variables into an image: https://github.com/paketo-buildpacks/environment-variables -->
-							<!-- with GraalVM <BP_BOOT_NATIVE_IMAGE>true</BP_BOOT_NATIVE_IMAGE> -->
-						</env>
 						<bindings>
 							<binding>${basedir}/bindings/ca-certificates:/platform/bindings/ca-certificates</binding>
 						</bindings>
