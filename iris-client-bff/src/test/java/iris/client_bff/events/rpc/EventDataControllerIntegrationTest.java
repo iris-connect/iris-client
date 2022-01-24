@@ -11,12 +11,14 @@ import iris.client_bff.events.eps.EventDataController;
 import iris.client_bff.events.eps.JsonRpcClientDto;
 import iris.client_bff.events.model.Location;
 import iris.client_bff.events.model.Location.LocationIdentifier;
+import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.events.web.dto.GuestListDataProvider;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -115,5 +117,39 @@ class EventDataControllerIntegrationTest {
 
 		assertTrue(e.getMessage().contains("Eingabedaten sind ungültig")
 				&& e.getMessage().contains("dataProvider.address.city"));
+	}
+
+	@Test
+	void submitError_block_to_many_guests() {
+		// prepare conditions
+		String refId = "submitGuestList_error";
+		String providerName = "provider_1";
+		Instant requestStart = Instant.now().minus(14, ChronoUnit.DAYS);
+		Instant requestEnd = Instant.now();
+		EventDataRequest dataRequest = EventDataRequest.builder()
+				.refId(refId).requestStart(requestStart).requestEnd(requestEnd)
+				.build();
+		requestRepo.save(dataRequest);
+
+		// prepare data
+		var token = dataRequest.getId().toString();
+		var clientDto = new JsonRpcClientDto();
+		clientDto.setName(refId);
+
+		var guests = new ArrayList<Guest>(10010);
+		for (int i = 0; i < 10010; i++)
+			guests.add(Guest.builder().firstName("fn").lastName("ln").build());
+
+		var guestList = GuestList.builder()
+				.startDate(requestStart)
+				.endDate(requestEnd)
+				.dataProvider(GuestListDataProvider.builder().name(providerName).build())
+				.guests(guests)
+				.build();
+
+		// test
+		assertThrows(ResponseStatusException.class, () -> {
+			controller.submitGuestList(clientDto, UUID.fromString(token), guestList);
+		});
 	}
 }
