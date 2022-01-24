@@ -67,9 +67,12 @@ public class IrisMessageService {
         return this.messageRepository.save(message);
     }
 
+    // disabled file attachments
+    /*
     public Optional<IrisMessageFile> findFileById(UUID fileId) {
         return this.fileRepository.findById(IrisMessageFile.IrisMessageFileIdentifier.of(fileId));
     }
+     */
 
     public List<IrisMessageHdContact> getHdContacts(String search) throws IrisMessageException {
 

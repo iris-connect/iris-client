@@ -48,6 +48,8 @@ public class IrisMessageBuilder {
 
         IrisMessage message = new IrisMessage();
 
+        // disabled file attachments
+        /*
         List<IrisMessageFile> files = new ArrayList<>();
         try {
             if (messageTransfer.getAttachments() != null) {
@@ -64,6 +66,7 @@ public class IrisMessageBuilder {
         } catch (Throwable e) {
             throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_FILE);
         }
+         */
 
         message
                 .setHdAuthor(hdAuthor)
@@ -72,7 +75,9 @@ public class IrisMessageBuilder {
                 .setBody(messageTransfer.getBody())
                 .setFolder(folder.get())
                 .setIsRead(false)
-                .setAttachments(files);
+        // disabled file attachments
+//                .setAttachments(files)
+        ;
 
         return message;
     }
@@ -93,6 +98,8 @@ public class IrisMessageBuilder {
 
         IrisMessage message = new IrisMessage();
 
+        // disabled file attachments
+        /*
         List<IrisMessageFile> files = new ArrayList<>();
         try {
             if (messageInsert.getAttachments() != null) {
@@ -110,6 +117,7 @@ public class IrisMessageBuilder {
         } catch (IOException e) {
             throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_FILE);
         }
+         */
 
         message
                 .setHdAuthor(hdAuthor)
@@ -118,7 +126,9 @@ public class IrisMessageBuilder {
                 .setBody(messageInsert.getBody())
                 .setFolder(folder.get())
                 .setIsRead(true)
-                .setAttachments(files);
+        // disabled file attachments
+//                .setAttachments(files)
+        ;
 
         return message;
     }

@@ -72,7 +72,8 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
   get tableHeaders(): DataTableHeader[] {
     if (this.context === IrisMessageContext.Inbox) {
       return [
-        { text: "", value: "hasAttachments", sortable: false, width: 0 },
+        // disabled file attachments
+        // { text: "", value: "hasAttachments", sortable: false, width: 0 },
         { text: "Von", value: "hdAuthor.name", sortable: true },
         {
           text: "Betreff",
@@ -84,7 +85,8 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
     }
     if (this.context === IrisMessageContext.Outbox) {
       return [
-        { text: "", value: "hasAttachments", sortable: false, width: 0 },
+        // disabled file attachments
+        // { text: "", value: "hasAttachments", sortable: false, width: 0 },
         { text: "An", value: "hdRecipient.name", sortable: true },
         {
           text: "Betreff",

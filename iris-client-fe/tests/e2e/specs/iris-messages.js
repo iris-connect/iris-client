@@ -63,7 +63,8 @@ describe("IrisMessages", () => {
         cy.assertInputInvalidByRule("textarea{body}")
           .type("-")
           .assertInputInvalidByRule("sanitised");
-        cy.assertInputValid("input{attachments}");
+        // disabled file attachments
+        // cy.assertInputValid("input{attachments}");
         cy.selectOwnIrisMessageContact(
           "input{hdRecipient}",
           ".select-menu-recipient"

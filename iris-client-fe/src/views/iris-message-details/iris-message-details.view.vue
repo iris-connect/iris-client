@@ -22,37 +22,37 @@
         <div class="body-1" data-test="message.body">
           {{ message.body }}
         </div>
-        <div v-if="message.attachments.length > 0">
-          <v-divider class="my-4" />
-          <p class="font-weight-bold">Anhang</p>
-          <div class="elevation-1 mt-4">
-            <template v-for="(attachment, index) in message.attachments">
-              <v-list-item
-                dense
-                :key="`item_${index}`"
-                @click="openAttachment(attachment.id)"
-                :disabled="attachmentLoading"
-              >
-                <v-list-item-icon>
-                  <v-icon>mdi-download</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ attachment.name }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle v-if="attachment.type">
-                    {{ attachment.type }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-              <v-divider
-                inset
-                :key="`divider_${index}`"
-                v-if="index < message.attachments.length - 1"
-              />
-            </template>
-          </div>
-        </div>
+        <!--        <div v-if="message.attachments.length > 0">-->
+        <!--          <v-divider class="my-4" />-->
+        <!--          <p class="font-weight-bold">Anhang</p>-->
+        <!--          <div class="elevation-1 mt-4">-->
+        <!--            <template v-for="(attachment, index) in message.attachments">-->
+        <!--              <v-list-item-->
+        <!--                dense-->
+        <!--                :key="`item_${index}`"-->
+        <!--                @click="openAttachment(attachment.id)"-->
+        <!--                :disabled="attachmentLoading"-->
+        <!--              >-->
+        <!--                <v-list-item-icon>-->
+        <!--                  <v-icon>mdi-download</v-icon>-->
+        <!--                </v-list-item-icon>-->
+        <!--                <v-list-item-content>-->
+        <!--                  <v-list-item-title>-->
+        <!--                    {{ attachment.name }}-->
+        <!--                  </v-list-item-title>-->
+        <!--                  <v-list-item-subtitle v-if="attachment.type">-->
+        <!--                    {{ attachment.type }}-->
+        <!--                  </v-list-item-subtitle>-->
+        <!--                </v-list-item-content>-->
+        <!--              </v-list-item>-->
+        <!--              <v-divider-->
+        <!--                inset-->
+        <!--                :key="`divider_${index}`"-->
+        <!--                v-if="index < message.attachments.length - 1"-->
+        <!--              />-->
+        <!--            </template>-->
+        <!--          </div>-->
+        <!--        </div>-->
       </v-card-text>
       <v-card-actions>
         <v-btn text @click="goBack"> Zurück </v-btn>
@@ -146,9 +146,12 @@ export default class IrisMessageDetailsView extends Vue {
       await this.$store.dispatch("irisMessageList/fetchUnreadMessageCount");
     }
   }
+  // disabled file attachments
+  /*
   openAttachment(id: string) {
     this.$store.dispatch("irisMessageDetails/downloadAttachment", id);
   }
+   */
   goBack() {
     if (this.prevLocation === "iris-message-list") {
       return this.$router.back();

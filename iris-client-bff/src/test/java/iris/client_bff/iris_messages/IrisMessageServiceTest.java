@@ -164,6 +164,8 @@ public class IrisMessageServiceTest {
 
 	}
 
+	// disabled file attachments
+	/*
 	@Test
 	void findFileById() {
 
@@ -190,6 +192,7 @@ public class IrisMessageServiceTest {
 		assertTrue(file.isEmpty());
 
 	}
+	 */
 
 	@Test
 	void getHdContacts() {

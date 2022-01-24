@@ -30,8 +30,9 @@ public class IrisMessageTransfer {
     @Size(max = IrisMessage.BODY_MAX_LENGTH)
     private String body;
 
-    @Valid
-    private List<Attachment> attachments;
+    // disabled file attachments
+//    @Valid
+//    private List<Attachment> attachments;
 
     public static IrisMessageTransfer fromEntity(IrisMessage message) {
         return IrisMessageTransfer.builder()
@@ -39,7 +40,8 @@ public class IrisMessageTransfer {
                 .hdRecipient(HdContact.fromEntity(message.getHdRecipient()))
                 .subject(message.getSubject())
                 .body(message.getBody())
-                .attachments(Attachment.fromEntity(message.getAttachments()))
+                // disabled file attachments
+//                .attachments(Attachment.fromEntity(message.getAttachments()))
                 .build();
     }
 
