@@ -83,7 +83,7 @@ public class IrisMessageTestData {
                 .setHdAuthor(this.getTestMessageHdContactOwn())
                 .setHdRecipient(this.getTestMessageHdContactOther())
                 // disabled file attachments
-//                .setAttachments(List.of(file))
+//                .setFileAttachments(List.of(file))
                 .setIsRead(true);
         return message;
     }
@@ -99,7 +99,7 @@ public class IrisMessageTestData {
                 .setHdAuthor(this.getTestMessageHdContactOther())
                 .setHdRecipient(this.getTestMessageHdContactOwn())
                 // disabled file attachments
-//                .setAttachments(List.of(file))
+//                .setFileAttachments(List.of(file))
                 .setIsRead(false);
         return message;
     }
@@ -108,7 +108,7 @@ public class IrisMessageTestData {
         // disabled file attachments
         /*
         List<MultipartFile> files = new ArrayList<>();
-        for ( IrisMessageFile messageFile : message.getAttachments() ) {
+        for ( IrisMessageFile messageFile : message.getFileAttachments() ) {
             files.add(
                     new MockMultipartFile(
                             messageFile.getName() + "_form",
@@ -124,7 +124,7 @@ public class IrisMessageTestData {
                 .setBody(message.getBody())
                 .setHdRecipient(message.getHdRecipient().getId())
                 // disabled file attachments
-//                .setAttachments(files)
+//                .setFileAttachments(files)
                 ;
     }
 }

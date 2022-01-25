@@ -61,7 +61,7 @@ public class IrisMessage extends Aggregate<IrisMessage, IrisMessage.IrisMessageI
     private Boolean isRead;
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<IrisMessageFile> attachments = new ArrayList<>();
+    private List<IrisMessageFile> fileAttachments = new ArrayList<>();
 
     @Embeddable
     @EqualsAndHashCode

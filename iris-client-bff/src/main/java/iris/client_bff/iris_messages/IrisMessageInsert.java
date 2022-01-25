@@ -27,5 +27,5 @@ public class IrisMessageInsert {
 
     // disabled file attachments
 //    @Valid
-//    private List<@IrisMessageFileConstraint @FileTypeConstraint MultipartFile> attachments;
+//    private List<@IrisMessageFileConstraint @FileTypeConstraint MultipartFile> fileAttachments;
 }

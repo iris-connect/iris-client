@@ -1914,7 +1914,7 @@ export type IrisMessageQuery = DataQuery & {
 
 export type PageIrisMessages = Page<IrisMessage>;
 
-export interface IrisMessageAttachment {
+export interface IrisMessageFileAttachment {
   id: string;
   name: string;
   type?: string;
@@ -1930,11 +1930,11 @@ export interface IrisMessage {
   hdRecipient: IrisMessageHdContact;
   createdAt: string;
   isRead?: boolean;
-  hasAttachments?: boolean;
+  hasFileAttachments?: boolean;
 }
 
 export interface IrisMessageDetails extends IrisMessage {
-  attachments?: IrisMessageAttachment[];
+  fileAttachments?: IrisMessageFileAttachment[];
 }
 
 export interface IrisMessageInsert {
@@ -1942,7 +1942,7 @@ export interface IrisMessageInsert {
   subject: string;
   body: string;
   // disabled file attachments
-  // attachments?: File[];
+  // fileAttachments?: File[];
 }
 
 export enum IrisMessageContext {
@@ -2313,7 +2313,7 @@ export class IrisClientFrontendApi extends BaseAPI {
   }
 
   /**
-   * @summary Fetches allowed file types for iris message attachments
+   * @summary Fetches allowed file types for iris message fileAttachments
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof IrisClientFrontendApi
@@ -2384,8 +2384,6 @@ export class IrisClientFrontendApi extends BaseAPI {
 
   // disabled file attachments
   /**
-   * @ignore
-   * message attachments are not enabled for now
    * @summary Download file
    * @param {string} fileId
    * @param {*} options Override http request option.

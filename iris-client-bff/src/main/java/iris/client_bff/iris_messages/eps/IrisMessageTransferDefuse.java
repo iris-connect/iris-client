@@ -27,7 +27,7 @@ public class IrisMessageTransferDefuse {
                 .subject(this.defuse(message.getSubject(), "subject", IrisMessage.SUBJECT_MAX_LENGTH))
                 .body(this.defuse(message.getBody(), "body", IrisMessage.BODY_MAX_LENGTH))
                 // disabled file attachments
-//                .attachments(this.defuse(message.getAttachments()))
+//                .fileAttachments(this.defuse(message.getFileAttachments()))
                 .build();
     }
 
@@ -37,15 +37,15 @@ public class IrisMessageTransferDefuse {
                 .setName(this.defuse(contact.getName(), field + ".id", IrisMessageHdContact.NAME_MAX_LENGTH));
     }
 
-    private List<IrisMessageTransfer.Attachment> defuse(List<IrisMessageTransfer.Attachment> attachments) {
-        return attachments.stream().map(this::defuse).collect(Collectors.toList());
+    private List<IrisMessageTransfer.FileAttachment> defuse(List<IrisMessageTransfer.FileAttachment> fileAttachments) {
+        return fileAttachments.stream().map(this::defuse).collect(Collectors.toList());
     }
 
-    private IrisMessageTransfer.Attachment defuse(IrisMessageTransfer.Attachment attachment) {
-        return new IrisMessageTransfer.Attachment()
-                .setName(this.defuse(attachment.getName(), "attachment.name", IrisMessageFile.NAME_MAX_LENGTH))
-                .setContent(attachment.getContent())
-                .setContentType(this.defuse(attachment.getContentType(), "attachment.contentType", IrisMessageFile.CONTENT_TYPE_MAX_LENGTH));
+    private IrisMessageTransfer.FileAttachment defuse(IrisMessageTransfer.FileAttachment fileAttachment) {
+        return new IrisMessageTransfer.FileAttachment()
+                .setName(this.defuse(fileAttachment.getName(), "fileAttachment.name", IrisMessageFile.NAME_MAX_LENGTH))
+                .setContent(fileAttachment.getContent())
+                .setContentType(this.defuse(fileAttachment.getContentType(), "fileAttachment.contentType", IrisMessageFile.CONTENT_TYPE_MAX_LENGTH));
     }
 
     private String defuse(String input, String field, int maxLength) {
