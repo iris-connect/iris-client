@@ -3,7 +3,11 @@ import { TableRow } from "@/views/event-tracking-details/event-tracking-details.
 import { DataRequestDetails } from "@/api";
 import { getFormattedDate } from "@/utils/date";
 import { getValidPhoneNumber } from "@/utils/misc";
-import dataExport, { Row } from "@/utils/data-export/data-export";
+import dataExport, {
+  EXPORT_DATE_FORMAT,
+  EXPORT_DATE_TIME_FORMAT,
+  Row,
+} from "@/utils/data-export/data-export";
 
 export type OctowareData = {
   ID: string;
@@ -63,6 +67,15 @@ const getHeaders = (): Array<keyof OctowareData> => {
   ];
 };
 
+const getColFormats = (): Partial<Record<keyof OctowareData, string>> => {
+  return {
+    DAT_MELDE: EXPORT_DATE_FORMAT.XLSX,
+    DAT_GEBURT: EXPORT_DATE_FORMAT.XLSX,
+    DAT_ERST_KONTAKT: EXPORT_DATE_TIME_FORMAT.XLSX,
+    DAT_LETZT_KONTAKT: EXPORT_DATE_TIME_FORMAT.XLSX,
+  };
+};
+
 const mapData = (
   event: DataRequestDetails | null,
   tableRows: TableRow[]
@@ -86,24 +99,32 @@ const mapData = (
       TN_R_UMGEBUNGART: "",
       UMGEBUNG: locationName.substr(0, 100),
       BEMERKUNG: locationInfo.substr(0, 248),
-      DAT_MELDE: getFormattedDate(event?.requestedAt, "DD.MM.YYYY", ""),
+      DAT_MELDE: getFormattedDate(
+        event?.requestedAt,
+        EXPORT_DATE_FORMAT.APP,
+        ""
+      ),
       TN_R_KONTAKT_KAT: "",
       TN_R_KONT_INDXPERS: "",
       NAME: guest.lastName || "",
       VORNAME: guest.firstName || "",
       // the Genders mapper can be used here, because Octoware is using identical expressions.
       GESCHLECHT: guest.sex ? Genders.getName(guest.sex) : "",
-      DAT_GEBURT: getFormattedDate(guest.dateOfBirth, "DD.MM.YYYY", ""),
+      DAT_GEBURT: getFormattedDate(
+        guest.dateOfBirth,
+        EXPORT_DATE_FORMAT.APP,
+        ""
+      ),
       GEB_ORT: "",
       GebLand_ISO_KENNZ: "",
       DAT_ERST_KONTAKT: getFormattedDate(
         row.checkInTime,
-        "DD.MM.YYYY HH:mm",
+        EXPORT_DATE_TIME_FORMAT.APP,
         ""
       ),
       DAT_LETZT_KONTAKT: getFormattedDate(
         row.checkOutTime,
-        "DD.MM.YYYY HH:mm",
+        EXPORT_DATE_TIME_FORMAT.APP,
         ""
       ),
       Wohn_STRASSE: guestAddress?.street || "",
@@ -121,7 +142,10 @@ const mapData = (
 };
 
 const exportXlsx = (rows: Row[], fileName: string) => {
-  dataExport.exportXlsx(getHeaders(), rows, { fileName });
+  dataExport.exportXlsx(getHeaders(), rows, {
+    fileName,
+    colFormats: getColFormats(),
+  });
 };
 
 const exportOctoware = {
