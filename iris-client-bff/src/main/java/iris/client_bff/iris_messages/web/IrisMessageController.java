@@ -48,7 +48,7 @@ public class IrisMessageController {
     private static final String FIELD_HD_RECIPIENT = "hdRecipient";
     private static final String FIELD_SUBJECT = "subject";
     private static final String FIELD_BODY = "body";
-    private static final String FIELD_ATTACHMENT = "attachment";
+    private static final String FIELD_FILE_ATTACHMENT = "fileAttachment";
 
     private IrisMessageService irisMessageService;
     private final ValidationHelper validationHelper;
@@ -94,9 +94,9 @@ public class IrisMessageController {
         this.validateField(irisMessageInsert.getBody(), FIELD_BODY);
         // disabled file attachments
         /*
-        if (irisMessageInsert.getAttachments() != null) {
-            for ( MultipartFile file : irisMessageInsert.getAttachments() ) {
-                this.validateField(file.getOriginalFilename(), FIELD_ATTACHMENT);
+        if (irisMessageInsert.getFileAttachments() != null) {
+            for ( MultipartFile file : irisMessageInsert.getFileAttachments() ) {
+                this.validateField(file.getOriginalFilename(), FIELD_FILE_ATTACHMENT);
             }
         }
          */

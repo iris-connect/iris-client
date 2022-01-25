@@ -52,9 +52,9 @@ public class IrisMessageBuilder {
         /*
         List<IrisMessageFile> files = new ArrayList<>();
         try {
-            if (messageTransfer.getAttachments() != null) {
+            if (messageTransfer.getFileAttachments() != null) {
                 Tika tika = new Tika();
-                for ( IrisMessageTransfer.Attachment file : messageTransfer.getAttachments() ) {
+                for ( IrisMessageTransfer.FileAttachment file : messageTransfer.getFileAttachments() ) {
                     IrisMessageFile messageFile = new IrisMessageFile()
                             .setMessage(message)
                             .setContent(file.getContent())
@@ -76,7 +76,7 @@ public class IrisMessageBuilder {
                 .setFolder(folder.get())
                 .setIsRead(false)
         // disabled file attachments
-//                .setAttachments(files)
+//                .setFileAttachments(files)
         ;
 
         return message;
@@ -102,9 +102,9 @@ public class IrisMessageBuilder {
         /*
         List<IrisMessageFile> files = new ArrayList<>();
         try {
-            if (messageInsert.getAttachments() != null) {
+            if (messageInsert.getFileAttachments() != null) {
                 Tika tika = new Tika();
-                for ( MultipartFile file : messageInsert.getAttachments() ) {
+                for ( MultipartFile file : messageInsert.getFileAttachments() ) {
                     String fileName = file.getOriginalFilename() == null ? file.getName() : file.getOriginalFilename();
                     IrisMessageFile messageFile = new IrisMessageFile()
                             .setMessage(message)
@@ -127,7 +127,7 @@ public class IrisMessageBuilder {
                 .setFolder(folder.get())
                 .setIsRead(true)
         // disabled file attachments
-//                .setAttachments(files)
+//                .setFileAttachments(files)
         ;
 
         return message;

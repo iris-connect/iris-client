@@ -40,7 +40,7 @@ import {
   dummyIrisMessageHdContacts,
   getDummyMessageFromRequest,
   // disabled file attachments
-  // dummyIrisMessageAttachments,
+  // dummyIrisMessageFileAttachments,
 } from "@/server/data/dummy-iris-messages";
 
 const loginResponse = (role: UserRole): Response => {
@@ -361,14 +361,14 @@ export function makeMockAPIServer() {
       // disabled file attachments
       /*
       this.get("/iris-messages/files/:fileId/download", (schema, request) => {
-        let attachment = dummyIrisMessageAttachments.find(
+        let fileAttachment = dummyIrisMessageFileAttachments.find(
           (item) => item.id === request.params.fileId
         );
-        if (!attachment) {
-          attachment = dummyIrisMessageAttachments[0];
+        if (!fileAttachment) {
+          fileAttachment = dummyIrisMessageFileAttachments[0];
         }
         return authResponse(request, "dummy file content", {
-          "content-disposition": `filename="${attachment.name}.txt"`,
+          "content-disposition": `filename="${fileAttachment.name}.txt"`,
         });
       });
        */

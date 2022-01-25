@@ -15,8 +15,8 @@ export type IrisMessageDetailsState = {
   messageLoadingError: ErrorMessage;
   messageSaving: boolean;
   messageSavingError: ErrorMessage;
-  attachmentLoading: boolean;
-  attachmentLoadingError: ErrorMessage;
+  fileAttachmentLoading: boolean;
+  fileAttachmentLoadingError: ErrorMessage;
 };
 
 export interface IrisMessageDetailsModule
@@ -36,11 +36,11 @@ export interface IrisMessageDetailsModule
       state: IrisMessageDetailsState,
       payload: ErrorMessage
     ): void;
-    setAttachmentLoading(
+    setFileAttachmentLoading(
       state: IrisMessageDetailsState,
       payload: boolean
     ): void;
-    setAttachmentLoadingError(
+    setFileAttachmentLoadingError(
       state: IrisMessageDetailsState,
       payload: ErrorMessage
     ): void;
@@ -57,7 +57,7 @@ export interface IrisMessageDetailsModule
     ): Promise<void>;
     // disabled file attachments
     /*
-    downloadAttachment(
+    downloadFileAttachment(
       { commit }: { commit: Commit },
       fileId: string
     ): Promise<void>;
@@ -71,8 +71,8 @@ const defaultState: IrisMessageDetailsState = {
   messageLoadingError: null,
   messageSaving: false,
   messageSavingError: null,
-  attachmentLoading: false,
-  attachmentLoadingError: null,
+  fileAttachmentLoading: false,
+  fileAttachmentLoadingError: null,
 };
 
 const irisMessageDetails: IrisMessageDetailsModule = {
@@ -96,11 +96,11 @@ const irisMessageDetails: IrisMessageDetailsModule = {
     setMessageSavingError(state, payload) {
       state.messageSavingError = payload;
     },
-    setAttachmentLoading(state, payload) {
-      state.attachmentLoading = payload;
+    setFileAttachmentLoading(state, payload) {
+      state.fileAttachmentLoading = payload;
     },
-    setAttachmentLoadingError(state, payload) {
-      state.attachmentLoadingError = payload;
+    setFileAttachmentLoadingError(state, payload) {
+      state.fileAttachmentLoadingError = payload;
     },
     reset(state) {
       Object.assign(state, { ...defaultState });
@@ -140,17 +140,17 @@ const irisMessageDetails: IrisMessageDetailsModule = {
     },
     // disabled file attachments
     /*
-    async downloadAttachment({ commit }, fileId: string) {
-      commit("setAttachmentLoading", true);
-      commit("setAttachmentLoadingError", null);
+    async downloadFileAttachment({ commit }, fileId: string) {
+      commit("setFileAttachmentLoading", true);
+      commit("setFileAttachmentLoadingError", null);
       try {
         const response = await authClient.irisMessageFileDownload(fileId);
         const fileName = extractFileName(response);
         fileDownload.download(response.data, fileName);
       } catch (e) {
-        commit("setAttachmentLoadingError", getErrorMessage(e));
+        commit("setFileAttachmentLoadingError", getErrorMessage(e));
       } finally {
-        commit("setAttachmentLoading", false);
+        commit("setFileAttachmentLoading", false);
       }
     },
      */

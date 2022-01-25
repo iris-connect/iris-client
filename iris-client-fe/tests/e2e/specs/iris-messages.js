@@ -64,7 +64,7 @@ describe("IrisMessages", () => {
           .type("-")
           .assertInputInvalidByRule("sanitised");
         // disabled file attachments
-        // cy.assertInputValid("input{attachments}");
+        // cy.assertInputValid("input{fileAttachments}");
         cy.selectOwnIrisMessageContact(
           "input{hdRecipient}",
           ".select-menu-recipient"

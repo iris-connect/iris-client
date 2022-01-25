@@ -32,7 +32,7 @@ public class IrisMessageTransfer {
 
     // disabled file attachments
 //    @Valid
-//    private List<Attachment> attachments;
+//    private List<FileAttachment> fileAttachments;
 
     public static IrisMessageTransfer fromEntity(IrisMessage message) {
         return IrisMessageTransfer.builder()
@@ -41,7 +41,7 @@ public class IrisMessageTransfer {
                 .subject(message.getSubject())
                 .body(message.getBody())
                 // disabled file attachments
-//                .attachments(Attachment.fromEntity(message.getAttachments()))
+//                .fileAttachments(FileAttachment.fromEntity(message.getFileAttachments()))
                 .build();
     }
 
@@ -64,7 +64,7 @@ public class IrisMessageTransfer {
     }
 
     @Data
-    public static class Attachment {
+    public static class FileAttachment {
 
         @NotBlank
         @Size(max = IrisMessageFile.NAME_MAX_LENGTH)
@@ -78,12 +78,12 @@ public class IrisMessageTransfer {
         @Size(max = IrisMessageFile.CONTENT_TYPE_MAX_LENGTH)
         private String contentType;
 
-        public static List<Attachment> fromEntity(List<IrisMessageFile> files) {
-            return files.stream().map(Attachment::fromEntity).collect(Collectors.toList());
+        public static List<FileAttachment> fromEntity(List<IrisMessageFile> files) {
+            return files.stream().map(FileAttachment::fromEntity).collect(Collectors.toList());
         }
 
-        public static Attachment fromEntity(IrisMessageFile file) {
-            return new Attachment()
+        public static FileAttachment fromEntity(IrisMessageFile file) {
+            return new FileAttachment()
                     .setName(file.getName())
                     .setContent(file.getContent())
                     .setContentType(file.getContentType());

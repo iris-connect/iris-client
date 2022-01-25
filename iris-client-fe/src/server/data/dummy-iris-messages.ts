@@ -4,7 +4,7 @@ import {
   IrisMessageContext,
   IrisMessageDetails,
   IrisMessageFolder,
-  IrisMessageAttachment,
+  IrisMessageFileAttachment,
 } from "@/api";
 import { Request } from "miragejs";
 
@@ -71,9 +71,9 @@ export const dummyIrisMessageHdContacts: IrisMessageHdContact[] = [
 ];
 
 // disabled file attachments
-export const dummyIrisMessageAttachments: IrisMessageAttachment[] = [];
+export const dummyIrisMessageFileAttachments: IrisMessageFileAttachment[] = [];
 /*
-export const dummyIrisMessageAttachments: IrisMessageAttachment[] = [
+export const dummyIrisMessageFileAttachments: IrisMessageFileAttachment[] = [
   {
     id: "file_1",
     name: "Anhang 1",
@@ -98,7 +98,7 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     createdAt: daysAgo(3),
     isRead: false,
-    attachments: dummyIrisMessageAttachments,
+    fileAttachments: dummyIrisMessageFileAttachments,
   },
   {
     hdAuthor: dummyIrisMessageHdContacts[0],
@@ -121,7 +121,7 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     body: "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     createdAt: daysAgo(5),
     isRead: false,
-    attachments: dummyIrisMessageAttachments,
+    fileAttachments: dummyIrisMessageFileAttachments,
   },
   {
     hdAuthor: dummyIrisMessageHdContacts[0],
@@ -156,7 +156,7 @@ export const getDummyMessageFromRequest = (
   const body = form.get("body") as string;
   const recipient = form.get("recipient") as string;
   // disabled file attachments
-  // const attachments = form.getAll("attachments");
+  // const fileAttachments = form.getAll("fileAttachments");
   return {
     id: id || new Date().getTime() + "",
     subject,
@@ -171,8 +171,8 @@ export const getDummyMessageFromRequest = (
     createdAt: new Date().getTime() + "",
     // disabled file attachments
     /*
-    attachments: attachments.map((attachment) => {
-      const a = attachment as File;
+    fileAttachments: fileAttachments.map((fileAttachment) => {
+      const a = fileAttachment as File;
       return {
         id: new Date().getTime() + "",
         name: a.name,

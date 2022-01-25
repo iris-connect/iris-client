@@ -20,13 +20,13 @@ public class IrisMessageDetailsDto {
     private IrisMessageHdContact hdRecipient;
     private Instant createdAt;
     private Boolean isRead;
-    private List<Attachment> attachments;
-    private Boolean hasAttachments;
+    private List<FileAttachment> fileAttachments;
+    private Boolean hasFileAttachments;
 
     public static IrisMessageDetailsDto fromEntity(IrisMessage message) {
         // disabled file attachments
-//        List<Attachment> attachments = Attachment.fromEntity(message.getAttachments());
-        List<Attachment> attachments = new ArrayList<>();
+//        List<FileAttachment> fileAttachments = FileAttachment.fromEntity(message.getFileAttachments());
+        List<FileAttachment> fileAttachments = new ArrayList<>();
         return new IrisMessageDetailsDto(
                 message.getId().toString(),
                 message.getSubject(),
@@ -35,25 +35,25 @@ public class IrisMessageDetailsDto {
                 message.getHdRecipient(),
                 message.getMetadata().getCreated(),
                 message.getIsRead(),
-                attachments,
-                attachments.size() > 0
+                fileAttachments,
+                fileAttachments.size() > 0
         );
     }
 
     @Value
-    public static class Attachment {
+    public static class FileAttachment {
 
         private String id;
         private String name;
         private String type;
 
-        public static List<Attachment> fromEntity(List<IrisMessageFile> files) {
+        public static List<FileAttachment> fromEntity(List<IrisMessageFile> files) {
             if (files == null) return new ArrayList<>();
-            return files.stream().map(Attachment::fromEntity).collect(Collectors.toList());
+            return files.stream().map(FileAttachment::fromEntity).collect(Collectors.toList());
         }
 
-        public static Attachment fromEntity(IrisMessageFile file) {
-            return new Attachment(
+        public static FileAttachment fromEntity(IrisMessageFile file) {
+            return new FileAttachment(
                     file.getId().toString(),
                     file.getName(),
                     file.getContentType()

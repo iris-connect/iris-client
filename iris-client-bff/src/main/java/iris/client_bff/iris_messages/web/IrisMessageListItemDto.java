@@ -15,12 +15,12 @@ public class IrisMessageListItemDto {
     private IrisMessageHdContact hdRecipient;
     private Instant createdAt;
     private Boolean isRead;
-    private Boolean hasAttachments;
+    private Boolean hasFileAttachments;
 
     public static IrisMessageListItemDto fromEntity(IrisMessage message) {
         // disabled file attachments
-//        Boolean hasAttachments = message.getAttachments() != null && message.getAttachments().size() > 0;
-        Boolean hasAttachments = false;
+//        Boolean hasFileAttachments = message.getFileAttachments() != null && message.getFileAttachments().size() > 0;
+        Boolean hasFileAttachments = false;
         return new IrisMessageListItemDto(
                 message.getId().toString(),
                 message.getSubject(),
@@ -28,7 +28,7 @@ public class IrisMessageListItemDto {
                 message.getHdRecipient(),
                 message.getMetadata().getCreated(),
                 message.getIsRead(),
-                hasAttachments
+                hasFileAttachments
         );
     }
 }
