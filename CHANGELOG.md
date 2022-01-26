@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.3.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.3.0-rc.1...v1.3.0-rc.2) (2022-01-26)
+
+
+### Bug Fixes
+
+* Changes the certificate paths to the new schema introduced with new EPS. ([fe1a0b3](https://github.com/iris-connect/iris-client/commit/fe1a0b3c89abb306f178e88f963881c684b36540))
+
 # [1.3.0-rc.1](https://github.com/iris-connect/iris-client/compare/v1.2.1...v1.3.0-rc.1) (2022-01-26)
 
 
