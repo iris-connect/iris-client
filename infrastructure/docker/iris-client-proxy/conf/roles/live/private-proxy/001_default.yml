@@ -54,8 +54,8 @@ private:
       verify_client: false
       server_name: "$PROXY_DOMAIN"
       ca_certificate_files: *CA_FILES
-      certificate_file: "$DIR/../../../certs/$PROXY_TLS_CERT"
-      key_file: "$DIR/../../../certs/$PROXY_TLS_CERT_KEY"
+      certificate_file: "/$DIR/../../../certs/$PROXY_TLS_CERT"
+      key_file: "/$DIR/../../../certs/$PROXY_TLS_CERT_KEY"
 
   jsonrpc_client:
     endpoint: "https://$PRIVATE_PROXY_EPS_HOSTNAME:7766/jsonrpc"
