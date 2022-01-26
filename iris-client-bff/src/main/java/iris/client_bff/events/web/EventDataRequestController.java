@@ -224,6 +224,7 @@ public class EventDataRequestController {
 	}
 
 	private DataRequestDetails mapDataRequestDetails(EventDataRequest request) {
+
 		DataRequestDetails mapped = modelMapper.map(request, DataRequestDetails.class);
 		mapped.setCode(request.getId().toString());
 		mapped.setStart(request.getRequestStart());
@@ -232,6 +233,8 @@ public class EventDataRequestController {
 		mapped.setLastModifiedAt(request.getLastModifiedAt());
 		mapped.setRequestedAt(request.getCreatedAt());
 		mapped.setExternalRequestId(request.getRefId());
+		mapped.setCreatedBy(request.getCreatedBy());
+		mapped.setLastModifiedBy(request.getLastModifiedBy());
 		return mapped;
 	}
 

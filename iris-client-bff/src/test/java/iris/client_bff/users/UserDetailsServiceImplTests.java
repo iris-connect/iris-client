@@ -43,15 +43,13 @@ class UserDetailsServiceImplTests {
 	UserDetailsServiceImpl userDetailsService;
 
 	UUID notFound = UUID.randomUUID();
-	UUID foundAdmin = UUID.randomUUID();
-	UUID foundUser = UUID.randomUUID();
 
 	UserAccount admin = userAccountAdmin();
 	UserAccount user = spy(userAccountUser());
 
-	UserAccountAuthentication adminAuth = new UserAccountAuthentication("mm", true,
+	UserAccountAuthentication adminAuth = new UserAccountAuthentication(admin, true,
 			List.of(new SimpleGrantedAuthority("ADMIN")));
-	UserAccountAuthentication userAuth = new UserAccountAuthentication("tm", true,
+	UserAccountAuthentication userAuth = new UserAccountAuthentication(user, true,
 			List.of(new SimpleGrantedAuthority("USER")));
 
 	@BeforeEach
@@ -73,7 +71,7 @@ class UserDetailsServiceImplTests {
 
 		mockAdminFound();
 
-		assertThrows(RuntimeException.class, () -> userDetailsService.update(foundAdmin, null, userAuth));
+		assertThrows(RuntimeException.class, () -> userDetailsService.update(admin.getId().getUser_id(), null, userAuth));
 	}
 
 	@Test
@@ -83,7 +81,7 @@ class UserDetailsServiceImplTests {
 
 		var dto = new UserUpdateDTO().userName("new");
 
-		assertThrows(RuntimeException.class, () -> userDetailsService.update(foundUser, dto, userAuth));
+		assertThrows(RuntimeException.class, () -> userDetailsService.update(user.getId().getUser_id(), dto, userAuth));
 	}
 
 	@Test
@@ -93,7 +91,7 @@ class UserDetailsServiceImplTests {
 
 		var dto = new UserUpdateDTO().role(UserRoleDTO.ADMIN);
 
-		assertThrows(RuntimeException.class, () -> userDetailsService.update(foundUser, dto, userAuth));
+		assertThrows(RuntimeException.class, () -> userDetailsService.update(user.getId().getUser_id(), dto, userAuth));
 	}
 
 	@Test
@@ -104,7 +102,7 @@ class UserDetailsServiceImplTests {
 
 		var dto = new UserUpdateDTO().role(UserRoleDTO.USER);
 
-		assertThrows(RuntimeException.class, () -> userDetailsService.update(foundAdmin, dto, adminAuth));
+		assertThrows(RuntimeException.class, () -> userDetailsService.update(admin.getId().getUser_id(), dto, adminAuth));
 	}
 
 	@Test
@@ -115,12 +113,10 @@ class UserDetailsServiceImplTests {
 
 		var dto = new UserUpdateDTO();
 
-		userDetailsService.update(foundUser, dto, adminAuth);
+		userDetailsService.update(user.getId().getUser_id(), dto, adminAuth);
 
-		verify(user).getUserName();
-		verify(user).getRole();
 		verify(userAccountsRepository).save(user);
-		verifyNoMoreInteractions(user, jwtService, userAccountsRepository);
+		verifyNoMoreInteractions(jwtService, userAccountsRepository);
 	}
 
 	@Test
@@ -131,7 +127,7 @@ class UserDetailsServiceImplTests {
 
 		var dto = new UserUpdateDTO().firstName("fn").lastName("ln").userName("un").password("pw").role(UserRoleDTO.ADMIN);
 
-		var ret = userDetailsService.update(foundUser, dto, adminAuth);
+		var ret = userDetailsService.update(user.getId().getUser_id(), dto, adminAuth);
 
 		assertThat(ret).extracting("firstName", "lastName", "userName", "role")
 				.containsExactly("fn", "ln", "un", UserRole.ADMIN);
@@ -150,19 +146,19 @@ class UserDetailsServiceImplTests {
 
 		var dto = new UserUpdateDTO().userName("un");
 
-		userDetailsService.update(foundUser, dto, adminAuth);
+		userDetailsService.update(user.getId().getUser_id(), dto, adminAuth);
 
 		verify(jwtService).invalidateTokensOfUser("tm");
 
 		dto = new UserUpdateDTO().password("pw");
 
-		userDetailsService.update(foundUser, dto, adminAuth);
+		userDetailsService.update(user.getId().getUser_id(), dto, adminAuth);
 
 		verify(jwtService).invalidateTokensOfUser("un");
 
 		dto = new UserUpdateDTO().role(UserRoleDTO.ADMIN);
 
-		userDetailsService.update(foundUser, dto, adminAuth);
+		userDetailsService.update(user.getId().getUser_id(), dto, adminAuth);
 
 		verify(jwtService, times(2)).invalidateTokensOfUser("un");
 	}
@@ -172,11 +168,11 @@ class UserDetailsServiceImplTests {
 
 		mockUserFound();
 
-		var value = userDetailsService.isOldPasswordCorrect(foundUser, "password");
+		var value = userDetailsService.isOldPasswordCorrect(user.getId().getUser_id(), "password");
 
 		assertTrue(value);
 
-		verify(userAccountsRepository).findById(foundUser);
+		verify(userAccountsRepository).findById(user.getId().getUser_id());
 		verifyNoMoreInteractions(userAccountsRepository);
 	}
 
@@ -185,18 +181,17 @@ class UserDetailsServiceImplTests {
 
 		mockUserFound();
 
-		var value = userDetailsService.isOldPasswordCorrect(foundUser, "pass");
+		var value = userDetailsService.isOldPasswordCorrect(user.getId().getUser_id(), "pass");
 
 		assertFalse(value);
 
-		verify(userAccountsRepository).findById(foundUser);
+		verify(userAccountsRepository).findById(user.getId().getUser_id());
 		verifyNoMoreInteractions(userAccountsRepository);
 	}
 
 	private UserAccount userAccountAdmin() {
 
 		var account = new UserAccount();
-		account.setUser_id(foundAdmin);
 		account.setFirstName("Max");
 		account.setLastName("Muster");
 		account.setUserName("mm");
@@ -209,7 +204,6 @@ class UserDetailsServiceImplTests {
 	private UserAccount userAccountUser() {
 
 		var account = new UserAccount();
-		account.setUser_id(foundUser);
 		account.setFirstName("Thomas");
 		account.setLastName("Müller");
 		account.setUserName("tm");
@@ -224,11 +218,11 @@ class UserDetailsServiceImplTests {
 	}
 
 	private void mockAdminFound() {
-		when(userAccountsRepository.findById(foundAdmin)).thenReturn(Optional.of(admin));
+		when(userAccountsRepository.findById(admin.getId().getUser_id())).thenReturn(Optional.of(admin));
 	}
 
 	private void mockUserFound() {
-		when(userAccountsRepository.findById(foundUser)).thenReturn(Optional.of(user));
+		when(userAccountsRepository.findById(user.getId().getUser_id())).thenReturn(Optional.of(user));
 	}
 
 	private void mockCountLastAdmin() {

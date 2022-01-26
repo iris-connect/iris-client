@@ -3,6 +3,8 @@ package iris.client_bff.core;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.time.Instant;
+
 import javax.persistence.EmbeddedId;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -39,5 +41,21 @@ public abstract class Aggregate<T extends Aggregate<T, ID>, ID extends Id> exten
 	@PostLoad
 	void markNotNew() {
 		this.isNew = false;
+	}
+
+	public Instant getLastModifiedAt() {
+		return this.getMetadata().getLastModified();
+	}
+
+	public String getLastModifiedBy() {
+		return getMetadata().getLastModifiedBy();
+	}
+
+	public Instant getCreatedAt() {
+		return this.getMetadata().getCreated();
+	}
+
+	public String getCreatedBy() {
+		return getMetadata().getCreatedBy();
 	}
 }

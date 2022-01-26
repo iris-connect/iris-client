@@ -11,7 +11,7 @@ public class UserMappers {
 				.userName(account.getUserName())
 				.firstName(account.getFirstName())
 				.lastName(account.getLastName())
-				.id(account.getUser_id().toString())
+				.id(account.getId().toString())
 				.role(UserRoleDTO.valueOf(account.getRole().name()));
 	}
 

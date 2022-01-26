@@ -196,7 +196,7 @@ public class UserController {
 		}
 
 		userService.findByUsername(username)
-				.filter(it -> !it.getUser_id().equals(id))
+				.filter(it -> !it.getId().getUser_id().equals(id))
 				.ifPresent(__ -> {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UserController.username.notunique");
 				});

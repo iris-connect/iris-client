@@ -10,8 +10,6 @@ import iris.client_bff.core.Sex;
 import iris.client_bff.core.web.dto.Address;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -21,7 +19,8 @@ import static lombok.AccessLevel.PRIVATE;
 public class IndexCaseMapper {
 
     public static IndexCaseDetailsDTO mapDetailed(CaseDataRequest indexCase) {
-        return IndexCaseDetailsDTO.builder()
+    	
+				return IndexCaseDetailsDTO.builder()
                 .caseId(indexCase.getId().toString())
                 .comment(indexCase.getComment())
                 .externalCaseId(indexCase.getRefId())
@@ -30,6 +29,10 @@ public class IndexCaseMapper {
                 .start(indexCase.getRequestStart())
                 .end(indexCase.getRequestEnd())
                 .readableToken(indexCase.getReadableToken())
+                .createdAt(indexCase.getCreatedAt())
+                .createdBy(indexCase.getCreatedBy())
+                .lastModifiedAt(indexCase.getLastModifiedAt())
+                .lastModifiedBy(indexCase.getLastModifiedBy())
                 .build();
     }
 

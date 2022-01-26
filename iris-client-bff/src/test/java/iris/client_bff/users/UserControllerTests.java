@@ -89,7 +89,7 @@ class UserControllerTests {
 
 		var dto2 = new UserUpdateDTO().firstName("fn1").lastName("ln1").userName("un").password(pw).oldPassword(pw)
 				.role(UserRoleDTO.USER);
-		var authentication = new UserAccountAuthentication("fn", true,
+		var authentication = new UserAccountAuthentication(createUserAccount("fn"), true,
 				List.of(new SimpleGrantedAuthority(UserRole.USER.name())));
 
 		Assertions.assertThrows(ResponseStatusException.class,
@@ -108,12 +108,10 @@ class UserControllerTests {
 
 		var dto2 = new UserUpdateDTO().firstName("fn1").lastName("ln1").userName("un").password(pw).oldPassword(pw)
 				.role(UserRoleDTO.USER);
-		var authentication = new UserAccountAuthentication("fn", true,
+		var authentication = new UserAccountAuthentication(createUserAccount("fn"), true,
 				List.of(new SimpleGrantedAuthority(UserRole.USER.name())));
-		var id = UUID.randomUUID();
 
 		var account = new UserAccount();
-		account.setUser_id(id);
 		account.setFirstName("fn");
 		account.setLastName("ln");
 		account.setPassword(pw);
@@ -122,9 +120,9 @@ class UserControllerTests {
 
 		when(userService.findByUsername(anyString())).thenReturn(Optional.of(account));
 
-		userController.updateUser(id, dto2, authentication);
+		userController.updateUser(account.getId().getUser_id(), dto2, authentication);
 
-		verify(userService).update(id, dto2, authentication);
+		verify(userService).update(account.getId().getUser_id(), dto2, authentication);
 		assertThat(user).isNotNull();
 	}
 
@@ -133,11 +131,10 @@ class UserControllerTests {
 
 		var dto = new UserUpdateDTO().firstName("fn1").lastName("ln1").userName("un").password("abcde123")
 				.oldPassword("abcde123").role(UserRoleDTO.USER);
-		var authentication = new UserAccountAuthentication("test", true,
+		var authentication = new UserAccountAuthentication(createUserAccount("test"), true,
 				List.of(new SimpleGrantedAuthority(UserRole.ADMIN.name())));
 
 		var account = new UserAccount();
-		account.setUser_id(UUID.randomUUID());
 		account.setFirstName("fn");
 		account.setLastName("ln");
 		account.setPassword("abcde123");
@@ -154,13 +151,10 @@ class UserControllerTests {
 	void testRootChangePW_ownWithOldPassword() {
 
 		var dto = new UserUpdateDTO().password("abcde1234").role(UserRoleDTO.ADMIN);
-		var authentication = new UserAccountAuthentication("test", true,
+		var authentication = new UserAccountAuthentication(createUserAccount("test"), true,
 				List.of(new SimpleGrantedAuthority(UserRole.ADMIN.name())));
 
-		var id = UUID.randomUUID();
-
 		var account = new UserAccount();
-		account.setUser_id(id);
 		account.setFirstName("fn");
 		account.setLastName("ln");
 		account.setPassword("abcde123");
@@ -172,23 +166,20 @@ class UserControllerTests {
 				.thenReturn(true);
 
 		Assertions.assertThrows(ResponseStatusException.class,
-				() -> userController.updateUser(id, dto, authentication));
+				() -> userController.updateUser(account.getId().getUser_id(), dto, authentication));
 
 		var dto2 = dto.oldPassword("abcde123");
-		Assertions.assertDoesNotThrow(() -> userController.updateUser(id, dto2, authentication));
+		Assertions.assertDoesNotThrow(() -> userController.updateUser(account.getId().getUser_id(), dto2, authentication));
 	}
 
 	@Test
 	void testRootChangePW_foreignWithoutOldPassword() {
 
 		var dto = new UserUpdateDTO().password("abcde123").role(UserRoleDTO.ADMIN);
-		var authentication = new UserAccountAuthentication("test", true,
+		var authentication = new UserAccountAuthentication(createUserAccount("test"), true,
 				List.of(new SimpleGrantedAuthority(UserRole.ADMIN.name())));
 
-		var id = UUID.randomUUID();
-
 		var account = new UserAccount();
-		account.setUser_id(id);
 		account.setFirstName("fn");
 		account.setLastName("ln");
 		account.setPassword("abcde123");
@@ -199,6 +190,10 @@ class UserControllerTests {
 		when(userService.isItCurrentUser(any(UUID.class), any(UserAccountAuthentication.class)))
 				.thenReturn(false);
 
-		Assertions.assertDoesNotThrow(() -> userController.updateUser(id, dto, authentication));
+		Assertions.assertDoesNotThrow(() -> userController.updateUser(account.getId().getUser_id(), dto, authentication));
+	}
+
+	private UserAccount createUserAccount(String userName) {
+		return new UserAccount().setUserName(userName);
 	}
 }

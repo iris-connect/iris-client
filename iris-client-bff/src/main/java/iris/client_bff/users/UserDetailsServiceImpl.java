@@ -84,7 +84,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		var invalidateTokens = false;
 
 		var oldUserName = userAccount.getUserName();
-		if (!isAdmin && !oldUserName.equals(authentication.getUserName())) {
+		if (!isAdmin && !oldUserName.equals(authentication.getName())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change other users!");
 		}
 
@@ -164,7 +164,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		var userAccount = findUser(userId);
 
-		return authentication.getUserName().equals(userAccount.getUserName());
+		return authentication.getName().equals(userAccount.getUserName());
 	}
 
 	private UserAccount findUser(UUID userId) {

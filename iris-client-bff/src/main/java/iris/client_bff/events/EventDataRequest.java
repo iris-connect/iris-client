@@ -91,14 +91,6 @@ public class EventDataRequest extends Aggregate<EventDataRequest, EventDataReque
 		this.announcementToken = announcementToken;
 	}
 
-	public Instant getLastModifiedAt() {
-		return this.getMetadata().getLastModified();
-	}
-
-	public Instant getCreatedAt() {
-		return this.getMetadata().getCreated();
-	}
-
 	@Embeddable
 	@EqualsAndHashCode
 	@RequiredArgsConstructor(staticName = "of")
