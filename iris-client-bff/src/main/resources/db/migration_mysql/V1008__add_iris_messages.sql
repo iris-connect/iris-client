@@ -42,6 +42,6 @@ CREATE TABLE iris_message_file (
     created datetime NOT NULL,
     last_modified datetime NOT NULL,
     CONSTRAINT iris_message_file_pkey PRIMARY KEY (id),
-    CONSTRAINT iris_message_fk FOREIGN KEY (message_id) REFERENCES iris_message(id)
+    CONSTRAINT iris_message_file_message_fk FOREIGN KEY (message_id) REFERENCES iris_message(id)
 );
 CREATE INDEX iris_message_file_id ON iris_message_file (id);
