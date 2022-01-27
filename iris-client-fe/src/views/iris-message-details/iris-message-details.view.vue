@@ -22,6 +22,39 @@
         <div class="body-1" data-test="message.body">
           {{ message.body }}
         </div>
+        <div v-if="message.dataAttachments.length > 0">
+          <v-divider class="my-4" />
+          <p class="font-weight-bold">Daten</p>
+          <div class="elevation-1 mt-4">
+            <template
+              v-for="(dataAttachment, index) in message.dataAttachments"
+            >
+              <v-list-item dense :key="`item_${index}`">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ dataAttachment.description }}
+                  </v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-action v-if="isInbox">
+                  <v-btn
+                    icon
+                    @click="importDataAttachment(dataAttachment.id)"
+                    :disabled="
+                      dataAttachment.isImported || dataAttachmentImporting
+                    "
+                  >
+                    <v-icon>mdi-download</v-icon>
+                  </v-btn>
+                </v-list-item-action>
+              </v-list-item>
+              <v-divider
+                inset
+                :key="`divider_${index}`"
+                v-if="index < message.dataAttachments.length - 1"
+              />
+            </template>
+          </div>
+        </div>
         <!--
         <div v-if="message.fileAttachments.length > 0">
           <v-divider class="my-4" />
@@ -70,7 +103,12 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { IrisMessageFileAttachment, IrisMessageDetails } from "@/api";
+import {
+  IrisMessageContext,
+  IrisMessageDataAttachment,
+  IrisMessageDetails,
+  IrisMessageFileAttachment,
+} from "@/api";
 import { ErrorMessage } from "@/utils/axios";
 import { getFormattedDate } from "@/utils/date";
 
@@ -80,6 +118,7 @@ type MessageData = {
   createdAt: string;
   subject: string;
   body: string;
+  dataAttachments: IrisMessageDataAttachment[];
   fileAttachments: IrisMessageFileAttachment[];
 };
 
@@ -113,14 +152,23 @@ export default class IrisMessageDetailsView extends Vue {
         : "-",
       subject: message?.subject || "-",
       body: message?.body || "-",
+      dataAttachments: message?.dataAttachments || [],
       fileAttachments: message?.fileAttachments || [],
     };
+  }
+  get isInbox(): boolean {
+    const message: IrisMessageDetails | null =
+      this.$store.state.irisMessageDetails.message;
+    return message?.context === IrisMessageContext.Inbox;
   }
   get messageLoading(): boolean {
     return (
       this.$store.state.irisMessageDetails.messageLoading ||
       this.$store.state.irisMessageDetails.messageSaving
     );
+  }
+  get dataAttachmentImporting(): boolean {
+    return this.$store.state.irisMessageDetails.dataAttachmentImporting;
   }
   get fileAttachmentLoading(): boolean {
     return this.$store.state.irisMessageDetails.fileAttachmentLoading;
@@ -129,6 +177,7 @@ export default class IrisMessageDetailsView extends Vue {
     return [
       this.$store.state.irisMessageDetails.messageLoadingError,
       this.$store.state.irisMessageDetails.messageSavingError,
+      this.$store.state.irisMessageDetails.dataAttachmentImportingError,
       this.$store.state.irisMessageDetails.fileAttachmentLoadingError,
     ];
   }
@@ -149,6 +198,12 @@ export default class IrisMessageDetailsView extends Vue {
       );
       await this.$store.dispatch("irisMessageList/fetchUnreadMessageCount");
     }
+  }
+  async importDataAttachment(id: string) {
+    await this.$store.dispatch("irisMessageDetails/importDataAttachment", id);
+    const message: IrisMessageDetails | null =
+      this.$store.state.irisMessageDetails.message;
+    this.$store.dispatch("irisMessageDetails/fetchMessage", message?.id);
   }
   // disabled file attachments
   /*

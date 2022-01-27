@@ -10,6 +10,8 @@ import globalAxios, {
   Method,
 } from "axios";
 import axios from "axios";
+import { serialize } from "object-to-formdata";
+
 /**
  *
  * @export
@@ -126,7 +128,7 @@ export const apiRequestBuilder =
     url.search = createSearchParams(url, options?.query || {});
     const requestData =
       options?.multipart && data
-        ? createFormData(data as Record<string, any>)
+        ? serialize(data, { indices: true, dotsForObjectNotation: true })
         : data;
     return axiosInstance.request({
       url: toPathString(url),
@@ -135,24 +137,6 @@ export const apiRequestBuilder =
       ...options,
     });
   };
-
-const createFormData = (
-  data: Record<string, string | Blob | File | File[]>
-): FormData => {
-  const formData = new FormData();
-  let key: keyof typeof data;
-  for (key in data) {
-    const entry = data[key];
-    if (Array.isArray(entry)) {
-      entry.forEach((item) => {
-        formData.append(`${key}`, item);
-      });
-    } else {
-      formData.append(key, entry);
-    }
-  }
-  return formData;
-};
 
 export const cancelTokenProvider = () => {
   let source: CancelTokenSource = axios.CancelToken.source();

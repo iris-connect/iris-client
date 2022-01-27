@@ -57,6 +57,7 @@ export type FormData = {
 };
 
 export type EventData = {
+  code: string;
   startTime: string;
   endTime: string;
   generatedTime: string;
@@ -142,6 +143,7 @@ export default class EventTrackingDetailsView extends Vue {
     const dataRequest = this.eventTrackingDetails;
 
     return {
+      code: dataRequest?.code || "",
       startTime: getFormattedDate(dataRequest?.start),
       endTime: getFormattedDate(dataRequest?.end),
       generatedTime: getFormattedDate(dataRequest?.requestedAt),

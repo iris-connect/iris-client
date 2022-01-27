@@ -2,6 +2,7 @@ package iris.client_bff.iris_messages;
 
 import iris.client_bff.iris_messages.validation.FileTypeConstraint;
 import iris.client_bff.iris_messages.validation.IrisMessageFileConstraint;
+import iris.client_bff.iris_messages.data.IrisMessageDataInsert;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,9 @@ public class IrisMessageInsert {
     @NotBlank
     @Size(max = IrisMessage.BODY_MAX_LENGTH)
     private String body;
+
+    @Valid
+    private List<IrisMessageDataInsert> dataAttachments;
 
     // disabled file attachments
 //    @Valid

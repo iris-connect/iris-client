@@ -143,6 +143,7 @@ const normalizeGuest = (source?: Guest, parse?: boolean): Guest => {
     source,
     (normalizer) => {
       const normalized: Complete<Guest> = {
+        guestId: normalizer("guestId", undefined),
         firstName: normalizer("firstName", ""),
         lastName: normalizer("lastName", ""),
         dateOfBirth: normalizer("dateOfBirth", undefined),

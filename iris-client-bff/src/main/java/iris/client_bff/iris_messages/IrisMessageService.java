@@ -3,6 +3,7 @@ package iris.client_bff.iris_messages;
 import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.hd_search.HealthDepartment;
 import iris.client_bff.hd_search.eps.EPSHdSearchClient;
+import iris.client_bff.iris_messages.data.*;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +26,15 @@ public class IrisMessageService {
 
     private final IrisMessageRepository messageRepository;
     private final IrisMessageFolderRepository folderRepository;
+    private final IrisMessageDataRepository dataRepository;
     private final IrisMessageFileRepository fileRepository;
     private final HibernateSearcher searcher;
     private final EPSIrisMessageClient irisMessageClient;
     private final EPSHdSearchClient hdSearchClient;
 
     private final IrisMessageBuilder messageBuilder;
+
+    private final IrisMessageDataProcessors messageDataProcessors;
 
     public Optional<IrisMessage> findById(UUID messageId) {
         return messageRepository.findById(IrisMessage.IrisMessageIdentifier.of(messageId));
@@ -65,6 +69,18 @@ public class IrisMessageService {
     public IrisMessage updateMessage(IrisMessage message, IrisMessageUpdate messageUpdate) {
         message.setIsRead(messageUpdate.getIsRead());
         return this.messageRepository.save(message);
+    }
+
+    public void importMessageData(UUID messageDataId) {
+        Optional<IrisMessageData> optionalIrisMessageData = this.dataRepository.findById(IrisMessageData.IrisMessageDataIdentifier.of(messageDataId));
+        if (optionalIrisMessageData.isEmpty()) {
+            throw new IrisMessageDataException("missing data");
+        }
+        IrisMessageData messageData = optionalIrisMessageData.get();
+        IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageData.getDiscriminator());
+        processor.importData(messageData);
+        messageData.setIsImported(true);
+        this.dataRepository.save(messageData);
     }
 
     // disabled file attachments

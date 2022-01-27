@@ -984,6 +984,7 @@ export interface ExistingDataRequestClientWithLocationList {
  * @interface Guest
  */
 export interface Guest {
+  guestId?: string;
   /**
    *
    * @type {string}
@@ -1920,6 +1921,12 @@ export interface IrisMessageFileAttachment {
   type?: string;
 }
 
+export interface IrisMessageDataAttachment {
+  id: string;
+  description: string;
+  isImported?: boolean;
+}
+
 export interface IrisMessage {
   id: string;
   folder: string;
@@ -1930,17 +1937,34 @@ export interface IrisMessage {
   hdRecipient: IrisMessageHdContact;
   createdAt: string;
   isRead?: boolean;
-  hasFileAttachments?: boolean;
+  hasAttachments?: boolean;
 }
 
 export interface IrisMessageDetails extends IrisMessage {
+  context: IrisMessageContext;
   fileAttachments?: IrisMessageFileAttachment[];
+  dataAttachments?: IrisMessageDataAttachment[];
+}
+
+export type IrisMessageDataInsertPayload = {
+  [key: string]:
+    | string
+    | string[]
+    | IrisMessageDataInsertPayload
+    | IrisMessageDataInsertPayload[];
+};
+
+export interface IrisMessageDataInsert {
+  description: string;
+  payload: string;
+  discriminator: string;
 }
 
 export interface IrisMessageInsert {
   hdRecipient: string;
   subject: string;
   body: string;
+  dataAttachments?: IrisMessageDataInsert[];
   // disabled file attachments
   // fileAttachments?: File[];
 }
@@ -2380,6 +2404,23 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("irisMessagesSetIsRead", "messageId", messageId);
     const path = `/iris-messages/${encodeURIComponent(messageId)}`;
     return this.apiRequest("PATCH", path, { isRead: true }, options);
+  }
+
+  /**
+   *
+   * @summary Import data from message attachment
+   * @param {string} messageDataId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessageDataImport(
+    messageDataId: string,
+    options?: RequestOptions
+  ): ApiResponse {
+    assertParamExists("messageDataImport", "messageDataId", messageDataId);
+    const path = `/iris-messages/data/${encodeURIComponent(messageDataId)}`;
+    return this.apiRequest("POST", path, null, options);
   }
 
   // disabled file attachments

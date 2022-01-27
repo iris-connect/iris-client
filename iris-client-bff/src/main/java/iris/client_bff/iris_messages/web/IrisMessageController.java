@@ -5,6 +5,7 @@ import iris.client_bff.iris_messages.*;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageFile;
 import iris.client_bff.iris_messages.IrisMessageException;
+import iris.client_bff.iris_messages.data.IrisMessageDataInsert;
 import iris.client_bff.iris_messages.validation.FileTypeValidator;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,7 @@ public class IrisMessageController {
 
     private static final String FOLDER_ID = "folderId";
     private static final String MESSAGE_ID = "messageId";
+    private static final String MESSAGE_DATA_ID = "messageDataId";
     private static final String FILE_ID = "fileId";
 
     private static final String FIELD_SEARCH = "search";
@@ -49,6 +51,9 @@ public class IrisMessageController {
     private static final String FIELD_SUBJECT = "subject";
     private static final String FIELD_BODY = "body";
     private static final String FIELD_FILE_ATTACHMENT = "fileAttachment";
+
+    private static final String FIELD_DISCRIMINATOR = "discriminator";
+    private static final String FIELD_DESCRIPTION = "description";
 
     private IrisMessageService irisMessageService;
     private final ValidationHelper validationHelper;
@@ -92,6 +97,15 @@ public class IrisMessageController {
         this.validateField(irisMessageInsert.getHdRecipient(), FIELD_HD_RECIPIENT);
         this.validateField(irisMessageInsert.getSubject(), FIELD_SUBJECT);
         this.validateField(irisMessageInsert.getBody(), FIELD_BODY);
+
+        if (irisMessageInsert.getDataAttachments() != null) {
+            for ( IrisMessageDataInsert data : irisMessageInsert.getDataAttachments() ) {
+                this.validateField(data.getDiscriminator(), FIELD_DISCRIMINATOR);
+                //@todo: add validation for payload?
+                this.validateField(data.getDescription(), FIELD_DESCRIPTION);
+            }
+        }
+
         // disabled file attachments
         /*
         if (irisMessageInsert.getFileAttachments() != null) {
@@ -117,6 +131,13 @@ public class IrisMessageController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/data/{messageDataId}")
+    public ResponseEntity<String> importMessageData(@PathVariable UUID messageDataId) {
+        this.validateUUID(messageDataId, MESSAGE_DATA_ID, ErrorMessages.INVALID_IRIS_MESSAGE_DATA_ID);
+        this.irisMessageService.importMessageData(messageDataId);
+        return ResponseEntity.ok("saved");
     }
 
     @PatchMapping("/{messageId}")

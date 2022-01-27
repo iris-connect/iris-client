@@ -2,6 +2,8 @@ package iris.client_bff.iris_messages;
 
 import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.hd_search.eps.EPSHdSearchClient;
+import iris.client_bff.iris_messages.data.IrisMessageDataProcessors;
+import iris.client_bff.iris_messages.data.IrisMessageDataRepository;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,9 @@ public class IrisMessageServiceTest {
 	IrisMessageFolderRepository folderRepository;
 
 	@Mock
+	IrisMessageDataRepository dataRepository;
+
+	@Mock
 	IrisMessageFileRepository fileRepository;
 
 	@Mock
@@ -47,6 +52,9 @@ public class IrisMessageServiceTest {
 	@Mock
 	IrisMessageBuilder irisMessageBuilder;
 
+	@Mock
+	IrisMessageDataProcessors messageDataProcessors;
+
 	IrisMessageService service;
 
 	private final UUID ID_NOT_FOUND = UUID.randomUUID();
@@ -57,11 +65,13 @@ public class IrisMessageServiceTest {
 		this.service = new IrisMessageService(
 				this.messageRepository,
 				this.folderRepository,
+				this.dataRepository,
 				this.fileRepository,
 				this.searcher,
 				this.irisMessageClient,
 				this.hdSearchClient,
-				this.irisMessageBuilder
+				this.irisMessageBuilder,
+				this.messageDataProcessors
 		);
 	}
 

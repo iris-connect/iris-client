@@ -2,6 +2,7 @@ package iris.client_bff.iris_messages;
 
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
+import iris.client_bff.iris_messages.data.IrisMessageData;
 import lombok.*;
 import org.hibernate.search.engine.backend.types.Sortable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
@@ -59,6 +60,9 @@ public class IrisMessage extends Aggregate<IrisMessage, IrisMessage.IrisMessageI
     private IrisMessageHdContact hdRecipient;
 
     private Boolean isRead;
+
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IrisMessageData> dataAttachments = new ArrayList<>();
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IrisMessageFile> fileAttachments = new ArrayList<>();

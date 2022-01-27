@@ -23,6 +23,7 @@ import java.time.LocalDate;
 @AllArgsConstructor(access = PRIVATE)
 public class Guest extends Person {
 
+  private String guestId;
   private GuestAttendanceInformation attendanceInformation;
   private Boolean identityChecked;
 }

@@ -70,7 +70,9 @@ public class EventDataRequestController {
 	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (
 			EventDataRequest request) -> {
 		ExistingDataRequestClientWithLocation mapped = EventMapper.map(request);
-		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
+		if (request.getLocation() != null) {
+			mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
+		}
 		return mapped;
 	};
 
@@ -228,7 +230,9 @@ public class EventDataRequestController {
 		mapped.setCode(request.getId().toString());
 		mapped.setStart(request.getRequestStart());
 		mapped.setEnd(request.getRequestEnd());
-		mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
+		if (request.getLocation() != null) {
+			mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
+		}
 		mapped.setLastModifiedAt(request.getLastModifiedAt());
 		mapped.setRequestedAt(request.getCreatedAt());
 		mapped.setExternalRequestId(request.getRefId());

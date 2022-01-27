@@ -15,6 +15,8 @@ export type IrisMessageDetailsState = {
   messageLoadingError: ErrorMessage;
   messageSaving: boolean;
   messageSavingError: ErrorMessage;
+  dataAttachmentImporting: boolean;
+  dataAttachmentImportingError: ErrorMessage;
   fileAttachmentLoading: boolean;
   fileAttachmentLoadingError: ErrorMessage;
 };
@@ -33,6 +35,14 @@ export interface IrisMessageDetailsModule
     ): void;
     setMessageSaving(state: IrisMessageDetailsState, payload: boolean): void;
     setMessageSavingError(
+      state: IrisMessageDetailsState,
+      payload: ErrorMessage
+    ): void;
+    setDataAttachmentImporting(
+      state: IrisMessageDetailsState,
+      payload: boolean
+    ): void;
+    setDataAttachmentImportingError(
       state: IrisMessageDetailsState,
       payload: ErrorMessage
     ): void;
@@ -55,6 +65,10 @@ export interface IrisMessageDetailsModule
       { commit }: { commit: Commit },
       messageId: string
     ): Promise<void>;
+    importDataAttachment(
+      { commit }: { commit: Commit },
+      dataId: string
+    ): Promise<void>;
     // disabled file attachments
     /*
     downloadFileAttachment(
@@ -71,6 +85,8 @@ const defaultState: IrisMessageDetailsState = {
   messageLoadingError: null,
   messageSaving: false,
   messageSavingError: null,
+  dataAttachmentImporting: false,
+  dataAttachmentImportingError: null,
   fileAttachmentLoading: false,
   fileAttachmentLoadingError: null,
 };
@@ -95,6 +111,12 @@ const irisMessageDetails: IrisMessageDetailsModule = {
     },
     setMessageSavingError(state, payload) {
       state.messageSavingError = payload;
+    },
+    setDataAttachmentImporting(state, payload) {
+      state.dataAttachmentImporting = payload;
+    },
+    setDataAttachmentImportingError(state, payload) {
+      state.dataAttachmentImportingError = payload;
     },
     setFileAttachmentLoading(state, payload) {
       state.fileAttachmentLoading = payload;
@@ -136,6 +158,17 @@ const irisMessageDetails: IrisMessageDetailsModule = {
         commit("setMessageLoadingError", getErrorMessage(e));
       } finally {
         commit("setMessageSaving", false);
+      }
+    },
+    async importDataAttachment({ commit }, dataId: string) {
+      commit("setDataAttachmentImporting", true);
+      commit("setDataAttachmentImportingError", null);
+      try {
+        await authClient.irisMessageDataImport(dataId);
+      } catch (e) {
+        commit("setDataAttachmentImportingError", getErrorMessage(e));
+      } finally {
+        commit("setDataAttachmentImporting", false);
       }
     },
     // disabled file attachments

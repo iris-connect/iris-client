@@ -5,6 +5,7 @@ import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageFile;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import iris.client_bff.iris_messages.IrisMessageTransfer;
+import iris.client_bff.iris_messages.data.IrisMessageData;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,9 @@ public class IrisMessageTransferDefuse {
                 .hdRecipient(this.defuse(message.getHdRecipient(), "recipient"))
                 .subject(this.defuse(message.getSubject(), "subject", IrisMessage.SUBJECT_MAX_LENGTH))
                 .body(this.defuse(message.getBody(), "body", IrisMessage.BODY_MAX_LENGTH))
+                .dataAttachments(this.defuseDataList(message.getDataAttachments()))
                 // disabled file attachments
-//                .fileAttachments(this.defuse(message.getFileAttachments()))
+//                .fileAttachments(this.defuseFileList(message.getFileAttachments()))
                 .build();
     }
 
@@ -37,7 +39,20 @@ public class IrisMessageTransferDefuse {
                 .setName(this.defuse(contact.getName(), field + ".id", IrisMessageHdContact.NAME_MAX_LENGTH));
     }
 
-    private List<IrisMessageTransfer.FileAttachment> defuse(List<IrisMessageTransfer.FileAttachment> fileAttachments) {
+    private List<IrisMessageTransfer.DataAttachment> defuseDataList(List<IrisMessageTransfer.DataAttachment> dataAttachments) {
+        return dataAttachments.stream().map(this::defuse).collect(Collectors.toList());
+    }
+
+    private IrisMessageTransfer.DataAttachment defuse(IrisMessageTransfer.DataAttachment dataAttachment) {
+        return new IrisMessageTransfer.DataAttachment()
+                .setDiscriminator(this.defuse(dataAttachment.getDiscriminator(), "dataAttachment.discriminator", IrisMessageData.DISCRIMINATOR_MAX_LENGTH))
+//                .setPayload(this.defuse(dataAttachment.getPayload(), "dataAttachment.payload", IrisMessageData.PAYLOAD_MAX_LENGTH))
+                // @todo: create & apply validationHelper for JSON Strings?
+                .setPayload(dataAttachment.getPayload())
+                .setDescription(this.defuse(dataAttachment.getDescription(), "dataAttachment.description", IrisMessageData.DESCRIPTION_MAX_LENGTH));
+    }
+
+    private List<IrisMessageTransfer.FileAttachment> defuseFileList(List<IrisMessageTransfer.FileAttachment> fileAttachments) {
         return fileAttachments.stream().map(this::defuse).collect(Collectors.toList());
     }
 

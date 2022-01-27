@@ -1,5 +1,6 @@
 package iris.client_bff.iris_messages;
 
+import iris.client_bff.iris_messages.data.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,12 +25,15 @@ public class IrisMessageBuilderTest {
 	@Mock
 	EPSIrisMessageClient irisMessageClient;
 
+	@Mock
+	IrisMessageDataProcessors messageDataProcessors;
+
 	IrisMessageBuilder builder;
 
 	@BeforeEach
 	void setUp() {
 		this.testData = new IrisMessageTestData();
-		this.builder = new IrisMessageBuilder(this.folderRepository, this.irisMessageClient);
+		this.builder = new IrisMessageBuilder(this.folderRepository, this.irisMessageClient, this.messageDataProcessors);
 	}
 
 	@Test

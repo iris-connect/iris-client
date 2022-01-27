@@ -1,5 +1,6 @@
 package iris.client_bff.iris_messages;
 
+import iris.client_bff.iris_messages.data.*;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ public class IrisMessageBuilder {
 
     private final IrisMessageFolderRepository folderRepository;
     private final EPSIrisMessageClient irisMessageClient;
+
+    private final IrisMessageDataProcessors messageDataProcessors;
 
     public IrisMessage build(IrisMessageTransfer messageTransfer) throws IrisMessageException {
 
@@ -48,6 +51,20 @@ public class IrisMessageBuilder {
 
         IrisMessage message = new IrisMessage();
 
+        List<IrisMessageData> dataList = new ArrayList<>();
+        try {
+            if (messageTransfer.getDataAttachments() != null) {
+                for ( IrisMessageTransfer.DataAttachment dataAttachment : messageTransfer.getDataAttachments() ) {
+                    IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(dataAttachment.getDiscriminator());
+                    IrisMessageData irisMessageData = processor.convertToData(dataAttachment);
+                    irisMessageData.setMessage(message);
+                    dataList.add(irisMessageData);
+                }
+            }
+        } catch (Throwable e) {
+            throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_DATA);
+        }
+
         // disabled file attachments
         /*
         List<IrisMessageFile> files = new ArrayList<>();
@@ -75,6 +92,7 @@ public class IrisMessageBuilder {
                 .setBody(messageTransfer.getBody())
                 .setFolder(folder.get())
                 .setIsRead(false)
+                .setDataAttachments(dataList)
         // disabled file attachments
 //                .setFileAttachments(files)
         ;
@@ -97,6 +115,20 @@ public class IrisMessageBuilder {
         }
 
         IrisMessage message = new IrisMessage();
+
+        List<IrisMessageData> dataList = new ArrayList<>();
+        try {
+            if (messageInsert.getDataAttachments() != null) {
+                for ( IrisMessageDataInsert dataInsert : messageInsert.getDataAttachments() ) {
+                    IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(dataInsert.getDiscriminator());
+                    IrisMessageData irisMessageData = processor.convertToData(dataInsert);
+                    irisMessageData.setMessage(message);
+                    dataList.add(irisMessageData);
+                }
+            }
+        } catch (Throwable e) {
+            throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_DATA);
+        }
 
         // disabled file attachments
         /*
@@ -126,6 +158,7 @@ public class IrisMessageBuilder {
                 .setBody(messageInsert.getBody())
                 .setFolder(folder.get())
                 .setIsRead(true)
+                .setDataAttachments(dataList)
         // disabled file attachments
 //                .setFileAttachments(files)
         ;

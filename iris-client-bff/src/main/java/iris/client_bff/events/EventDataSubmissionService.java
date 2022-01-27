@@ -91,7 +91,7 @@ public class EventDataSubmissionService {
 		log.trace("Submission for {} event {}", status, LogHelper.obfuscateAtStart8(dataAuthorizationToken.toString()));
 	}
 
-	private void save(EventDataRequest dataRequest, GuestList guestList) {
+	public void save(EventDataRequest dataRequest, GuestList guestList) {
 		var guests = guestList.getGuests().stream().map(it -> mapper.map(it, Guest.class)).collect(Collectors.toSet());
 
 		var dataProvider = mapper.map(guestList.getDataProvider(), GuestListDataProvider.class);
