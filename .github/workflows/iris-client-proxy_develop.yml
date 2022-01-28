@@ -49,9 +49,18 @@ jobs:
         with:
           context: ./infrastructure/docker/iris-client-proxy/
           tags: ${{ steps.meta.outputs.tags }}
-          push: true
+          push: false
+          load: true
           labels: |
             iris.client-proxy.image.revision=${{ github.sha }}
+
+      - name: Sign and push docker image
+        uses: sudo-bot/action-docker-sign@latest
+        with:
+          image-ref: ${{steps.meta.outputs.tags}}
+          private-key-id: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}
+          private-key: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY }}
+          private-key-passphrase: ${{ secrets.DOCKER_HUB_DCT_PASSPHRASE }}
 
   container_scan:
     name: Container Scan

@@ -55,9 +55,6 @@ jobs:
           labels: |
             iris.client-eps.image.revision=${{ github.sha }}
 
-      - name: Print metadata
-        run: echo "meta ${{steps.meta.outputs.tags}}"
-
       - name: Sign and push docker image
         uses: sudo-bot/action-docker-sign@latest
         with:

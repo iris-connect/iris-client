@@ -22,6 +22,9 @@ MINOR_LATEST=$MAJOR.`echo $VERSION | cut -d'.' -f2`-latest
 
 echo "version = $VERSION"
 
+# print identifier of used dct signing key
+echo "signing-key identifier = $DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER"
+
 # expect commit sha as second parameter
 COMMIT=$2
 
@@ -37,8 +40,11 @@ NGINX_IMAGE_NAME="$NAMESPACE/iris-client-nginx"
 docker build -t $NGINX_IMAGE_NAME ./infrastructure/docker/nginx/
 
 docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$VERSION
+docker trust sign --local $NGINX_IMAGE_NAME:$VERSION
 docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MAJOR_LATEST
+docker trust sign --local $NGINX_IMAGE_NAME:$MAJOR_LATEST
 docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MINOR_LATEST
+docker trust sign --local $NGINX_IMAGE_NAME:$MINOR_LATEST
 if (( $RELEASE )); then
 	docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MAJOR
 	docker tag $NGINX_IMAGE_NAME $NGINX_IMAGE_NAME:$MINOR

@@ -35,7 +35,17 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PW }}
-      
+
+      - run: mkdir -p ~/.docker/trust/private/
+
+      - run: echo "${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY }}" > ~/.docker/trust/private/${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}.key
+
+      - run: chmod 600 ~/.docker/trust/private/${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}.key
+
+      - run: DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE=${{ secrets.DOCKER_HUB_DCT_PASSPHRASE }} DOCKER_CONTENT_TRUST=1 docker trust key load ~/.docker/trust/private/${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}.key
+
+      - run: DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER=${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}
+
       - run: chmod +x ./.prepare-release.sh
 
       - run: node -v; npm -v
