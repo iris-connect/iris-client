@@ -1,6 +1,19 @@
 #!/bin/bash
 
+# exit when any command fails
+set -e
+
+# keep track of the last executed command
+trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
+# echo an error message before exiting
+trap 'echo "\"${last_command}\" command failed with exit code $?."' ERR
+
 source .env
+
+## Import root certificates to Javas key store
+echo "Running 'import-root-cert.sh' to check and import root certificates"
+
+bash scripts/import-root-cert.sh
 
 ## Variables depending on .env
 export SPRING_DATASOURCE_URL=jdbc:postgresql://$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB
