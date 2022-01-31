@@ -1,5 +1,5 @@
 import dataExport from "@/utils/data-export/data-export";
-import { TableRow } from "@/views/event-tracking-details/event-tracking-details.view.vue";
+import { TableRow } from "@/views/event-tracking-details/utils/mappedData";
 
 export type EventParticipantData = {
   involvementDescription: string;

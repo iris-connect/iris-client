@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { TableRow } from "@/views/event-tracking-details/event-tracking-details.view.vue";
+import { TableRow } from "@/views/event-tracking-details/utils/mappedData";
 import { PropType } from "vue";
 import { DataRequestDetails } from "@/api";
 import ExportDialog, {

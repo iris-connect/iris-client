@@ -71,12 +71,22 @@ public class IrisMessageService {
         return this.messageRepository.save(message);
     }
 
-    public void importMessageData(UUID messageDataId) {
+    private IrisMessageData getMessageData(UUID messageDataId) {
         Optional<IrisMessageData> optionalIrisMessageData = this.dataRepository.findById(IrisMessageData.IrisMessageDataIdentifier.of(messageDataId));
         if (optionalIrisMessageData.isEmpty()) {
-            throw new IrisMessageDataException("missing data");
+            throw new IrisMessageDataException("missing message data");
         }
-        IrisMessageData messageData = optionalIrisMessageData.get();
+        return optionalIrisMessageData.get();
+    }
+
+    public IrisMessageViewData viewMessageData(UUID messageDataId) {
+        IrisMessageData messageData = this.getMessageData(messageDataId);
+        IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageData.getDiscriminator());
+        return processor.viewData(messageData);
+    }
+
+    public void importMessageData(UUID messageDataId) {
+        IrisMessageData messageData = this.getMessageData(messageDataId);
         IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageData.getDiscriminator());
         processor.importData(messageData);
         messageData.setIsImported(true);

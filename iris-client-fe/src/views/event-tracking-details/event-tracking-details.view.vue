@@ -6,7 +6,7 @@
       </template>
     </alert-component>
     <event-tracking-details-component
-      :table-rows="guests"
+      :table-rows="tableRows"
       :event-data="eventData"
       :form-data="formData"
       :loading="loading"
@@ -17,8 +17,14 @@
       <template #data-export="{ selection }">
         <event-tracking-details-data-export
           :event="eventTrackingDetails"
-          :items-length="guests.length"
+          :items-length="tableRows.length"
           :selection="selection"
+        />
+      </template>
+      <template #data-message="{ messageData, disabled }">
+        <iris-message-data-export-dialog
+          :data="messageData"
+          :disabled="disabled"
         />
       </template>
     </event-tracking-details-component>
@@ -26,92 +32,32 @@
 </template>
 <style></style>
 <script lang="ts">
-import {
-  Address,
-  DataRequestDetails,
-  DataRequestStatus,
-  DataRequestStatusUpdateByUser,
-  Guest,
-  LocationInformation,
-} from "@/api";
+import { DataRequestDetails, DataRequestStatusUpdateByUser } from "@/api";
 import router from "@/router";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import EventTrackingDetailsLocationInfo from "@/views/event-tracking-details/components/event-tracking-details-location-info.vue";
-import { getFormattedDate } from "@/utils/date";
-import Genders from "@/constants/Genders";
-import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { ErrorMessage } from "@/utils/axios";
-import EditableField from "@/components/form/editable-field.vue";
-import StatusChangeConfirmDialog from "@/views/event-tracking-details/components/confirm-dialog.vue";
-import EventTrackingStatusChange from "@/views/event-tracking-details/components/event-tracking-status-change.vue";
 import EventTrackingDetailsComponent from "@/views/event-tracking-details/components/event-tracking-details.component.vue";
-import AlertComponent from "@/components/alerts/alert.component.vue";
+import AlertComponent from "@/components/alerts/alert-component.vue";
 import EventTrackingDetailsDataExport from "@/views/event-tracking-details/components/data-export/event-tracking-details-data-export.vue";
-import { getValidPhoneNumber } from "@/utils/misc";
-
-export type FormData = {
-  name?: string;
-  externalRequestId?: string;
-  comment?: string;
-};
-
-export type EventData = {
-  code: string;
-  startTime: string;
-  endTime: string;
-  generatedTime: string;
-  status?: DataRequestStatus;
-  lastChange: string;
-  location?: LocationInformation;
-  additionalInformation: string;
-};
-
-export type TableRow = {
-  lastName: string;
-  firstName: string;
-  checkInTime: string;
-  checkOutTime: string;
-  maxDuration: string;
-  comment: string;
-  sex: string;
-  email: string;
-  phone: string;
-  mobilePhone: string;
-  address: string;
-  raw: Guest;
-};
-
-function getFormattedAddress(address?: Address | null): string {
-  if (address) {
-    return `${sanitiseFieldForDisplay(
-      address.street
-    )} ${sanitiseFieldForDisplay(
-      address.houseNumber
-    )} \n${sanitiseFieldForDisplay(address.zipCode)} ${sanitiseFieldForDisplay(
-      address.city
-    )}`;
-  }
-  return "-";
-}
-function sanitiseFieldForDisplay(text = ""): string {
-  const RE = RegExp(/\s+/, "g");
-  return text.replace(RE, " ");
-}
+import {
+  EventData,
+  FormData,
+  getEventData,
+  getFormData,
+  getTableRows,
+  TableRow,
+} from "@/views/event-tracking-details/utils/mappedData";
+import IrisMessageDataExportDialog from "@/views/iris-message-create/components/iris-message-data-export-dialog.vue";
 
 @Component({
   components: {
+    IrisMessageDataExportDialog,
     EventTrackingDetailsDataExport,
     EventTrackingDetailsComponent,
-    EventTrackingStatusChange,
-    StatusChangeConfirmDialog,
-    EditableField,
-    ErrorMessageAlert,
-    EventTrackingDetailsLocationInfo,
-    EventTrackingDetailsView: EventTrackingDetailsView,
     AlertComponent,
   },
-  async beforeRouteEnter(_from, _to, next) {
+  async beforeRouteEnter(from, to, next) {
     next();
     await store.dispatch(
       "eventTrackingDetails/fetchEventTrackingDetails",
@@ -132,26 +78,11 @@ export default class EventTrackingDetailsView extends Vue {
 
   // Editable values => formData. Readonly values => eventData.
   get formData(): FormData {
-    return {
-      externalRequestId: this.eventTrackingDetails?.externalRequestId || "",
-      name: this.eventTrackingDetails?.name || "",
-      comment: this.eventTrackingDetails?.comment || "",
-    };
+    return getFormData(this.eventTrackingDetails);
   }
 
   get eventData(): EventData {
-    const dataRequest = this.eventTrackingDetails;
-
-    return {
-      code: dataRequest?.code || "",
-      startTime: getFormattedDate(dataRequest?.start),
-      endTime: getFormattedDate(dataRequest?.end),
-      generatedTime: getFormattedDate(dataRequest?.requestedAt),
-      status: dataRequest?.status,
-      lastChange: getFormattedDate(dataRequest?.lastModifiedAt),
-      location: dataRequest?.locationInformation,
-      additionalInformation: dataRequest?.requestDetails || "-",
-    };
+    return getEventData(this.eventTrackingDetails);
   }
 
   get loading(): boolean {
@@ -211,78 +142,8 @@ export default class EventTrackingDetailsView extends Vue {
       });
   }
 
-  get guests(): TableRow[] {
-    // TODO attendanceInformation is optional
-    const guests =
-      store.state.eventTrackingDetails.eventTrackingDetails?.submissionData
-        ?.guests || [];
-    const eventDataRequest =
-      store.state.eventTrackingDetails.eventTrackingDetails;
-    return guests.map((guest, index) => {
-      const attendTo = guest.attendanceInformation?.attendTo;
-      const checkOut = attendTo ? new Date(attendTo) : null;
-
-      const attendFrom = guest.attendanceInformation?.attendFrom;
-      const checkIn = attendFrom ? new Date(attendFrom) : null;
-
-      const startTime = eventDataRequest?.start
-        ? new Date(eventDataRequest.start)
-        : checkIn;
-      const endTime = eventDataRequest?.end
-        ? new Date(eventDataRequest.end)
-        : checkOut;
-
-      let checkInTime = "-";
-      if (checkIn && startTime) {
-        checkInTime = getFormattedDate(checkIn);
-      }
-
-      let checkOutTime = "-";
-      if (checkOut) {
-        checkOutTime = getFormattedDate(checkOut);
-      }
-
-      // min(iE, cE)-max(iS, cS)
-      // |--------------| TIME INFECTED PERSON _i Started and Ended_ AT LOCATION
-      //       |----------------| TIME CONTACT PERSON _c Started and Ended_ AT LOCATION
-      //       |--------| RELEVANT
-
-      let maxDuration = "keine";
-      if (checkOut && checkIn && startTime && endTime) {
-        let durationSeconds =
-          (Math.min(checkOut.valueOf(), endTime.valueOf()) -
-            Math.max(checkIn.valueOf(), startTime.valueOf())) /
-          1000;
-        let hours = Math.floor(durationSeconds / 3600);
-        let minutes = Math.round((durationSeconds - hours * 3600) / 60);
-        if (durationSeconds > 0) {
-          if (hours > 0)
-            maxDuration = hours.toString() + "h " + minutes.toString() + "min";
-          else if (minutes > 0) maxDuration = minutes.toString() + "min";
-        }
-      }
-      return {
-        id: index,
-        lastName: sanitiseFieldForDisplay(guest.lastName) || "-",
-        firstName: sanitiseFieldForDisplay(guest.firstName) || "-",
-        checkInTime,
-        checkOutTime,
-        maxDuration: maxDuration,
-        comment:
-          sanitiseFieldForDisplay(
-            guest.attendanceInformation.additionalInformation
-          ) || "-",
-        sex: guest.sex ? Genders.getName(guest.sex) : "-",
-        email: sanitiseFieldForDisplay(guest.email) || "-",
-        phone:
-          sanitiseFieldForDisplay(
-            getValidPhoneNumber(guest.phone, guest.mobilePhone)
-          ) || "-",
-        mobilePhone: sanitiseFieldForDisplay(guest.mobilePhone) || "-",
-        address: getFormattedAddress(guest.address),
-        raw: guest,
-      };
-    });
+  get tableRows(): TableRow[] {
+    return getTableRows(this.eventTrackingDetails);
   }
 }
 </script>

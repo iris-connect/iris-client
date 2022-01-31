@@ -3,11 +3,9 @@ package iris.client_bff.events.message;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionService;
+import iris.client_bff.events.web.dto.DataRequestDetails;
 import iris.client_bff.iris_messages.IrisMessageTransfer;
-import iris.client_bff.iris_messages.data.IrisMessageData;
-import iris.client_bff.iris_messages.data.IrisMessageDataException;
-import iris.client_bff.iris_messages.data.IrisMessageDataInsert;
-import iris.client_bff.iris_messages.data.IrisMessageDataProcessor;
+import iris.client_bff.iris_messages.data.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +51,26 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
                 payload.getAnnouncementToken()
         );
         EventDataRequest request = this.requestService.save(eventDataRequest);
-        submissionService.save(request, messagePayload.getEventDataSubmissionPayload().getGuestList());
+        this.submissionService.save(request, messagePayload.getEventDataSubmissionPayload().getGuestList());
+    }
+
+    // @todo: add validation / defuse!
+    @Override
+    public IrisMessageViewData viewData(IrisMessageData irisMessageData) throws IrisMessageDataException {
+        EventMessageDataPayload messagePayload = EventMessageDataPayload.toModel(irisMessageData.getPayload());
+        EventMessageDataPayload.EventDataRequestPayload requestPayload = messagePayload.getEventDataRequestPayload();
+        EventMessageDataPayload.EventDataSubmissionPayload submissionPayload = messagePayload.getEventDataSubmissionPayload();
+        DataRequestDetails details = DataRequestDetails.builder()
+                .name(requestPayload.getName())
+                .start(requestPayload.getRequestStart())
+                .end(requestPayload.getRequestEnd())
+                .requestDetails(requestPayload.getRequestDetails())
+                .submissionData(submissionPayload.getGuestList())
+                .comment(requestPayload.getComment())
+                .build();
+        return new IrisMessageViewData()
+                .setId(irisMessageData.getId().toString())
+                .setDiscriminator(irisMessageData.getDiscriminator())
+                .setPayload(details);
     }
 }

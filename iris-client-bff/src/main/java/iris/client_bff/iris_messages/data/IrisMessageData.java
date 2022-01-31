@@ -19,7 +19,7 @@ public class IrisMessageData extends Aggregate<IrisMessageData, IrisMessageData.
 
     public static final int DISCRIMINATOR_MAX_LENGTH = 255;
     public static final int PAYLOAD_MAX_LENGTH = 999999;
-    public static final int DESCRIPTION_MAX_LENGTH = 500;
+    public static final int DESCRIPTION_MAX_LENGTH = 255;
 
     {
         id = IrisMessageDataIdentifier.of(UUID.randomUUID());

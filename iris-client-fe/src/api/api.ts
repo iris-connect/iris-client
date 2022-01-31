@@ -1954,10 +1954,20 @@ export type IrisMessageDataInsertPayload = {
     | IrisMessageDataInsertPayload[];
 };
 
+export type IrisMessageDataDiscriminator = "event-tracking";
 export interface IrisMessageDataInsert {
   description: string;
   payload: string;
-  discriminator: string;
+  discriminator: IrisMessageDataDiscriminator;
+}
+
+export type IrisMessageDataViewPayload = {
+  "event-tracking": DataRequestDetails;
+};
+export interface IrisMessageViewData {
+  id: string;
+  discriminator: IrisMessageDataDiscriminator;
+  payload: IrisMessageDataViewPayload[IrisMessageDataDiscriminator];
 }
 
 export interface IrisMessageInsert {
@@ -2418,9 +2428,30 @@ export class IrisClientFrontendApi extends BaseAPI {
     messageDataId: string,
     options?: RequestOptions
   ): ApiResponse {
-    assertParamExists("messageDataImport", "messageDataId", messageDataId);
-    const path = `/iris-messages/data/${encodeURIComponent(messageDataId)}`;
+    assertParamExists("irisMessageDataImport", "messageDataId", messageDataId);
+    const path = `/iris-messages/data/import/${encodeURIComponent(
+      messageDataId
+    )}`;
     return this.apiRequest("POST", path, null, options);
+  }
+
+  /**
+   *
+   * @summary View data from message attachment
+   * @param {string} messageDataId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessageDataView(
+    messageDataId: string,
+    options?: RequestOptions
+  ): ApiResponse<IrisMessageViewData> {
+    assertParamExists("irisMessageDataView", "messageDataId", messageDataId);
+    const path = `/iris-messages/data/view/${encodeURIComponent(
+      messageDataId
+    )}`;
+    return this.apiRequest("GET", path, null, options);
   }
 
   // disabled file attachments

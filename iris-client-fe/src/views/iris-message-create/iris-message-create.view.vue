@@ -9,64 +9,112 @@
       <v-card>
         <v-card-title>Nachricht schreiben</v-card-title>
         <v-card-text>
-          <v-autocomplete
-            v-model="form.model.hdRecipient"
-            :search-input="search"
-            @update:search-input="handleSearch"
-            :no-filter="true"
-            label="Empfänger"
-            :items="recipients"
-            :rules="validationRules.defined"
-            :menu-props="{ contentClass: 'select-menu-recipient' }"
-            item-text="name"
-            item-value="id"
-            data-test="hdRecipient"
-            :loading="recipientsLoading"
-            :class="{
-              'is-loading': recipientsLoading,
-              'is-empty': recipients.length <= 0,
-            }"
-          ></v-autocomplete>
-          <v-text-field
-            v-model="form.model.subject"
-            label="Betreff"
-            :rules="validationRules.sanitisedAndDefined"
-            maxlength="50"
-            data-test="subject"
-          ></v-text-field>
-          <v-textarea
-            v-model="form.model.body"
-            label="Nachricht"
-            auto-grow
-            rows="5"
-            value=""
-            :rules="validationRules.sanitisedAndDefined"
-            data-test="body"
-          ></v-textarea>
-          <!--
-          <v-file-input
-            label="Datei(en) anfügen"
-            :value="form.model.fileAttachments"
-            @change="addFileAttachments"
-            @click:clear="clearFileAttachments"
-            multiple
-            data-test="fileAttachments"
-            :accept="allowedFileTypes.join(',')"
-          >
-            <template v-slot:selection="{ index, text }">
-              <v-chip
+          <v-row>
+            <v-col cols="12">
+              <v-autocomplete
+                v-model="form.model.hdRecipient"
+                :search-input="search"
+                @update:search-input="handleSearch"
+                :no-filter="true"
+                label="Empfänger"
+                :items="recipients"
+                :rules="validationRules.defined"
+                :menu-props="{ contentClass: 'select-menu-recipient' }"
+                item-text="name"
+                item-value="id"
+                data-test="hdRecipient"
+                :loading="recipientsLoading"
+                :class="{
+                  'is-loading': recipientsLoading,
+                  'is-empty': recipients.length <= 0,
+                }"
+              ></v-autocomplete>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field
+                v-model="form.model.subject"
+                label="Betreff"
+                :rules="validationRules.sanitisedAndDefined"
+                maxlength="50"
+                data-test="subject"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <v-textarea
+                v-model="form.model.body"
+                label="Nachricht"
+                auto-grow
+                rows="5"
+                value=""
+                :rules="validationRules.sanitisedAndDefined"
+                data-test="body"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="12">
+              <p class="subtitle-1">Daten anfügen</p>
+              <div
                 :key="index"
-                dark
-                color="blue"
-                close
-                @click:close="removeFileAttachments(index)"
-                data-test="fileAttachments.remove"
+                v-for="(dataAttachment, index) in form.model.dataAttachments"
               >
-                {{ text }}
-              </v-chip>
-            </template>
-          </v-file-input>
-          -->
+                <v-row no-gutters class="py-3">
+                  <v-col>
+                    <v-row>
+                      <v-col cols="auto">
+                        <strong>
+                          {{ dataAttachment.discriminator }}
+                        </strong>
+                      </v-col>
+                      <v-col>
+                        <v-text-field
+                          v-model="dataAttachment.description"
+                          label="Kurzbeschreibung"
+                          :rules="validationRules.description"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                  <v-col cols="auto" class="mt-3">
+                    <v-btn icon :disabled="true">
+                      <v-icon> mdi-pencil </v-icon>
+                    </v-btn>
+                    <v-btn
+                      icon
+                      color="error"
+                      @click="removeDataAttachment(index)"
+                    >
+                      <v-icon> mdi-delete </v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </div>
+            </v-col>
+            <v-col cols="12">
+              <!--
+              <v-file-input
+                label="Datei(en) anfügen"
+                :value="form.model.fileAttachments"
+                @change="addFileAttachments"
+                @click:clear="clearFileAttachments"
+                multiple
+                data-test="fileAttachments"
+                :accept="allowedFileTypes.join(',')"
+              >
+                <template v-slot:selection="{ index, text }">
+                  <v-chip
+                    :key="index"
+                    dark
+                    color="blue"
+                    close
+                    @click:close="removeFileAttachment(index)"
+                    data-test="fileAttachments.remove"
+                  >
+                    {{ text }}
+                  </v-chip>
+                </template>
+              </v-file-input>
+              -->
+            </v-col>
+          </v-row>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -104,7 +152,7 @@ import rules from "@/common/validation-rules";
 // disabled file attachments
 // import _unionBy from "lodash/unionBy";
 import { ErrorMessage } from "@/utils/axios";
-import { debounce } from "lodash";
+import _debounce from "lodash/debounce";
 
 type IrisMessageCreateForm = {
   model: IrisMessageInsert;
@@ -136,6 +184,8 @@ export default class IrisMessageCreateView extends Vue {
       subject: "",
       body: "",
       hdRecipient: "",
+      dataAttachments:
+        this.$store.state.irisMessageCreate.dataAttachments || [],
       // disabled file attachments
       // fileAttachments: [],
     },
@@ -143,7 +193,7 @@ export default class IrisMessageCreateView extends Vue {
   };
 
   search: string | null = "";
-  handleSearch = debounce(async (value: string | null) => {
+  handleSearch = _debounce(async (value: string | null) => {
     this.search = value;
     await store.dispatch("irisMessageCreate/fetchRecipients", value);
   }, 500);
@@ -163,7 +213,7 @@ export default class IrisMessageCreateView extends Vue {
       "name"
     );
   }
-  removeFileAttachments(index: number) {
+  removeFileAttachment(index: number) {
     if (this.form.model.fileAttachments) {
       this.form.model.fileAttachments.splice(index, 1);
     }
@@ -175,6 +225,12 @@ export default class IrisMessageCreateView extends Vue {
     return this.$store.state.irisMessageCreate.allowedFileTypes || [];
   }
    */
+
+  removeDataAttachment(index: number) {
+    if (this.form.model.dataAttachments) {
+      this.form.model.dataAttachments.splice(index, 1);
+    }
+  }
 
   get recipients(): IrisMessageHdContact[] {
     return this.$store.state.irisMessageCreate.contacts || [];
@@ -189,6 +245,7 @@ export default class IrisMessageCreateView extends Vue {
       defined: [rules.defined],
       sanitised: [rules.sanitised],
       sanitisedAndDefined: [rules.sanitised, rules.defined],
+      description: [rules.defined, rules.sanitised, rules.maxLength(255)],
     };
   }
 

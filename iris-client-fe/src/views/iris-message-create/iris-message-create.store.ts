@@ -3,7 +3,11 @@ import { RootState } from "@/store/types";
 import { Commit, Module } from "vuex";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
-import { IrisMessageInsert, IrisMessageHdContact } from "@/api";
+import {
+  IrisMessageInsert,
+  IrisMessageHdContact,
+  IrisMessageDataInsert,
+} from "@/api";
 import { normalizeIrisMessageHdContacts } from "@/views/iris-message-create/iris-message-create.data";
 import { cancelTokenProvider } from "@/api/common";
 
@@ -13,6 +17,7 @@ export type IrisMessageCreateState = {
   contacts: IrisMessageHdContact[] | null;
   contactsLoading: boolean;
   contactsLoadingError: ErrorMessage;
+  dataAttachments: IrisMessageDataInsert[];
   allowedFileTypes: string[] | null;
 };
 
@@ -40,6 +45,10 @@ export interface IrisMessageDetailsModule
       state: IrisMessageCreateState,
       payload: string[] | null
     ): void;
+    setDataAttachments(
+      state: IrisMessageCreateState,
+      payload: IrisMessageDataInsert[]
+    ): void;
     reset(state: IrisMessageCreateState, payload: null): void;
   };
   actions: {
@@ -62,6 +71,7 @@ const defaultState: IrisMessageCreateState = {
   contactsLoading: false,
   contactsLoadingError: null,
   allowedFileTypes: null,
+  dataAttachments: [],
 };
 
 const cancel_fetchRecipients = cancelTokenProvider();
@@ -89,6 +99,9 @@ const irisMessageCreate: IrisMessageDetailsModule = {
     },
     setAllowedFileTypes(state, payload) {
       state.allowedFileTypes = payload;
+    },
+    setDataAttachments(state, payload) {
+      state.dataAttachments = payload;
     },
     reset(state) {
       Object.assign(state, { ...defaultState });

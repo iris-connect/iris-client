@@ -9,6 +9,7 @@
         v-slot="{ entry }"
         @submit="handleEditableField"
         required
+        :disabled="isPreview"
       >
         Details für Ereignis ID:
         {{ entry }}
@@ -25,6 +26,7 @@
             v-slot="{ entry }"
             @submit="handleEditableField"
             required
+            :disabled="isPreview"
           >
             <strong> Name: </strong><br />
             {{ entry }}
@@ -40,6 +42,7 @@
             @submit="handleEditableField"
             component="v-textarea"
             default-value="-"
+            :disabled="isPreview"
           >
             <strong> Kommentar: </strong><br />
             <div class="white-space-pre-line">
@@ -74,6 +77,7 @@
               <event-tracking-status-change
                 :status="eventData.status"
                 @update="handleStatusUpdate"
+                v-if="!isPreview"
               />
             </v-col>
           </v-row>
@@ -156,9 +160,22 @@
       <error-message-alert :errors="errors" />
     </v-card-text>
     <v-card-actions>
-      <v-btn color="white" :to="{ name: 'event-list' }" replace> Zurück </v-btn>
+      <v-btn
+        v-if="!isPreview"
+        color="white"
+        :to="{ name: 'event-list' }"
+        replace
+      >
+        Zurück
+      </v-btn>
       <v-spacer />
       <slot name="data-export" v-bind:selection="tableData.select" />
+      <slot
+        v-if="!isPreview"
+        name="data-message"
+        v-bind:messageData="messageData"
+        v-bind:disabled="tableData.select.length <= 0"
+      />
     </v-card-actions>
   </v-card>
 </template>
@@ -167,18 +184,23 @@ import { Component, Vue } from "vue-property-decorator";
 import EditableField from "@/components/form/editable-field.vue";
 import EventTrackingStatusChange from "@/views/event-tracking-details/components/event-tracking-status-change.vue";
 import EventTrackingDetailsLocationInfo from "@/views/event-tracking-details/components/event-tracking-details-location-info.vue";
-import {
-  EventData,
-  TableRow,
-  FormData,
-} from "@/views/event-tracking-details/event-tracking-details.view.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import rules from "@/common/validation-rules";
-import { DataRequestStatus, DataRequestStatusUpdateByUser } from "@/api";
+import {
+  DataRequestStatus,
+  DataRequestStatusUpdateByUser,
+  IrisMessageDataInsert,
+} from "@/api";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import { ErrorMessage } from "@/utils/axios";
 import IrisDataTable from "@/components/iris-data-table.vue";
+import _map from "lodash/map";
+import {
+  EventData,
+  FormData,
+  TableRow,
+} from "@/views/event-tracking-details/utils/mappedData";
 
 const EventTrackingDetailsComponentProps = Vue.extend({
   props: {
@@ -201,6 +223,10 @@ const EventTrackingDetailsComponentProps = Vue.extend({
     formData: {
       type: Object as () => FormData,
       default: () => ({}),
+    },
+    isPreview: {
+      type: Boolean,
+      default: false,
     },
   },
 });
@@ -288,6 +314,18 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
 
   get statusColor(): string {
     return StatusColors.getColor(this.eventData?.status);
+  }
+
+  get messageData(): IrisMessageDataInsert {
+    const guests: string[] = _map(this.tableData.select, "raw.guestId");
+    return {
+      discriminator: "event-tracking",
+      description: this.eventData.additionalInformation,
+      payload: JSON.stringify({
+        id: this.eventData.code,
+        guests,
+      }),
+    };
   }
 
   handleEditableField(

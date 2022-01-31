@@ -1,5 +1,8 @@
 <template>
   <div>
+    <alert-component v-if="dataImportAlert">
+      <template v-slot:message> Die Daten wurden importiert. </template>
+    </alert-component>
     <v-card :loading="messageLoading" data-test="view.iris-message-details">
       <v-card-subtitle class="pb-0 text-right" data-test="message.createdAt">
         {{ message.createdAt }}
@@ -36,15 +39,29 @@
                   </v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-action v-if="isInbox">
-                  <v-btn
-                    icon
-                    @click="importDataAttachment(dataAttachment.id)"
-                    :disabled="
-                      dataAttachment.isImported || dataAttachmentImporting
-                    "
-                  >
-                    <v-icon>mdi-download</v-icon>
-                  </v-btn>
+                  <div>
+                    <v-btn
+                      icon
+                      @click="viewDataAttachment(dataAttachment.id)"
+                      :disabled="dataAttachmentLoading"
+                    >
+                      <v-icon>mdi-eye</v-icon>
+                    </v-btn>
+                    <iris-message-data-import-confirm-dialog
+                      @confirm="importDataAttachment(dataAttachment.id)"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          v-on="on"
+                          v-bind="attrs"
+                          icon
+                          :disabled="!isImportEnabled(dataAttachment.id)"
+                        >
+                          <v-icon>mdi-download</v-icon>
+                        </v-btn>
+                      </template>
+                    </iris-message-data-import-confirm-dialog>
+                  </div>
                 </v-list-item-action>
               </v-list-item>
               <v-divider
@@ -90,6 +107,11 @@
           </div>
         </div>
         -->
+        <iris-message-data-preview-dialog
+          v-model="dataPreview"
+          @import="importDataAttachment"
+          :import-enabled="isImportEnabled(dataPreviewId)"
+        />
       </v-card-text>
       <v-card-actions>
         <v-btn text @click="goBack"> Zurück </v-btn>
@@ -108,9 +130,13 @@ import {
   IrisMessageDataAttachment,
   IrisMessageDetails,
   IrisMessageFileAttachment,
+  IrisMessageViewData,
 } from "@/api";
 import { ErrorMessage } from "@/utils/axios";
 import { getFormattedDate } from "@/utils/date";
+import IrisMessageDataPreviewDialog from "@/views/iris-message-details/components/iris-message-data-preview-dialog.vue";
+import AlertComponent from "@/components/alerts/alert-component.vue";
+import IrisMessageDataImportConfirmDialog from "@/views/iris-message-details/components/iris-message-data-import-confirm-dialog.vue";
 
 type MessageData = {
   author: string;
@@ -124,6 +150,9 @@ type MessageData = {
 
 @Component({
   components: {
+    IrisMessageDataImportConfirmDialog,
+    AlertComponent,
+    IrisMessageDataPreviewDialog,
     ErrorMessageAlert,
   },
   beforeRouteEnter(to, from, next) {
@@ -140,6 +169,14 @@ type MessageData = {
   },
 })
 export default class IrisMessageDetailsView extends Vue {
+  dataImportAlert = false;
+  showDataImportAlert(): void {
+    this.dataImportAlert = true;
+    setTimeout(() => {
+      this.dataImportAlert = false;
+    }, 2000);
+  }
+  dataPreview: IrisMessageViewData | null = null;
   prevLocation: null | string = null;
   get message(): MessageData {
     const message: IrisMessageDetails | null =
@@ -167,8 +204,8 @@ export default class IrisMessageDetailsView extends Vue {
       this.$store.state.irisMessageDetails.messageSaving
     );
   }
-  get dataAttachmentImporting(): boolean {
-    return this.$store.state.irisMessageDetails.dataAttachmentImporting;
+  get dataAttachmentLoading(): boolean {
+    return this.$store.state.irisMessageDetails.dataAttachmentLoading;
   }
   get fileAttachmentLoading(): boolean {
     return this.$store.state.irisMessageDetails.fileAttachmentLoading;
@@ -177,7 +214,7 @@ export default class IrisMessageDetailsView extends Vue {
     return [
       this.$store.state.irisMessageDetails.messageLoadingError,
       this.$store.state.irisMessageDetails.messageSavingError,
-      this.$store.state.irisMessageDetails.dataAttachmentImportingError,
+      this.$store.state.irisMessageDetails.dataAttachmentLoadingError,
       this.$store.state.irisMessageDetails.fileAttachmentLoadingError,
     ];
   }
@@ -204,6 +241,21 @@ export default class IrisMessageDetailsView extends Vue {
     const message: IrisMessageDetails | null =
       this.$store.state.irisMessageDetails.message;
     this.$store.dispatch("irisMessageDetails/fetchMessage", message?.id);
+    this.showDataImportAlert();
+  }
+  async viewDataAttachment(id: string) {
+    this.dataPreview = await this.$store.dispatch(
+      "irisMessageDetails/viewDataAttachment",
+      id
+    );
+  }
+  get dataPreviewId() {
+    return this.dataPreview?.id;
+  }
+  isImportEnabled(id?: string): boolean {
+    if (this.dataAttachmentLoading) return false;
+    const attachment = this.message.dataAttachments.find((a) => a.id === id);
+    return !attachment?.isImported;
   }
   // disabled file attachments
   /*

@@ -2,10 +2,13 @@
   <v-form
     v-model="isValid"
     class="flex-fill"
-    :disabled="disabled"
+    :disabled="disabled || isDisabled"
     :data-test="`editable-field.${name}`"
   >
-    <v-hover v-if="!isEditing" v-slot="{ hover }">
+    <div v-if="disabled">
+      <slot v-bind="{ entry: model || '-' }" />
+    </div>
+    <v-hover v-else-if="!isEditing" v-slot="{ hover }">
       <div
         @click="isEditing = true"
         :class="['d-flex editable-button', hover ? 'hover' : '']"
@@ -60,6 +63,10 @@ const EditableFieldProps = Vue.extend({
       type: String,
       default: "",
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
 });
 
@@ -74,7 +81,7 @@ export default class EditableField extends EditableFieldProps {
 
   isValid = false;
 
-  disabled = false;
+  isDisabled = false;
 
   error: string | null = "";
 
@@ -102,7 +109,7 @@ export default class EditableField extends EditableFieldProps {
   reset(): void {
     this.model = this.normalize(this.value);
     this.error = "";
-    this.disabled = false;
+    this.isDisabled = false;
     this.isEditing = false;
   }
 
@@ -111,16 +118,16 @@ export default class EditableField extends EditableFieldProps {
       return this.reset();
     }
     this.error = "";
-    this.disabled = true;
+    this.isDisabled = true;
     const payload: Record<string, string> = {
       [this.name]: this.model,
     };
     const resolve = () => {
-      this.disabled = false;
+      this.isDisabled = false;
       this.isEditing = false;
     };
     const reject = (error: AxiosError | string) => {
-      this.disabled = false;
+      this.isDisabled = false;
       this.error = getErrorMessage(error);
     };
     this.$emit("submit", payload, resolve, reject);

@@ -1,7 +1,7 @@
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
-import { IrisMessageDetails } from "@/api";
+import { IrisMessageDetails, IrisMessageViewData } from "@/api";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import { normalizeIrisMessageDetails } from "@/views/iris-message-details/iris-message-details.data";
@@ -15,8 +15,8 @@ export type IrisMessageDetailsState = {
   messageLoadingError: ErrorMessage;
   messageSaving: boolean;
   messageSavingError: ErrorMessage;
-  dataAttachmentImporting: boolean;
-  dataAttachmentImportingError: ErrorMessage;
+  dataAttachmentLoading: boolean;
+  dataAttachmentLoadingError: ErrorMessage;
   fileAttachmentLoading: boolean;
   fileAttachmentLoadingError: ErrorMessage;
 };
@@ -38,11 +38,11 @@ export interface IrisMessageDetailsModule
       state: IrisMessageDetailsState,
       payload: ErrorMessage
     ): void;
-    setDataAttachmentImporting(
+    setDataAttachmentLoading(
       state: IrisMessageDetailsState,
       payload: boolean
     ): void;
-    setDataAttachmentImportingError(
+    setDataAttachmentLoadingError(
       state: IrisMessageDetailsState,
       payload: ErrorMessage
     ): void;
@@ -69,6 +69,10 @@ export interface IrisMessageDetailsModule
       { commit }: { commit: Commit },
       dataId: string
     ): Promise<void>;
+    viewDataAttachment(
+      { commit }: { commit: Commit },
+      dataId: string
+    ): Promise<IrisMessageViewData | undefined>;
     // disabled file attachments
     /*
     downloadFileAttachment(
@@ -85,8 +89,8 @@ const defaultState: IrisMessageDetailsState = {
   messageLoadingError: null,
   messageSaving: false,
   messageSavingError: null,
-  dataAttachmentImporting: false,
-  dataAttachmentImportingError: null,
+  dataAttachmentLoading: false,
+  dataAttachmentLoadingError: null,
   fileAttachmentLoading: false,
   fileAttachmentLoadingError: null,
 };
@@ -112,11 +116,11 @@ const irisMessageDetails: IrisMessageDetailsModule = {
     setMessageSavingError(state, payload) {
       state.messageSavingError = payload;
     },
-    setDataAttachmentImporting(state, payload) {
-      state.dataAttachmentImporting = payload;
+    setDataAttachmentLoading(state, payload) {
+      state.dataAttachmentLoading = payload;
     },
-    setDataAttachmentImportingError(state, payload) {
-      state.dataAttachmentImportingError = payload;
+    setDataAttachmentLoadingError(state, payload) {
+      state.dataAttachmentLoadingError = payload;
     },
     setFileAttachmentLoading(state, payload) {
       state.fileAttachmentLoading = payload;
@@ -161,14 +165,25 @@ const irisMessageDetails: IrisMessageDetailsModule = {
       }
     },
     async importDataAttachment({ commit }, dataId: string) {
-      commit("setDataAttachmentImporting", true);
-      commit("setDataAttachmentImportingError", null);
+      commit("setDataAttachmentLoading", true);
+      commit("setDataAttachmentLoadingError", null);
       try {
         await authClient.irisMessageDataImport(dataId);
       } catch (e) {
-        commit("setDataAttachmentImportingError", getErrorMessage(e));
+        commit("setDataAttachmentLoadingError", getErrorMessage(e));
       } finally {
-        commit("setDataAttachmentImporting", false);
+        commit("setDataAttachmentLoading", false);
+      }
+    },
+    async viewDataAttachment({ commit }, dataId) {
+      commit("setDataAttachmentLoading", true);
+      commit("setDataAttachmentLoadingError", null);
+      try {
+        return (await authClient.irisMessageDataView(dataId)).data;
+      } catch (e) {
+        commit("setDataAttachmentLoadingError", getErrorMessage(e));
+      } finally {
+        commit("setDataAttachmentLoading", false);
       }
     },
     // disabled file attachments

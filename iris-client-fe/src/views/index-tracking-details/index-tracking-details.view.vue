@@ -215,7 +215,7 @@ import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import dayjs from "@/utils/date";
 import ContactCategories from "@/constants/ContactCategories";
-import AlertComponent from "@/components/alerts/alert.component.vue";
+import AlertComponent from "@/components/alerts/alert-component.vue";
 import IndexTrackingSubmissionUrl from "@/views/index-tracking-details/components/index-tracking-submission-url.vue";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import exportStandardEvents from "@/views/index-tracking-details/components/data-export/utils/exportStandardEvents";

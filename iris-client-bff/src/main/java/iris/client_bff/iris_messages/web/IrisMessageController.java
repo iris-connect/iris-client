@@ -6,6 +6,7 @@ import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageFile;
 import iris.client_bff.iris_messages.IrisMessageException;
 import iris.client_bff.iris_messages.data.IrisMessageDataInsert;
+import iris.client_bff.iris_messages.data.IrisMessageViewData;
 import iris.client_bff.iris_messages.validation.FileTypeValidator;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
@@ -133,11 +134,18 @@ public class IrisMessageController {
         }
     }
 
-    @PostMapping("/data/{messageDataId}")
-    public ResponseEntity<String> importMessageData(@PathVariable UUID messageDataId) {
+    @PostMapping("/data/import/{messageDataId}")
+    public ResponseEntity<?> importMessageData(@PathVariable UUID messageDataId) {
         this.validateUUID(messageDataId, MESSAGE_DATA_ID, ErrorMessages.INVALID_IRIS_MESSAGE_DATA_ID);
         this.irisMessageService.importMessageData(messageDataId);
-        return ResponseEntity.ok("saved");
+        return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/data/view/{messageDataId}")
+    public ResponseEntity<IrisMessageViewData> viewMessageData(@PathVariable UUID messageDataId) {
+        this.validateUUID(messageDataId, MESSAGE_DATA_ID, ErrorMessages.INVALID_IRIS_MESSAGE_DATA_ID);
+        IrisMessageViewData messageData = this.irisMessageService.viewMessageData(messageDataId);
+        return ResponseEntity.ok(messageData);
     }
 
     @PatchMapping("/{messageId}")

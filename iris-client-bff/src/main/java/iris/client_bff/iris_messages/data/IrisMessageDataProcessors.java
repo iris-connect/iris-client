@@ -20,7 +20,11 @@ public class IrisMessageDataProcessors {
     }
 
     public IrisMessageDataProcessor getProcessor(String discriminator) {
-        return this.processors.get(discriminator);
+        try {
+            return this.processors.get(discriminator);
+        } catch (Throwable e) {
+            throw new IrisMessageDataException("No data processor found for discriminator: " + discriminator);
+        }
     }
 
 }
