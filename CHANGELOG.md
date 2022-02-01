@@ -1,5 +1,17 @@
 # Changelog
 
+# [1.3.0-rc.3](https://github.com/iris-connect/iris-client/compare/v1.3.0-rc.2...v1.3.0-rc.3) (2022-02-01)
+
+
+### Bug Fixes
+
+* Changes the certificate paths to the new schema introduced with new EPS. ([6772bdc](https://github.com/iris-connect/iris-client/commit/6772bdc8c98939a0684e890946232ffa399d929c))
+
+
+### Features
+
+* **Standalone installation:** Provides a script to check and import the now required root certificates to the key store of the used Java installation. This script runs together with 'start-iris-client-bff.sh'. ([ed691f8](https://github.com/iris-connect/iris-client/commit/ed691f8ee801e59601cfbb13fbfaca68012b78a8)), closes [iris-connect/iris-backlog#226](https://github.com/iris-connect/iris-backlog/issues/226) [#586](https://github.com/iris-connect/iris-client/issues/586)
+
 # [1.3.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.3.0-rc.1...v1.3.0-rc.2) (2022-01-26)
 
 
