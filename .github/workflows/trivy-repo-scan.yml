@@ -4,10 +4,10 @@ on:
   push:
     branches: [ develop, release, main ]
   pull_request:
-    branches: [ develop, release ]
+    branches: [ develop, release, main ]
   schedule:
     - cron: '10 4 * * *'
-    
+
 jobs:
   repo_scan:
     name: Trivy Repo Scan
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2.4.0
 
-      - name: Run Trivy vulnerability scanner in repo mode
+      - name: Run Trivy vulnerability scanner in fs mode
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
@@ -25,8 +25,19 @@ jobs:
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH,MEDIUM'
+          exit-code: '1'
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v1
+        if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+          
+      - name: Show Trivy vulnerability errors
+        uses: aquasecurity/trivy-action@master
+        if: failure()
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          

@@ -1,0 +1,5 @@
+# EPS images must start with root to change the owner of the certificate files. The images switch to non-root at startup.
+DS002
+
+# Since Trivy 0.22.0 and the POM scan, an outdated version of junit:junit is regularly, but not always, flagged. It is unclear where this comes from.
+CVE-2020-15250

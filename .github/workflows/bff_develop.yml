@@ -10,13 +10,11 @@ on:
     paths:
       - iris-client-bff/**
       - .github/workflows/bff_develop.yml
+      - .github/workflows/publish-test-results.yml@develop
+      - .github/workflows/trivy-container-scan.yml
   pull_request:
     branches:
       - develop
-
-defaults:
-  run:
-    shell: bash
 
 jobs:
   build_and_push:
@@ -34,16 +32,9 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
-          distribution: 'zulu'
+          distribution: 'liberica'
           java-version: '17'
-    
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          cache: 'maven'
 
       - name: Create image tag
         id: meta

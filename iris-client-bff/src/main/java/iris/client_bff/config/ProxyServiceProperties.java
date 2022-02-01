@@ -14,7 +14,10 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class ProxyServiceProperties {
 
+	@NotBlank
 	private final String epsName;
+
+	@NotBlank
 	private final String targetProxy;
 
 	@NotBlank

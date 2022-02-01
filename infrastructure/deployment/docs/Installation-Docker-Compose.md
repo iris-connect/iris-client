@@ -98,16 +98,6 @@ POSTGRES_DB
 ```
 Die DB muss vorher von Ihnen angelegt werden. Der User benötigt die Berechtigung, Tabellen zu erstellen und zu ändern. Das Datenbank-Schema wird von der Applikation verwaltet und eventuelle Änderungen werden für Sie transparent migriert.
 
-## Einrichtung der Benutzer-Authentifizierung
-
-Der IRIS Client stellt für die Benutzer [JSON Webtokens](https://de.wikipedia.org/wiki/JSON_Web_Token) aus. Dafür wird ein HMAC512 Algorithmus benutzt. Dieser Algorithmus verlangt ein starkes *Shared Secret*. Das kann wie folgt konfiguriert werden.
-
-```
-SECURITY_JWT_JWT_SHARED_SECRET
-```
-
-Wir empfehlen, einen Passwort-Generator zu benutzen (z.B. https://passwordsgenerator.net). 
-
 ## Einrichtung Ihrer lokalen Domain
 
 Der IRIS Client ist eine HTTPS basierte Webanwendung, die unter einer Domain betrieben wird. Diese Domain ist frei wählbar. Sie müssen für Ihre Domain ein validiertes Zertifikat und den entsprechenden Schlüssel konfigurieren. 
@@ -204,38 +194,6 @@ IRIS_ENV=
 ```
 
 Von dieser Einstellung hängt unter anderen ab, zu welchem Service Directory sich Ihr IRIS Client verbindet und welchem ROOT Zertifikat vertraut wird. 
-
-## Einrichtung vom Service Directory Endpunkt
-
-Wie in der [Architektur](./Architektur.md) beschrieben, benötigt der IRIS Client Zugriff auf das IRIS Service Directory, damit es weiß, welche Services unter welcher Adresse zu erreichen sind. Die richtige Service Directory URL hängt von der Umgebung (Staging oder Live ab). 
-
-```
-# Staging: 
-EPS_SD_ENDPOINT=https://test.iris-gateway.de:32324/jsonrpc
-
-# Live: 
-EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
-```
-## Einrichtung vom IRIS Locations Service
-
-Wie in der [Architektur](./Architektur.md) beschrieben, benötigt der IRIS Client Zugriff auf den IRIS Locations Service, damit die Mitarbeiter im GA u.a. nach Betrieben und Gastronomien suchen können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
-
-```
-# staging:  ls-1
-# live:     locations-production-1
-EPS_LS_NAME=
-```
-
-## Einrichtung vom IRIS Public Proxy
-
-Wie in der [Architektur](./Architektur.md) beschrieben, benötigt der IRIS Client Zugriff auf den IRIS Public Proxy Service, damit eingehende Daten wie z.B. Kontakttagebücher empfangen werden können. Es gibt 2 vordefinierte Werte für diesen Parameter. 
-
-```
-# staging:  public-proxy-1
-# live:     public-proxy-production-1
-EPS_PP_NAME=
-```
-
 
 ## Einrichtung: TLS-Zertifikat ( Private Proxy )
 

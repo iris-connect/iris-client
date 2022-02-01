@@ -18,12 +18,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.4.0
 
-      - name: Setup node from node version file
-        uses: actions/setup-node@v2.5.0
-        with:
-          node-version-file: 'iris-client-fe/.nvmrc'
+      - run: node -v; npm -v
 
       - name: Cypress run
+        # Install NPM dependencies, cache them correctly and run all Cypress tests
         uses: cypress-io/github-action@v2.11.7
         timeout-minutes: 20
         with:

@@ -147,16 +147,6 @@ POSTGRES_DB
 ```
 Die DB muss vorher von Ihnen angelegt werden. Der User benötigt die Berechtigung Tabellen zu erstellen und zu ändern. Das Datenbankschema wird von der Applikation verwaltet und eventuelle Änderungen werden für Sie transparent migriert.
 
-## Einrichtung der Benutzer-Authentifizierung
-
-Der IRIS-Client stellt die Benutzer [JSON Webtokens](https://de.wikipedia.org/wiki/JSON_Web_Token) aus. Dafür wird ein HMAC512 Algorithmus benutzt. Dieser Algorithmus verlangt ein starkes *Shared Secret*. Das kann wie folgt konfiguriert werden:
-
-```
-SECURITY_JWT_JWT_SHARED_SECRET
-```
-
-Wir empfehlen, einen Passwortgenerator zu benutzen (z.B. https://passwordsgenerator.net). 
-
 ## Einrichtung Ihrer lokalen Domain
 
 > Diese Anleitung geht davon aus, dass Sie NGINX benutzen
@@ -225,37 +215,6 @@ IRIS_ENV=
 ```
 
 Von dieser Einstellung hänger unter anderem ab, zu welchem Service Directory sich Ihr IRIS-Client verbindet und welchen ROOT-Zertifikaten vertraut wird. 
-
-## Einrichtung des Service-Directory Endpunkts
-
-Wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben, benötigt der IRIS-Client Zugriff auf das IRIS Service-Directory, damit es weiß welche Services unter welcher Adresse zu erreichen sind. Die richtige Service-Directory-URL hängt von der Umgebung (Staging oder Live ab). 
-
-```
-# Staging: 
-EPS_SD_ENDPOINT=https://test.iris-gateway.de:32324/jsonrpc
-
-# Live: 
-EPS_SD_ENDPOINT=https://prod.iris-gateway.de:32324/jsonrpc
-```
-## Einrichtung vom IRIS Locations Service
-
-Wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben, benötigt der IRIS-Client Zugriff auf den IRIS Locations Service, damit die Mitarbeiter im GA u.a. nach Betrieben und Gastronomien suchen können. Es gibt zwei vordefinierte Werte für diesen Parameter. 
-
-```
-# staging:  ls-1
-# live:     locations-production-1
-EPS_LS_NAME=
-```
-
-## Einrichtung des IRIS Public-Proxy
-
-Wie in der [Architektur](../deployment/docs/Architektur.md) beschrieben, benötigt der IRIS-Client Zugriff auf den IRIS Public-Proxy-Service, damit eingehende Daten wie z.B. Kontakttagebücher empfangen werden können. Es gibt zwei vordefinierte Werte für diesen Parameter. 
-
-```
-# staging:  public-proxy-1
-# live:     public-proxy-production-1
-EPS_PP_NAME=
-```
 
 
 ## Einrichtung: TLS-Zertifikat (Private-Proxy)

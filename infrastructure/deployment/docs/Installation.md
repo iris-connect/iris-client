@@ -100,3 +100,10 @@ Unabhängig von der Installations Variante können Sie testen, ob die Installati
 Unabhängig von der Installations Variante finden Sie hier Informationen über Upgrades auf eine neue Version. 
 
 [Upgrade Guides](Upgrade-Guides.md)
+
+## Backups
+
+Die Verantwortung, Backups der Installation durchzuführen, liegt bei den Administrierenden.
+
+Wir empfehlen die verwendete Datenbank, die Inhalte des Volumes `proxy_db_iris`, die eigenen Zertifikate und eventuell angepasste `.env` und Konfigurationsdateien regelmäßig zu sichern.
+

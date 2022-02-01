@@ -18,6 +18,9 @@ jobs:
         image-ref: ${{fromJson(inputs.image-refs)}}
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.4.0
+    
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
@@ -30,5 +33,14 @@ jobs:
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v1
+        if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+
+      - name: Show Trivy vulnerability errors
+        uses: aquasecurity/trivy-action@master
+        if: failure()
+        with:
+          image-ref: '${{ matrix.image-ref }}'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH,MEDIUM'

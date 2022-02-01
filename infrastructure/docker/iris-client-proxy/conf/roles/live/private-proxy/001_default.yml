@@ -1,3 +1,12 @@
+definitions:
+  CA_FILES:
+    &CA_FILES
+    - "/$DIR/../../../ca/live/root-x1.crt"
+    - "/$DIR/../../../ca/live/root-x2.crt"
+    - "/$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
+  CERT_FILE: &CERT_FILE "/$DIR/../../../certs/$PROXY_CLIENT_CERT"
+  KEY_FILE: &KEY_FILE "/$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
+
 vars:
   PROXY_OP:
     source: env
@@ -11,7 +20,7 @@ vars:
     source: env
     variable: PROXY_CLIENT_CERT_KEY
     type: string    
-  PROXY_DOMAIN:     
+  PROXY_DOMAIN:
     source: env
     variable: PROXY_DOMAIN
     type: string
@@ -24,13 +33,13 @@ vars:
     variable: PROXY_TLS_CERT_KEY
     type: string
   IRIS_CLIENT_BFF_HOSTNAME:
-   source: env
-   variable: IRIS_CLIENT_BFF_HOSTNAME
-   type: string
+    source: env
+    variable: IRIS_CLIENT_BFF_HOSTNAME
+    type: string
   PRIVATE_PROXY_EPS_HOSTNAME:
-   source: env
-   variable: PRIVATE_PROXY_EPS_HOSTNAME
-   type: string
+    source: env
+    variable: PRIVATE_PROXY_EPS_HOSTNAME
+    type: string
 
 private:
   name: "$PROXY_OP"
@@ -44,22 +53,16 @@ private:
     tls:
       verify_client: false
       server_name: "$PROXY_DOMAIN"
-      ca_certificate_files: 
-        - "$DIR/../../../ca/live/root-x1.crt"
-        - "$DIR/../../../ca/live/root-x2.crt"
-        - "$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
-      certificate_file: "$DIR/../../../certs/$PROXY_TLS_CERT"
-      key_file: "$DIR/../../../certs/$PROXY_TLS_CERT_KEY"
+      ca_certificate_files: *CA_FILES
+      certificate_file: "/$DIR/../../../certs/$PROXY_TLS_CERT"
+      key_file: "/$DIR/../../../certs/$PROXY_TLS_CERT_KEY"
 
   jsonrpc_client:
     endpoint: "https://$PRIVATE_PROXY_EPS_HOSTNAME:7766/jsonrpc"
     tls:
       server_name: "$PROXY_OP"
-      ca_certificate_files: 
-        - "$DIR/../../../ca/live/root-x1.crt"
-        - "$DIR/../../../ca/live/root-x2.crt"
-        - "$DIR/../../../ca/live/D-TRUST_Limited_Basic_Combined.pem"
-      certificate_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT"
-      key_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
+      ca_certificate_files: *CA_FILES
+      certificate_file: *CERT_FILE
+      key_file: *KEY_FILE
   jsonrpc_server: # the JSON-RPC server that the EPS server uses for communication
     bind_address: 0.0.0.0:8877

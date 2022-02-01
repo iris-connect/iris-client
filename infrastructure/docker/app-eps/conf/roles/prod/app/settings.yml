@@ -1,3 +1,15 @@
+definitions:
+  CA_FILES:
+    &CA_FILES
+    - "/$DIR/../../../ca/prod/D-TRUST_Limited_Basic_Combined.pem"
+    - "/$DIR/../../../ca/prod/root-x1.crt"
+    - "/$DIR/../../../ca/prod/root-x2.crt"
+  CERT_FILE: &CERT_FILE "/$DIR/../../../certs/$APP_CN.crt"
+  KEY_FILE: &KEY_FILE "/$DIR/../../../certs/$APP_CN.key"
+  CA_INTERMEDIATE_FILES:
+    &CA_INTERMEDIATE_FILES
+    - "/$DIR/../../../ca/prod/inter-r1.crt"
+    - "/$DIR/../../../ca/prod/inter-r2.crt"
 vars:
   APP_CN:
     source: env
@@ -14,19 +26,11 @@ directory:
   settings:
     jsonrpc_client:
       tls:
-        certificate_file: "$DIR/../../../certs/$APP_CN.crt"
-        key_file: "$DIR/../../../certs/$APP_CN.key"
-        ca_certificate_files:
-          - "$DIR/../../../ca/prod/D-TRUST_Limited_Basic_Combined.pem"
-          - "$DIR/../../../ca/prod/root-x1.crt"
-          - "$DIR/../../../ca/prod/root-x2.crt"
-    ca_certificate_files:
-      - "$DIR/../../../ca/prod/D-TRUST_Limited_Basic_Combined.pem"
-      - "$DIR/../../../ca/prod/root-x1.crt"
-      - "$DIR/../../../ca/prod/root-x2.crt"
-    ca_intermediate_certificate_files:
-      - "$DIR/../../../ca/prod/inter-r1.crt"
-      - "$DIR/../../../ca/prod/inter-r2.crt"
+        certificate_file: *CERT_FILE
+        key_file: *KEY_FILE
+        ca_certificate_files: *CA_FILES
+    ca_certificate_files: *CA_FILES
+    ca_intermediate_certificate_files: *CA_INTERMEDIATE_FILES
     endpoints: [ "https://prod.iris-gateway.de:32324/jsonrpc" ]
     server_names: [ "service-directory-production-1" ]
 channels: # defines all the channels that we want to open when starting the server
@@ -35,23 +39,17 @@ channels: # defines all the channels that we want to open when starting the serv
     settings:
       bind_address: "0.0.0.0:4444" # do not change port.
       tls:
-        ca_certificate_files:
-          - "$DIR/../../../ca/prod/D-TRUST_Limited_Basic_Combined.pem"
-          - "$DIR/../../../ca/prod/root-x1.crt"
-          - "$DIR/../../../ca/prod/root-x2.crt"
-        certificate_file: "$DIR/../../../certs/$APP_CN.crt"
-        key_file: "$DIR/../../../certs/$APP_CN.key"
+        ca_certificate_files: *CA_FILES
+        certificate_file: *CERT_FILE
+        key_file: *KEY_FILE
   - name: main JSON-RPC server # accepts incoming JSONRPC connections to deliver and receive messages
     type: jsonrpc_server
     settings:
       bind_address: "0.0.0.0:5556"
       tls:
-        ca_certificate_files:
-          - "$DIR/../../../ca/prod/D-TRUST_Limited_Basic_Combined.pem"
-          - "$DIR/../../../ca/prod/root-x1.crt"
-          - "$DIR/../../../ca/prod/root-x2.crt"
-        certificate_file: "$DIR/../../../certs/$APP_CN.crt"
-        key_file: "$DIR/../../../certs/$APP_CN.key"
+        ca_certificate_files: *CA_FILES
+        certificate_file: *CERT_FILE
+        key_file: *KEY_FILE
         verify_client: false
   - name: main JSON-RPC client # creates outgoing JSONRPC connections to deliver and receive messages
     type: jsonrpc_client
@@ -61,9 +59,6 @@ channels: # defines all the channels that we want to open when starting the serv
     type: grpc_client
     settings:
       tls:
-        ca_certificate_files:
-          - "$DIR/../../../ca/prod/D-TRUST_Limited_Basic_Combined.pem"
-          - "$DIR/../../../ca/prod/root-x1.crt"
-          - "$DIR/../../../ca/prod/root-x2.crt"
-        certificate_file: "$DIR/../../../certs/$APP_CN.crt"
-        key_file: "$DIR/../../../certs/$APP_CN.key"
+        ca_certificate_files: *CA_FILES
+        certificate_file: *CERT_FILE
+        key_file: *KEY_FILE

@@ -11,10 +11,6 @@ on:
       - next-major
       - 1.**
 
-defaults:
-  run:
-    shell: bash
-      
 jobs:
   release-client:
     name: Build and release Client
@@ -30,22 +26,10 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
-          distribution: 'zulu'
+          distribution: 'liberica'
           java-version: '17'
+          cache: 'maven'
           
-      - name: Setup node from node version file
-        uses: actions/setup-node@v2.5.0
-        with:
-          node-version-file: 'iris-client-fe/.nvmrc'
-
-      - name: Cache local Maven repository
-        uses: actions/cache@v2.1.6
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-      
       - name: Login to DockerHub
         uses: docker/login-action@v1 
         with:
@@ -53,6 +37,8 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PW }}
       
       - run: chmod +x ./.prepare-release.sh
+
+      - run: node -v; npm -v
   
       - name: Build all and create release with semantic-release
         uses: cycjimmy/semantic-release-action@v2

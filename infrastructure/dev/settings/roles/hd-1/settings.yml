@@ -4,10 +4,10 @@ directory:
   settings:
     jsonrpc_client:
       tls:
-        certificate_file: "$DIR/../../certs/hd-1.crt"
-        key_file: "$DIR/../../certs/hd-1.key"
-        ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
-    ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
+        certificate_file: "/$DIR/../../certs/hd-1.crt"
+        key_file: "/$DIR/../../certs/hd-1.key"
+        ca_certificate_files: [ "/$DIR/../../certs/root.crt" ]
+    ca_certificate_files: [ "/$DIR/../../certs/root.crt" ]
     endpoints: [ "https://iris.staging.iris-gateway.de:3322/jsonrpc" ]
     server_names: [ "sd-1" ]
 channels: # defines all the channels that we want to open when starting the server
@@ -19,19 +19,19 @@ channels: # defines all the channels that we want to open when starting the serv
     type: grpc_client
     settings:
       tls:
-        ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
-        certificate_file: "$DIR/../../certs/hd-1.crt"
-        key_file: "$DIR/../../certs/hd-1.key"
+        ca_certificate_files: [ "/$DIR/../../certs/root.crt" ]
+        certificate_file: "/$DIR/../../certs/hd-1.crt"
+        key_file: "/$DIR/../../certs/hd-1.key"
   - name: main JSON-RPC server # accepts incoming JSONRPC connections to deliver and receive messages
     type: jsonrpc_server
     settings:
       bind_address: "0.0.0.0:5556"
       tls:
-        ca_certificate_files: [ "$DIR/../../certs/root.crt" ]
-        certificate_file: "$DIR/../../certs/hd-1.crt"
-        key_file: "$DIR/../../certs/hd-1.key"
+        ca_certificate_files: [ "/$DIR/../../certs/root.crt" ]
+        certificate_file: "/$DIR/../../certs/hd-1.crt"
+        key_file: "/$DIR/../../certs/hd-1.key"
         verify_client: false
 signing:
-  certificate_file: "$DIR/../../certs/hd-1-sign.crt"
-  key_file: "$DIR/../../certs/hd-1-sign.key"
-  ca_certificate_file: "$DIR/../../certs/root.crt"
+  certificate_file: "/$DIR/../../certs/hd-1-sign.crt"
+  key_file: "/$DIR/../../certs/hd-1-sign.key"
+  ca_certificate_file: "/$DIR/../../certs/root.crt"

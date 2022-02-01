@@ -1,3 +1,11 @@
+definitions:
+  CA_FILES:
+    &CA_FILES
+    - "/$DIR/../../../../../ca/staging/IRIS-CA-Staging.crt"
+    - "/$DIR/../../../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
+  CERT_FILE: &CERT_FILE "/$DIR/../../../certs/$PROXY_CLIENT_CERT"
+  KEY_FILE: &KEY_FILE "/$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
+
 vars:
   PROXY_OP:
     source: env
@@ -31,34 +39,33 @@ vars:
     source: env
     variable: PRIVATE_PROXY_EPS_ENDPOINT
     type: string
+  ANNOUNCEMENT_DB_FOLDER:     
+    source: env
+    variable: ANNOUNCEMENT_DB_FOLDER
+    type: string
     
-
 private:
   name: "$PROXY_OP"
   datastore:
     type: file
     settings:
-      filename: ./db/private-proxy-announcements.db
+      filename: "$ANNOUNCEMENT_DB_FOLDER/private-proxy-announcements.db"
   bind_address: 0.0.0.0:5545
   internal_endpoint:
     address: "$IRIS_CLIENT_BFF_ENDPOINT"
     tls:
       verify_client: false
       server_name: "$PROXY_DOMAIN"
-      ca_certificate_files: 
-        - "$DIR/../../../../../ca/staging/IRIS-CA-Staging.crt"
-        - "$DIR/../../../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
-      certificate_file: "$DIR/../../../certs/$PROXY_TLS_CERT"
-      key_file: "$DIR/../../../certs/$PROXY_TLS_CERT_KEY"
+      ca_certificate_files: *CA_FILES
+      certificate_file: "/$DIR/../../../certs/$PROXY_TLS_CERT"
+      key_file: "/$DIR/../../../certs/$PROXY_TLS_CERT_KEY"
 
   jsonrpc_client:
     endpoint: "$PRIVATE_PROXY_EPS_ENDPOINT"
     tls:
       server_name: "$PROXY_OP"
-      ca_certificate_files: 
-        - "$DIR/../../../../../ca/staging/IRIS-CA-Staging.crt"
-        - "$DIR/../../../../../ca/staging/D-TRUST_Limited_Basic_Test_Combined.pem"
-      certificate_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT"
-      key_file: "$DIR/../../../certs/$PROXY_CLIENT_CERT_KEY"
+      ca_certificate_files: *CA_FILES 
+      certificate_file: *CERT_FILE
+      key_file: *KEY_FILE
   jsonrpc_server: # the JSON-RPC server that the EPS server uses for communication
     bind_address: 0.0.0.0:8877
