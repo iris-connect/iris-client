@@ -15,7 +15,7 @@
     "convert-licenses": "(csv2md licenses-prod.csv > licenses-prod.md || true) && csv2md licenses-dev.csv > licenses-dev.md"
   },
   "dependencies": {
-    "@fontsource/roboto": "^4.5.1",
+    "@fontsource/roboto": "^4.5.2",
     "@mdi/font": "^6.5.95",
     "@types/lodash": "^4.14.178",
     "axios": "^0.25.0",
