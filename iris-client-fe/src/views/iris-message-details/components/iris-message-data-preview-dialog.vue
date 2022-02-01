@@ -24,7 +24,6 @@
               v-on="on"
               v-bind="attrs"
               color="primary"
-              text
               data-test="import-data"
               :disabled="!importEnabled"
             >

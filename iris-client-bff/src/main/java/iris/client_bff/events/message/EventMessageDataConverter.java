@@ -5,10 +5,7 @@ import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestRepository;
 import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.model.EventDataSubmission;
-import iris.client_bff.iris_messages.IrisMessageTransfer;
 import iris.client_bff.iris_messages.data.IrisMessageDataException;
-import iris.client_bff.iris_messages.data.IrisMessageDataInsert;
-import iris.client_bff.iris_messages.data.IrisMessageData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -25,43 +22,27 @@ public class EventMessageDataConverter {
     private final EventDataRequestRepository requestRepository;
     private final EventDataSubmissionRepository submissionRepository;
 
-    public IrisMessageData dataFromInsert(IrisMessageDataInsert irisMessageDataInsert) throws IrisMessageDataException {
-        EventDataRequest.DataRequestIdentifier eventId = this.getEventId(irisMessageDataInsert);
+    public String payloadFromInsert(String insert) throws IrisMessageDataException {
+        EventMessageDataInsertPayload insertPayload = EventMessageDataConverter.getInsertPayload(insert);
+        EventDataRequest.DataRequestIdentifier eventId = EventDataRequest.DataRequestIdentifier.of(insertPayload.getId());
         EventDataRequest eventDataRequest = this.getEventDataRequest(eventId);
         EventDataSubmission eventDataSubmission = this.getEventDataSubmission(eventId);
         EventMessageDataPayload payload = EventMessageDataPayload.fromModel(
                 eventDataRequest,
                 eventDataSubmission,
-                this.getGuestIds(irisMessageDataInsert)
+                insertPayload.getGuests()
         );
-        return new IrisMessageData()
-                .setDescription(irisMessageDataInsert.getDescription())
-                .setDiscriminator(irisMessageDataInsert.getDiscriminator())
-                .setPayload(EventMessageDataPayload.toString(payload));
+        return EventMessageDataPayload.toString(payload);
     }
 
-    public IrisMessageData dataFromTransfer(IrisMessageTransfer.DataAttachment dataAttachment) throws IrisMessageDataException {
-        return new IrisMessageData()
-                .setDescription(dataAttachment.getDescription())
-                .setDiscriminator(dataAttachment.getDiscriminator())
-                .setPayload(dataAttachment.getPayload());
+    public String payloadFromTransfer(String transfer) throws IrisMessageDataException {
+        return transfer;
     }
 
-    private EventDataRequest.DataRequestIdentifier getEventId(IrisMessageDataInsert irisMessageDataInsert) throws IrisMessageDataException {
-        EventMessageDataPayloadInsert payloadInsert = this.getInsertPayload(irisMessageDataInsert);
-        UUID id = payloadInsert.getId();
-        return EventDataRequest.DataRequestIdentifier.of(id);
-    }
-
-    private List<UUID> getGuestIds(IrisMessageDataInsert irisMessageDataInsert) throws IrisMessageDataException {
-        EventMessageDataPayloadInsert payloadInsert = this.getInsertPayload(irisMessageDataInsert);
-        return payloadInsert.getGuests();
-    }
-
-    private EventMessageDataPayloadInsert getInsertPayload(IrisMessageDataInsert irisMessageDataInsert) throws IrisMessageDataException {
+    static EventMessageDataInsertPayload getInsertPayload(String payload) throws IrisMessageDataException {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(irisMessageDataInsert.getPayload(), EventMessageDataPayloadInsert.class);
+            return objectMapper.readValue(payload, EventMessageDataInsertPayload.class);
         } catch (Throwable e) {
             throw new IrisMessageDataException("invalid payload");
         }

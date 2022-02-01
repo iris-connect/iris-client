@@ -201,11 +201,12 @@ import {
   FormData,
   TableRow,
 } from "@/views/event-tracking-details/utils/mappedData";
+import { PropType } from "vue";
 
 const EventTrackingDetailsComponentProps = Vue.extend({
   props: {
     tableRows: {
-      type: Array as () => TableRow[],
+      type: Array as PropType<TableRow[]>,
       default: () => [],
     },
     loading: {
@@ -213,16 +214,16 @@ const EventTrackingDetailsComponentProps = Vue.extend({
       default: false,
     },
     errors: {
-      type: Array as () => ErrorMessage[],
+      type: Array as PropType<ErrorMessage[]>,
       default: () => [],
     },
     eventData: {
-      type: Object as () => EventData,
+      type: Object as PropType<EventData | null>,
       default: null,
     },
     formData: {
-      type: Object as () => FormData,
-      default: () => ({}),
+      type: Object as PropType<FormData | null>,
+      default: null,
     },
     isPreview: {
       type: Boolean,
@@ -320,9 +321,9 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
     const guests: string[] = _map(this.tableData.select, "raw.guestId");
     return {
       discriminator: "event-tracking",
-      description: this.eventData.additionalInformation,
+      description: this.formData?.name || "",
       payload: JSON.stringify({
-        id: this.eventData.code,
+        id: this.eventData?.code || "",
         guests,
       }),
     };

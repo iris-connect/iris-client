@@ -94,11 +94,7 @@ export const normalizeIrisMessage = (
         hdRecipient: normalizeIrisMessageHdContact(source?.hdRecipient),
         createdAt: normalizer("createdAt", "", "dateString"),
         isRead: normalizer("isRead", undefined, "boolean"),
-        hasAttachments: normalizer(
-          "hasAttachments",
-          undefined,
-          "boolean"
-        ),
+        hasAttachments: normalizer("hasAttachments", undefined, "boolean"),
       };
       return normalized;
     },

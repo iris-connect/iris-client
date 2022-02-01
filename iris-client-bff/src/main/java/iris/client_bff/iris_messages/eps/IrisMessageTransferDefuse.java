@@ -46,9 +46,7 @@ public class IrisMessageTransferDefuse {
     private IrisMessageTransfer.DataAttachment defuse(IrisMessageTransfer.DataAttachment dataAttachment) {
         return new IrisMessageTransfer.DataAttachment()
                 .setDiscriminator(this.defuse(dataAttachment.getDiscriminator(), "dataAttachment.discriminator", IrisMessageData.DISCRIMINATOR_MAX_LENGTH))
-//                .setPayload(this.defuse(dataAttachment.getPayload(), "dataAttachment.payload", IrisMessageData.PAYLOAD_MAX_LENGTH))
-                // @todo: create & apply validationHelper for JSON Strings?
-                .setPayload(dataAttachment.getPayload())
+                .setPayload(this.defuseDataPayload(dataAttachment.getPayload(), "dataAttachment.payload", IrisMessageData.PAYLOAD_MAX_LENGTH))
                 .setDescription(this.defuse(dataAttachment.getDescription(), "dataAttachment.description", IrisMessageData.DESCRIPTION_MAX_LENGTH));
     }
 
@@ -69,6 +67,14 @@ public class IrisMessageTransferDefuse {
             return INVALID_INPUT_STRING;
         }
         return StringUtils.truncate(input, maxLength);
+    }
+
+    private String defuseDataPayload(String input, String field, int maxLength) {
+        if (input == null) return null;
+        if (this.validationHelper.isPossibleAttackForMessageDataPayload(input, field, false) || input.length() > maxLength) {
+            return "";
+        }
+        return input;
     }
 
 }

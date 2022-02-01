@@ -6,15 +6,14 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
-import java.util.UUID;
 
 @Data
-public class EventMessageDataPayloadInsert {
+public class EventMessageDataInsertPayload {
 
     @NotBlank
-    UUID id;
+    String id;
 
     @Valid
     @NotEmpty
-    List<@NotBlank UUID> guests;
+    List<@NotBlank String> guests;
 }

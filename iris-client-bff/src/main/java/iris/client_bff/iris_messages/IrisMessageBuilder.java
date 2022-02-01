@@ -1,14 +1,12 @@
 package iris.client_bff.iris_messages;
 
+import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.data.*;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
-import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +20,7 @@ public class IrisMessageBuilder {
     private final EPSIrisMessageClient irisMessageClient;
 
     private final IrisMessageDataProcessors messageDataProcessors;
+    private final ValidationHelper validationHelper;
 
     public IrisMessage build(IrisMessageTransfer messageTransfer) throws IrisMessageException {
 
@@ -56,8 +55,13 @@ public class IrisMessageBuilder {
             if (messageTransfer.getDataAttachments() != null) {
                 for ( IrisMessageTransfer.DataAttachment dataAttachment : messageTransfer.getDataAttachments() ) {
                     IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(dataAttachment.getDiscriminator());
-                    IrisMessageData irisMessageData = processor.convertToData(dataAttachment);
-                    irisMessageData.setMessage(message);
+                    String payload = processor.payloadFromTransfer(dataAttachment.getPayload());
+                    this.validateMessageDataPayload(payload, dataAttachment.getDiscriminator());
+                    IrisMessageData irisMessageData = new IrisMessageData()
+                            .setMessage(message)
+                            .setDiscriminator(dataAttachment.getDiscriminator())
+                            .setDescription(dataAttachment.getDescription())
+                            .setPayload(payload);
                     dataList.add(irisMessageData);
                 }
             }
@@ -121,8 +125,13 @@ public class IrisMessageBuilder {
             if (messageInsert.getDataAttachments() != null) {
                 for ( IrisMessageDataInsert dataInsert : messageInsert.getDataAttachments() ) {
                     IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(dataInsert.getDiscriminator());
-                    IrisMessageData irisMessageData = processor.convertToData(dataInsert);
-                    irisMessageData.setMessage(message);
+                    String payload = processor.payloadFromInsert(dataInsert.getPayload());
+                    this.validateMessageDataPayload(payload, dataInsert.getDiscriminator());
+                    IrisMessageData irisMessageData = new IrisMessageData()
+                            .setMessage(message)
+                            .setDiscriminator(dataInsert.getDiscriminator())
+                            .setDescription(dataInsert.getDescription())
+                            .setPayload(payload);
                     dataList.add(irisMessageData);
                 }
             }
@@ -165,4 +174,11 @@ public class IrisMessageBuilder {
 
         return message;
     }
+
+    private void validateMessageDataPayload(String value, String field) {
+        if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, false)) {
+            throw new IrisMessageDataException(ErrorMessages.INVALID_IRIS_MESSAGE_DATA + ": "+ field);
+        }
+    }
+
 }

@@ -3,25 +3,20 @@ package iris.client_bff.iris_messages.web;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.*;
 import iris.client_bff.iris_messages.IrisMessage;
-import iris.client_bff.iris_messages.IrisMessageFile;
 import iris.client_bff.iris_messages.IrisMessageException;
-import iris.client_bff.iris_messages.data.IrisMessageDataInsert;
-import iris.client_bff.iris_messages.data.IrisMessageViewData;
+import iris.client_bff.iris_messages.data.*;
 import iris.client_bff.iris_messages.validation.FileTypeValidator;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tika.Tika;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -53,11 +48,14 @@ public class IrisMessageController {
     private static final String FIELD_BODY = "body";
     private static final String FIELD_FILE_ATTACHMENT = "fileAttachment";
 
-    private static final String FIELD_DISCRIMINATOR = "discriminator";
-    private static final String FIELD_DESCRIPTION = "description";
+    private static final String FIELD_DATA_DISCRIMINATOR = "discriminator";
+    private static final String FIELD_DATA_DESCRIPTION = "description";
+    private static final String FIELD_DATA_PAYLOAD = "payload";
 
     private IrisMessageService irisMessageService;
     private final ValidationHelper validationHelper;
+
+    private final IrisMessageDataProcessors messageDataProcessors;
 
     @GetMapping()
     public Page<IrisMessageListItemDto> getMessages(
@@ -101,9 +99,15 @@ public class IrisMessageController {
 
         if (irisMessageInsert.getDataAttachments() != null) {
             for ( IrisMessageDataInsert data : irisMessageInsert.getDataAttachments() ) {
-                this.validateField(data.getDiscriminator(), FIELD_DISCRIMINATOR);
-                //@todo: add validation for payload?
-                this.validateField(data.getDescription(), FIELD_DESCRIPTION);
+                this.validateField(data.getDiscriminator(), FIELD_DATA_DISCRIMINATOR);
+                this.validateMessageDataPayload(data.getPayload(), FIELD_DATA_PAYLOAD);
+                this.validateField(data.getDescription(), FIELD_DATA_DESCRIPTION);
+                try {
+                    IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(data.getDiscriminator());
+                    processor.validateInsert(data.getPayload());
+                } catch (IrisMessageDataException e) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+                }
             }
         }
 
@@ -248,13 +252,19 @@ public class IrisMessageController {
 
     private void validateField(String value, String field) {
         if (validationHelper.isPossibleAttack(value, field, false)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT + ": "+ field);
         }
     }
 
     private void validateUUID(UUID value, String field, String errorMessage) {
         if (value == null || !ValidationHelper.isUUIDInputValid(value.toString(), field)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+        }
+    }
+
+    private void validateMessageDataPayload(String value, String field) {
+        if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, false)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_IRIS_MESSAGE_DATA + ": "+ field);
         }
     }
 

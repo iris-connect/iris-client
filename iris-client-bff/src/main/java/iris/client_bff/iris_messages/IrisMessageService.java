@@ -82,13 +82,16 @@ public class IrisMessageService {
     public IrisMessageViewData viewMessageData(UUID messageDataId) {
         IrisMessageData messageData = this.getMessageData(messageDataId);
         IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageData.getDiscriminator());
-        return processor.viewData(messageData);
+        return new IrisMessageViewData()
+                .setId(messageData.getId().toString())
+                .setDiscriminator(messageData.getDiscriminator())
+                .setPayload(processor.viewPayload(messageData.getPayload()));
     }
 
     public void importMessageData(UUID messageDataId) {
         IrisMessageData messageData = this.getMessageData(messageDataId);
         IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageData.getDiscriminator());
-        processor.importData(messageData);
+        processor.importPayload(messageData.getPayload());
         messageData.setIsImported(true);
         this.dataRepository.save(messageData);
     }

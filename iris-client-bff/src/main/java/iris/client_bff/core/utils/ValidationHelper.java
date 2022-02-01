@@ -170,6 +170,13 @@ public class ValidationHelper {
 				ArrayUtils.removeElement(FORBIDDEN_SYMBOLS, "+"));
 	}
 
+	public boolean isPossibleAttackForMessageDataPayload(String input, String field, boolean obfuscateLogging) {
+		String[] inputValues = input.replaceAll("[\":,{}\\[\\]]+", ",").split(",");
+		// "+" is allowed for phone numbers
+		String[] forbiddenSymbols = ArrayUtils.removeElement(FORBIDDEN_SYMBOLS, "+");
+		return Arrays.stream(inputValues).anyMatch(v -> isPossibleAttack(v, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES, forbiddenSymbols));
+	}
+
 	public boolean isPossibleAttack(String input, String field, boolean obfuscateLogging,
 			String[][] forbiddenKeywordTuples, String[] forbiddenSymbols) {
 		if (input == null) {

@@ -15,8 +15,9 @@ import org.modelmapper.ModelMapper;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
+
+// @todo: add validation / defuse!
 
 @Slf4j
 @Data
@@ -28,7 +29,7 @@ public class EventMessageDataPayload {
     public static EventMessageDataPayload fromModel(
             EventDataRequest eventDataRequest,
             EventDataSubmission eventDataSubmission,
-            List<UUID> guestIds
+            List<String> guestIds
     ) {
         return new EventMessageDataPayload()
                 .setEventDataRequestPayload(EventDataRequestPayload.fromModel(eventDataRequest))
@@ -85,12 +86,16 @@ public class EventMessageDataPayload {
 
         private GuestList guestList;
 
-        public static EventDataSubmissionPayload fromModel(EventDataSubmission eventDataSubmission, List<UUID> guestIds) {
+        public static EventDataSubmissionPayload fromModel(EventDataSubmission eventDataSubmission, List<String> guestIds) {
             ModelMapper mapper = new ModelMapper();
             List<Guest> guests = eventDataSubmission.getGuests()
                     .stream()
-                    .filter((guest -> guestIds.contains(guest.getGuestId())))
-                    .map(it -> mapper.map(it, Guest.class))
+                    .filter((guest -> guestIds.contains(guest.getGuestId().toString())))
+                    .map(it -> {
+                        Guest mapped = mapper.map(it, Guest.class);
+                        mapped.setGuestId(null);
+                        return mapped;
+                    })
                     .collect(Collectors.toList());
             GuestList guestList = GuestList.builder()
                     .guests(guests)
