@@ -166,6 +166,10 @@ Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installa
     cp -R <Zielverzeichnis>/conf/proxy/roles <Installationsverzeichnis>/conf/proxy    
     ```
 
+#### Hinweis zu neuem Verhalten beim Start-Skript
+
+Im Ordner 'scipts' der 'stand-alone-deployment-1.3.0.zip' ist eine neues Skript 'import-root-cert.sh' enthalten. Mit diesem können die nun benötigten Root-Zertifikate in den Key-Store der verwendetet Java-Installation importiert werden. Dies erfolgt für die in der '.env' gesetzten Umgebung ('IRIS_ENV'). Das Skript wird mit dem 'start-iris-client-bff.sh' zusammen ausgeführt, so dass kein zusätzliche Aktion nötig ist. **Beim ersten Start muss allerdings für den Import ein Passwort bei 'sudo' eingegeben werden!**
+    
 ### 1.1.x -> 1.2.1
 
 [Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.2.0) finden Sie Informationen zum Release 1.2.0.  
