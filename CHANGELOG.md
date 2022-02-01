@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/iris-connect/iris-client/compare/v1.3.0...v1.3.1) (2022-02-01)
+
+
+### Bug Fixes
+
+* D-Trust root certificates were missing and are now included in docker-images ([7ea894a](https://github.com/iris-connect/iris-client/commit/7ea894a579979861b36d1c5651cacf60a2a39ea2))
+
 # [1.3.0](https://github.com/iris-connect/iris-client/compare/v1.2.1...v1.3.0) (2022-02-01)
 
 
