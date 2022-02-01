@@ -85,7 +85,7 @@ public class IrisMessageService {
         return new IrisMessageViewData()
                 .setId(messageData.getId().toString())
                 .setDiscriminator(messageData.getDiscriminator())
-                .setPayload(processor.viewPayload(messageData.getPayload()));
+                .setPayload(processor.getViewPayload(messageData.getPayload()));
     }
 
     public void importMessageData(UUID messageDataId) {

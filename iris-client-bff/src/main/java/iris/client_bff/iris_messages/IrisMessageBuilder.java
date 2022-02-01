@@ -56,6 +56,9 @@ public class IrisMessageBuilder {
                 for ( IrisMessageTransfer.DataAttachment dataAttachment : messageTransfer.getDataAttachments() ) {
                     IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(dataAttachment.getDiscriminator());
                     String payload = processor.payloadFromTransfer(dataAttachment.getPayload());
+                    // we do not defuse the payload when receiving it to be able to store yet unknown payload types.
+                    // We defuse it while importing / viewing
+                    // To minimize the risk of possible attacks, we check the keys & values of the payloads JSON string
                     this.validateMessageDataPayload(payload, dataAttachment.getDiscriminator());
                     IrisMessageData irisMessageData = new IrisMessageData()
                             .setMessage(message)
@@ -126,6 +129,8 @@ public class IrisMessageBuilder {
                 for ( IrisMessageDataInsert dataInsert : messageInsert.getDataAttachments() ) {
                     IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(dataInsert.getDiscriminator());
                     String payload = processor.payloadFromInsert(dataInsert.getPayload());
+                    // The payload should be fine as it is composed of already validated data
+                    // Doesn't hurt to validate the keys & values of the payloads JSON string
                     this.validateMessageDataPayload(payload, dataInsert.getDiscriminator());
                     IrisMessageData irisMessageData = new IrisMessageData()
                             .setMessage(message)

@@ -1,5 +1,6 @@
 package iris.client_bff.events.message;
 
+import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionService;
@@ -31,61 +32,77 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 
     private final EventMessageDataConverter dataConverter;
 
+    private final EventMessageDataPayloadDefuse payloadDefuse;
+
     private final Validator validator;
 
     @Override
     public void validateInsert(String insert) throws ResponseStatusException {
+        // convert insert String to insert PayloadObject
         EventMessageDataInsertPayload insertPayload = EventMessageDataConverter.getInsertPayload(insert);
+        // validate insert PayloadObject
         Set<ConstraintViolation<EventMessageDataInsertPayload>> constraintViolations = validator.validate(insertPayload);
         if (!constraintViolations.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     ErrorMessages.INVALID_INPUT + ": " + constraintViolations.stream().map(violation -> String.format("%s: %s", violation.getPropertyPath(), violation.getMessage())).collect(Collectors.joining(", "))
             );
+        // check if insert PayloadObject contains a possible attack
+        this.validateUUID(insertPayload.id, "payload.eventId", ErrorMessages.INVALID_IRIS_MESSAGE_DATA);
+        for ( String guestId : insertPayload.getGuests() ) {
+            this.validateUUID(guestId, "payload.guestId", ErrorMessages.INVALID_IRIS_MESSAGE_DATA);
+        }
+    }
+
+    private void validateUUID(String value, String field, String errorMessage) {
+        if (value == null || !ValidationHelper.isUUIDInputValid(value, field)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage + ": " + field);
+        }
     }
 
     @Override
     public String payloadFromInsert(String insert) throws IrisMessageDataException {
-        return dataConverter.payloadFromInsert(insert);
+        EventMessageDataPayload payload = dataConverter.payloadFromInsert(insert);
+        return EventMessageDataPayload.toString(payload);
     }
 
     @Override
     public String payloadFromTransfer(String transfer) throws IrisMessageDataException {
-        return dataConverter.payloadFromTransfer(transfer);
+        // we do not defuse the payload when receiving it to be able to receive yet unknown payload types.
+        // We defuse it while importing / viewing
+        return transfer;
     }
 
-    // @todo: add validation / defuse!
+    private EventMessageDataPayload getDefusedPayload(String payload) throws IrisMessageDataException {
+        EventMessageDataPayload messagePayload = EventMessageDataPayload.toModel(payload);
+        this.payloadDefuse.defuse(messagePayload);
+        return messagePayload;
+    }
+
     @Override
     public void importPayload(String payload) throws IrisMessageDataException {
-        EventMessageDataPayload messagePayload = EventMessageDataPayload.toModel(payload);
+        EventMessageDataPayload messagePayload = this.getDefusedPayload(payload);
         EventMessageDataPayload.EventDataRequestPayload requestPayload = messagePayload.getEventDataRequestPayload();
-        EventDataRequest eventDataRequest = new EventDataRequest(
-                requestPayload.getRefId(),
-                requestPayload.getName(),
-                requestPayload.getRequestStart(),
-                requestPayload.getRequestEnd(),
-                requestPayload.getComment(),
-                requestPayload.getRequestDetails(),
-                requestPayload.getHdUserId(),
-                requestPayload.getLocation(),
-                requestPayload.getAnnouncementToken()
-        );
+        EventDataRequest eventDataRequest = EventDataRequest.builder()
+                .refId(requestPayload.getRefId())
+                .name(requestPayload.getName())
+                .requestStart(requestPayload.getRequestStart())
+                .requestEnd(requestPayload.getRequestEnd())
+                .build();
         EventDataRequest request = this.requestService.save(eventDataRequest);
         this.submissionService.save(request, messagePayload.getEventDataSubmissionPayload().getGuestList());
     }
 
-    // @todo: add validation / defuse!
     @Override
-    public DataRequestDetails viewPayload(String payload) throws IrisMessageDataException {
-        EventMessageDataPayload messagePayload = EventMessageDataPayload.toModel(payload);
+    public Object getViewPayload(String payload) throws IrisMessageDataException {
+        EventMessageDataPayload messagePayload = this.getDefusedPayload(payload);
         EventMessageDataPayload.EventDataRequestPayload requestPayload = messagePayload.getEventDataRequestPayload();
         EventMessageDataPayload.EventDataSubmissionPayload submissionPayload = messagePayload.getEventDataSubmissionPayload();
         return DataRequestDetails.builder()
                 .name(requestPayload.getName())
                 .start(requestPayload.getRequestStart())
                 .end(requestPayload.getRequestEnd())
-                .requestDetails(requestPayload.getRequestDetails())
                 .submissionData(submissionPayload.getGuestList())
-                .comment(requestPayload.getComment())
                 .build();
     }
+
 }

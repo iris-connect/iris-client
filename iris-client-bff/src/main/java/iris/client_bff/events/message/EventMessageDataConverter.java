@@ -22,21 +22,16 @@ public class EventMessageDataConverter {
     private final EventDataRequestRepository requestRepository;
     private final EventDataSubmissionRepository submissionRepository;
 
-    public String payloadFromInsert(String insert) throws IrisMessageDataException {
+    EventMessageDataPayload payloadFromInsert(String insert) throws IrisMessageDataException {
         EventMessageDataInsertPayload insertPayload = EventMessageDataConverter.getInsertPayload(insert);
         EventDataRequest.DataRequestIdentifier eventId = EventDataRequest.DataRequestIdentifier.of(insertPayload.getId());
         EventDataRequest eventDataRequest = this.getEventDataRequest(eventId);
         EventDataSubmission eventDataSubmission = this.getEventDataSubmission(eventId);
-        EventMessageDataPayload payload = EventMessageDataPayload.fromModel(
+        return EventMessageDataPayload.fromModel(
                 eventDataRequest,
                 eventDataSubmission,
                 insertPayload.getGuests()
         );
-        return EventMessageDataPayload.toString(payload);
-    }
-
-    public String payloadFromTransfer(String transfer) throws IrisMessageDataException {
-        return transfer;
     }
 
     static EventMessageDataInsertPayload getInsertPayload(String payload) throws IrisMessageDataException {

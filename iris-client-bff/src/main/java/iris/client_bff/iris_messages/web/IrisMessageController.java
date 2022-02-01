@@ -100,6 +100,8 @@ public class IrisMessageController {
         if (irisMessageInsert.getDataAttachments() != null) {
             for ( IrisMessageDataInsert data : irisMessageInsert.getDataAttachments() ) {
                 this.validateField(data.getDiscriminator(), FIELD_DATA_DISCRIMINATOR);
+                // The validation of the insert payload is handled by the data processor
+                // Doesn't hurt to validate the keys & values of the payloads JSON string
                 this.validateMessageDataPayload(data.getPayload(), FIELD_DATA_PAYLOAD);
                 this.validateField(data.getDescription(), FIELD_DATA_DESCRIPTION);
                 try {
@@ -258,7 +260,7 @@ public class IrisMessageController {
 
     private void validateUUID(UUID value, String field, String errorMessage) {
         if (value == null || !ValidationHelper.isUUIDInputValid(value.toString(), field)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage + ": "+ field);
         }
     }
 

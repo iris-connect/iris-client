@@ -8,5 +8,5 @@ public interface IrisMessageDataProcessor {
     String payloadFromInsert(String insert) throws IrisMessageDataException;
     String payloadFromTransfer(String transfer) throws IrisMessageDataException;
     void importPayload(String payload) throws IrisMessageDataException;
-    Object viewPayload(String payload) throws IrisMessageDataException;
+    Object getViewPayload(String payload) throws IrisMessageDataException;
 }

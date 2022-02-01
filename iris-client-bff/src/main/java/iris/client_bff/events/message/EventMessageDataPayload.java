@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.model.EventDataSubmission;
-import iris.client_bff.events.model.Location;
 import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.events.web.dto.GuestListDataProvider;
@@ -16,8 +15,6 @@ import org.modelmapper.ModelMapper;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
-
-// @todo: add validation / defuse!
 
 @Slf4j
 @Data
@@ -63,11 +60,6 @@ public class EventMessageDataPayload {
         private String name;
         private Instant requestStart;
         private Instant requestEnd;
-        private final String hdUserId = null;
-        private String comment;
-        private String requestDetails = null;
-        private Location location = null;
-        private final String announcementToken = null;
 
         public static EventDataRequestPayload fromModel(EventDataRequest eventDataRequest) {
             return new EventDataRequestPayload()
@@ -75,8 +67,6 @@ public class EventMessageDataPayload {
                     .setName(eventDataRequest.getName())
                     .setRequestStart(eventDataRequest.getRequestStart())
                     .setRequestEnd(eventDataRequest.getRequestEnd())
-                    .setComment(eventDataRequest.getComment())
-//                    .setLocation(eventDataRequest.getLocation())
                     ;
         }
     }
