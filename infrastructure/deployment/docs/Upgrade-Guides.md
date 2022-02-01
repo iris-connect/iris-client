@@ -5,7 +5,7 @@
 
 ### 1.2.x -> 1.3.1
 
-[Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.3.0) finden Sie Informationen zum Release 1.3.0.
+[Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.3.0) finden Sie Informationen zum Release 1.3.0.  
 [Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.3.1) finden Sie Informationen zum Release 1.3.1.
 
 1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.3.1/deployment-1.3.1.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
@@ -119,7 +119,7 @@
 
 ### 1.2.x -> 1.3.1
 
-[Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.3.0) finden Sie Informationen zum Release 1.3.0.
+[Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.3.0) finden Sie Informationen zum Release 1.3.0.  
 [Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.3.1) finden Sie Informationen zum Release 1.3.1.
 
 Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installationsverzeichnis` installiert haben und dabei die Stand-Alone Ordner Struktur benutzen.
