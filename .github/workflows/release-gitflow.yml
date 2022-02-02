@@ -16,7 +16,10 @@ jobs:
     name: Build and release Client
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
-
+    env:
+      DCT_PRIVATE_KEY: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY }}
+      DCT_PRIVATE_KEY_PASSPHRASE: ${{ secrets.DOCKER_HUB_DCT_PASSPHRASE }}
+      DCT_PRIVATE_KEY_IDENTIFIER: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2.4.0
@@ -36,15 +39,8 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PW }}
 
-      - run: mkdir -p ~/.docker/trust/private/
-
-      - run: echo "${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY }}" > ~/.docker/trust/private/${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}.key
-
-      - run: chmod 600 ~/.docker/trust/private/${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}.key
-
-      - run: DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE=${{ secrets.DOCKER_HUB_DCT_PASSPHRASE }} DOCKER_CONTENT_TRUST=1 docker trust key load ~/.docker/trust/private/${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}.key
-
-      - run: DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER=${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}
+      - name: Setup DCT
+        run: sh ./.setup_dct.sh
 
       - run: chmod +x ./.prepare-release.sh
 
