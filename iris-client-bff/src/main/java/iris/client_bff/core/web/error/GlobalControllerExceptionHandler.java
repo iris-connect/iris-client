@@ -2,6 +2,7 @@ package iris.client_bff.core.web.error;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
+import iris.client_bff.core.web.filter.ApplicationRequestSizeLimitFilter.BlockLimitExceededException;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
 import iris.client_bff.ui.messages.ErrorMessages;
@@ -29,6 +30,12 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
 	@ExceptionHandler(IRISDataRequestException.class)
 	public void handleIRISDataRequestException(IRISDataRequestException ex) {
 		log.info("Data request failed with exception: {}", getInternalMessage(ex));
+	}
+
+	@ResponseStatus(value = HttpStatus.PAYLOAD_TOO_LARGE, reason = ErrorMessages.REQUEST_TOO_LARGE)
+	@ExceptionHandler(BlockLimitExceededException.class)
+	public void handleBlockLimitExceededException(BlockLimitExceededException ex) {
+		log.info("Request failed with exception: {}", getInternalMessage(ex));
 	}
 
 	@ExceptionHandler(Exception.class)

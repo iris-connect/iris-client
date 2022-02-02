@@ -8,7 +8,9 @@ import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequestRepository;
 import iris.client_bff.cases.eps.CaseDataController;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
+import iris.client_bff.cases.eps.dto.ContactPerson;
 import iris.client_bff.cases.eps.dto.Contacts;
+import iris.client_bff.cases.eps.dto.Event;
 import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.web.CaseDataRequestController;
 import iris.client_bff.cases.web.submission_dto.ContactPersonList;
@@ -19,9 +21,12 @@ import iris.client_bff.utils.DtoSupplier;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.server.ResponseStatusException;
 
 @IrisWebIntegrationTest
 class CaseDataControllerIntegrationTest {
@@ -100,14 +105,7 @@ class CaseDataControllerIntegrationTest {
 		CaseDataRequest dataRequest = createRequest(refId, requestStart, requestEnd);
 
 		// prepare data
-		// var contactPersonList = dtoSupplier.getContactPersonList(0, 2);
 		Contacts contacts = Contacts.builder().build();
-		// Contacts contacts = Contacts.builder()
-		// .contactPersons(contactPersonList)
-		// .startDate(requestStart)
-		// .endDate(requestEnd)
-		// .build();
-
 		Events events = Events.builder().build();
 
 		CaseDataProvider dataProvider = CaseDataProvider.builder()
@@ -136,6 +134,70 @@ class CaseDataControllerIntegrationTest {
 		events.setEvents(dtoSupplier.getEventList(2, 3));
 		result = controller.submitContactAndEventData(dataRequest.getId().toString(), contacts, events, dataProvider);
 		assertNotEquals("OK", result);
+	}
+
+	@Test
+	void submitError_block_to_many_contacts() {
+
+		// prepare conditions
+		String refId = "submitError_block_to_many_contacts";
+		Instant requestStart = Instant.now().minus(14, ChronoUnit.DAYS);
+		Instant requestEnd = Instant.now();
+		CaseDataRequest dataRequest = createRequest(refId, requestStart, requestEnd);
+		requestRepo.save(dataRequest);
+
+		// prepare data
+		var token = dataRequest.getId().toString();
+
+		var contactPersonList = Stream.generate(() -> dtoSupplier.getContactPersonList(0, 2))
+				.flatMap(List<ContactPerson>::stream)
+				.limit(1020)
+				.toList();
+
+		var contacts = Contacts.builder().contactPersons(contactPersonList).startDate(requestStart).endDate(requestEnd)
+				.build();
+
+		var eventList = dtoSupplier.getEventList(0, 2);
+		var events = Events.builder().events(eventList).startDate(requestStart).endDate(requestEnd).build();
+
+		CaseDataProvider dataProvider = CaseDataProvider.builder().firstName("Max").lastName("Mustermann").build();
+
+		// test
+		assertThrows(ResponseStatusException.class, () -> {
+			controller.submitContactAndEventData(token, contacts, events, dataProvider);
+		});
+	}
+
+	@Test
+	void submitError_block_to_many_events() {
+
+		// prepare conditions
+		String refId = "submitError_block_to_many_events";
+		Instant requestStart = Instant.now().minus(14, ChronoUnit.DAYS);
+		Instant requestEnd = Instant.now();
+		CaseDataRequest dataRequest = createRequest(refId, requestStart, requestEnd);
+		requestRepo.save(dataRequest);
+
+		// prepare data
+		var token = dataRequest.getId().toString();
+
+		var contactPersonList = dtoSupplier.getContactPersonList(0, 2);
+		var contacts = Contacts.builder().contactPersons(contactPersonList).startDate(requestStart).endDate(requestEnd)
+				.build();
+
+		var eventList = Stream.generate(() -> dtoSupplier.getEventList(0, 2))
+				.flatMap(List<Event>::stream)
+				.limit(1020)
+				.toList();
+
+		var events = Events.builder().events(eventList).startDate(requestStart).endDate(requestEnd).build();
+
+		CaseDataProvider dataProvider = CaseDataProvider.builder().firstName("Max").lastName("Mustermann").build();
+
+		// test
+		assertThrows(ResponseStatusException.class, () -> {
+			controller.submitContactAndEventData(token, contacts, events, dataProvider);
+		});
 	}
 
 	private CaseDataRequest createRequest(String refId, Instant requestStart, Instant requestEnd) {

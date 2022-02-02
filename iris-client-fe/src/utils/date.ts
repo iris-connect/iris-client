@@ -4,6 +4,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import localeData from "dayjs/plugin/localeData";
 
 dayjs.locale("de");
 
@@ -11,6 +12,7 @@ dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
+dayjs.extend(localeData);
 
 export default dayjs;
 

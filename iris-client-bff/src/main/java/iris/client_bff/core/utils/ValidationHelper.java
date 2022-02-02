@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor()
 public class ValidationHelper {
+
 	private final AlertService alertService;
 	private final CentralConfigurationService configService;
 
@@ -113,6 +115,32 @@ public class ValidationHelper {
 		return PW_REGEX.matcher(password).matches();
 	}
 
+	public boolean isPostOutOfLimit(List<?> list, String client, long postLimit, long warnLimit, String type) {
+
+		if (list == null) {
+			return false;
+		}
+
+		if (list.size() > postLimit) {
+
+			var msg = String.format(
+					"Input from client `%s` contains %d %s at once. We prevent this as a possible attack! {threshold = %d}",
+					client, list.size(), type, postLimit);
+			alertService.createAlertTicketAndMessage(String.format("Input validation - to many %s posted", type), msg);
+
+			return true;
+
+		} else if (list.size() > warnLimit) {
+
+			var msg = String.format(
+					"Input from client `%s` contains %d %s at once. This could be an indication of an attack! {threshold = %d}",
+					client, list.size(), type, postLimit);
+			alertService.createAlertMessage(String.format("Input validation - warning about many %s posts", type), msg);
+		}
+
+		return false;
+	}
+
 	public boolean isPossibleAttackForRequiredValue(String input, String field, boolean obfuscateLogging) {
 		if (isBlank(input)) {
 			log.warn(ErrorMessages.MISSING_REQUIRED_INPUT + " - {}" + field);
@@ -120,6 +148,26 @@ public class ValidationHelper {
 		}
 
 		return isPossibleAttack(input, field, obfuscateLogging);
+	}
+
+	public boolean isPossibleAttack(String input, String field, boolean obfuscateLogging) {
+		return isPossibleAttack(input, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES, FORBIDDEN_SYMBOLS);
+	}
+
+	public boolean isPossibleAttackForPassword(String input, String field) {
+
+		if (isBlank(input)) {
+			log.warn(ErrorMessages.MISSING_REQUIRED_INPUT + " - {}" + field);
+			return true;
+		}
+
+		return isPossibleAttack(input, field, true, FORBIDDEN_KEYWORD_TUPLES,
+				ArrayUtils.removeElements(FORBIDDEN_SYMBOLS, PW_SYMBOLS));
+	}
+
+	public boolean isPossibleAttackForPhone(String input, String field, boolean obfuscateLogging) {
+		return isPossibleAttack(input, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES,
+				ArrayUtils.removeElement(FORBIDDEN_SYMBOLS, "+"));
 	}
 
 	public boolean isPossibleAttack(String input, String field, boolean obfuscateLogging,
@@ -148,26 +196,6 @@ public class ValidationHelper {
 		}
 
 		return false;
-	}
-
-	public boolean isPossibleAttack(String input, String field, boolean obfuscateLogging) {
-		return isPossibleAttack(input, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES, FORBIDDEN_SYMBOLS);
-	}
-
-	public boolean isPossibleAttackForPassword(String input, String field) {
-
-		if (isBlank(input)) {
-			log.warn(ErrorMessages.MISSING_REQUIRED_INPUT + " - {}" + field);
-			return true;
-		}
-
-		return isPossibleAttack(input, field, true, FORBIDDEN_KEYWORD_TUPLES,
-				ArrayUtils.removeElements(FORBIDDEN_SYMBOLS, PW_SYMBOLS));
-	}
-
-	public boolean isPossibleAttackForPhone(String input, String field, boolean obfuscateLogging) {
-		return isPossibleAttack(input, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES,
-				ArrayUtils.removeElement(FORBIDDEN_SYMBOLS, "+"));
 	}
 
 	/**

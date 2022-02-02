@@ -65,7 +65,7 @@ services:
       EXT_APP_DW_BASEURL: https://staging.digitales-wartezimmer.org/
       SECURITY_AUTH_DB_ADMIN_USER_NAME:
       SECURITY_AUTH_DB_ADMIN_USER_PASSWORD:
-      SERVER_ERROR_INCLUDE-MESSAGE: ALWAYS
+      SERVER_ERROR_INCLUDE_STACKTRACE: ALWAYS
     restart: unless-stopped
     depends_on:
       postgres:

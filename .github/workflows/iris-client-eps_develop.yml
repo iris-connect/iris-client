@@ -6,13 +6,13 @@ on:
   push:
     branches:
       - develop
-    paths:
+    paths:    
       - infrastructure/docker/iris-client-eps/**
       - .github/workflows/iris-client-eps_develop.yml
   pull_request:
     branches:
       - develop
-    paths:
+    paths:    
       - infrastructure/docker/iris-client-eps/**
       - .github/workflows/iris-client-eps_develop.yml
 
@@ -20,7 +20,7 @@ jobs:
   build_and_push:
     name: Build and push Docker image
     runs-on: ubuntu-latest
-
+    
     # Map a step output to a job output
     outputs:
       image-ref: ${{ steps.meta.outputs.tags }}
@@ -45,8 +45,8 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PW }}
 
       - name: Build and push to docker.io
-        uses: docker/build-push-action@v2.7.0
         id: build_image
+        uses: docker/build-push-action@v2.8.0
         with:
           context: ./infrastructure/docker/iris-client-eps/
           tags: ${{ steps.meta.outputs.tags }}
