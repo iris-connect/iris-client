@@ -45,7 +45,6 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PW }}
 
       - name: Build and push to docker.io
-        id: build_image
         uses: docker/build-push-action@v2.8.0
         with:
           context: ./infrastructure/docker/iris-client-eps/
