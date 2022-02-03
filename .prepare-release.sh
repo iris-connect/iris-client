@@ -136,12 +136,13 @@ printf "\n  Set version to POMs and build BFF image and JAR  \n\n"
 # Set new version in pom.xml using mvn versions:set command
 mvn versions:set -DnewVersion=$VERSION -DprocessAllModules=true
 
+BFF_IMAGE_NAME="$NAMESPACE/iris-client-bff"
+
 # Package the new version and copy it to release folder
 # These files will be upload to github by @semantic-release/github
-mvn -B clean verify spring-boot:repackage spring-boot:build-image -Dspring-boot.build-image.publish=false
+mvn -B clean verify spring-boot:repackage spring-boot:build-image -Dspring-boot.build-image.publish=false -Dimage.tag=$BFF_IMAGE_NAME:$VERSION
 mkdir release && cp ./iris-client-bff/target/*.jar release
 
-BFF_IMAGE_NAME="$NAMESPACE/iris-client-bff"
 docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:latest
 docker trust sign --local $BFF_IMAGE_NAME:latest
 docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:$MAJOR_LATEST

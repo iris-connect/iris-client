@@ -44,7 +44,7 @@ jobs:
 
       - name: build, package and publish the image
         run: |
-          mvn -B clean verify spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=false -Dversion.tag=${{ steps.meta.outputs.version }}
+          mvn -B clean verify spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=false -Dimage.tag=${{ steps.meta.outputs.tags }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
