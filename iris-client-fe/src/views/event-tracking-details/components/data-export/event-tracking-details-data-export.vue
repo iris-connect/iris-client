@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { TableRow } from "@/views/event-tracking-details/utils/mappedData";
+import { GuestListTableRow } from "@/views/event-tracking-details/utils/mappedData";
 import { PropType } from "vue";
 import { DataRequestDetails } from "@/api";
 import ExportDialog, {
@@ -97,7 +97,7 @@ const EventTrackingDetailsDataExportProps = Vue.extend({
       default: null,
     },
     selection: {
-      type: Array as PropType<TableRow[]>,
+      type: Array as PropType<GuestListTableRow[]>,
       default: () => [],
     },
     itemsLength: {

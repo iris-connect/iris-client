@@ -61,7 +61,7 @@
                     <v-row>
                       <v-col cols="auto">
                         <strong>
-                          {{ dataAttachment.discriminator }}
+                          {{ getDataLabel(dataAttachment.discriminator) }}
                         </strong>
                       </v-col>
                       <v-col>
@@ -74,9 +74,16 @@
                     </v-row>
                   </v-col>
                   <v-col cols="auto" class="mt-3">
-                    <v-btn icon :disabled="true">
-                      <v-icon> mdi-pencil </v-icon>
-                    </v-btn>
+                    <iris-message-data-select-dialog
+                      :value="dataAttachment"
+                      @input="updateDataAttachment($event, index)"
+                    >
+                      <template #activator="{ attrs, on }">
+                        <v-btn icon v-bind="attrs" v-on="on">
+                          <v-icon> mdi-pencil </v-icon>
+                        </v-btn>
+                      </template>
+                    </iris-message-data-select-dialog>
                     <v-btn
                       icon
                       color="error"
@@ -87,6 +94,7 @@
                   </v-col>
                 </v-row>
               </div>
+              <iris-message-data-select-dialog @input="addDataAttachment" />
             </v-col>
             <v-col cols="12">
               <!--
@@ -147,12 +155,19 @@
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { IrisMessageInsert, IrisMessageHdContact } from "@/api";
+import {
+  IrisMessageInsert,
+  IrisMessageHdContact,
+  IrisMessageDataInsert,
+  IrisMessageDataDiscriminator,
+} from "@/api";
 import rules from "@/common/validation-rules";
 // disabled file attachments
 // import _unionBy from "lodash/unionBy";
 import { ErrorMessage } from "@/utils/axios";
 import _debounce from "lodash/debounce";
+import IrisMessageDataSelectDialog from "@/views/iris-message-create/components/iris-message-data-select-dialog.vue";
+import Discriminators from "@/constants/Discriminators";
 
 type IrisMessageCreateForm = {
   model: IrisMessageInsert;
@@ -161,6 +176,7 @@ type IrisMessageCreateForm = {
 
 @Component({
   components: {
+    IrisMessageDataSelectDialog,
     ErrorMessageAlert,
   },
   // disabled file attachments
@@ -226,6 +242,20 @@ export default class IrisMessageCreateView extends Vue {
   }
    */
 
+  addDataAttachment(messageData: IrisMessageDataInsert) {
+    console.log("addDataAttachment", messageData);
+    if (!this.form.model.dataAttachments) {
+      this.form.model.dataAttachments = [];
+    }
+    this.form.model.dataAttachments.push(messageData);
+  }
+
+  updateDataAttachment(messageData: IrisMessageDataInsert, index: number) {
+    if (this.form.model.dataAttachments) {
+      this.form.model.dataAttachments[index] = messageData;
+    }
+  }
+
   removeDataAttachment(index: number) {
     if (this.form.model.dataAttachments) {
       this.form.model.dataAttachments.splice(index, 1);
@@ -247,6 +277,10 @@ export default class IrisMessageCreateView extends Vue {
       sanitisedAndDefined: [rules.sanitised, rules.defined],
       description: [rules.defined, rules.sanitised, rules.maxLength(255)],
     };
+  }
+
+  getDataLabel(discriminator: IrisMessageDataDiscriminator): string {
+    return Discriminators.getLabel(discriminator);
   }
 
   get disabled(): boolean {

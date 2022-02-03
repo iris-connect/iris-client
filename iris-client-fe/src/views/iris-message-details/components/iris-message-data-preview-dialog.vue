@@ -40,7 +40,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { AsyncComponent, ComponentOptions, PropType } from "vue";
 import { IrisMessageDataDiscriminator, IrisMessageViewData } from "@/api";
-import SortableDataTable from "@/components/sortable-data-table.vue";
 import { normalizeDataRequestDetails } from "@/views/event-tracking-details/event-tracking-details.data";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { ErrorMessage } from "@/utils/axios";
@@ -56,7 +55,7 @@ type DataPreview = {
 };
 
 const dataPreview: DataPreview = {
-  "event-tracking": {
+  [IrisMessageDataDiscriminator.EventTracking]: {
     normalize: normalizeDataRequestDetails,
     component: () =>
       import(
@@ -82,7 +81,6 @@ const IrisMessageDataPreviewDialogProps = Vue.extend({
   components: {
     IrisMessageDataImportConfirmDialog,
     ErrorMessageAlert,
-    SortableDataTable,
   },
 })
 export default class IrisMessageDataPreviewDialog extends IrisMessageDataPreviewDialogProps {

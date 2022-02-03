@@ -1954,15 +1954,17 @@ export type IrisMessageDataInsertPayload = {
     | IrisMessageDataInsertPayload[];
 };
 
-export type IrisMessageDataDiscriminator = "event-tracking";
+export enum IrisMessageDataDiscriminator {
+  EventTracking = "event-tracking",
+}
 export interface IrisMessageDataInsert {
   description: string;
-  payload: string;
+  payload: IrisMessageDataInsertPayload;
   discriminator: IrisMessageDataDiscriminator;
 }
 
 export type IrisMessageDataViewPayload = {
-  "event-tracking": DataRequestDetails;
+  [IrisMessageDataDiscriminator.EventTracking]: DataRequestDetails;
 };
 export interface IrisMessageViewData {
   id: string;
@@ -2340,10 +2342,21 @@ export class IrisClientFrontendApi extends BaseAPI {
     options?: RequestOptions
   ): ApiResponse {
     assertParamExists("irisMessagesPost", "data", data);
-    return this.apiRequest("POST", "/iris-messages", data, {
-      ...options,
-      multipart: true,
-    });
+    return this.apiRequest(
+      "POST",
+      "/iris-messages",
+      {
+        ...data,
+        dataAttachments: data.dataAttachments?.map((insert) => ({
+          ...insert,
+          payload: JSON.stringify(insert.payload),
+        })),
+      },
+      {
+        ...options,
+        multipart: true,
+      }
+    );
   }
 
   /**

@@ -26,7 +26,7 @@ export type EventData = {
   additionalInformation: string;
 };
 
-export type TableRow = {
+export type GuestListTableRow = {
   lastName: string;
   firstName: string;
   checkInTime: string;
@@ -79,17 +79,20 @@ export const getEventData = (event: DataRequestDetails | null): EventData => {
   };
 };
 
-export const getTableRows = (event: DataRequestDetails | null): TableRow[] => {
-  const guests = event?.submissionData?.guests || [];
-  return guests.map((guest, index) => {
+export const getGuestListTableRows = (
+  guests: Guest[] | undefined,
+  eventStart: string | undefined,
+  eventEnd: string | undefined
+): GuestListTableRow[] => {
+  return (guests || []).map((guest, index) => {
     const attendTo = guest.attendanceInformation?.attendTo;
     const checkOut = attendTo ? new Date(attendTo) : null;
 
     const attendFrom = guest.attendanceInformation?.attendFrom;
     const checkIn = attendFrom ? new Date(attendFrom) : null;
 
-    const startTime = event?.start ? new Date(event.start) : checkIn;
-    const endTime = event?.end ? new Date(event.end) : checkOut;
+    const startTime = eventStart ? new Date(eventStart) : checkIn;
+    const endTime = eventEnd ? new Date(eventEnd) : checkOut;
 
     let checkInTime = "-";
     if (checkIn && startTime) {

@@ -24,7 +24,7 @@ public class EventMessageDataConverter {
 
     EventMessageDataPayload payloadFromInsert(String insert) throws IrisMessageDataException {
         EventMessageDataInsertPayload insertPayload = EventMessageDataConverter.getInsertPayload(insert);
-        EventDataRequest.DataRequestIdentifier eventId = EventDataRequest.DataRequestIdentifier.of(insertPayload.getId());
+        EventDataRequest.DataRequestIdentifier eventId = EventDataRequest.DataRequestIdentifier.of(insertPayload.getEvent());
         EventDataRequest eventDataRequest = this.getEventDataRequest(eventId);
         EventDataSubmission eventDataSubmission = this.getEventDataSubmission(eventId);
         return EventMessageDataPayload.fromModel(

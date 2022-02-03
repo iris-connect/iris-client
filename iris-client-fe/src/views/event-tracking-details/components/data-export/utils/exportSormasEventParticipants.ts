@@ -1,5 +1,5 @@
 import dataExport from "@/utils/data-export/data-export";
-import { TableRow } from "@/views/event-tracking-details/utils/mappedData";
+import { GuestListTableRow } from "@/views/event-tracking-details/utils/mappedData";
 
 export type EventParticipantData = {
   involvementDescription: string;
@@ -57,7 +57,7 @@ const getHeaders = () => [
   },
 ];
 
-const mapData = (tableRows: TableRow[]): EventParticipantData[] => {
+const mapData = (tableRows: GuestListTableRow[]): EventParticipantData[] => {
   const data: EventParticipantData[] = [];
 
   const headerInstance: EventParticipantData = {

@@ -11,7 +11,7 @@ import java.util.List;
 public class EventMessageDataInsertPayload {
 
     @NotBlank
-    String id;
+    String event;
 
     @Valid
     @NotEmpty

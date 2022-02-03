@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500">
+  <v-dialog v-model="dialog" max-width="500" scrollable>
     <template v-slot:activator="{ attrs, on }">
       <slot name="activator" v-bind="{ attrs, on }">
         <v-btn
@@ -14,8 +14,8 @@
         </v-btn>
       </slot>
     </template>
-    <v-card data-test="message-data-export-dialog">
-      <v-form ref="form" v-model="form.valid" lazy-validation>
+    <v-form ref="form" v-model="form.valid" lazy-validation>
+      <v-card data-test="message-data-export-dialog">
         <v-card-title> Daten senden </v-card-title>
         <v-card-text>
           <v-row>
@@ -53,22 +53,21 @@
             Senden
           </v-btn>
         </v-card-actions>
-      </v-form>
-    </v-card>
+      </v-card>
+    </v-form>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import SortableDataTable from "@/components/sortable-data-table.vue";
-import { IrisMessageDataInsert } from "@/api";
+import { Component, Ref, Vue, Watch } from "vue-property-decorator";
+import { IrisMessageDataInsert, IrisMessageDataInsertPayload } from "@/api";
 import { PropType } from "vue";
 import rules from "@/common/validation-rules";
 
 type IrisMessageDataForm = {
   model: {
     discriminator: string;
-    payload: string;
+    payload: IrisMessageDataInsertPayload;
     description: string;
   };
   valid: boolean;
@@ -88,14 +87,10 @@ const IrisMessageDataExportDialogProps = Vue.extend({
 });
 
 @Component({
-  components: {
-    SortableDataTable,
-  },
+  components: {},
 })
 export default class IrisMessageDataExportDialog extends IrisMessageDataExportDialogProps {
-  $refs!: {
-    form: HTMLFormElement;
-  };
+  @Ref("form") readonly formRef!: HTMLFormElement;
 
   get validationRules(): Record<string, Array<unknown>> {
     return {
@@ -110,15 +105,27 @@ export default class IrisMessageDataExportDialog extends IrisMessageDataExportDi
       valid: false,
       model: {
         discriminator: this.data?.discriminator || "",
-        payload: this.data?.payload || "",
+        payload: this.data?.payload || {},
         description: this.data?.description || "",
       },
     };
   }
 
+  @Watch("dialog")
+  async onDialogChange(activated: boolean) {
+    await this.$nextTick();
+    if (activated && this.validateForm()) {
+      this.sendMessage();
+    }
+  }
+
+  validateForm(): boolean {
+    if (!this.formRef) return false;
+    return this.formRef.validate() as boolean;
+  }
+
   sendMessage(): void {
-    const valid = this.$refs.form.validate() as boolean;
-    if (valid) {
+    if (this.validateForm()) {
       this.dialog = false;
       this.$store.commit("irisMessageCreate/setDataAttachments", [
         this.form.model,

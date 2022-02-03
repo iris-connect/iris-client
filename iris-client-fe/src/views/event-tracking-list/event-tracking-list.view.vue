@@ -102,17 +102,13 @@
 </template>
 
 <script lang="ts">
-import {
-  DataRequestStatus,
-  ExistingDataRequestClientWithLocation,
-} from "@/api";
+import { DataRequestStatus } from "@/api";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
 import { debounce } from "lodash";
-import dayjs from "@/utils/date";
 import { DataQuery, getSortAttribute } from "@/api/common";
 import { DataOptions } from "vuetify";
 import {
@@ -122,32 +118,9 @@ import {
   getStringParamFromRouteWithOptionalFallback,
 } from "@/utils/pagination";
 import { Dictionary } from "vue-router/types/router";
-import { join } from "@/utils/misc";
 import StatusTestLabel from "@/constants/StatusTestLabel";
 import IrisDataTable from "@/components/iris-data-table.vue";
-
-function getFormattedAddress(
-  data?: ExistingDataRequestClientWithLocation
-): string {
-  const contact = data?.locationInformation?.contact;
-  const officialName = contact?.officialName;
-  return join(
-    [
-      data?.locationInformation?.name ?? "-",
-      officialName ? `(${officialName})` : "",
-      contact?.address?.street,
-      join([contact?.address?.zip, contact?.address?.city], " "),
-    ],
-    "\n"
-  );
-}
-
-function getFormattedDate(date?: string): string {
-  if (date && dayjs(date).isValid()) {
-    return dayjs(date).format("LLL");
-  }
-  return "-";
-}
+import { getEventTrackingListTableRows } from "@/views/event-tracking-list/utils/mappeData";
 
 @Component({
   components: {
@@ -243,25 +216,7 @@ export default class EventTrackingListView extends Vue {
       itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
       loading: eventTrackingListLoading,
       itemsLength: eventTrackingList?.totalElements || 0,
-      data: (eventTrackingList?.content || []).map(
-        (
-          dataRequest:
-            | Partial<ExistingDataRequestClientWithLocation>
-            | undefined
-        ) => {
-          return {
-            address: getFormattedAddress(dataRequest),
-            endTime: getFormattedDate(dataRequest?.end),
-            startTime: getFormattedDate(dataRequest?.start),
-            generatedTime: getFormattedDate(dataRequest?.requestedAt),
-            lastChange: getFormattedDate(dataRequest?.lastUpdatedAt),
-            extID: dataRequest?.externalRequestId || "-",
-            code: dataRequest?.code,
-            name: dataRequest?.name || "-",
-            status: dataRequest?.status?.toString() || "-",
-          };
-        }
-      ),
+      data: getEventTrackingListTableRows(eventTrackingList?.content),
       headers: [
         {
           text: "Ext.ID",

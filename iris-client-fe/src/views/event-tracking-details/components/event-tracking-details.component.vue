@@ -189,6 +189,7 @@ import rules from "@/common/validation-rules";
 import {
   DataRequestStatus,
   DataRequestStatusUpdateByUser,
+  IrisMessageDataDiscriminator,
   IrisMessageDataInsert,
 } from "@/api";
 import StatusMessages from "@/constants/StatusMessages";
@@ -199,14 +200,14 @@ import _map from "lodash/map";
 import {
   EventData,
   FormData,
-  TableRow,
+  GuestListTableRow,
 } from "@/views/event-tracking-details/utils/mappedData";
 import { PropType } from "vue";
 
 const EventTrackingDetailsComponentProps = Vue.extend({
   props: {
     tableRows: {
-      type: Array as PropType<TableRow[]>,
+      type: Array as PropType<GuestListTableRow[]>,
       default: () => [],
     },
     loading: {
@@ -320,12 +321,12 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
   get messageData(): IrisMessageDataInsert {
     const guests: string[] = _map(this.tableData.select, "raw.guestId");
     return {
-      discriminator: "event-tracking",
+      discriminator: IrisMessageDataDiscriminator.EventTracking,
       description: this.formData?.name || "",
-      payload: JSON.stringify({
-        id: this.eventData?.code || "",
+      payload: {
+        event: this.eventData?.code || "",
         guests,
-      }),
+      },
     };
   }
 

@@ -45,8 +45,8 @@ import {
   FormData,
   getEventData,
   getFormData,
-  getTableRows,
-  TableRow,
+  getGuestListTableRows,
+  GuestListTableRow,
 } from "@/views/event-tracking-details/utils/mappedData";
 import IrisMessageDataExportDialog from "@/views/iris-message-create/components/iris-message-data-export-dialog.vue";
 
@@ -142,8 +142,12 @@ export default class EventTrackingDetailsView extends Vue {
       });
   }
 
-  get tableRows(): TableRow[] {
-    return getTableRows(this.eventTrackingDetails);
+  get tableRows(): GuestListTableRow[] {
+    return getGuestListTableRows(
+      this.eventTrackingDetails?.submissionData?.guests,
+      this.eventTrackingDetails?.start,
+      this.eventTrackingDetails?.end
+    );
   }
 }
 </script>

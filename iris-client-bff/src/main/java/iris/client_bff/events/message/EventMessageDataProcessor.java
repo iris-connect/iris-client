@@ -47,15 +47,9 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
                     ErrorMessages.INVALID_INPUT + ": " + constraintViolations.stream().map(violation -> String.format("%s: %s", violation.getPropertyPath(), violation.getMessage())).collect(Collectors.joining(", "))
             );
         // check if insert PayloadObject contains a possible attack
-        this.validateUUID(insertPayload.id, "payload.eventId", ErrorMessages.INVALID_IRIS_MESSAGE_DATA);
+        this.validateUUID(insertPayload.getEvent(), "payload.eventId", ErrorMessages.INVALID_IRIS_MESSAGE_DATA);
         for ( String guestId : insertPayload.getGuests() ) {
             this.validateUUID(guestId, "payload.guestId", ErrorMessages.INVALID_IRIS_MESSAGE_DATA);
-        }
-    }
-
-    private void validateUUID(String value, String field, String errorMessage) {
-        if (value == null || !ValidationHelper.isUUIDInputValid(value, field)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage + ": " + field);
         }
     }
 
@@ -70,12 +64,6 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
         // we do not defuse the payload when receiving it to be able to receive yet unknown payload types.
         // We defuse it while importing / viewing
         return transfer;
-    }
-
-    private EventMessageDataPayload getDefusedPayload(String payload) throws IrisMessageDataException {
-        EventMessageDataPayload messagePayload = EventMessageDataPayload.toModel(payload);
-        this.payloadDefuse.defuse(messagePayload);
-        return messagePayload;
     }
 
     @Override
@@ -103,6 +91,18 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
                 .end(requestPayload.getRequestEnd())
                 .submissionData(submissionPayload.getGuestList())
                 .build();
+    }
+
+    private void validateUUID(String value, String field, String errorMessage) {
+        if (value == null || !ValidationHelper.isUUIDInputValid(value, field)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage + ": " + field);
+        }
+    }
+
+    private EventMessageDataPayload getDefusedPayload(String payload) throws IrisMessageDataException {
+        EventMessageDataPayload messagePayload = EventMessageDataPayload.toModel(payload);
+        this.payloadDefuse.defuse(messagePayload);
+        return messagePayload;
     }
 
 }

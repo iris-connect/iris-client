@@ -1,0 +1,122 @@
+<template>
+  <data-query-handler
+    @query:update="handleQueryUpdate"
+    :route-control="false"
+    #default="{ query }"
+  >
+    <search-field v-model="query.search" />
+    <sortable-data-table
+      class="mt-5"
+      v-bind="$attrs"
+      v-model="selection"
+      :headers="tableHeaders"
+      item-key="id"
+      :sort.sync="query.sort"
+      :items="tableRows"
+      :loading="eventListLoading"
+      show-select
+      single-select
+      :page.sync="query.page"
+      :items-per-page.sync="query.size"
+      :server-items-length="totalElements"
+      :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
+    />
+  </data-query-handler>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import { PropType } from "vue";
+import SortableDataTable from "@/components/sortable-data-table.vue";
+import { Page } from "@/api";
+import SearchField from "@/components/pageable/search-field.vue";
+import store from "@/store";
+import {
+  EventTrackingListTableRow,
+  getEventTrackingListTableRows,
+} from "@/views/event-tracking-list/utils/mappeData";
+import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
+import { DataQuery } from "@/api/common";
+
+const SelectEventProps = Vue.extend({
+  inheritAttrs: false,
+  props: {
+    pagination: {
+      type: Object as PropType<Page<unknown> | null>,
+      default: null,
+    },
+    route: {
+      type: Boolean,
+      default: true,
+    },
+    value: {
+      type: String,
+      default: "",
+    },
+    description: {
+      type: String,
+      default: "",
+    },
+  },
+});
+@Component({
+  components: {
+    DataQueryHandler,
+    SearchField,
+    SortableDataTable,
+  },
+})
+export default class SelectEvent extends SelectEventProps {
+  tableHeaders = [
+    {
+      text: "Ext.ID",
+      align: "start",
+      sortable: true,
+      value: "extID",
+    },
+    { text: "Event", value: "name" },
+    { text: "Ort", value: "address", sortable: false },
+    { text: "Zeit (Start)", value: "startTime" },
+    { text: "Zeit (Ende)", value: "endTime" },
+    { text: "Generiert", value: "generatedTime" },
+    { text: "Status", value: "status" },
+    { text: "Letzte Änderung", value: "lastChange" },
+  ];
+
+  get tableRows() {
+    const content =
+      store.state.eventTrackingList.eventTrackingList?.content || [];
+    return getEventTrackingListTableRows(content);
+  }
+
+  get selection(): EventTrackingListTableRow[] {
+    if (this.value.length <= 0) return [];
+    return this.tableRows.filter((row) => {
+      return row.id === this.value;
+    });
+  }
+  set selection(rows: EventTrackingListTableRow[]) {
+    const sel = rows.find((row) => row.id);
+    if (!this.description) {
+      this.$emit("update:description", sel?.name || "");
+    }
+    this.$emit("input", sel?.id || "");
+  }
+
+  handleQueryUpdate(query: DataQuery) {
+    store.dispatch("eventTrackingList/fetchEventTrackingList", query);
+  }
+
+  beforeDestroy() {
+    store.commit("eventTrackingList/reset");
+  }
+
+  get eventListLoading(): boolean {
+    return store.state.eventTrackingList.eventTrackingListLoading;
+  }
+
+  get totalElements(): boolean {
+    return store.state.eventTrackingList.eventTrackingList?.totalElements;
+  }
+}
+</script>

@@ -4,8 +4,7 @@
       v-if="context"
       class="mt-5"
       v-bind="{ ...dataTable, ...$attrs }"
-      v-on="listeners"
-      :page.sync="tablePage"
+      v-on="$listeners"
       :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
       :item-class="itemClass"
     >
@@ -30,7 +29,6 @@ import { DataTableHeader } from "vuetify";
 import { getFormattedDate } from "@/utils/date";
 import { PropType } from "vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
-import _omit from "lodash/omit";
 
 const IrisMessageDataTableProps = Vue.extend({
   inheritAttrs: false,
@@ -47,10 +45,6 @@ const IrisMessageDataTableProps = Vue.extend({
       type: String as PropType<IrisMessageContext | null>,
       default: null,
     },
-    page: {
-      type: Number,
-      default: 0,
-    },
   },
 });
 
@@ -60,15 +54,6 @@ const IrisMessageDataTableProps = Vue.extend({
   },
 })
 export default class IrisMessageDataTable extends IrisMessageDataTableProps {
-  get listeners(): Record<string, unknown> {
-    return _omit(this.$listeners, ["update:page"]);
-  }
-  get tablePage(): number {
-    return this.page + 1;
-  }
-  set tablePage(value: number) {
-    this.$emit("update:page", Math.max(0, value - 1));
-  }
   get tableHeaders(): DataTableHeader[] {
     if (this.context === IrisMessageContext.Inbox) {
       return [

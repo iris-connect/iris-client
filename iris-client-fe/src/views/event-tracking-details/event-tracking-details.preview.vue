@@ -25,8 +25,8 @@ import {
   FormData,
   getEventData,
   getFormData,
-  getTableRows,
-  TableRow,
+  getGuestListTableRows,
+  GuestListTableRow,
 } from "@/views/event-tracking-details/utils/mappedData";
 import { PropType } from "vue";
 
@@ -52,8 +52,12 @@ export default class EventTrackingDetailsPreview extends EventTrackingDetailsPre
   get eventData(): EventData {
     return getEventData(this.data);
   }
-  get tableRows(): TableRow[] {
-    return getTableRows(this.data);
+  get tableRows(): GuestListTableRow[] {
+    return getGuestListTableRows(
+      this.data?.submissionData?.guests,
+      this.data?.start,
+      this.data?.end
+    );
   }
 }
 </script>
