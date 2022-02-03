@@ -10,6 +10,7 @@ import {
 } from "@/api";
 import { normalizeIrisMessageHdContacts } from "@/views/iris-message-create/iris-message-create.data";
 import { cancelTokenProvider } from "@/api/common";
+import { parseData } from "@/utils/data";
 
 export type IrisMessageCreateState = {
   messageCreationOngoing: boolean;
@@ -79,7 +80,7 @@ const cancel_fetchRecipients = cancelTokenProvider();
 const irisMessageCreate: IrisMessageDetailsModule = {
   namespaced: true,
   state() {
-    return { ...defaultState };
+    return parseData(defaultState);
   },
   mutations: {
     setMessageCreationOngoing(state, payload) {
@@ -104,7 +105,7 @@ const irisMessageCreate: IrisMessageDetailsModule = {
       state.dataAttachments = payload;
     },
     reset(state) {
-      Object.assign(state, { ...defaultState });
+      Object.assign(state, parseData(defaultState));
     },
   },
   actions: {

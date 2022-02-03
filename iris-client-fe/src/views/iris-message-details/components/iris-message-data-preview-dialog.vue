@@ -18,7 +18,11 @@
           Schließen
         </v-btn>
         <v-spacer></v-spacer>
-        <iris-message-data-import-confirm-dialog @confirm="handleImport">
+        <confirm-dialog
+          title="Daten importieren?"
+          text="Dieser Vorgang kann nicht rückgäng gemacht werden."
+          @confirm="handleImport"
+        >
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               v-on="on"
@@ -30,7 +34,7 @@
               Daten importieren
             </v-btn>
           </template>
-        </iris-message-data-import-confirm-dialog>
+        </confirm-dialog>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -43,7 +47,7 @@ import { IrisMessageDataDiscriminator, IrisMessageViewData } from "@/api";
 import { normalizeDataRequestDetails } from "@/views/event-tracking-details/event-tracking-details.data";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { ErrorMessage } from "@/utils/axios";
-import IrisMessageDataImportConfirmDialog from "@/views/iris-message-details/components/iris-message-data-import-confirm-dialog.vue";
+import ConfirmDialog from "@/components/confirm-dialog.vue";
 
 type Normalizer = typeof normalizeDataRequestDetails;
 
@@ -79,7 +83,7 @@ const IrisMessageDataPreviewDialogProps = Vue.extend({
 
 @Component({
   components: {
-    IrisMessageDataImportConfirmDialog,
+    ConfirmDialog,
     ErrorMessageAlert,
   },
 })

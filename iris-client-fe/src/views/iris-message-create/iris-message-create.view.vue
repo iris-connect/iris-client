@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="my-3">
     <v-form
       ref="form"
       v-model="form.valid"
@@ -51,12 +51,12 @@
               ></v-textarea>
             </v-col>
             <v-col cols="12">
-              <p class="subtitle-1">Daten anfügen</p>
+              <p class="subtitle-1">Daten</p>
               <div
                 :key="index"
                 v-for="(dataAttachment, index) in form.model.dataAttachments"
               >
-                <v-row no-gutters class="py-3">
+                <v-row no-gutters>
                   <v-col>
                     <v-row>
                       <v-col cols="auto">
@@ -84,15 +84,20 @@
                         </v-btn>
                       </template>
                     </iris-message-data-select-dialog>
-                    <v-btn
-                      icon
-                      color="error"
-                      @click="removeDataAttachment(index)"
+                    <confirm-dialog
+                      title="Anhang entfernen?"
+                      text="Möchten Sie den gewählten Anhang dieser Nachricht entfernen?"
+                      @confirm="removeDataAttachment(index)"
                     >
-                      <v-icon> mdi-delete </v-icon>
-                    </v-btn>
+                      <template #activator="{ attrs, on }">
+                        <v-btn v-bind="attrs" v-on="on" icon color="error">
+                          <v-icon> mdi-delete </v-icon>
+                        </v-btn>
+                      </template>
+                    </confirm-dialog>
                   </v-col>
                 </v-row>
+                <v-divider class="mb-5" />
               </div>
               <iris-message-data-select-dialog @input="addDataAttachment" />
             </v-col>
@@ -168,6 +173,7 @@ import { ErrorMessage } from "@/utils/axios";
 import _debounce from "lodash/debounce";
 import IrisMessageDataSelectDialog from "@/views/iris-message-create/components/iris-message-data-select-dialog.vue";
 import Discriminators from "@/constants/Discriminators";
+import ConfirmDialog from "@/components/confirm-dialog.vue";
 
 type IrisMessageCreateForm = {
   model: IrisMessageInsert;
@@ -176,6 +182,7 @@ type IrisMessageCreateForm = {
 
 @Component({
   components: {
+    ConfirmDialog,
     IrisMessageDataSelectDialog,
     ErrorMessageAlert,
   },
@@ -243,7 +250,6 @@ export default class IrisMessageCreateView extends Vue {
    */
 
   addDataAttachment(messageData: IrisMessageDataInsert) {
-    console.log("addDataAttachment", messageData);
     if (!this.form.model.dataAttachments) {
       this.form.model.dataAttachments = [];
     }

@@ -147,7 +147,6 @@ export default class IrisMessageDataSelectForm extends IrisMessageDataSelectForm
   }
 
   submit() {
-    console.log("submit", this.form.model);
     if (this.formRef.validate()) {
       this.$emit("submit", parseData(this.form.model));
     }

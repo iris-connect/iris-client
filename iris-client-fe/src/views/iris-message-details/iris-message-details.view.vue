@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="my-3">
     <alert-component v-if="dataImportAlert">
       <template v-slot:message> Die Daten wurden importiert. </template>
     </alert-component>
@@ -47,7 +47,9 @@
                     >
                       <v-icon>mdi-eye</v-icon>
                     </v-btn>
-                    <iris-message-data-import-confirm-dialog
+                    <confirm-dialog
+                      title="Daten importieren?"
+                      text="Dieser Vorgang kann nicht rückgäng gemacht werden."
                       @confirm="importDataAttachment(dataAttachment.id)"
                     >
                       <template v-slot:activator="{ on, attrs }">
@@ -60,7 +62,7 @@
                           <v-icon>mdi-download</v-icon>
                         </v-btn>
                       </template>
-                    </iris-message-data-import-confirm-dialog>
+                    </confirm-dialog>
                   </div>
                 </v-list-item-action>
               </v-list-item>
@@ -136,7 +138,7 @@ import { ErrorMessage } from "@/utils/axios";
 import { getFormattedDate } from "@/utils/date";
 import IrisMessageDataPreviewDialog from "@/views/iris-message-details/components/iris-message-data-preview-dialog.vue";
 import AlertComponent from "@/components/alerts/alert-component.vue";
-import IrisMessageDataImportConfirmDialog from "@/views/iris-message-details/components/iris-message-data-import-confirm-dialog.vue";
+import ConfirmDialog from "@/components/confirm-dialog.vue";
 
 type MessageData = {
   author: string;
@@ -150,7 +152,7 @@ type MessageData = {
 
 @Component({
   components: {
-    IrisMessageDataImportConfirmDialog,
+    ConfirmDialog,
     AlertComponent,
     IrisMessageDataPreviewDialog,
     ErrorMessageAlert,

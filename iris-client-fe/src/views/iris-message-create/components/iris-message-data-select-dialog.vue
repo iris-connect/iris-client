@@ -3,13 +3,14 @@
     <template v-slot:activator="{ attrs, on }">
       <slot name="activator" v-bind="{ attrs, on }">
         <v-btn
-          color="primary"
+          color="red lighten-2"
+          dark
           v-on="on"
           v-bind="attrs"
           data-test="message-data-export-dialog.activator"
           :disabled="disabled"
         >
-          Daten anfügen
+          Daten hinzufügen
         </v-btn>
       </slot>
     </template>
