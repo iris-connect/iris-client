@@ -35,6 +35,7 @@ public class DataSubmissionConfig {
 
 		CompositeJsonServiceExporter compositeJsonServiceExporter = new CompositeJsonServiceExporter();
 		compositeJsonServiceExporter.setServices(new Object[] { caseDataController, eventDataController });
+		compositeJsonServiceExporter.setAllowExtraParams(true);
 
 		return compositeJsonServiceExporter;
 	}
