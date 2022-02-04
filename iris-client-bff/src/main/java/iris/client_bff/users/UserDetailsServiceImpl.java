@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.auth.db.jwt.JWTService;
 import iris.client_bff.users.entities.UserAccount;
+import iris.client_bff.users.entities.UserAccount.UserAccountIdentifier;
 import iris.client_bff.users.entities.UserRole;
 import iris.client_bff.users.web.dto.UserInsertDTO;
 import iris.client_bff.users.web.dto.UserRoleDTO;
@@ -52,11 +53,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return new User(userAccount.getUserName(), userAccount.getPassword(), authorities);
 	}
 
+	public Optional<UserAccount> findByUuid(UUID id) {
+		return userAccountsRepository.findById(UserAccountIdentifier.of(id));
+	}
+
 	public Optional<UserAccount> findByUsername(String username) {
 		return userAccountsRepository.findByUserName(username);
 	}
 
-	public boolean isOldPasswordCorrect(@NonNull UUID id, @NonNull String oldPassword) {
+	public boolean isOldPasswordCorrect(@NonNull UserAccountIdentifier id, @NonNull String oldPassword) {
 
 		return userAccountsRepository.findById(id)
 				.map(UserAccount::getPassword)
@@ -74,11 +79,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userAccountsRepository.save(userAccount);
 	}
 
-	public UserAccount update(UUID userId, UserUpdateDTO userUpdateDTO, UserAccountAuthentication authentication) {
+	public UserAccount update(UserAccountIdentifier userId, UserUpdateDTO userUpdateDTO,
+			UserAccountAuthentication authentication) {
 
 		log.info("Update user: {}", userId);
 
-		var userAccount = findUser(userId);
+		var userAccount = loadUser(userId);
 
 		var isAdmin = authentication.isAdmin();
 		var invalidateTokens = false;
@@ -143,7 +149,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userAccountsRepository.save(userAccount);
 	}
 
-	public void deleteById(UUID id, String currentUserName) {
+	public void deleteById(UserAccountIdentifier id, String currentUserName) {
 
 		userAccountsRepository.findById(id)
 				.ifPresent(it -> {
@@ -160,14 +166,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		userAccountsRepository.deleteById(id);
 	}
 
-	public boolean isItCurrentUser(UUID userId, UserAccountAuthentication authentication) {
+	public boolean isItCurrentUser(UserAccountIdentifier userId, UserAccountAuthentication authentication) {
 
-		var userAccount = findUser(userId);
+		var userAccount = loadUser(userId);
 
 		return authentication.getName().equals(userAccount.getUserName());
 	}
 
-	private UserAccount findUser(UUID userId) {
+	private UserAccount loadUser(UserAccountIdentifier userId) {
 
 		return userAccountsRepository.findById(userId)
 				.orElseThrow(() -> {

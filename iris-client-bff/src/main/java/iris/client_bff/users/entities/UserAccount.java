@@ -53,18 +53,22 @@ public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
 
 		private static final long serialVersionUID = -8254677010830428881L;
 
-		final UUID user_id;
+		final UUID userId;
 
 		/**
 		 * for JSON deserialization
 		 */
-		public static UserAccountIdentifier of(String uuid) {
+		private static UserAccountIdentifier of(String uuid) {
 			return of(UUID.fromString(uuid));
 		}
 
 		@Override
 		public String toString() {
-			return user_id.toString();
+			return userId.toString();
+		}
+
+		public UUID toUuid() {
+			return userId;
 		}
 	}
 }

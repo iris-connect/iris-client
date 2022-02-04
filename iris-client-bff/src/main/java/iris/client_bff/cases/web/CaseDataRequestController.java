@@ -14,6 +14,7 @@ import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.ui.messages.ErrorMessages;
+import iris.client_bff.users.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,6 +54,7 @@ public class CaseDataRequestController {
 
 	private final CaseDataSubmissionService submissionService;
 	private final ValidationHelper validHelper;
+	private final UserDetailsServiceImpl userService;
 
 	@GetMapping
 	@ResponseStatus(OK)
@@ -76,7 +78,7 @@ public class CaseDataRequestController {
 		IndexCaseInsertDTO insertValidated = validateIndexCaseInsertDTO(insert);
 
 		try {
-			return mapDetailed(caseDataRequestService.create(insertValidated));
+			return mapDetailed(caseDataRequestService.create(insertValidated), userService);
 		} catch (IRISDataRequestException e) {
 			// TODO: use ExceptionMapper?
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.CASE_DATA_REQUEST_CREATION);
@@ -88,7 +90,7 @@ public class CaseDataRequestController {
 	public ResponseEntity<IndexCaseDetailsDTO> getDetails(@PathVariable UUID id) {
 		if (ValidationHelper.isUUIDInputValid(id.toString(), FIELD_ID)) {
 			return caseDataRequestService.findDetailed(id).map((dataRequest -> {
-				var indexCaseDetailsDTO = mapDetailed(dataRequest);
+				var indexCaseDetailsDTO = mapDetailed(dataRequest, userService);
 
 				submissionService.findByRequest(dataRequest).ifPresent(indexCaseDetailsDTO::setSubmissionData);
 
@@ -107,15 +109,13 @@ public class CaseDataRequestController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 
-		IndexCaseUpdateDTO updateValidated = validateIndexCaseUpdateDTO(update);
+		var updateValidated = validateIndexCaseUpdateDTO(update);
 
-		ResponseEntity<IndexCaseDetailsDTO> responseEntity = caseDataRequestService.findDetailed(id)
+		return caseDataRequestService.findDetailed(id)
 				.map(it -> caseDataRequestService.update(it, updateValidated))
-				.map(IndexCaseMapper::mapDetailed)
+				.map(it -> mapDetailed(it, userService))
 				.map(ResponseEntity::ok)
 				.orElseGet(ResponseEntity.notFound()::build);
-
-		return responseEntity;
 	}
 
 	private IndexCaseUpdateDTO validateIndexCaseUpdateDTO(IndexCaseUpdateDTO update) {

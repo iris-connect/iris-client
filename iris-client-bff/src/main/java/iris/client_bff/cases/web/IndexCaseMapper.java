@@ -1,156 +1,171 @@
 package iris.client_bff.cases.web;
 
+import static lombok.AccessLevel.*;
+
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.model.CaseDataSubmission;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
-import iris.client_bff.cases.web.submission_dto.*;
+import iris.client_bff.cases.web.submission_dto.ContactCategory;
+import iris.client_bff.cases.web.submission_dto.ContactPerson;
+import iris.client_bff.cases.web.submission_dto.ContactPersonAllOfContactInformation;
+import iris.client_bff.cases.web.submission_dto.ContactPersonAllOfWorkPlace;
+import iris.client_bff.cases.web.submission_dto.ContactPersonList;
+import iris.client_bff.cases.web.submission_dto.ContactsAndEvents;
+import iris.client_bff.cases.web.submission_dto.ContactsAndEventsDataProvider;
+import iris.client_bff.cases.web.submission_dto.Event;
+import iris.client_bff.cases.web.submission_dto.EventList;
 import iris.client_bff.core.Sex;
 import iris.client_bff.core.web.dto.Address;
+import iris.client_bff.users.UserDetailsServiceImpl;
+import iris.client_bff.users.entities.UserAccount;
 import lombok.NoArgsConstructor;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static lombok.AccessLevel.PRIVATE;
-
 @NoArgsConstructor(access = PRIVATE)
 public class IndexCaseMapper {
 
-    public static IndexCaseDetailsDTO mapDetailed(CaseDataRequest indexCase) {
-    	
-				return IndexCaseDetailsDTO.builder()
-                .caseId(indexCase.getId().toString())
-                .comment(indexCase.getComment())
-                .externalCaseId(indexCase.getRefId())
-                .name(indexCase.getName())
-                .status(IndexCaseStatusDTO.valueOf(indexCase.getStatus().name()))
-                .start(indexCase.getRequestStart())
-                .end(indexCase.getRequestEnd())
-                .readableToken(indexCase.getReadableToken())
-                .createdAt(indexCase.getCreatedAt())
-                .createdBy(indexCase.getCreatedBy())
-                .lastModifiedAt(indexCase.getLastModifiedAt())
-                .lastModifiedBy(indexCase.getLastModifiedBy())
-                .build();
-    }
+	public static IndexCaseDetailsDTO mapDetailed(CaseDataRequest indexCase, UserDetailsServiceImpl userService) {
 
-    public static IndexCaseDTO map(CaseDataRequest indexCase) {
+		return IndexCaseDetailsDTO.builder()
+				.caseId(indexCase.getId().toString())
+				.comment(indexCase.getComment())
+				.externalCaseId(indexCase.getRefId())
+				.name(indexCase.getName())
+				.status(IndexCaseStatusDTO.valueOf(indexCase.getStatus().name()))
+				.start(indexCase.getRequestStart())
+				.end(indexCase.getRequestEnd())
+				.readableToken(indexCase.getReadableToken())
+				.createdAt(indexCase.getCreatedAt())
+				.createdBy(userService.findByUuid(indexCase.getCreatedBy()).map(IndexCaseMapper::getFullName).orElse(null))
+				.lastModifiedAt(indexCase.getLastModifiedAt())
+				.lastModifiedBy(
+						userService.findByUuid(indexCase.getLastModifiedBy()).map(IndexCaseMapper::getFullName).orElse(null))
+				.build();
+	}
 
-        return IndexCaseDTO.builder()
-                .caseId(indexCase.getId().toString())
-                .comment(indexCase.getComment())
-                .externalCaseId(indexCase.getRefId())
-                .name(indexCase.getName())
-                .status(IndexCaseStatusDTO.valueOf(indexCase.getStatus().name()))
-                .start(indexCase.getRequestStart())
-                .end(indexCase.getRequestEnd())
-                .build();
-    }
+	public static IndexCaseDTO map(CaseDataRequest indexCase) {
 
-    public static ContactsAndEvents mapDataSubmission(CaseDataSubmission submission) {
-        var contactsAndEventsDataProvider = ContactsAndEventsDataProvider.builder()
-                .firstName(submission.getDataProvider().getFirstName())
-                .lastName(submission.getDataProvider().getLastName())
-                .dateOfBirth(submission.getDataProvider().getDateOfBirth())
-                .build();
+		return IndexCaseDTO.builder()
+				.caseId(indexCase.getId().toString())
+				.comment(indexCase.getComment())
+				.externalCaseId(indexCase.getRefId())
+				.name(indexCase.getName())
+				.status(IndexCaseStatusDTO.valueOf(indexCase.getStatus().name()))
+				.start(indexCase.getRequestStart())
+				.end(indexCase.getRequestEnd())
+				.build();
+	}
 
-        var contacts = ContactPersonList.builder()
-                .contactPersons(submission.getContacts().stream().map(contact -> {
+	public static ContactsAndEvents mapDataSubmission(CaseDataSubmission submission) {
+		var contactsAndEventsDataProvider = ContactsAndEventsDataProvider.builder()
+				.firstName(submission.getDataProvider().getFirstName())
+				.lastName(submission.getDataProvider().getLastName())
+				.dateOfBirth(submission.getDataProvider().getDateOfBirth())
+				.build();
 
-                    var contactPerson = ContactPerson.builder()
-                            .dateOfBirth(contact.getDateOfBirth())
-                            .firstName(contact.getFirstName())
-                            .lastName(contact.getLastName())
-                            .phone(contact.getPhone())
-                            .email(contact.getEmail())
-                            .mobilePhone(contact.getMobilePhone())
-                            .sex(Sex.valueOf(Optional.ofNullable(contact.getSex()).orElse(Sex.UNKNOWN).name()))
-                            .build();
+		var contacts = ContactPersonList.builder()
+				.contactPersons(submission.getContacts().stream().map(contact -> {
 
-                    if (contact.getAddress() != null) {
-                        var address = Address.builder()
-                                .city(contact.getAddress().getCity())
-                                .houseNumber(contact.getAddress().getHouseNumber())
-                                .street(contact.getAddress().getStreet())
-                                .zipCode(contact.getAddress().getZipCode())
-                                .build();
+					var contactPerson = ContactPerson.builder()
+							.dateOfBirth(contact.getDateOfBirth())
+							.firstName(contact.getFirstName())
+							.lastName(contact.getLastName())
+							.phone(contact.getPhone())
+							.email(contact.getEmail())
+							.mobilePhone(contact.getMobilePhone())
+							.sex(Sex.valueOf(Optional.ofNullable(contact.getSex()).orElse(Sex.UNKNOWN).name()))
+							.build();
 
-                        contactPerson.setAddress(address);
-                    }
+					if (contact.getAddress() != null) {
+						var address = Address.builder()
+								.city(contact.getAddress().getCity())
+								.houseNumber(contact.getAddress().getHouseNumber())
+								.street(contact.getAddress().getStreet())
+								.zipCode(contact.getAddress().getZipCode())
+								.build();
 
-                    var contactInformation = ContactPersonAllOfContactInformation
-                            .builder()
-                            .basicConditions(contact.getBasicConditions())
-                            .firstContactDate(contact.getFirstContactDate())
-                            .lastContactDate(contact.getLastContactDate())
-                            .build();
+						contactPerson.setAddress(address);
+					}
 
-                    if (contact.getContactCategory() != null) {
-                        contactInformation.setContactCategory(ContactCategory.valueOf(contact.getContactCategory().name()));
-                    }
+					var contactInformation = ContactPersonAllOfContactInformation
+							.builder()
+							.basicConditions(contact.getBasicConditions())
+							.firstContactDate(contact.getFirstContactDate())
+							.lastContactDate(contact.getLastContactDate())
+							.build();
 
-                    contactPerson.setContactInformation(contactInformation);
+					if (contact.getContactCategory() != null) {
+						contactInformation.setContactCategory(ContactCategory.valueOf(contact.getContactCategory().name()));
+					}
 
-                    var workplace = ContactPersonAllOfWorkPlace.builder()
-                            .name(contact.getWorkplaceName())
-                            .pointOfContact(contact.getWorkplacePointOfContact())
-                            .phone(contact.getWorkplacePhone())
-                            .build();
+					contactPerson.setContactInformation(contactInformation);
 
-                    if (contact.getWorkplaceAddress() != null) {
-                        workplace.setAddress(Address.builder()
-                                .zipCode(contact.getWorkplaceAddress().getZipCode())
-                                .city(contact.getWorkplaceAddress().getCity())
-                                .houseNumber(contact.getWorkplaceAddress().getHouseNumber())
-                                .street(contact.getWorkplaceAddress().getStreet())
-                                .build());
-                    }
+					var workplace = ContactPersonAllOfWorkPlace.builder()
+							.name(contact.getWorkplaceName())
+							.pointOfContact(contact.getWorkplacePointOfContact())
+							.phone(contact.getWorkplacePhone())
+							.build();
 
-                    contactPerson.setWorkPlace(workplace);
+					if (contact.getWorkplaceAddress() != null) {
+						workplace.setAddress(Address.builder()
+								.zipCode(contact.getWorkplaceAddress().getZipCode())
+								.city(contact.getWorkplaceAddress().getCity())
+								.houseNumber(contact.getWorkplaceAddress().getHouseNumber())
+								.street(contact.getWorkplaceAddress().getStreet())
+								.build());
+					}
 
-                    return contactPerson;
-                }).collect(Collectors.toList()))
-                .startDate(submission.getContactsStartDateAsLocalDate())
-                .endDate(submission.getContactsEndDateAsLocalDate())
-                .build();
+					contactPerson.setWorkPlace(workplace);
 
-        EventList events;
-        if (submission.getEvents().isEmpty()) {
-            events = EventList.builder().build();
-        } else {
-            events = EventList.builder()
-                    .events(submission.getEvents().stream().map(event -> {
+					return contactPerson;
+				}).collect(Collectors.toList()))
+				.startDate(submission.getContactsStartDateAsLocalDate())
+				.endDate(submission.getContactsEndDateAsLocalDate())
+				.build();
 
-                        var eventResult = Event.builder()
-                                .name(event.getName())
-                                .phone(event.getPhone())
-                                .additionalInformation(event.getAdditionalInformation())
-                                .build();
+		EventList events;
+		if (submission.getEvents().isEmpty()) {
+			events = EventList.builder().build();
+		} else {
+			events = EventList.builder()
+					.events(submission.getEvents().stream().map(event -> {
 
-                        iris.client_bff.core.model.Address addressDB = event.getAddress();
-                        if (addressDB != null) {
-                            var address = Address.builder()
-                                    .city(addressDB.getCity())
-                                    .houseNumber(addressDB.getHouseNumber())
-                                    .street(addressDB.getStreet())
-                                    .zipCode(addressDB.getZipCode())
-                                    .build();
-                            eventResult.setAddress(address);
-                        }
+						var eventResult = Event.builder()
+								.name(event.getName())
+								.phone(event.getPhone())
+								.additionalInformation(event.getAdditionalInformation())
+								.build();
 
-                        return eventResult;
-                    }).collect(Collectors.toList()))
-                    .endDate(submission.getEventsEndDateAsLocalDate())
-                    .startDate(submission.getEventsStartDateAsLocalDate())
-                    .build();
-        }
+						iris.client_bff.core.model.Address addressDB = event.getAddress();
+						if (addressDB != null) {
+							var address = Address.builder()
+									.city(addressDB.getCity())
+									.houseNumber(addressDB.getHouseNumber())
+									.street(addressDB.getStreet())
+									.zipCode(addressDB.getZipCode())
+									.build();
+							eventResult.setAddress(address);
+						}
 
-        return ContactsAndEvents.builder()
-                .dataProvider(contactsAndEventsDataProvider)
-                .contacts(contacts)
-                .events(events)
-                .build();
-    }
+						return eventResult;
+					}).collect(Collectors.toList()))
+					.endDate(submission.getEventsEndDateAsLocalDate())
+					.startDate(submission.getEventsStartDateAsLocalDate())
+					.build();
+		}
+
+		return ContactsAndEvents.builder()
+				.dataProvider(contactsAndEventsDataProvider)
+				.contacts(contacts)
+				.events(events)
+				.build();
+	}
+
+	private static String getFullName(UserAccount user) {
+		return user.getFirstName() + " " + user.getLastName();
+	}
 }

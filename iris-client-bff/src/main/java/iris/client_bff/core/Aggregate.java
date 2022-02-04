@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.EntityListeners;
@@ -47,7 +48,7 @@ public abstract class Aggregate<T extends Aggregate<T, ID>, ID extends Id> exten
 		return this.getMetadata().getLastModified();
 	}
 
-	public String getLastModifiedBy() {
+	public UUID getLastModifiedBy() {
 		return getMetadata().getLastModifiedBy();
 	}
 
@@ -55,7 +56,7 @@ public abstract class Aggregate<T extends Aggregate<T, ID>, ID extends Id> exten
 		return this.getMetadata().getCreated();
 	}
 
-	public String getCreatedBy() {
+	public UUID getCreatedBy() {
 		return getMetadata().getCreatedBy();
 	}
 }

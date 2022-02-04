@@ -3,6 +3,7 @@ package iris.client_bff.core;
 import lombok.Getter;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -32,8 +33,8 @@ public class Metadata {
 
 	@CreatedBy
 	@Column(updatable = false)
-	String createdBy;
+	UUID createdBy;
 
 	@LastModifiedBy
-	String lastModifiedBy;
+	UUID lastModifiedBy;
 }
