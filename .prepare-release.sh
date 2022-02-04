@@ -24,6 +24,8 @@ echo "version = $VERSION"
 
 # print identifier of used dct signing key
 echo "signing-key identifier = $DCT_PRIVATE_KEY_IDENTIFIER"
+export DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE="$DCT_PRIVATE_KEY_PASSPHRASE"
+export DOCKER_CONTENT_TRUST=1
 
 # expect commit sha as second parameter
 COMMIT=$2
