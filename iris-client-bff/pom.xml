@@ -27,6 +27,7 @@
 		<java.version>17</java.version>
 		<docker.image.prefix>inoeg</docker.image.prefix>
 		<version.tag>${project.version}</version.tag>
+		<image.tag>${docker.image.prefix}/${project.artifactId}:${version.tag}</image.tag>
 		<vavr-version>0.10.4</vavr-version>
 		<greenmail-version>1.6.5</greenmail-version>
 		<testcontainers-version>1.16.3</testcontainers-version>
@@ -327,7 +328,7 @@
 						</exclude>
 					</excludes>
 					<image>
-						<name>${docker.image.prefix}/${project.artifactId}:${version.tag}</name>
+						<name>${image.tag}</name>
 						<bindings>
 							<binding>${basedir}/bindings/ca-certificates:/platform/bindings/ca-certificates</binding>
 						</bindings>
