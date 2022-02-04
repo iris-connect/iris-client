@@ -435,7 +435,7 @@ eslint-visitor-keys@2.1.0 | Apache-2.0 | https://github.com/eslint/eslint-visito
 eslint-visitor-keys@3.1.0 | Apache-2.0 | https://github.com/eslint/eslint-visitor-keys
 eslint-visitor-keys@3.2.0 | Apache-2.0 | https://github.com/eslint/eslint-visitor-keys
 eslint-webpack-plugin@3.1.0 | MIT | https://github.com/webpack-contrib/eslint-webpack-plugin
-eslint@8.7.0 | MIT | https://github.com/eslint/eslint
+eslint@8.8.0 | MIT | https://github.com/eslint/eslint
 espree@9.3.0 | BSD-2-Clause | https://github.com/eslint/espree
 esquery@1.4.0 | BSD-3-Clause | https://github.com/estools/esquery
 esrecurse@4.3.0 | BSD-2-Clause | https://github.com/estools/esrecurse
@@ -558,7 +558,7 @@ invert-kv@2.0.0 | MIT | https://github.com/sindresorhus/invert-kv
 ip@1.1.5 | MIT | https://github.com/indutny/node-ip
 ipaddr.js@1.9.1 | MIT | https://github.com/whitequark/ipaddr.js
 ipaddr.js@2.0.1 | MIT | https://github.com/whitequark/ipaddr.js
-iris-client-frontend@1.3.1-POST-RELEASE | UNLICENSED | 
+iris-client-frontend@1.4.0-rc.1-POST-RELEASE | UNLICENSED | 
 is-absolute-url@3.0.3 | MIT | https://github.com/sindresorhus/is-absolute-url
 is-arguments@1.1.1 | MIT | https://github.com/inspect-js/is-arguments
 is-arrayish@0.2.1 | MIT | https://github.com/qix-/node-is-arrayish
@@ -629,7 +629,7 @@ levn@0.4.1 | MIT | https://github.com/gkz/levn
 license-checker@25.0.1 | BSD-3-Clause | https://github.com/davglass/license-checker
 lilconfig@2.0.4 | MIT | https://github.com/antonk52/lilconfig
 lines-and-columns@1.1.6 | MIT | https://github.com/eventualbuddha/lines-and-columns
-lint-staged@12.3.1 | MIT | https://github.com/okonet/lint-staged
+lint-staged@12.3.2 | MIT | https://github.com/okonet/lint-staged
 listr2@3.13.5 | MIT | https://github.com/cenk1cenk2/listr2
 listr2@4.0.1 | MIT | https://github.com/cenk1cenk2/listr2
 loader-runner@4.2.0 | MIT | https://github.com/webpack/loader-runner
@@ -1038,7 +1038,7 @@ webpack-dev-server@4.7.3 | MIT | https://github.com/webpack/webpack-dev-server
 webpack-merge@5.8.0 | MIT | https://github.com/survivejs/webpack-merge
 webpack-sources@3.2.3 | MIT | https://github.com/webpack/webpack-sources
 webpack-virtual-modules@0.4.3 | MIT | https://github.com/sysgears/webpack-virtual-modules
-webpack@5.67.0 | MIT | https://github.com/webpack/webpack
+webpack@5.68.0 | MIT | https://github.com/webpack/webpack
 websocket-driver@0.7.4 | Apache-2.0 | https://github.com/faye/websocket-driver-node
 websocket-extensions@0.1.4 | Apache-2.0 | https://github.com/faye/websocket-extensions-node
 whatwg-fetch@3.6.2 | MIT | https://github.com/github/fetch

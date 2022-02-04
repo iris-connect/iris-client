@@ -19,7 +19,7 @@ List of third-party dependencies grouped by their license type.
         * spring-commons (io.rest-assured:spring-commons:4.4.0 - http://maven.apache.org)
         * spring-mock-mvc (io.rest-assured:spring-mock-mvc:4.4.0 - http://maven.apache.org)
         * xml-path (io.rest-assured:xml-path:4.4.0 - http://code.google.com/p/rest-assured/xml-path)
-        * Swagger UI (org.webjars:swagger-ui:4.1.3 - http://webjars.org)
+        * Swagger UI (org.webjars:swagger-ui:4.2.1 - http://webjars.org)
 
     Apache License 2.0:
 
@@ -52,13 +52,12 @@ List of third-party dependencies grouped by their license type.
         * Apache HttpClient Mime (org.apache.httpcomponents:httpmime:4.5.13 - http://hc.apache.org/httpcomponents-client)
         * Apache Log4j API (org.apache.logging.log4j:log4j-api:2.17.1 - https://logging.apache.org/log4j/2.x/log4j-api/)
         * Apache Log4j to SLF4J Adapter (org.apache.logging.log4j:log4j-to-slf4j:2.17.1 - https://logging.apache.org/log4j/2.x/log4j-to-slf4j/)
-        * Lucene Common Analyzers (org.apache.lucene:lucene-analyzers-common:8.7.0 - https://lucene.apache.org/lucene-parent/lucene-analyzers-common)
-        * Lucene Core (org.apache.lucene:lucene-core:8.7.0 - https://lucene.apache.org/lucene-parent/lucene-core)
-        * Lucene Facets (org.apache.lucene:lucene-facet:8.7.0 - https://lucene.apache.org/lucene-parent/lucene-facet)
-        * Lucene Join (org.apache.lucene:lucene-join:8.7.0 - https://lucene.apache.org/lucene-parent/lucene-join)
-        * Lucene Queries (org.apache.lucene:lucene-queries:8.7.0 - https://lucene.apache.org/lucene-parent/lucene-queries)
-        * Lucene QueryParsers (org.apache.lucene:lucene-queryparser:8.7.0 - https://lucene.apache.org/lucene-parent/lucene-queryparser)
-        * Lucene Sandbox (org.apache.lucene:lucene-sandbox:8.7.0 - https://lucene.apache.org/lucene-parent/lucene-sandbox)
+        * Lucene Common Analyzers (org.apache.lucene:lucene-analyzers-common:8.11.1 - https://lucene.apache.org/lucene-parent/lucene-analyzers-common)
+        * Lucene Core (org.apache.lucene:lucene-core:8.11.1 - https://lucene.apache.org/lucene-parent/lucene-core)
+        * Lucene Facets (org.apache.lucene:lucene-facet:8.11.1 - https://lucene.apache.org/lucene-parent/lucene-facet)
+        * Lucene Join (org.apache.lucene:lucene-join:8.11.1 - https://lucene.apache.org/lucene-parent/lucene-join)
+        * Lucene Queries (org.apache.lucene:lucene-queries:8.11.1 - https://lucene.apache.org/lucene-parent/lucene-queries)
+        * Lucene QueryParsers (org.apache.lucene:lucene-queryparser:8.11.1 - https://lucene.apache.org/lucene-parent/lucene-queryparser)
         * Maven Artifact Resolver API (org.apache.maven.resolver:maven-resolver-api:1.4.1 - https://maven.apache.org/resolver/maven-resolver-api/)
         * tomcat-embed-core (org.apache.tomcat.embed:tomcat-embed-core:9.0.56 - https://tomcat.apache.org/)
         * tomcat-embed-el (org.apache.tomcat.embed:tomcat-embed-el:9.0.56 - https://tomcat.apache.org/)
@@ -220,6 +219,7 @@ List of third-party dependencies grouped by their license type.
     Eclipse Distribution License v. 1.0:
 
         * Jakarta Persistence API (jakarta.persistence:jakarta.persistence-api:2.2.3 - https://github.com/eclipse-ee4j/jpa-api)
+        * javax.persistence-api (javax.persistence:javax.persistence-api:2.2 - https://github.com/javaee/jpa-spec)
         * SDO API (org.eclipse.persistence:commonj.sdo:2.1.1 - http://www.eclipse.org/eclipselink)
         * EclipseLink Core (org.eclipse.persistence:org.eclipse.persistence.core:2.7.9 - http://www.eclipse.org/eclipselink)
         * EclipseLink Moxy (org.eclipse.persistence:org.eclipse.persistence.moxy:2.7.9 - http://www.eclipse.org/eclipselink)
@@ -252,6 +252,7 @@ List of third-party dependencies grouped by their license type.
 
     Eclipse Public License v1.0:
 
+        * javax.persistence-api (javax.persistence:javax.persistence-api:2.2 - https://github.com/javaee/jpa-spec)
         * Eclipse ECJ (org.eclipse.jdt.core.compiler:ecj:4.4.2 - http://www.eclipse.org/jdt/)
         * SDO API (org.eclipse.persistence:commonj.sdo:2.1.1 - http://www.eclipse.org/eclipselink)
 
@@ -278,11 +279,11 @@ List of third-party dependencies grouped by their license type.
 
     GNU Lesser General Public License v2.1 or later:
 
-        * Hibernate Search Backend - Lucene (org.hibernate.search:hibernate-search-backend-lucene:6.0.6.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-backend-lucene/)
-        * Hibernate Search Engine (org.hibernate.search:hibernate-search-engine:6.0.6.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-engine/)
-        * Hibernate Search ORM Integration (org.hibernate.search:hibernate-search-mapper-orm:6.0.6.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-mapper-orm/)
-        * Hibernate Search Mapper - POJO Base (org.hibernate.search:hibernate-search-mapper-pojo-base:6.0.6.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-mapper-pojo-base/)
-        * Hibernate Search Utils - Common (org.hibernate.search:hibernate-search-util-common:6.0.6.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-util-common/)
+        * Hibernate Search Backend - Lucene (org.hibernate.search:hibernate-search-backend-lucene:6.1.0.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-backend-lucene/)
+        * Hibernate Search Engine (org.hibernate.search:hibernate-search-engine:6.1.0.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-engine/)
+        * Hibernate Search ORM Integration (org.hibernate.search:hibernate-search-mapper-orm:6.1.0.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-mapper-orm/)
+        * Hibernate Search Mapper - POJO Base (org.hibernate.search:hibernate-search-mapper-pojo-base:6.1.0.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-mapper-pojo-base/)
+        * Hibernate Search Utils - Common (org.hibernate.search:hibernate-search-util-common:6.1.0.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-util-common/)
 
     GNU Library General Public License v2.1 or later:
 
@@ -355,9 +356,9 @@ List of third-party dependencies grouped by their license type.
         * Woodstox (com.fasterxml.woodstox:woodstox-core:6.2.6 - https://github.com/FasterXML/woodstox)
         * org.apiguardian:apiguardian-api (org.apiguardian:apiguardian-api:1.1.2 - https://github.com/apiguardian-team/apiguardian)
         * org.opentest4j:opentest4j (org.opentest4j:opentest4j:1.2.0 - https://github.com/ota4j-team/opentest4j)
-        * springdoc-openapi-common (org.springdoc:springdoc-openapi-common:1.6.4 - https://springdoc.org/springdoc-openapi-common/)
-        * springdoc-openapi-ui (org.springdoc:springdoc-openapi-ui:1.6.4 - https://springdoc.org/springdoc-openapi-ui/)
-        * springdoc-openapi-webmvc-core (org.springdoc:springdoc-openapi-webmvc-core:1.6.4 - https://springdoc.org/springdoc-openapi-webmvc-core/)
+        * springdoc-openapi-common (org.springdoc:springdoc-openapi-common:1.6.5 - https://springdoc.org/springdoc-openapi-common/)
+        * springdoc-openapi-ui (org.springdoc:springdoc-openapi-ui:1.6.5 - https://springdoc.org/springdoc-openapi-ui/)
+        * springdoc-openapi-webmvc-core (org.springdoc:springdoc-openapi-webmvc-core:1.6.5 - https://springdoc.org/springdoc-openapi-webmvc-core/)
 
     The Apache Software License, Version 2.0:
 

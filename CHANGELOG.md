@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.4.0-rc.1](https://github.com/iris-connect/iris-client/compare/v1.3.1...v1.4.0-rc.1) (2022-02-04)
+
+
+### Features
+
+* Images are signed before uploading to docker to insure their integrity. ([20f4381](https://github.com/iris-connect/iris-client/commit/20f4381115bb24d5f0ecc550c9ba66bb1c3f5b86)), closes [#569](https://github.com/iris-connect/iris-client/issues/569)
+
 ## [1.3.1](https://github.com/iris-connect/iris-client/compare/v1.3.0...v1.3.1) (2022-02-01)
 
 
