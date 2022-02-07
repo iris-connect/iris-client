@@ -63,7 +63,7 @@ const dataPreview: DataPreview = {
     normalize: normalizeDataRequestDetails,
     component: () =>
       import(
-        /* webpackChunkName: "event-tracking-details.preview" */ "../../../views/event-tracking-details/event-tracking-details.preview.vue"
+        /* webpackChunkName: "event-tracking-details.preview" */ "../../event-tracking-message-data/event-tracking-details.preview.vue"
       ),
   },
 };

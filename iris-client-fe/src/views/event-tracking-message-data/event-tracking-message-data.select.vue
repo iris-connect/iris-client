@@ -45,13 +45,13 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import EventTrackingFormView from "@/views/event-tracking-form/event-tracking-form.view.vue";
 import store from "@/store";
-import SelectEvent from "@/views/event-tracking-select/components/select-event.vue";
+import SelectEvent from "@/views/event-tracking-message-data/components/select-event.vue";
 import { IrisMessageDataInsertPayload } from "@/api";
-import SelectGuests from "@/views/event-tracking-select/components/select-guests.vue";
+import SelectGuests from "@/views/event-tracking-message-data/components/select-guests.vue";
 import { PropType } from "vue";
 import rules from "@/common/validation-rules";
 
-const EventTrackingSelectViewProps = Vue.extend({
+const EventTrackingMessageDataSelectProps = Vue.extend({
   props: {
     description: {
       type: String,
@@ -76,7 +76,7 @@ const EventTrackingSelectViewProps = Vue.extend({
     next();
   },
 })
-export default class EventTrackingSelectView extends EventTrackingSelectViewProps {
+export default class EventTrackingMessageDataSelect extends EventTrackingMessageDataSelectProps {
   step = 1;
 
   touched: Record<string, boolean | undefined> = {};

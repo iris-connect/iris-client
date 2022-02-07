@@ -13,7 +13,7 @@
       item-key="id"
       :sort.sync="query.sort"
       :items="tableRows"
-      :loading="eventListLoading"
+      :loading="fetchPageEvent.state.loading"
       show-select
       single-select
       :page.sync="query.page"
@@ -21,6 +21,7 @@
       :server-items-length="totalElements"
       :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
     />
+    <error-message-alert :errors="[fetchPageEvent.state.error]" />
   </data-query-handler>
 </template>
 
@@ -30,13 +31,14 @@ import { PropType } from "vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
 import { Page } from "@/api";
 import SearchField from "@/components/pageable/search-field.vue";
-import store from "@/store";
 import {
   EventTrackingListTableRow,
   getEventTrackingListTableRows,
 } from "@/views/event-tracking-list/utils/mappeData";
 import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import { DataQuery } from "@/api/common";
+import ErrorMessageAlert from "@/components/error-message-alert.vue";
+import { fetchPageEventAction } from "@/modules/event-tracking/api";
 
 const SelectEventProps = Vue.extend({
   inheritAttrs: false,
@@ -61,6 +63,7 @@ const SelectEventProps = Vue.extend({
 });
 @Component({
   components: {
+    ErrorMessageAlert,
     DataQueryHandler,
     SearchField,
     SortableDataTable,
@@ -83,10 +86,12 @@ export default class SelectEvent extends SelectEventProps {
     { text: "Letzte Änderung", value: "lastChange" },
   ];
 
+  fetchPageEvent = fetchPageEventAction();
+
   get tableRows() {
-    const content =
-      store.state.eventTrackingList.eventTrackingList?.content || [];
-    return getEventTrackingListTableRows(content);
+    return getEventTrackingListTableRows(
+      this.fetchPageEvent.state.result?.content || []
+    );
   }
 
   get selection(): EventTrackingListTableRow[] {
@@ -104,19 +109,11 @@ export default class SelectEvent extends SelectEventProps {
   }
 
   handleQueryUpdate(query: DataQuery) {
-    store.dispatch("eventTrackingList/fetchEventTrackingList", query);
-  }
-
-  beforeDestroy() {
-    store.commit("eventTrackingList/reset");
-  }
-
-  get eventListLoading(): boolean {
-    return store.state.eventTrackingList.eventTrackingListLoading;
+    this.fetchPageEvent.execute(query);
   }
 
   get totalElements(): boolean {
-    return store.state.eventTrackingList.eventTrackingList?.totalElements;
+    return this.fetchPageEvent.state.result?.totalElements;
   }
 }
 </script>

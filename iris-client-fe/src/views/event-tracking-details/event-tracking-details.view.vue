@@ -33,8 +33,6 @@
 <style></style>
 <script lang="ts">
 import { DataRequestDetails, DataRequestStatusUpdateByUser } from "@/api";
-import router from "@/router";
-import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import { ErrorMessage } from "@/utils/axios";
 import EventTrackingDetailsComponent from "@/views/event-tracking-details/components/event-tracking-details.component.vue";
@@ -49,6 +47,10 @@ import {
   GuestListTableRow,
 } from "@/views/event-tracking-details/utils/mappedData";
 import IrisMessageDataExportDialog from "@/views/iris-message-create/components/iris-message-data-export-dialog.vue";
+import {
+  fetchEventDetailsAction,
+  patchDataRequestAction,
+} from "@/modules/event-tracking/api";
 
 @Component({
   components: {
@@ -57,23 +59,19 @@ import IrisMessageDataExportDialog from "@/views/iris-message-create/components/
     EventTrackingDetailsComponent,
     AlertComponent,
   },
-  async beforeRouteEnter(from, to, next) {
-    next();
-    await store.dispatch(
-      "eventTrackingDetails/fetchEventTrackingDetails",
-      router.currentRoute.params.id
-    );
-  },
-  beforeRouteLeave(to, from, next) {
-    store.commit("eventTrackingDetails/reset");
-    next();
-  },
 })
 export default class EventTrackingDetailsView extends Vue {
   alert = false;
 
+  fetchEventDetails = fetchEventDetailsAction();
+  patchDataRequest = patchDataRequestAction();
+
+  mounted() {
+    this.fetchEventDetails.execute(this.$route.params.id);
+  }
+
   get eventTrackingDetails(): DataRequestDetails | null {
-    return store.state.eventTrackingDetails.eventTrackingDetails;
+    return this.fetchEventDetails.state.result;
   }
 
   // Editable values => formData. Readonly values => eventData.
@@ -86,13 +84,13 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   get loading(): boolean {
-    return store.state.eventTrackingDetails.eventTrackingDetailsLoading;
+    return this.fetchEventDetails.state.loading;
   }
 
   get errorMessages(): ErrorMessage[] {
     return [
-      store.state.eventTrackingDetails.eventTrackingDetailsLoadingError,
-      store.state.eventTrackingDetails.dataRequestPatchError,
+      this.fetchEventDetails.state.error,
+      this.patchDataRequest.state.error,
     ];
   }
 
@@ -116,8 +114,8 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   updateRequestStatus(status: DataRequestStatusUpdateByUser): void {
-    store.dispatch("eventTrackingDetails/patchDataRequest", {
-      id: router.currentRoute.params.id,
+    this.patchDataRequest.execute({
+      id: this.$route.params.id,
       data: {
         status,
       },
@@ -129,15 +127,15 @@ export default class EventTrackingDetailsView extends Vue {
     resolve: () => void,
     reject: (error: string | undefined) => void
   ): void {
-    store
-      .dispatch("eventTrackingDetails/patchDataRequest", {
-        id: router.currentRoute.params.id,
+    this.patchDataRequest
+      .execute({
+        id: this.$route.params.id,
         data,
       })
       .then(resolve)
       .catch((error) => {
-        // reset vuex error as it is handled locally
-        store.commit("eventTrackingDetails/setDataRequestPatchError", null);
+        // reset action error as it is handled locally
+        this.patchDataRequest.reset(["error"]);
         reject(error);
       });
   }

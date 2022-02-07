@@ -103,7 +103,6 @@
 
 <script lang="ts">
 import { DataRequestStatus } from "@/api";
-import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
 import StatusColors from "@/constants/StatusColors";
@@ -121,21 +120,20 @@ import { Dictionary } from "vue-router/types/router";
 import StatusTestLabel from "@/constants/StatusTestLabel";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import { getEventTrackingListTableRows } from "@/views/event-tracking-list/utils/mappeData";
+import { fetchPageEventAction } from "@/modules/event-tracking/api";
 
 @Component({
   components: {
     IrisDataTable,
     EventTrackingFormView: EventTrackingFormView,
   },
-  beforeRouteLeave(to, from, next) {
-    store.commit("eventTrackingList/reset");
-    next();
-  },
 })
 export default class EventTrackingListView extends Vue {
   statusFilter: DataRequestStatus | undefined = getStatusFilterFromRoute(
     this.$route
   );
+
+  fetchPageEvent = fetchPageEventAction();
 
   selectableStatus: Dictionary<DataRequestStatus> = DataRequestStatus;
 
@@ -164,7 +162,7 @@ export default class EventTrackingListView extends Vue {
         status: getStatusFilterFromRoute(this.$route),
         search: search,
       };
-      await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
+      await this.fetchPageEvent.execute(query);
     }
   }, 1000);
 
@@ -190,7 +188,7 @@ export default class EventTrackingListView extends Vue {
         this.$route
       ),
     };
-    await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
+    await this.fetchPageEvent.execute(query);
   }
 
   get statusButtonSelected(): number {
@@ -203,18 +201,13 @@ export default class EventTrackingListView extends Vue {
     });
   }
 
-  get eventListLoading(): boolean {
-    return store.state.eventTrackingList.eventTrackingListLoading;
-  }
-
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   get dataTableModel() {
-    const { eventTrackingList, eventTrackingListLoading } =
-      store.state.eventTrackingList;
+    const eventTrackingList = this.fetchPageEvent.state.result;
     return {
       page: getPageFromRouteWithDefault(this.$route),
       itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
-      loading: eventTrackingListLoading,
+      loading: this.fetchPageEvent.state.loading,
       itemsLength: eventTrackingList?.totalElements || 0,
       data: getEventTrackingListTableRows(eventTrackingList?.content),
       headers: [
@@ -276,7 +269,7 @@ export default class EventTrackingListView extends Vue {
         this.$route
       ),
     };
-    await store.dispatch("eventTrackingList/fetchEventTrackingList", query);
+    await this.fetchPageEvent.execute(query);
   }
 
   async triggerSearch(input: string | undefined): Promise<void> {

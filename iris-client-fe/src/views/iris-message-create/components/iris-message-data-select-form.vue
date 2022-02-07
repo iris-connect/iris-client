@@ -81,7 +81,7 @@ const dataSelect: DataSelect = {
   [IrisMessageDataDiscriminator.EventTracking]: {
     component: () =>
       import(
-        /* webpackChunkName: "event-tracking-select.view" */ "../../../views/event-tracking-select/event-tracking-select.view.vue"
+        /* webpackChunkName: "event-tracking-message-data.select" */ "../../event-tracking-message-data/event-tracking-message-data.select.vue"
       ),
   },
 };

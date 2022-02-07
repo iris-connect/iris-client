@@ -2,6 +2,7 @@
   <v-form
     v-model="isValid"
     class="flex-fill"
+    @submit.prevent
     :disabled="disabled || isDisabled"
     :data-test="`editable-field.${name}`"
   >

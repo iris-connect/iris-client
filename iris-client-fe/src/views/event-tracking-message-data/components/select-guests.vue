@@ -9,7 +9,9 @@
       show-select
       show-select-all
       class="mt-5"
+      :loading="fetchEventDetails.state.loading"
     />
+    <error-message-alert :errors="[fetchEventDetails.state.error]" />
   </div>
 </template>
 
@@ -17,13 +19,16 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import SearchField from "@/components/pageable/search-field.vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
-import { DataRequestDetails } from "@/api";
 import {
   getGuestListTableRows,
   GuestListTableRow,
 } from "@/views/event-tracking-details/utils/mappedData";
-import store from "@/store";
 import { PropType } from "vue";
+import authClient from "@/api-client";
+import asyncAction from "@/utils/asyncAction";
+import { normalizeDataRequestDetails } from "@/views/event-tracking-details/event-tracking-details.data";
+import ErrorMessageAlert from "@/components/error-message-alert.vue";
+import { fetchEventDetailsAction } from "@/modules/event-tracking/api";
 const SelectGuestsProps = Vue.extend({
   inheritAttrs: false,
   props: {
@@ -39,6 +44,7 @@ const SelectGuestsProps = Vue.extend({
 });
 @Component({
   components: {
+    ErrorMessageAlert,
     SortableDataTable,
     SearchField,
   },
@@ -84,23 +90,35 @@ export default class SelectGuests extends SelectGuestsProps {
     },
     { text: "", value: "data-table-expand" },
   ];
+
+  fetchEventDetails = fetchEventDetailsAction();
+
   @Watch("eventId", { immediate: true })
-  onEventIdChange(eventId: string) {
+  async onEventIdChange(eventId: string) {
     if (eventId) {
-      store.dispatch("eventTrackingDetails/fetchEventTrackingDetails", eventId);
+      this.fetchEventDetails.execute(eventId);
     } else {
-      store.commit("eventTrackingDetails/reset");
+      this.fetchEventDetails.reset();
     }
   }
-  get eventTrackingDetails(): DataRequestDetails | null {
-    return store.state.eventTrackingDetails.eventTrackingDetails;
-  }
+
   get tableRows(): GuestListTableRow[] {
+    const eventDetails = this.fetchEventDetails.state.result;
     return getGuestListTableRows(
-      this.eventTrackingDetails?.submissionData?.guests,
-      this.eventTrackingDetails?.start,
-      this.eventTrackingDetails?.end
+      eventDetails?.submissionData?.guests,
+      eventDetails?.start,
+      eventDetails?.end
     );
+  }
+
+  get fetchEventDetailsAction() {
+    const action = async (eventId: string) => {
+      return normalizeDataRequestDetails(
+        (await authClient.getLocationDetails(eventId)).data,
+        true
+      );
+    };
+    return asyncAction(action);
   }
 }
 </script>
