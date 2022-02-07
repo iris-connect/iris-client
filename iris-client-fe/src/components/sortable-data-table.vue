@@ -5,6 +5,7 @@
     :sort-by.sync="sortBy"
     :sort-desc.sync="sortDesc"
     :page.sync="tablePage"
+    :footer-props="withDefaultFooterProps"
   >
     <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
       <slot :name="slot" v-bind="scope" />
@@ -17,6 +18,8 @@ import { Component, Vue } from "vue-property-decorator";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import { TableSort, TableSortDirection } from "@/server/utils/pagination";
 import _omit from "lodash/omit";
+import { PropType } from "vue";
+import { DEFAULT_ITEMS_PER_PAGE_OPTIONS } from "@/utils/pagination";
 
 export const getSortDir = (dir: unknown): TableSortDirection | undefined => {
   switch (dir) {
@@ -44,6 +47,10 @@ const SortableDataTableProps = Vue.extend({
       type: Number,
       default: 0,
     },
+    footerProps: {
+      type: Object as PropType<Record<string, unknown> | null>,
+      default: null,
+    },
   },
 });
 @Component({
@@ -60,6 +67,13 @@ export default class SortableDataTable extends SortableDataTableProps {
   }
   set tablePage(value: number) {
     this.$emit("update:page", Math.max(0, value - 1));
+  }
+
+  get withDefaultFooterProps() {
+    return {
+      "items-per-page-options": DEFAULT_ITEMS_PER_PAGE_OPTIONS,
+      ...this.footerProps,
+    };
   }
 
   get sortBy(): string[] {

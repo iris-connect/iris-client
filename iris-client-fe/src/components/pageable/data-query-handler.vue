@@ -11,6 +11,7 @@ import {
   DEFAULT_PAGE_SIZE,
   getPageFromRouteWithDefault,
   getPageSizeFromRouteWithDefault,
+  getStatusFilterFromRoute,
   getStringParamFromRouteWithOptionalFallback,
 } from "@/utils/pagination";
 import _mapValues from "lodash/mapValues";
@@ -43,6 +44,7 @@ export default class DataQueryHandler extends DataQueryHandlerProps {
     page: 0,
     sort: undefined,
     search: "",
+    status: null,
   };
 
   mounted() {
@@ -55,6 +57,7 @@ export default class DataQueryHandler extends DataQueryHandlerProps {
           "search",
           this.$route
         ),
+        status: getStatusFilterFromRoute(this.$route),
       };
     }
     this.initialized = true;

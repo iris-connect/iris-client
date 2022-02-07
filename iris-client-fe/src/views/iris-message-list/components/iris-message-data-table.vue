@@ -5,7 +5,6 @@
       class="mt-5"
       v-bind="{ ...dataTable, ...$attrs }"
       v-on="$listeners"
-      :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
       :item-class="itemClass"
     >
       <template v-slot:header.hasAttachments>

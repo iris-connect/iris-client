@@ -19,7 +19,6 @@
       :page.sync="query.page"
       :items-per-page.sync="query.size"
       :server-items-length="totalElements"
-      :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
     />
     <error-message-alert :errors="[fetchPageEvent.state.error]" />
   </data-query-handler>

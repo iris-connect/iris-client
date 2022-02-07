@@ -1,103 +1,70 @@
 <template>
   <div>
-    <v-row>
-      <v-col cols="12">
-        <div class="mb-6">
-          <v-btn
-            class="float-right"
-            color="primary"
-            :to="{ name: 'event-new' }"
-            data-test="view.link.create"
-          >
-            Neue Ereignisverfolgung starten
-          </v-btn>
-        </div>
-      </v-col>
-    </v-row>
-    <v-row class="mb-6">
-      <v-col cols="12">
-        Status:
-        <v-btn-toggle
-          dense
-          mandatory
-          :value="statusButtonSelected"
-          class="flex-wrap"
-        >
-          <v-btn
-            text
-            @click="filterStatus(selectableStatus[status])"
-            v-for="status in Object.keys(selectableStatus)"
-            :key="status"
-            :data-test="`status.select.${getStatusTestLabel(
-              selectableStatus[status]
-            )}`"
-          >
-            {{ getStatusSelectLabel(selectableStatus[status]) }}
-          </v-btn>
-          <!-- this needs to come last, see statusButtonSelected() -->
-          <v-btn
-            text
-            @click="filterStatus(undefined)"
-            data-test="status.select.all"
-          >
-            Alle
-          </v-btn>
-        </v-btn-toggle>
-      </v-col>
-    </v-row>
-
-    <v-card>
-      <v-card-title>Ereignisnachverfolgungen</v-card-title>
-      <v-card-text>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Suchbegriff (min. 2 Buchstaben)"
-          single-line
-          hide-details
-          @keyup="triggerSearch(search)"
-        ></v-text-field>
-        <iris-data-table
-          :loading="dataTableModel.loading"
-          :page="dataTableModel.page"
-          :server-items-length="dataTableModel.itemsLength"
-          :headers="dataTableModel.headers"
-          :items="dataTableModel.data"
-          :items-per-page="dataTableModel.itemsPerPage"
-          class="elevation-1 mt-5 twolineTable"
-          :search="search"
-          :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
-          @update:options="updatePagination"
-          data-test="view.data-table"
-        >
-          <template v-slot:[itemAddressSlotName]="{ item }">
-            <span class="text-pre-wrap"> {{ item.address }} </span>
-          </template>
-          <template v-slot:[itemStatusSlotName]="{ item }">
-            <v-chip
-              :color="getStatusColor(item.status)"
-              dark
-              :data-test="`status.${getStatusTestLabel(item.status)}`"
-            >
-              {{ getStatusName(item.status) }}
-            </v-chip>
-          </template>
-          <template v-slot:[itemActionSlotName]="{ item }">
-            <!-- TODO use imported route name -->
+    <data-query-handler @query:update="handleQueryUpdate" #default="{ query }">
+      <v-row>
+        <v-col cols="12">
+          <div class="mb-6">
             <v-btn
+              class="float-right"
               color="primary"
-              :to="{
-                name: 'event-details',
-                params: { id: item.code },
-              }"
-              data-test="select"
+              :to="{ name: 'event-new' }"
+              data-test="view.link.create"
             >
-              Details
+              Neue Ereignisverfolgung starten
             </v-btn>
-          </template>
-        </iris-data-table>
-      </v-card-text>
-    </v-card>
+          </div>
+        </v-col>
+      </v-row>
+      <v-row class="mb-6">
+        <v-col cols="12">
+          Status:
+          <status-select v-model="query.status" />
+        </v-col>
+      </v-row>
+      <v-card>
+        <v-card-title>Ereignisnachverfolgungen</v-card-title>
+        <v-card-text>
+          <search-field v-model="query.search" />
+          <sortable-data-table
+            :loading="dataTableModel.loading"
+            :page.sync="query.page"
+            :server-items-length="dataTableModel.itemsLength"
+            :headers="dataTableModel.headers"
+            :items="dataTableModel.data"
+            :sort.sync="query.sort"
+            :items-per-page.sync="query.size"
+            class="elevation-1 mt-5 twolineTable"
+            data-test="view.data-table"
+          >
+            <template v-slot:[itemAddressSlotName]="{ item }">
+              <span class="text-pre-wrap"> {{ item.address }} </span>
+            </template>
+            <template v-slot:[itemStatusSlotName]="{ item }">
+              <v-chip
+                :color="getStatusColor(item.status)"
+                dark
+                :data-test="`status.${getStatusTestLabel(item.status)}`"
+              >
+                {{ getStatusName(item.status) }}
+              </v-chip>
+            </template>
+            <template v-slot:[itemActionSlotName]="{ item }">
+              <!-- TODO use imported route name -->
+              <v-btn
+                color="primary"
+                :to="{
+                  name: 'event-details',
+                  params: { id: item.code },
+                }"
+                data-test="select"
+              >
+                Details
+              </v-btn>
+            </template>
+          </sortable-data-table>
+        </v-card-text>
+      </v-card>
+    </data-query-handler>
   </div>
 </template>
 
@@ -107,106 +74,37 @@ import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
 import StatusColors from "@/constants/StatusColors";
 import StatusMessages from "@/constants/StatusMessages";
-import { debounce } from "lodash";
-import { DataQuery, getSortAttribute } from "@/api/common";
-import { DataOptions } from "vuetify";
-import {
-  getPageFromRouteWithDefault,
-  getPageSizeFromRouteWithDefault,
-  getStatusFilterFromRoute,
-  getStringParamFromRouteWithOptionalFallback,
-} from "@/utils/pagination";
-import { Dictionary } from "vue-router/types/router";
+import { DataQuery } from "@/api/common";
 import StatusTestLabel from "@/constants/StatusTestLabel";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import { getEventTrackingListTableRows } from "@/views/event-tracking-list/utils/mappeData";
 import { fetchPageEventAction } from "@/modules/event-tracking/api";
+import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
+import SearchField from "@/components/pageable/search-field.vue";
+import StatusSelect from "@/components/pageable/status-select.vue";
+import SortableDataTable from "@/components/sortable-data-table.vue";
 
 @Component({
   components: {
+    SortableDataTable,
+    StatusSelect,
+    SearchField,
+    DataQueryHandler,
     IrisDataTable,
     EventTrackingFormView: EventTrackingFormView,
   },
 })
 export default class EventTrackingListView extends Vue {
-  statusFilter: DataRequestStatus | undefined = getStatusFilterFromRoute(
-    this.$route
-  );
-
   fetchPageEvent = fetchPageEventAction();
 
-  selectableStatus: Dictionary<DataRequestStatus> = DataRequestStatus;
-
-  search = getStringParamFromRouteWithOptionalFallback(
-    "search",
-    this.$route,
-    ""
-  );
-
-  runSearch = debounce(async (input: string | undefined) => {
-    let search = input?.trim();
-    if (!search || search.length > 1) {
-      this.$router.replace({
-        name: this.$route.name as string | undefined,
-        query: {
-          ...this.$route.query,
-          page: `1`,
-          search: search || undefined,
-        },
-      });
-
-      const query: DataQuery = {
-        size: getPageSizeFromRouteWithDefault(this.$route),
-        page: 0,
-        sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
-        status: getStatusFilterFromRoute(this.$route),
-        search: search,
-      };
-      await this.fetchPageEvent.execute(query);
-    }
-  }, 1000);
-
-  async filterStatus(target: DataRequestStatus | undefined): Promise<void> {
-    this.statusFilter = target;
-
-    this.$router.replace({
-      name: this.$route.name as string | undefined,
-      query: {
-        ...this.$route.query,
-        page: `1`,
-        status: target,
-      },
-    });
-
-    const query: DataQuery = {
-      size: getPageSizeFromRouteWithDefault(this.$route),
-      page: 0,
-      sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
-      status: target,
-      search: getStringParamFromRouteWithOptionalFallback(
-        "search",
-        this.$route
-      ),
-    };
-    await this.fetchPageEvent.execute(query);
-  }
-
-  get statusButtonSelected(): number {
-    if (!this.statusFilter) {
-      // return length + 1, assuming "Alle" button is displayed last
-      return Object.keys(this.selectableStatus).length;
-    }
-    return Object.values(this.selectableStatus).findIndex((v) => {
-      return v === this.statusFilter;
-    });
+  handleQueryUpdate(query: DataQuery) {
+    this.fetchPageEvent.execute(query);
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   get dataTableModel() {
     const eventTrackingList = this.fetchPageEvent.state.result;
     return {
-      page: getPageFromRouteWithDefault(this.$route),
-      itemsPerPage: getPageSizeFromRouteWithDefault(this.$route),
       loading: this.fetchPageEvent.state.loading,
       itemsLength: eventTrackingList?.totalElements || 0,
       data: getEventTrackingListTableRows(eventTrackingList?.content),
@@ -243,39 +141,6 @@ export default class EventTrackingListView extends Vue {
     return "item.address";
   }
 
-  async updatePagination(pagination: DataOptions): Promise<void> {
-    let sort = getSortAttribute(pagination.sortBy[0]);
-    if (sort) {
-      pagination.sortDesc[0] ? (sort = sort + ",desc") : (sort = sort + ",asc");
-    }
-
-    this.$router.replace({
-      name: this.$route.name as string | undefined,
-      query: {
-        ...this.$route.query,
-        page: `${pagination.page}`,
-        size: `${pagination.itemsPerPage}`,
-        sort: sort,
-      },
-    });
-
-    const query: DataQuery = {
-      size: pagination.itemsPerPage,
-      page: pagination.page - 1,
-      sort: sort,
-      status: getStatusFilterFromRoute(this.$route),
-      search: getStringParamFromRouteWithOptionalFallback(
-        "search",
-        this.$route
-      ),
-    };
-    await this.fetchPageEvent.execute(query);
-  }
-
-  async triggerSearch(input: string | undefined): Promise<void> {
-    await this.runSearch(input);
-  }
-
   getStatusColor(status: DataRequestStatus): string {
     return StatusColors.getColor(status);
   }
@@ -286,11 +151,6 @@ export default class EventTrackingListView extends Vue {
 
   getStatusTestLabel(status: DataRequestStatus): string {
     return StatusTestLabel.getStatusTestLabel(status);
-  }
-
-  getStatusSelectLabel(status: DataRequestStatus | null): string {
-    if (!status) return "Alle";
-    return StatusMessages.getMessage(status);
   }
 }
 </script>

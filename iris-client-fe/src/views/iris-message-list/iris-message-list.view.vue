@@ -51,12 +51,13 @@ import {
   getStringParamFromRouteWithOptionalFallback,
 } from "@/utils/pagination";
 import SearchField from "@/components/pageable/search-field.vue";
-import { IrisMessageFolder, IrisMessageQuery } from "@/api";
+import { IrisMessageFolder } from "@/api";
 import DataTree from "@/components/data-tree/data-tree.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import IrisMessageFoldersDataTree from "@/views/iris-message-list/components/iris-message-folders-data-tree.vue";
 import IrisMessageDataTable from "@/views/iris-message-list/components/iris-message-data-table.vue";
 import _mapValues from "lodash/mapValues";
+import { DataQuery } from "@/api/common";
 
 @Component({
   components: {
@@ -80,7 +81,7 @@ export default class IrisMessageListView extends Vue {
     ];
   }
 
-  query: IrisMessageQuery = {
+  query: DataQuery = {
     size: getPageSizeFromRouteWithDefault(this.$route),
     page: Math.max(0, getPageFromRouteWithDefault(this.$route) - 1),
     sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
@@ -100,7 +101,7 @@ export default class IrisMessageListView extends Vue {
   }
 
   @Watch("query", { immediate: true, deep: true })
-  onQueryChange(newValue: IrisMessageQuery) {
+  onQueryChange(newValue: DataQuery) {
     this.updateRoute(newValue);
     if (newValue.folder) {
       this.$store.dispatch("irisMessageList/fetchMessages", newValue);
@@ -128,7 +129,7 @@ export default class IrisMessageListView extends Vue {
     });
   }
 
-  updateRoute(query: IrisMessageQuery): void {
+  updateRoute(query: DataQuery): void {
     const routeQuery: Record<string, unknown> = {
       ...this.$route.query,
       ...query,

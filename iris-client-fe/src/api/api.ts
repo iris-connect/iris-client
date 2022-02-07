@@ -1909,10 +1909,6 @@ export interface Page<Content> {
   empty?: boolean;
 }
 
-export type IrisMessageQuery = DataQuery & {
-  folder?: string;
-};
-
 export type PageIrisMessages = Page<IrisMessage>;
 
 export interface IrisMessageFileAttachment {

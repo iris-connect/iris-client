@@ -22,7 +22,7 @@ export type DataQuery = {
   sort?: string | null;
   status?: DataRequestStatus | null;
   search?: string | null;
-  sortOrderDesc?: boolean;
+  folder?: string;
 };
 
 export type RequestQuery = {

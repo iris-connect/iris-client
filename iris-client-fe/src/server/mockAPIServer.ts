@@ -6,7 +6,6 @@ import {
   DataRequestStatus,
   ExistingDataRequestClientWithLocation,
   IrisMessage,
-  IrisMessageQuery,
   User,
   UserRole,
 } from "@/api";
@@ -42,6 +41,7 @@ import {
   // disabled file attachments
   // dummyIrisMessageFileAttachments,
 } from "@/server/data/dummy-iris-messages";
+import { DataQuery } from "@/api/common";
 
 const loginResponse = (role: UserRole): Response => {
   return new Response(200, {
@@ -304,7 +304,7 @@ export function makeMockAPIServer() {
       });
 
       this.get("/iris-messages", (schema, request) => {
-        const query: Partial<IrisMessageQuery> = request.queryParams;
+        const query: Partial<DataQuery> = request.queryParams;
         return authResponse(
           request,
           queriedPage(dummyIrisMessageList as IrisMessage[], query)
