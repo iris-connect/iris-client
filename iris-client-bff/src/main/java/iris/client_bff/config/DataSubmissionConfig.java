@@ -35,7 +35,7 @@ public class DataSubmissionConfig {
 
 		CompositeJsonServiceExporter compositeJsonServiceExporter = new CompositeJsonServiceExporter();
 		compositeJsonServiceExporter.setServices(new Object[] { caseDataController, eventDataController });
-		compositeJsonServiceExporter.setAllowExtraParams(true);
+		compositeJsonServiceExporter.setAllowExtraParams(true); // Used to allow the EPS to add common parameters (e.g. a signature) and not have to change all methods.
 
 		return compositeJsonServiceExporter;
 	}
