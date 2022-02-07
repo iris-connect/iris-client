@@ -31,7 +31,7 @@
 		<vavr-version>0.10.4</vavr-version>
 		<greenmail-version>1.6.5</greenmail-version>
 		<testcontainers-version>1.16.3</testcontainers-version>
-		<hibernate-search-version>6.1.0.Final</hibernate-search-version>
+		<hibernate-search-version>6.1.1.Final</hibernate-search-version>
 	</properties>
 
 	<profiles>
