@@ -12,55 +12,58 @@
     <v-card>
       <v-card-title>Nachrichten</v-card-title>
       <v-card-text>
-        <iris-message-folders-data-tree
-          :folders="folders"
-          :loading="foldersLoading"
-          v-model="query.folder"
+        <data-query-handler
+          ref="queryHandler"
+          @query:update="handleQueryUpdate"
+          #default="{ query }"
         >
-          <template #data-table="{ context }">
-            <search-field
-              :disabled="!context"
-              v-model="query.search"
-              data-test="search"
-            />
-            <iris-message-data-table
-              :context="context"
-              :message-list="messageList"
-              :loading="messageListLoading"
-              :search.sync="query.search"
-              :sort.sync="query.sort"
-              :page.sync="query.page"
-              :items-per-page.sync="query.size"
-              @click:row="handleRowClick"
-              data-test="view.data-table"
-            />
-          </template>
-        </iris-message-folders-data-tree>
-        <error-message-alert :errors="errors" />
+          <iris-message-folders-data-tree
+            :folders="folders"
+            :loading="foldersLoading"
+            v-model="query.folder"
+            @input="handleFolderChange($event)"
+          >
+            <template #data-table="{ context }">
+              <search-field
+                :disabled="!context"
+                v-model="query.search"
+                data-test="search"
+              />
+              <iris-message-data-table
+                :context="context"
+                :message-list="messageList"
+                :loading="messageListLoading"
+                :search.sync="query.search"
+                :sort.sync="query.sort"
+                :page.sync="query.page"
+                :items-per-page.sync="query.size"
+                @click:row="handleRowClick"
+                data-test="view.data-table"
+              />
+            </template>
+          </iris-message-folders-data-tree>
+          <error-message-alert :errors="errors" />
+        </data-query-handler>
       </v-card-text>
     </v-card>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
-import {
-  getPageFromRouteWithDefault,
-  getPageSizeFromRouteWithDefault,
-  getStringParamFromRouteWithOptionalFallback,
-} from "@/utils/pagination";
 import SearchField from "@/components/pageable/search-field.vue";
 import { IrisMessageFolder } from "@/api";
 import DataTree from "@/components/data-tree/data-tree.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import IrisMessageFoldersDataTree from "@/views/iris-message-list/components/iris-message-folders-data-tree.vue";
 import IrisMessageDataTable from "@/views/iris-message-list/components/iris-message-data-table.vue";
-import _mapValues from "lodash/mapValues";
 import { DataQuery } from "@/api/common";
+import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 
 @Component({
   components: {
+    DataQueryHandler,
     IrisMessageDataTable,
     IrisMessageFoldersDataTree,
     ErrorMessageAlert,
@@ -81,30 +84,15 @@ export default class IrisMessageListView extends Vue {
     ];
   }
 
-  query: DataQuery = {
-    size: getPageSizeFromRouteWithDefault(this.$route),
-    page: Math.max(0, getPageFromRouteWithDefault(this.$route) - 1),
-    sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
-    search: getStringParamFromRouteWithOptionalFallback("search", this.$route),
-    folder: getStringParamFromRouteWithOptionalFallback("folder", this.$route),
-  };
-
-  @Watch("query.folder", { immediate: true })
-  onFolderChange() {
+  handleFolderChange() {
     this.$store.commit("irisMessageList/setMessageList", null);
-    this.query = {
-      ...this.query,
-      page: 0,
-      sort: undefined,
-      search: undefined,
-    };
   }
 
-  @Watch("query", { immediate: true, deep: true })
-  onQueryChange(newValue: DataQuery) {
-    this.updateRoute(newValue);
+  handleQueryUpdate(newValue: DataQuery) {
     if (newValue.folder) {
       this.$store.dispatch("irisMessageList/fetchMessages", newValue);
+    } else {
+      this.$store.commit("irisMessageList/setMessageList", null);
     }
   }
 
@@ -127,24 +115,6 @@ export default class IrisMessageListView extends Vue {
       name: "iris-message-details",
       params: { messageId: row.id },
     });
-  }
-
-  updateRoute(query: DataQuery): void {
-    const routeQuery: Record<string, unknown> = {
-      ...this.$route.query,
-      ...query,
-      page: `${(query?.page || 0) + 1}`,
-    };
-    this.$router
-      .replace({
-        name: this.$route.name as string | undefined,
-        query: _mapValues(routeQuery, (val) => {
-          return val ? `${val}` : undefined;
-        }),
-      })
-      .catch(() => {
-        // ignored
-      });
   }
 }
 </script>

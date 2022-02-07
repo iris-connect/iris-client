@@ -43,8 +43,9 @@ export default class DataQueryHandler extends DataQueryHandlerProps {
     size: DEFAULT_PAGE_SIZE,
     page: 0,
     sort: undefined,
-    search: "",
-    status: null,
+    search: undefined,
+    status: undefined,
+    folder: undefined,
   };
 
   mounted() {
@@ -52,12 +53,16 @@ export default class DataQueryHandler extends DataQueryHandlerProps {
       this.query = {
         size: getPageSizeFromRouteWithDefault(this.$route),
         page: Math.max(0, getPageFromRouteWithDefault(this.$route) - 1),
+        status: getStatusFilterFromRoute(this.$route),
         sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
         search: getStringParamFromRouteWithOptionalFallback(
           "search",
           this.$route
         ),
-        status: getStatusFilterFromRoute(this.$route),
+        folder: getStringParamFromRouteWithOptionalFallback(
+          "folder",
+          this.$route
+        ),
       };
     }
     this.initialized = true;
