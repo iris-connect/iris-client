@@ -1,6 +1,6 @@
 package iris.client_bff.vaccination_info.eps;
 
-import iris.client_bff.core.model.Address;
+import iris.client_bff.config.MapStructCentralConfig;
 import iris.client_bff.vaccination_info.EncryptionService;
 import iris.client_bff.vaccination_info.VaccinationInfo;
 import iris.client_bff.vaccination_info.VaccinationInfoAnnouncement;
@@ -14,8 +14,8 @@ import java.security.GeneralSecurityException;
 import java.security.PublicKey;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,7 +31,8 @@ class VaccinationInfoControllerImpl implements VaccinationInfoController {
 
 	private final VaccinationInfoService service;
 	private final EncryptionService encryptionService;
-	private final ObjectMapper mapper;
+	private final ObjectMapper objectMapper;
+	private final DtoMapper mapper;
 
 	@Override
 	public AnnouncementResultDto announceVaccinationInfoList(AnnouncementDataDto announcementData) {
@@ -50,7 +51,8 @@ class VaccinationInfoControllerImpl implements VaccinationInfoController {
 
 		log.debug("Start submit vaccination info list (JSON-RPC interface)");
 
-		service.createVaccinationInfo(AnnouncementIdentifier.of(dataAuthorizationToken), map(facility), map(employees));
+		service.createVaccinationInfo(AnnouncementIdentifier.of(dataAuthorizationToken), mapper.mapDto2Entity(facility),
+				mapper.mapDtos2Entities(employees));
 
 		log.trace("Finish submit vaccination info list (JSON-RPC interface)");
 
@@ -82,7 +84,7 @@ class VaccinationInfoControllerImpl implements VaccinationInfoController {
 			var key = encryptionService.generateAgreedKey(keyPair.getPrivate(), submitterPublicKey);
 
 			var pubKeyBase64 = encryptionService.encodeToBase64(keyPair.getPublic());
-			var encryptionData = encryptionService.encryptAndEncode(key, mapper.writeValueAsString(tokens));
+			var encryptionData = encryptionService.encryptAndEncode(key, objectMapper.writeValueAsString(tokens));
 
 			return new AnnouncementResultDto(pubKeyBase64, encryptionData.iv(), encryptionData.data());
 		} catch (JsonProcessingException | GeneralSecurityException e) {
@@ -98,45 +100,13 @@ class VaccinationInfoControllerImpl implements VaccinationInfoController {
 		}
 	}
 
-	private VaccinationInfo.Facility map(Facility facilityDto) {
+	@Mapper(config = MapStructCentralConfig.class)
+	static interface DtoMapper {
 
-		var address = map(facilityDto.address());
+		VaccinationInfo.Facility mapDto2Entity(Facility facilityDto);
 
-		var personDto = facilityDto.contactPerson();
-		var contactPerson = VaccinationInfo.ContactPerson.of(personDto.firstName(), personDto.lastName(), personDto.eMail(),
-				personDto.phone());
+		Set<VaccinationInfo.Employee> mapDtos2Entities(Set<Employee> employees);
 
-		return VaccinationInfo.Facility.of(facilityDto.name(), address, contactPerson);
-	}
-
-	private Set<VaccinationInfo.Employee> map(Set<Employee> employees) {
-
-		return employees.stream()
-				.map(this::map)
-				.collect(Collectors.toSet());
-	}
-
-	private VaccinationInfo.Employee map(Employee employee) {
-
-		return VaccinationInfo.Employee.of(
-				employee.firstName(),
-				employee.lastName(),
-				employee.dateOfBirth(),
-				employee.sex(),
-				map(employee.address()),
-				employee.eMail(),
-				employee.phone(),
-				employee.vaccination(),
-				employee.vaccinationStatus());
-	}
-
-	private Address map(iris.client_bff.core.web.dto.Address addressDto) {
-
-		return Address.builder()
-				.street(addressDto.getStreet())
-				.houseNumber(addressDto.getHouseNumber())
-				.city(addressDto.getCity())
-				.zipCode(addressDto.getZipCode())
-				.build();
+		VaccinationInfo.Employee mapDto2Entity(Employee employee);
 	}
 }

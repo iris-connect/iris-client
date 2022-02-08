@@ -9,6 +9,7 @@ import iris.client_bff.core.model.Address;
 import iris.client_bff.vaccination_info.VaccinationInfo.VaccinationInfoIdentifier;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -151,6 +152,7 @@ public class VaccinationInfo extends Aggregate<VaccinationInfo, VaccinationInfoI
 	@Embeddable
 	@Data
 	@Setter(AccessLevel.PACKAGE)
+	@Builder
 	@AllArgsConstructor(staticName = "of")
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class Facility {
@@ -168,6 +170,7 @@ public class VaccinationInfo extends Aggregate<VaccinationInfo, VaccinationInfoI
 	@Embeddable
 	@Data
 	@Setter(AccessLevel.PACKAGE)
+	@Builder
 	@AllArgsConstructor(staticName = "of")
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class ContactPerson {
@@ -186,6 +189,7 @@ public class VaccinationInfo extends Aggregate<VaccinationInfo, VaccinationInfoI
 	@Table(name = "employees")
 	@Data
 	@Setter(AccessLevel.PACKAGE)
+	@Builder
 	@AllArgsConstructor(staticName = "of")
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class Employee {

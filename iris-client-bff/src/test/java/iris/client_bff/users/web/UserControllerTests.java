@@ -40,6 +40,8 @@ class UserControllerTests {
 	AlertService alertService;
 	@Mock(lenient = true)
 	CentralConfigurationService hdConfig;
+	@Mock(lenient = true)
+	UserMapperImpl userMapper;
 
 	UserController userController;
 
@@ -71,7 +73,7 @@ class UserControllerTests {
 						});
 		when(userService.isOldPasswordCorrect(any(UserAccountIdentifier.class), anyString())).thenReturn(true);
 
-		userController = new UserController(userService);
+		userController = new UserController(userService, userMapper);
 	}
 
 	@Test
