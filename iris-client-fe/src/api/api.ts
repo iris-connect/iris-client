@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {
-  ApiResponse,
-  assertParamExists,
-  DataQuery,
-  RequestOptions,
-} from "./common";
+import { ApiResponse, assertParamExists, RequestOptions } from "./common";
 import { BaseAPI } from "./base";
 import { UserSession } from "@/views/user-login/user-login.store";
 

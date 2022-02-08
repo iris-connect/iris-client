@@ -151,3 +151,6 @@ const difference = <A extends Record<string, any>, B extends A>(
     }
   });
 };
+export const getObjectKeys = <T>(obj: T): Array<keyof T> => {
+  return Object.keys(obj) as Array<keyof typeof obj>;
+};

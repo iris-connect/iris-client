@@ -18,10 +18,10 @@
           #default="{ query }"
         >
           <iris-message-folders-data-tree
-            :folders="folders"
-            :loading="foldersLoading"
+            :folders="messageApi.fetchMessageFolders.state.result"
+            :loading="messageApi.fetchMessageFolders.state.loading"
             v-model="query.folder"
-            @input="handleFolderChange($event)"
+            @input="clearMessageList"
           >
             <template #data-table="{ context }">
               <search-field
@@ -31,8 +31,8 @@
               />
               <iris-message-data-table
                 :context="context"
-                :message-list="messageList"
-                :loading="messageListLoading"
+                :message-list="messageApi.fetchMessages.state.result"
+                :loading="messageApi.fetchMessages.state.loading"
                 :search.sync="query.search"
                 :sort.sync="query.sort"
                 :page.sync="query.page"
@@ -51,15 +51,18 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import store from "@/store";
 import SearchField from "@/components/pageable/search-field.vue";
-import { IrisMessageFolder } from "@/api";
 import DataTree from "@/components/data-tree/data-tree.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import IrisMessageFoldersDataTree from "@/views/iris-message-list/components/iris-message-folders-data-tree.vue";
 import IrisMessageDataTable from "@/views/iris-message-list/components/iris-message-data-table.vue";
 import { DataQuery } from "@/api/common";
 import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
+import { getApiErrorMessages } from "@/utils/api";
+import {
+  bundleIrisMessageApi,
+  fetchUnreadMessageCountApi,
+} from "@/modules/iris-message/api";
 
 @Component({
   components: {
@@ -70,44 +73,29 @@ import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
     DataTree,
     SearchField,
   },
-  beforeRouteEnter(to, from, next) {
-    store.dispatch("irisMessageList/fetchMessageFolders");
-    store.dispatch("irisMessageList/fetchUnreadMessageCount");
-    next();
-  },
 })
 export default class IrisMessageListView extends Vue {
-  get errors() {
-    return [
-      this.$store.state.irisMessageList.messageListLoadingError,
-      this.$store.state.irisMessageList.messageFoldersLoadingError,
-    ];
+  messageApi = bundleIrisMessageApi(["fetchMessages", "fetchMessageFolders"]);
+
+  mounted() {
+    this.messageApi.fetchMessageFolders.execute();
+    fetchUnreadMessageCountApi.execute();
   }
 
-  handleFolderChange() {
-    this.$store.commit("irisMessageList/setMessageList", null);
+  get errors() {
+    return getApiErrorMessages(this.messageApi);
+  }
+
+  clearMessageList() {
+    this.messageApi.fetchMessages.reset(["result"]);
   }
 
   handleQueryUpdate(newValue: DataQuery) {
     if (newValue.folder) {
-      this.$store.dispatch("irisMessageList/fetchMessages", newValue);
+      this.messageApi.fetchMessages.execute(newValue);
     } else {
-      this.$store.commit("irisMessageList/setMessageList", null);
+      this.clearMessageList();
     }
-  }
-
-  get messageList(): IrisMessageFolder[] | null {
-    return this.$store.state.irisMessageList.messageList;
-  }
-  get messageListLoading(): boolean {
-    return this.$store.state.irisMessageList.messageListLoading;
-  }
-
-  get folders(): IrisMessageFolder[] | null {
-    return this.$store.state.irisMessageList.messageFolders;
-  }
-  get foldersLoading(): boolean {
-    return this.$store.state.irisMessageList.messageFoldersLoading;
   }
 
   handleRowClick(row: { id: string }) {

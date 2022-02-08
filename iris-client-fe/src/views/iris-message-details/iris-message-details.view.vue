@@ -125,7 +125,6 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import store from "@/store";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import {
   IrisMessageContext,
@@ -139,6 +138,11 @@ import { getFormattedDate } from "@/utils/date";
 import IrisMessageDataPreviewDialog from "@/views/iris-message-details/components/iris-message-data-preview-dialog.vue";
 import AlertComponent from "@/components/alerts/alert-component.vue";
 import ConfirmDialog from "@/components/confirm-dialog.vue";
+import {
+  bundleIrisMessageApi,
+  fetchUnreadMessageCountApi,
+} from "@/modules/iris-message/api";
+import { getApiErrorMessages, getApiLoading } from "@/utils/api";
 
 type MessageData = {
   author: string;
@@ -158,16 +162,11 @@ type MessageData = {
     ErrorMessageAlert,
   },
   beforeRouteEnter(to, from, next) {
-    store.dispatch("irisMessageDetails/fetchMessage", to.params.messageId);
     next((vm) => {
       if (typeof from.name === "string") {
         (vm as IrisMessageDetailsView).prevLocation = from.name;
       }
     });
-  },
-  beforeRouteLeave(to, from, next) {
-    store.commit("irisMessageDetails/reset");
-    next();
   },
 })
 export default class IrisMessageDetailsView extends Vue {
@@ -178,11 +177,28 @@ export default class IrisMessageDetailsView extends Vue {
       this.dataImportAlert = false;
     }, 2000);
   }
+
+  messageApi = bundleIrisMessageApi(["fetchMessage", "markAsRead"]);
+
+  messageDataApi = bundleIrisMessageApi([
+    "importDataAttachment",
+    "viewDataAttachment",
+  ]);
+
+  messageFileApi = bundleIrisMessageApi(["downloadFileAttachment"]);
+
+  mounted() {
+    this.messageApi.fetchMessage.execute(this.$route.params.messageId);
+  }
+
+  get messageDetails(): IrisMessageDetails | null {
+    return this.messageApi.fetchMessage.state.result;
+  }
+
   dataPreview: IrisMessageViewData | null = null;
   prevLocation: null | string = null;
   get message(): MessageData {
-    const message: IrisMessageDetails | null =
-      this.$store.state.irisMessageDetails.message;
+    const message = this.messageDetails;
     return {
       author: message?.hdAuthor?.name || "-",
       recipient: message?.hdRecipient?.name || "-",
@@ -196,60 +212,46 @@ export default class IrisMessageDetailsView extends Vue {
     };
   }
   get isInbox(): boolean {
-    const message: IrisMessageDetails | null =
-      this.$store.state.irisMessageDetails.message;
-    return message?.context === IrisMessageContext.Inbox;
+    return this.messageDetails?.context === IrisMessageContext.Inbox;
   }
   get messageLoading(): boolean {
-    return (
-      this.$store.state.irisMessageDetails.messageLoading ||
-      this.$store.state.irisMessageDetails.messageSaving
-    );
+    return getApiLoading(this.messageApi);
   }
   get dataAttachmentLoading(): boolean {
-    return this.$store.state.irisMessageDetails.dataAttachmentLoading;
+    return getApiLoading(this.messageDataApi);
   }
   get fileAttachmentLoading(): boolean {
-    return this.$store.state.irisMessageDetails.fileAttachmentLoading;
+    return getApiLoading(this.messageFileApi);
   }
   get errors(): ErrorMessage[] {
     return [
-      this.$store.state.irisMessageDetails.messageLoadingError,
-      this.$store.state.irisMessageDetails.messageSavingError,
-      this.$store.state.irisMessageDetails.dataAttachmentLoadingError,
-      this.$store.state.irisMessageDetails.fileAttachmentLoadingError,
+      ...getApiErrorMessages(this.messageApi),
+      ...getApiErrorMessages(this.messageDataApi),
+      ...getApiErrorMessages(this.messageFileApi),
     ];
   }
   get messageLoaded(): boolean {
+    const messageState = this.messageApi.fetchMessage.state;
     return (
-      this.$store.state.irisMessageDetails.messageLoading !== true &&
-      this.$store.state.irisMessageDetails.messageLoadingError === null &&
-      this.$store.state.irisMessageDetails.message !== null
+      !messageState.loading &&
+      messageState.error === null &&
+      messageState.result !== null
     );
   }
   @Watch("messageLoaded")
   async onMessageLoaded(newValue: boolean) {
-    const message = store.state.irisMessageDetails.message;
-    if (newValue && !message?.isRead) {
-      await this.$store.dispatch(
-        "irisMessageDetails/markAsRead",
-        this.$route.params.messageId
-      );
-      await this.$store.dispatch("irisMessageList/fetchUnreadMessageCount");
+    if (newValue && !this.messageDetails?.isRead) {
+      await this.messageApi.markAsRead.execute(this.$route.params.messageId);
+      await fetchUnreadMessageCountApi.execute();
     }
   }
   async importDataAttachment(id: string) {
-    await this.$store.dispatch("irisMessageDetails/importDataAttachment", id);
-    const message: IrisMessageDetails | null =
-      this.$store.state.irisMessageDetails.message;
-    this.$store.dispatch("irisMessageDetails/fetchMessage", message?.id);
+    await this.messageDataApi.importDataAttachment.execute(id);
+    await this.messageApi.fetchMessage.execute(this.$route.params.messageId);
     this.showDataImportAlert();
   }
   async viewDataAttachment(id: string) {
-    this.dataPreview = await this.$store.dispatch(
-      "irisMessageDetails/viewDataAttachment",
-      id
-    );
+    this.dataPreview = await this.messageDataApi.viewDataAttachment.execute(id);
   }
   get dataPreviewId() {
     return this.dataPreview?.id;
@@ -262,7 +264,7 @@ export default class IrisMessageDetailsView extends Vue {
   // disabled file attachments
   /*
   openFileAttachment(id: string) {
-    this.$store.dispatch("irisMessageDetails/downloadFileAttachment", id);
+    this.messageApi.downloadFileAttachment.execute(id);
   }
    */
   goBack() {

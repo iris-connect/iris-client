@@ -63,12 +63,10 @@ const IrisMessageFoldersDataTreeProps = Vue.extend({
 export default class IrisMessageFoldersDataTree extends IrisMessageFoldersDataTreeProps {
   get folder(): IrisMessageFolder | undefined {
     if (!this.value) return undefined;
-    const folders = this.$store.state.irisMessageList.messageFolders || [];
-    return extractFolder(folders, ["id", this.value]);
+    return extractFolder(this.folders || [], ["id", this.value]);
   }
   get defaultFolder(): IrisMessageFolder | undefined {
-    const folders = this.$store.state.irisMessageList.messageFolders || [];
-    return extractFolder(folders, ["isDefault", true]);
+    return extractFolder(this.folders || [], ["isDefault", true]);
   }
   get model() {
     return this.value;

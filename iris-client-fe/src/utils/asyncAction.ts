@@ -1,6 +1,7 @@
 /* eslint-disable   @typescript-eslint/no-explicit-any */
 import Vue from "vue";
-import { parseData } from "@/utils/data";
+import { getObjectKeys, parseData } from "@/utils/data";
+import { getErrorMessage } from "@/utils/axios";
 
 export enum STATUS {
   IDLE = "idle",
@@ -9,18 +10,19 @@ export enum STATUS {
   FAILED = "failed",
 }
 
-export interface AsyncActionState<R> {
-  result: R | null;
+export interface AsyncActionState<R = any> {
   status: STATUS;
   loading: boolean;
   error: any;
+  result: R | null;
 }
 
 export const asyncAction = <
   E extends (...args: any[]) => any,
   R = Awaited<ReturnType<E>>
 >(
-  actionExecute: E
+  actionExecute: E,
+  parseError?: boolean
 ): {
   state: AsyncActionState<R>;
   reset: (keys?: Array<keyof AsyncActionState<R>>) => void;
@@ -43,7 +45,8 @@ export const asyncAction = <
         state.result = result;
         return result;
       })
-      .catch((error) => {
+      .catch((e) => {
+        const error = parseError !== false ? getErrorMessage(e) : e;
         state.status = STATUS.FAILED;
         state.error = error;
         return Promise.reject(error);
@@ -54,10 +57,9 @@ export const asyncAction = <
   };
   const reset = (keys?: Array<keyof typeof state>) => {
     const stateKeys =
-      keys?.length && keys.length > 0
-        ? keys
-        : (Object.keys(state) as Array<keyof typeof state>);
-    stateKeys.forEach((key: keyof typeof state) => {
+      keys?.length && keys.length > 0 ? keys : getObjectKeys(state);
+    stateKeys.forEach((key) => {
+      // _set(state, key, parseData(initialState[key]));
       state[key] = parseData(initialState[key]);
     });
   };

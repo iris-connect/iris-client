@@ -158,7 +158,6 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import store from "@/store";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import {
   IrisMessageInsert,
@@ -174,6 +173,8 @@ import _debounce from "lodash/debounce";
 import IrisMessageDataSelectDialog from "@/views/iris-message-create/components/iris-message-data-select-dialog.vue";
 import Discriminators from "@/constants/Discriminators";
 import ConfirmDialog from "@/components/confirm-dialog.vue";
+import { getApiErrorMessages } from "@/utils/api";
+import { bundleIrisMessageApi } from "@/modules/iris-message/api";
 
 type IrisMessageCreateForm = {
   model: IrisMessageInsert;
@@ -186,22 +187,13 @@ type IrisMessageCreateForm = {
     IrisMessageDataSelectDialog,
     ErrorMessageAlert,
   },
-  // disabled file attachments
-  /*
-  beforeRouteEnter(to, from, next) {
-    store.dispatch("irisMessageCreate/fetchAllowedFileTypes");
-    next();
-  },
-   */
-  beforeRouteLeave(to, from, next) {
-    store.commit("irisMessageCreate/reset");
-    next();
-  },
 })
 export default class IrisMessageCreateView extends Vue {
   $refs!: {
     form: HTMLFormElement;
   };
+  messageApi = bundleIrisMessageApi(["createMessage", "fetchRecipients"]);
+  messageFileApi = bundleIrisMessageApi(["fetchAllowedFileTypes"]);
   form: IrisMessageCreateForm = {
     model: {
       subject: "",
@@ -215,17 +207,21 @@ export default class IrisMessageCreateView extends Vue {
     valid: false,
   };
 
+  // disabled file attachments
+  /*
+  mounted() {
+    this.messageFileApi.fetchAllowedFileTypes.execute();
+  }
+  */
+
   search: string | null = "";
   handleSearch = _debounce(async (value: string | null) => {
     this.search = value;
-    await store.dispatch("irisMessageCreate/fetchRecipients", value);
+    await this.messageApi.fetchRecipients.execute(value);
   }, 500);
 
   get errors(): ErrorMessage[] {
-    return [
-      this.$store.state.irisMessageCreate.contactsLoadingError,
-      this.$store.state.irisMessageCreate.messageCreationError,
-    ];
+    return getApiErrorMessages(this.messageApi);
   }
   // disabled file attachments
   /*
@@ -245,10 +241,9 @@ export default class IrisMessageCreateView extends Vue {
     this.form.model.fileAttachments = [];
   }
   get allowedFileTypes(): string[] {
-    return this.$store.state.irisMessageCreate.allowedFileTypes || [];
+    return this.messageFileApi.fetchAllowedFileTypes.state.result || [];
   }
-   */
-
+  */
   addDataAttachment(messageData: IrisMessageDataInsert) {
     if (!this.form.model.dataAttachments) {
       this.form.model.dataAttachments = [];
@@ -269,11 +264,11 @@ export default class IrisMessageCreateView extends Vue {
   }
 
   get recipients(): IrisMessageHdContact[] {
-    return this.$store.state.irisMessageCreate.contacts || [];
+    return this.messageApi.fetchRecipients.state.result || [];
   }
 
   get recipientsLoading(): boolean {
-    return this.$store.state.irisMessageCreate.contactsLoading;
+    return this.messageApi.fetchRecipients.state.loading;
   }
 
   get validationRules(): Record<string, Array<unknown>> {
@@ -290,14 +285,14 @@ export default class IrisMessageCreateView extends Vue {
   }
 
   get disabled(): boolean {
-    return this.$store.state.irisMessageCreate.messageCreationOngoing;
+    return this.messageApi.createMessage.state.loading;
   }
 
   async submit(): Promise<void> {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
       const payload: IrisMessageInsert = this.form.model;
-      await store.dispatch("irisMessageCreate/createMessage", payload);
+      await this.messageApi.createMessage.execute(payload);
       await this.$router.replace({ name: "iris-message-list" });
     }
   }

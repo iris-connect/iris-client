@@ -25,6 +25,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { RouteConfig } from "vue-router";
 import { PropType } from "vue";
+import { fetchUnreadMessageCountApi } from "@/modules/iris-message/api";
 
 const IrisMessageListNavLinkProps = Vue.extend({
   inheritAttrs: false,
@@ -41,10 +42,10 @@ export default class IrisMessageListNavLink extends IrisMessageListNavLinkProps 
   pollingTimeout = -1;
   isMounted = false;
   get unreadMessageCount() {
-    return this.$store.state.irisMessageList.unreadMessageCount || 0;
+    return fetchUnreadMessageCountApi.state.result || 0;
   }
   get unreadMessageCountLoading() {
-    return this.$store.state.irisMessageList.unreadMessageCountLoading;
+    return fetchUnreadMessageCountApi.state.loading;
   }
   mounted() {
     this.isMounted = true;
@@ -57,11 +58,9 @@ export default class IrisMessageListNavLink extends IrisMessageListNavLinkProps 
   fetchMessageCount() {
     clearTimeout(this.pollingTimeout);
     if (this.isMounted) {
-      this.$store
-        .dispatch("irisMessageList/fetchUnreadMessageCount")
-        .catch(() => {
-          // ignored
-        });
+      fetchUnreadMessageCountApi.execute().catch(() => {
+        // ignored
+      });
       this.pollingTimeout = setTimeout(this.fetchMessageCount, 30000);
     }
   }
