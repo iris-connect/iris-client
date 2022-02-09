@@ -175,6 +175,7 @@ import Discriminators from "@/constants/Discriminators";
 import ConfirmDialog from "@/components/confirm-dialog.vue";
 import { getApiErrorMessages } from "@/utils/api";
 import { bundleIrisMessageApi } from "@/modules/iris-message/api";
+import store from "@/store";
 
 type IrisMessageCreateForm = {
   model: IrisMessageInsert;
@@ -186,6 +187,10 @@ type IrisMessageCreateForm = {
     ConfirmDialog,
     IrisMessageDataSelectDialog,
     ErrorMessageAlert,
+  },
+  beforeRouteLeave(to, from, next) {
+    store.commit("irisMessageCreate/reset");
+    next();
   },
 })
 export default class IrisMessageCreateView extends Vue {
