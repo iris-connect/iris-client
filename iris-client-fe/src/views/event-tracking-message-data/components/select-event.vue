@@ -13,14 +13,14 @@
       item-key="id"
       :sort.sync="query.sort"
       :items="tableRows"
-      :loading="fetchPageEvent.state.loading"
+      :loading="eventApi.fetchPageEvent.state.loading"
       show-select
       single-select
       :page.sync="query.page"
       :items-per-page.sync="query.size"
       :server-items-length="totalElements"
     />
-    <error-message-alert :errors="[fetchPageEvent.state.error]" />
+    <error-message-alert :errors="[eventApi.fetchPageEvent.state.error]" />
   </data-query-handler>
 </template>
 
@@ -37,7 +37,7 @@ import {
 import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import { DataQuery } from "@/api/common";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { fetchPageEventAction } from "@/modules/event-tracking/api";
+import { bundleEventTrackingApi } from "@/modules/event-tracking/api";
 
 const SelectEventProps = Vue.extend({
   inheritAttrs: false,
@@ -85,11 +85,11 @@ export default class SelectEvent extends SelectEventProps {
     { text: "Letzte Änderung", value: "lastChange" },
   ];
 
-  fetchPageEvent = fetchPageEventAction();
+  eventApi = bundleEventTrackingApi(["fetchPageEvent"]);
 
   get tableRows() {
     return getEventTrackingListTableRows(
-      this.fetchPageEvent.state.result?.content || []
+      this.eventApi.fetchPageEvent.state.result?.content || []
     );
   }
 
@@ -108,11 +108,11 @@ export default class SelectEvent extends SelectEventProps {
   }
 
   handleQueryUpdate(query: DataQuery) {
-    this.fetchPageEvent.execute(query);
+    this.eventApi.fetchPageEvent.execute(query);
   }
 
   get totalElements(): boolean {
-    return this.fetchPageEvent.state.result?.totalElements;
+    return this.eventApi.fetchPageEvent.state.result?.totalElements;
   }
 }
 </script>

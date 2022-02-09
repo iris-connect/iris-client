@@ -78,7 +78,7 @@ import { DataQuery } from "@/api/common";
 import StatusTestLabel from "@/constants/StatusTestLabel";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import { getEventTrackingListTableRows } from "@/views/event-tracking-list/utils/mappeData";
-import { fetchPageEventAction } from "@/modules/event-tracking/api";
+import { bundleEventTrackingApi } from "@/modules/event-tracking/api";
 import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import SearchField from "@/components/pageable/search-field.vue";
 import StatusSelect from "@/components/pageable/status-select.vue";
@@ -95,17 +95,17 @@ import SortableDataTable from "@/components/sortable-data-table.vue";
   },
 })
 export default class EventTrackingListView extends Vue {
-  fetchPageEvent = fetchPageEventAction();
+  eventApi = bundleEventTrackingApi(["fetchPageEvent"]);
 
   handleQueryUpdate(query: DataQuery) {
-    this.fetchPageEvent.execute(query);
+    this.eventApi.fetchPageEvent.execute(query);
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   get dataTableModel() {
-    const eventTrackingList = this.fetchPageEvent.state.result;
+    const eventTrackingList = this.eventApi.fetchPageEvent.state.result;
     return {
-      loading: this.fetchPageEvent.state.loading,
+      loading: this.eventApi.fetchPageEvent.state.loading,
       itemsLength: eventTrackingList?.totalElements || 0,
       data: getEventTrackingListTableRows(eventTrackingList?.content),
       headers: [

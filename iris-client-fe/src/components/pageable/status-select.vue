@@ -8,7 +8,7 @@
     >
       {{ getStatusSelectLabel(status) }}
     </v-btn>
-    <v-btn text :data-test="getStatusSelectLabel()">
+    <v-btn text :data-test="getStatusTestLabel()">
       {{ getStatusSelectLabel() }}
     </v-btn>
   </v-btn-toggle>

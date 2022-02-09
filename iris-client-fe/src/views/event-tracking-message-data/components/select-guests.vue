@@ -9,9 +9,9 @@
       show-select
       show-select-all
       class="mt-5"
-      :loading="fetchEventDetails.state.loading"
+      :loading="eventApi.fetchEventDetails.state.loading"
     />
-    <error-message-alert :errors="[fetchEventDetails.state.error]" />
+    <error-message-alert :errors="[eventApi.fetchEventDetails.state.error]" />
   </div>
 </template>
 
@@ -28,7 +28,7 @@ import authClient from "@/api-client";
 import asyncAction from "@/utils/asyncAction";
 import { normalizeDataRequestDetails } from "@/views/event-tracking-details/event-tracking-details.data";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { fetchEventDetailsAction } from "@/modules/event-tracking/api";
+import { bundleEventTrackingApi } from "@/modules/event-tracking/api";
 const SelectGuestsProps = Vue.extend({
   inheritAttrs: false,
   props: {
@@ -91,19 +91,19 @@ export default class SelectGuests extends SelectGuestsProps {
     { text: "", value: "data-table-expand" },
   ];
 
-  fetchEventDetails = fetchEventDetailsAction();
+  eventApi = bundleEventTrackingApi(["fetchEventDetails"]);
 
   @Watch("eventId", { immediate: true })
-  async onEventIdChange(eventId: string) {
+  onEventIdChange(eventId: string) {
     if (eventId) {
-      this.fetchEventDetails.execute(eventId);
+      this.eventApi.fetchEventDetails.execute(eventId);
     } else {
-      this.fetchEventDetails.reset();
+      this.eventApi.fetchEventDetails.reset();
     }
   }
 
   get tableRows(): GuestListTableRow[] {
-    const eventDetails = this.fetchEventDetails.state.result;
+    const eventDetails = this.eventApi.fetchEventDetails.state.result;
     return getGuestListTableRows(
       eventDetails?.submissionData?.guests,
       eventDetails?.start,

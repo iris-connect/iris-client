@@ -4,8 +4,9 @@ import authClient from "@/api-client";
 import asyncAction from "@/utils/asyncAction";
 import { normalizeDataRequestDetails } from "@/views/event-tracking-details/event-tracking-details.data";
 import { DataRequestClientUpdate } from "@/api";
+import { apiBundleProvider } from "@/utils/api";
 
-export const fetchPageEventAction = () => {
+const fetchPageEvent = () => {
   const action = async (query: DataQuery) => {
     return normalizePageEvent(
       (await authClient.dataRequestsClientLocationsGet({ query })).data,
@@ -15,7 +16,7 @@ export const fetchPageEventAction = () => {
   return asyncAction(action);
 };
 
-export const fetchEventDetailsAction = () => {
+const fetchEventDetails = () => {
   const action = async (eventId: string) => {
     return normalizeDataRequestDetails(
       (await authClient.getLocationDetails(eventId)).data,
@@ -25,7 +26,7 @@ export const fetchEventDetailsAction = () => {
   return asyncAction(action);
 };
 
-export const patchDataRequestAction = () => {
+const patchDataRequest = () => {
   const action = async (payload: {
     id: string;
     data: DataRequestClientUpdate;
@@ -37,3 +38,11 @@ export const patchDataRequestAction = () => {
   };
   return asyncAction(action);
 };
+
+export const eventTrackingApi = {
+  fetchPageEvent,
+  fetchEventDetails,
+  patchDataRequest,
+};
+
+export const bundleEventTrackingApi = apiBundleProvider(eventTrackingApi);

@@ -32,7 +32,11 @@
 </template>
 <style></style>
 <script lang="ts">
-import { DataRequestDetails, DataRequestStatusUpdateByUser } from "@/api";
+import {
+  DataRequestClientUpdate,
+  DataRequestDetails,
+  DataRequestStatusUpdateByUser,
+} from "@/api";
 import { Component, Vue } from "vue-property-decorator";
 import { ErrorMessage } from "@/utils/axios";
 import EventTrackingDetailsComponent from "@/views/event-tracking-details/components/event-tracking-details.component.vue";
@@ -47,10 +51,8 @@ import {
   GuestListTableRow,
 } from "@/views/event-tracking-details/utils/mappedData";
 import IrisMessageDataExportDialog from "@/views/iris-message-create/components/iris-message-data-export-dialog.vue";
-import {
-  fetchEventDetailsAction,
-  patchDataRequestAction,
-} from "@/modules/event-tracking/api";
+import { bundleEventTrackingApi } from "@/modules/event-tracking/api";
+import { getApiErrorMessages, getApiLoading } from "@/utils/api";
 
 @Component({
   components: {
@@ -63,15 +65,14 @@ import {
 export default class EventTrackingDetailsView extends Vue {
   alert = false;
 
-  fetchEventDetails = fetchEventDetailsAction();
-  patchDataRequest = patchDataRequestAction();
+  eventApi = bundleEventTrackingApi(["fetchEventDetails", "patchDataRequest"]);
 
   mounted() {
-    this.fetchEventDetails.execute(this.$route.params.id);
+    this.eventApi.fetchEventDetails.execute(this.$route.params.id);
   }
 
   get eventTrackingDetails(): DataRequestDetails | null {
-    return this.fetchEventDetails.state.result;
+    return this.eventApi.fetchEventDetails.state.result;
   }
 
   // Editable values => formData. Readonly values => eventData.
@@ -84,14 +85,11 @@ export default class EventTrackingDetailsView extends Vue {
   }
 
   get loading(): boolean {
-    return this.fetchEventDetails.state.loading;
+    return getApiLoading(this.eventApi);
   }
 
   get errorMessages(): ErrorMessage[] {
-    return [
-      this.fetchEventDetails.state.error,
-      this.patchDataRequest.state.error,
-    ];
+    return getApiErrorMessages(this.eventApi);
   }
 
   created(): void {
@@ -113,13 +111,18 @@ export default class EventTrackingDetailsView extends Vue {
     }, 2000);
   }
 
-  updateRequestStatus(status: DataRequestStatusUpdateByUser): void {
-    this.patchDataRequest.execute({
+  async updateMessage(
+    data: DataRequestClientUpdate
+  ): Promise<DataRequestDetails> {
+    await this.eventApi.patchDataRequest.execute({
       id: this.$route.params.id,
-      data: {
-        status,
-      },
+      data,
     });
+    return this.eventApi.fetchEventDetails.execute(this.$route.params.id);
+  }
+
+  updateRequestStatus(status: DataRequestStatusUpdateByUser): void {
+    this.updateMessage({ status });
   }
 
   handleEditableField(
@@ -127,15 +130,11 @@ export default class EventTrackingDetailsView extends Vue {
     resolve: () => void,
     reject: (error: string | undefined) => void
   ): void {
-    this.patchDataRequest
-      .execute({
-        id: this.$route.params.id,
-        data,
-      })
+    this.updateMessage(data)
       .then(resolve)
       .catch((error) => {
         // reset action error as it is handled locally
-        this.patchDataRequest.reset(["error"]);
+        this.eventApi.patchDataRequest.reset(["error"]);
         reject(error);
       });
   }
