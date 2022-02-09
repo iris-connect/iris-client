@@ -1914,6 +1914,7 @@ export interface IrisMessageFileAttachment {
 
 export interface IrisMessageDataAttachment {
   id: string;
+  discriminator?: IrisMessageDataDiscriminator;
   description: string;
   isImported?: boolean;
 }

@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +63,7 @@ public class IrisMessageController {
     public Page<IrisMessageListItemDto> getMessages(
             @RequestParam() UUID folder,
             @RequestParam(required = false) String search,
-            Pageable pageable
+            @PageableDefault(sort = "metadata.created", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         this.validateUUID(folder, FOLDER_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FOLDER_ID);
         this.validateField(search, FIELD_SEARCH);

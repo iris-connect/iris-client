@@ -16,6 +16,7 @@ const normalizeIrisMessageDataAttachment = (
     (normalizer) => {
       const normalized: Complete<IrisMessageDataAttachment> = {
         id: normalizer("id", ""),
+        discriminator: normalizer("discriminator", undefined),
         description: normalizer("description", ""),
         isImported: normalizer("isImported", undefined, "boolean"),
       };

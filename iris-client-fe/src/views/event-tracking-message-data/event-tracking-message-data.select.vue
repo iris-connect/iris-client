@@ -1,5 +1,5 @@
 <template>
-  <v-stepper vertical v-model="step" width="100%" :elevation="0">
+  <v-stepper vertical v-model="step" flat>
     <v-stepper-step
       :rules="validationRules.event"
       editable

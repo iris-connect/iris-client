@@ -51,6 +51,7 @@ public class IrisMessageDetailsDto {
     public static class DataAttachment {
 
         private String id;
+        private String discriminator;
         private String description;
         private Boolean isImported;
 
@@ -62,6 +63,7 @@ public class IrisMessageDetailsDto {
         public static DataAttachment fromEntity(IrisMessageData data) {
             return new DataAttachment(
                     data.getId().toString(),
+                    data.getDiscriminator(),
                     data.getDescription(),
                     data.getIsImported()
             );

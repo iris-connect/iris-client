@@ -109,13 +109,13 @@
       ></v-text-field>
       <iris-data-table
         :loading="loading"
-        :headers="tableData.headers"
+        :headers="tableHeaders"
         :items="tableRows"
         :items-per-page="5"
         class="elevation-1 mt-5"
         :search="tableData.search"
-        show-select
-        show-select-all
+        :show-select="selectEnabled"
+        :show-select-all="selectEnabled"
         v-model="tableData.select"
         show-expand
         single-expand
@@ -159,19 +159,11 @@
       </iris-data-table>
       <error-message-alert :errors="errors" />
     </v-card-text>
-    <v-card-actions>
-      <v-btn
-        v-if="!isPreview"
-        color="white"
-        :to="{ name: 'event-list' }"
-        replace
-      >
-        Zurück
-      </v-btn>
+    <v-card-actions v-if="!isPreview">
+      <v-btn color="white" :to="{ name: 'event-list' }" replace> Zurück </v-btn>
       <v-spacer />
       <slot name="data-export" v-bind:selection="tableData.select" />
       <slot
-        v-if="!isPreview"
         name="data-message"
         v-bind:messageData="messageData"
         v-bind:disabled="tableData.select.length <= 0"
@@ -230,6 +222,10 @@ const EventTrackingDetailsComponentProps = Vue.extend({
       type: Boolean,
       default: false,
     },
+    selectEnabled: {
+      type: Boolean,
+      default: true,
+    },
   },
 });
 
@@ -243,12 +239,8 @@ const EventTrackingDetailsComponentProps = Vue.extend({
   },
 })
 export default class EventTrackingDetailsComponent extends EventTrackingDetailsComponentProps {
-  tableData = {
-    search: "",
-    expanded: [],
-    select: [],
-    headers: [
-      { text: "", value: "data-table-select" },
+  get tableHeaders() {
+    const headers = [
       {
         text: "Nachname",
         value: "lastName",
@@ -275,7 +267,16 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
         value: "comment",
       },
       { text: "", value: "data-table-expand" },
-    ],
+    ];
+    if (this.selectEnabled) {
+      return [{ text: "", value: "data-table-select" }, ...headers];
+    }
+    return headers;
+  }
+  tableData = {
+    search: "",
+    expanded: [],
+    select: [],
     expandedHeaders: [
       {
         text: "Geschlecht",

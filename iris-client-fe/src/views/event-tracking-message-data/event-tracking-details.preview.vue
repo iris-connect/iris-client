@@ -4,6 +4,7 @@
     :event-data="eventData"
     :form-data="formData"
     :is-preview="true"
+    :select-enabled="selectEnabled"
   >
     <template #data-export="{ selection }">
       <event-tracking-details-data-export
@@ -35,6 +36,10 @@ const EventTrackingDetailsPreviewProps = Vue.extend({
     data: {
       type: Object as PropType<DataRequestDetails | null>,
       default: null,
+    },
+    selectEnabled: {
+      type: Boolean,
+      default: false,
     },
   },
 });

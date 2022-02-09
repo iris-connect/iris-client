@@ -26,9 +26,8 @@
               :rules="validationRules.defined"
               v-model="form.model.payload"
             >
-              <component
-                v-if="selectComponent"
-                v-bind:is="selectComponent"
+              <iris-message-data-component
+                v-bind="dataComponentConfig"
                 v-model="form.model.payload"
                 :description.sync="form.model.description"
               />
@@ -47,7 +46,7 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import { AsyncComponent, ComponentOptions, PropType } from "vue";
+import { PropType } from "vue";
 import {
   IrisMessageDataDiscriminator,
   IrisMessageDataInsert,
@@ -56,12 +55,9 @@ import {
 import Discriminators from "@/constants/Discriminators";
 import rules from "@/common/validation-rules";
 import { parseData } from "@/utils/data";
-
-type DataSelect = {
-  [key in IrisMessageDataDiscriminator]: {
-    component: ComponentOptions<Vue> | typeof Vue | AsyncComponent;
-  };
-};
+import IrisMessageDataComponent, {
+  MessageDataComponentSource,
+} from "@/modules/iris-message/components/iris-message-data-component.vue";
 
 type IrisMessageDataForm = {
   model: {
@@ -77,7 +73,7 @@ type DiscriminatorOption = {
   value: IrisMessageDataDiscriminator;
 };
 
-const dataSelect: DataSelect = {
+const dataComponentSource: MessageDataComponentSource = {
   [IrisMessageDataDiscriminator.EventTracking]: {
     component: () =>
       import(
@@ -108,8 +104,11 @@ const IrisMessageDataSelectFormProps = Vue.extend({
     },
   },
 });
-
-@Component
+@Component({
+  components: {
+    IrisMessageDataComponent,
+  },
+})
 export default class IrisMessageDataSelectForm extends IrisMessageDataSelectFormProps {
   @Ref("form") readonly formRef!: HTMLFormElement;
 
@@ -135,15 +134,11 @@ export default class IrisMessageDataSelectForm extends IrisMessageDataSelectForm
     },
   };
 
-  get selectComponent() {
-    try {
-      if (this.form.model?.discriminator) {
-        return dataSelect[this.form.model?.discriminator].component;
-      }
-    } catch (e) {
-      // ignored
-    }
-    return null;
+  get dataComponentConfig() {
+    return {
+      source: dataComponentSource,
+      discriminator: this.form.model?.discriminator,
+    };
   }
 
   submit() {

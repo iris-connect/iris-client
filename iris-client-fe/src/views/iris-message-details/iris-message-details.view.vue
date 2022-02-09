@@ -1,8 +1,5 @@
 <template>
   <div class="my-3">
-    <alert-component v-if="dataImportAlert">
-      <template v-slot:message> Die Daten wurden importiert. </template>
-    </alert-component>
     <v-card :loading="messageLoading" data-test="view.iris-message-details">
       <v-card-subtitle class="pb-0 text-right" data-test="message.createdAt">
         {{ message.createdAt }}
@@ -25,55 +22,11 @@
         <div class="body-1" data-test="message.body">
           {{ message.body }}
         </div>
-        <div v-if="message.dataAttachments.length > 0">
-          <v-divider class="my-4" />
-          <p class="font-weight-bold">Daten</p>
-          <div class="elevation-1 mt-4">
-            <template
-              v-for="(dataAttachment, index) in message.dataAttachments"
-            >
-              <v-list-item dense :key="`item_${index}`">
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ dataAttachment.description }}
-                  </v-list-item-title>
-                </v-list-item-content>
-                <v-list-item-action v-if="isInbox">
-                  <div>
-                    <v-btn
-                      icon
-                      @click="viewDataAttachment(dataAttachment.id)"
-                      :disabled="dataAttachmentLoading"
-                    >
-                      <v-icon>mdi-eye</v-icon>
-                    </v-btn>
-                    <confirm-dialog
-                      title="Daten importieren?"
-                      text="Dieser Vorgang kann nicht rückgäng gemacht werden."
-                      @confirm="importDataAttachment(dataAttachment.id)"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          v-on="on"
-                          v-bind="attrs"
-                          icon
-                          :disabled="!isImportEnabled(dataAttachment.id)"
-                        >
-                          <v-icon>mdi-download</v-icon>
-                        </v-btn>
-                      </template>
-                    </confirm-dialog>
-                  </div>
-                </v-list-item-action>
-              </v-list-item>
-              <v-divider
-                inset
-                :key="`divider_${index}`"
-                v-if="index < message.dataAttachments.length - 1"
-              />
-            </template>
-          </div>
-        </div>
+        <iris-message-data-attachments
+          :data-attachments="message.dataAttachments"
+          :readonly="!isInbox"
+          @import:done="handleImportDone"
+        />
         <!--
         <div v-if="message.fileAttachments.length > 0">
           <v-divider class="my-4" />
@@ -109,11 +62,6 @@
           </div>
         </div>
         -->
-        <iris-message-data-preview-dialog
-          v-model="dataPreview"
-          @import="importDataAttachment"
-          :import-enabled="isImportEnabled(dataPreviewId)"
-        />
       </v-card-text>
       <v-card-actions>
         <v-btn text @click="goBack"> Zurück </v-btn>
@@ -131,18 +79,15 @@ import {
   IrisMessageDataAttachment,
   IrisMessageDetails,
   IrisMessageFileAttachment,
-  IrisMessageViewData,
 } from "@/api";
 import { ErrorMessage } from "@/utils/axios";
 import { getFormattedDate } from "@/utils/date";
-import IrisMessageDataPreviewDialog from "@/views/iris-message-details/components/iris-message-data-preview-dialog.vue";
-import AlertComponent from "@/components/alerts/alert-component.vue";
-import ConfirmDialog from "@/components/confirm-dialog.vue";
 import {
   bundleIrisMessageApi,
   fetchUnreadMessageCountApi,
 } from "@/modules/iris-message/api";
 import { getApiErrorMessages, getApiLoading } from "@/utils/api";
+import IrisMessageDataAttachments from "@/views/iris-message-details/components/iris-message-data-attachments.vue";
 
 type MessageData = {
   author: string;
@@ -156,9 +101,7 @@ type MessageData = {
 
 @Component({
   components: {
-    ConfirmDialog,
-    AlertComponent,
-    IrisMessageDataPreviewDialog,
+    IrisMessageDataAttachments,
     ErrorMessageAlert,
   },
   beforeRouteEnter(to, from, next) {
@@ -170,21 +113,7 @@ type MessageData = {
   },
 })
 export default class IrisMessageDetailsView extends Vue {
-  dataImportAlert = false;
-  showDataImportAlert(): void {
-    this.dataImportAlert = true;
-    setTimeout(() => {
-      this.dataImportAlert = false;
-    }, 2000);
-  }
-
   messageApi = bundleIrisMessageApi(["fetchMessage", "markAsRead"]);
-
-  messageDataApi = bundleIrisMessageApi([
-    "importDataAttachment",
-    "viewDataAttachment",
-  ]);
-
   messageFileApi = bundleIrisMessageApi(["downloadFileAttachment"]);
 
   mounted() {
@@ -195,8 +124,8 @@ export default class IrisMessageDetailsView extends Vue {
     return this.messageApi.fetchMessage.state.result;
   }
 
-  dataPreview: IrisMessageViewData | null = null;
   prevLocation: null | string = null;
+
   get message(): MessageData {
     const message = this.messageDetails;
     return {
@@ -217,16 +146,12 @@ export default class IrisMessageDetailsView extends Vue {
   get messageLoading(): boolean {
     return getApiLoading(this.messageApi);
   }
-  get dataAttachmentLoading(): boolean {
-    return getApiLoading(this.messageDataApi);
-  }
   get fileAttachmentLoading(): boolean {
     return getApiLoading(this.messageFileApi);
   }
   get errors(): ErrorMessage[] {
     return [
       ...getApiErrorMessages(this.messageApi),
-      ...getApiErrorMessages(this.messageDataApi),
       ...getApiErrorMessages(this.messageFileApi),
     ];
   }
@@ -245,21 +170,9 @@ export default class IrisMessageDetailsView extends Vue {
       await fetchUnreadMessageCountApi.execute();
     }
   }
-  async importDataAttachment(id: string) {
-    await this.messageDataApi.importDataAttachment.execute(id);
-    await this.messageApi.fetchMessage.execute(this.$route.params.messageId);
-    this.showDataImportAlert();
-  }
-  async viewDataAttachment(id: string) {
-    this.dataPreview = await this.messageDataApi.viewDataAttachment.execute(id);
-  }
-  get dataPreviewId() {
-    return this.dataPreview?.id;
-  }
-  isImportEnabled(id?: string): boolean {
-    if (this.dataAttachmentLoading) return false;
-    const attachment = this.message.dataAttachments.find((a) => a.id === id);
-    return !attachment?.isImported;
+
+  handleImportDone() {
+    this.messageApi.fetchMessage.execute(this.$route.params.messageId);
   }
   // disabled file attachments
   /*
