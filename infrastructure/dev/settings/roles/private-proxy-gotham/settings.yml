@@ -16,7 +16,7 @@ private:
     #verify_service_call: true
   jsonrpc_client:
     endpoint: https://private-proxy-1:7766/jsonrpc
-    server_name: private-proxy-1
+    server_name: private-proxy-gotham
     tls:
       ca_certificate_files: [ "/$DIR/../../certs/root.crt" ]
       certificate_file: "/$DIR/../../certs/private-proxy-gotham.crt"
