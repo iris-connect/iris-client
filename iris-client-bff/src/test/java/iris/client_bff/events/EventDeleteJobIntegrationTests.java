@@ -72,7 +72,7 @@ class EventDeleteJobIntegrationTests {
 
 	private EventDataRequest createRequest(String name, String refId, Instant date) {
 
-		var location = new Location(new LocationIdentifier(), faker.idNumber().valid(), faker.idNumber().valid(), null,
+		var location = new Location(LocationIdentifier.random(), faker.idNumber().valid(), faker.idNumber().valid(), null,
 				null, null, null, null, null, null, null, null, null);
 
 		return eventRequests.save(EventDataRequest.builder()

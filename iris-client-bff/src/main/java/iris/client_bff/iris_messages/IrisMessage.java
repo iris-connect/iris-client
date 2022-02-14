@@ -2,6 +2,7 @@ package iris.client_bff.iris_messages;
 
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
+import iris.client_bff.core.IdWithUuid;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -73,32 +74,19 @@ public class IrisMessage extends Aggregate<IrisMessage, IrisMessage.IrisMessageI
 	@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<IrisMessageData> dataAttachments = new ArrayList<>();
 
-	@Embeddable
-	@EqualsAndHashCode
+    @EqualsAndHashCode(callSuper = false)
 	@RequiredArgsConstructor(staticName = "of")
-	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-	public static class IrisMessageIdentifier implements Id, Serializable {
+  	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE) // for JPA
+		public static class IrisMessageIdentifier extends IdWithUuid {
 
 		@Serial
-		private static final long serialVersionUID = 1140444389070674189L;
+		private static final long serialVersionUID = -8204204051601543710L;
 
 		private final UUID id;
 
-		/**
-		 * for JSON deserialization
-		 */
-		public static IrisMessage.IrisMessageIdentifier of(String uuid) {
-			return of(UUID.fromString(uuid));
-		}
-
 		@Override
-		public String toString() {
-			return id.toString();
-		}
-
-		public UUID toUUID() {
+			protected UUID getBasicId() {
 			return id;
 		}
 	}
-
 }

@@ -92,7 +92,7 @@ public class EventDataRequestController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<DataRequestDetails> getDataRequestByCode(@PathVariable DataRequestIdentifier code) {
 
-		var dataRequest = dataRequestService.findById(code.toUUID());
+		var dataRequest = dataRequestService.findById(code);
 
 		if (dataRequest.isPresent()) {
 
@@ -110,7 +110,7 @@ public class EventDataRequestController {
 	public ResponseEntity<DataRequestDetails> update(@PathVariable DataRequestIdentifier code,
 			@RequestBody @Valid EventUpdateDTO patch) {
 
-		var dataRequest = dataRequestService.findById(code.toUUID());
+		var dataRequest = dataRequestService.findById(code);
 		if (dataRequest.isPresent()) {
 			EventDataRequest updated = dataRequestService.update(dataRequest.get(), patch);
 

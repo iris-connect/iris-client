@@ -1,14 +1,8 @@
 package iris.client_bff.config;
 
 import iris.client_bff.IrisClientBffApplication;
-import iris.client_bff.cases.CaseDataRequest;
-import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
-import iris.client_bff.events.EventDataRequest;
-import iris.client_bff.events.model.Location.LocationIdentifier;
-import iris.client_bff.iris_messages.IrisMessage;
-import iris.client_bff.iris_messages.IrisMessageFolder;
-import iris.client_bff.vaccination_info.VaccinationInfo;
-import iris.client_bff.vaccination_info.VaccinationInfo.VaccinationInfoIdentifier;
+import iris.client_bff.core.IdWithUuid;
+import iris.client_bff.core.converter.PrimitivesToIdWithUuidConverter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -32,16 +26,15 @@ import org.hibernate.search.mapper.orm.mapping.HibernateOrmSearchMappingConfigur
 import org.hibernate.search.mapper.orm.massindexing.MassIndexer;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.hibernate.search.mapper.pojo.bridge.IdentifierBridge;
-import org.hibernate.search.mapper.pojo.bridge.ValueBridge;
 import org.hibernate.search.mapper.pojo.bridge.runtime.IdentifierBridgeFromDocumentIdentifierContext;
 import org.hibernate.search.mapper.pojo.bridge.runtime.IdentifierBridgeToDocumentIdentifierContext;
-import org.hibernate.search.mapper.pojo.bridge.runtime.ValueBridgeToIndexedValueContext;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ScannedGenericBeanDefinition;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Component;
 
@@ -123,121 +116,40 @@ class HibernateSearchConfig {
 	}
 
 	@Component("SearchMappingConfigurer")
+	@RequiredArgsConstructor
 	static class SearchMappingConfigurer implements HibernateOrmSearchMappingConfigurer {
+
+		private final @NonNull PrimitivesToIdWithUuidConverter converter;
+
 		@Override
 		public void configure(HibernateOrmMappingConfigurationContext context) {
 
-			context.bridges().exactType(CaseDataRequest.DataRequestIdentifier.class)
-					.identifierBridge(new IdentifierBridge<>() {
+			context.bridges().strictSubTypesOf(IdWithUuid.class).identifierBinder(idBindingContext -> {
 
-						@Override
-						public String toDocumentIdentifier(DataRequestIdentifier value,
-								IdentifierBridgeToDocumentIdentifierContext context) {
-							return value.toString();
-						}
+				var idType = (Class<IdWithUuid>) idBindingContext.bridgedElement().rawType();
+				idBindingContext.bridge(idType, IdWithUuidBridge.of(converter, idType));
+			});
+		}
+	}
 
-						@Override
-						public DataRequestIdentifier fromDocumentIdentifier(String value,
-								IdentifierBridgeFromDocumentIdentifierContext context) {
-							return value == null ? null : DataRequestIdentifier.of(value);
-						}
-					});
+	/**
+	 * @author Jens Kutzsche
+	 */
+	@RequiredArgsConstructor(staticName = "of")
+	static class IdWithUuidBridge<T extends IdWithUuid> implements IdentifierBridge<T> {
 
-			context.bridges().exactType(EventDataRequest.DataRequestIdentifier.class)
-					.identifierBridge(new IdentifierBridge<>() {
+		private final PrimitivesToIdWithUuidConverter converter;
+		private final Class<T> clazz;
 
-						@Override
-						public String toDocumentIdentifier(EventDataRequest.DataRequestIdentifier value,
-								IdentifierBridgeToDocumentIdentifierContext context) {
-							return value.toString();
-						}
+		@Override
+		public String toDocumentIdentifier(T value, IdentifierBridgeToDocumentIdentifierContext context) {
+			return value.toString();
+		}
 
-						@Override
-						public EventDataRequest.DataRequestIdentifier fromDocumentIdentifier(String value,
-								IdentifierBridgeFromDocumentIdentifierContext context) {
-							return value == null ? null : EventDataRequest.DataRequestIdentifier.of(value);
-						}
-					});
-
-			context.bridges().exactType(LocationIdentifier.class)
-					.identifierBridge(new IdentifierBridge<>() {
-
-						@Override
-						public String toDocumentIdentifier(LocationIdentifier value,
-								IdentifierBridgeToDocumentIdentifierContext context) {
-							return value.toString();
-						}
-
-						@Override
-						public LocationIdentifier fromDocumentIdentifier(String value,
-								IdentifierBridgeFromDocumentIdentifierContext context) {
-							return value == null ? null : LocationIdentifier.of(value);
-						}
-					});
-
-			context.bridges().exactType(IrisMessage.IrisMessageIdentifier.class)
-					.identifierBridge(new IdentifierBridge<>() {
-
-						@Override
-						public String toDocumentIdentifier(
-								IrisMessage.IrisMessageIdentifier value,
-								IdentifierBridgeToDocumentIdentifierContext context) {
-							return value.toString();
-						}
-
-						@Override
-						public IrisMessage.IrisMessageIdentifier fromDocumentIdentifier(
-								String value,
-								IdentifierBridgeFromDocumentIdentifierContext context) {
-							return value == null ? null : IrisMessage.IrisMessageIdentifier.of(value);
-						}
-					});
-
-			context.bridges().exactType(IrisMessageFolder.IrisMessageFolderIdentifier.class)
-					.identifierBridge(new IdentifierBridge<>() {
-
-						@Override
-						public String toDocumentIdentifier(
-								IrisMessageFolder.IrisMessageFolderIdentifier value,
-								IdentifierBridgeToDocumentIdentifierContext context) {
-							return value.toString();
-						}
-
-						@Override
-						public IrisMessageFolder.IrisMessageFolderIdentifier fromDocumentIdentifier(
-								String value,
-								IdentifierBridgeFromDocumentIdentifierContext context) {
-							return value == null ? null : IrisMessageFolder.IrisMessageFolderIdentifier.of(value);
-						}
-					});
-
-			context.bridges().exactType(VaccinationInfo.VaccinationInfoIdentifier.class)
-					.identifierBridge(new IdentifierBridge<>() {
-
-						@Override
-						public String toDocumentIdentifier(
-								VaccinationInfoIdentifier value,
-								IdentifierBridgeToDocumentIdentifierContext context) {
-							return value.toString();
-						}
-
-						@Override
-						public VaccinationInfoIdentifier fromDocumentIdentifier(
-								String value,
-								IdentifierBridgeFromDocumentIdentifierContext context) {
-							return value == null ? null : VaccinationInfoIdentifier.of(value);
-						}
-					});
-
-			context.bridges().exactType(IrisMessageFolder.IrisMessageFolderIdentifier.class)
-					.valueBridge(new ValueBridge<IrisMessageFolder.IrisMessageFolderIdentifier, String>() {
-						@Override
-						public String toIndexedValue(
-								IrisMessageFolder.IrisMessageFolderIdentifier value,
-								ValueBridgeToIndexedValueContext context) {
-							return value == null ? null : value.toString();
-						}
-					});
+		@Override
+		public T fromDocumentIdentifier(String value,
+				IdentifierBridgeFromDocumentIdentifierContext context) {
+			return (T) converter.convert(value, TypeDescriptor.valueOf(String.class), TypeDescriptor.valueOf(clazz));
 		}
 	}
 }

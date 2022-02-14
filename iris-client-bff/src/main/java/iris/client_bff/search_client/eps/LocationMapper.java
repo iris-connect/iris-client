@@ -1,6 +1,7 @@
 package iris.client_bff.search_client.eps;
 
 import iris.client_bff.events.model.Location;
+import iris.client_bff.events.model.Location.LocationIdentifier;
 import iris.client_bff.search_client.web.dto.LocationInformation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ public class LocationMapper {
 
 	public static Location map(LocationInformation locationInformation) {
 		var location = mapper.map(locationInformation, Location.class);
-		location.setId(new Location.LocationIdentifier());
+		location.setId(LocationIdentifier.random());
 
 		if (location.getLocationId() == null) {
 			location.setLocationId(locationInformation.getId());

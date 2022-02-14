@@ -1,6 +1,11 @@
 package iris.client_bff.core;
 
+import java.io.Serializable;
+
+import javax.persistence.Embeddable;
+
 /**
  * @author Jens Kutzsche
  */
-public interface Id {}
+@Embeddable
+public interface Id extends Serializable {}

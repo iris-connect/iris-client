@@ -2,14 +2,13 @@ package iris.client_bff.cases.model;
 
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.core.Aggregate;
-import iris.client_bff.core.Id;
+import iris.client_bff.core.IdWithUuid;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -17,7 +16,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -66,29 +64,6 @@ public class CaseDataSubmission extends Aggregate<CaseDataSubmission, CaseDataSu
 		this.dataProvider = dataProvider;
 	}
 
-	@Embeddable
-	@EqualsAndHashCode
-	@RequiredArgsConstructor(staticName = "of")
-	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-	public static class DataSubmissionIdentifier implements Id, Serializable {
-
-		private static final long serialVersionUID = -8254677010830428881L;
-
-		final UUID submissionId;
-
-		/**
-		 * for JSON deserialization
-		 */
-		public static DataSubmissionIdentifier random() {
-			return of(UUID.randomUUID());
-		}
-
-		@Override
-		public String toString() {
-			return submissionId.toString();
-		}
-	}
-
 	public LocalDate getEventsStartDateAsLocalDate() {
 		return safelyParseInstant(eventsStartDate);
 	}
@@ -107,5 +82,24 @@ public class CaseDataSubmission extends Aggregate<CaseDataSubmission, CaseDataSu
 
 	private LocalDate safelyParseInstant(Instant instant) {
 		return instant == null ? null : LocalDate.ofInstant(instant, ZoneId.of("CET"));
+	}
+
+	@EqualsAndHashCode(callSuper = false)
+	@RequiredArgsConstructor(staticName = "of")
+	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+	public static class DataSubmissionIdentifier extends IdWithUuid {
+
+		private static final long serialVersionUID = 7214282060294664780L;
+
+		final UUID submissionId;
+
+		public static DataSubmissionIdentifier random() {
+			return of(UUID.randomUUID());
+		}
+
+		@Override
+		protected UUID getBasicId() {
+			return submissionId;
+		}
 	}
 }

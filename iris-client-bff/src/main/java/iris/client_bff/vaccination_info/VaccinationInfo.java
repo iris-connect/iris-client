@@ -3,7 +3,7 @@ package iris.client_bff.vaccination_info;
 import static iris.client_bff.vaccination_info.VaccinationStatus.*;
 
 import iris.client_bff.core.Aggregate;
-import iris.client_bff.core.Id;
+import iris.client_bff.core.IdWithUuid;
 import iris.client_bff.core.Sex;
 import iris.client_bff.core.model.Address;
 import iris.client_bff.vaccination_info.VaccinationInfo.VaccinationInfoIdentifier;
@@ -12,12 +12,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
@@ -84,31 +82,22 @@ public class VaccinationInfo extends Aggregate<VaccinationInfo, VaccinationInfoI
 		determineStatusCounts();
 	}
 
-	@Embeddable
-	@EqualsAndHashCode
+	@EqualsAndHashCode(callSuper = false)
 	@RequiredArgsConstructor(staticName = "of")
-	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-	public static class VaccinationInfoIdentifier implements Id, Serializable {
+	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE) // for JPA
+	public static class VaccinationInfoIdentifier extends IdWithUuid {
 
 		private static final long serialVersionUID = 6389647206633809409L;
 
-		@Getter
 		final UUID id;
 
 		static VaccinationInfoIdentifier random() {
 			return of(UUID.randomUUID());
 		}
 
-		/**
-		 * for JSON deserialization
-		 */
-		public static VaccinationInfoIdentifier of(String uuid) {
-			return of(UUID.fromString(uuid));
-		}
-
 		@Override
-		public String toString() {
-			return id.toString();
+		protected UUID getBasicId() {
+			return id;
 		}
 	}
 

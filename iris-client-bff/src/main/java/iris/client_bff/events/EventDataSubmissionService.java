@@ -3,6 +3,7 @@ package iris.client_bff.events;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.log.LogHelper;
 import iris.client_bff.core.messages.ErrorMessages;
+import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.model.Guest;
@@ -13,7 +14,6 @@ import iris.client_bff.proxy.ProxyServiceClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -37,7 +37,8 @@ public class EventDataSubmissionService {
 	private final ProxyServiceClient proxyClient;
 	private final AlertService alertService;
 
-	public String findRequestAndSaveGuestList(UUID dataAuthorizationToken, String clientName, GuestList guestList) {
+	public String findRequestAndSaveGuestList(DataRequestIdentifier dataAuthorizationToken, String clientName,
+			GuestList guestList) {
 		return requestService.findById(dataAuthorizationToken).map(dataRequest -> {
 
 			if (!dataRequest.getLocation().getProviderId().equals(clientName)) {
@@ -87,7 +88,7 @@ public class EventDataSubmissionService {
 		});
 	}
 
-	private void logSubmissionStatus(String status, UUID dataAuthorizationToken) {
+	private void logSubmissionStatus(String status, DataRequestIdentifier dataAuthorizationToken) {
 		log.trace("Submission for {} event {}", status, LogHelper.obfuscateAtStart8(dataAuthorizationToken.toString()));
 	}
 

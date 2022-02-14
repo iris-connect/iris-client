@@ -1,7 +1,7 @@
 package iris.client_bff.iris_messages;
 
 import iris.client_bff.core.Aggregate;
-import iris.client_bff.core.Id;
+import iris.client_bff.core.IdWithUuid;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,11 +10,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serial;
-import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "iris_message_folder")
@@ -41,30 +48,18 @@ public class IrisMessageFolder extends Aggregate<IrisMessageFolder, IrisMessageF
 	@AttributeOverride(name = "id", column = @Column(name = "parent_folder"))
 	private IrisMessageFolderIdentifier parentFolder;
 
-	@Embeddable
-	@EqualsAndHashCode
+	@EqualsAndHashCode(callSuper = false)
 	@RequiredArgsConstructor(staticName = "of")
-	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-	public static class IrisMessageFolderIdentifier implements Id, Serializable {
+	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE) // for JPA
+	public static class IrisMessageFolderIdentifier extends IdWithUuid {
 
 		@Serial
-		private static final long serialVersionUID = -8255216015747810442L;
+		private static final long serialVersionUID = 8991605733958195526L;
 
 		final UUID id;
 
-		/**
-		 * for JSON deserialization
-		 */
-		public static IrisMessageFolder.IrisMessageFolderIdentifier of(String uuid) {
-			return of(UUID.fromString(uuid));
-		}
-
 		@Override
-		public String toString() {
-			return id.toString();
-		}
-
-		public UUID toUUID() {
+		protected UUID getBasicId() {
 			return id;
 		}
 	}

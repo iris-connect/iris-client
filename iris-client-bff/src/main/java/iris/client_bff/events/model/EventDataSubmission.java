@@ -1,7 +1,7 @@
 package iris.client_bff.events.model;
 
 import iris.client_bff.core.Aggregate;
-import iris.client_bff.core.Id;
+import iris.client_bff.core.IdWithUuid;
 import iris.client_bff.events.EventDataRequest;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -9,13 +9,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -54,26 +52,22 @@ public class EventDataSubmission extends Aggregate<EventDataSubmission, EventDat
 		this.endDate = endDate;
 	}
 
-	@Embeddable
-	@EqualsAndHashCode
+	@EqualsAndHashCode(callSuper = false)
 	@RequiredArgsConstructor(staticName = "of")
-	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-	public static class DataSubmissionIdentifier implements Id, Serializable {
+	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE) // for JPA
+	public static class DataSubmissionIdentifier extends IdWithUuid {
 
-		private static final long serialVersionUID = -8254677010830428881L;
+		private static final long serialVersionUID = -3879046114187116862L;
 
 		final UUID submissionId;
 
-		/**
-		 * for JSON deserialization
-		 */
 		public static DataSubmissionIdentifier random() {
 			return of(UUID.randomUUID());
 		}
 
 		@Override
-		public String toString() {
-			return submissionId.toString();
+		protected UUID getBasicId() {
+			return submissionId;
 		}
 	}
 }

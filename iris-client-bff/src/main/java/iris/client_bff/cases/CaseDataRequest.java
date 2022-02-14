@@ -1,24 +1,21 @@
 package iris.client_bff.cases;
 
 import iris.client_bff.core.Aggregate;
-import iris.client_bff.core.Id;
+import iris.client_bff.core.IdWithUuid;
 import iris.client_bff.core.token.IdentifierToken;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -84,27 +81,22 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 		this.announcementToken = announcementToken;
 	}
 
-	@Embeddable
-	@EqualsAndHashCode
+	@EqualsAndHashCode(callSuper = false)
 	@RequiredArgsConstructor(staticName = "of")
 	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-	public static class DataRequestIdentifier implements Id, Serializable {
+	public static class DataRequestIdentifier extends IdWithUuid {
 
-		private static final long serialVersionUID = -8254677010830428881L;
+		private static final long serialVersionUID = -4382059956315582084L;
 
-		@Getter
 		final UUID requestId;
 
-		/**
-		 * for JSON deserialization
-		 */
-		public static DataRequestIdentifier of(String uuid) {
-			return of(UUID.fromString(uuid));
+		public static DataRequestIdentifier of(String id) {
+			return of(UUID.fromString(id));
 		}
 
 		@Override
-		public String toString() {
-			return requestId.toString();
+		protected UUID getBasicId() {
+			return requestId;
 		}
 	}
 
