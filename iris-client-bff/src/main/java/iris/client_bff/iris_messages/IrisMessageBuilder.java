@@ -40,10 +40,7 @@ public class IrisMessageBuilder {
         // ensure that the message was sent to the correct recipient
         IrisMessageHdContact hdOwn = this.irisMessageClient.getOwnIrisMessageHdContact();
         if (!Objects.equals(hdOwn.getId(), hdRecipient.getId())) {
-            // @todo: enable next line when done with testing
-//            throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_RECIPIENT);
-            // @todo: remove next line when done with testing
-            hdRecipient = hdOwn;
+            throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_RECIPIENT);
         }
 
         IrisMessage message = new IrisMessage();
