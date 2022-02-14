@@ -18,6 +18,8 @@ import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.events.web.dto.GuestListDataProvider;
 import iris.client_bff.events.web.dto.LocationInformation;
 import iris.client_bff.ui.messages.ErrorMessages;
+import iris.client_bff.users.UserDetailsServiceImpl;
+import iris.client_bff.users.entities.UserAccount;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,6 +63,7 @@ public class EventDataRequestController {
 	private static final String FIELD_CODE = "code";
 	private static final String FIELD_SEARCH = "search";
 
+	private final UserDetailsServiceImpl userService;
 	private EventDataRequestService dataRequestService;
 	private EventDataSubmissionRepository submissionRepo;
 
@@ -224,6 +227,7 @@ public class EventDataRequestController {
 	}
 
 	private DataRequestDetails mapDataRequestDetails(EventDataRequest request) {
+
 		DataRequestDetails mapped = modelMapper.map(request, DataRequestDetails.class);
 		mapped.setCode(request.getId().toString());
 		mapped.setStart(request.getRequestStart());
@@ -232,6 +236,8 @@ public class EventDataRequestController {
 		mapped.setLastModifiedAt(request.getLastModifiedAt());
 		mapped.setRequestedAt(request.getCreatedAt());
 		mapped.setExternalRequestId(request.getRefId());
+		mapped.setCreatedBy(userService.findByUuid(request.getCreatedBy()).map(this::getFullName).orElse(null));
+		mapped.setLastModifiedBy(userService.findByUuid(request.getLastModifiedBy()).map(this::getFullName).orElse(null));
 		return mapped;
 	}
 
@@ -256,5 +262,9 @@ public class EventDataRequestController {
 				.build();
 
 		requestDetails.setSubmissionData(guestList);
+	}
+
+	private String getFullName(UserAccount user) {
+		return user.getFirstName() + " " + user.getLastName();
 	}
 }

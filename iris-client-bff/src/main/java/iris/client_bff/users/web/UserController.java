@@ -7,6 +7,7 @@ import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.ui.messages.ErrorMessages;
 import iris.client_bff.users.UserDetailsServiceImpl;
+import iris.client_bff.users.entities.UserAccount.UserAccountIdentifier;
 import iris.client_bff.users.web.dto.UserDTO;
 import iris.client_bff.users.web.dto.UserInsertDTO;
 import iris.client_bff.users.web.dto.UserListDTO;
@@ -16,7 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.security.Principal;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -54,7 +54,8 @@ public class UserController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserListDTO getAllUsers() {
 		return new UserListDTO()
-				.users(this.userService.loadAll().stream().map(UserMappers::map).collect(Collectors.toList()));
+				.users(this.userService.loadAll().stream().map(it -> UserMappers.map(it, userService))
+						.collect(Collectors.toList()));
 	}
 
 	@PostMapping
@@ -66,12 +67,12 @@ public class UserController {
 
 		checkUniqueUsername(userInsertValidated.getUserName());
 
-		return map(userService.create(userInsertValidated));
+		return map(userService.create(userInsertValidated), userService);
 	}
 
 	@PatchMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public UserDTO updateUser(@PathVariable UUID id, @RequestBody @Valid UserUpdateDTO userUpdateDTO,
+	public UserDTO updateUser(@PathVariable UserAccountIdentifier id, @RequestBody @Valid UserUpdateDTO userUpdateDTO,
 			UserAccountAuthentication authentication) {
 
 		var userUpdateDTOValidated = validateUserUpdateDTO(userUpdateDTO);
@@ -80,13 +81,13 @@ public class UserController {
 		checkUniqueUsername(userName, id);
 		checkOldPassword(userUpdateDTOValidated.getOldPassword(), userUpdateDTOValidated.getPassword(), authentication, id);
 
-		return map(userService.update(id, userUpdateDTOValidated, authentication));
+		return map(userService.update(id, userUpdateDTOValidated, authentication), userService);
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public void deleteUser(@PathVariable UUID id, Principal principal) {
+	public void deleteUser(@PathVariable UserAccountIdentifier id, Principal principal) {
 		this.userService.deleteById(id, principal.getName());
 	}
 
@@ -189,21 +190,21 @@ public class UserController {
 				});
 	}
 
-	private void checkUniqueUsername(String username, UUID id) {
+	private void checkUniqueUsername(String username, UserAccountIdentifier id) {
 
 		if (isBlank(username)) {
 			return;
 		}
 
 		userService.findByUsername(username)
-				.filter(it -> !it.getUser_id().equals(id))
+				.filter(it -> !it.getId().equals(id))
 				.ifPresent(__ -> {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UserController.username.notunique");
 				});
 	}
 
 	private void checkOldPassword(String oldPassword, String password, UserAccountAuthentication authentication,
-			UUID id) {
+			UserAccountIdentifier id) {
 
 		if (isBlank(password)
 				|| (authentication.isAdmin() && !userService.isItCurrentUser(id, authentication))) {
