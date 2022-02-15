@@ -16,7 +16,7 @@ public class IrisMessageFolderInitializer {
 
 	@PostConstruct
 	protected void createMessageFoldersIfNotExist() {
-		if (folderRepository.findAll().isEmpty()) {
+		if (folderRepository.count() == 0) {
 			IrisMessageFolder inboxFolder = new IrisMessageFolder();
 			inboxFolder
 					.setName("Posteingang")

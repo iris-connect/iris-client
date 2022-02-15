@@ -77,8 +77,8 @@ public class IrisMessageController {
                     .toUri();
             return ResponseEntity.created(location).build();
         } catch (Throwable e) {
-            String errorMessage = e instanceof IrisMessageException
-                    ? ((IrisMessageException) e).getErrorMessage()
+            String errorMessage = e instanceof IrisMessageException ime
+                    ? ime.getErrorMessage()
                     : ErrorMessages.IRIS_MESSAGE_SUBMISSION;
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         }

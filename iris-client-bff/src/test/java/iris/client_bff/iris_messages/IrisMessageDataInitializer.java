@@ -28,13 +28,13 @@ public class IrisMessageDataInitializer implements DataInitializer {
 		log.debug("Test data: creating iris messages …");
 
 		Optional<IrisMessageFolder> inboxFolder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
-		assertThat(inboxFolder.isPresent()).isTrue();
+		assertThat(inboxFolder).isPresent();
 		IrisMessageFolder nestedInboxFolder = this.testData.getTestMessageFolder(inboxFolder.get(), "nested inbox");
 
 		this.folderRepository.save(nestedInboxFolder);
 
 		Optional<IrisMessageFolder> outboxFolder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
-		assertThat(outboxFolder.isPresent()).isTrue();
+		assertThat(outboxFolder).isPresent();
 
 		this.messageRepository.save(this.testData.getTestInboxMessage(inboxFolder.get()));
 		this.messageRepository.save(this.testData.getTestInboxMessage(inboxFolder.get()));
@@ -42,6 +42,5 @@ public class IrisMessageDataInitializer implements DataInitializer {
 		this.messageRepository.save(this.testData.getTestInboxMessage(nestedInboxFolder));
 
 		this.messageRepository.save(this.testData.getTestOutboxMessage(outboxFolder.get()));
-
 	}
 }
