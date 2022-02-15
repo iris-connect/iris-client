@@ -1,14 +1,16 @@
 package iris.client_bff.iris_messages;
 
+import static org.assertj.core.api.Assertions.*;
+
 import iris.client_bff.DataInitializer;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -16,31 +18,39 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Order(10)
 public class IrisMessageDataInitializer implements DataInitializer {
 
-	private final IrisMessageRepository messageRepository;
+  private final IrisMessageRepository messageRepository;
 
-	private final IrisMessageFolderRepository folderRepository;
+  private final IrisMessageFolderRepository folderRepository;
 
-	private final IrisMessageTestData testData;
+  private final IrisMessageTestData testData;
 
-	@Override
-	public void initialize() {
+  @Getter
+  private IrisMessageFolder inboxFolder;
 
-		log.debug("Test data: creating iris messages …");
+  @Override
+  public void initialize() {
 
-		Optional<IrisMessageFolder> inboxFolder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
-		assertThat(inboxFolder).isPresent();
-		IrisMessageFolder nestedInboxFolder = this.testData.getTestMessageFolder(inboxFolder.get(), "nested inbox");
+	log.debug("Test data: creating iris messages …");
 
-		this.folderRepository.save(nestedInboxFolder);
+	Optional<IrisMessageFolder> folder = this.folderRepository
+		.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
+	assertThat(folder).isPresent();
+	this.inboxFolder = folder.get();
+	IrisMessageFolder nestedInboxFolder = this.testData.getTestMessageFolder(inboxFolder, "nested inbox");
 
-		Optional<IrisMessageFolder> outboxFolder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
-		assertThat(outboxFolder).isPresent();
+	this.folderRepository.save(nestedInboxFolder);
 
-		this.messageRepository.save(this.testData.getTestInboxMessage(inboxFolder.get()));
-		this.messageRepository.save(this.testData.getTestInboxMessage(inboxFolder.get()));
+	Optional<IrisMessageFolder> outboxFolder = this.folderRepository
+		.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
+	assertThat(outboxFolder).isPresent();
 
-		this.messageRepository.save(this.testData.getTestInboxMessage(nestedInboxFolder));
+	var message = this.testData.getTestInboxMessage(inboxFolder);
+	message.setSubject("First test inbox subject");
+	this.messageRepository.save(message);
+	this.messageRepository.save(this.testData.getTestInboxMessage(inboxFolder));
 
-		this.messageRepository.save(this.testData.getTestOutboxMessage(outboxFolder.get()));
-	}
+	this.messageRepository.save(this.testData.getTestInboxMessage(nestedInboxFolder));
+
+	this.messageRepository.save(this.testData.getTestOutboxMessage(outboxFolder.get()));
+  }
 }
