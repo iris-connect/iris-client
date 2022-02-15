@@ -26,8 +26,11 @@ import org.hibernate.search.mapper.orm.mapping.HibernateOrmSearchMappingConfigur
 import org.hibernate.search.mapper.orm.massindexing.MassIndexer;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.hibernate.search.mapper.pojo.bridge.IdentifierBridge;
+import org.hibernate.search.mapper.pojo.bridge.ValueBridge;
 import org.hibernate.search.mapper.pojo.bridge.runtime.IdentifierBridgeFromDocumentIdentifierContext;
 import org.hibernate.search.mapper.pojo.bridge.runtime.IdentifierBridgeToDocumentIdentifierContext;
+import org.hibernate.search.mapper.pojo.bridge.runtime.ValueBridgeFromIndexedValueContext;
+import org.hibernate.search.mapper.pojo.bridge.runtime.ValueBridgeToIndexedValueContext;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.context.annotation.Bean;
@@ -127,7 +130,13 @@ class HibernateSearchConfig {
 			context.bridges().strictSubTypesOf(IdWithUuid.class).identifierBinder(idBindingContext -> {
 
 				var idType = (Class<IdWithUuid>) idBindingContext.bridgedElement().rawType();
-				idBindingContext.bridge(idType, IdWithUuidBridge.of(converter, idType));
+				idBindingContext.bridge(idType, IdWithUuidIdentifierBridge.of(converter, idType));
+			});
+
+			context.bridges().strictSubTypesOf(IdWithUuid.class).valueBinder(valueBindingContext -> {
+
+				var valueType = (Class<IdWithUuid>) valueBindingContext.bridgedElement().rawType();
+				valueBindingContext.bridge(valueType, IdWithUuidValueBridge.of(converter, valueType));
 			});
 		}
 	}
@@ -136,19 +145,39 @@ class HibernateSearchConfig {
 	 * @author Jens Kutzsche
 	 */
 	@RequiredArgsConstructor(staticName = "of")
-	static class IdWithUuidBridge<T extends IdWithUuid> implements IdentifierBridge<T> {
+	static class IdWithUuidIdentifierBridge<T extends IdWithUuid> implements IdentifierBridge<T> {
 
 		private final PrimitivesToIdWithUuidConverter converter;
 		private final Class<T> clazz;
 
 		@Override
 		public String toDocumentIdentifier(T value, IdentifierBridgeToDocumentIdentifierContext context) {
-			return value.toString();
+			return value == null ? null : value.toString();
 		}
 
 		@Override
 		public T fromDocumentIdentifier(String value,
 				IdentifierBridgeFromDocumentIdentifierContext context) {
+			return (T) converter.convert(value, TypeDescriptor.valueOf(String.class), TypeDescriptor.valueOf(clazz));
+		}
+	}
+
+	/**
+	 * @author Jens Kutzsche
+	 */
+	@RequiredArgsConstructor(staticName = "of")
+	static class IdWithUuidValueBridge<T extends IdWithUuid> implements ValueBridge<T, String> {
+
+		private final PrimitivesToIdWithUuidConverter converter;
+		private final Class<T> clazz;
+
+		@Override
+		public String toIndexedValue(T value, ValueBridgeToIndexedValueContext context) {
+			return value == null ? null : value.toString();
+		}
+
+		@Override
+		public T fromIndexedValue(String value, ValueBridgeFromIndexedValueContext context) {
 			return (T) converter.convert(value, TypeDescriptor.valueOf(String.class), TypeDescriptor.valueOf(clazz));
 		}
 	}
