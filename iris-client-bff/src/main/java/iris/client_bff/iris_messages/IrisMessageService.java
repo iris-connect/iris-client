@@ -3,6 +3,8 @@ package iris.client_bff.iris_messages;
 import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.hd_search.HealthDepartment;
 import iris.client_bff.hd_search.eps.EPSHdSearchClient;
+import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
+import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class IrisMessageService {
@@ -32,26 +32,25 @@ public class IrisMessageService {
 
     private final IrisMessageBuilder messageBuilder;
 
-    public Optional<IrisMessage> findById(UUID messageId) {
-        return messageRepository.findById(IrisMessage.IrisMessageIdentifier.of(messageId));
+    public Optional<IrisMessage> findById(IrisMessageIdentifier messageId) {
+        return messageRepository.findById(messageId);
     }
 
-    public Page<IrisMessage> search(UUID folderId, String searchString, Pageable pageable) {
-        var folderIdentifier = IrisMessageFolder.IrisMessageFolderIdentifier.of(folderId);
+    public Page<IrisMessage> search(IrisMessageFolderIdentifier folderId, String searchString, Pageable pageable) {
         if (StringUtils.isEmpty(searchString)) {
-            return messageRepository.findAllByFolderIdOrderByIsReadAsc(folderIdentifier, pageable);
+            return messageRepository.findAllByFolderIdOrderByIsReadAsc(folderId, pageable);
         }
         var result = searcher.search(
                 searchString,
                 pageable,
                 SEARCH_FIELDS,
-                it -> it.must(f2 -> f2.match().field("folder.id").matching(folderIdentifier)),
+                it -> it.must(f2 -> f2.match().field("folder.id").matching(folderId)),
                 IrisMessage.class);
         return new PageImpl<>(result.hits(), pageable, result.total().hitCount());
     }
 
-    public int getCountUnreadByFolderId(UUID folderId) {
-        return messageRepository.getCountUnreadByFolderId(IrisMessageFolder.IrisMessageFolderIdentifier.of(folderId));
+    public int getCountUnreadByFolderId(IrisMessageFolderIdentifier folderId) {
+        return messageRepository.getCountUnreadByFolderId(folderId);
     }
 
     public int getCountUnread() {

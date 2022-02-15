@@ -3,7 +3,9 @@ package iris.client_bff.iris_messages.web;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.*;
 import iris.client_bff.iris_messages.IrisMessage;
+import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
 import iris.client_bff.iris_messages.IrisMessageFile;
+import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.IrisMessageException;
 import iris.client_bff.iris_messages.validation.FileTypeValidator;
 import iris.client_bff.ui.messages.ErrorMessages;
@@ -29,10 +31,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Slf4j
 @RestController
 @AllArgsConstructor
 @Validated
@@ -55,11 +55,10 @@ public class IrisMessageController {
 
     @GetMapping()
     public Page<IrisMessageListItemDto> getMessages(
-            @RequestParam() UUID folder,
+            @RequestParam() IrisMessageFolderIdentifier folder,
             @RequestParam(required = false) String search,
             Pageable pageable
     ) {
-        this.validateUUID(folder, FOLDER_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FOLDER_ID);
         this.validateField(search, FIELD_SEARCH);
         return this.irisMessageService.search(folder, search, pageable).map(IrisMessageListItemDto::fromEntity);
     }
@@ -108,8 +107,7 @@ public class IrisMessageController {
     }
 
     @GetMapping("/{messageId}")
-    public ResponseEntity<IrisMessageDetailsDto> getMessageDetails(@PathVariable UUID messageId) {
-        this.validateUUID(messageId, MESSAGE_ID, ErrorMessages.INVALID_IRIS_MESSAGE_ID);
+    public ResponseEntity<IrisMessageDetailsDto> getMessageDetails(@PathVariable IrisMessageIdentifier messageId) {
         Optional<IrisMessage> irisMessage = this.irisMessageService.findById(messageId);
         if (irisMessage.isPresent()) {
             IrisMessageDetailsDto messageDetailsDto = IrisMessageDetailsDto.fromEntity(irisMessage.get());
@@ -121,12 +119,11 @@ public class IrisMessageController {
 
     @PatchMapping("/{messageId}")
     public ResponseEntity<IrisMessageDetailsDto> updateMessage(
-            @PathVariable UUID messageId,
+            @PathVariable IrisMessageIdentifier messageId,
             @RequestBody @Valid IrisMessageUpdate irisMessageUpdate,
             BindingResult bindingResult
     ) {
         this.validateConstraints(bindingResult);
-        this.validateUUID(messageId, MESSAGE_ID, ErrorMessages.INVALID_IRIS_MESSAGE_ID);
         this.validateIrisMessageUpdate(irisMessageUpdate);
         Optional<IrisMessage> message = this.irisMessageService.findById(messageId);
         if (message.isPresent()) {
@@ -201,11 +198,10 @@ public class IrisMessageController {
     }
 
     @GetMapping("/count/unread")
-    public ResponseEntity<Integer> getUnreadMessageCount(@RequestParam(required = false) UUID folder) {
+    public ResponseEntity<Integer> getUnreadMessageCount(@RequestParam(required = false) IrisMessageFolderIdentifier folder) {
         if (folder == null) {
             return ResponseEntity.ok(irisMessageService.getCountUnread());
         }
-        this.validateUUID(folder, FOLDER_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FOLDER_ID);
         return ResponseEntity.ok(irisMessageService.getCountUnreadByFolderId(folder));
     }
 
@@ -222,11 +218,4 @@ public class IrisMessageController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
         }
     }
-
-    private void validateUUID(UUID value, String field, String errorMessage) {
-        if (value == null || !ValidationHelper.isUUIDInputValid(value.toString(), field)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
-        }
-    }
-
 }

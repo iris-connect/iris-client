@@ -1,28 +1,38 @@
 package iris.client_bff.iris_messages.web;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
-import iris.client_bff.iris_messages.*;
+import iris.client_bff.iris_messages.IrisMessage;
+import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
+import iris.client_bff.iris_messages.IrisMessageFolder;
+import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
+import iris.client_bff.iris_messages.IrisMessageHdContact;
+import iris.client_bff.iris_messages.IrisMessageService;
+import iris.client_bff.iris_messages.IrisMessageTestData;
+import iris.client_bff.iris_messages.IrisMessageUpdate;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
 @RequiredArgsConstructor
@@ -50,13 +60,13 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	void getInboxMessages() throws Exception {
-		this.getMessages(testData.MOCK_INBOX_MESSAGE, testData.MOCK_INBOX_MESSAGE.getFolder().getId().toUUID());
+		this.getMessages(testData.MOCK_INBOX_MESSAGE, testData.MOCK_INBOX_MESSAGE.getFolder().getId());
 	}
 
 	@Test
 	@WithMockUser()
 	void getOutboxMessages() throws Exception {
-		this.getMessages(testData.MOCK_OUTBOX_MESSAGE, testData.MOCK_OUTBOX_MESSAGE.getFolder().getId().toUUID());
+		this.getMessages(testData.MOCK_OUTBOX_MESSAGE, testData.MOCK_OUTBOX_MESSAGE.getFolder().getId());
 	}
 
 	@Test
@@ -73,7 +83,7 @@ class IrisMessageControllerTest {
 		IrisMessage irisMessage = testData.MOCK_OUTBOX_MESSAGE;
 
 		when(irisMessageService.sendMessage(any())).thenReturn(irisMessage);
-		when(irisMessageService.findById(irisMessage.getId().toUUID())).thenReturn(Optional.of(irisMessage));
+		when(irisMessageService.findById(irisMessage.getId())).thenReturn(Optional.of(irisMessage));
 
 		var postResult = mockMvc
 				.perform(
@@ -127,7 +137,7 @@ class IrisMessageControllerTest {
 	@WithMockUser()
 	void getMessageDetails() throws Exception {
 
-		UUID messageId = testData.MOCK_INBOX_MESSAGE.getId().toUUID();
+		IrisMessageIdentifier messageId = testData.MOCK_INBOX_MESSAGE.getId();
 
 		when(irisMessageService.findById(messageId)).thenReturn(Optional.of(testData.MOCK_INBOX_MESSAGE));
 
@@ -147,7 +157,7 @@ class IrisMessageControllerTest {
 	@WithMockUser()
 	void getMessageDetails_shouldFail() throws Exception {
 
-		UUID invalidId = UUID.randomUUID();
+		IrisMessageIdentifier invalidId = IrisMessageIdentifier.of(UUID.randomUUID());
 
 		when(irisMessageService.findById(invalidId)).thenReturn(Optional.empty());
 
@@ -169,7 +179,7 @@ class IrisMessageControllerTest {
 		updatedMessage.setIsRead(true);
 		verify(updatedMessage).setIsRead(true);
 
-		when(irisMessageService.findById(any(UUID.class))).thenReturn(Optional.of(updatedMessage));
+		when(irisMessageService.findById(any())).thenReturn(Optional.of(updatedMessage));
 		when(irisMessageService.updateMessage(updatedMessage, messageUpdate)).thenReturn(updatedMessage);
 
 		var res = mockMvc
@@ -181,7 +191,7 @@ class IrisMessageControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
-		verify(irisMessageService).findById(any(UUID.class));
+		verify(irisMessageService).findById(any());
 		verify(irisMessageService).updateMessage(any(IrisMessage.class), any(IrisMessageUpdate.class));
 
 		var messageDetailsDto = om.readValue(res.getResponse().getContentAsString(), IrisMessageDetailsDto.class);
@@ -197,7 +207,7 @@ class IrisMessageControllerTest {
 
 		IrisMessageUpdate messageUpdate = new IrisMessageUpdate(true);
 
-		when(irisMessageService.findById(any(UUID.class))).thenReturn(Optional.empty());
+		when(irisMessageService.findById(any())).thenReturn(Optional.empty());
 
 		mockMvc
 				.perform(
@@ -223,7 +233,8 @@ class IrisMessageControllerTest {
 
 		verify(irisMessageService).getFolders();
 
-		List<IrisMessageFolderDto> folderDtoList = om.readValue(res.getResponse().getContentAsString(), new TypeReference<>() {});
+		List<IrisMessageFolderDto> folderDtoList = om.readValue(res.getResponse().getContentAsString(),
+				new TypeReference<>() {});
 
 		assertEquals(2, folderDtoList.size());
 		assertThat(folderDtoList).isEqualTo(IrisMessageFolderDto.fromEntity(folderList));
@@ -261,7 +272,8 @@ class IrisMessageControllerTest {
 
 		verify(irisMessageService).getHdContacts(null);
 
-		List<IrisMessageHdContact> contacts = om.readValue(res.getResponse().getContentAsString(), new TypeReference<>() {});
+		List<IrisMessageHdContact> contacts = om.readValue(res.getResponse().getContentAsString(),
+				new TypeReference<>() {});
 
 		assertEquals(1, contacts.size());
 		assertThat(contacts).contains(testData.MOCK_CONTACT_OTHER);
@@ -283,7 +295,8 @@ class IrisMessageControllerTest {
 		verify(irisMessageService).getHdContacts(null);
 		verify(irisMessageService).getOwnHdContact();
 
-		List<IrisMessageHdContact> contacts = om.readValue(res.getResponse().getContentAsString(), new TypeReference<>() {});
+		List<IrisMessageHdContact> contacts = om.readValue(res.getResponse().getContentAsString(),
+				new TypeReference<>() {});
 
 		assertEquals(2, contacts.size());
 		assertThat(contacts).contains(testData.MOCK_CONTACT_OTHER);
@@ -310,7 +323,7 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	void getUnreadMessageCountByFolder() throws Exception {
-		when(irisMessageService.getCountUnreadByFolderId(any(UUID.class))).thenReturn(1);
+		when(irisMessageService.getCountUnreadByFolderId(any())).thenReturn(1);
 
 		var res = mockMvc
 				.perform(MockMvcRequestBuilders
@@ -320,14 +333,14 @@ class IrisMessageControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
-		verify(irisMessageService).getCountUnreadByFolderId(testData.MOCK_INBOX_FOLDER.getId().toUUID());
+		verify(irisMessageService).getCountUnreadByFolderId(testData.MOCK_INBOX_FOLDER.getId());
 
 		Integer count = om.readValue(res.getResponse().getContentAsString(), new TypeReference<>() {});
 
 		assertEquals(1, count);
 	}
 
-	private void getMessages(IrisMessage message, UUID folderId) throws Exception {
+	private void getMessages(IrisMessage message, IrisMessageFolderIdentifier folderId) throws Exception {
 
 		when(irisMessageService.search(eq(folderId), nullable(String.class), any(Pageable.class)))
 				.thenReturn(new RestResponsePage<>(List.of(message)));
