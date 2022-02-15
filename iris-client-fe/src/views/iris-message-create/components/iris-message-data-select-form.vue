@@ -35,6 +35,7 @@
           </v-col>
         </v-row>
       </v-card-text>
+      <v-divider></v-divider>
       <v-card-actions>
         <v-btn color="secondary" text @click="cancel"> Abbrechen </v-btn>
         <v-spacer></v-spacer>
@@ -50,19 +51,19 @@ import { PropType } from "vue";
 import {
   IrisMessageDataDiscriminator,
   IrisMessageDataInsert,
-  IrisMessageDataInsertPayload,
+  IrisMessageDataSelectionPayload,
 } from "@/api";
 import Discriminators from "@/constants/Discriminators";
 import rules from "@/common/validation-rules";
 import { parseData } from "@/utils/data";
 import IrisMessageDataComponent, {
-  MessageDataComponentSource,
+  IrisMessageDataComponentSource,
 } from "@/modules/iris-message/components/iris-message-data-component.vue";
 
 type IrisMessageDataForm = {
   model: {
     discriminator: IrisMessageDataDiscriminator | null;
-    payload: IrisMessageDataInsertPayload | null;
+    payload: IrisMessageDataSelectionPayload | null;
     description: string;
   };
   valid: boolean;
@@ -73,11 +74,11 @@ type DiscriminatorOption = {
   value: IrisMessageDataDiscriminator;
 };
 
-const dataComponentSource: MessageDataComponentSource = {
+const dataComponentSource: IrisMessageDataComponentSource = {
   [IrisMessageDataDiscriminator.EventTracking]: {
     component: () =>
       import(
-        /* webpackChunkName: "event-tracking-message-data.select" */ "../../event-tracking-message-data/event-tracking-message-data.select.vue"
+        /* webpackChunkName: "event-tracking-message-data.export" */ "../../event-tracking-message-data/event-tracking-message-data.export.vue"
       ),
   },
 };

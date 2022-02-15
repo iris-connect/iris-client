@@ -10,19 +10,16 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
-public class EventMessageDataInsertPayload {
-
-    @NotBlank
-    String event;
+public class EventMessageDataImportSelectionPayload {
 
     @Valid
     @NotEmpty
     List<@NotBlank String> guests;
 
-    public static EventMessageDataInsertPayload toModel(String payload) {
+    public static EventMessageDataImportSelectionPayload toModel(String payload) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(payload, EventMessageDataInsertPayload.class);
+            return objectMapper.readValue(payload, EventMessageDataImportSelectionPayload.class);
         } catch (Throwable e) {
             throw new IrisMessageDataException("invalid payload");
         }

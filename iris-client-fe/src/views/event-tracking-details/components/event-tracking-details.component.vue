@@ -320,7 +320,10 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
   }
 
   get messageData(): IrisMessageDataInsert {
-    const guests: string[] = _map(this.tableData.select, "raw.guestId");
+    const guests: string[] = _map(
+      this.tableData.select,
+      "raw.messageDataSelectId"
+    );
     return {
       discriminator: IrisMessageDataDiscriminator.EventTracking,
       description: this.formData?.name || "",

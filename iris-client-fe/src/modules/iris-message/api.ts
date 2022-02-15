@@ -7,9 +7,9 @@ import {
   normalizeUnreadIrisMessageCount,
 } from "@/views/iris-message-list/iris-message-list.data";
 import { cancelTokenProvider, DataQuery } from "@/api/common";
-import { IrisMessageInsert } from "@/api";
+import { IrisMessageDataSelectionPayload, IrisMessageInsert } from "@/api";
 import { normalizeIrisMessageHdContacts } from "@/views/iris-message-create/iris-message-create.data";
-import { apiBundleProvider, bundleApi } from "@/utils/api";
+import { apiBundleProvider } from "@/utils/api";
 // disabled file attachments
 // import fileDownload from "@/utils/fileDownload";
 // import { AxiosResponse } from "axios";
@@ -93,16 +93,40 @@ const markAsRead = () => {
   return asyncAction(action);
 };
 
-const importDataAttachment = () => {
+const importDataAttachmentAndAdd = () => {
   const action = async (dataId: string) => {
-    return authClient.irisMessageDataImport(dataId);
+    return authClient.importIrisMessageDataAndAdd(dataId);
   };
   return asyncAction(action);
 };
 
-export const viewDataAttachment = () => {
+const importDataAttachmentAndUpdate = () => {
+  const action = async (
+    dataId: string,
+    importTargetId: string,
+    data: IrisMessageDataSelectionPayload
+  ) => {
+    return authClient.importIrisMessageDataAndUpdate(dataId, data, {
+      params: { importTargetId },
+    });
+  };
+  return asyncAction(action);
+};
+
+export const getMessageDataImportSelectionViewData = () => {
+  const action = async (dataId: string, importTargetId?: string) => {
+    return (
+      await authClient.messageDataImportSelectionViewDataGet(dataId, {
+        params: { importTargetId },
+      })
+    ).data;
+  };
+  return asyncAction(action);
+};
+
+export const getMessageDataViewData = () => {
   const action = async (dataId: string) => {
-    return (await authClient.irisMessageDataView(dataId)).data;
+    return (await authClient.irisMessageDataViewDataGet(dataId)).data;
   };
   return asyncAction(action);
 };
@@ -140,17 +164,13 @@ export const irisMessageApi = {
   fetchMessageFolders,
   fetchMessage,
   markAsRead,
-  importDataAttachment,
-  viewDataAttachment,
+  importDataAttachmentAndAdd,
+  importDataAttachmentAndUpdate,
+  getMessageDataImportSelectionViewData,
+  getMessageDataViewData,
   downloadFileAttachment,
 };
 
 export const bundleIrisMessageApi = apiBundleProvider(irisMessageApi);
-
-export const bundleIrisMessageApi2 = <K extends keyof typeof irisMessageApi>(
-  keys?: K[]
-) => {
-  return bundleApi(irisMessageApi, keys);
-};
 
 export const fetchUnreadMessageCountApi = fetchUnreadMessageCount();

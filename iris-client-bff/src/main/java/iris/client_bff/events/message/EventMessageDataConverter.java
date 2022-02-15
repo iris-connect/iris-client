@@ -1,6 +1,5 @@
 package iris.client_bff.events.message;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestRepository;
 import iris.client_bff.events.EventDataSubmissionRepository;
@@ -22,8 +21,8 @@ public class EventMessageDataConverter {
     private final EventDataRequestRepository requestRepository;
     private final EventDataSubmissionRepository submissionRepository;
 
-    EventMessageDataPayload payloadFromInsert(String insert) throws IrisMessageDataException {
-        EventMessageDataInsertPayload insertPayload = EventMessageDataConverter.getInsertPayload(insert);
+    EventMessageDataPayload getPayloadFromInsert(String insert) throws IrisMessageDataException {
+        EventMessageDataInsertPayload insertPayload = EventMessageDataInsertPayload.toModel(insert);
         EventDataRequest.DataRequestIdentifier eventId = EventDataRequest.DataRequestIdentifier.of(insertPayload.getEvent());
         EventDataRequest eventDataRequest = this.getEventDataRequest(eventId);
         EventDataSubmission eventDataSubmission = this.getEventDataSubmission(eventId);
@@ -32,15 +31,6 @@ public class EventMessageDataConverter {
                 eventDataSubmission,
                 insertPayload.getGuests()
         );
-    }
-
-    static EventMessageDataInsertPayload getInsertPayload(String payload) throws IrisMessageDataException {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(payload, EventMessageDataInsertPayload.class);
-        } catch (Throwable e) {
-            throw new IrisMessageDataException("invalid payload");
-        }
     }
 
     private EventDataRequest getEventDataRequest(EventDataRequest.DataRequestIdentifier eventId) throws IrisMessageDataException {

@@ -9,15 +9,12 @@
       Ereignis wählen
     </v-stepper-step>
     <v-stepper-content step="1">
-      <div>
-        <select-event
-          v-if="step >= 1"
-          :value="selection.event"
-          @input="onEventChange"
-          :description="description"
-          @update:description="$emit('update:description', $event)"
-        />
-      </div>
+      <select-event
+        :value="selection.event"
+        @input="onEventChange"
+        :description="description"
+        @update:description="$emit('update:description', $event)"
+      />
     </v-stepper-content>
     <v-stepper-step
       :rules="validationRules.guests"
@@ -28,14 +25,11 @@
       Gäste wählen
     </v-stepper-step>
     <v-stepper-content step="2">
-      <div>
-        <select-guests
-          v-if="step >= 2"
-          :event-id="selection.event"
-          :value="selection.guests"
-          @input="onGuestsChange"
-        />
-      </div>
+      <select-guests
+        :event-id="selection.event"
+        :value="selection.guests"
+        @input="onGuestsChange"
+      />
     </v-stepper-content>
   </v-stepper>
 </template>
@@ -44,21 +38,20 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import EventTrackingFormView from "@/views/event-tracking-form/event-tracking-form.view.vue";
-import store from "@/store";
 import SelectEvent from "@/views/event-tracking-message-data/components/select-event.vue";
-import { IrisMessageDataInsertPayload } from "@/api";
+import { IrisMessageDataSelectionPayload } from "@/api";
 import SelectGuests from "@/views/event-tracking-message-data/components/select-guests.vue";
 import { PropType } from "vue";
 import rules from "@/common/validation-rules";
 
-const EventTrackingMessageDataSelectProps = Vue.extend({
+const EventTrackingMessageDataExportProps = Vue.extend({
   props: {
     description: {
       type: String,
       default: "",
     },
     value: {
-      type: Object as PropType<IrisMessageDataInsertPayload | null>,
+      type: Object as PropType<IrisMessageDataSelectionPayload | null>,
       default: null,
     },
   },
@@ -69,18 +62,14 @@ const EventTrackingMessageDataSelectProps = Vue.extend({
     SelectGuests,
     SelectEvent,
     IrisDataTable,
-    EventTrackingFormView: EventTrackingFormView,
-  },
-  beforeRouteLeave(to, from, next) {
-    store.commit("eventTrackingList/reset");
-    next();
+    EventTrackingFormView,
   },
 })
-export default class EventTrackingMessageDataSelect extends EventTrackingMessageDataSelectProps {
+export default class EventTrackingMessageDataExport extends EventTrackingMessageDataExportProps {
   step = 1;
 
   touched: Record<string, boolean | undefined> = {};
-  selection: IrisMessageDataInsertPayload = this.value || {
+  selection: IrisMessageDataSelectionPayload = this.value || {
     event: "",
     guests: [],
   };
@@ -98,7 +87,7 @@ export default class EventTrackingMessageDataSelect extends EventTrackingMessage
   }
 
   @Watch("selection", { immediate: true, deep: true })
-  onSelectionChange(newValue: IrisMessageDataInsertPayload) {
+  onSelectionChange(newValue: IrisMessageDataSelectionPayload) {
     if (this.validate("event") === true && this.validate("guests") === true) {
       this.$emit("input", newValue);
     } else {

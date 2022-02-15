@@ -40,7 +40,6 @@ public class IrisMessageController {
 
     private static final String FOLDER_ID = "folderId";
     private static final String MESSAGE_ID = "messageId";
-    private static final String MESSAGE_DATA_ID = "messageDataId";
     private static final String FILE_ID = "fileId";
 
     private static final String FIELD_SEARCH = "search";
@@ -140,20 +139,6 @@ public class IrisMessageController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
-
-    @PostMapping("/data/import/{messageDataId}")
-    public ResponseEntity<?> importMessageData(@PathVariable UUID messageDataId) {
-        this.validateUUID(messageDataId, MESSAGE_DATA_ID, ErrorMessages.INVALID_IRIS_MESSAGE_DATA_ID);
-        this.irisMessageService.importMessageData(messageDataId);
-        return ResponseEntity.ok(null);
-    }
-
-    @GetMapping("/data/view/{messageDataId}")
-    public ResponseEntity<IrisMessageViewData> viewMessageData(@PathVariable UUID messageDataId) {
-        this.validateUUID(messageDataId, MESSAGE_DATA_ID, ErrorMessages.INVALID_IRIS_MESSAGE_DATA_ID);
-        IrisMessageViewData messageData = this.irisMessageService.viewMessageData(messageDataId);
-        return ResponseEntity.ok(messageData);
     }
 
     @PatchMapping("/{messageId}")

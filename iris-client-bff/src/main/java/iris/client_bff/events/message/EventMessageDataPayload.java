@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -80,10 +81,11 @@ public class EventMessageDataPayload {
             ModelMapper mapper = new ModelMapper();
             List<Guest> guests = eventDataSubmission.getGuests()
                     .stream()
-                    .filter((guest -> guestIds.contains(guest.getGuestId().toString())))
+                    .filter((guest -> guestIds.size() <= 0 || guestIds.contains(guest.getGuestId().toString())))
                     .map(it -> {
                         Guest mapped = mapper.map(it, Guest.class);
                         mapped.setGuestId(null);
+                        mapped.setMessageDataSelectId(UUID.randomUUID().toString());
                         return mapped;
                     })
                     .collect(Collectors.toList());

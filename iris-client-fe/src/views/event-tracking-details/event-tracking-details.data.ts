@@ -143,7 +143,7 @@ const normalizeGuest = (source?: Guest, parse?: boolean): Guest => {
     source,
     (normalizer) => {
       const normalized: Complete<Guest> = {
-        guestId: normalizer("guestId", undefined),
+        messageDataSelectId: normalizer("messageDataSelectId", undefined),
         firstName: normalizer("firstName", ""),
         lastName: normalizer("lastName", ""),
         dateOfBirth: normalizer("dateOfBirth", undefined),
@@ -164,6 +164,22 @@ const normalizeGuest = (source?: Guest, parse?: boolean): Guest => {
     parse,
     "Guest"
   );
+};
+
+export const normalizeGuests = (source?: Guest[], parse?: boolean): Guest[] => {
+  const sourceData: { guests: Guest[] } = { guests: source || [] };
+  return normalizeData(
+    sourceData,
+    (normalizer) => {
+      const guests = normalizer("guests", [], "array");
+      const normalizedGuests = guests.map((guest) =>
+        normalizeGuest(guest, true)
+      );
+      return { guests: normalizedGuests };
+    },
+    parse,
+    "Guests"
+  ).guests;
 };
 
 const normalizeGuestListDataProvider = (
@@ -188,9 +204,8 @@ const normalizeGuestList = (source?: GuestList, parse?: boolean): GuestList => {
   return normalizeData(
     source,
     (normalizer) => {
-      const guests = normalizer("guests", [], "array");
       const normalized: Complete<GuestList> = {
-        guests: guests.map((guest) => normalizeGuest(guest, true)),
+        guests: normalizeGuests(source?.guests),
         dataProvider: normalizeGuestListDataProvider(source?.dataProvider),
         additionalInformation: normalizer("additionalInformation", undefined),
         startDate: normalizer("startDate", undefined, "dateString"),

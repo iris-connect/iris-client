@@ -43,7 +43,7 @@ export const getApiErrorMessages = <T, K extends keyof T>(
   api: ApiState<T>,
   keys?: K[]
 ): ErrorMessage[] => {
-  return getCombinedApiState("error", api, keys);
+  return getCombinedApiState("error", api, keys).filter((v) => v);
 };
 
 export const getApiLoading = <T, K extends keyof T>(

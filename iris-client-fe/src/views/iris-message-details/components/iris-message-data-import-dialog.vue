@@ -3,12 +3,17 @@
     <template v-slot:activator="{ attrs, on }">
       <slot name="activator" v-bind="{ attrs, on }" />
     </template>
-    <v-card>
-      <v-card-title>Daten importieren</v-card-title>
-      <v-card-text>
-        <iris-message-data-component v-bind="dataComponentConfig" />
-      </v-card-text>
-    </v-card>
+    <v-sheet>
+      <iris-message-data-view
+        :disabled="loading"
+        v-bind="dataComponentConfig"
+        :payload="importSelectionViewPayload"
+        @update:target="onSelectTarget"
+        @submit="handleSubmit"
+        @cancel="dialog = false"
+      />
+      <error-message-alert class="mb-n4" :errors="errors" />
+    </v-sheet>
   </v-dialog>
 </template>
 
@@ -17,13 +22,28 @@ import { Component, Vue } from "vue-property-decorator";
 import { PropType } from "vue";
 import ConfirmDialog from "@/components/confirm-dialog.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { IrisMessageDataDiscriminator } from "@/api";
-import IrisMessageDataComponent, {
-  MessageDataComponentSource,
-} from "@/modules/iris-message/components/iris-message-data-component.vue";
+import {
+  Guest,
+  IrisMessageDataDiscriminator,
+  IrisMessageDataSelectionPayload,
+} from "@/api";
+import { bundleIrisMessageApi } from "@/modules/iris-message/api";
+import { ErrorMessage } from "@/utils/axios";
+import { getApiErrorMessages, getApiLoading } from "@/utils/api";
+import IrisMessageDataView, {
+  IrisMessageDataViewSource,
+} from "@/modules/iris-message/components/iris-message-data-view.vue";
+import { normalizeGuests } from "@/views/event-tracking-details/event-tracking-details.data";
 
-const dataComponentSource: MessageDataComponentSource = {
+type IrisMessageDataViewPayload = {
+  [IrisMessageDataDiscriminator.EventTracking]: Guest[];
+};
+
+type DataViewSource = IrisMessageDataViewSource<IrisMessageDataViewPayload>;
+
+const dataViewSource: DataViewSource = {
   [IrisMessageDataDiscriminator.EventTracking]: {
+    normalize: normalizeGuests,
     component: () =>
       import(
         /* webpackChunkName: "event-tracking-message-data.import" */ "../../event-tracking-message-data/event-tracking-message-data.import.vue"
@@ -42,32 +62,66 @@ const IrisMessageDataImportDialogProps = Vue.extend({
       type: Object as PropType<IrisMessageImportData | null>,
       default: null,
     },
-    importEnabled: {
-      type: Boolean,
-      default: false,
-    },
   },
 });
 
 @Component({
   components: {
-    IrisMessageDataComponent,
+    IrisMessageDataView,
     ConfirmDialog,
     ErrorMessageAlert,
   },
 })
 export default class IrisMessageDataImportDialog extends IrisMessageDataImportDialogProps {
+  messageDataApi = bundleIrisMessageApi([
+    "getMessageDataImportSelectionViewData",
+    "importDataAttachmentAndUpdate",
+  ]);
+
   get dialog() {
     return !!this.value;
   }
   set dialog(value) {
     this.$emit("input", null);
   }
+  get importSelectionViewPayload() {
+    const viewData =
+      this.messageDataApi.getMessageDataImportSelectionViewData.state.result;
+    return viewData?.payload;
+  }
+  onSelectTarget(value: string | null) {
+    if (this.value?.id && value) {
+      this.messageDataApi.getMessageDataImportSelectionViewData.execute(
+        this.value?.id,
+        value
+      );
+    }
+  }
   get dataComponentConfig() {
     return {
-      source: dataComponentSource,
       discriminator: this.value?.discriminator,
+      source: dataViewSource,
     };
+  }
+  get loading(): boolean {
+    return getApiLoading(this.messageDataApi);
+  }
+  get errors(): ErrorMessage[] {
+    return getApiErrorMessages(this.messageDataApi);
+  }
+  async handleSubmit(messageData: {
+    target: string;
+    selection: IrisMessageDataSelectionPayload;
+  }) {
+    if (this.value?.id && messageData.target) {
+      await this.messageDataApi.importDataAttachmentAndUpdate.execute(
+        this.value.id,
+        messageData.target,
+        messageData.selection
+      );
+      this.dialog = false;
+      this.$emit("import:done");
+    }
   }
 }
 </script>

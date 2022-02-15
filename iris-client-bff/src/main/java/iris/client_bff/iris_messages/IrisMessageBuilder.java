@@ -54,17 +54,15 @@ public class IrisMessageBuilder {
         try {
             if (messageTransfer.getDataAttachments() != null) {
                 for ( IrisMessageTransfer.DataAttachment dataAttachment : messageTransfer.getDataAttachments() ) {
-                    IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(dataAttachment.getDiscriminator());
-                    String payload = processor.payloadFromTransfer(dataAttachment.getPayload());
-                    // we do not defuse the payload when receiving it to be able to store yet unknown payload types.
+                    // we do not process and / or defuse the payload when receiving it to be able to store yet unknown payload types.
                     // We defuse it while importing / viewing
                     // To minimize the risk of possible attacks, we check the keys & values of the payloads JSON string
-                    this.validateMessageDataPayload(payload, dataAttachment.getDiscriminator());
+                    this.validateMessageDataPayload(dataAttachment.getPayload(), dataAttachment.getDiscriminator());
                     IrisMessageData irisMessageData = new IrisMessageData()
                             .setMessage(message)
                             .setDiscriminator(dataAttachment.getDiscriminator())
                             .setDescription(dataAttachment.getDescription())
-                            .setPayload(payload);
+                            .setPayload(dataAttachment.getPayload());
                     dataList.add(irisMessageData);
                 }
             }
@@ -128,7 +126,7 @@ public class IrisMessageBuilder {
             if (messageInsert.getDataAttachments() != null) {
                 for ( IrisMessageDataInsert dataInsert : messageInsert.getDataAttachments() ) {
                     IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(dataInsert.getDiscriminator());
-                    String payload = processor.payloadFromInsert(dataInsert.getPayload());
+                    String payload = processor.getPayloadFromInsert(dataInsert.getPayload());
                     // The payload should be fine as it is composed of already validated data
                     // Doesn't hurt to validate the keys & values of the payloads JSON string
                     this.validateMessageDataPayload(payload, dataInsert.getDiscriminator());

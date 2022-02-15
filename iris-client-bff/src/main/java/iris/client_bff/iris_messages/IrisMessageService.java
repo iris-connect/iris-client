@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -71,6 +72,15 @@ public class IrisMessageService {
         return this.messageRepository.save(message);
     }
 
+    public IrisMessageDataProcessor getMessageDataProcessor(UUID messageDataId) throws IrisMessageDataException {
+        IrisMessageData messageData = this.getMessageData(messageDataId);
+        return this.getMessageDataProcessor(messageData.getDiscriminator());
+    }
+
+    public IrisMessageDataProcessor getMessageDataProcessor(String discriminator) throws IrisMessageDataException {
+        return this.messageDataProcessors.getProcessor(discriminator);
+    }
+
     private IrisMessageData getMessageData(UUID messageDataId) {
         Optional<IrisMessageData> optionalIrisMessageData = this.dataRepository.findById(IrisMessageData.IrisMessageDataIdentifier.of(messageDataId));
         if (optionalIrisMessageData.isEmpty()) {
@@ -79,19 +89,41 @@ public class IrisMessageService {
         return optionalIrisMessageData.get();
     }
 
-    public IrisMessageViewData viewMessageData(UUID messageDataId) {
+    public IrisMessageDataViewData getMessageDataViewData(UUID messageDataId) {
         IrisMessageData messageData = this.getMessageData(messageDataId);
-        IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageData.getDiscriminator());
-        return new IrisMessageViewData()
+        IrisMessageDataProcessor processor = this.getMessageDataProcessor(messageData.getDiscriminator());
+        return new IrisMessageDataViewData()
                 .setId(messageData.getId().toString())
                 .setDiscriminator(messageData.getDiscriminator())
                 .setPayload(processor.getViewPayload(messageData.getPayload()));
     }
 
+
+    public IrisMessageDataViewData getMessageDataImportSelectionViewData(UUID messageDataId, UUID importTargetId) {
+        IrisMessageData messageData = this.getMessageData(messageDataId);
+        IrisMessageDataProcessor processor = this.getMessageDataProcessor(messageData.getDiscriminator());
+        return new IrisMessageDataViewData()
+                .setId(messageData.getId().toString())
+                .setDiscriminator(messageData.getDiscriminator())
+                .setPayload(processor.getImportSelectionViewPayload(messageData.getPayload(), importTargetId));
+    }
+
     public void importMessageData(UUID messageDataId) {
         IrisMessageData messageData = this.getMessageData(messageDataId);
-        IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageData.getDiscriminator());
+        IrisMessageDataProcessor processor = this.getMessageDataProcessor(messageData.getDiscriminator());
         processor.importPayload(messageData.getPayload());
+        messageData.setIsImported(true);
+        this.dataRepository.save(messageData);
+    }
+
+    public void importMessageData(UUID messageDataId, UUID importTargetId, String importSelection) {
+        IrisMessageData messageData = this.getMessageData(messageDataId);
+        IrisMessageDataProcessor processor = this.getMessageDataProcessor(messageData.getDiscriminator());
+        processor.importPayload(
+                messageData.getPayload(),
+                importTargetId,
+                importSelection
+        );
         messageData.setIsImported(true);
         this.dataRepository.save(messageData);
     }

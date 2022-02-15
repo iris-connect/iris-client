@@ -60,14 +60,14 @@
 
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from "vue-property-decorator";
-import { IrisMessageDataInsert, IrisMessageDataInsertPayload } from "@/api";
+import { IrisMessageDataInsert, IrisMessageDataSelectionPayload } from "@/api";
 import { PropType } from "vue";
 import rules from "@/common/validation-rules";
 
 type IrisMessageDataForm = {
   model: {
     discriminator: string;
-    payload: IrisMessageDataInsertPayload;
+    payload: IrisMessageDataSelectionPayload;
     description: string;
   };
   valid: boolean;

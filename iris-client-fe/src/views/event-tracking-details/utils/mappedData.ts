@@ -80,9 +80,9 @@ export const getEventData = (event: DataRequestDetails | null): EventData => {
 };
 
 export const getGuestListTableRows = (
-  guests: Guest[] | undefined,
-  eventStart: string | undefined,
-  eventEnd: string | undefined
+  guests?: Guest[] | null,
+  eventStart?: string,
+  eventEnd?: string
 ): GuestListTableRow[] => {
   return (guests || []).map((guest, index) => {
     const attendTo = guest.attendanceInformation?.attendTo;

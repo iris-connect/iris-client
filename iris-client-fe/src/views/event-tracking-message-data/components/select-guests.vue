@@ -1,14 +1,8 @@
 <template>
   <div>
-    <search-field :debounce="0" v-model="search" />
-    <sortable-data-table
-      v-model="selection"
-      :headers="tableHeaders"
-      :items="tableRows"
-      :search="search"
-      show-select
-      show-select-all
-      class="mt-5"
+    <select-guests-data-table
+      v-bind="{ ...$attrs, ...tableData }"
+      v-on="$listeners"
       :loading="eventApi.fetchEventDetails.state.loading"
     />
     <error-message-alert :errors="[eventApi.fetchEventDetails.state.error]" />
@@ -17,18 +11,11 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import SearchField from "@/components/pageable/search-field.vue";
-import SortableDataTable from "@/components/sortable-data-table.vue";
-import {
-  getGuestListTableRows,
-  GuestListTableRow,
-} from "@/views/event-tracking-details/utils/mappedData";
 import { PropType } from "vue";
-import authClient from "@/api-client";
-import asyncAction from "@/utils/asyncAction";
-import { normalizeDataRequestDetails } from "@/views/event-tracking-details/event-tracking-details.data";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { bundleEventTrackingApi } from "@/modules/event-tracking/api";
+import { Guest } from "@/api";
+import SelectGuestsDataTable from "@/views/event-tracking-message-data/components/select-guests-data-table.vue";
 const SelectGuestsProps = Vue.extend({
   inheritAttrs: false,
   props: {
@@ -36,61 +23,27 @@ const SelectGuestsProps = Vue.extend({
       type: String,
       default: "",
     },
-    value: {
-      type: Array as PropType<(string | undefined)[]>,
-      default: () => [],
+    guests: {
+      type: Array as PropType<Guest[] | null>,
+      default: null,
+    },
+    eventStart: {
+      type: String,
+      default: null,
+    },
+    eventEnd: {
+      type: String,
+      default: null,
     },
   },
 });
 @Component({
   components: {
+    SelectGuestsDataTable,
     ErrorMessageAlert,
-    SortableDataTable,
-    SearchField,
   },
 })
 export default class SelectGuests extends SelectGuestsProps {
-  get selection(): GuestListTableRow[] {
-    if (this.value.length <= 0) return [];
-    return this.tableRows.filter((row) => {
-      return this.value.indexOf(row.raw.guestId) !== -1;
-    });
-  }
-  set selection(rows: GuestListTableRow[]) {
-    const sel = rows.map((row) => row.raw.guestId);
-    this.$emit("input", sel);
-  }
-  search = "";
-  tableHeaders = [
-    { text: "", value: "data-table-select" },
-    {
-      text: "Nachname",
-      value: "lastName",
-      align: "start",
-    },
-    {
-      text: "Vorname",
-      value: "firstName",
-    },
-    {
-      text: "Check-In",
-      value: "checkInTime",
-    },
-    {
-      text: "Check-Out",
-      value: "checkOutTime",
-    },
-    {
-      text: "max. Kontaktdauer",
-      value: "maxDuration",
-    },
-    {
-      text: "Kommentar",
-      value: "comment",
-    },
-    { text: "", value: "data-table-expand" },
-  ];
-
   eventApi = bundleEventTrackingApi(["fetchEventDetails"]);
 
   @Watch("eventId", { immediate: true })
@@ -102,23 +55,17 @@ export default class SelectGuests extends SelectGuestsProps {
     }
   }
 
-  get tableRows(): GuestListTableRow[] {
+  get tableData(): {
+    items: Guest[];
+    eventStart?: string;
+    eventEnd?: string;
+  } {
     const eventDetails = this.eventApi.fetchEventDetails.state.result;
-    return getGuestListTableRows(
-      eventDetails?.submissionData?.guests,
-      eventDetails?.start,
-      eventDetails?.end
-    );
-  }
-
-  get fetchEventDetailsAction() {
-    const action = async (eventId: string) => {
-      return normalizeDataRequestDetails(
-        (await authClient.getLocationDetails(eventId)).data,
-        true
-      );
+    return {
+      items: eventDetails?.submissionData?.guests || [],
+      eventStart: eventDetails?.start,
+      eventEnd: eventDetails?.end,
     };
-    return asyncAction(action);
   }
 }
 </script>

@@ -22,6 +22,7 @@ public class ErrorMessages {
 	public static final String INVALID_IRIS_MESSAGE_FOLDER = "Der Nachrichten-Ordner ist ungültig.";
 	public static final String INVALID_IRIS_MESSAGE_FILE_ID = "Die ID des Nachrichten Anhangs ist ungültig.";
 	public static final String INVALID_IRIS_MESSAGE_DATA_ID = "Die ID des Nachrichten Daten-Anhangs ist ungültig.";
+	public static final String INVALID_IRIS_MESSAGE_DATA_IMPORT_TARGET = "Die ID des Zielobjekts oder das Objekt selbst ist ungültig.";
 	public static final String INVALID_IRIS_MESSAGE_FILE = "Der Nachrichten Anhang ist ungültig.";
 	public static final String INVALID_IRIS_MESSAGE_DATA = "Der Nachrichten Daten-Anhang ist ungültig.";
 	public static final String INVALID_FILE_TYPE = "Der Dateityp ist ungültig.";

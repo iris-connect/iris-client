@@ -1,8 +1,8 @@
 <template>
   <v-tooltip
-    :attach="tooltipAlign"
+    :attach="tooltipTarget"
     right
-    :disabled="!partialSelection"
+    :disabled="!partialSelection || !tooltipEnabled"
     :value="partialSelection"
     :content-class="partialSelection ? 'tt-arrow' : 'd-none'"
     nudge-right="6"
@@ -44,15 +44,29 @@ const DataTableSelectAllProps = Vue.extend({
 });
 @Component
 export default class DataTableSelectAll extends DataTableSelectAllProps {
+  observer: IntersectionObserver | null = null;
   get partialSelection(): boolean {
     return this.value.length > 0 && this.value.length < this.items.length;
   }
-  tooltipAlign: unknown = "";
+  tooltipEnabled = true;
+  tooltipTarget: Element | null = null;
   mounted() {
-    this.tooltipAlign = this.$el.closest(".v-data-table") || "";
+    this.tooltipTarget = this.$el.closest(".v-data-table") || null;
+    if (this.tooltipTarget) {
+      this.observer = new IntersectionObserver(() => {
+        this.tooltipEnabled = false;
+        window.setTimeout(() => {
+          this.tooltipEnabled = true;
+        }, 500);
+      });
+      this.observer.observe(this.tooltipTarget);
+    }
   }
   beforeDestroy() {
-    this.tooltipAlign = "";
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+    this.tooltipTarget = null;
   }
   toggle() {
     if (this.value.length <= 0) {

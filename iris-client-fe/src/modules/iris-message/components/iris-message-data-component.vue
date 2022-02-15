@@ -17,8 +17,8 @@ import { ErrorMessage } from "@/utils/axios";
 import { IrisMessageDataDiscriminator } from "@/api";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 
-export type MessageDataComponentSource = {
-  [key in IrisMessageDataDiscriminator]: {
+export type IrisMessageDataComponentSource = {
+  [key in IrisMessageDataDiscriminator]?: {
     component: ComponentOptions<Vue> | typeof Vue | AsyncComponent;
   };
 };
@@ -31,7 +31,7 @@ const IrisMessageDataComponentProps = Vue.extend({
       default: null,
     },
     source: {
-      type: Object as PropType<MessageDataComponentSource | null>,
+      type: Object as PropType<IrisMessageDataComponentSource | null>,
       default: null,
     },
   },
@@ -45,7 +45,7 @@ export default class IrisMessageDataComponent extends IrisMessageDataComponentPr
   get dataComponent() {
     try {
       if (this.discriminator && this.source) {
-        return this.source[this.discriminator].component;
+        return this.source[this.discriminator]?.component;
       }
     } catch (e) {
       // ignored
@@ -55,7 +55,7 @@ export default class IrisMessageDataComponent extends IrisMessageDataComponentPr
   get errors(): ErrorMessage[] {
     if (!this.discriminator || !this.source) return [];
     return [
-      this.dataComponent === null
+      !this.dataComponent
         ? "Die angeforderte Komponente konnte nicht ermittelt werden."
         : null,
     ].filter((v) => v);

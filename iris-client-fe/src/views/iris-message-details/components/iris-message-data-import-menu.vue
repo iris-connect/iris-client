@@ -11,7 +11,7 @@
       <confirm-dialog
         title="Daten importieren?"
         text="Dieser Vorgang kann nicht rückgäng gemacht werden."
-        @confirm="$emit('import:create')"
+        @confirm="$emit('import:add')"
       >
         <template #activator="{ on, attrs }">
           <v-list-item v-on="on" v-bind="attrs">
