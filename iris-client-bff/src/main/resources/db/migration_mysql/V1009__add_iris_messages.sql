@@ -6,7 +6,11 @@ CREATE TABLE iris_message_folder (
     context varchar(50) NOT NULL,
     created datetime NOT NULL,
     last_modified datetime NOT NULL,
-    CONSTRAINT iris_message_folder_pkey PRIMARY KEY (id)
+    created_by binary(16) NULL,
+    last_modified_by binary(16) NULL,
+    CONSTRAINT iris_message_folder_pkey PRIMARY KEY (id),
+    FOREIGN KEY (created_by) REFERENCES user_accounts(user_id),
+    FOREIGN KEY (last_modified_by) REFERENCES user_accounts(user_id)
 );
 CREATE INDEX iris_message_folder_id ON iris_message_folder (id);
 
@@ -28,8 +32,12 @@ CREATE TABLE iris_message (
     is_read bool NULL,
     created datetime NOT NULL,
     last_modified datetime NOT NULL,
+    created_by binary(16) NULL,
+    last_modified_by binary(16) NULL,
     CONSTRAINT iris_message_pkey PRIMARY KEY (id),
-    CONSTRAINT iris_message_folder_fk FOREIGN KEY (folder_id) REFERENCES iris_message_folder(id)
+    CONSTRAINT iris_message_folder_fk FOREIGN KEY (folder_id) REFERENCES iris_message_folder(id),
+    FOREIGN KEY (created_by) REFERENCES user_accounts(user_id),
+    FOREIGN KEY (last_modified_by) REFERENCES user_accounts(user_id)
 );
 CREATE INDEX iris_message_id ON iris_message (id);
 
@@ -41,7 +49,11 @@ CREATE TABLE iris_message_file (
     content_type varchar(50) NULL,
     created datetime NOT NULL,
     last_modified datetime NOT NULL,
+    created_by binary(16) NULL,
+    last_modified_by binary(16) NULL,
     CONSTRAINT iris_message_file_pkey PRIMARY KEY (id),
-    CONSTRAINT iris_message_file_message_fk FOREIGN KEY (message_id) REFERENCES iris_message(id)
+    CONSTRAINT iris_message_file_message_fk FOREIGN KEY (message_id) REFERENCES iris_message(id),
+    FOREIGN KEY (created_by) REFERENCES user_accounts(user_id),
+    FOREIGN KEY (last_modified_by) REFERENCES user_accounts(user_id)
 );
 CREATE INDEX iris_message_file_id ON iris_message_file (id);
