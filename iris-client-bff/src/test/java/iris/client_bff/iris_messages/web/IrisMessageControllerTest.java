@@ -52,7 +52,7 @@ class IrisMessageControllerTest {
 
 	@Test
 	void endpointShouldBeProtected() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))
+		mockMvc.perform(get(baseUrl))
 				.andExpect(MockMvcResultMatchers.status().isForbidden())
 				.andReturn();
 	}
@@ -72,7 +72,7 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	void getMessages_shouldFail() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))
+		mockMvc.perform(get(baseUrl))
 				.andExpect(MockMvcResultMatchers.status().is4xxClientError())
 				.andReturn();
 	}
@@ -91,8 +91,7 @@ class IrisMessageControllerTest {
 								.multipart(baseUrl)
 								.param("hdRecipient", irisMessage.getHdRecipient().getId())
 								.param("subject", irisMessage.getSubject())
-								.param("body", irisMessage.getBody())
-				)
+								.param("body", irisMessage.getBody()))
 				.andExpect(MockMvcResultMatchers.status().isCreated())
 				.andReturn();
 
@@ -102,7 +101,7 @@ class IrisMessageControllerTest {
 		assert location != null;
 		String messageId = location.substring(location.lastIndexOf('/') + 1);
 
-		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/" + messageId))
+		var res = mockMvc.perform(get(baseUrl + "/" + messageId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
@@ -126,8 +125,7 @@ class IrisMessageControllerTest {
 								.multipart(baseUrl)
 								.param("hdRecipient", irisMessage.getHdRecipient().getId())
 								.param("subject", IrisMessageTestData.INVALID_SUBJECT)
-								.param("body", IrisMessageTestData.INVALID_BODY)
-				)
+								.param("body", IrisMessageTestData.INVALID_BODY))
 				.andExpect(MockMvcResultMatchers.status().is4xxClientError())
 				.andReturn();
 
@@ -141,7 +139,7 @@ class IrisMessageControllerTest {
 
 		when(irisMessageService.findById(messageId)).thenReturn(Optional.of(testData.MOCK_INBOX_MESSAGE));
 
-		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/" + messageId))
+		var res = mockMvc.perform(get(baseUrl + "/" + messageId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
@@ -161,7 +159,7 @@ class IrisMessageControllerTest {
 
 		when(irisMessageService.findById(invalidId)).thenReturn(Optional.empty());
 
-		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/" + invalidId))
+		var res = mockMvc.perform(get(baseUrl + "/" + invalidId))
 				.andExpect(MockMvcResultMatchers.status().is4xxClientError())
 				.andReturn();
 
@@ -186,8 +184,7 @@ class IrisMessageControllerTest {
 				.perform(
 						MockMvcRequestBuilders.patch(baseUrl + "/" + updatedMessage.getId())
 								.content(om.writeValueAsString(messageUpdate))
-								.contentType(MediaType.APPLICATION_JSON)
-				)
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
@@ -213,8 +210,7 @@ class IrisMessageControllerTest {
 				.perform(
 						MockMvcRequestBuilders.patch(baseUrl + "/" + invalidId)
 								.content(om.writeValueAsString(messageUpdate))
-								.contentType(MediaType.APPLICATION_JSON)
-				)
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().is4xxClientError())
 				.andReturn();
 	}
@@ -227,7 +223,7 @@ class IrisMessageControllerTest {
 
 		when(irisMessageService.getFolders()).thenReturn(folderList);
 
-		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/folders"))
+		var res = mockMvc.perform(get(baseUrl + "/folders"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
@@ -246,14 +242,14 @@ class IrisMessageControllerTest {
 	@WithMockUser()
 	void downloadMessageFile() throws Exception {
 		when(irisMessageService.findFileById(any(UUID.class))).thenReturn(Optional.of(testData.MOCK_MESSAGE_FILE));
-
+	
 		var res = mockMvc
 				.perform(MockMvcRequestBuilders.get(baseUrl + "/files/{id}/download", testData.MOCK_MESSAGE_FILE.getId()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
-
+	
 		verify(irisMessageService).findFileById(any(UUID.class));
-
+	
 		assertThat(res.getResponse().getHeader(HttpHeaders.CONTENT_DISPOSITION)).contains(testData.MOCK_MESSAGE_FILE.getName());
 		assertThat(res.getResponse().getHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS)).isEqualTo(HttpHeaders.CONTENT_DISPOSITION);
 	}
@@ -266,7 +262,7 @@ class IrisMessageControllerTest {
 		when(irisMessageService.getHdContacts(null)).thenReturn(List.of(testData.MOCK_CONTACT_OTHER));
 
 		var res = mockMvc
-				.perform(MockMvcRequestBuilders.get(baseUrl + "/hd-contacts"))
+				.perform(get(baseUrl + "/hd-contacts"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
@@ -288,7 +284,7 @@ class IrisMessageControllerTest {
 		when(irisMessageService.getOwnHdContact()).thenReturn(testData.MOCK_CONTACT_OWN);
 
 		var res = mockMvc
-				.perform(MockMvcRequestBuilders.get(baseUrl + "/hd-contacts").queryParam("includeOwn", "true"))
+				.perform(get(baseUrl + "/hd-contacts").queryParam("includeOwn", "true"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
@@ -309,7 +305,7 @@ class IrisMessageControllerTest {
 		when(irisMessageService.getCountUnread()).thenReturn(2);
 
 		var res = mockMvc
-				.perform(MockMvcRequestBuilders.get(baseUrl + "/count/unread"))
+				.perform(get(baseUrl + "/count/unread"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
@@ -326,10 +322,8 @@ class IrisMessageControllerTest {
 		when(irisMessageService.getCountUnreadByFolderId(any())).thenReturn(1);
 
 		var res = mockMvc
-				.perform(MockMvcRequestBuilders
-						.get(baseUrl + "/count/unread")
-						.queryParam("folder", testData.MOCK_INBOX_FOLDER.getId().toString())
-				)
+				.perform(get(baseUrl + "/count/unread")
+						.queryParam("folder", testData.MOCK_INBOX_FOLDER.getId().toString()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
@@ -345,9 +339,10 @@ class IrisMessageControllerTest {
 		when(irisMessageService.search(eq(folderId), nullable(String.class), any(Pageable.class)))
 				.thenReturn(new RestResponsePage<>(List.of(message)));
 
-		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl).param("folder", folderId.toString()))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
+		var res = mockMvc.perform(get(baseUrl)
+			.param("folder", folderId.toString()))
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andReturn();
 
 		verify(irisMessageService).search(eq(folderId), nullable(String.class), any(Pageable.class));
 
