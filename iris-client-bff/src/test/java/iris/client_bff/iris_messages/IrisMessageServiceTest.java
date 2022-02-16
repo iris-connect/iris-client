@@ -49,8 +49,8 @@ public class IrisMessageServiceTest {
 	IrisMessageService service;
 
 	private final IrisMessageIdentifier ID_NOT_FOUND = IrisMessageIdentifier.of(UUID.randomUUID());
-	// disabled file attachments
-//	private final IrisMessageFileIdentifier FILE_ID_NOT_FOUND = IrisMessageFileIdentifier.of(UUID.randomUUID());
+
+	private final IrisMessageFile.IrisMessageFileIdentifier FILE_ID_NOT_FOUND = IrisMessageFile.IrisMessageFileIdentifier.of(UUID.randomUUID());
 
 	@BeforeEach
 	void setUp() {
@@ -151,8 +151,6 @@ public class IrisMessageServiceTest {
 
 	}
 
-	// disabled file attachments
-	/*
 	@Test
 	void findFileById() {
 	
@@ -179,7 +177,6 @@ public class IrisMessageServiceTest {
 		assertTrue(file.isEmpty());
 	
 	}
-	 */
 
 	@Test
 	void getHdContacts() {

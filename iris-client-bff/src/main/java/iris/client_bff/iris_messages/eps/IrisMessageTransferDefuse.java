@@ -25,8 +25,7 @@ public class IrisMessageTransferDefuse {
                 .hdRecipient(this.defuse(message.getHdRecipient(), "recipient"))
                 .subject(this.defuse(message.getSubject(), "subject", IrisMessage.SUBJECT_MAX_LENGTH))
                 .body(this.defuse(message.getBody(), "body", IrisMessage.BODY_MAX_LENGTH))
-                // disabled file attachments
-//                .fileAttachments(this.defuse(message.getFileAttachments()))
+                .fileAttachments(this.defuse(message.getFileAttachments()))
                 .build();
     }
 

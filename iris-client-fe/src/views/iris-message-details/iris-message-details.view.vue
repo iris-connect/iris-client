@@ -22,7 +22,6 @@
         <div class="body-1" data-test="message.body">
           {{ message.body }}
         </div>
-        <!--
         <div v-if="message.fileAttachments.length > 0">
           <v-divider class="my-4" />
           <p class="font-weight-bold">Anhang</p>
@@ -56,7 +55,6 @@
             </template>
           </div>
         </div>
-        -->
       </v-card-text>
       <v-card-actions>
         <v-btn text @click="goBack"> Zurück </v-btn>
@@ -150,12 +148,11 @@ export default class IrisMessageDetailsView extends Vue {
       await this.$store.dispatch("irisMessageList/fetchUnreadMessageCount");
     }
   }
-  // disabled file attachments
-  /*
+
   openFileAttachment(id: string) {
     this.$store.dispatch("irisMessageDetails/downloadFileAttachment", id);
   }
-   */
+
   goBack() {
     if (this.prevLocation === "iris-message-list") {
       return this.$router.back();

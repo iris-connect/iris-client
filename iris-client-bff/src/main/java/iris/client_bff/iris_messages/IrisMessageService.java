@@ -58,12 +58,9 @@ public class IrisMessageService {
         return folderRepository.findAll();
     }
 
-    // disabled file attachments
-    /*
-    public Optional<IrisMessageFile> findFileById(IrisMessageFileIdentifier fileId) {
+    public Optional<IrisMessageFile> findFileById(IrisMessageFile.IrisMessageFileIdentifier fileId) {
         return this.fileRepository.findById(fileId);
     }
-     */
 
     public List<IrisMessageHdContact> getHdContacts(String search) throws IrisMessageException {
 

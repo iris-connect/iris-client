@@ -5,6 +5,31 @@ type LegacyNavigator = Navigator & {
   msSaveBlob?: (blob: Blob, defaultName?: string) => boolean;
 };
 
+const fileToBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        const dataUrl = reader.result;
+        resolve(dataUrl.split(",")[1] || "");
+      } else {
+        reject("invalid result");
+      }
+    };
+    reader.onerror = (error) => reject(error);
+  });
+
+const base64ToFile = (base64: string, fileName: string) => {
+  const bStr = atob(base64);
+  let n = bStr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bStr.charCodeAt(n);
+  }
+  return new File([u8arr], fileName);
+};
+
 const validateData = (data: BlobPart): boolean => {
   if (typeof data === "string") return true;
   if (data instanceof Blob) return true;
@@ -14,7 +39,7 @@ const validateData = (data: BlobPart): boolean => {
 };
 
 const download = (data: BlobPart, fileName: string) => {
-  if (!fileDownload.validateData(data)) {
+  if (!fileUtil.validateData(data)) {
     throw new Error("invalid file data");
   }
   const legacyNavigator = navigator as LegacyNavigator;
@@ -38,9 +63,11 @@ const download = (data: BlobPart, fileName: string) => {
   }
 };
 
-const fileDownload = {
+const fileUtil = {
+  fileToBase64,
+  base64ToFile,
   validateData,
   download,
 };
 
-export default fileDownload;
+export default fileUtil;

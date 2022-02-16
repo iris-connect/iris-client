@@ -39,8 +39,7 @@ import {
   dummyIrisMessageList,
   dummyIrisMessageHdContacts,
   getDummyMessageFromRequest,
-  // disabled file attachments
-  // dummyIrisMessageFileAttachments,
+  dummyIrisMessageFileAttachments,
 } from "@/server/data/dummy-iris-messages";
 
 const loginResponse = (role: UserRole): Response => {
@@ -358,8 +357,7 @@ export function makeMockAPIServer() {
       this.get("/iris-messages/allowed-file-types", (schema, request) => {
         return authResponse(request, ["image/*"]);
       });
-      // disabled file attachments
-      /*
+
       this.get("/iris-messages/files/:fileId/download", (schema, request) => {
         let fileAttachment = dummyIrisMessageFileAttachments.find(
           (item) => item.id === request.params.fileId
@@ -371,7 +369,6 @@ export function makeMockAPIServer() {
           "content-disposition": `filename="${fileAttachment.name}.txt"`,
         });
       });
-       */
     },
   });
 

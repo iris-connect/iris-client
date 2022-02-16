@@ -18,9 +18,7 @@ public class IrisMessageListItemDto {
     private Boolean hasFileAttachments;
 
     public static IrisMessageListItemDto fromEntity(IrisMessage message) {
-        // disabled file attachments
-//        Boolean hasFileAttachments = message.getFileAttachments() != null && message.getFileAttachments().size() > 0;
-        Boolean hasFileAttachments = false;
+        Boolean hasFileAttachments = message.getFileAttachments() != null && message.getFileAttachments().size() > 0;
         return new IrisMessageListItemDto(
                 message.getId().toString(),
                 message.getSubject(),

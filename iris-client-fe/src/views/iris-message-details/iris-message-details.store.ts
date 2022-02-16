@@ -5,9 +5,8 @@ import { IrisMessageDetails } from "@/api";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import { normalizeIrisMessageDetails } from "@/views/iris-message-details/iris-message-details.data";
-// disabled file attachments
-// import fileDownload from "@/utils/fileDownload";
-// import { AxiosResponse } from "axios";
+import fileUtil from "@/utils/fileUtil";
+import { AxiosResponse } from "axios";
 
 export type IrisMessageDetailsState = {
   message: IrisMessageDetails | null;
@@ -55,13 +54,10 @@ export interface IrisMessageDetailsModule
       { commit }: { commit: Commit },
       messageId: string
     ): Promise<void>;
-    // disabled file attachments
-    /*
     downloadFileAttachment(
       { commit }: { commit: Commit },
       fileId: string
     ): Promise<void>;
-     */
   };
 }
 
@@ -138,26 +134,21 @@ const irisMessageDetails: IrisMessageDetailsModule = {
         commit("setMessageSaving", false);
       }
     },
-    // disabled file attachments
-    /*
     async downloadFileAttachment({ commit }, fileId: string) {
       commit("setFileAttachmentLoading", true);
       commit("setFileAttachmentLoadingError", null);
       try {
         const response = await authClient.irisMessageFileDownload(fileId);
         const fileName = extractFileName(response);
-        fileDownload.download(response.data, fileName);
+        fileUtil.download(response.data, fileName);
       } catch (e) {
         commit("setFileAttachmentLoadingError", getErrorMessage(e));
       } finally {
         commit("setFileAttachmentLoading", false);
       }
     },
-     */
   },
 };
-// disabled file attachments
-/*
 const extractFileName = (response: AxiosResponse): string => {
   const fileName = (response.headers["content-disposition"] || "")
     .split("filename=")[1]
@@ -168,6 +159,4 @@ const extractFileName = (response: AxiosResponse): string => {
   }
   return fileName;
 };
- */
-
 export default irisMessageDetails;

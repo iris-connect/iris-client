@@ -1,14 +1,15 @@
 package iris.client_bff.iris_messages.validation;
 
+import iris.client_bff.iris_messages.web.IrisMessageInsertFileDto;
 import org.apache.tika.Tika;
 import org.springframework.http.MediaType;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Base64;
 import java.util.Objects;
 
-public class FileTypeValidator implements ConstraintValidator<FileTypeConstraint, MultipartFile> {
+public class FileTypeValidator implements ConstraintValidator<FileTypeConstraint, IrisMessageInsertFileDto> {
 
     //@todo: move ALLOWED_TYPES to a better place
     public static final String[] ALLOWED_TYPES = {"image/*"};
@@ -19,11 +20,11 @@ public class FileTypeValidator implements ConstraintValidator<FileTypeConstraint
     }
 
     @Override
-    public boolean isValid(MultipartFile file, ConstraintValidatorContext ctx) {
+    public boolean isValid(IrisMessageInsertFileDto file, ConstraintValidatorContext ctx) {
         if (file == null) return true;
         try {
             Tika tika = new Tika();
-            String type = tika.detect(file.getInputStream(), file.getOriginalFilename());
+            String type = tika.detect(Base64.getDecoder().decode(file.getContent()));
             MediaType mediaType = MediaType.valueOf(type);
             for (String allowedType : ALLOWED_TYPES) {
                 String[] typeMap = allowedType.split("/");

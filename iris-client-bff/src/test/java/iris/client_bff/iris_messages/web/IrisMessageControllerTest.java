@@ -8,9 +8,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
+import iris.client_bff.events.web.TestData;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
 import iris.client_bff.iris_messages.IrisMessageBuilder;
+import iris.client_bff.iris_messages.IrisMessageFile.IrisMessageFileIdentifier;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
@@ -25,6 +27,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -92,13 +95,14 @@ class IrisMessageControllerTest {
 		when(irisMessageService.sendMessage(any())).thenReturn(irisMessage);
 		when(irisMessageService.findById(irisMessage.getId())).thenReturn(Optional.of(irisMessage));
 
+		ObjectMapper objectMapper = new ObjectMapper();
+
 		var postResult = mockMvc
 				.perform(
-						MockMvcRequestBuilders
-								.multipart(baseUrl)
-								.param("hdRecipient", messageInsert.getHdRecipient())
-								.param("subject", messageInsert.getSubject())
-								.param("body", messageInsert.getBody()))
+						MockMvcRequestBuilders.post(baseUrl)
+								.content(objectMapper.writeValueAsString(messageInsert))
+								.contentType(MediaType.APPLICATION_JSON)
+				)
 				.andExpect(MockMvcResultMatchers.status().isCreated())
 				.andReturn();
 
@@ -244,8 +248,6 @@ class IrisMessageControllerTest {
 		assertThat(folderDtoList).isEqualTo(IrisMessageFolderDto.fromEntity(folderList));
 	}
 
-	// disabled file attachments
-	/*
 	@Test
 	@WithMockUser()
 	void downloadMessageFile() throws Exception {
@@ -261,7 +263,6 @@ class IrisMessageControllerTest {
 		assertThat(res.getResponse().getHeader(HttpHeaders.CONTENT_DISPOSITION)).contains(testData.MOCK_MESSAGE_FILE.getName());
 		assertThat(res.getResponse().getHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS)).isEqualTo(HttpHeaders.CONTENT_DISPOSITION);
 	}
-	 */
 
 	@Test
 	@WithMockUser()

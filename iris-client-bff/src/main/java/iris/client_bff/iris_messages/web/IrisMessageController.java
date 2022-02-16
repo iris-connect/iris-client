@@ -5,6 +5,7 @@ import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
 import iris.client_bff.iris_messages.IrisMessageBuilder;
 import iris.client_bff.iris_messages.IrisMessageException;
+import iris.client_bff.iris_messages.IrisMessageFile;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
@@ -22,8 +23,10 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import org.apache.tika.Tika;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,10 +41,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Validated
 @RequestMapping("/iris-messages")
 public class IrisMessageController {
-
-	private static final String FOLDER_ID = "folderId";
-	private static final String MESSAGE_ID = "messageId";
-	private static final String FILE_ID = "fileId";
 
 	private static final String FIELD_SEARCH = "search";
 
@@ -63,9 +62,9 @@ public class IrisMessageController {
 		return this.irisMessageService.search(folder, search, pageable).map(IrisMessageListItemDto::fromEntity);
 	}
 
-	@PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<URI> createAndSendMessage(@Valid @ModelAttribute IrisMessageInsertDto irisMessageInsert,
+	public ResponseEntity<URI> createAndSendMessage(@Valid @RequestBody IrisMessageInsertDto irisMessageInsert,
 			BindingResult bindingResult) {
 		this.validateConstraints(bindingResult);
 		this.validateIrisMessageInsert(irisMessageInsert);
@@ -93,14 +92,12 @@ public class IrisMessageController {
 		this.validateField(irisMessageInsert.getHdRecipient(), FIELD_HD_RECIPIENT);
 		this.validateField(irisMessageInsert.getSubject(), FIELD_SUBJECT);
 		this.validateField(irisMessageInsert.getBody(), FIELD_BODY);
-		// disabled file attachments
-		/*
+
 		if (irisMessageInsert.getFileAttachments() != null) {
-		    for ( MultipartFile file : irisMessageInsert.getFileAttachments() ) {
-		        this.validateField(file.getOriginalFilename(), FIELD_FILE_ATTACHMENT);
+		    for ( IrisMessageInsertFileDto file : irisMessageInsert.getFileAttachments() ) {
+		        this.validateField(file.getName(), FIELD_FILE_ATTACHMENT);
 		    }
 		}
-		 */
 	}
 
 	@GetMapping("/allowed-file-types")
@@ -152,10 +149,8 @@ public class IrisMessageController {
 		return ResponseEntity.ok(IrisMessageFolderDto.fromEntity(irisMessageFolders));
 	}
 
-	// disabled file attachments
-	/*
 	@GetMapping("/files/{id}/download")
-	public ResponseEntity<byte[]> downloadMessageFile(@PathVariable IrisMessageFileIdentifier id) {
+	public ResponseEntity<byte[]> downloadMessageFile(@PathVariable IrisMessageFile.IrisMessageFileIdentifier id) {
 	    Optional<IrisMessageFile> file = this.irisMessageService.findFileById(id);
 	    if (file.isPresent()) {
 	        try {
@@ -180,7 +175,6 @@ public class IrisMessageController {
 	    }
 	    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
-	 */
 
 	@GetMapping("/hd-contacts")
 	public ResponseEntity<List<IrisMessageHdContact>> getMessageHdContacts(

@@ -1914,6 +1914,11 @@ export type IrisMessageQuery = DataQuery & {
 
 export type PageIrisMessages = Page<IrisMessage>;
 
+export interface Base64File {
+  name?: string;
+  content: string;
+}
+
 export interface IrisMessageFileAttachment {
   id: string;
   name: string;
@@ -1941,8 +1946,7 @@ export interface IrisMessageInsert {
   hdRecipient: string;
   subject: string;
   body: string;
-  // disabled file attachments
-  // fileAttachments?: File[];
+  fileAttachments?: Base64File[];
 }
 
 export enum IrisMessageContext {
@@ -2306,10 +2310,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     options?: RequestOptions
   ): ApiResponse {
     assertParamExists("irisMessagesPost", "data", data);
-    return this.apiRequest("POST", "/iris-messages", data, {
-      ...options,
-      multipart: true,
-    });
+    return this.apiRequest("POST", "/iris-messages", data, options);
   }
 
   /**
@@ -2382,13 +2383,11 @@ export class IrisClientFrontendApi extends BaseAPI {
     return this.apiRequest("PATCH", path, { isRead: true }, options);
   }
 
-  // disabled file attachments
   /**
    * @summary Download file
    * @param {string} fileId
    * @param {*} options Override http request option.
    */
-  /*
   public irisMessageFileDownload(
     fileId: string,
     options?: RequestOptions
@@ -2400,5 +2399,4 @@ export class IrisClientFrontendApi extends BaseAPI {
       responseType: "blob",
     });
   }
-   */
 }

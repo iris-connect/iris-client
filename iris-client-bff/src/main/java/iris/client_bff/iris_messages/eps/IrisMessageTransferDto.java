@@ -8,6 +8,7 @@ import lombok.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,9 +34,8 @@ public class IrisMessageTransferDto {
     @Size(max = IrisMessage.BODY_MAX_LENGTH)
     private String body;
 
-    // disabled file attachments
-//    @Valid
-//    private List<FileAttachment> fileAttachments;
+    @Valid
+    private List<FileAttachment> fileAttachments;
 
     public static IrisMessageTransferDto fromEntity(IrisMessage message) {
         return IrisMessageTransferDto.builder()
@@ -43,8 +43,7 @@ public class IrisMessageTransferDto {
                 .hdRecipient(HdContact.fromEntity(message.getHdRecipient()))
                 .subject(message.getSubject())
                 .body(message.getBody())
-                // disabled file attachments
-//                .fileAttachments(FileAttachment.fromEntity(message.getFileAttachments()))
+                .fileAttachments(FileAttachment.fromEntity(message.getFileAttachments()))
                 .build();
     }
 
@@ -73,7 +72,7 @@ public class IrisMessageTransferDto {
         @Size(max = IrisMessageFile.NAME_MAX_LENGTH)
         private String name;
 
-        private byte[] content;
+        private String content;
 
         public static List<FileAttachment> fromEntity(List<IrisMessageFile> files) {
             return files.stream().map(FileAttachment::fromEntity).collect(Collectors.toList());
@@ -82,7 +81,7 @@ public class IrisMessageTransferDto {
         public static FileAttachment fromEntity(IrisMessageFile file) {
             return new FileAttachment()
                     .setName(file.getName())
-                    .setContent(file.getContent());
+                    .setContent(Base64.getEncoder().encodeToString(file.getContent()));
         }
     }
 

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class IrisMessageTestData {
 
+	public final IrisMessageFile MOCK_MESSAGE_FILE = getTestMessageFile();
+
 	private final IrisMessageFolder MOCK_DEFAULT_FOLDER = getTestDefaultMessageFolder();
 
 	public final IrisMessageFolder MOCK_INBOX_FOLDER = MOCK_DEFAULT_FOLDER;
