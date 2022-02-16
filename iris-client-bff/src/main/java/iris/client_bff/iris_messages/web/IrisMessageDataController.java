@@ -41,10 +41,8 @@ public class IrisMessageDataController {
     public ResponseEntity<?> importMessageDataAndUpdate(
             @PathVariable UUID messageDataId,
             @RequestParam UUID importTargetId,
-            @RequestBody String importSelection,
-            BindingResult bindingResult
+            @RequestBody String importSelection
     ) {
-        this.validateConstraints(bindingResult);
         this.validateUUID(messageDataId, MESSAGE_DATA_ID, ErrorMessages.INVALID_IRIS_MESSAGE_DATA_ID);
         this.validateUUID(importTargetId, IMPORT_TARGET_ID, ErrorMessages.INVALID_IRIS_MESSAGE_DATA_IMPORT_TARGET);
         this.validateMessageDataPayload(importSelection, FIELD_DATA_IMPORT_SELECTION);
@@ -76,14 +74,6 @@ public class IrisMessageDataController {
         this.validateUUID(messageDataId, MESSAGE_DATA_ID, ErrorMessages.INVALID_IRIS_MESSAGE_DATA_ID);
         IrisMessageDataViewData messageData = this.irisMessageService.getMessageDataViewData(messageDataId);
         return ResponseEntity.ok(messageData);
-    }
-
-    private void validateConstraints(BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            String message = ErrorMessages.INVALID_INPUT + ": " + bindingResult.getFieldErrors().stream()
-                    .map(fieldError -> String.format("%s: %s", fieldError.getField(), fieldError.getDefaultMessage())).collect(Collectors.joining(", "));
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
-        }
     }
 
     private void validateUUID(UUID value, String field, String errorMessage) {

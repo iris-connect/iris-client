@@ -144,10 +144,8 @@ public class IrisMessageController {
     @PatchMapping("/{messageId}")
     public ResponseEntity<IrisMessageDetailsDto> updateMessage(
             @PathVariable UUID messageId,
-            @RequestBody @Valid IrisMessageUpdate irisMessageUpdate,
-            BindingResult bindingResult
+            @RequestBody @Valid IrisMessageUpdate irisMessageUpdate
     ) {
-        this.validateConstraints(bindingResult);
         this.validateUUID(messageId, MESSAGE_ID, ErrorMessages.INVALID_IRIS_MESSAGE_ID);
         this.validateIrisMessageUpdate(irisMessageUpdate);
         Optional<IrisMessage> message = this.irisMessageService.findById(messageId);
