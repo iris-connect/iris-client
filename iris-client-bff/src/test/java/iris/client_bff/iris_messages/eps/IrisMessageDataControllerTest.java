@@ -1,19 +1,27 @@
 package iris.client_bff.iris_messages.eps;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.iris_messages.*;
+import iris.client_bff.iris_messages.IrisMessage;
+import iris.client_bff.iris_messages.IrisMessageContext;
+import iris.client_bff.iris_messages.IrisMessageFolder;
+import iris.client_bff.iris_messages.IrisMessageFolderRepository;
+import iris.client_bff.iris_messages.IrisMessageRepository;
+import iris.client_bff.iris_messages.IrisMessageTestData;
+import iris.client_bff.iris_messages.IrisMessageTransfer;
 import iris.client_bff.iris_messages.web.IrisMessageController;
 import iris.client_bff.ui.messages.ErrorMessages;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.web.server.ResponseStatusException;
 
 @IrisWebIntegrationTest
 class IrisMessageDataControllerTest {
@@ -33,6 +41,9 @@ class IrisMessageDataControllerTest {
 	@Autowired
 	EPSIrisMessageClient messageClient;
 
+	@Autowired
+	MessageSourceAccessor messages;
+
 	@Test
 	void createIrisMessage() {
 
@@ -51,7 +62,7 @@ class IrisMessageDataControllerTest {
 		var e = assertThrows(ResponseStatusException.class, () -> this.dataController.createIrisMessage(null));
 
 		assertNotNull(e.getMessage());
-		assertTrue(e.getMessage().contains(ErrorMessages.IRIS_MESSAGE_SUBMISSION));
+		assertThat(e.getMessage()).contains(messages.getMessage("iris_message.invalid_id"));
 	}
 
 	@Test
@@ -65,7 +76,8 @@ class IrisMessageDataControllerTest {
 		localMessageTransfer.setBody(IrisMessageTestData.INVALID_BODY);
 		verify(localMessageTransfer).setBody(IrisMessageTestData.INVALID_BODY);
 
-		var e = assertThrows(ResponseStatusException.class, () -> this.dataController.createIrisMessage(localMessageTransfer));
+		var e = assertThrows(ResponseStatusException.class,
+				() -> this.dataController.createIrisMessage(localMessageTransfer));
 
 		assertNotNull(e.getMessage());
 		assertTrue(e.getMessage().contains(ErrorMessages.INVALID_INPUT));
@@ -75,13 +87,15 @@ class IrisMessageDataControllerTest {
 
 		IrisMessageTestData testData = new IrisMessageTestData();
 
-		Optional<IrisMessageFolder> outboxFolder = this.folderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
+		Optional<IrisMessageFolder> outboxFolder = this.folderRepository
+				.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
 
 		assertThat(outboxFolder.isPresent()).isTrue();
 
 		IrisMessage message = testData.getTestOutboxMessage(outboxFolder.get());
 
-		// @todo: remove next line as soon as dummy loopback functionality is removed / EPS message endpoints are implemented
+		// @todo: remove next line as soon as dummy loopback functionality is removed / EPS message endpoints are
+		// implemented
 		message.setHdRecipient(this.messageClient.getOwnIrisMessageHdContact());
 
 		return message;

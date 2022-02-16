@@ -1,17 +1,22 @@
 package iris.client_bff.iris_messages.validation;
 
-import iris.client_bff.ui.messages.ErrorMessages;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
-import java.lang.annotation.*;
 
 @Documented
 @Constraint(validatedBy = FileTypeValidator.class)
-@Target( { ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE })
+@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FileTypeConstraint {
-    String message() default ErrorMessages.INVALID_FILE_TYPE;
-    Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default {};
+	String message() default "{iris_message.invalid_file_type}";
+
+	Class<?>[] groups() default {};
+
+	Class<? extends Payload>[] payload() default {};
 }
