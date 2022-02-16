@@ -1,32 +1,24 @@
 package iris.client_bff.core.web.error;
 
-import static org.apache.commons.lang3.ArrayUtils.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.core.web.filter.ApplicationRequestSizeLimitFilter.BlockLimitExceededException;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
 import iris.client_bff.ui.messages.ErrorMessages;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.unit.DataSize;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Slf4j
 @ControllerAdvice
-@RequiredArgsConstructor
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
-
-	private final MessageSourceAccessor messages;
 
 	@ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE, reason = ErrorMessages.LOCATION_SEARCH)
 	@ExceptionHandler(IRISSearchException.class)
@@ -54,16 +46,6 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
 
 		log.warn("Unmapped exception occurred", ex);
 		throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, getInternalMessage(ex));
-	}
-
-	@ExceptionHandler(MaxUploadSizeExceededException.class)
-	public void handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
-
-		var maxSize = DataSize.ofBytes(ex.getMaxUploadSize());
-
-		throw new ResponseStatusException(
-				HttpStatus.PAYLOAD_TOO_LARGE,
-				messages.getMessage("iris_message.max_upload_file_size", toArray(maxSize.toMegabytes() + " MB")));
 	}
 
 	private String getInternalMessage(Exception ex) {
