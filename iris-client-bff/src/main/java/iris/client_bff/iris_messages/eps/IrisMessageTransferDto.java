@@ -1,15 +1,12 @@
 package iris.client_bff.iris_messages.eps;
 
 import iris.client_bff.iris_messages.IrisMessage;
-import iris.client_bff.iris_messages.IrisMessageFile;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -33,18 +30,12 @@ public class IrisMessageTransferDto {
     @Size(max = IrisMessage.BODY_MAX_LENGTH)
     private String body;
 
-    // disabled file attachments
-//    @Valid
-//    private List<FileAttachment> fileAttachments;
-
     public static IrisMessageTransferDto fromEntity(IrisMessage message) {
         return IrisMessageTransferDto.builder()
                 .hdAuthor(HdContact.fromEntity(message.getHdAuthor()))
                 .hdRecipient(HdContact.fromEntity(message.getHdRecipient()))
                 .subject(message.getSubject())
                 .body(message.getBody())
-                // disabled file attachments
-//                .fileAttachments(FileAttachment.fromEntity(message.getFileAttachments()))
                 .build();
     }
 
@@ -65,25 +56,4 @@ public class IrisMessageTransferDto {
                     .setName(contact.getName());
         }
     }
-
-    @Data
-    public static class FileAttachment {
-
-        @NotBlank
-        @Size(max = IrisMessageFile.NAME_MAX_LENGTH)
-        private String name;
-
-        private byte[] content;
-
-        public static List<FileAttachment> fromEntity(List<IrisMessageFile> files) {
-            return files.stream().map(FileAttachment::fromEntity).collect(Collectors.toList());
-        }
-
-        public static FileAttachment fromEntity(IrisMessageFile file) {
-            return new FileAttachment()
-                    .setName(file.getName())
-                    .setContent(file.getContent());
-        }
-    }
-
 }

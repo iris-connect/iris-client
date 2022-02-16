@@ -43,30 +43,6 @@
             :rules="validationRules.sanitisedAndDefined"
             data-test="body"
           ></v-textarea>
-          <!--
-          <v-file-input
-            label="Datei(en) anfügen"
-            :value="form.model.fileAttachments"
-            @change="addFileAttachments"
-            @click:clear="clearFileAttachments"
-            multiple
-            data-test="fileAttachments"
-            :accept="allowedFileTypes.join(',')"
-          >
-            <template v-slot:selection="{ index, text }">
-              <v-chip
-                :key="index"
-                dark
-                color="blue"
-                close
-                @click:close="removeFileAttachments(index)"
-                data-test="fileAttachments.remove"
-              >
-                {{ text }}
-              </v-chip>
-            </template>
-          </v-file-input>
-          -->
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -101,8 +77,6 @@ import store from "@/store";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { IrisMessageInsert, IrisMessageHdContact } from "@/api";
 import rules from "@/common/validation-rules";
-// disabled file attachments
-// import _unionBy from "lodash/unionBy";
 import { ErrorMessage } from "@/utils/axios";
 import { debounce } from "lodash";
 
@@ -115,13 +89,6 @@ type IrisMessageCreateForm = {
   components: {
     ErrorMessageAlert,
   },
-  // disabled file attachments
-  /*
-  beforeRouteEnter(to, from, next) {
-    store.dispatch("irisMessageCreate/fetchAllowedFileTypes");
-    next();
-  },
-   */
   beforeRouteLeave(to, from, next) {
     store.commit("irisMessageCreate/reset");
     next();
@@ -136,8 +103,6 @@ export default class IrisMessageCreateView extends Vue {
       subject: "",
       body: "",
       hdRecipient: "",
-      // disabled file attachments
-      // fileAttachments: [],
     },
     valid: false,
   };
@@ -154,27 +119,6 @@ export default class IrisMessageCreateView extends Vue {
       this.$store.state.irisMessageCreate.messageCreationError,
     ];
   }
-  // disabled file attachments
-  /*
-  addFileAttachments(files: File[]) {
-    this.form.model.fileAttachments = _unionBy(
-      this.form.model.fileAttachments,
-      files,
-      "name"
-    );
-  }
-  removeFileAttachments(index: number) {
-    if (this.form.model.fileAttachments) {
-      this.form.model.fileAttachments.splice(index, 1);
-    }
-  }
-  clearFileAttachments() {
-    this.form.model.fileAttachments = [];
-  }
-  get allowedFileTypes(): string[] {
-    return this.$store.state.irisMessageCreate.allowedFileTypes || [];
-  }
-   */
 
   get recipients(): IrisMessageHdContact[] {
     return this.$store.state.irisMessageCreate.contacts || [];

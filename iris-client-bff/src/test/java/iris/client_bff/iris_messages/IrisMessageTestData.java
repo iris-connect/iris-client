@@ -20,12 +20,6 @@ public class IrisMessageTestData {
 	public final static String INVALID_SUBJECT = "S".repeat(Math.max(0, IrisMessage.SUBJECT_MAX_LENGTH + 1));
 	public final static String INVALID_BODY = "B".repeat(Math.max(0, IrisMessage.BODY_MAX_LENGTH + 1));
 
-	private IrisMessageFile getTestMessageFile() {
-		return new IrisMessageFile()
-				.setName("test-file-name")
-				.setContent("test".getBytes());
-	}
-
 	private IrisMessageHdContact getTestMessageHdContactOwn() {
 		return new IrisMessageHdContact()
 				.setName("test-own-contact")

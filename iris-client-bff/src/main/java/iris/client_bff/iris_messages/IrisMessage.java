@@ -9,8 +9,6 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -59,9 +57,6 @@ public class IrisMessage extends Aggregate<IrisMessage, IrisMessage.IrisMessageI
     private IrisMessageHdContact hdRecipient;
 
     private Boolean isRead;
-
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<IrisMessageFile> fileAttachments = new ArrayList<>();
 
     @Embeddable
     @EqualsAndHashCode

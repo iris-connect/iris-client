@@ -2,14 +2,10 @@ package iris.client_bff.iris_messages.eps;
 
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
-import iris.client_bff.iris_messages.IrisMessageFile;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static iris.client_bff.ui.messages.ErrorMessages.INVALID_INPUT_STRING;
 
@@ -25,8 +21,6 @@ public class IrisMessageTransferDefuse {
                 .hdRecipient(this.defuse(message.getHdRecipient(), "recipient"))
                 .subject(this.defuse(message.getSubject(), "subject", IrisMessage.SUBJECT_MAX_LENGTH))
                 .body(this.defuse(message.getBody(), "body", IrisMessage.BODY_MAX_LENGTH))
-                // disabled file attachments
-//                .fileAttachments(this.defuse(message.getFileAttachments()))
                 .build();
     }
 
@@ -34,16 +28,6 @@ public class IrisMessageTransferDefuse {
         return new IrisMessageTransferDto.HdContact()
                 .setId(this.defuse(contact.getId(), field + ".id", IrisMessageHdContact.ID_MAX_LENGTH))
                 .setName(this.defuse(contact.getName(), field + ".id", IrisMessageHdContact.NAME_MAX_LENGTH));
-    }
-
-    private List<IrisMessageTransferDto.FileAttachment> defuse(List<IrisMessageTransferDto.FileAttachment> fileAttachments) {
-        return fileAttachments.stream().map(this::defuse).collect(Collectors.toList());
-    }
-
-    private IrisMessageTransferDto.FileAttachment defuse(IrisMessageTransferDto.FileAttachment fileAttachment) {
-        return new IrisMessageTransferDto.FileAttachment()
-                .setName(this.defuse(fileAttachment.getName(), "fileAttachment.name", IrisMessageFile.NAME_MAX_LENGTH))
-                .setContent(fileAttachment.getContent());
     }
 
     private String defuse(String input, String field, int maxLength) {

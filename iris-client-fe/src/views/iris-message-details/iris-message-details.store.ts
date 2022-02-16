@@ -5,9 +5,6 @@ import { IrisMessageDetails } from "@/api";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import { normalizeIrisMessageDetails } from "@/views/iris-message-details/iris-message-details.data";
-// disabled file attachments
-// import fileDownload from "@/utils/fileDownload";
-// import { AxiosResponse } from "axios";
 
 export type IrisMessageDetailsState = {
   message: IrisMessageDetails | null;
@@ -15,8 +12,6 @@ export type IrisMessageDetailsState = {
   messageLoadingError: ErrorMessage;
   messageSaving: boolean;
   messageSavingError: ErrorMessage;
-  fileAttachmentLoading: boolean;
-  fileAttachmentLoadingError: ErrorMessage;
 };
 
 export interface IrisMessageDetailsModule
@@ -36,14 +31,6 @@ export interface IrisMessageDetailsModule
       state: IrisMessageDetailsState,
       payload: ErrorMessage
     ): void;
-    setFileAttachmentLoading(
-      state: IrisMessageDetailsState,
-      payload: boolean
-    ): void;
-    setFileAttachmentLoadingError(
-      state: IrisMessageDetailsState,
-      payload: ErrorMessage
-    ): void;
     reset(state: IrisMessageDetailsState, payload: null): void;
   };
   actions: {
@@ -55,13 +42,6 @@ export interface IrisMessageDetailsModule
       { commit }: { commit: Commit },
       messageId: string
     ): Promise<void>;
-    // disabled file attachments
-    /*
-    downloadFileAttachment(
-      { commit }: { commit: Commit },
-      fileId: string
-    ): Promise<void>;
-     */
   };
 }
 
@@ -71,8 +51,6 @@ const defaultState: IrisMessageDetailsState = {
   messageLoadingError: null,
   messageSaving: false,
   messageSavingError: null,
-  fileAttachmentLoading: false,
-  fileAttachmentLoadingError: null,
 };
 
 const irisMessageDetails: IrisMessageDetailsModule = {
@@ -95,12 +73,6 @@ const irisMessageDetails: IrisMessageDetailsModule = {
     },
     setMessageSavingError(state, payload) {
       state.messageSavingError = payload;
-    },
-    setFileAttachmentLoading(state, payload) {
-      state.fileAttachmentLoading = payload;
-    },
-    setFileAttachmentLoadingError(state, payload) {
-      state.fileAttachmentLoadingError = payload;
     },
     reset(state) {
       Object.assign(state, { ...defaultState });
@@ -138,36 +110,7 @@ const irisMessageDetails: IrisMessageDetailsModule = {
         commit("setMessageSaving", false);
       }
     },
-    // disabled file attachments
-    /*
-    async downloadFileAttachment({ commit }, fileId: string) {
-      commit("setFileAttachmentLoading", true);
-      commit("setFileAttachmentLoadingError", null);
-      try {
-        const response = await authClient.irisMessageFileDownload(fileId);
-        const fileName = extractFileName(response);
-        fileDownload.download(response.data, fileName);
-      } catch (e) {
-        commit("setFileAttachmentLoadingError", getErrorMessage(e));
-      } finally {
-        commit("setFileAttachmentLoading", false);
-      }
-    },
-     */
   },
 };
-// disabled file attachments
-/*
-const extractFileName = (response: AxiosResponse): string => {
-  const fileName = (response.headers["content-disposition"] || "")
-    .split("filename=")[1]
-    .split(";")[0]
-    .replace(/['"]/g, "");
-  if (fileName.length <= 0) {
-    throw new Error("invalid file name");
-  }
-  return fileName;
-};
- */
 
 export default irisMessageDetails;

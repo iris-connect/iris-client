@@ -1914,12 +1914,6 @@ export type IrisMessageQuery = DataQuery & {
 
 export type PageIrisMessages = Page<IrisMessage>;
 
-export interface IrisMessageFileAttachment {
-  id: string;
-  name: string;
-  type?: string;
-}
-
 export interface IrisMessage {
   id: string;
   folder: string;
@@ -1930,19 +1924,14 @@ export interface IrisMessage {
   hdRecipient: IrisMessageHdContact;
   createdAt: string;
   isRead?: boolean;
-  hasFileAttachments?: boolean;
 }
 
-export interface IrisMessageDetails extends IrisMessage {
-  fileAttachments?: IrisMessageFileAttachment[];
-}
+export type IrisMessageDetails = IrisMessage;
 
 export interface IrisMessageInsert {
   hdRecipient: string;
   subject: string;
   body: string;
-  // disabled file attachments
-  // fileAttachments?: File[];
 }
 
 export enum IrisMessageContext {
@@ -2306,27 +2295,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     options?: RequestOptions
   ): ApiResponse {
     assertParamExists("irisMessagesPost", "data", data);
-    return this.apiRequest("POST", "/iris-messages", data, {
-      ...options,
-      multipart: true,
-    });
-  }
-
-  /**
-   * @summary Fetches allowed file types for iris message fileAttachments
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof IrisClientFrontendApi
-   */
-  public irisMessageAllowedFileTypesGet(
-    options?: RequestOptions
-  ): ApiResponse<string[]> {
-    return this.apiRequest(
-      "GET",
-      "/iris-messages/allowed-file-types",
-      null,
-      options
-    );
+    return this.apiRequest("POST", "/iris-messages", data, options);
   }
 
   /**
@@ -2381,24 +2350,4 @@ export class IrisClientFrontendApi extends BaseAPI {
     const path = `/iris-messages/${encodeURIComponent(messageId)}`;
     return this.apiRequest("PATCH", path, { isRead: true }, options);
   }
-
-  // disabled file attachments
-  /**
-   * @summary Download file
-   * @param {string} fileId
-   * @param {*} options Override http request option.
-   */
-  /*
-  public irisMessageFileDownload(
-    fileId: string,
-    options?: RequestOptions
-  ): ApiResponse {
-    assertParamExists("irisMessageFileDownload", "fileId", fileId);
-    const path = `/iris-messages/files/${encodeURIComponent(fileId)}/download`;
-    return this.apiRequest("GET", path, null, {
-      ...options,
-      responseType: "blob",
-    });
-  }
-   */
 }

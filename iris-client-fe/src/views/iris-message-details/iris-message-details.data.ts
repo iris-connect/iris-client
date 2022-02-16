@@ -1,25 +1,6 @@
-import { IrisMessageFileAttachment, IrisMessageDetails } from "@/api";
-import { Complete, normalizeData } from "@/utils/data";
+import { IrisMessageDetails } from "@/api";
+import { normalizeData } from "@/utils/data";
 import { normalizeIrisMessage } from "@/views/iris-message-list/iris-message-list.data";
-
-const normalizeIrisMessageFileAttachment = (
-  source?: IrisMessageFileAttachment,
-  parse?: boolean
-): IrisMessageFileAttachment => {
-  return normalizeData(
-    source,
-    (normalizer) => {
-      const normalized: Complete<IrisMessageFileAttachment> = {
-        id: normalizer("id", ""),
-        name: normalizer("name", ""),
-        type: normalizer("type", undefined),
-      };
-      return normalized;
-    },
-    parse,
-    "IrisMessageFileAttachment"
-  );
-};
 
 export const normalizeIrisMessageDetails = (
   source?: IrisMessageDetails,
@@ -28,14 +9,7 @@ export const normalizeIrisMessageDetails = (
   return normalizeData(
     source,
     () => {
-      const normalized: IrisMessageDetails = {
-        ...normalizeIrisMessage(source),
-        fileAttachments: source?.fileAttachments
-          ? source.fileAttachments.map((item) =>
-              normalizeIrisMessageFileAttachment(item)
-            )
-          : undefined,
-      };
+      const normalized: IrisMessageDetails = normalizeIrisMessage(source);
       return normalized;
     },
     parse,

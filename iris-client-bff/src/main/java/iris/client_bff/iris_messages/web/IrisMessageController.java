@@ -9,7 +9,6 @@ import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import iris.client_bff.iris_messages.IrisMessageService;
-import iris.client_bff.iris_messages.validation.FileTypeValidator;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 
@@ -25,7 +24,6 @@ import javax.validation.constraints.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -39,16 +37,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping("/iris-messages")
 public class IrisMessageController {
 
-	private static final String FOLDER_ID = "folderId";
-	private static final String MESSAGE_ID = "messageId";
-	private static final String FILE_ID = "fileId";
-
 	private static final String FIELD_SEARCH = "search";
 
 	private static final String FIELD_HD_RECIPIENT = "hdRecipient";
 	private static final String FIELD_SUBJECT = "subject";
 	private static final String FIELD_BODY = "body";
-	private static final String FIELD_FILE_ATTACHMENT = "fileAttachment";
 
 	private IrisMessageService irisMessageService;
 	private final IrisMessageBuilder irisMessageBuilder;
@@ -63,9 +56,9 @@ public class IrisMessageController {
 		return this.irisMessageService.search(folder, search, pageable).map(IrisMessageListItemDto::fromEntity);
 	}
 
-	@PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<URI> createAndSendMessage(@Valid @ModelAttribute IrisMessageInsertDto irisMessageInsert,
+	public ResponseEntity<URI> createAndSendMessage(@Valid @RequestBody IrisMessageInsertDto irisMessageInsert,
 			BindingResult bindingResult) {
 		this.validateConstraints(bindingResult);
 		this.validateIrisMessageInsert(irisMessageInsert);
@@ -93,19 +86,6 @@ public class IrisMessageController {
 		this.validateField(irisMessageInsert.getHdRecipient(), FIELD_HD_RECIPIENT);
 		this.validateField(irisMessageInsert.getSubject(), FIELD_SUBJECT);
 		this.validateField(irisMessageInsert.getBody(), FIELD_BODY);
-		// disabled file attachments
-		/*
-		if (irisMessageInsert.getFileAttachments() != null) {
-		    for ( MultipartFile file : irisMessageInsert.getFileAttachments() ) {
-		        this.validateField(file.getOriginalFilename(), FIELD_FILE_ATTACHMENT);
-		    }
-		}
-		 */
-	}
-
-	@GetMapping("/allowed-file-types")
-	public ResponseEntity<String[]> getAllowedFileTypes() {
-		return ResponseEntity.ok(FileTypeValidator.ALLOWED_TYPES);
 	}
 
 	@GetMapping("/{messageId}")
@@ -151,36 +131,6 @@ public class IrisMessageController {
 		}
 		return ResponseEntity.ok(IrisMessageFolderDto.fromEntity(irisMessageFolders));
 	}
-
-	// disabled file attachments
-	/*
-	@GetMapping("/files/{id}/download")
-	public ResponseEntity<byte[]> downloadMessageFile(@PathVariable IrisMessageFileIdentifier id) {
-	    Optional<IrisMessageFile> file = this.irisMessageService.findFileById(id);
-	    if (file.isPresent()) {
-	        try {
-	            IrisMessageFile messageFile = file.get();
-	            int contentLength = 0;
-	            MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
-	            if (messageFile.getContent() != null) {
-	                contentLength = messageFile.getContent().length;
-	                Tika tika = new Tika();
-	                String contentType = tika.detect(messageFile.getContent(), messageFile.getName());
-	                mediaType = MediaType.valueOf(contentType);
-	            }
-	            return ResponseEntity.ok()
-	                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + messageFile.getName() + "\"")
-	                    .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION)
-	                    .contentLength(contentLength)
-	                    .contentType(mediaType)
-	                    .body(messageFile.getContent());
-	        } catch(Throwable e) {
-	            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "iris_message.invalid_file");
-	        }
-	    }
-	    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	}
-	 */
 
 	@GetMapping("/hd-contacts")
 	public ResponseEntity<List<IrisMessageHdContact>> getMessageHdContacts(

@@ -24,7 +24,6 @@ public class IrisMessageService {
 
     private final IrisMessageRepository messageRepository;
     private final IrisMessageFolderRepository folderRepository;
-    private final IrisMessageFileRepository fileRepository;
     private final HibernateSearcher searcher;
     private final EPSIrisMessageClient irisMessageClient;
     private final EPSHdSearchClient hdSearchClient;
@@ -57,13 +56,6 @@ public class IrisMessageService {
     public List<IrisMessageFolder> getFolders() {
         return folderRepository.findAll();
     }
-
-    // disabled file attachments
-    /*
-    public Optional<IrisMessageFile> findFileById(IrisMessageFileIdentifier fileId) {
-        return this.fileRepository.findById(fileId);
-    }
-     */
 
     public List<IrisMessageHdContact> getHdContacts(String search) throws IrisMessageException {
 

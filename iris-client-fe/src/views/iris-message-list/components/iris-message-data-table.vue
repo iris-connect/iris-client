@@ -9,12 +9,6 @@
       :footer-props="{ 'items-per-page-options': [10, 20, 30, 50] }"
       :item-class="itemClass"
     >
-      <template v-slot:header.hasFileAttachments>
-        <v-icon dense>mdi-paperclip</v-icon>
-      </template>
-      <template v-slot:item.hasFileAttachments="{ item }">
-        <v-icon dense v-if="item.hasFileAttachments">mdi-paperclip</v-icon>
-      </template>
       <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
         <slot :name="slot" v-bind="scope" />
       </template>
@@ -72,8 +66,6 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
   get tableHeaders(): DataTableHeader[] {
     if (this.context === IrisMessageContext.Inbox) {
       return [
-        // disabled file attachments
-        // { text: "", value: "hasFileAttachments", sortable: false, width: 0 },
         { text: "Von", value: "hdAuthor.name", sortable: true },
         {
           text: "Betreff",
@@ -85,8 +77,6 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
     }
     if (this.context === IrisMessageContext.Outbox) {
       return [
-        // disabled file attachments
-        // { text: "", value: "hasFileAttachments", sortable: false, width: 0 },
         { text: "An", value: "hdRecipient.name", sortable: true },
         {
           text: "Betreff",
@@ -109,7 +99,6 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
           created: getFormattedDate(message.createdAt, "L LT"),
         },
         isRead: message.isRead,
-        hasFileAttachments: message.hasFileAttachments,
       };
     });
     return {

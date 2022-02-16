@@ -22,41 +22,6 @@
         <div class="body-1" data-test="message.body">
           {{ message.body }}
         </div>
-        <!--
-        <div v-if="message.fileAttachments.length > 0">
-          <v-divider class="my-4" />
-          <p class="font-weight-bold">Anhang</p>
-          <div class="elevation-1 mt-4">
-            <template
-              v-for="(fileAttachment, index) in message.fileAttachments"
-            >
-              <v-list-item
-                dense
-                :key="`item_${index}`"
-                @click="openFileAttachment(fileAttachment.id)"
-                :disabled="fileAttachmentLoading"
-              >
-                <v-list-item-icon>
-                  <v-icon>mdi-download</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ fileAttachment.name }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle v-if="fileAttachment.type">
-                    {{ fileAttachment.type }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-              <v-divider
-                inset
-                :key="`divider_${index}`"
-                v-if="index < message.fileAttachments.length - 1"
-              />
-            </template>
-          </div>
-        </div>
-        -->
       </v-card-text>
       <v-card-actions>
         <v-btn text @click="goBack"> Zurück </v-btn>
@@ -70,7 +35,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { IrisMessageFileAttachment, IrisMessageDetails } from "@/api";
+import { IrisMessageDetails } from "@/api";
 import { ErrorMessage } from "@/utils/axios";
 import { getFormattedDate } from "@/utils/date";
 
@@ -80,7 +45,6 @@ type MessageData = {
   createdAt: string;
   subject: string;
   body: string;
-  fileAttachments: IrisMessageFileAttachment[];
 };
 
 @Component({
@@ -113,7 +77,6 @@ export default class IrisMessageDetailsView extends Vue {
         : "-",
       subject: message?.subject || "-",
       body: message?.body || "-",
-      fileAttachments: message?.fileAttachments || [],
     };
   }
   get messageLoading(): boolean {
@@ -122,14 +85,10 @@ export default class IrisMessageDetailsView extends Vue {
       this.$store.state.irisMessageDetails.messageSaving
     );
   }
-  get fileAttachmentLoading(): boolean {
-    return this.$store.state.irisMessageDetails.fileAttachmentLoading;
-  }
   get errors(): ErrorMessage[] {
     return [
       this.$store.state.irisMessageDetails.messageLoadingError,
       this.$store.state.irisMessageDetails.messageSavingError,
-      this.$store.state.irisMessageDetails.fileAttachmentLoadingError,
     ];
   }
   get messageLoaded(): boolean {
@@ -150,12 +109,6 @@ export default class IrisMessageDetailsView extends Vue {
       await this.$store.dispatch("irisMessageList/fetchUnreadMessageCount");
     }
   }
-  // disabled file attachments
-  /*
-  openFileAttachment(id: string) {
-    this.$store.dispatch("irisMessageDetails/downloadFileAttachment", id);
-  }
-   */
   goBack() {
     if (this.prevLocation === "iris-message-list") {
       return this.$router.back();

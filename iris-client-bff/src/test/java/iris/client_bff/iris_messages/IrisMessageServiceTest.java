@@ -35,9 +35,6 @@ public class IrisMessageServiceTest {
 	IrisMessageFolderRepository folderRepository;
 
 	@Mock
-	IrisMessageFileRepository fileRepository;
-
-	@Mock
 	HibernateSearcher searcher;
 
 	@Mock
@@ -49,8 +46,6 @@ public class IrisMessageServiceTest {
 	IrisMessageService service;
 
 	private final IrisMessageIdentifier ID_NOT_FOUND = IrisMessageIdentifier.of(UUID.randomUUID());
-	// disabled file attachments
-//	private final IrisMessageFileIdentifier FILE_ID_NOT_FOUND = IrisMessageFileIdentifier.of(UUID.randomUUID());
 
 	@BeforeEach
 	void setUp() {
@@ -58,7 +53,6 @@ public class IrisMessageServiceTest {
 		this.service = new IrisMessageService(
 				this.messageRepository,
 				this.folderRepository,
-				this.fileRepository,
 				this.searcher,
 				this.irisMessageClient,
 				this.hdSearchClient);
@@ -150,36 +144,6 @@ public class IrisMessageServiceTest {
 		assertEquals(2, folders.size());
 
 	}
-
-	// disabled file attachments
-	/*
-	@Test
-	void findFileById() {
-	
-		when(this.fileRepository.findById(any())).thenReturn(Optional.of(this.testData.MOCK_MESSAGE_FILE));
-	
-		var file = this.service.findFileById(this.testData.MOCK_MESSAGE_FILE.getId());
-	
-		verify(this.fileRepository).findById(any());
-	
-		assertTrue(file.isPresent());
-		assertEquals(file.get(), this.testData.MOCK_MESSAGE_FILE);
-	
-	}
-	
-	@Test
-	void findFileById_notFound() {
-	
-		when(this.fileRepository.findById(this.FILE_ID_NOT_FOUND)).thenReturn(Optional.empty());
-	
-		var file = this.service.findFileById(this.FILE_ID_NOT_FOUND);
-	
-		verify(this.fileRepository).findById(any());
-	
-		assertTrue(file.isEmpty());
-	
-	}
-	 */
 
 	@Test
 	void getHdContacts() {

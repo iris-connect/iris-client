@@ -41,35 +41,13 @@ public class IrisMessageBuilder {
 
 		IrisMessage message = new IrisMessage();
 
-		// disabled file attachments
-		/*
-		List<IrisMessageFile> files = new ArrayList<>();
-		try {
-		    if (messageTransfer.getFileAttachments() != null) {
-		        Tika tika = new Tika();
-		        for ( IrisMessageTransferDto.FileAttachment file : messageTransfer.getFileAttachments() ) {
-		            IrisMessageFile messageFile = new IrisMessageFile()
-		                    .setMessage(message)
-		                    .setContent(file.getContent())
-		                    .setName(file.getName());
-		            files.add(messageFile);
-		        }
-		    }
-		} catch (Throwable e) {
-		    throw new IrisMessageException("iris_message.invalid_file");
-		}
-		 */
-
 		message
 				.setHdAuthor(hdAuthor)
 				.setHdRecipient(hdRecipient)
 				.setSubject(messageTransfer.getSubject())
 				.setBody(messageTransfer.getBody())
 				.setFolder(folder.get())
-				.setIsRead(false)
-		// disabled file attachments
-		// .setFileAttachments(files)
-		;
+				.setIsRead(false);
 
 		return message;
 	}
@@ -92,35 +70,13 @@ public class IrisMessageBuilder {
 
 		IrisMessage message = new IrisMessage();
 
-		// disabled file attachments
-		/*
-		List<IrisMessageFile> files = new ArrayList<>();
-		try {
-		    if (messageInsert.getFileAttachments() != null) {
-		        for ( MultipartFile file : messageInsert.getFileAttachments() ) {
-		            String fileName = file.getOriginalFilename() == null ? file.getName() : file.getOriginalFilename();
-		            IrisMessageFile messageFile = new IrisMessageFile()
-		                    .setMessage(message)
-		                    .setContent(file.getBytes())
-		                    .setName(fileName);
-		            files.add(messageFile);
-		        }
-		    }
-		} catch (IOException e) {
-		    throw new IrisMessageException("iris_message.invalid_file");
-		}
-		 */
-
 		message
 				.setHdAuthor(hdAuthor)
 				.setHdRecipient(hdRecipient.get())
 				.setSubject(messageInsert.getSubject())
 				.setBody(messageInsert.getBody())
 				.setFolder(folder.get())
-				.setIsRead(true)
-		// disabled file attachments
-		// .setFileAttachments(files)
-		;
+				.setIsRead(true);
 
 		return message;
 	}

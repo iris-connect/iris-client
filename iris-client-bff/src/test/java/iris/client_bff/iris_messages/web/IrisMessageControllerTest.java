@@ -92,13 +92,14 @@ class IrisMessageControllerTest {
 		when(irisMessageService.sendMessage(any())).thenReturn(irisMessage);
 		when(irisMessageService.findById(irisMessage.getId())).thenReturn(Optional.of(irisMessage));
 
+		ObjectMapper objectMapper = new ObjectMapper();
+
 		var postResult = mockMvc
 				.perform(
-						MockMvcRequestBuilders
-								.multipart(baseUrl)
-								.param("hdRecipient", messageInsert.getHdRecipient())
-								.param("subject", messageInsert.getSubject())
-								.param("body", messageInsert.getBody()))
+						MockMvcRequestBuilders.post(baseUrl)
+								.content(objectMapper.writeValueAsString(messageInsert))
+								.contentType(MediaType.APPLICATION_JSON)
+				)
 				.andExpect(MockMvcResultMatchers.status().isCreated())
 				.andReturn();
 
@@ -243,25 +244,6 @@ class IrisMessageControllerTest {
 		assertEquals(2, folderDtoList.size());
 		assertThat(folderDtoList).isEqualTo(IrisMessageFolderDto.fromEntity(folderList));
 	}
-
-	// disabled file attachments
-	/*
-	@Test
-	@WithMockUser()
-	void downloadMessageFile() throws Exception {
-		when(irisMessageService.findFileById(any(IrisMessageFileIdentifier.class))).thenReturn(Optional.of(testData.MOCK_MESSAGE_FILE));
-
-		var res = mockMvc
-				.perform(MockMvcRequestBuilders.get(baseUrl + "/files/{id}/download", testData.MOCK_MESSAGE_FILE.getId()))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
-
-		verify(irisMessageService).findFileById(any(IrisMessageFileIdentifier.class));
-
-		assertThat(res.getResponse().getHeader(HttpHeaders.CONTENT_DISPOSITION)).contains(testData.MOCK_MESSAGE_FILE.getName());
-		assertThat(res.getResponse().getHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS)).isEqualTo(HttpHeaders.CONTENT_DISPOSITION);
-	}
-	 */
 
 	@Test
 	@WithMockUser()
