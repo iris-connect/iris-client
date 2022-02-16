@@ -1,5 +1,7 @@
-package iris.client_bff.iris_messages;
+package iris.client_bff.iris_messages.web;
 
+import iris.client_bff.iris_messages.IrisMessage;
+import iris.client_bff.iris_messages.IrisMessageHdContact;
 import iris.client_bff.iris_messages.validation.FileTypeConstraint;
 import iris.client_bff.iris_messages.validation.IrisMessageFileConstraint;
 import lombok.Data;
@@ -11,7 +13,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
-public class IrisMessageInsert {
+public class IrisMessageInsertDto {
 
     @NotBlank
     @Size(max = IrisMessageHdContact.ID_MAX_LENGTH)

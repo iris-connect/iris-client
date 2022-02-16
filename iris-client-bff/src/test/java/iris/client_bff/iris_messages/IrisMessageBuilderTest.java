@@ -1,6 +1,8 @@
 package iris.client_bff.iris_messages;
 
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
+import iris.client_bff.iris_messages.eps.IrisMessageTransferDto;
+import iris.client_bff.iris_messages.web.IrisMessageInsertDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +38,7 @@ public class IrisMessageBuilderTest {
 	void buildTransfer() {
 
 		IrisMessage message = this.testData.MOCK_INBOX_MESSAGE;
-		IrisMessageTransfer messageTransfer = IrisMessageTransfer.fromEntity(message);
+		IrisMessageTransferDto messageTransfer = IrisMessageTransferDto.fromEntity(message);
 
 		when(this.folderRepository.findFirstByContextAndParentFolderIsNull(any())).thenReturn(Optional.of(this.testData.MOCK_INBOX_FOLDER));
 
@@ -57,7 +59,7 @@ public class IrisMessageBuilderTest {
 	void buildInsert() {
 
 		IrisMessage message = this.testData.MOCK_OUTBOX_MESSAGE;
-		IrisMessageInsert messageInsert = this.testData.getTestMessageInsert(message);
+		IrisMessageInsertDto messageInsert = this.testData.getTestMessageInsert(message);
 
 		when(this.folderRepository.findFirstByContextAndParentFolderIsNull(any())).thenReturn(Optional.of(this.testData.MOCK_OUTBOX_FOLDER));
 

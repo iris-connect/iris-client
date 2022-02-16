@@ -1,5 +1,8 @@
-package iris.client_bff.iris_messages;
+package iris.client_bff.iris_messages.eps;
 
+import iris.client_bff.iris_messages.IrisMessage;
+import iris.client_bff.iris_messages.IrisMessageFile;
+import iris.client_bff.iris_messages.IrisMessageHdContact;
 import lombok.*;
 
 import javax.validation.Valid;
@@ -12,7 +15,7 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class IrisMessageTransfer {
+public class IrisMessageTransferDto {
 
     // we send the name & id as we do not know if the author`s health department is accessible by the recipient
     @Valid
@@ -34,8 +37,8 @@ public class IrisMessageTransfer {
 //    @Valid
 //    private List<FileAttachment> fileAttachments;
 
-    public static IrisMessageTransfer fromEntity(IrisMessage message) {
-        return IrisMessageTransfer.builder()
+    public static IrisMessageTransferDto fromEntity(IrisMessage message) {
+        return IrisMessageTransferDto.builder()
                 .hdAuthor(HdContact.fromEntity(message.getHdAuthor()))
                 .hdRecipient(HdContact.fromEntity(message.getHdRecipient()))
                 .subject(message.getSubject())
@@ -72,12 +75,6 @@ public class IrisMessageTransfer {
 
         private byte[] content;
 
-        /**
-         * @deprecated
-         */
-        @Size(max = IrisMessageFile.CONTENT_TYPE_MAX_LENGTH)
-        private String contentType;
-
         public static List<FileAttachment> fromEntity(List<IrisMessageFile> files) {
             return files.stream().map(FileAttachment::fromEntity).collect(Collectors.toList());
         }
@@ -85,8 +82,7 @@ public class IrisMessageTransfer {
         public static FileAttachment fromEntity(IrisMessageFile file) {
             return new FileAttachment()
                     .setName(file.getName())
-                    .setContent(file.getContent())
-                    .setContentType(file.getContentType());
+                    .setContent(file.getContent());
         }
     }
 

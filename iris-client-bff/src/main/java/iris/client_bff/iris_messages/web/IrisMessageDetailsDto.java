@@ -4,6 +4,7 @@ import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageFile;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import lombok.*;
+import org.apache.tika.Tika;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -53,10 +54,12 @@ public class IrisMessageDetailsDto {
         }
 
         public static FileAttachment fromEntity(IrisMessageFile file) {
+            Tika tika = new Tika();
+            String type = tika.detect(file.getContent(), file.getName());
             return new FileAttachment(
                     file.getId().toString(),
                     file.getName(),
-                    file.getContentType()
+                    type
             );
         }
     }

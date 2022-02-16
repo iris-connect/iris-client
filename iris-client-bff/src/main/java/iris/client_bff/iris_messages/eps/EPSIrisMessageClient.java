@@ -49,7 +49,7 @@ public class EPSIrisMessageClient {
 
     public void createIrisMessage(IrisMessage message) throws IrisMessageException {
         String methodName = message.getHdRecipient().getId() + ".createIrisMessage";
-        Map<String, IrisMessageTransfer> payload  = Map.of("irisMessage", IrisMessageTransfer.fromEntity(message));
+        Map<String, IrisMessageTransferDto> payload  = Map.of("irisMessage", IrisMessageTransferDto.fromEntity(message));
         int defaultReadTimeout = this.epsRpcClient.getReadTimeoutMillis();
         try {
             this.epsRpcClient.setReadTimeoutMillis(READ_TIMEOUT);

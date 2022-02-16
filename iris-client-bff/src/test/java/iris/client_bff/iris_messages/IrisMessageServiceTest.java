@@ -46,12 +46,11 @@ public class IrisMessageServiceTest {
 	@Mock
 	EPSHdSearchClient hdSearchClient;
 
-	@Mock
-	IrisMessageBuilder irisMessageBuilder;
-
 	IrisMessageService service;
 
 	private final IrisMessageIdentifier ID_NOT_FOUND = IrisMessageIdentifier.of(UUID.randomUUID());
+	// disabled file attachments
+//	private final IrisMessageFileIdentifier FILE_ID_NOT_FOUND = IrisMessageFileIdentifier.of(UUID.randomUUID());
 
 	@BeforeEach
 	void setUp() {
@@ -62,8 +61,7 @@ public class IrisMessageServiceTest {
 				this.fileRepository,
 				this.searcher,
 				this.irisMessageClient,
-				this.hdSearchClient,
-				this.irisMessageBuilder);
+				this.hdSearchClient);
 	}
 
 	@Test
@@ -153,22 +151,6 @@ public class IrisMessageServiceTest {
 
 	}
 
-	@Test
-	void updateMessage() {
-
-		IrisMessage message = this.testData.getTestInboxMessage();
-		IrisMessageUpdate messageUpdate = new IrisMessageUpdate(true);
-
-		when(this.messageRepository.save(any(IrisMessage.class))).then(AdditionalAnswers.returnsFirstArg());
-
-		this.service.updateMessage(message, messageUpdate);
-
-		verify(this.messageRepository).save(any(IrisMessage.class));
-
-		assertEquals(message.getIsRead(), messageUpdate.getIsRead());
-
-	}
-
 	// disabled file attachments
 	/*
 	@Test
@@ -188,9 +170,9 @@ public class IrisMessageServiceTest {
 	@Test
 	void findFileById_notFound() {
 	
-		when(this.fileRepository.findById(IrisMessageFile.IrisMessageFileIdentifier.of(this.ID_NOT_FOUND))).thenReturn(Optional.empty());
+		when(this.fileRepository.findById(this.FILE_ID_NOT_FOUND)).thenReturn(Optional.empty());
 	
-		var file = this.service.findFileById(this.ID_NOT_FOUND);
+		var file = this.service.findFileById(this.FILE_ID_NOT_FOUND);
 	
 		verify(this.fileRepository).findById(any());
 	
@@ -231,38 +213,15 @@ public class IrisMessageServiceTest {
 
 		IrisMessage message = this.testData.MOCK_OUTBOX_MESSAGE;
 
-		IrisMessageInsert messageInsert = this.testData.getTestMessageInsert(message);
-
-		when(this.irisMessageBuilder.build(messageInsert)).thenReturn(message);
 		doNothing().when(this.irisMessageClient).createIrisMessage(any(IrisMessage.class));
 		when(this.messageRepository.save(any(IrisMessage.class))).then(AdditionalAnswers.returnsFirstArg());
 
-		var sentMessage = this.service.sendMessage(messageInsert);
+		var sentMessage = this.service.sendMessage(message);
 
-		verify(this.irisMessageBuilder).build(messageInsert);
 		verify(this.irisMessageClient).createIrisMessage(message);
 		verify(this.messageRepository).save(message);
 
 		assertEquals(sentMessage, message);
-
-	}
-
-	@Test
-	void receiveMessage() {
-
-		IrisMessage message = this.testData.MOCK_INBOX_MESSAGE;
-
-		IrisMessageTransfer messageTransfer = IrisMessageTransfer.fromEntity(message);
-
-		when(this.irisMessageBuilder.build(messageTransfer)).thenReturn(message);
-		when(this.messageRepository.save(any(IrisMessage.class))).then(AdditionalAnswers.returnsFirstArg());
-
-		var receivedMessage = this.service.receiveMessage(messageTransfer);
-
-		verify(this.irisMessageBuilder).build(messageTransfer);
-		verify(this.messageRepository).save(message);
-
-		assertEquals(receivedMessage, message);
 
 	}
 

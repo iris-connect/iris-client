@@ -11,8 +11,6 @@ import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolderRepository;
 import iris.client_bff.iris_messages.IrisMessageRepository;
 import iris.client_bff.iris_messages.IrisMessageTestData;
-import iris.client_bff.iris_messages.IrisMessageTransfer;
-import iris.client_bff.iris_messages.web.IrisMessageController;
 import iris.client_bff.ui.messages.ErrorMessages;
 
 import java.util.Optional;
@@ -25,9 +23,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 @IrisWebIntegrationTest
 class IrisMessageDataControllerTest {
-
-	@Autowired
-	IrisMessageController controller;
 
 	@Autowired
 	IrisMessageDataController dataController;
@@ -48,9 +43,9 @@ class IrisMessageDataControllerTest {
 	void createIrisMessage() {
 
 		IrisMessage localMessage = this.messageRepository.save(this.getMessage());
-		IrisMessageTransfer localMessageTransfer = IrisMessageTransfer.fromEntity(localMessage);
+		IrisMessageTransferDto localMessageTransfer = IrisMessageTransferDto.fromEntity(localMessage);
 
-		IrisMessageTransfer remoteMessageTransfer = this.dataController.createIrisMessage(localMessageTransfer);
+		IrisMessageTransferDto remoteMessageTransfer = this.dataController.createIrisMessage(localMessageTransfer);
 
 		assertNotNull(remoteMessageTransfer);
 		assertThat(localMessageTransfer).isEqualTo(remoteMessageTransfer);
@@ -68,7 +63,7 @@ class IrisMessageDataControllerTest {
 	@Test
 	void createIrisMessage_shouldFail_invalidData() {
 
-		IrisMessageTransfer localMessageTransfer = Mockito.spy(IrisMessageTransfer.fromEntity(this.getMessage()));
+		IrisMessageTransferDto localMessageTransfer = Mockito.spy(IrisMessageTransferDto.fromEntity(this.getMessage()));
 
 		localMessageTransfer.setSubject(IrisMessageTestData.INVALID_SUBJECT);
 		verify(localMessageTransfer).setSubject(IrisMessageTestData.INVALID_SUBJECT);

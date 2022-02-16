@@ -4,7 +4,6 @@ import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageFile;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
-import iris.client_bff.iris_messages.IrisMessageTransfer;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -20,8 +19,8 @@ public class IrisMessageTransferDefuse {
 
     private final ValidationHelper validationHelper;
 
-    IrisMessageTransfer defuse(IrisMessageTransfer message) {
-        return IrisMessageTransfer.builder()
+    IrisMessageTransferDto defuse(IrisMessageTransferDto message) {
+        return IrisMessageTransferDto.builder()
                 .hdAuthor(this.defuse(message.getHdAuthor(), "author"))
                 .hdRecipient(this.defuse(message.getHdRecipient(), "recipient"))
                 .subject(this.defuse(message.getSubject(), "subject", IrisMessage.SUBJECT_MAX_LENGTH))
@@ -31,21 +30,20 @@ public class IrisMessageTransferDefuse {
                 .build();
     }
 
-    private IrisMessageTransfer.HdContact defuse(IrisMessageTransfer.HdContact contact, String field) {
-        return new IrisMessageTransfer.HdContact()
+    private IrisMessageTransferDto.HdContact defuse(IrisMessageTransferDto.HdContact contact, String field) {
+        return new IrisMessageTransferDto.HdContact()
                 .setId(this.defuse(contact.getId(), field + ".id", IrisMessageHdContact.ID_MAX_LENGTH))
                 .setName(this.defuse(contact.getName(), field + ".id", IrisMessageHdContact.NAME_MAX_LENGTH));
     }
 
-    private List<IrisMessageTransfer.FileAttachment> defuse(List<IrisMessageTransfer.FileAttachment> fileAttachments) {
+    private List<IrisMessageTransferDto.FileAttachment> defuse(List<IrisMessageTransferDto.FileAttachment> fileAttachments) {
         return fileAttachments.stream().map(this::defuse).collect(Collectors.toList());
     }
 
-    private IrisMessageTransfer.FileAttachment defuse(IrisMessageTransfer.FileAttachment fileAttachment) {
-        return new IrisMessageTransfer.FileAttachment()
+    private IrisMessageTransferDto.FileAttachment defuse(IrisMessageTransferDto.FileAttachment fileAttachment) {
+        return new IrisMessageTransferDto.FileAttachment()
                 .setName(this.defuse(fileAttachment.getName(), "fileAttachment.name", IrisMessageFile.NAME_MAX_LENGTH))
-                .setContent(fileAttachment.getContent())
-                .setContentType(this.defuse(fileAttachment.getContentType(), "fileAttachment.contentType", IrisMessageFile.CONTENT_TYPE_MAX_LENGTH));
+                .setContent(fileAttachment.getContent());
     }
 
     private String defuse(String input, String field, int maxLength) {

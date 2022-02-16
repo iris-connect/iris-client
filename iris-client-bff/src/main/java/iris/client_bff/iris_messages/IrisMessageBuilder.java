@@ -1,6 +1,8 @@
 package iris.client_bff.iris_messages;
 
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
+import iris.client_bff.iris_messages.eps.IrisMessageTransferDto;
+import iris.client_bff.iris_messages.web.IrisMessageInsertDto;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
@@ -15,7 +17,7 @@ public class IrisMessageBuilder {
 	private final IrisMessageFolderRepository folderRepository;
 	private final EPSIrisMessageClient irisMessageClient;
 
-	public IrisMessage build(IrisMessageTransfer messageTransfer) throws IrisMessageException {
+	public IrisMessage build(IrisMessageTransferDto messageTransfer) throws IrisMessageException {
 
 		Optional<IrisMessageFolder> folder = this.folderRepository
 				.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
@@ -45,17 +47,16 @@ public class IrisMessageBuilder {
 		try {
 		    if (messageTransfer.getFileAttachments() != null) {
 		        Tika tika = new Tika();
-		        for ( IrisMessageTransfer.FileAttachment file : messageTransfer.getFileAttachments() ) {
+		        for ( IrisMessageTransferDto.FileAttachment file : messageTransfer.getFileAttachments() ) {
 		            IrisMessageFile messageFile = new IrisMessageFile()
 		                    .setMessage(message)
 		                    .setContent(file.getContent())
-		                    .setContentType(tika.detect(file.getContent(), file.getName()))
 		                    .setName(file.getName());
 		            files.add(messageFile);
 		        }
 		    }
 		} catch (Throwable e) {
-		    throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_FILE);
+		    throw new IrisMessageException("iris_message.invalid_file");
 		}
 		 */
 
@@ -73,7 +74,7 @@ public class IrisMessageBuilder {
 		return message;
 	}
 
-	public IrisMessage build(IrisMessageInsert messageInsert) throws IrisMessageException {
+	public IrisMessage build(IrisMessageInsertDto messageInsert) throws IrisMessageException {
 
 		Optional<IrisMessageFolder> folder = this.folderRepository
 				.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
@@ -96,19 +97,17 @@ public class IrisMessageBuilder {
 		List<IrisMessageFile> files = new ArrayList<>();
 		try {
 		    if (messageInsert.getFileAttachments() != null) {
-		        Tika tika = new Tika();
 		        for ( MultipartFile file : messageInsert.getFileAttachments() ) {
 		            String fileName = file.getOriginalFilename() == null ? file.getName() : file.getOriginalFilename();
 		            IrisMessageFile messageFile = new IrisMessageFile()
 		                    .setMessage(message)
 		                    .setContent(file.getBytes())
-		                    .setContentType(tika.detect(file.getInputStream(), fileName))
 		                    .setName(fileName);
 		            files.add(messageFile);
 		        }
 		    }
 		} catch (IOException e) {
-		    throw new IrisMessageException(ErrorMessages.INVALID_IRIS_MESSAGE_FILE);
+		    throw new IrisMessageException("iris_message.invalid_file");
 		}
 		 */
 

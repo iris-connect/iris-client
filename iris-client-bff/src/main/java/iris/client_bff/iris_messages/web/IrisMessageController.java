@@ -3,13 +3,12 @@ package iris.client_bff.iris_messages.web;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
+import iris.client_bff.iris_messages.IrisMessageBuilder;
 import iris.client_bff.iris_messages.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
-import iris.client_bff.iris_messages.IrisMessageInsert;
 import iris.client_bff.iris_messages.IrisMessageService;
-import iris.client_bff.iris_messages.IrisMessageUpdate;
 import iris.client_bff.iris_messages.validation.FileTypeValidator;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
@@ -52,6 +51,7 @@ public class IrisMessageController {
 	private static final String FIELD_FILE_ATTACHMENT = "fileAttachment";
 
 	private IrisMessageService irisMessageService;
+	private final IrisMessageBuilder irisMessageBuilder;
 	private final ValidationHelper validationHelper;
 
 	@GetMapping()
@@ -65,16 +65,17 @@ public class IrisMessageController {
 
 	@PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<URI> createMessage(@Valid @ModelAttribute IrisMessageInsert irisMessageInsert,
+	public ResponseEntity<URI> createAndSendMessage(@Valid @ModelAttribute IrisMessageInsertDto irisMessageInsert,
 			BindingResult bindingResult) {
 		this.validateConstraints(bindingResult);
 		this.validateIrisMessageInsert(irisMessageInsert);
 		try {
-			IrisMessage message = irisMessageService.sendMessage(irisMessageInsert);
+			IrisMessage message = irisMessageBuilder.build(irisMessageInsert);
+			IrisMessage sentMessage = irisMessageService.sendMessage(message);
 			URI location = ServletUriComponentsBuilder
 					.fromCurrentRequest()
 					.path("/{id}")
-					.buildAndExpand(message.getId())
+					.buildAndExpand(sentMessage.getId())
 					.toUri();
 			return ResponseEntity.created(location).build();
 		} catch (Throwable e) {
@@ -85,7 +86,7 @@ public class IrisMessageController {
 		}
 	}
 
-	private void validateIrisMessageInsert(IrisMessageInsert irisMessageInsert) {
+	private void validateIrisMessageInsert(IrisMessageInsertDto irisMessageInsert) {
 		if (irisMessageInsert == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "iris_message.submission_error");
 		}
@@ -121,19 +122,21 @@ public class IrisMessageController {
 	@PatchMapping("/{messageId}")
 	public ResponseEntity<IrisMessageDetailsDto> updateMessage(
 			@PathVariable IrisMessageIdentifier messageId,
-			@RequestBody @Valid IrisMessageUpdate irisMessageUpdate,
+			@RequestBody @Valid IrisMessageUpdateDto irisMessageUpdate,
 			BindingResult bindingResult) {
 		this.validateConstraints(bindingResult);
 		this.validateIrisMessageUpdate(irisMessageUpdate);
-		Optional<IrisMessage> message = this.irisMessageService.findById(messageId);
-		if (message.isPresent()) {
-			IrisMessage updatedMessage = this.irisMessageService.updateMessage(message.get(), irisMessageUpdate);
+		Optional<IrisMessage> optionalMessage = this.irisMessageService.findById(messageId);
+		if (optionalMessage.isPresent()) {
+			IrisMessage message = optionalMessage.get();
+			message.setIsRead(irisMessageUpdate.getIsRead());
+			IrisMessage updatedMessage = this.irisMessageService.saveMessage(message);
 			return ResponseEntity.ok(IrisMessageDetailsDto.fromEntity(updatedMessage));
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	private void validateIrisMessageUpdate(IrisMessageUpdate irisMessageUpdate) {
+	private void validateIrisMessageUpdate(IrisMessageUpdateDto irisMessageUpdate) {
 		if (irisMessageUpdate == null || irisMessageUpdate.getIsRead() == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
@@ -152,7 +155,7 @@ public class IrisMessageController {
 	// disabled file attachments
 	/*
 	@GetMapping("/files/{id}/download")
-	public ResponseEntity<byte[]> downloadMessageFile(@PathVariable UUID id) {
+	public ResponseEntity<byte[]> downloadMessageFile(@PathVariable IrisMessageFileIdentifier id) {
 	    Optional<IrisMessageFile> file = this.irisMessageService.findFileById(id);
 	    if (file.isPresent()) {
 	        try {
@@ -172,7 +175,7 @@ public class IrisMessageController {
 	                    .contentType(mediaType)
 	                    .body(messageFile.getContent());
 	        } catch(Throwable e) {
-	            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ErrorMessages.INVALID_IRIS_MESSAGE_FILE);
+	            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "iris_message.invalid_file");
 	        }
 	    }
 	    return new ResponseEntity<>(HttpStatus.NOT_FOUND);

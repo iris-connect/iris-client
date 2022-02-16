@@ -1,4 +1,4 @@
-package iris.client_bff.iris_messages;
+package iris.client_bff.iris_messages.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class IrisMessageUpdate {
+public class IrisMessageUpdateDto {
 
     @NotNull
     private Boolean isRead;

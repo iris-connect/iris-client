@@ -10,12 +10,12 @@ import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
+import iris.client_bff.iris_messages.IrisMessageBuilder;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import iris.client_bff.iris_messages.IrisMessageService;
 import iris.client_bff.iris_messages.IrisMessageTestData;
-import iris.client_bff.iris_messages.IrisMessageUpdate;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -50,6 +50,9 @@ class IrisMessageControllerTest {
 	@MockBean
 	private IrisMessageService irisMessageService;
 
+	@MockBean
+	private IrisMessageBuilder irisMessageBuilder;
+
 	@Test
 	void endpointShouldBeProtected() throws Exception {
 		mockMvc.perform(get(baseUrl))
@@ -79,8 +82,12 @@ class IrisMessageControllerTest {
 
 	@Test
 	@WithMockUser()
-	public void createMessage() throws Exception {
+	public void createAndSendMessage() throws Exception {
 		IrisMessage irisMessage = testData.MOCK_OUTBOX_MESSAGE;
+
+		IrisMessageInsertDto messageInsert = this.testData.getTestMessageInsert(irisMessage);
+
+		when(irisMessageBuilder.build(any(IrisMessageInsertDto.class))).thenReturn(irisMessage);
 
 		when(irisMessageService.sendMessage(any())).thenReturn(irisMessage);
 		when(irisMessageService.findById(irisMessage.getId())).thenReturn(Optional.of(irisMessage));
@@ -89,12 +96,13 @@ class IrisMessageControllerTest {
 				.perform(
 						MockMvcRequestBuilders
 								.multipart(baseUrl)
-								.param("hdRecipient", irisMessage.getHdRecipient().getId())
-								.param("subject", irisMessage.getSubject())
-								.param("body", irisMessage.getBody()))
+								.param("hdRecipient", messageInsert.getHdRecipient())
+								.param("subject", messageInsert.getSubject())
+								.param("body", messageInsert.getBody()))
 				.andExpect(MockMvcResultMatchers.status().isCreated())
 				.andReturn();
 
+		verify(irisMessageBuilder).build(messageInsert);
 		verify(irisMessageService).sendMessage(any());
 
 		String location = postResult.getResponse().getHeader("location");
@@ -109,9 +117,9 @@ class IrisMessageControllerTest {
 
 		var messageDetailsDto = om.readValue(res.getResponse().getContentAsString(), IrisMessageDetailsDto.class);
 
-		assertThat(messageDetailsDto.getHdRecipient()).isEqualTo(irisMessage.getHdRecipient());
-		assertThat(messageDetailsDto.getSubject()).isEqualTo(irisMessage.getSubject());
-		assertThat(messageDetailsDto.getBody()).isEqualTo(irisMessage.getBody());
+		assertThat(messageDetailsDto.getHdRecipient().getId()).isEqualTo(messageInsert.getHdRecipient());
+		assertThat(messageDetailsDto.getSubject()).isEqualTo(messageInsert.getSubject());
+		assertThat(messageDetailsDto.getBody()).isEqualTo(messageInsert.getBody());
 
 	}
 
@@ -171,14 +179,14 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	void updateMessage() throws Exception {
-		IrisMessageUpdate messageUpdate = new IrisMessageUpdate(true);
+		IrisMessageUpdateDto messageUpdate = new IrisMessageUpdateDto(true);
 
 		IrisMessage updatedMessage = spy(testData.getTestInboxMessage());
 		updatedMessage.setIsRead(true);
 		verify(updatedMessage).setIsRead(true);
 
 		when(irisMessageService.findById(any())).thenReturn(Optional.of(updatedMessage));
-		when(irisMessageService.updateMessage(updatedMessage, messageUpdate)).thenReturn(updatedMessage);
+		when(irisMessageService.saveMessage(updatedMessage)).thenReturn(updatedMessage);
 
 		var res = mockMvc
 				.perform(
@@ -189,7 +197,7 @@ class IrisMessageControllerTest {
 				.andReturn();
 
 		verify(irisMessageService).findById(any());
-		verify(irisMessageService).updateMessage(any(IrisMessage.class), any(IrisMessageUpdate.class));
+		verify(irisMessageService).saveMessage(any(IrisMessage.class));
 
 		var messageDetailsDto = om.readValue(res.getResponse().getContentAsString(), IrisMessageDetailsDto.class);
 
@@ -202,7 +210,7 @@ class IrisMessageControllerTest {
 	void updateMessage_shouldFail() throws Exception {
 		UUID invalidId = UUID.randomUUID();
 
-		IrisMessageUpdate messageUpdate = new IrisMessageUpdate(true);
+		IrisMessageUpdateDto messageUpdate = new IrisMessageUpdateDto(true);
 
 		when(irisMessageService.findById(any())).thenReturn(Optional.empty());
 
@@ -241,15 +249,15 @@ class IrisMessageControllerTest {
 	@Test
 	@WithMockUser()
 	void downloadMessageFile() throws Exception {
-		when(irisMessageService.findFileById(any(UUID.class))).thenReturn(Optional.of(testData.MOCK_MESSAGE_FILE));
-	
+		when(irisMessageService.findFileById(any(IrisMessageFileIdentifier.class))).thenReturn(Optional.of(testData.MOCK_MESSAGE_FILE));
+
 		var res = mockMvc
 				.perform(MockMvcRequestBuilders.get(baseUrl + "/files/{id}/download", testData.MOCK_MESSAGE_FILE.getId()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
-	
-		verify(irisMessageService).findFileById(any(UUID.class));
-	
+
+		verify(irisMessageService).findFileById(any(IrisMessageFileIdentifier.class));
+
 		assertThat(res.getResponse().getHeader(HttpHeaders.CONTENT_DISPOSITION)).contains(testData.MOCK_MESSAGE_FILE.getName());
 		assertThat(res.getResponse().getHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS)).isEqualTo(HttpHeaders.CONTENT_DISPOSITION);
 	}

@@ -42,7 +42,6 @@ CREATE TABLE  iris_message_file (
     message_id uuid NOT NULL,
     name varchar(255) NOT NULL,
     content bytea NULL,
-    content_type varchar(50) NULL,
     created timestamp NOT NULL,
     last_modified timestamp NOT NULL,
     created_by uuid NULL,

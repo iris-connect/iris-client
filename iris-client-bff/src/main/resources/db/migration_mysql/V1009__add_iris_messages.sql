@@ -42,7 +42,6 @@ CREATE TABLE iris_message_file (
     message_id binary(16) NOT NULL,
     name varchar(255) NOT NULL,
     content mediumblob NULL,
-    content_type varchar(50) NULL,
     created datetime NOT NULL,
     last_modified datetime NOT NULL,
     created_by binary(16) NULL,

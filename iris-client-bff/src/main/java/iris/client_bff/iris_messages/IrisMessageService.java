@@ -7,7 +7,6 @@ import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,8 +28,6 @@ public class IrisMessageService {
     private final HibernateSearcher searcher;
     private final EPSIrisMessageClient irisMessageClient;
     private final EPSHdSearchClient hdSearchClient;
-
-    private final IrisMessageBuilder messageBuilder;
 
     public Optional<IrisMessage> findById(IrisMessageIdentifier messageId) {
         return messageRepository.findById(messageId);
@@ -61,15 +58,10 @@ public class IrisMessageService {
         return folderRepository.findAll();
     }
 
-    public IrisMessage updateMessage(IrisMessage message, IrisMessageUpdate messageUpdate) {
-        message.setIsRead(messageUpdate.getIsRead());
-        return this.messageRepository.save(message);
-    }
-
     // disabled file attachments
     /*
-    public Optional<IrisMessageFile> findFileById(UUID fileId) {
-        return this.fileRepository.findById(IrisMessageFile.IrisMessageFileIdentifier.of(fileId));
+    public Optional<IrisMessageFile> findFileById(IrisMessageFileIdentifier fileId) {
+        return this.fileRepository.findById(fileId);
     }
      */
 
@@ -98,19 +90,12 @@ public class IrisMessageService {
         return this.irisMessageClient.getOwnIrisMessageHdContact();
     }
 
-    public IrisMessage sendMessage(IrisMessageInsert messageInsert) throws IrisMessageException {
-
-        IrisMessage message = this.messageBuilder.build(messageInsert);
-
+    public IrisMessage sendMessage(IrisMessage message) throws IrisMessageException {
         this.irisMessageClient.createIrisMessage(message);
-
         return this.messageRepository.save(message);
     }
 
-    public IrisMessage receiveMessage(IrisMessageTransfer messageTransfer) throws IrisMessageException {
-
-        IrisMessage message = this.messageBuilder.build(messageTransfer);
-
+    public IrisMessage saveMessage(IrisMessage message) {
         return this.messageRepository.save(message);
     }
 

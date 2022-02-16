@@ -17,7 +17,6 @@ import java.util.UUID;
 public class IrisMessageFile extends Aggregate<IrisMessageFile, IrisMessageFile.IrisMessageFileIdentifier> {
 
     public static final int NAME_MAX_LENGTH = 255;
-    public static final int CONTENT_TYPE_MAX_LENGTH = 50;
 
     {
         id = IrisMessageFileIdentifier.of(UUID.randomUUID());
@@ -28,12 +27,6 @@ public class IrisMessageFile extends Aggregate<IrisMessageFile, IrisMessageFile.
 
     @Column(length = 16777215)
     private byte[] content;
-
-    /**
-     * @deprecated
-     */
-    @Column
-    private String contentType;
 
     @ToString.Exclude
     @ManyToOne
