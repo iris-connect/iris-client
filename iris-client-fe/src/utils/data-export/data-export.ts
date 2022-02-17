@@ -1,4 +1,4 @@
-import XLSX, { CellObject, FullProperties, WorkSheet } from "xlsx";
+import { utils, writeFile, CellObject, FullProperties, WorkSheet } from "xlsx";
 import sanitization from "@/utils/data-export/sanitization";
 import appConfig from "@/config";
 import dayjs from "@/utils/date";
@@ -50,9 +50,9 @@ const formatXlsxCells = (
 ) => {
   const defaultFmt = "@";
   for (let c = range.sCol || 0; c <= range.eCol; c++) {
-    const colHeader = ws[XLSX.utils.encode_cell({ r: 0, c })];
+    const colHeader = ws[utils.encode_cell({ r: 0, c })];
     for (let r = range.sRow || 0; r <= range.eRow; r++) {
-      const cell = ws[XLSX.utils.encode_cell({ r, c })];
+      const cell = ws[utils.encode_cell({ r, c })];
       cell.z = defaultFmt;
       if (config.autoFormat) {
         autoFormatXlsxCell(cell);
@@ -99,7 +99,7 @@ const exportXlsx = (
   config: ExportConfigXLSX
 ) => {
   const sanitizedRows = sanitization.sanitizeRows(rows, headers, false);
-  const wb = XLSX.utils.book_new();
+  const wb = utils.book_new();
   if (!wb.Props) {
     wb.Props = {
       Version: appConfig.appVersionId,
@@ -110,14 +110,14 @@ const exportXlsx = (
       p === "Application" ? "IRIS connect" : o[p],
   });
   const headerRow = getHeaderRow(headers);
-  const ws = XLSX.utils.aoa_to_sheet([headerRow, ...sanitizedRows]);
+  const ws = utils.aoa_to_sheet([headerRow, ...sanitizedRows]);
   formatXlsxCells(
     ws,
     { eRow: sanitizedRows.length, eCol: headerRow.length - 1 },
     config
   );
-  XLSX.utils.book_append_sheet(wb, ws, "Tabelle1");
-  XLSX.writeFile(wb, `${config.fileName}.xlsx`);
+  utils.book_append_sheet(wb, ws, "Tabelle1");
+  writeFile(wb, `${config.fileName}.xlsx`);
 };
 
 const exportCsv = (
@@ -146,11 +146,8 @@ const exportCsv = (
           return row.map((field) => (field ? field : '"'));
         });
       }
-      const ws = XLSX.utils.aoa_to_sheet([
-        getHeaderRow(headers),
-        ...sanitizedRows,
-      ]);
-      let csv = XLSX.utils.sheet_to_csv(ws, {
+      const ws = utils.aoa_to_sheet([getHeaderRow(headers), ...sanitizedRows]);
+      let csv = utils.sheet_to_csv(ws, {
         FS: delimiter,
         forceQuotes,
       });
