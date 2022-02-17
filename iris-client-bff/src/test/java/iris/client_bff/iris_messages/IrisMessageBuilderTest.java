@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.support.MessageSourceAccessor;
 
 import java.util.Optional;
 
@@ -26,12 +27,15 @@ public class IrisMessageBuilderTest {
 	@Mock
 	EPSIrisMessageClient irisMessageClient;
 
+	@Mock
+	MessageSourceAccessor messages;
+
 	IrisMessageBuilder builder;
 
 	@BeforeEach
 	void setUp() {
 		this.testData = new IrisMessageTestData();
-		this.builder = new IrisMessageBuilder(this.folderRepository, this.irisMessageClient);
+		this.builder = new IrisMessageBuilder(this.folderRepository, this.irisMessageClient, this.messages);
 	}
 
 	@Test
