@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,13 +21,14 @@ public class IrisMessageBuilder {
 
 	private final IrisMessageFolderRepository folderRepository;
 	private final EPSIrisMessageClient irisMessageClient;
+	private final MessageSourceAccessor messages;
 
 	public IrisMessage build(IrisMessageTransferDto messageTransfer) throws IrisMessageException {
 
 		Optional<IrisMessageFolder> folder = this.folderRepository
 				.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
 		if (folder.isEmpty()) {
-			throw new IrisMessageException("iris_message.invalid_folder");
+			throw new IrisMessageException(messages.getMessage("iris_message.invalid_folder"));
 		}
 
 		IrisMessageHdContact hdAuthor = new IrisMessageHdContact(
@@ -40,7 +42,7 @@ public class IrisMessageBuilder {
 		// ensure that the message was sent to the correct recipient
 		IrisMessageHdContact hdOwn = this.irisMessageClient.getOwnIrisMessageHdContact();
 		if (!Objects.equals(hdOwn.getId(), hdRecipient.getId())) {
-			throw new IrisMessageException("iris_message.invalid_recipient");
+			throw new IrisMessageException(messages.getMessage("iris_message.invalid_recipient"));
 		}
 
 		IrisMessage message = new IrisMessage();

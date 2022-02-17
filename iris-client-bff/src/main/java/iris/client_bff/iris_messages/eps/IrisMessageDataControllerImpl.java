@@ -8,9 +8,7 @@ import iris.client_bff.iris_messages.IrisMessageService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -24,17 +22,17 @@ public class IrisMessageDataControllerImpl implements IrisMessageDataController 
 	private final JsonRpcDataValidator jsonRpcDataValidator;
 
 	@Override
-	public IrisMessageTransferDto createIrisMessage(IrisMessageTransferDto messageTransfer) throws ResponseStatusException {
+	public IrisMessageTransferDto createIrisMessage(IrisMessageTransferDto messageTransfer) throws IrisMessageException {
 		if (messageTransfer == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, messages.getMessage("iris_message.invalid_id"));
+			throw new IrisMessageException(messages.getMessage("iris_message.invalid_id"));
 		}
-		jsonRpcDataValidator.validateData(messageTransfer);
 		try {
+			jsonRpcDataValidator.validateData(messageTransfer);
 			IrisMessage message = this.irisMessageBuilder.build(this.messageTransferDefuse.defuse(messageTransfer));
 			IrisMessage savedMessage = this.irisMessageService.saveMessage(message);
 			return IrisMessageTransferDto.fromEntity(savedMessage);
-		} catch (IrisMessageException e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getErrorMessage());
+		} catch (Throwable e) {
+			throw new IrisMessageException(e);
 		}
 	}
 }

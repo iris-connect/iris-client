@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageContext;
+import iris.client_bff.iris_messages.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolderRepository;
 import iris.client_bff.iris_messages.IrisMessageRepository;
@@ -19,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.web.server.ResponseStatusException;
 
 @IrisWebIntegrationTest
 class IrisMessageDataControllerTest {
@@ -54,7 +54,7 @@ class IrisMessageDataControllerTest {
 	@Test
 	void createIrisMessage_shouldFail_noData() {
 
-		var e = assertThrows(ResponseStatusException.class, () -> this.dataController.createIrisMessage(null));
+		var e = assertThrows(IrisMessageException.class, () -> this.dataController.createIrisMessage(null));
 
 		assertNotNull(e.getMessage());
 		assertThat(e.getMessage()).contains(messages.getMessage("iris_message.invalid_id"));
@@ -71,7 +71,7 @@ class IrisMessageDataControllerTest {
 		localMessageTransfer.setBody(IrisMessageTestData.INVALID_BODY);
 		verify(localMessageTransfer).setBody(IrisMessageTestData.INVALID_BODY);
 
-		var e = assertThrows(ResponseStatusException.class,
+		var e = assertThrows(IrisMessageException.class,
 				() -> this.dataController.createIrisMessage(localMessageTransfer));
 
 		assertNotNull(e.getMessage());

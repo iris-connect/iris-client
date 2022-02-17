@@ -4,6 +4,7 @@ import {
   IrisMessageContext,
   IrisMessageDetails,
   IrisMessageFolder,
+  IrisMessageInsert,
   IrisMessageFileAttachment,
 } from "@/api";
 import { Request } from "miragejs";
@@ -147,11 +148,10 @@ export const getDummyMessageFromRequest = (
   request: Request,
   id?: string
 ): IrisMessageDetails => {
-  const form = request.requestBody as unknown as FormData;
-  const subject = form.get("subject") as string;
-  const body = form.get("body") as string;
-  const recipient = form.get("recipient") as string;
-  const fileAttachments = form.getAll("fileAttachments");
+  const form: IrisMessageInsert = JSON.parse(request.requestBody);
+  const subject = form.subject;
+  const body = form.body;
+  const recipient = form.hdRecipient;
   return {
     id: id || new Date().getTime() + "",
     subject,
@@ -164,12 +164,11 @@ export const getDummyMessageFromRequest = (
       dummyIrisMessageHdContacts.find((c) => c.id === recipient) ||
       dummyIrisMessageHdContacts[1],
     createdAt: new Date().getTime() + "",
-    fileAttachments: fileAttachments.map((fileAttachment) => {
-      const a = fileAttachment as File;
+    fileAttachments: form.fileAttachments?.map((fileAttachment) => {
       return {
         id: new Date().getTime() + "",
-        name: a.name,
-        type: a.type,
+        name: fileAttachment.name + "",
+        type: "",
       };
     }),
   };
