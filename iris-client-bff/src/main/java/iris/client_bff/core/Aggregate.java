@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.function.Function;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.EntityListeners;
@@ -45,18 +46,25 @@ public abstract class Aggregate<T extends Aggregate<T, ID>, ID extends Id> exten
 	}
 
 	public Instant getLastModifiedAt() {
-		return this.getMetadata().getLastModified();
+		return getMetadata(Metadata::getLastModified);
 	}
 
 	public UUID getLastModifiedBy() {
-		return getMetadata().getLastModifiedBy();
+		return getMetadata(Metadata::getLastModifiedBy);
 	}
 
 	public Instant getCreatedAt() {
-		return this.getMetadata().getCreated();
+		return getMetadata(Metadata::getCreated);
 	}
 
 	public UUID getCreatedBy() {
-		return getMetadata().getCreatedBy();
+		return getMetadata(Metadata::getCreatedBy);
+	}
+
+	private <R> R getMetadata(Function<Metadata, R> getter) {
+
+		// The null check must be because Hibernate does not create an object if all fields are null.
+		// https://stackoverflow.com/questions/13606220/embedded-object-not-instantiated-automatically-if-it-has-no-basic-datatype-fiel
+		return getMetadata() == null ? null : getter.apply(getMetadata());
 	}
 }
