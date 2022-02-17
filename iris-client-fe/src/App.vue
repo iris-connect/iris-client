@@ -3,26 +3,33 @@
     <v-app-bar app color="white" flat data-test="app-bar">
       <v-img
         alt="IRIS Logo"
-        class="shrink mt-3 mr-4"
+        class="shrink"
         contain
         src="@/assets/logo-iris-connect.png"
         transition="scale-transition"
-        height="150"
         max-width="150"
+        height="36"
+        position="0 45%"
       />
       <template v-if="authenticated">
         <template v-for="link in links">
-          <v-btn
-            v-if="link.meta.menu"
-            :key="link.name"
-            :to="link.path"
-            :exact="link.meta.menuExact"
-            :disabled="isLinkDisabled(link)"
-            text
-            :data-test="`app-bar.nav.link.${link.name}`"
-          >
-            {{ link.meta.menuName }}
-          </v-btn>
+          <div :key="link.name" v-if="link.meta.menu">
+            <component
+              v-if="link.meta.menuComponent"
+              v-bind:is="link.meta.menuComponent"
+              :link="link"
+            ></component>
+            <v-btn
+              v-else
+              :to="link.path"
+              :exact="link.meta.menuExact"
+              :disabled="isLinkDisabled(link)"
+              text
+              :data-test="`app-bar.nav.link.${link.name}`"
+            >
+              {{ link.meta.menuName }}
+            </v-btn>
+          </div>
         </template>
         <v-spacer></v-spacer>
         <app-menu />
