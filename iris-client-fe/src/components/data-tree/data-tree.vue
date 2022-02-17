@@ -68,7 +68,12 @@ const DataTreeProps = Vue.extend({
   },
 });
 
-@Component
+@Component({
+  name: "data-tree",
+  components: {
+    DataTree,
+  },
+})
 export default class DataTree extends DataTreeProps {
   open = false;
   get hasItems() {

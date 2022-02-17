@@ -39,6 +39,7 @@ public class EPSIrisMessageClient {
                             directoryEntry.groups().contains("health-departments") &&
                             directoryEntry.services() != null &&
                             directoryEntry.services().stream().anyMatch(service -> service.name().equals("inter-ga-communication")))
+                    .filter(directoryEntry -> !rpcClientProps.getOwnEndpoint().equals(directoryEntry.name))
                     .map(directoryEntry -> new IrisMessageHdContact(directoryEntry.name, directoryEntry.name))
                     .sorted(Comparator.comparing(IrisMessageHdContact::getName, String.CASE_INSENSITIVE_ORDER))
                     .toList();
