@@ -34,11 +34,7 @@ public class EPSIrisMessageClient {
         var methodName = rpcClientProps.getOwnEndpoint() + "._directory";
         try {
             return epsRpcClient.invoke(methodName, null, Directory.class).entries().stream()
-                    .filter(directoryEntry ->
-                            directoryEntry.groups() != null &&
-                            directoryEntry.groups().contains("health-departments") &&
-                            directoryEntry.services() != null &&
-                            directoryEntry.services().stream().anyMatch(service -> service.name().equals("inter-ga-communication")))
+                    .filter(this::isHealthDepartmentWithInterGaCommunication)
                     .map(directoryEntry -> new IrisMessageHdContact(directoryEntry.name, directoryEntry.name))
                     .sorted(Comparator.comparing(IrisMessageHdContact::getName, String.CASE_INSENSITIVE_ORDER))
                     .toList();
@@ -46,6 +42,15 @@ public class EPSIrisMessageClient {
             throw new IrisMessageException(t);
         }
     }
+
+		private boolean isHealthDepartmentWithInterGaCommunication(DirectoryEntry directoryEntry) {
+			
+			return 
+					directoryEntry.groups() != null &&
+					directoryEntry.groups().contains("health-departments") &&
+					directoryEntry.services() != null &&
+					directoryEntry.services().stream().anyMatch(service -> service.name().equals("inter-ga-communication"));					
+		}
 
     public void createIrisMessage(IrisMessage message) throws IrisMessageException {
         String methodName = message.getHdRecipient().getId() + ".createIrisMessage";
