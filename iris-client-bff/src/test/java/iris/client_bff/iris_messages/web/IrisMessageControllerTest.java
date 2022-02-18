@@ -98,8 +98,7 @@ class IrisMessageControllerTest {
 				.perform(
 						MockMvcRequestBuilders.post(baseUrl)
 								.content(objectMapper.writeValueAsString(messageInsert))
-								.contentType(MediaType.APPLICATION_JSON)
-				)
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isCreated())
 				.andReturn();
 
@@ -186,8 +185,8 @@ class IrisMessageControllerTest {
 		updatedMessage.setRead(true);
 		verify(updatedMessage).setRead(true);
 
-		when(irisMessageService.findById(any())).thenReturn(Optional.of(updatedMessage));
-		when(irisMessageService.saveMessage(updatedMessage)).thenReturn(updatedMessage);
+		when(irisMessageService.updateReadState(updatedMessage.getId(), messageUpdate.getIsRead()))
+				.thenReturn(Optional.of(updatedMessage));
 
 		var res = mockMvc
 				.perform(
@@ -197,8 +196,7 @@ class IrisMessageControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 
-		verify(irisMessageService).findById(any());
-		verify(irisMessageService).saveMessage(any(IrisMessage.class));
+		verify(irisMessageService).updateReadState(updatedMessage.getId(), messageUpdate.getIsRead());
 
 		var messageDetailsDto = om.readValue(res.getResponse().getContentAsString(), IrisMessageDetailsDto.class);
 

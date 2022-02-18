@@ -94,4 +94,11 @@ public class IrisMessageService {
         return this.messageRepository.save(message);
     }
 
+	public Optional<IrisMessage> updateReadState(IrisMessageIdentifier messageId, Boolean readed) {
+
+		Optional<IrisMessage> message = findById(messageId);
+
+		return message.map(it -> it.setRead(readed))
+				.map(this::saveMessage);
+	}
 }
