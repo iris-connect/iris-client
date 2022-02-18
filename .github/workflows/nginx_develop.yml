@@ -7,14 +7,14 @@ on:
     branches:
       - develop
     paths:
-      - iris-client-fe/**
-      - iris-client-bff/**
       - infrastructure/docker/nginx/**
       - .github/workflows/nginx_develop.yml
   pull_request:
     branches:
       - develop
     paths:
+      - iris-client-fe/**
+      - iris-client-bff/**
       - infrastructure/docker/nginx/**
       - .github/workflows/nginx_develop.yml
 
