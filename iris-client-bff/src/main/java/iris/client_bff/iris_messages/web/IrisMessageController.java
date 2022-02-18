@@ -101,12 +101,11 @@ public class IrisMessageController {
 	@GetMapping("/{messageId}")
 	public ResponseEntity<IrisMessageDetailsDto> getMessageDetails(@PathVariable IrisMessageIdentifier messageId) {
 		Optional<IrisMessage> irisMessage = this.irisMessageService.findById(messageId);
-		if (irisMessage.isPresent()) {
-			IrisMessageDetailsDto messageDetailsDto = IrisMessageDetailsDto.fromEntity(irisMessage.get());
-			return ResponseEntity.ok(messageDetailsDto);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+
+		return irisMessage
+				.map(IrisMessageDetailsDto::fromEntity)
+				.map(ResponseEntity::ok)
+				.orElseGet(ResponseEntity.notFound()::build);
 	}
 
 	@PatchMapping("/{messageId}")
@@ -161,10 +160,12 @@ public class IrisMessageController {
 	@GetMapping("/count/unread")
 	public ResponseEntity<Integer> getUnreadMessageCount(
 			@RequestParam(required = false) IrisMessageFolderIdentifier folder) {
-		if (folder == null) {
-			return ResponseEntity.ok(irisMessageService.getCountUnread());
-		}
-		return ResponseEntity.ok(irisMessageService.getCountUnreadByFolderId(folder));
+
+		var count = folder == null
+				? irisMessageService.getCountUnread()
+				: irisMessageService.getCountUnreadByFolderId(folder);
+
+		return ResponseEntity.ok(count);
 	}
 
 	private void validateConstraints(BindingResult bindingResult) {
