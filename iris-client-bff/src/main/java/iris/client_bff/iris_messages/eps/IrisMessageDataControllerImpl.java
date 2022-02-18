@@ -2,7 +2,6 @@ package iris.client_bff.iris_messages.eps;
 
 import iris.client_bff.config.JsonRpcDataValidator;
 import iris.client_bff.iris_messages.IrisMessage;
-import iris.client_bff.iris_messages.IrisMessageBuilder;
 import iris.client_bff.iris_messages.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageService;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +11,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class IrisMessageDataControllerImpl implements IrisMessageDataController {
+class IrisMessageDataControllerImpl implements IrisMessageDataController {
 
 	private final IrisMessageTransferDefuse messageTransferDefuse;
 	private final IrisMessageService irisMessageService;
-	private final IrisMessageBuilder irisMessageBuilder;
+	private final IrisMessageBuilderEps irisMessageBuilder;
 	private final MessageSourceAccessor messages;
 
 	private final JsonRpcDataValidator jsonRpcDataValidator;

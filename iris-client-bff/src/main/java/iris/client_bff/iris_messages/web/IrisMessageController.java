@@ -3,7 +3,6 @@ package iris.client_bff.iris_messages.web;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
-import iris.client_bff.iris_messages.IrisMessageBuilder;
 import iris.client_bff.iris_messages.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
@@ -54,7 +53,7 @@ public class IrisMessageController {
 	private static final String FIELD_BODY = "body";
 
 	private IrisMessageService irisMessageService;
-	private final IrisMessageBuilder irisMessageBuilder;
+	private final IrisMessageBuilderWeb irisMessageBuilder;
 	private final ValidationHelper validationHelper;
 
 	@GetMapping()

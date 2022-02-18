@@ -7,7 +7,7 @@ import lombok.Value;
 import java.time.Instant;
 
 @Value
-public class IrisMessageListItemDto {
+class IrisMessageListItemDto {
 
     private String id;
     private String subject;

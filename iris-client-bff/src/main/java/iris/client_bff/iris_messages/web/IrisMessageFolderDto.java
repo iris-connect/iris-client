@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class IrisMessageFolderDto {
+class IrisMessageFolderDto {
 
     private String id;
     private String name;

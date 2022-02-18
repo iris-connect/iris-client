@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class IrisMessageUpdateDto {
+class IrisMessageUpdateDto {
 
     @NotNull
     private Boolean isRead;

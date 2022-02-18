@@ -10,7 +10,6 @@ import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
-import iris.client_bff.iris_messages.IrisMessageBuilder;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
@@ -51,7 +50,7 @@ class IrisMessageControllerTest {
 	private IrisMessageService irisMessageService;
 
 	@MockBean
-	private IrisMessageBuilder irisMessageBuilder;
+	private IrisMessageBuilderWeb irisMessageBuilder;
 
 	@Test
 	void endpointShouldBeProtected() throws Exception {
@@ -328,9 +327,9 @@ class IrisMessageControllerTest {
 				.thenReturn(new RestResponsePage<>(List.of(message)));
 
 		var res = mockMvc.perform(get(baseUrl)
-			.param("folder", folderId.toString()))
-			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andReturn();
+				.param("folder", folderId.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
 
 		verify(irisMessageService).search(eq(folderId), nullable(String.class), any(Pageable.class));
 

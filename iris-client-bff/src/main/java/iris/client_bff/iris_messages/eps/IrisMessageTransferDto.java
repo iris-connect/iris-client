@@ -2,7 +2,10 @@ package iris.client_bff.iris_messages.eps;
 
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -12,13 +15,14 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class IrisMessageTransferDto {
+class IrisMessageTransferDto {
 
     // we send the name & id as we do not know if the author`s health department is accessible by the recipient
     @Valid
     private HdContact hdAuthor;
 
-    // the recipient is used to check if it is identical with the endpoint identifier of the health department, the message is sent to
+	// the recipient is used to check if it is identical with the endpoint identifier of the health department, the
+	// message is sent to
     @Valid
     private HdContact hdRecipient;
 
