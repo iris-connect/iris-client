@@ -23,6 +23,8 @@ import javax.validation.constraints.Size;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -51,7 +53,7 @@ public class IrisMessageController {
 	public Page<IrisMessageListItemDto> getMessages(
 			@RequestParam() IrisMessageFolderIdentifier folder,
 			@RequestParam(required = false) String search,
-			Pageable pageable) {
+			@PageableDefault(sort = "metadata.created", direction = Sort.Direction.DESC) Pageable pageable) {
 		this.validateField(search, FIELD_SEARCH);
 		return this.irisMessageService.search(folder, search, pageable).map(IrisMessageListItemDto::fromEntity);
 	}
@@ -109,7 +111,7 @@ public class IrisMessageController {
 		Optional<IrisMessage> optionalMessage = this.irisMessageService.findById(messageId);
 		if (optionalMessage.isPresent()) {
 			IrisMessage message = optionalMessage.get();
-			message.setIsRead(irisMessageUpdate.getIsRead());
+			message.setRead(irisMessageUpdate.getIsRead());
 			IrisMessage updatedMessage = this.irisMessageService.saveMessage(message);
 			return ResponseEntity.ok(IrisMessageDetailsDto.fromEntity(updatedMessage));
 		}
@@ -139,8 +141,9 @@ public class IrisMessageController {
 		validateField(search, FIELD_SEARCH);
 		try {
 			ArrayList<IrisMessageHdContact> irisMessageContacts = new ArrayList<>(irisMessageService.getHdContacts(search));
-			if (includeOwn) {
-				irisMessageContacts.add(irisMessageService.getOwnHdContact());
+			if (!includeOwn) {
+				IrisMessageHdContact ownContact = this.irisMessageService.getOwnHdContact();
+				irisMessageContacts.removeIf(c -> c.getId().equals(ownContact.getId()));
 			}
 			return ResponseEntity.ok(irisMessageContacts);
 		} catch (Throwable e) {

@@ -183,8 +183,8 @@ class IrisMessageControllerTest {
 		IrisMessageUpdateDto messageUpdate = new IrisMessageUpdateDto(true);
 
 		IrisMessage updatedMessage = spy(testData.getTestInboxMessage());
-		updatedMessage.setIsRead(true);
-		verify(updatedMessage).setIsRead(true);
+		updatedMessage.setRead(true);
+		verify(updatedMessage).setRead(true);
 
 		when(irisMessageService.findById(any())).thenReturn(Optional.of(updatedMessage));
 		when(irisMessageService.saveMessage(updatedMessage)).thenReturn(updatedMessage);
@@ -250,6 +250,7 @@ class IrisMessageControllerTest {
 	void getMessageHdContactsWithoutOwn() throws Exception {
 
 		when(irisMessageService.getHdContacts(null)).thenReturn(List.of(testData.MOCK_CONTACT_OTHER));
+		when(irisMessageService.getOwnHdContact()).thenReturn(testData.MOCK_CONTACT_OWN);
 
 		var res = mockMvc
 				.perform(get(baseUrl + "/hd-contacts"))
@@ -257,6 +258,7 @@ class IrisMessageControllerTest {
 				.andReturn();
 
 		verify(irisMessageService).getHdContacts(null);
+		verify(irisMessageService).getOwnHdContact();
 
 		List<IrisMessageHdContact> contacts = om.readValue(res.getResponse().getContentAsString(),
 				new TypeReference<>() {});
@@ -270,8 +272,7 @@ class IrisMessageControllerTest {
 	@WithMockUser()
 	void getMessageHdContactsIncludingOwn() throws Exception {
 
-		when(irisMessageService.getHdContacts(null)).thenReturn(List.of(testData.MOCK_CONTACT_OTHER));
-		when(irisMessageService.getOwnHdContact()).thenReturn(testData.MOCK_CONTACT_OWN);
+		when(irisMessageService.getHdContacts(null)).thenReturn(List.of(testData.MOCK_CONTACT_OTHER, testData.MOCK_CONTACT_OWN));
 
 		var res = mockMvc
 				.perform(get(baseUrl + "/hd-contacts").queryParam("includeOwn", "true"))
@@ -279,7 +280,6 @@ class IrisMessageControllerTest {
 				.andReturn();
 
 		verify(irisMessageService).getHdContacts(null);
-		verify(irisMessageService).getOwnHdContact();
 
 		List<IrisMessageHdContact> contacts = om.readValue(res.getResponse().getContentAsString(),
 				new TypeReference<>() {});

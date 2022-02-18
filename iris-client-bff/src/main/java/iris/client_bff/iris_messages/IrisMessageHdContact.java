@@ -22,14 +22,14 @@ public class IrisMessageHdContact {
 
     @ToString.Exclude
     @Transient
-    private Boolean isOwn;
+    private boolean isOwn;
 
     public IrisMessageHdContact(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public IrisMessageHdContact(String id, String name, Boolean isOwn) {
+    public IrisMessageHdContact(String id, String name, boolean isOwn) {
         this(id, name);
         this.isOwn = isOwn;
     }

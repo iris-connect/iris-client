@@ -12,11 +12,6 @@ CREATE TABLE  iris_message_folder (
     FOREIGN KEY (last_modified_by) REFERENCES user_accounts(user_id)
 );
 
-CREATE TABLE  iris_message_folder_default (
-    id uuid NOT NULL,
-    CONSTRAINT iris_message_folder_default_pkey PRIMARY KEY (id)
-);
-
 CREATE TABLE  iris_message (
     id uuid NOT NULL,
     folder_id uuid NOT NULL,

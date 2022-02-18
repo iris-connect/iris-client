@@ -24,22 +24,20 @@ public class IrisMessageTestData {
 		return new IrisMessageHdContact()
 				.setName("test-own-contact")
 				.setId("test-own-contact-id")
-				.setIsOwn(true);
+				.setOwn(true);
 	}
 
 	private IrisMessageHdContact getTestMessageHdContactOther() {
 		return new IrisMessageHdContact()
 				.setName("test-other-contact")
 				.setId("test-other-contact-id")
-				.setIsOwn(false);
+				.setOwn(false);
 	}
 
 	private IrisMessageFolder getTestDefaultMessageFolder() {
-		IrisMessageFolder folder = new IrisMessageFolder()
+		return new IrisMessageFolder()
 				.setContext(IrisMessageContext.INBOX)
 				.setName("default folder");
-		folder.setDefaultFolder(folder.getId());
-		return folder;
 	}
 
 	public IrisMessageFolder getTestMessageFolder(IrisMessageFolder parentFolder, String name) {
@@ -50,8 +48,7 @@ public class IrisMessageTestData {
 	private IrisMessageFolder getTestMessageFolder(IrisMessageContext context, String name) {
 		return new IrisMessageFolder()
 				.setContext(context)
-				.setName(name)
-				.setDefaultFolder(MOCK_DEFAULT_FOLDER.getId());
+				.setName(name);
 	}
 
 	public IrisMessage getTestInboxMessage() {
@@ -67,7 +64,7 @@ public class IrisMessageTestData {
 				.setFolder(folder)
 				.setHdAuthor(this.getTestMessageHdContactOwn())
 				.setHdRecipient(this.getTestMessageHdContactOther())
-				.setIsRead(true);
+				.setRead(true);
 		return message;
 	}
 
@@ -79,7 +76,7 @@ public class IrisMessageTestData {
 				.setFolder(folder)
 				.setHdAuthor(this.getTestMessageHdContactOther())
 				.setHdRecipient(this.getTestMessageHdContactOwn())
-				.setIsRead(false);
+				.setRead(false);
 		return message;
 	}
 

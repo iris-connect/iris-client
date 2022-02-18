@@ -35,7 +35,6 @@ const normalizeIrisMessageFolder = (
           ? normalizeIrisMessageFolders(source?.items)
           : undefined,
         context: normalizer("context", IrisMessageContext.Unknown),
-        isDefault: normalizer("isDefault", undefined, "boolean"),
       };
       return normalized;
     },

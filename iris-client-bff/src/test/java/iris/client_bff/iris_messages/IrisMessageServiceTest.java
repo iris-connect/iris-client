@@ -121,11 +121,11 @@ public class IrisMessageServiceTest {
 	@Test
 	void getCountUnread() {
 
-		when(this.messageRepository.countByIsReadFalseOrIsReadIsNull()).thenReturn(3);
+		when(this.messageRepository.countByIsReadFalse()).thenReturn(3);
 
 		var count = this.service.getCountUnread();
 
-		verify(this.messageRepository).countByIsReadFalseOrIsReadIsNull();
+		verify(this.messageRepository).countByIsReadFalse();
 
 		assertEquals(3, count);
 

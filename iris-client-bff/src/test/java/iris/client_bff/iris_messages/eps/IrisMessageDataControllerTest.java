@@ -89,8 +89,7 @@ class IrisMessageDataControllerTest {
 
 		IrisMessage message = testData.getTestOutboxMessage(outboxFolder.get());
 
-		// @todo: remove next line as soon as dummy loopback functionality is removed / EPS message endpoints are
-		// implemented
+		// for testing purposes, we use ourselves as message recipient
 		message.setHdRecipient(this.messageClient.getOwnIrisMessageHdContact());
 
 		return message;

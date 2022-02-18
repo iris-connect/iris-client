@@ -25,7 +25,7 @@ public class IrisMessageDetailsDto {
                 message.getHdAuthor(),
                 message.getHdRecipient(),
                 message.getMetadata().getCreated(),
-                message.getIsRead()
+                message.isRead()
         );
     }
 

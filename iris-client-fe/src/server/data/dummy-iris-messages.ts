@@ -13,7 +13,6 @@ export const dummyIrisMessageFolders: IrisMessageFolder[] = [
     id: "inbox",
     name: "Posteingang",
     context: IrisMessageContext.Inbox,
-    isDefault: true,
     items: [
       {
         id: "inbox_1",

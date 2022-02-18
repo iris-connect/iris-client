@@ -23,7 +23,7 @@ public class IrisMessageListItemDto {
                 message.getHdAuthor(),
                 message.getHdRecipient(),
                 message.getMetadata().getCreated(),
-                message.getIsRead()
+                message.isRead()
         );
     }
 }

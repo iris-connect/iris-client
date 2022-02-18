@@ -51,7 +51,7 @@ import {
   getStringParamFromRouteWithOptionalFallback,
 } from "@/utils/pagination";
 import SearchField from "@/components/pageable/search-field.vue";
-import { IrisMessageFolder, IrisMessageQuery } from "@/api";
+import { IrisMessageContext, IrisMessageFolder, IrisMessageQuery } from "@/api";
 import DataTree from "@/components/data-tree/data-tree.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import IrisMessageFoldersDataTree from "@/views/iris-message-list/components/iris-message-folders-data-tree.vue";
@@ -88,6 +88,21 @@ export default class IrisMessageListView extends Vue {
     folder: getStringParamFromRouteWithOptionalFallback("folder", this.$route),
   };
 
+  get unreadMessageCountLoading() {
+    return this.$store.state.irisMessageList.unreadMessageCountLoading || 0;
+  }
+  @Watch("unreadMessageCountLoading")
+  onUnreadMessageCountLoadingChange(newValue: boolean) {
+    if (!newValue && !this.messageListLoading) {
+      const currentFolder = this.folders?.find(
+        (folder) => folder.id === this.query.folder
+      );
+      if (currentFolder?.context === IrisMessageContext.Inbox) {
+        this.fetchMessages(this.query);
+      }
+    }
+  }
+
   @Watch("query.folder", { immediate: true })
   onFolderChange() {
     this.$store.commit("irisMessageList/setMessageList", null);
@@ -99,12 +114,16 @@ export default class IrisMessageListView extends Vue {
     };
   }
 
+  fetchMessages(query: IrisMessageQuery) {
+    this.updateRoute(query);
+    if (query.folder) {
+      this.$store.dispatch("irisMessageList/fetchMessages", query);
+    }
+  }
+
   @Watch("query", { immediate: true, deep: true })
   onQueryChange(newValue: IrisMessageQuery) {
-    this.updateRoute(newValue);
-    if (newValue.folder) {
-      this.$store.dispatch("irisMessageList/fetchMessages", newValue);
-    }
+    this.fetchMessages(newValue);
   }
 
   get messageList(): IrisMessageFolder[] | null {

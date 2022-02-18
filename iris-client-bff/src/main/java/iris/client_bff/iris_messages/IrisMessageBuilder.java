@@ -49,7 +49,7 @@ public class IrisMessageBuilder {
 				.setSubject(messageTransfer.getSubject())
 				.setBody(messageTransfer.getBody())
 				.setFolder(folder.get())
-				.setIsRead(false);
+				.setRead(false);
 
 		return message;
 	}
@@ -78,7 +78,7 @@ public class IrisMessageBuilder {
 				.setSubject(messageInsert.getSubject())
 				.setBody(messageInsert.getBody())
 				.setFolder(folder.get())
-				.setIsRead(true);
+				.setRead(true);
 
 		return message;
 	}

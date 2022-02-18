@@ -50,7 +50,7 @@ public class IrisMessageService {
     }
 
     public int getCountUnread() {
-        return messageRepository.countByIsReadFalseOrIsReadIsNull();
+        return messageRepository.countByIsReadFalse();
     }
 
     public List<IrisMessageFolder> getFolders() {

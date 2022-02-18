@@ -56,7 +56,7 @@ public class IrisMessage extends Aggregate<IrisMessage, IrisMessage.IrisMessageI
     })
     private IrisMessageHdContact hdRecipient;
 
-    private Boolean isRead;
+    private boolean isRead;
 
     @Embeddable
     @EqualsAndHashCode

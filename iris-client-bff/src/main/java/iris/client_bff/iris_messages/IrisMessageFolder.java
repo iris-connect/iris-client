@@ -18,7 +18,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "iris_message_folder")
-@SecondaryTable(name = "iris_message_folder_default")
 @Data
 @EqualsAndHashCode(callSuper = true, exclude = "messages")
 @NoArgsConstructor
@@ -39,17 +38,8 @@ public class IrisMessageFolder extends Aggregate<IrisMessageFolder, IrisMessageF
 	private IrisMessageContext context;
 
 	@Embedded
-	@AttributeOverride(name = "id",
-			column = @Column(name = "id", table = "iris_message_folder_default", insertable = false, updatable = false))
-	private IrisMessageFolderIdentifier defaultFolder;
-
-	@Embedded
 	@AttributeOverride(name = "id", column = @Column(name = "parent_folder"))
 	private IrisMessageFolderIdentifier parentFolder;
-
-	public Boolean getIsDefault() {
-		return this.getId().equals(this.defaultFolder);
-	}
 
 	@Embeddable
 	@EqualsAndHashCode

@@ -1945,7 +1945,6 @@ export type IrisMessageFolder = {
   name: string;
   items?: IrisMessageFolder[];
   context?: IrisMessageContext;
-  isDefault?: boolean;
 };
 
 export interface IrisMessageHdContact {
