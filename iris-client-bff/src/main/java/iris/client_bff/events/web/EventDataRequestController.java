@@ -14,7 +14,6 @@ import iris.client_bff.events.web.dto.DataRequestDetails;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
 import iris.client_bff.events.web.dto.GuestList;
-import iris.client_bff.users.entities.UserAccount;
 import lombok.AllArgsConstructor;
 
 import java.util.Optional;
@@ -139,9 +138,5 @@ public class EventDataRequestController {
 				.build();
 
 		requestDetails.setSubmissionData(guestList);
-	}
-
-	private String getFullName(UserAccount user) {
-		return user.getFirstName() + " " + user.getLastName();
 	}
 }
