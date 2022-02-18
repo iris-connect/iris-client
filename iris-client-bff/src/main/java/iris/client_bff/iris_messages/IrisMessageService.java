@@ -7,20 +7,22 @@ import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class IrisMessageService {
 
-    private static final String[] SEARCH_FIELDS = { "subject", "hdAuthor.name", "hdRecipient.name" };
+	private static final String[] SEARCH_FIELDS = { "subject_search", "hdAuthor.name_search", "hdRecipient.name_search" };
 
     private final IrisMessageRepository messageRepository;
     private final IrisMessageFolderRepository folderRepository;
@@ -74,7 +76,8 @@ public class IrisMessageService {
 
         return contacts
                 .stream()
-                .filter(contact -> hdEpsNames.contains(contact.getId()) || contact.getName().contains(search) || contact.getId().contains(search))
+				.filter(contact -> hdEpsNames.contains(contact.getId()) || contact.getName().contains(search)
+						|| contact.getId().contains(search))
                 .toList();
     }
 

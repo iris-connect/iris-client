@@ -1,5 +1,6 @@
 package iris.client_bff.config;
 
+import iris.client_bff.IrisClientBffApplication;
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest;
@@ -8,7 +9,10 @@ import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
@@ -30,8 +34,13 @@ import org.hibernate.search.mapper.pojo.bridge.ValueBridge;
 import org.hibernate.search.mapper.pojo.bridge.runtime.IdentifierBridgeFromDocumentIdentifierContext;
 import org.hibernate.search.mapper.pojo.bridge.runtime.IdentifierBridgeToDocumentIdentifierContext;
 import org.hibernate.search.mapper.pojo.bridge.runtime.ValueBridgeToIndexedValueContext;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ScannedGenericBeanDefinition;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Component;
 
 @Configuration
@@ -50,14 +59,35 @@ class HibernateSearchConfig {
 	@PostConstruct
 	void initialize() throws InterruptedException {
 
-		MassIndexer indexer = createAndGetSearchSession().massIndexer(CaseDataRequest.class, EventDataRequest.class)
-				.threadsToLoadObjects(2);
+		var classes = searchClassesWithAnnotationIndexed();
+
+		MassIndexer indexer = createAndGetSearchSession().massIndexer(classes).threadsToLoadObjects(2);
 		try {
 			indexer.startAndWait();
 		} catch (InterruptedException e) {
 			log.error("Hibernate Search indexer was interrupted!", e);
 			throw e;
 		}
+	}
+
+	private List<? extends Class<?>> searchClassesWithAnnotationIndexed() {
+
+		var scanner = new ClassPathScanningCandidateComponentProvider(false);
+		scanner.addIncludeFilter(new AnnotationTypeFilter(Indexed.class));
+
+		var components = scanner.findCandidateComponents(IrisClientBffApplication.class.getPackageName());
+
+		return components.stream()
+				.filter(ScannedGenericBeanDefinition.class::isInstance)
+				.map(ScannedGenericBeanDefinition.class::cast)
+				.map(AbstractBeanDefinition::getBeanClassName)
+				.map(this::loadClass)
+				.toList();
+	}
+
+	@SneakyThrows
+	private Class<?> loadClass(String clazz) {
+		return getClass().getClassLoader().loadClass(clazz);
 	}
 
 	SearchSession createAndGetSearchSession() {
@@ -149,16 +179,14 @@ class HibernateSearchConfig {
 						@Override
 						public String toDocumentIdentifier(
 								IrisMessage.IrisMessageIdentifier value,
-								IdentifierBridgeToDocumentIdentifierContext context
-						) {
+								IdentifierBridgeToDocumentIdentifierContext context) {
 							return value.toString();
 						}
 
 						@Override
 						public IrisMessage.IrisMessageIdentifier fromDocumentIdentifier(
 								String value,
-								IdentifierBridgeFromDocumentIdentifierContext context
-						) {
+								IdentifierBridgeFromDocumentIdentifierContext context) {
 							return value == null ? null : IrisMessage.IrisMessageIdentifier.of(value);
 						}
 					});
@@ -169,16 +197,14 @@ class HibernateSearchConfig {
 						@Override
 						public String toDocumentIdentifier(
 								IrisMessageFolder.IrisMessageFolderIdentifier value,
-								IdentifierBridgeToDocumentIdentifierContext context
-						) {
+								IdentifierBridgeToDocumentIdentifierContext context) {
 							return value.toString();
 						}
 
 						@Override
 						public IrisMessageFolder.IrisMessageFolderIdentifier fromDocumentIdentifier(
 								String value,
-								IdentifierBridgeFromDocumentIdentifierContext context
-						) {
+								IdentifierBridgeFromDocumentIdentifierContext context) {
 							return value == null ? null : IrisMessageFolder.IrisMessageFolderIdentifier.of(value);
 						}
 					});
@@ -188,12 +214,10 @@ class HibernateSearchConfig {
 						@Override
 						public String toIndexedValue(
 								IrisMessageFolder.IrisMessageFolderIdentifier value,
-								ValueBridgeToIndexedValueContext context
-						) {
+								ValueBridgeToIndexedValueContext context) {
 							return value == null ? null : value.toString();
 						}
 					});
-
 		}
 	}
 }

@@ -1,11 +1,16 @@
 package iris.client_bff.iris_messages;
 
-import lombok.*;
-import org.hibernate.search.engine.backend.types.Sortable;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
+
+import org.hibernate.search.engine.backend.types.Sortable;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
 @Data
 @Embeddable
@@ -17,7 +22,8 @@ public class IrisMessageHdContact {
     public static final int NAME_MAX_LENGTH = 255;
 
     private String id;
-    @KeywordField(sortable = Sortable.YES, normalizer = "german")
+	@FullTextField(name = "name_search", analyzer = "german")
+	@GenericField(sortable = Sortable.YES)
     private String name;
 
     @ToString.Exclude
