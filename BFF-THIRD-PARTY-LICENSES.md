@@ -19,7 +19,7 @@ List of third-party dependencies grouped by their license type.
         * spring-commons (io.rest-assured:spring-commons:4.4.0 - http://maven.apache.org)
         * spring-mock-mvc (io.rest-assured:spring-mock-mvc:4.4.0 - http://maven.apache.org)
         * xml-path (io.rest-assured:xml-path:4.4.0 - http://code.google.com/p/rest-assured/xml-path)
-        * Swagger UI (org.webjars:swagger-ui:4.2.1 - http://webjars.org)
+        * Swagger UI (org.webjars:swagger-ui:4.5.0 - http://webjars.org)
 
     Apache License 2.0:
 
@@ -147,7 +147,7 @@ List of third-party dependencies grouped by their license type.
     BSD-2-Clause:
 
         * HdrHistogram (org.hdrhistogram:HdrHistogram:2.1.12 - http://hdrhistogram.github.io/HdrHistogram/)
-        * PostgreSQL JDBC Driver (org.postgresql:postgresql:42.3.1 - https://jdbc.postgresql.org)
+        * PostgreSQL JDBC Driver (org.postgresql:postgresql:42.3.3 - https://jdbc.postgresql.org)
 
     BSD-3-Clause:
 
@@ -279,11 +279,11 @@ List of third-party dependencies grouped by their license type.
 
     GNU Lesser General Public License v2.1 or later:
 
-        * Hibernate Search Backend - Lucene (org.hibernate.search:hibernate-search-backend-lucene:6.1.0.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-backend-lucene/)
-        * Hibernate Search Engine (org.hibernate.search:hibernate-search-engine:6.1.0.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-engine/)
-        * Hibernate Search ORM Integration (org.hibernate.search:hibernate-search-mapper-orm:6.1.0.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-mapper-orm/)
-        * Hibernate Search Mapper - POJO Base (org.hibernate.search:hibernate-search-mapper-pojo-base:6.1.0.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-mapper-pojo-base/)
-        * Hibernate Search Utils - Common (org.hibernate.search:hibernate-search-util-common:6.1.0.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-util-common/)
+        * Hibernate Search Backend - Lucene (org.hibernate.search:hibernate-search-backend-lucene:6.1.1.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-backend-lucene/)
+        * Hibernate Search Engine (org.hibernate.search:hibernate-search-engine:6.1.1.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-engine/)
+        * Hibernate Search ORM Integration (org.hibernate.search:hibernate-search-mapper-orm:6.1.1.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-mapper-orm/)
+        * Hibernate Search Mapper - POJO Base (org.hibernate.search:hibernate-search-mapper-pojo-base:6.1.1.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-mapper-pojo-base/)
+        * Hibernate Search Utils - Common (org.hibernate.search:hibernate-search-util-common:6.1.1.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-util-common/)
 
     GNU Library General Public License v2.1 or later:
 
@@ -356,9 +356,9 @@ List of third-party dependencies grouped by their license type.
         * Woodstox (com.fasterxml.woodstox:woodstox-core:6.2.6 - https://github.com/FasterXML/woodstox)
         * org.apiguardian:apiguardian-api (org.apiguardian:apiguardian-api:1.1.2 - https://github.com/apiguardian-team/apiguardian)
         * org.opentest4j:opentest4j (org.opentest4j:opentest4j:1.2.0 - https://github.com/ota4j-team/opentest4j)
-        * springdoc-openapi-common (org.springdoc:springdoc-openapi-common:1.6.5 - https://springdoc.org/springdoc-openapi-common/)
-        * springdoc-openapi-ui (org.springdoc:springdoc-openapi-ui:1.6.5 - https://springdoc.org/springdoc-openapi-ui/)
-        * springdoc-openapi-webmvc-core (org.springdoc:springdoc-openapi-webmvc-core:1.6.5 - https://springdoc.org/springdoc-openapi-webmvc-core/)
+        * springdoc-openapi-common (org.springdoc:springdoc-openapi-common:1.6.6 - https://springdoc.org/springdoc-openapi-common/)
+        * springdoc-openapi-ui (org.springdoc:springdoc-openapi-ui:1.6.6 - https://springdoc.org/springdoc-openapi-ui/)
+        * springdoc-openapi-webmvc-core (org.springdoc:springdoc-openapi-webmvc-core:1.6.6 - https://springdoc.org/springdoc-openapi-webmvc-core/)
 
     The Apache Software License, Version 2.0:
 

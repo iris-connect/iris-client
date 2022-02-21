@@ -1,5 +1,19 @@
 # Changelog
 
+# [1.4.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.4.0-rc.1...v1.4.0-rc.2) (2022-02-21)
+
+
+### Bug Fixes
+
+* **deps:** Updates Postgresql JDBC driver (now 42.3.2) to fix a vulnerability in this dependency. ([7dd2641](https://github.com/iris-connect/iris-client/commit/7dd2641b44ced77146461622c4b84f8fa2eb48ac))
+* Updates data-export code to handle breaking changes of sheetJS module export. ([f4f38c8](https://github.com/iris-connect/iris-client/commit/f4f38c81e7c3626d52bbedd837a128b569c522fb)), closes [#628](https://github.com/iris-connect/iris-client/issues/628)
+
+
+### Features
+
+* Extends the audit metadata in BFF to save who create and last modify an entity. ([246eaa5](https://github.com/iris-connect/iris-client/commit/246eaa5833cbe85d765093420df9f729221875dd)), closes [iris-connect/iris-backlog#234](https://github.com/iris-connect/iris-backlog/issues/234) [#597](https://github.com/iris-connect/iris-client/issues/597)
+* Health departments with IRIS can send messages to each other, encrypted and secured via the IRIS-Connect secure network. There is a central output and input for messages. Currently, only text messages are possible. In the near future, data sets as attachments will follow. ([6922f2c](https://github.com/iris-connect/iris-client/commit/6922f2c8dd3f7bbf0eed4b576625c45762450379)), closes [iris-connect/iris-backlog#256](https://github.com/iris-connect/iris-backlog/issues/256) [iris-connect/iris-backlog#259](https://github.com/iris-connect/iris-backlog/issues/259) [#541](https://github.com/iris-connect/iris-client/issues/541)
+
 # [1.4.0-rc.1](https://github.com/iris-connect/iris-client/compare/v1.3.1...v1.4.0-rc.1) (2022-02-04)
 
 

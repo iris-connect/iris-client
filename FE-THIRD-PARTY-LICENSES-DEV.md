@@ -1,14 +1,14 @@
 module name | license | repository
 ---|---|---
 @babel/code-frame@7.16.7 | MIT | https://github.com/babel/babel
-@babel/compat-data@7.16.8 | MIT | https://github.com/babel/babel
+@babel/compat-data@7.17.0 | MIT | https://github.com/babel/babel
 @babel/core@7.16.0 | MIT | https://github.com/babel/babel
 @babel/generator@7.16.8 | MIT | https://github.com/babel/babel
 @babel/helper-annotate-as-pure@7.16.7 | MIT | https://github.com/babel/babel
 @babel/helper-builder-binary-assignment-operator-visitor@7.16.7 | MIT | https://github.com/babel/babel
 @babel/helper-compilation-targets@7.16.7 | MIT | https://github.com/babel/babel
-@babel/helper-create-class-features-plugin@7.16.7 | MIT | https://github.com/babel/babel
-@babel/helper-create-regexp-features-plugin@7.16.7 | MIT | https://github.com/babel/babel
+@babel/helper-create-class-features-plugin@7.17.1 | MIT | https://github.com/babel/babel
+@babel/helper-create-regexp-features-plugin@7.17.0 | MIT | https://github.com/babel/babel
 @babel/helper-define-polyfill-provider@0.3.1 | MIT | https://github.com/babel/babel-polyfills
 @babel/helper-environment-visitor@7.16.7 | MIT | https://github.com/babel/babel
 @babel/helper-explode-assignable-expression@7.16.7 | MIT | https://github.com/babel/babel
@@ -36,23 +36,23 @@ module name | license | repository
 @babel/plugin-proposal-async-generator-functions@7.16.8 | MIT | https://github.com/babel/babel
 @babel/plugin-proposal-class-properties@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-proposal-class-static-block@7.16.7 | MIT | https://github.com/babel/babel
-@babel/plugin-proposal-decorators@7.16.7 | MIT | https://github.com/babel/babel
+@babel/plugin-proposal-decorators@7.17.2 | MIT | https://github.com/babel/babel
 @babel/plugin-proposal-dynamic-import@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-proposal-export-namespace-from@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-proposal-json-strings@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-proposal-logical-assignment-operators@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-proposal-nullish-coalescing-operator@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-proposal-numeric-separator@7.16.7 | MIT | https://github.com/babel/babel
-@babel/plugin-proposal-object-rest-spread@7.16.7 | MIT | https://github.com/babel/babel
+@babel/plugin-proposal-object-rest-spread@7.17.3 | MIT | https://github.com/babel/babel
 @babel/plugin-proposal-optional-catch-binding@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-proposal-optional-chaining@7.16.7 | MIT | https://github.com/babel/babel
-@babel/plugin-proposal-private-methods@7.16.7 | MIT | https://github.com/babel/babel
+@babel/plugin-proposal-private-methods@7.16.11 | MIT | https://github.com/babel/babel
 @babel/plugin-proposal-private-property-in-object@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-proposal-unicode-property-regex@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-syntax-async-generators@7.8.4 | MIT | https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-async-generators
 @babel/plugin-syntax-class-properties@7.12.13 | MIT | https://github.com/babel/babel
 @babel/plugin-syntax-class-static-block@7.14.5 | MIT | https://github.com/babel/babel
-@babel/plugin-syntax-decorators@7.16.7 | MIT | https://github.com/babel/babel
+@babel/plugin-syntax-decorators@7.17.0 | MIT | https://github.com/babel/babel
 @babel/plugin-syntax-dynamic-import@7.8.3 | MIT | https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-dynamic-import
 @babel/plugin-syntax-export-namespace-from@7.8.3 | MIT | https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-export-namespace-from
 @babel/plugin-syntax-json-strings@7.8.3 | MIT | https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-json-strings
@@ -71,7 +71,7 @@ module name | license | repository
 @babel/plugin-transform-block-scoping@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-transform-classes@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-transform-computed-properties@7.16.7 | MIT | https://github.com/babel/babel
-@babel/plugin-transform-destructuring@7.16.7 | MIT | https://github.com/babel/babel
+@babel/plugin-transform-destructuring@7.17.3 | MIT | https://github.com/babel/babel
 @babel/plugin-transform-dotall-regex@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-transform-duplicate-keys@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-transform-exponentiation-operator@7.16.7 | MIT | https://github.com/babel/babel
@@ -90,7 +90,7 @@ module name | license | repository
 @babel/plugin-transform-property-literals@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-transform-regenerator@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-transform-reserved-words@7.16.7 | MIT | https://github.com/babel/babel
-@babel/plugin-transform-runtime@7.16.8 | MIT | https://github.com/babel/babel
+@babel/plugin-transform-runtime@7.17.0 | MIT | https://github.com/babel/babel
 @babel/plugin-transform-shorthand-properties@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-transform-spread@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-transform-sticky-regex@7.16.7 | MIT | https://github.com/babel/babel
@@ -98,15 +98,15 @@ module name | license | repository
 @babel/plugin-transform-typeof-symbol@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-transform-unicode-escapes@7.16.7 | MIT | https://github.com/babel/babel
 @babel/plugin-transform-unicode-regex@7.16.7 | MIT | https://github.com/babel/babel
-@babel/preset-env@7.16.8 | MIT | https://github.com/babel/babel
+@babel/preset-env@7.16.11 | MIT | https://github.com/babel/babel
 @babel/preset-modules@0.1.5 | MIT | https://github.com/babel/preset-modules
-@babel/runtime@7.16.7 | MIT | https://github.com/babel/babel
+@babel/runtime@7.17.2 | MIT | https://github.com/babel/babel
 @babel/template@7.16.7 | MIT | https://github.com/babel/babel
 @babel/traverse@7.16.8 | MIT | https://github.com/babel/babel
 @babel/types@7.16.8 | MIT | https://github.com/babel/babel
 @cypress/request@2.88.10 | Apache-2.0 | https://github.com/cypress-io/request
 @cypress/xvfb@1.2.4 | MIT | https://github.com/cypress-io/xvfb
-@eslint/eslintrc@1.0.5 | MIT | https://github.com/eslint/eslintrc
+@eslint/eslintrc@1.1.0 | MIT | https://github.com/eslint/eslintrc
 @hapi/hoek@9.2.1 | BSD-3-Clause | https://github.com/hapijs/hoek
 @hapi/topo@5.1.0 | BSD-3-Clause | https://github.com/hapijs/topo
 @humanwhocodes/config-array@0.9.2 | Apache-2.0 | https://github.com/humanwhocodes/config-array
@@ -117,7 +117,7 @@ module name | license | repository
 @nodelib/fs.walk@1.2.8 | MIT | https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.walk
 @polka/url@1.0.0-next.21 | MIT | https://github.com/lukeed/polka
 @rushstack/eslint-patch@1.1.0 | MIT | https://github.com/microsoft/rushstack
-@sideway/address@4.1.2 | BSD-3-Clause | https://github.com/sideway/address
+@sideway/address@4.1.3 | BSD-3-Clause | https://github.com/sideway/address
 @sideway/formula@3.0.0 | BSD-3-Clause | https://github.com/sideway/formula
 @sideway/pinpoint@2.0.0 | BSD-3-Clause | https://github.com/sideway/pinpoint
 @soda/friendly-errors-webpack-plugin@1.8.1 | MIT | https://github.com/sodatea/friendly-errors-webpack-plugin
@@ -127,9 +127,9 @@ module name | license | repository
 @types/bonjour@3.5.9 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/connect-history-api-fallback@1.3.5 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/connect@3.4.35 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
-@types/eslint-scope@3.7.1 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/eslint-scope@3.7.3 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/eslint@7.28.2 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
-@types/estree@0.0.50 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/estree@0.0.51 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/express-serve-static-core@4.17.25 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/express@4.17.13 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/html-minifier-terser@6.0.0 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -148,8 +148,6 @@ module name | license | repository
 @types/sinonjs__fake-timers@8.1.1 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/sizzle@2.3.3 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/sockjs@0.3.33 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
-@types/webpack-dev-middleware@5.0.2 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
-@types/webpack-dev-server@4.3.1 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/webpack-env@1.16.3 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/ws@8.2.2 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 @types/yauzl@2.9.2 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
@@ -168,7 +166,7 @@ module name | license | repository
 @vue/babel-helper-vue-transform-on@1.0.2 | MIT | 
 @vue/babel-plugin-jsx@1.1.1 | MIT | https://github.com/vuejs/jsx-next
 @vue/babel-plugin-transform-vue-jsx@1.2.1 | MIT | https://github.com/vuejs/jsx/tree/master/packages/babel-plugin-transform-vue-jsx
-@vue/babel-preset-app@5.0.0-rc.2 | MIT | https://github.com/vuejs/vue-cli
+@vue/babel-preset-app@5.0.1 | MIT | https://github.com/vuejs/vue-cli
 @vue/babel-preset-jsx@1.2.4 | MIT | https://github.com/vuejs/jsx/tree/master/packages/babel-preset-jsx
 @vue/babel-sugar-composition-api-inject-h@1.2.1 | MIT | https://github.com/vuejs/jsx/tree/master/packages/babel-sugar-composition-api-inject-h
 @vue/babel-sugar-composition-api-render-instance@1.2.4 | MIT | https://github.com/vuejs/jsx/tree/master/packages/babel-sugar-composition-api-render-instance
@@ -176,15 +174,15 @@ module name | license | repository
 @vue/babel-sugar-inject-h@1.2.2 | MIT | https://github.com/vuejs/jsx/tree/master/packages/babel-sugar-inject-h
 @vue/babel-sugar-v-model@1.2.3 | MIT | https://github.com/vuejs/jsx/tree/master/packages/babel-sugar-v-model
 @vue/babel-sugar-v-on@1.2.3 | MIT | https://github.com/vuejs/jsx/tree/master/packages/babel-sugar-v-on
-@vue/cli-overlay@5.0.0-rc.2 | MIT | https://github.com/vuejs/vue-cli
-@vue/cli-plugin-babel@5.0.0-rc.2 | MIT | https://github.com/vuejs/vue-cli
-@vue/cli-plugin-e2e-cypress@5.0.0-rc.2 | MIT | https://github.com/vuejs/vue-cli
-@vue/cli-plugin-eslint@5.0.0-rc.2 | MIT | https://github.com/vuejs/vue-cli
-@vue/cli-plugin-router@5.0.0-rc.2 | MIT | https://github.com/vuejs/vue-cli
-@vue/cli-plugin-typescript@5.0.0-rc.2 | MIT | https://github.com/vuejs/vue-cli
-@vue/cli-plugin-vuex@5.0.0-rc.2 | MIT | https://github.com/vuejs/vue-cli
-@vue/cli-service@5.0.0-rc.2 | MIT | https://github.com/vuejs/vue-cli
-@vue/cli-shared-utils@5.0.0-rc.2 | MIT | https://github.com/vuejs/vue-cli
+@vue/cli-overlay@5.0.1 | MIT | https://github.com/vuejs/vue-cli
+@vue/cli-plugin-babel@5.0.1 | MIT | https://github.com/vuejs/vue-cli
+@vue/cli-plugin-e2e-cypress@5.0.1 | MIT | https://github.com/vuejs/vue-cli
+@vue/cli-plugin-eslint@5.0.1 | MIT | https://github.com/vuejs/vue-cli
+@vue/cli-plugin-router@5.0.1 | MIT | https://github.com/vuejs/vue-cli
+@vue/cli-plugin-typescript@5.0.1 | MIT | https://github.com/vuejs/vue-cli
+@vue/cli-plugin-vuex@5.0.1 | MIT | https://github.com/vuejs/vue-cli
+@vue/cli-service@5.0.1 | MIT | https://github.com/vuejs/vue-cli
+@vue/cli-shared-utils@5.0.1 | MIT | https://github.com/vuejs/vue-cli
 @vue/component-compiler-utils@3.3.0 | MIT | https://github.com/vuejs/component-compiler-utils
 @vue/eslint-config-typescript@10.0.0 | MIT | https://github.com/vuejs/eslint-config-typescript
 @vue/test-utils@1.3.0 | MIT | https://github.com/vuejs/vue-test-utils
@@ -218,6 +216,7 @@ ajv-formats@2.1.1 | MIT | https://github.com/ajv-validator/ajv-formats
 ajv-keywords@3.5.2 | MIT | https://github.com/epoberezkin/ajv-keywords
 ajv-keywords@5.1.0 | MIT | https://github.com/epoberezkin/ajv-keywords
 ajv@6.12.6 | MIT | https://github.com/ajv-validator/ajv
+ajv@8.10.0 | MIT | https://github.com/ajv-validator/ajv
 ajv@8.8.2 | MIT | https://github.com/ajv-validator/ajv
 ajv@8.9.0 | MIT | https://github.com/ajv-validator/ajv
 alphanum-sort@1.0.2 | MIT | https://github.com/TrySound/alphanum-sort
@@ -255,7 +254,7 @@ aws4@1.11.0 | MIT | https://github.com/mhart/aws4
 babel-loader@8.2.3 | MIT | https://github.com/babel/babel-loader
 babel-plugin-dynamic-import-node@2.3.3 | MIT | https://github.com/airbnb/babel-plugin-dynamic-import-node
 babel-plugin-polyfill-corejs2@0.3.1 | MIT | https://github.com/babel/babel-polyfills
-babel-plugin-polyfill-corejs3@0.5.1 | MIT | https://github.com/babel/babel-polyfills
+babel-plugin-polyfill-corejs3@0.5.2 | MIT | https://github.com/babel/babel-polyfills
 babel-plugin-polyfill-regenerator@0.3.1 | MIT | https://github.com/babel/babel-polyfills
 balanced-match@1.0.0 | MIT | https://github.com/juliangruber/balanced-match
 base64-js@1.5.1 | MIT | https://github.com/beatgammit/base64-js
@@ -295,6 +294,7 @@ caseless@0.12.0 | Apache-2.0 | https://github.com/mikeal/caseless
 chalk@2.4.2 | MIT | https://github.com/chalk/chalk
 chalk@3.0.0 | MIT | https://github.com/chalk/chalk
 chalk@4.1.2 | MIT | https://github.com/chalk/chalk
+charcodes@0.2.0 | MIT | https://github.com/xtuc/charcodes
 check-more-types@2.24.0 | MIT | https://github.com/kensho/check-more-types
 chokidar@3.5.1 | MIT | https://github.com/paulmillr/chokidar
 chokidar@3.5.2 | MIT | https://github.com/paulmillr/chokidar
@@ -344,7 +344,7 @@ convert-source-map@1.8.0 | MIT | https://github.com/thlorenz/convert-source-map
 cookie-signature@1.0.6 | MIT | https://github.com/visionmedia/node-cookie-signature
 cookie@0.4.0 | MIT | https://github.com/jshttp/cookie
 copy-webpack-plugin@9.0.1 | MIT | https://github.com/webpack-contrib/copy-webpack-plugin
-core-js-compat@3.20.3 | MIT | https://github.com/zloirock/core-js
+core-js-compat@3.21.1 | MIT | https://github.com/zloirock/core-js
 core-util-is@1.0.2 | MIT | https://github.com/isaacs/core-util-is
 cosmiconfig@6.0.0 | MIT | https://github.com/davidtheclark/cosmiconfig
 cosmiconfig@7.0.1 | MIT | https://github.com/davidtheclark/cosmiconfig
@@ -366,7 +366,7 @@ csso@4.2.0 | MIT | https://github.com/css/csso
 csv-parse@4.15.4 | MIT | https://github.com/wdavidw/node-csv-parse
 csv2md@1.1.0 | MIT | https://github.com/pstaender/csv2md
 cypress-fail-fast@3.3.0 | MIT | https://github.com/javierbrea/cypress-fail-fast
-cypress@9.3.1 | MIT | https://github.com/cypress-io/cypress
+cypress@9.5.0 | MIT | https://github.com/cypress-io/cypress
 dashdash@1.14.1 | MIT | https://github.com/trentm/node-dashdash
 de-indent@1.0.2 | MIT | https://github.com/yyx990803/de-indent
 debug@2.6.9 | MIT | https://github.com/visionmedia/debug
@@ -426,17 +426,17 @@ escape-string-regexp@4.0.0 | MIT | https://github.com/sindresorhus/escape-string
 eslint-config-prettier@8.3.0 | MIT | https://github.com/prettier/eslint-config-prettier
 eslint-plugin-cypress@2.12.1 | MIT | https://github.com/cypress-io/eslint-plugin-cypress
 eslint-plugin-prettier@4.0.0 | MIT | https://github.com/prettier/eslint-plugin-prettier
-eslint-plugin-vue@8.3.0 | MIT | https://github.com/vuejs/eslint-plugin-vue
+eslint-plugin-vue@8.4.1 | MIT | https://github.com/vuejs/eslint-plugin-vue
 eslint-scope@5.1.1 | BSD-2-Clause | https://github.com/eslint/eslint-scope
 eslint-scope@6.0.0 | BSD-2-Clause | https://github.com/eslint/eslint-scope
-eslint-scope@7.1.0 | BSD-2-Clause | https://github.com/eslint/eslint-scope
+eslint-scope@7.1.1 | BSD-2-Clause | https://github.com/eslint/eslint-scope
 eslint-utils@3.0.0 | MIT | https://github.com/mysticatea/eslint-utils
 eslint-visitor-keys@2.1.0 | Apache-2.0 | https://github.com/eslint/eslint-visitor-keys
 eslint-visitor-keys@3.1.0 | Apache-2.0 | https://github.com/eslint/eslint-visitor-keys
-eslint-visitor-keys@3.2.0 | Apache-2.0 | https://github.com/eslint/eslint-visitor-keys
+eslint-visitor-keys@3.3.0 | Apache-2.0 | https://github.com/eslint/eslint-visitor-keys
 eslint-webpack-plugin@3.1.0 | MIT | https://github.com/webpack-contrib/eslint-webpack-plugin
-eslint@8.8.0 | MIT | https://github.com/eslint/eslint
-espree@9.3.0 | BSD-2-Clause | https://github.com/eslint/espree
+eslint@8.9.0 | MIT | https://github.com/eslint/eslint
+espree@9.3.1 | BSD-2-Clause | https://github.com/eslint/espree
 esquery@1.4.0 | BSD-3-Clause | https://github.com/estools/esquery
 esrecurse@4.3.0 | BSD-2-Clause | https://github.com/estools/esrecurse
 estraverse@4.3.0 | BSD-2-Clause | https://github.com/estools/estraverse
@@ -506,6 +506,7 @@ glob@7.1.6 | ISC | https://github.com/isaacs/node-glob
 global-dirs@3.0.0 | MIT | https://github.com/sindresorhus/global-dirs
 globals@11.12.0 | MIT | https://github.com/sindresorhus/globals
 globals@13.12.0 | MIT | https://github.com/sindresorhus/globals
+globals@13.12.1 | MIT | https://github.com/sindresorhus/globals
 globby@11.0.4 | MIT | https://github.com/sindresorhus/globby
 graceful-fs@4.2.9 | ISC | https://github.com/isaacs/node-graceful-fs
 gzip-size@6.0.0 | MIT | https://github.com/sindresorhus/gzip-size
@@ -558,7 +559,7 @@ invert-kv@2.0.0 | MIT | https://github.com/sindresorhus/invert-kv
 ip@1.1.5 | MIT | https://github.com/indutny/node-ip
 ipaddr.js@1.9.1 | MIT | https://github.com/whitequark/ipaddr.js
 ipaddr.js@2.0.1 | MIT | https://github.com/whitequark/ipaddr.js
-iris-client-frontend@1.4.0-rc.1-POST-RELEASE | UNLICENSED | 
+iris-client-frontend@1.4.0-rc.2-POST-RELEASE | UNLICENSED | 
 is-absolute-url@3.0.3 | MIT | https://github.com/sindresorhus/is-absolute-url
 is-arguments@1.1.1 | MIT | https://github.com/inspect-js/is-arguments
 is-arrayish@0.2.1 | MIT | https://github.com/qix-/node-is-arrayish
@@ -598,7 +599,7 @@ isobject@3.0.1 | MIT | https://github.com/jonschlinkert/isobject
 isstream@0.1.2 | MIT | https://github.com/rvagg/isstream
 javascript-stringify@2.1.0 | MIT | https://github.com/blakeembrey/javascript-stringify
 jest-worker@27.3.1 | MIT | https://github.com/facebook/jest
-joi@17.4.2 | BSD-3-Clause | https://github.com/sideway/joi
+joi@17.6.0 | BSD-3-Clause | https://github.com/sideway/joi
 js-beautify@1.14.0 | MIT | https://github.com/beautify-web/js-beautify
 js-message@1.0.7 | MIT | https://github.com/RIAEvangelist/js-message
 js-queue@2.0.2 | MIT | https://github.com/RIAEvangelist/js-queue
@@ -629,7 +630,7 @@ levn@0.4.1 | MIT | https://github.com/gkz/levn
 license-checker@25.0.1 | BSD-3-Clause | https://github.com/davglass/license-checker
 lilconfig@2.0.4 | MIT | https://github.com/antonk52/lilconfig
 lines-and-columns@1.1.6 | MIT | https://github.com/eventualbuddha/lines-and-columns
-lint-staged@12.3.2 | MIT | https://github.com/okonet/lint-staged
+lint-staged@12.3.4 | MIT | https://github.com/okonet/lint-staged
 listr2@3.13.5 | MIT | https://github.com/cenk1cenk2/listr2
 listr2@4.0.1 | MIT | https://github.com/cenk1cenk2/listr2
 loader-runner@4.2.0 | MIT | https://github.com/webpack/loader-runner
@@ -691,7 +692,7 @@ mime@1.6.0 | MIT | https://github.com/broofa/node-mime
 mime@2.6.0 | MIT | https://github.com/broofa/mime
 mimic-fn@1.2.0 | MIT | https://github.com/sindresorhus/mimic-fn
 mimic-fn@2.1.0 | MIT | https://github.com/sindresorhus/mimic-fn
-mini-css-extract-plugin@2.4.4 | MIT | https://github.com/webpack-contrib/mini-css-extract-plugin
+mini-css-extract-plugin@2.5.3 | MIT | https://github.com/webpack-contrib/mini-css-extract-plugin
 minimalistic-assert@1.0.1 | ISC | https://github.com/calvinmetcalf/minimalistic-assert
 minimatch@3.0.4 | ISC | https://github.com/isaacs/minimatch
 minimist@1.2.5 | MIT | https://github.com/substack/minimist
@@ -837,11 +838,9 @@ proxy-from-env@1.0.0 | MIT | https://github.com/Rob--W/proxy-from-env
 pseudomap@1.0.2 | ISC | https://github.com/isaacs/pseudomap
 psl@1.8.0 | MIT | https://github.com/lupomontero/psl
 pump@3.0.0 | MIT | https://github.com/mafintosh/pump
-punycode@1.3.2 | MIT | https://github.com/bestiejs/punycode.js
 punycode@2.1.1 | MIT | https://github.com/bestiejs/punycode.js
 qs@6.5.2 | BSD-3-Clause | https://github.com/ljharb/qs
 qs@6.7.0 | BSD-3-Clause | https://github.com/ljharb/qs
-querystring@0.2.0 | MIT | https://github.com/Gozala/querystring
 queue-microtask@1.2.3 | MIT | https://github.com/feross/queue-microtask
 randombytes@2.1.0 | MIT | https://github.com/crypto-browserify/randombytes
 range-parser@1.2.1 | MIT | https://github.com/jshttp/range-parser
@@ -856,15 +855,15 @@ readdir-scoped-modules@1.1.0 | ISC | https://github.com/npm/readdir-scoped-modul
 readdirp@3.5.0 | MIT | https://github.com/paulmillr/readdirp
 readdirp@3.6.0 | MIT | https://github.com/paulmillr/readdirp
 rechoir@0.6.2 | MIT | https://github.com/tkellen/node-rechoir
-regenerate-unicode-properties@9.0.0 | MIT | https://github.com/mathiasbynens/regenerate-unicode-properties
+regenerate-unicode-properties@10.0.1 | MIT | https://github.com/mathiasbynens/regenerate-unicode-properties
 regenerate@1.4.2 | MIT | https://github.com/mathiasbynens/regenerate
 regenerator-runtime@0.13.9 | MIT | https://github.com/facebook/regenerator/tree/master/packages/runtime
 regenerator-transform@0.14.5 | MIT | https://github.com/facebook/regenerator/tree/master/packages/regenerator-transform
 regexp.prototype.flags@1.3.1 | MIT | https://github.com/es-shims/RegExp.prototype.flags
 regexpp@3.2.0 | MIT | https://github.com/mysticatea/regexpp
-regexpu-core@4.8.0 | MIT | https://github.com/mathiasbynens/regexpu-core
-regjsgen@0.5.2 | MIT | https://github.com/bnjmnt4n/regjsgen
-regjsparser@0.7.0 | BSD-2-Clause | https://github.com/jviereck/regjsparser
+regexpu-core@5.0.1 | MIT | https://github.com/mathiasbynens/regexpu-core
+regjsgen@0.6.0 | MIT | https://github.com/bnjmnt4n/regjsgen
+regjsparser@0.8.4 | BSD-2-Clause | https://github.com/jviereck/regjsparser
 relateurl@0.2.7 | MIT | https://github.com/stevenvachon/relateurl
 renderkid@3.0.0 | MIT | https://github.com/AriaMinaei/RenderKid
 request-progress@3.0.0 | MIT | https://github.com/IndigoUnited/node-request-progress
@@ -886,8 +885,8 @@ rxjs@7.5.2 | Apache-2.0 | https://github.com/reactivex/rxjs
 safe-buffer@5.1.2 | MIT | https://github.com/feross/safe-buffer
 safe-buffer@5.2.1 | MIT | https://github.com/feross/safe-buffer
 safer-buffer@2.1.2 | MIT | https://github.com/ChALkeR/safer-buffer
-sass-loader@12.4.0 | MIT | https://github.com/webpack-contrib/sass-loader
-sass@1.48.0 | MIT | https://github.com/sass/dart-sass
+sass-loader@12.6.0 | MIT | https://github.com/webpack-contrib/sass-loader
+sass@1.49.7 | MIT | https://github.com/sass/dart-sass
 schema-utils@2.7.0 | MIT | https://github.com/webpack/schema-utils
 schema-utils@2.7.1 | MIT | https://github.com/webpack/schema-utils
 schema-utils@3.1.1 | MIT | https://github.com/webpack/schema-utils
@@ -1006,7 +1005,6 @@ universalify@2.0.0 | MIT | https://github.com/RyanZim/universalify
 unpipe@1.0.0 | MIT | https://github.com/stream-utils/unpipe
 untildify@4.0.0 | MIT | https://github.com/sindresorhus/untildify
 uri-js@4.4.1 | BSD-2-Clause | https://github.com/garycourt/uri-js
-url@0.11.0 | MIT | https://github.com/defunctzombie/node-url
 util-deprecate@1.0.2 | MIT | https://github.com/TooTallNate/util-deprecate
 util-extend@1.0.3 | MIT | https://github.com/isaacs/util-extend
 utila@0.4.0 | MIT | https://github.com/AriaMinaei/utila
@@ -1038,7 +1036,7 @@ webpack-dev-server@4.7.3 | MIT | https://github.com/webpack/webpack-dev-server
 webpack-merge@5.8.0 | MIT | https://github.com/survivejs/webpack-merge
 webpack-sources@3.2.3 | MIT | https://github.com/webpack/webpack-sources
 webpack-virtual-modules@0.4.3 | MIT | https://github.com/sysgears/webpack-virtual-modules
-webpack@5.68.0 | MIT | https://github.com/webpack/webpack
+webpack@5.69.1 | MIT | https://github.com/webpack/webpack
 websocket-driver@0.7.4 | Apache-2.0 | https://github.com/faye/websocket-driver-node
 websocket-extensions@0.1.4 | Apache-2.0 | https://github.com/faye/websocket-extensions-node
 whatwg-fetch@3.6.2 | MIT | https://github.com/github/fetch
