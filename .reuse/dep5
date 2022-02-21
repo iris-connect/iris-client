@@ -5,13 +5,13 @@ Source: https://github.com/iris-connect/iris-client
 
 Files: *
 # Copyright: $YEAR $NAME <$CONTACT>
-Copyright: 2021-2021 The IRIS Client Authors (see AUTHORS.md) <iris@steiger-stiftung.de>
+Copyright: 2021-present The IRIS Client Authors (see AUTHORS.md) <iris@steiger-stiftung.de>
 License: AGPL-3.0-or-later
 
 # File from SORMAS with own license
-Files: iris-client-bff/src/main/java/iris/client_bff/core/Base32.java
-Copyright: Copyright © 2016-2018 Helmholtz-Zentrum für Infektionsforschung GmbH (HZI)
-License: GPL-3.0-or-later
+#Files: iris-client-bff/src/main/java/iris/client_bff/core/Base32.java
+#Copyright: Copyright © 2016-2018 Helmholtz-Zentrum für Infektionsforschung GmbH (HZI)
+#License: GPL-3.0-or-later
 
 # Files from Maven Wrapper with own license
 Files: **/MavenWrapperDownloader.java

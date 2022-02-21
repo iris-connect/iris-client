@@ -1,9 +1,14 @@
 package iris.client_bff.iris_messages.eps;
 
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.*;
 
+import io.restassured.http.ContentType;
+import io.restassured.parsing.Parser;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageContext;
@@ -13,31 +18,27 @@ import iris.client_bff.iris_messages.IrisMessageFolderRepository;
 import iris.client_bff.iris_messages.IrisMessageRepository;
 import iris.client_bff.iris_messages.IrisMessageTestData;
 import iris.client_bff.ui.messages.ErrorMessages;
+import lombok.AllArgsConstructor;
 
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.test.web.servlet.MockMvc;
 
 @IrisWebIntegrationTest
+@AllArgsConstructor
 class IrisMessageDataControllerTest {
 
-	@Autowired
+	private static final String JSON_RPC = "application/json-rpc";
+
 	IrisMessageDataController dataController;
-
-	@Autowired
 	IrisMessageRepository messageRepository;
-
-	@Autowired
 	IrisMessageFolderRepository folderRepository;
-
-	@Autowired
 	EPSIrisMessageClient messageClient;
-
-	@Autowired
 	MessageSourceAccessor messages;
+	MockMvc mvc;
 
 	@Test
 	void createIrisMessage() {
@@ -78,6 +79,47 @@ class IrisMessageDataControllerTest {
 		assertTrue(e.getMessage().contains(ErrorMessages.INVALID_INPUT));
 	}
 
+	@Test
+	void createMessage_RealCommunucation() {
+
+		var json = """
+				{
+				    "id":"1",
+				    "jsonrpc":"2.0",
+				    "method":"createIrisMessage",
+				    "params":{
+				    		"irisMessage":{
+						        "hdAuthor":{
+							        	"id":"hd-1",
+							        	"name":"HD 1"
+						       	},
+										"hdRecipient":{
+												"id":"hd-1",
+												"name":"HD 1"
+										},
+										"subject":"Test Mail",
+										"body":"This is a Test Mail"
+								},
+				        "_client":{"name":"hd-1"}
+				    }
+				}
+				""";
+
+		given().mockMvc(mvc)
+				.contentType(ContentType.JSON)
+				.body(json)
+
+				.when()
+				.post("/data-submission-rpc")
+
+				.then()
+				.status(OK)
+				.contentType(JSON_RPC)
+				.parser(JSON_RPC, Parser.JSON)
+				.body("id", equalTo("1"))
+				.body("result.subject", equalTo("Test Mail"));
+	}
+
 	private IrisMessage getMessage() {
 
 		IrisMessageTestData testData = new IrisMessageTestData();
@@ -85,7 +127,7 @@ class IrisMessageDataControllerTest {
 		Optional<IrisMessageFolder> outboxFolder = this.folderRepository
 				.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
 
-		assertThat(outboxFolder.isPresent()).isTrue();
+		assertThat(outboxFolder).isPresent();
 
 		IrisMessage message = testData.getTestOutboxMessage(outboxFolder.get());
 
@@ -94,5 +136,4 @@ class IrisMessageDataControllerTest {
 
 		return message;
 	}
-
 }
