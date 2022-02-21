@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.4.0-rc.3](https://github.com/iris-connect/iris-client/compare/v1.4.0-rc.2...v1.4.0-rc.3) (2022-02-21)
+
+
+### Bug Fixes
+
+* Removes license reference for code from SORMAS that isn't used anymore. ([00db4a4](https://github.com/iris-connect/iris-client/commit/00db4a410fad6edc69ae7437c73030309a74ca5a))
+
 # [1.4.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.4.0-rc.1...v1.4.0-rc.2) (2022-02-21)
 
 
