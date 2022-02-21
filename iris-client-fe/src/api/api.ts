@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {
-  ApiResponse,
-  assertParamExists,
-  DataQuery,
-  RequestOptions,
-} from "./common";
+import { ApiResponse, assertParamExists, RequestOptions } from "./common";
 import { BaseAPI } from "./base";
 import { UserSession } from "@/views/user-login/user-login.store";
 
@@ -1915,10 +1910,6 @@ export interface Page<Content> {
   empty?: boolean;
 }
 
-export type IrisMessageQuery = DataQuery & {
-  folder?: string;
-};
-
 export type PageIrisMessages = Page<IrisMessage>;
 
 export interface IrisMessage {
@@ -1958,6 +1949,49 @@ export interface IrisMessageHdContact {
   id: string;
   name: string;
   own?: boolean;
+}
+
+export interface VrCompanyContactPerson {
+  firstName?: string;
+  lastName?: string;
+  eMail?: string;
+  phone?: string;
+}
+
+export interface VrCompany {
+  name?: string;
+  street?: string;
+  houseNumber?: string;
+  zipCode?: string;
+  city?: string;
+  contactPerson?: VrCompanyContactPerson;
+}
+
+export enum VaccinationStatus {
+  VACCINATED = "vaccinated",
+  NOT_VACCINATED = "notVaccinated",
+  SUSPICIOUS_PROOF = "suspiciousProof",
+}
+
+export interface VrCompanyEmployee {
+  firstName?: string;
+  lastName?: string;
+  street?: string;
+  houseNumber?: string;
+  zipCode?: string;
+  city?: string;
+  vaccination?: string;
+  vaccinationStatus?: VaccinationStatus;
+}
+
+export interface VaccinationRecord {
+  id?: string;
+  company?: VrCompany;
+  reportedAt?: string;
+}
+
+export interface VaccinationRecordDetails extends VaccinationRecord {
+  employees?: VrCompanyEmployee[];
 }
 
 /**
@@ -2355,5 +2389,18 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("irisMessagesSetIsRead", "messageId", messageId);
     const path = `/iris-messages/${encodeURIComponent(messageId)}`;
     return this.apiRequest("PATCH", path, { isRead: true }, options);
+  }
+
+  /**
+   *
+   * @summary Fetches paginated vaccination-record
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public pageVaccinationRecordGet(
+    options?: RequestOptions
+  ): ApiResponse<Page<VaccinationRecord>> {
+    return this.apiRequest("GET", "/vaccination-records", null, options);
   }
 }
