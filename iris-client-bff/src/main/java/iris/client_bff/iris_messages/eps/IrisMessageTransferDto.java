@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-class IrisMessageTransferDto {
+public class IrisMessageTransferDto {
 
     // we send the name & id as we do not know if the author`s health department is accessible by the recipient
     @Valid
