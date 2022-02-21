@@ -218,6 +218,17 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
+    path: "/vaccination-record/details/:id",
+    name: "vaccination-record-details" /* Caution: This acts as an identifier! */,
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "vaccination-record-details" */ "../views/vaccination-record-details/vaccination-record-details.view.vue"
+      ),
+  },
+  {
     path: "/about",
     name: "about" /* Caution: This acts as an identifier! */,
     meta: {

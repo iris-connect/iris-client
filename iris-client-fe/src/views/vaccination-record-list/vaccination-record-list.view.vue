@@ -54,7 +54,6 @@ export default class VaccinationRecordListView extends Vue {
     { text: "Unternehmen", value: "companyName", sortable: true },
     { text: "Adresse", value: "address", sortable: false },
     { text: "Meldung vom", value: "reportedAt", sortable: true },
-    { text: "", value: "actions", sortable: false },
   ];
   recordsApi = vaccinationRecordApi.fetchPageVaccinationRecord();
   handleQueryUpdate(newValue: DataQuery) {

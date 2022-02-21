@@ -2403,4 +2403,21 @@ export class IrisClientFrontendApi extends BaseAPI {
   ): ApiResponse<Page<VaccinationRecord>> {
     return this.apiRequest("GET", "/vaccination-records", null, options);
   }
+
+  /**
+   *
+   * @summary Fetches vaccination-record details
+   * @param {string} recordId for vaccination record.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public vaccinationRecordGet(
+    recordId: string,
+    options?: RequestOptions
+  ): ApiResponse<VaccinationRecordDetails> {
+    assertParamExists("vaccinationRecordGet", "recordId", recordId);
+    const path = `/vaccination-records/${encodeURIComponent(recordId)}`;
+    return this.apiRequest("GET", path, null, options);
+  }
 }

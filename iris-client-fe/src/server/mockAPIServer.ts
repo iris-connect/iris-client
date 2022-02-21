@@ -362,6 +362,13 @@ export function makeMockAPIServer() {
           queriedPage(vaccinationRecordList as VaccinationRecord[], query)
         );
       });
+
+      this.get("/vaccination-records/:recordId", (schema, request) => {
+        const record = vaccinationRecordList.find(
+          (it) => it.id === request.params.recordId
+        );
+        return authResponse(request, record);
+      });
     },
   });
 
