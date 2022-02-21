@@ -6,6 +6,8 @@ import _isObject from "lodash/isObject";
 import _isEmpty from "lodash/isEmpty";
 import store from "@/store";
 
+export type DataNormalizer<T> = (source?: T, parse?: boolean) => T;
+
 export const normalizeData = <T>(
   source: T | undefined,
   callback: (n: EntryNormalizer<T>) => T,
@@ -91,7 +93,7 @@ const validateType = (value: unknown, type: string): boolean => {
   return typeof value === type;
 };
 
-const parseData = <T>(data: T): T => {
+export const parseData = <T>(data: T): T => {
   try {
     return JSON.parse(JSON.stringify(data));
   } catch {
@@ -150,4 +152,7 @@ const difference = <A extends Record<string, any>, B extends A>(
       }
     }
   });
+};
+export const getObjectKeys = <T>(obj: T): Array<keyof T> => {
+  return Object.keys(obj) as Array<keyof typeof obj>;
 };

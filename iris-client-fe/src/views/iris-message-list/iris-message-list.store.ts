@@ -1,7 +1,7 @@
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
-import { IrisMessageFolder, IrisMessageQuery, PageIrisMessages } from "@/api";
+import { IrisMessageFolder, PageIrisMessages } from "@/api";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import {
@@ -9,6 +9,7 @@ import {
   normalizePageIrisMessages,
   normalizeUnreadIrisMessageCount,
 } from "@/views/iris-message-list/iris-message-list.data";
+import { DataQuery } from "@/api/common";
 
 export type IrisMessageListState = {
   messageList: PageIrisMessages | null;
@@ -55,7 +56,7 @@ export interface IrisMessageListModule
   actions: {
     fetchMessages(
       { commit }: { commit: Commit },
-      payload: IrisMessageQuery
+      payload: DataQuery
     ): Promise<void>;
     fetchMessageFolders({ commit }: { commit: Commit }): Promise<void>;
     fetchUnreadMessageCount({ commit }: { commit: Commit }): Promise<void>;
@@ -111,7 +112,7 @@ const irisMessageList: IrisMessageListModule = {
     },
   },
   actions: {
-    async fetchMessages({ commit }, query: IrisMessageQuery) {
+    async fetchMessages({ commit }, query: DataQuery) {
       let list: PageIrisMessages | null = null;
       commit("setMessageListLoading", true);
       commit("setMessageListLoadingError", null);

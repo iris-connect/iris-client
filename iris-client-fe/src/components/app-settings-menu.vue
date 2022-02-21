@@ -27,9 +27,9 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
-const AppMenuProps = Vue.extend({
+const AppSettingsMenuProps = Vue.extend({
   inheritAttrs: false,
 });
 @Component
-export default class AppMenu extends AppMenuProps {}
+export default class AppSettingsMenu extends AppSettingsMenuProps {}
 </script>

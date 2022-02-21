@@ -47,16 +47,19 @@ export const queriedPage = <T, Q extends Partial<DataQuery>>(
     qSort.length > 1
       ? _orderBy(items, [qSort[0]], [qSort[1] as TableSortDirection])
       : items;
-  const filteredItems = sortedItems.filter((item) => {
-    return Object.keys(filters).find((fKey) => {
-      const iValue = _get(item, fKey);
-      const fValue = _get(filters, fKey);
-      if (fValue && iValue) {
-        return _get(item, fKey) === _get(filters, fKey);
-      }
-      return true;
+  let filteredItems = sortedItems;
+  if (Object.keys(filters).length > 0) {
+    filteredItems = sortedItems.filter((item) => {
+      return Object.keys(filters).find((fKey) => {
+        const iValue = _get(item, fKey);
+        const fValue = _get(filters, fKey);
+        if (fValue && iValue) {
+          return _get(item, fKey) === _get(filters, fKey);
+        }
+        return true;
+      });
     });
-  });
+  }
   return {
     totalElements: filteredItems.length,
     totalPages: Math.ceil(filteredItems.length / qSize),
