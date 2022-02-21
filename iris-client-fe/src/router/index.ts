@@ -168,6 +168,44 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
+    path: "/iris-messages/list",
+    name: "iris-message-list" /* Caution: This acts as an identifier! */,
+    meta: {
+      menu: true,
+      menuName: "Nachrichten",
+      menuComponent: () =>
+        import(
+          /* webpackChunkName: "iris-message-list-nav-link" */ "../views/iris-message-list/components/iris-message-list-nav-link.vue"
+        ),
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "iris-message-list" */ "../views/iris-message-list/iris-message-list.view.vue"
+      ),
+  },
+  {
+    path: "/iris-messages/details/:messageId",
+    name: "iris-message-details" /* Caution: This acts as an identifier! */,
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "iris-message-details" */ "../views/iris-message-details/iris-message-details.view.vue"
+      ),
+  },
+  {
+    path: "/iris-messages/create",
+    name: "iris-message-create" /* Caution: This acts as an identifier! */,
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "iris-message-create" */ "../views/iris-message-create/iris-message-create.view.vue"
+      ),
+  },
+  {
     path: "/about",
     name: "about" /* Caution: This acts as an identifier! */,
     meta: {
@@ -185,7 +223,7 @@ const router = new VueRouter({
   routes,
 });
 
-const locationFromRoute = (route: Route): Location => {
+export const locationFromRoute = (route: Route): Location => {
   const { name, path, hash, query, params } = route;
   return {
     ...(name ? { name } : {}),

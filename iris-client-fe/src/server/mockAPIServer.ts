@@ -5,6 +5,8 @@ import {
   DataRequestDetails,
   DataRequestStatus,
   ExistingDataRequestClientWithLocation,
+  IrisMessage,
+  IrisMessageQuery,
   User,
   UserRole,
 } from "@/api";
@@ -25,13 +27,19 @@ import {
   getDummyUserFromRequest,
 } from "@/server/data/dummy-userlist";
 import { findIndex, remove, some } from "lodash";
-import { paginated } from "@/server/utils/pagination";
+import { paginated, queriedPage } from "@/server/utils/pagination";
 import dayjs from "@/utils/date";
 import _defaults from "lodash/defaults";
 import {
   dummyCheckinApps,
   getDummyCheckinAppStatus,
 } from "@/server/data/status-checkin-apps";
+import {
+  dummyIrisMessageFolders,
+  dummyIrisMessageList,
+  dummyIrisMessageHdContacts,
+  getDummyMessageFromRequest,
+} from "@/server/data/dummy-iris-messages";
 
 const loginResponse = (role: UserRole): Response => {
   return new Response(200, {
@@ -43,14 +51,15 @@ const loginResponse = (role: UserRole): Response => {
 const authResponse = (
   request?: Request,
   // eslint-disable-next-line @typescript-eslint/ban-types
-  data?: string | {} | undefined
+  data?: string | {} | undefined,
+  headers?: Record<string, string>
 ): Response => {
   if (request) {
     if (!validateAuthHeader(request)) {
-      return new Response(401, { error: "not authorized" });
+      return new Response(401, { error: "not authorized", ...headers });
     }
   }
-  return new Response(200, undefined, data);
+  return new Response(200, headers, data);
 };
 
 const validateAuthHeader = (request: Request): boolean => {
@@ -289,6 +298,58 @@ export function makeMockAPIServer() {
         return authResponse(
           request,
           getDummyCheckinAppStatus(request.params.name)
+        );
+      });
+
+      this.get("/iris-messages", (schema, request) => {
+        const query: Partial<IrisMessageQuery> = request.queryParams;
+        return authResponse(
+          request,
+          queriedPage(dummyIrisMessageList as IrisMessage[], query)
+        );
+      });
+
+      this.get("/iris-messages/:messageId", (schema, request) => {
+        const message = dummyIrisMessageList.find(
+          (msg) => msg.id === request.params.messageId
+        );
+        return authResponse(request, message);
+      });
+
+      this.patch("/iris-messages/:messageId", (schema, request) => {
+        const message = dummyIrisMessageList.find((msg) => {
+          if (msg.id === request.params.messageId) {
+            msg.isRead = true;
+            return true;
+          }
+          return false;
+        });
+        return authResponse(request, message);
+      });
+
+      this.post("/iris-messages", (schema, request) => {
+        try {
+          if (validateAuthHeader(request)) {
+            dummyIrisMessageList.push(getDummyMessageFromRequest(request));
+          }
+        } catch (e) {
+          // ignored
+        }
+        return authResponse(request);
+      });
+
+      this.get("/iris-messages/folders", (schema, request) => {
+        return authResponse(request, dummyIrisMessageFolders);
+      });
+
+      this.get("/iris-messages/hd-contacts", (schema, request) => {
+        return authResponse(request, dummyIrisMessageHdContacts);
+      });
+
+      this.get("/iris-messages/count/unread", (schema, request) => {
+        return authResponse(
+          request,
+          dummyIrisMessageList.filter((item) => !item.isRead).length
         );
       });
     },

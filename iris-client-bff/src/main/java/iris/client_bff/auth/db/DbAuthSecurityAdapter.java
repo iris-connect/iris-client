@@ -49,6 +49,9 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private Environment env;
 
+	@Autowired
+	private UserDetailsServiceImpl userService;
+
 	private PasswordEncoder passwordEncoder;
 
 	private JWTVerifier jwtVerifier;
@@ -83,7 +86,7 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
 				.and()
 				.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSigner, loginAttempts))
-				.addFilterAfter(new JWTAuthorizationFilter(jwtVerifier), JWTAuthenticationFilter.class)
+				.addFilterAfter(new JWTAuthorizationFilter(jwtVerifier, userService), JWTAuthenticationFilter.class)
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 

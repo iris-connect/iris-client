@@ -17,6 +17,8 @@ import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
+import iris.client_bff.users.UserDetailsServiceImpl;
+import iris.client_bff.users.entities.UserAccount;
 
 import java.time.Instant;
 import java.util.List;
@@ -56,16 +58,20 @@ class IndexCaseControllerTest {
 
 	@MockBean
 	CaseDataRequestService service;
+	@MockBean
+	UserDetailsServiceImpl userService;
 
 	// mock responses
 	private final CaseDataRequest MOCK_CASE = getCase();
 	private final UUID MOCK_CASE_ID = UUID.fromString(MOCK_CASE.getId().toString());
 	private final IndexCaseDTO MOCK_CASE_DTO = map(MOCK_CASE);
-	private final IndexCaseDetailsDTO MOCK_CASE_DETAILED_DTO = mapDetailed(MOCK_CASE);
 	private final Page<CaseDataRequest> casesPage = new RestResponsePage<>(List.of(MOCK_CASE));
+
+	private IndexCaseDetailsDTO MOCK_CASE_DETAILED_DTO;
 
 	@BeforeEach
 	void setUp() throws IRISDataRequestException {
+
 		when(service.findAll(any(Pageable.class))).thenReturn(casesPage);
 
 		when(service.findByStatus(any(Status.class), any(Pageable.class))).thenReturn(casesPage);
@@ -85,6 +91,10 @@ class IndexCaseControllerTest {
 
 		when(service.create(any())).thenReturn(MOCK_CASE);
 
+		when(userService.findByUuid(any()))
+				.thenReturn(Optional.of(new UserAccount().setFirstName("Max").setLastName("Muster")));
+
+		MOCK_CASE_DETAILED_DTO = mapDetailed(MOCK_CASE, userService);
 	}
 
 	@Test
@@ -212,7 +222,7 @@ class IndexCaseControllerTest {
 
 		var updated = om.readValue(res.getResponse().getContentAsString(), IndexCaseDetailsDTO.class);
 
-		var expected = mapDetailed(MOCK_CASE);
+		var expected = mapDetailed(MOCK_CASE, userService);
 		expected.setName(updatedName);
 
 		assertEquals(expected, updated);

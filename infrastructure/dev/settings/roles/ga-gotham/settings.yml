@@ -15,6 +15,14 @@ channels: # defines all the channels that we want to open when starting the serv
     type: jsonrpc_client
     settings:
       endpoint: http://iris-client:8092/data-submission-rpc
+  - name: main gRPC server # accepts incoming gRPC connections to deliver and receive messages
+    type: grpc_server
+    settings:
+      bind_address: "0.0.0.0:8888"
+      tls:
+        ca_certificate_files: [ "/$DIR/../../certs/root.crt" ]
+        certificate_file: "/$DIR/../../certs/ga-gotham.crt"
+        key_file: "/$DIR/../../certs/ga-gotham.key"
   - name: main gRPC client # creates outgoing gRPC connections to deliver and receive messages
     type: grpc_client
     settings:
