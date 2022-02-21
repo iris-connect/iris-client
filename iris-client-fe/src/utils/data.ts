@@ -17,6 +17,25 @@ export const normalizeData = <T>(
   return finalizeData(callback(normalizer), source, parse, message);
 };
 
+export const normalizeValue = <T>(
+  source: T | undefined,
+  callback: (n: ValueNormalizer<T>) => T,
+  parse?: boolean,
+  message?: string
+): T => {
+  if (!isEnabled()) return source as T;
+  const normalizer = valueNormalizer(source);
+  return finalizeData(callback(normalizer), source, parse, message);
+};
+
+export type ValueNormalizer<T> = (fallback: T, type?: string) => T;
+
+export const valueNormalizer =
+  <T>(value?: T) =>
+  (fallback: T, type = "string"): T => {
+    return getNormalizedValue(value, fallback, type);
+  };
+
 // utility type to check if all keys of T exist
 export type Complete<T> = {
   [P in keyof Required<T>]: Pick<T, P> extends Required<Pick<T, P>>
@@ -34,20 +53,28 @@ export type EntryNormalizer<T> = <K extends keyof T>(
   type?: string
 ) => T[K];
 
-export const entryNormalizer =
+const entryNormalizer =
   <T>(obj?: T) =>
   <K extends keyof T>(key: K, fallback: T[K], type = "string"): T[K] => {
-    return normalize<T, K>(obj, key, type, fallback);
+    return normalize<T, K>(obj, key, fallback, type);
   };
 
-export const normalize = <T, K extends keyof T>(
+const normalize = <T, K extends keyof T>(
   obj: T | unknown | undefined,
   key: K,
-  type: string,
-  fallback: T[K]
+  fallback: T[K],
+  type = "string"
 ): T[K] => {
-  const val: T[K] = _get(obj, key);
-  if (val !== undefined && validateType(val, type)) return val;
+  const value: T[K] = _get(obj, key);
+  return getNormalizedValue(value, fallback, type);
+};
+
+export const getNormalizedValue = <T>(
+  value: T | undefined,
+  fallback: T,
+  type = "string"
+): T => {
+  if (value !== undefined && validateType(value, type)) return value;
   return fallback;
 };
 
@@ -64,7 +91,7 @@ const validateType = (value: unknown, type: string): boolean => {
   return typeof value === type;
 };
 
-export const parseData = <T>(data: T): T => {
+const parseData = <T>(data: T): T => {
   try {
     return JSON.parse(JSON.stringify(data));
   } catch {
@@ -72,7 +99,7 @@ export const parseData = <T>(data: T): T => {
   }
 };
 
-export const finalizeData = <A>(
+const finalizeData = <A>(
   normalized: A,
   source?: A,
   parse?: boolean,
@@ -84,7 +111,7 @@ export const finalizeData = <A>(
   return parsed;
 };
 
-export const notifyDifference = <A>(a: A, b: A, msg?: string): void => {
+const notifyDifference = <A>(a: A, b: A, msg?: string): void => {
   if (store.state.normalizeSettings.logEnabled) {
     if (a && b) {
       const diffA = difference(a, b);
@@ -107,7 +134,7 @@ export const notifyDifference = <A>(a: A, b: A, msg?: string): void => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const difference = <A extends Record<string, any>, B extends A>(
+const difference = <A extends Record<string, any>, B extends A>(
   object: A,
   base: B
 ): Record<string, unknown> => {

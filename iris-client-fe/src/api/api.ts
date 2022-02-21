@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ApiResponse, assertParamExists, RequestOptions } from "./common";
+import {
+  ApiResponse,
+  assertParamExists,
+  DataQuery,
+  RequestOptions,
+} from "./common";
 import { BaseAPI } from "./base";
 import { UserSession } from "@/views/user-login/user-login.store";
 
@@ -1883,6 +1888,71 @@ export interface CheckinAppStatusInfo {
   message: string;
 }
 
+export interface Sort {
+  empty?: boolean;
+  sorted?: boolean;
+  unsorted?: boolean;
+}
+
+export interface Page<Content> {
+  totalElements?: number;
+  totalPages?: number;
+  size?: number;
+  content: Content[];
+  number?: number;
+  sort?: Sort;
+  first?: boolean;
+  last?: boolean;
+  numberOfElements?: number;
+  pageable?: Pageable;
+  empty?: boolean;
+}
+
+export type IrisMessageQuery = DataQuery & {
+  folder?: string;
+};
+
+export type PageIrisMessages = Page<IrisMessage>;
+
+export interface IrisMessage {
+  id: string;
+  folder: string;
+  context: IrisMessageContext;
+  subject: string;
+  body: string;
+  hdAuthor: IrisMessageHdContact;
+  hdRecipient: IrisMessageHdContact;
+  createdAt: string;
+  isRead?: boolean;
+}
+
+export type IrisMessageDetails = IrisMessage;
+
+export interface IrisMessageInsert {
+  hdRecipient: string;
+  subject: string;
+  body: string;
+}
+
+export enum IrisMessageContext {
+  Inbox = "INBOX",
+  Outbox = "OUTBOX",
+  Unknown = "UNKNOWN",
+}
+
+export type IrisMessageFolder = {
+  id: string;
+  name: string;
+  items?: IrisMessageFolder[];
+  context?: IrisMessageContext;
+};
+
+export interface IrisMessageHdContact {
+  id: string;
+  name: string;
+  isOwn?: boolean;
+}
+
 /**
  * IrisClientFrontendApi - object-oriented interface
  * @export
@@ -2180,5 +2250,103 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("checkinAppStatusGet", "name", name);
     const path = `/status/checkin-apps/${encodeURIComponent(name)}`;
     return this.apiRequest("GET", path, null, options);
+  }
+
+  /**
+   * @summary Fetches iris messages
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessagesGet(
+    options?: RequestOptions
+  ): ApiResponse<PageIrisMessages> {
+    assertParamExists("irisMessagesGet", "folder", options?.params?.folder);
+    return this.apiRequest("GET", "/iris-messages", null, options);
+  }
+
+  /**
+   * @summary Fetches iris message details
+   * @param {string} messageId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessageDetailsGet(
+    messageId: string,
+    options?: RequestOptions
+  ): ApiResponse<IrisMessageDetails> {
+    assertParamExists("irisMessageDetailsGet", "messageId", messageId);
+    const path = `/iris-messages/${encodeURIComponent(messageId)}`;
+    return this.apiRequest("GET", path, null, options);
+  }
+
+  /**
+   *
+   * @summary Create IRIS message
+   * @param {IrisMessageInsert} data
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessagesPost(
+    data: IrisMessageInsert,
+    options?: RequestOptions
+  ): ApiResponse {
+    assertParamExists("irisMessagesPost", "data", data);
+    return this.apiRequest("POST", "/iris-messages", data, options);
+  }
+
+  /**
+   * @summary Fetches iris message folders
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessageFoldersGet(
+    options?: RequestOptions
+  ): ApiResponse<IrisMessageFolder[]> {
+    return this.apiRequest("GET", "/iris-messages/folders", null, options);
+  }
+
+  /**
+   * @summary Fetches iris message contacts
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessageHdContactsGet(
+    options?: RequestOptions
+  ): ApiResponse<IrisMessageHdContact[]> {
+    return this.apiRequest("GET", "/iris-messages/hd-contacts", null, options);
+  }
+
+  /**
+   * @summary Fetches number of unread messages
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisUnreadMessageCountGet(
+    options?: RequestOptions
+  ): ApiResponse<number> {
+    return this.apiRequest("GET", "/iris-messages/count/unread", null, options);
+  }
+
+  /**
+   *
+   * @summary Mark IRIS message as read
+   * @param {string} messageId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessagesSetIsRead(
+    messageId: string,
+    options?: RequestOptions
+  ): ApiResponse {
+    assertParamExists("irisMessagesSetIsRead", "messageId", messageId);
+    const path = `/iris-messages/${encodeURIComponent(messageId)}`;
+    return this.apiRequest("PATCH", path, { isRead: true }, options);
   }
 }
