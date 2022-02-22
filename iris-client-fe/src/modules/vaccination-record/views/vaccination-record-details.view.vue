@@ -9,6 +9,7 @@
         :headers="tableHeaders"
         :items="tableRows"
         :search="search"
+        :loading="recordApi.state.loading"
         show-select
         show-select-all
       >
@@ -63,7 +64,7 @@ export default class VaccinationRecordDetailsView extends Mixins(
     { text: "Erreger", value: "vaccination", sortable: true },
     { text: "Impfstatus", value: "vaccinationStatus", sortable: true },
   ];
-  recordApi = vaccinationRecordApi.fetchVaccinationRecord();
+  recordApi = vaccinationRecordApi.fetchVaccinationRecordDetails();
   mounted() {
     this.recordApi.execute(this.$route.params.id);
   }

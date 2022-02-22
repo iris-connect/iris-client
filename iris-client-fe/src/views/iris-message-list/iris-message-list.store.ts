@@ -1,18 +1,18 @@
 import { RootState } from "@/store/types";
 
 import { Commit, Module } from "vuex";
-import { IrisMessageFolder, PageIrisMessages } from "@/api";
+import { IrisMessage, IrisMessageFolder, Page } from "@/api";
 import authClient from "@/api-client";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
 import {
   normalizeIrisMessageFolders,
-  normalizePageIrisMessages,
+  normalizePageIrisMessage,
   normalizeUnreadIrisMessageCount,
 } from "@/views/iris-message-list/iris-message-list.data";
 import { DataQuery } from "@/api/common";
 
 export type IrisMessageListState = {
-  messageList: PageIrisMessages | null;
+  messageList: Page<IrisMessage> | null;
   messageListLoading: boolean;
   messageListLoadingError: ErrorMessage;
   messageFolders: IrisMessageFolder[] | null;
@@ -27,7 +27,7 @@ export interface IrisMessageListModule
   mutations: {
     setMessageList(
       state: IrisMessageListState,
-      payload: PageIrisMessages
+      payload: Page<IrisMessage>
     ): void;
     setMessageListLoading(state: IrisMessageListState, payload: boolean): void;
     setMessageListLoadingError(
@@ -113,11 +113,11 @@ const irisMessageList: IrisMessageListModule = {
   },
   actions: {
     async fetchMessages({ commit }, query: DataQuery) {
-      let list: PageIrisMessages | null = null;
+      let list: Page<IrisMessage> | null = null;
       commit("setMessageListLoading", true);
       commit("setMessageListLoadingError", null);
       try {
-        list = normalizePageIrisMessages(
+        list = normalizePageIrisMessage(
           (await authClient.irisMessagesGet({ params: query })).data,
           true
         );

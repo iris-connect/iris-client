@@ -1910,8 +1910,6 @@ export interface Page<Content> {
   empty?: boolean;
 }
 
-export type PageIrisMessages = Page<IrisMessage>;
-
 export interface IrisMessage {
   id: string;
   folder: string;
@@ -1968,6 +1966,7 @@ export enum VaccinationStatus {
   VACCINATED = "vaccinated",
   NOT_VACCINATED = "notVaccinated",
   SUSPICIOUS_PROOF = "suspiciousProof",
+  UNKNOWN = "unknown",
 }
 
 export interface VREmployee {
@@ -1978,13 +1977,15 @@ export interface VREmployee {
   vaccinationStatus?: VaccinationStatus;
 }
 
+export type VaccinationStatusCount = {
+  [K in VaccinationStatus]?: number;
+};
+
 export interface VaccinationRecord {
   id?: string;
   facility?: VRFacility;
   reportedAt?: string;
-  vaccinationStatusCount?: {
-    [K in VaccinationStatus]?: number;
-  };
+  vaccinationStatusCount?: VaccinationStatusCount;
 }
 
 export interface VaccinationRecordDetails extends VaccinationRecord {
@@ -2298,7 +2299,7 @@ export class IrisClientFrontendApi extends BaseAPI {
    */
   public irisMessagesGet(
     options?: RequestOptions
-  ): ApiResponse<PageIrisMessages> {
+  ): ApiResponse<Page<IrisMessage>> {
     assertParamExists("irisMessagesGet", "folder", options?.params?.folder);
     return this.apiRequest("GET", "/iris-messages", null, options);
   }
@@ -2409,7 +2410,7 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof IrisClientFrontendApi
    */
-  public vaccinationRecordGet(
+  public vaccinationRecordDetailsGet(
     recordId: string,
     options?: RequestOptions
   ): ApiResponse<VaccinationRecordDetails> {

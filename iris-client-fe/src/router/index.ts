@@ -214,7 +214,7 @@ export const routes: Array<RouteConfig> = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "vaccination-record-list" */ "../views/vaccination-record-list/vaccination-record-list.view.vue"
+        /* webpackChunkName: "vaccination-record-list" */ "../modules/vaccination-record/views/vaccination-record-list.view.vue"
       ),
   },
   {
@@ -225,7 +225,7 @@ export const routes: Array<RouteConfig> = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "vaccination-record-details" */ "../views/vaccination-record-details/vaccination-record-details.view.vue"
+        /* webpackChunkName: "vaccination-record-details" */ "../modules/vaccination-record/views/vaccination-record-details.view.vue"
       ),
   },
   {

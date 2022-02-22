@@ -64,7 +64,7 @@ const getStatusTableHeader = (status: VaccinationStatus) => {
 })
 export default class VaccinationRecordListView extends Vue {
   tableHeaders = [
-    { text: "Einrichtung", value: "name", sortable: true },
+    { text: "Einrichtung", value: "facility.name", sortable: true },
     { text: "Adresse", value: "address", sortable: false },
     { text: "#\xa0Angestellte", value: "employeeCount", sortable: false },
     ...getEnumKeys(VaccinationStatus).map((s) =>
@@ -87,7 +87,9 @@ export default class VaccinationRecordListView extends Vue {
       const { facility } = record;
       return {
         id: record.id,
-        name: facility?.name || "-",
+        facility: {
+          name: facility?.name || "-",
+        },
         address: getFormattedAddress(facility?.address),
         employeeCount: _sum(_values(record.vaccinationStatusCount)),
         vaccinationStatusCount: record.vaccinationStatusCount,

@@ -9,7 +9,7 @@ const getStatusName = (status?: VaccinationStatus): string => {
     case VaccinationStatus.SUSPICIOUS_PROOF:
       return "Verdächtiger Nachweis";
     default:
-      return "unbekannt";
+      return "Unbekannt";
   }
 };
 

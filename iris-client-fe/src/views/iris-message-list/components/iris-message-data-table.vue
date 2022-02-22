@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { IrisMessageContext, PageIrisMessages } from "@/api";
+import { IrisMessage, IrisMessageContext, Page } from "@/api";
 import { DataTableHeader } from "vuetify";
 import { getFormattedDate } from "@/utils/date";
 import { PropType } from "vue";
@@ -27,7 +27,7 @@ const IrisMessageDataTableProps = Vue.extend({
   inheritAttrs: false,
   props: {
     messageList: {
-      type: Object as PropType<PageIrisMessages | null>,
+      type: Object as PropType<Page<IrisMessage> | null>,
       default: null,
     },
     loading: {
