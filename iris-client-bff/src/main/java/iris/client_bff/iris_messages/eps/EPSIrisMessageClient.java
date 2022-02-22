@@ -35,7 +35,10 @@ public class EPSIrisMessageClient {
         try {
             return epsRpcClient.invoke(methodName, null, Directory.class).entries().stream()
                     .filter(this::isHealthDepartmentWithInterGaCommunication)
-                    .map(directoryEntry -> new IrisMessageHdContact(directoryEntry.name, directoryEntry.name))
+                    .map(directoryEntry -> {
+                        boolean isOwn = rpcClientProps.getOwnEndpoint().equals(directoryEntry.name);
+                        return new IrisMessageHdContact(directoryEntry.name, directoryEntry.name, isOwn);
+                    })
                     .sorted(Comparator.comparing(IrisMessageHdContact::getName, String.CASE_INSENSITIVE_ORDER))
                     .toList();
         } catch (Throwable t) {
