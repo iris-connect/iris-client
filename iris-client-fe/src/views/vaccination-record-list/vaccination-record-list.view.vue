@@ -37,9 +37,22 @@ import SortableDataTable from "@/components/sortable-data-table.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { vaccinationRecordApi } from "@/modules/vaccination-record/api";
 import { DataQuery } from "@/api/common";
-import { VaccinationRecord } from "@/api";
+import { VaccinationRecord, VaccinationStatus } from "@/api";
 import { getFormattedDate } from "@/utils/date";
 import { getFormattedAddress } from "@/utils/address";
+import vaccinationConstants from "@/modules/vaccination-record/constants";
+import _values from "lodash/values";
+import _sum from "lodash/sum";
+import { getEnumKeys } from "@/utils/data";
+
+const getStatusTableHeader = (status: VaccinationStatus) => {
+  return {
+    text: `#\xa0${vaccinationConstants.getStatusName(status)}`,
+    value: "vaccinationStatusCount." + status,
+    sortable: true,
+    width: 0,
+  };
+};
 
 @Component({
   components: {
@@ -51,8 +64,12 @@ import { getFormattedAddress } from "@/utils/address";
 })
 export default class VaccinationRecordListView extends Vue {
   tableHeaders = [
-    { text: "Unternehmen", value: "companyName", sortable: true },
+    { text: "Einrichtung", value: "name", sortable: true },
     { text: "Adresse", value: "address", sortable: false },
+    { text: "#\xa0Angestellte", value: "employeeCount", sortable: false },
+    ...getEnumKeys(VaccinationStatus).map((s) =>
+      getStatusTableHeader(VaccinationStatus[s])
+    ),
     { text: "Meldung vom", value: "reportedAt", sortable: true },
   ];
   recordsApi = vaccinationRecordApi.fetchPageVaccinationRecord();
@@ -63,16 +80,17 @@ export default class VaccinationRecordListView extends Vue {
       this.recordsApi.reset(["result"]);
     }
   }
-
   get tableRows() {
     const vaccinationRecords: VaccinationRecord[] =
       this.recordsApi.state.result?.content || [];
     return vaccinationRecords.map((record) => {
-      const { company } = record;
+      const { facility } = record;
       return {
         id: record.id,
-        companyName: company?.name || "-",
-        address: getFormattedAddress(company),
+        name: facility?.name || "-",
+        address: getFormattedAddress(facility?.address),
+        employeeCount: _sum(_values(record.vaccinationStatusCount)),
+        vaccinationStatusCount: record.vaccinationStatusCount,
         reportedAt: getFormattedDate(record.reportedAt),
       };
     });

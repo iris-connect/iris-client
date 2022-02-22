@@ -1951,20 +1951,17 @@ export interface IrisMessageHdContact {
   own?: boolean;
 }
 
-export interface VrCompanyContactPerson {
+export interface VRFacilityContactPerson {
   firstName?: string;
   lastName?: string;
   eMail?: string;
   phone?: string;
 }
 
-export interface VrCompany {
+export interface VRFacility {
   name?: string;
-  street?: string;
-  houseNumber?: string;
-  zipCode?: string;
-  city?: string;
-  contactPerson?: VrCompanyContactPerson;
+  address?: Address;
+  contactPerson?: VRFacilityContactPerson;
 }
 
 export enum VaccinationStatus {
@@ -1973,25 +1970,25 @@ export enum VaccinationStatus {
   SUSPICIOUS_PROOF = "suspiciousProof",
 }
 
-export interface VrCompanyEmployee {
+export interface VREmployee {
   firstName?: string;
   lastName?: string;
-  street?: string;
-  houseNumber?: string;
-  zipCode?: string;
-  city?: string;
+  address?: Address;
   vaccination?: string;
   vaccinationStatus?: VaccinationStatus;
 }
 
 export interface VaccinationRecord {
   id?: string;
-  company?: VrCompany;
+  facility?: VRFacility;
   reportedAt?: string;
+  vaccinationStatusCount?: {
+    [K in VaccinationStatus]?: number;
+  };
 }
 
 export interface VaccinationRecordDetails extends VaccinationRecord {
-  employees?: VrCompanyEmployee[];
+  employees?: VREmployee[];
 }
 
 /**

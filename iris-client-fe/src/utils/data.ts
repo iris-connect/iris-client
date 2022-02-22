@@ -153,6 +153,13 @@ const difference = <A extends Record<string, any>, B extends A>(
     }
   });
 };
+
 export const getObjectKeys = <T>(obj: T): Array<keyof T> => {
   return Object.keys(obj) as Array<keyof typeof obj>;
+};
+
+export const getEnumKeys = <O extends object, K extends keyof O = keyof O>(
+  obj: O
+): K[] => {
+  return Object.keys(obj).filter((k) => Number.isNaN(+k)) as K[];
 };

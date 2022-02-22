@@ -23,19 +23,24 @@
       </sortable-data-table>
       <error-message-alert :errors="[recordApi.state.error]" />
     </v-card-text>
+    <v-card-actions>
+      <v-btn text @click="goBack"> Zurück </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
 import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import SearchField from "@/components/pageable/search-field.vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { vaccinationRecordApi } from "@/modules/vaccination-record/api";
-import { VaccinationStatus, VrCompanyEmployee } from "@/api";
+import { VREmployee } from "@/api";
 import { getFormattedAddress } from "@/utils/address";
 import IrisDataTable from "@/components/iris-data-table.vue";
+import HistoryBack from "@/mixins/HistoryBack";
+import vaccinationConstants from "@/modules/vaccination-record/constants";
 
 @Component({
   components: {
@@ -46,7 +51,9 @@ import IrisDataTable from "@/components/iris-data-table.vue";
     DataQueryHandler,
   },
 })
-export default class VaccinationRecordDetailsView extends Vue {
+export default class VaccinationRecordDetailsView extends Mixins(
+  HistoryBack("vaccination-record-list")
+) {
   search = "";
   selection = [];
   tableHeaders = [
@@ -61,44 +68,21 @@ export default class VaccinationRecordDetailsView extends Vue {
     this.recordApi.execute(this.$route.params.id);
   }
   get tableRows() {
-    const employees: VrCompanyEmployee[] =
+    const employees: VREmployee[] =
       this.recordApi.state.result?.employees || [];
     return employees.map((employee, index) => {
       return {
         id: index,
         lastName: employee.lastName || "-",
         firstName: employee.firstName || "-",
-        address: getFormattedAddress(employee),
+        address: getFormattedAddress(employee.address),
         vaccination: employee.vaccination || "-",
-        vaccinationStatus: this.getStatusName(employee.vaccinationStatus),
+        vaccinationStatus: vaccinationConstants.getStatusName(
+          employee.vaccinationStatus
+        ),
       };
     });
   }
-  // If we pass the statusName to the table, the user is able to sort / search for it
-  // caveat: We have to use the statusName for retrieving the color
-  getStatusColor(status: string): string {
-    switch (status) {
-      case this.getStatusName(VaccinationStatus.VACCINATED):
-        return "green";
-      case this.getStatusName(VaccinationStatus.NOT_VACCINATED):
-        return "red";
-      case this.getStatusName(VaccinationStatus.SUSPICIOUS_PROOF):
-        return "warning";
-      default:
-        return "gray";
-    }
-  }
-  getStatusName(status?: VaccinationStatus): string {
-    switch (status) {
-      case VaccinationStatus.VACCINATED:
-        return "Geimpft";
-      case VaccinationStatus.NOT_VACCINATED:
-        return "Ungeimpft";
-      case VaccinationStatus.SUSPICIOUS_PROOF:
-        return "Verdächtiger Nachweis";
-      default:
-        return "unbekannt";
-    }
-  }
+  getStatusColor = vaccinationConstants.getStatusColor;
 }
 </script>
