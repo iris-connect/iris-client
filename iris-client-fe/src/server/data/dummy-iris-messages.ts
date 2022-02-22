@@ -49,7 +49,7 @@ export const dummyIrisMessageHdContacts: IrisMessageHdContact[] = [
   {
     id: "1",
     name: "Eigenes GA",
-    isOwn: true,
+    own: true,
   },
   {
     id: "2",

@@ -67,7 +67,7 @@ export const normalizeIrisMessageHdContact = (
       const normalized: Complete<IrisMessageHdContact> = {
         id: normalizer("id", ""),
         name: normalizer("name", ""),
-        isOwn: normalizer("isOwn", undefined, "boolean"),
+        own: normalizer("own", undefined, "boolean"),
       };
       return normalized;
     },

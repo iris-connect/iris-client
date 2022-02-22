@@ -1950,7 +1950,7 @@ export type IrisMessageFolder = {
 export interface IrisMessageHdContact {
   id: string;
   name: string;
-  isOwn?: boolean;
+  own?: boolean;
 }
 
 /**
