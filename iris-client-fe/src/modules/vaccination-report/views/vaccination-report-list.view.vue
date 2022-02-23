@@ -1,6 +1,6 @@
 <template>
   <v-card class="my-7">
-    <v-card-title> Impfstatus Nachweise </v-card-title>
+    <v-card-title> Impfpflichtmeldungen </v-card-title>
     <v-card-text>
       <data-query-handler
         @query:update="handleQueryUpdate"
@@ -13,7 +13,7 @@
           :headers="tableHeaders"
           :sort.sync="query.sort"
           :items="tableRows"
-          :loading="recordsApi.state.loading"
+          :loading="vrApi.state.loading"
           :page.sync="query.page"
           :items-per-page.sync="query.size"
           :server-items-length="totalElements"
@@ -23,7 +23,7 @@
             <span class="text-pre-line"> {{ item.address }} </span>
           </template>
         </sortable-data-table>
-        <error-message-alert :errors="[recordsApi.state.error]" />
+        <error-message-alert :errors="[vrApi.state.error]" />
       </data-query-handler>
     </v-card-text>
   </v-card>
@@ -35,19 +35,19 @@ import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import SearchField from "@/components/pageable/search-field.vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { vaccinationRecordApi } from "@/modules/vaccination-record/api";
+import { vaccinationReportApi } from "@/modules/vaccination-report/api";
 import { DataQuery } from "@/api/common";
-import { VaccinationRecord, VaccinationStatus } from "@/api";
+import { VaccinationReport, VaccinationStatus } from "@/api";
 import { getFormattedDate } from "@/utils/date";
 import { getFormattedAddress } from "@/utils/address";
-import vaccinationConstants from "@/modules/vaccination-record/constants";
+import vaccinationReportConstants from "@/modules/vaccination-report/constants";
 import _values from "lodash/values";
 import _sum from "lodash/sum";
 import { getEnumKeys } from "@/utils/data";
 
 const getStatusTableHeader = (status: VaccinationStatus) => {
   return {
-    text: `#\xa0${vaccinationConstants.getStatusName(status)}`,
+    text: `#\xa0${vaccinationReportConstants.getStatusName(status)}`,
     value: "vaccinationStatusCount." + status,
     sortable: true,
     width: 0,
@@ -62,7 +62,7 @@ const getStatusTableHeader = (status: VaccinationStatus) => {
     DataQueryHandler,
   },
 })
-export default class VaccinationRecordListView extends Vue {
+export default class VaccinationReportListView extends Vue {
   tableHeaders = [
     { text: "Einrichtung", value: "facility.name", sortable: true },
     { text: "Adresse", value: "address", sortable: false },
@@ -72,38 +72,38 @@ export default class VaccinationRecordListView extends Vue {
     ),
     { text: "Meldung vom", value: "reportedAt", sortable: true },
   ];
-  recordsApi = vaccinationRecordApi.fetchPageVaccinationRecord();
+  vrApi = vaccinationReportApi.fetchPageVaccinationReport();
   handleQueryUpdate(newValue: DataQuery) {
     if (newValue) {
-      this.recordsApi.execute(newValue);
+      this.vrApi.execute(newValue);
     } else {
-      this.recordsApi.reset(["result"]);
+      this.vrApi.reset(["result"]);
     }
   }
   get tableRows() {
-    const vaccinationRecords: VaccinationRecord[] =
-      this.recordsApi.state.result?.content || [];
-    return vaccinationRecords.map((record) => {
-      const { facility } = record;
+    const vaccinationReports: VaccinationReport[] =
+      this.vrApi.state.result?.content || [];
+    return vaccinationReports.map((report) => {
+      const { facility } = report;
       return {
-        id: record.id,
+        id: report.id,
         facility: {
           name: facility?.name || "-",
         },
         address: getFormattedAddress(facility?.address),
-        employeeCount: _sum(_values(record.vaccinationStatusCount)),
-        vaccinationStatusCount: record.vaccinationStatusCount,
-        reportedAt: getFormattedDate(record.reportedAt),
+        employeeCount: _sum(_values(report.vaccinationStatusCount)),
+        vaccinationStatusCount: report.vaccinationStatusCount,
+        reportedAt: getFormattedDate(report.reportedAt),
       };
     });
   }
   get totalElements(): number | undefined {
-    return this.recordsApi.state.result?.totalElements;
+    return this.vrApi.state.result?.totalElements;
   }
   handleRowClick(row: { id?: string }) {
     if (row.id) {
       this.$router.push({
-        name: "vaccination-record-details",
+        name: "vaccination-report-details",
         params: { id: row.id },
       });
     }

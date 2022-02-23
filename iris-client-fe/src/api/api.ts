@@ -1963,6 +1963,11 @@ export interface VRFacility {
 }
 
 export enum VaccinationStatus {
+  NOT_VACCINATED = "notVaccinated",
+  SUSPICIOUS_PROOF = "suspiciousProof",
+}
+
+export enum VaccinationExtendedStatus {
   VACCINATED = "vaccinated",
   NOT_VACCINATED = "notVaccinated",
   SUSPICIOUS_PROOF = "suspiciousProof",
@@ -1981,14 +1986,14 @@ export type VaccinationStatusCount = {
   [K in VaccinationStatus]?: number;
 };
 
-export interface VaccinationRecord {
+export interface VaccinationReport {
   id?: string;
   facility?: VRFacility;
   reportedAt?: string;
   vaccinationStatusCount?: VaccinationStatusCount;
 }
 
-export interface VaccinationRecordDetails extends VaccinationRecord {
+export interface VaccinationReportDetails extends VaccinationReport {
   employees?: VREmployee[];
 }
 
@@ -2391,31 +2396,31 @@ export class IrisClientFrontendApi extends BaseAPI {
 
   /**
    *
-   * @summary Fetches paginated vaccination-record
+   * @summary Fetches paginated vaccination-report
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof IrisClientFrontendApi
    */
-  public pageVaccinationRecordGet(
+  public pageVaccinationReportGet(
     options?: RequestOptions
-  ): ApiResponse<Page<VaccinationRecord>> {
-    return this.apiRequest("GET", "/vaccination-records", null, options);
+  ): ApiResponse<Page<VaccinationReport>> {
+    return this.apiRequest("GET", "/vaccination-reports", null, options);
   }
 
   /**
    *
-   * @summary Fetches vaccination-record details
-   * @param {string} recordId for vaccination record.
+   * @summary Fetches vaccination-report details
+   * @param {string} id for vaccination report.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof IrisClientFrontendApi
    */
-  public vaccinationRecordDetailsGet(
-    recordId: string,
+  public vaccinationReportDetailsGet(
+    id: string,
     options?: RequestOptions
-  ): ApiResponse<VaccinationRecordDetails> {
-    assertParamExists("vaccinationRecordGet", "recordId", recordId);
-    const path = `/vaccination-records/${encodeURIComponent(recordId)}`;
+  ): ApiResponse<VaccinationReportDetails> {
+    assertParamExists("vaccinationReportDetailsGet", "id", id);
+    const path = `/vaccination-reports/${encodeURIComponent(id)}`;
     return this.apiRequest("GET", path, null, options);
   }
 }

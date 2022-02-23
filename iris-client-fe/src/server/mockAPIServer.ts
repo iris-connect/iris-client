@@ -8,7 +8,7 @@ import {
   IrisMessage,
   User,
   UserRole,
-  VaccinationRecord,
+  VaccinationReport,
 } from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
 import {
@@ -41,7 +41,7 @@ import {
   getDummyMessageFromRequest,
 } from "@/server/data/dummy-iris-messages";
 import { DataQuery } from "@/api/common";
-import { vaccinationRecordList } from "@/server/data/vaccination-records";
+import { vaccinationReportList } from "@/server/data/vaccination-reports";
 
 const loginResponse = (role: UserRole): Response => {
   return new Response(200, {
@@ -355,19 +355,19 @@ export function makeMockAPIServer() {
         );
       });
 
-      this.get("/vaccination-records", (schema, request) => {
+      this.get("/vaccination-reports", (schema, request) => {
         const query: Partial<DataQuery> = request.queryParams;
         return authResponse(
           request,
-          queriedPage(vaccinationRecordList as VaccinationRecord[], query)
+          queriedPage(vaccinationReportList as VaccinationReport[], query)
         );
       });
 
-      this.get("/vaccination-records/:recordId", (schema, request) => {
-        const record = vaccinationRecordList.find(
-          (it) => it.id === request.params.recordId
+      this.get("/vaccination-reports/:id", (schema, request) => {
+        const item = vaccinationReportList.find(
+          (it) => it.id === request.params.id
         );
-        return authResponse(request, record);
+        return authResponse(request, item);
       });
     },
   });

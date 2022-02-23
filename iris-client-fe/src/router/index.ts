@@ -206,26 +206,26 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: "/vaccination-record/list",
-    name: "vaccination-record-list" /* Caution: This acts as an identifier! */,
+    path: "/vaccination-report/list",
+    name: "vaccination-report-list" /* Caution: This acts as an identifier! */,
     meta: {
       menu: true,
-      menuName: "Impfnachweise",
+      menuName: "Impfberichte",
     },
     component: () =>
       import(
-        /* webpackChunkName: "vaccination-record-list" */ "../modules/vaccination-record/views/vaccination-record-list.view.vue"
+        /* webpackChunkName: "vaccination-report-list" */ "../modules/vaccination-report/views/vaccination-report-list.view.vue"
       ),
   },
   {
-    path: "/vaccination-record/details/:id",
-    name: "vaccination-record-details" /* Caution: This acts as an identifier! */,
+    path: "/vaccination-report/details/:id",
+    name: "vaccination-report-details" /* Caution: This acts as an identifier! */,
     meta: {
       menu: false,
     },
     component: () =>
       import(
-        /* webpackChunkName: "vaccination-record-details" */ "../modules/vaccination-record/views/vaccination-record-details.view.vue"
+        /* webpackChunkName: "vaccination-report-details" */ "../modules/vaccination-report/views/vaccination-report-details.view.vue"
       ),
   },
   {

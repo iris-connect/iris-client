@@ -1,14 +1,14 @@
 import {
   Page,
-  VaccinationRecord,
-  VaccinationRecordDetails,
+  VaccinationReport,
+  VaccinationReportDetails,
   VaccinationStatus,
   VaccinationStatusCount,
   VREmployee,
   VRFacility,
   VRFacilityContactPerson,
 } from "@/api";
-import { Complete, normalizeData } from "@/utils/data";
+import { Complete, getEnumKeys, normalizeData } from "@/utils/data";
 import { normalizeAddress } from "@/views/event-tracking-details/event-tracking-details.data";
 import { normalizePage } from "@/common/normalizer";
 
@@ -24,10 +24,7 @@ export const normalizeVREmployee = (
         lastName: normalizer("lastName", undefined),
         address: normalizeAddress(source?.address),
         vaccination: normalizer("vaccination", undefined),
-        vaccinationStatus: normalizer(
-          "vaccinationStatus",
-          VaccinationStatus.UNKNOWN
-        ),
+        vaccinationStatus: normalizer("vaccinationStatus", undefined),
       };
     },
     parse,
@@ -35,22 +32,22 @@ export const normalizeVREmployee = (
   );
 };
 
-export const normalizeVaccinationRecordDetails = (
-  source?: VaccinationRecordDetails,
+export const normalizeVaccinationReportDetails = (
+  source?: VaccinationReportDetails,
   parse?: boolean
-): VaccinationRecordDetails => {
+): VaccinationReportDetails => {
   return normalizeData(
     source,
     (normalizer) => {
       const employees = normalizer("employees", undefined, "array") || [];
-      const record = normalizeVaccinationRecord(source);
+      const report = normalizeVaccinationReport(source);
       return {
-        ...(record as Complete<typeof record>),
+        ...(report as Complete<typeof report>),
         employees: employees.map((employee) => normalizeVREmployee(employee)),
       };
     },
     parse,
-    "VaccinationRecordDetails"
+    "VaccinationReportDetails"
   );
 };
 
@@ -98,38 +95,22 @@ export const normalizeVaccinationStatusCount = (
   return normalizeData(
     source,
     (normalizer) => {
-      return {
-        [VaccinationStatus.VACCINATED]: normalizer(
-          VaccinationStatus.VACCINATED,
-          undefined,
-          "number"
-        ),
-        [VaccinationStatus.NOT_VACCINATED]: normalizer(
-          VaccinationStatus.NOT_VACCINATED,
-          undefined,
-          "number"
-        ),
-        [VaccinationStatus.SUSPICIOUS_PROOF]: normalizer(
-          VaccinationStatus.SUSPICIOUS_PROOF,
-          undefined,
-          "number"
-        ),
-        [VaccinationStatus.UNKNOWN]: normalizer(
-          VaccinationStatus.UNKNOWN,
-          undefined,
-          "number"
-        ),
-      };
+      const count: VaccinationStatusCount = {};
+      getEnumKeys(VaccinationStatus).forEach((key) => {
+        const status = VaccinationStatus[key];
+        count[status] = normalizer(status, undefined, "number");
+      });
+      return count as Complete<typeof count>;
     },
     parse,
     "VaccinationStatusCount"
   );
 };
 
-export const normalizeVaccinationRecord = (
-  source?: VaccinationRecord,
+export const normalizeVaccinationReport = (
+  source?: VaccinationReport,
   parse?: boolean
-): VaccinationRecord => {
+): VaccinationReport => {
   return normalizeData(
     source,
     (normalizer) => {
@@ -143,13 +124,13 @@ export const normalizeVaccinationRecord = (
       };
     },
     parse,
-    "VaccinationRecord"
+    "VaccinationReport"
   );
 };
 
-export const normalizePageVaccinationRecord = (
-  source?: Page<VaccinationRecord>,
+export const normalizePageVaccinationReport = (
+  source?: Page<VaccinationReport>,
   parse?: boolean
-): Page<VaccinationRecord> => {
-  return normalizePage(normalizeVaccinationRecord, source, parse);
+): Page<VaccinationReport> => {
+  return normalizePage(normalizeVaccinationReport, source, parse);
 };

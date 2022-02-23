@@ -1,7 +1,7 @@
 import {
   Address,
-  VaccinationRecord,
-  VaccinationRecordDetails,
+  VaccinationReport,
+  VaccinationReportDetails,
   VaccinationStatus,
   VREmployee,
   VRFacilityContactPerson,
@@ -35,8 +35,8 @@ const createEmployee = (): VREmployee => {
 
 const getVaccinationStatusCount = (
   employees: VREmployee[]
-): VaccinationRecord["vaccinationStatusCount"] => {
-  const count: VaccinationRecord["vaccinationStatusCount"] = {};
+): VaccinationReport["vaccinationStatusCount"] => {
+  const count: VaccinationReport["vaccinationStatusCount"] = {};
   for (const value of getEnumKeys(VaccinationStatus)) {
     count[VaccinationStatus[value]] = employees.filter(
       (e) => e.vaccinationStatus === VaccinationStatus[value]
@@ -54,7 +54,7 @@ const createContactPerson = (): VRFacilityContactPerson => {
   };
 };
 
-const createRecord = (id: string) => {
+const createReport = (id: string) => {
   const employees = _times(_random(1, 20), createEmployee);
   return {
     id,
@@ -76,10 +76,10 @@ const createRecord = (id: string) => {
   };
 };
 
-export const vaccinationRecordList: VaccinationRecordDetails[] = [
-  createRecord("1"),
-  createRecord("2"),
-  createRecord("3"),
-  createRecord("4"),
-  createRecord("5"),
+export const vaccinationReportList: VaccinationReportDetails[] = [
+  createReport("1"),
+  createReport("2"),
+  createReport("3"),
+  createReport("4"),
+  createReport("5"),
 ];
