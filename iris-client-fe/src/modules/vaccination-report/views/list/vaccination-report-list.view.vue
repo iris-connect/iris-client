@@ -35,12 +35,12 @@ import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import SearchField from "@/components/pageable/search-field.vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { vaccinationReportApi } from "@/modules/vaccination-report/api";
+import { vaccinationReportApi } from "@/modules/vaccination-report/services/api";
 import { DataQuery } from "@/api/common";
 import { VaccinationReport, VaccinationStatus } from "@/api";
 import { getFormattedDate } from "@/utils/date";
 import { getFormattedAddress } from "@/utils/address";
-import vaccinationReportConstants from "@/modules/vaccination-report/constants";
+import vaccinationReportConstants from "@/modules/vaccination-report/services/constants";
 import _values from "lodash/values";
 import _sum from "lodash/sum";
 import { getEnumKeys } from "@/utils/data";
@@ -66,7 +66,7 @@ export default class VaccinationReportListView extends Vue {
   tableHeaders = [
     { text: "Einrichtung", value: "facility.name", sortable: true },
     { text: "Adresse", value: "address", sortable: false },
-    { text: "#\xa0Angestellte", value: "employeeCount", sortable: false },
+    { text: "#\xa0Mitarbeiter", value: "employeeCount", sortable: false },
     ...getEnumKeys(VaccinationStatus).map((s) =>
       getStatusTableHeader(VaccinationStatus[s])
     ),

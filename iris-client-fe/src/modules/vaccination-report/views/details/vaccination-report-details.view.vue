@@ -4,11 +4,15 @@
     <v-card-text>
       <vaccination-report-facility-info :facility="facility" />
       <info-grid :content="dateInfo" />
-      <btn-toggle-select
-        class="my-5"
-        :select-options="statusSelectOptions"
-        v-model="status"
-      />
+      <div class="my-6">
+        <span class="mr-3">
+          <strong>Status:</strong>
+        </span>
+        <btn-toggle-select
+          :select-options="statusSelectOptions"
+          v-model="status"
+        />
+      </div>
       <search-field :debounce="0" v-model="search" />
       <sortable-data-table
         v-model="selection"
@@ -34,6 +38,12 @@
     </v-card-text>
     <v-card-actions>
       <v-btn text @click="goBack"> Zurück </v-btn>
+      <v-spacer />
+      <vaccination-report-data-export
+        :report="vaccinationReport"
+        :selection="selection"
+        :total="tableRows.length"
+      />
     </v-card-actions>
   </v-card>
 </template>
@@ -44,29 +54,32 @@ import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import SearchField from "@/components/pageable/search-field.vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { vaccinationReportApi } from "@/modules/vaccination-report/api";
+import { vaccinationReportApi } from "@/modules/vaccination-report/services/api";
 import { VaccinationStatus, VREmployee } from "@/api";
 import { getFormattedAddress } from "@/utils/address";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import HistoryBack from "@/mixins/HistoryBack";
-import vaccinationReportConstants from "@/modules/vaccination-report/constants";
+import vaccinationReportConstants from "@/modules/vaccination-report/services/constants";
 import InfoGrid from "@/components/info-grid.vue";
 import { getFormattedDate } from "@/utils/date";
 import { getEnumKeys } from "@/utils/data";
 import BtnToggleSelect from "@/components/btn-toggle-select.vue";
-import VaccinationReportFacilityInfo from "@/modules/vaccination-report/components/vaccination-report-facility-info.vue";
+import VaccinationReportFacilityInfo from "@/modules/vaccination-report/views/details/components/vaccination-report-facility-info.vue";
+import VaccinationReportDataExport from "@/modules/vaccination-report/views/details/modules/data-export/components/vaccination-report-data-export.vue";
 
-type TableRow = {
+export type VREmployeeTableRow = {
   id: number | string;
   lastName: string;
   firstName: string;
   address: string;
   vaccination: string;
   vaccinationStatus: string;
+  raw: VREmployee;
 };
 
 @Component({
   components: {
+    VaccinationReportDataExport,
     VaccinationReportFacilityInfo,
     BtnToggleSelect,
     InfoGrid,
@@ -97,8 +110,8 @@ export default class VaccinationReportDetailsView extends Mixins(
   get filteredTableRows() {
     return this.tableRows;
   }
-  get tableRows(): TableRow[] {
-    const employees: VREmployee[] = this.vrApi.state.result?.employees || [];
+  get tableRows(): VREmployeeTableRow[] {
+    const employees: VREmployee[] = this.vaccinationReport?.employees || [];
     return employees.map((employee, index) => {
       return {
         id: index,
@@ -109,15 +122,20 @@ export default class VaccinationReportDetailsView extends Mixins(
         vaccinationStatus: vaccinationReportConstants.getStatusName(
           employee.vaccinationStatus
         ),
+        raw: employee,
       };
     });
   }
+  get vaccinationReport() {
+    return this.vrApi.state.result;
+  }
   get facility() {
-    return this.vrApi.state.result?.facility;
+    return this.vaccinationReport?.facility;
   }
   get dateInfo() {
-    const reportedAt = this.vrApi.state.result?.reportedAt;
-    return [[["Meldung vom", getFormattedDate(reportedAt)]]];
+    return [
+      [["Meldung vom", getFormattedDate(this.vaccinationReport?.reportedAt)]],
+    ];
   }
   get statusSelectOptions() {
     return getEnumKeys(VaccinationStatus).map((key) => {
@@ -128,7 +146,7 @@ export default class VaccinationReportDetailsView extends Mixins(
     });
   }
   getStatusColor = vaccinationReportConstants.getStatusColor;
-  dataTableFilter(value: TableRow) {
+  dataTableFilter(value: VREmployeeTableRow) {
     if (this.status) {
       const statusName = vaccinationReportConstants.getStatusName(this.status);
       return value.vaccinationStatus === statusName;

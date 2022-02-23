@@ -60,11 +60,11 @@ const createReport = (id: string) => {
     id,
     facility: {
       name: _sample([
-        "Musterfirma",
+        "Müsterfirmá",
         "Beispielbetrieb",
         "Testfabrik",
         "Pflegeheim",
-        "Beispiel-Unternehmen",
+        "Beispiel:Ünternehmen",
         "Test.Corp",
       ]),
       address: createAddress(),

@@ -110,7 +110,14 @@ const sanitizeRows = (
     const sRow: string[] = [];
     headers.forEach((header) => {
       const field = getFieldValue(row, header);
-      sRow.push(sanitizeField(_toString(field), replaceDelimiters));
+      let replace = replaceDelimiters;
+      if (
+        typeof header !== "string" &&
+        typeof header.replaceDelimiters === "boolean"
+      ) {
+        replace = header.replaceDelimiters;
+      }
+      sRow.push(sanitizeField(_toString(field), replace));
     });
     return sRow;
   });

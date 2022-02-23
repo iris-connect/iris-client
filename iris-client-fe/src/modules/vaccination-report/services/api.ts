@@ -5,7 +5,7 @@ import asyncAction from "@/utils/asyncAction";
 import {
   normalizePageVaccinationReport,
   normalizeVaccinationReportDetails,
-} from "@/modules/vaccination-report/normalizer";
+} from "@/modules/vaccination-report/services/normalizer";
 
 const fetchPageVaccinationReport = () => {
   const action = async (query: DataQuery) => {
