@@ -14,7 +14,7 @@
         />
       </div>
       <search-field :debounce="0" v-model="search" />
-      <sortable-data-table
+      <iris-data-table
         v-model="selection"
         class="mt-5"
         :headers="tableHeaders"
@@ -33,7 +33,7 @@
             {{ item.vaccinationStatus }}
           </v-chip>
         </template>
-      </sortable-data-table>
+      </iris-data-table>
       <error-message-alert :errors="[vrApi.state.error]" />
     </v-card-text>
     <v-card-actions>
@@ -52,7 +52,6 @@
 import { Component, Mixins } from "vue-property-decorator";
 import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import SearchField from "@/components/pageable/search-field.vue";
-import SortableDataTable from "@/components/sortable-data-table.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { vaccinationReportApi } from "@/modules/vaccination-report/services/api";
 import { VaccinationStatus, VREmployee } from "@/api";
@@ -85,7 +84,6 @@ export type VREmployeeTableRow = {
     InfoGrid,
     IrisDataTable,
     ErrorMessageAlert,
-    SortableDataTable,
     SearchField,
     DataQueryHandler,
   },

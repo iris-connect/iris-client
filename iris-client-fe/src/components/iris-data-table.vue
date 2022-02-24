@@ -1,9 +1,10 @@
 <template>
   <v-data-table
     v-bind="$attrs"
-    v-on="$listeners"
+    v-on="listeners"
     :loading="loading"
     :items="filteredItems"
+    :server-items-length="serverItemsLength"
     v-model="model"
     :class="[
       $attrs.class,
@@ -31,6 +32,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import DataTableSelectAll from "@/components/data-table-select-all.vue";
 import { PropType } from "vue";
+import _omit from "lodash/omit";
 
 type FilterFunction = <T>(value: T, index: number, array: T[]) => boolean;
 
@@ -57,6 +59,10 @@ const IrisDataTableProps = Vue.extend({
       type: Function as PropType<FilterFunction | null>,
       default: null,
     },
+    serverItemsLength: {
+      type: Number,
+      default: -1,
+    },
   },
 });
 @Component({
@@ -65,9 +71,13 @@ const IrisDataTableProps = Vue.extend({
   },
 })
 export default class IrisDataTable extends IrisDataTableProps {
+  get listeners(): Record<string, unknown> {
+    return _omit(this.$listeners, ["input"]);
+  }
   currentItems = [];
   get filteredItems() {
-    if (this.filter) {
+    // use filter only for local data -> this.serverItemsLength <= -1
+    if (this.filter && this.serverItemsLength <= -1) {
       return this.items.filter(this.filter);
     }
     return this.items;
