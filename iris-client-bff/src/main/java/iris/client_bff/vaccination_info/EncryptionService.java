@@ -58,7 +58,7 @@ public class EncryptionService {
 	public SecretKey generateAgreedKey(PrivateKey ownPrivate, PublicKey foreignPublic)
 			throws GeneralSecurityException {
 
-		KeyAgreement agreement = KeyAgreement.getInstance("ECCDH", PROVIDER);
+		KeyAgreement agreement = KeyAgreement.getInstance("ECDH", PROVIDER);
 		agreement.init(ownPrivate);
 		agreement.doPhase(foreignPublic, true);
 
