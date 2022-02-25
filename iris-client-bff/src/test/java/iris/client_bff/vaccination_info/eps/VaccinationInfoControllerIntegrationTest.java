@@ -27,6 +27,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Locale;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -73,6 +74,14 @@ class VaccinationInfoControllerIntegrationTest {
 				.registerParser(JSON_RPC, Parser.JSON)
 				.expectBody("id", equalTo("1"))
 				.build();
+	}
+
+	@AfterAll
+	void cleanup() {
+
+		// Must be done, otherwise other tests may break using RestAssured.
+		RestAssuredMockMvc.requestSpecification = null;
+		RestAssuredMockMvc.responseSpecification = null;
 	}
 
 	@Test
