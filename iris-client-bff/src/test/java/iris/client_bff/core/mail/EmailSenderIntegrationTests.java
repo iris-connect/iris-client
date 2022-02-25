@@ -112,7 +112,7 @@ class EmailSenderIntegrationTests {
 
 		Try<Void> sendTestEmailDe() {
 
-			var locale = Locale.GERMAN;
+			var locale = new Locale("de", "DE", "test");
 			var subject = messages.getMessage("TestMail.subject", locale);
 
 			var email = new TestEmail(subject, TestKeys.TEST_MAIL_FTL, getParameters(), locale);
@@ -122,7 +122,7 @@ class EmailSenderIntegrationTests {
 
 		Try<Void> sendTestHtmlEmailDe() {
 
-			var locale = Locale.GERMAN;
+			var locale = new Locale("de", "DE", "test");
 			var subject = messages.getMessage("TestMail.subject", locale);
 
 			var email = new TestEmail(subject, TestKeys.TEST_HTML_MAIL_FTLH, getParameters(), locale);

@@ -10,3 +10,4 @@ This file lists all individual authors that have contributed significant code to
 * Nadine Schwingler
 * Tim Lusa
 * Fabio Aversente
+* Timo Bögner

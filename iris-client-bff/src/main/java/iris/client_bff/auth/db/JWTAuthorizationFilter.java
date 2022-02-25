@@ -3,6 +3,7 @@ package iris.client_bff.auth.db;
 import static iris.client_bff.auth.db.SecurityConstants.*;
 
 import iris.client_bff.auth.db.jwt.JWTVerifier;
+import iris.client_bff.users.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -26,11 +27,14 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 @Slf4j
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
-	private JWTVerifier jwtVerifier;
+	private final JWTVerifier jwtVerifier;
+	private final UserDetailsServiceImpl userService;
 
-	public JWTAuthorizationFilter(JWTVerifier jwtVerifier) {
+	public JWTAuthorizationFilter(JWTVerifier jwtVerifier, UserDetailsServiceImpl userService) {
 		super();
+
 		this.jwtVerifier = jwtVerifier;
+		this.userService = userService;
 	}
 
 	@Override
@@ -75,10 +79,13 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 		DecodedJWT jwt = jwtVerifier.verify(token);
 
 		var userName = jwt.getSubject();
+		var userAccount = userService.findByUsername(userName);
 
-		if (userName != null && jwtVerifier.isTokenWhitelisted(token)) {
+		if (userAccount.isPresent() && jwtVerifier.isTokenWhitelisted(token)) {
+
 			var authority = new SimpleGrantedAuthority(jwt.getClaim(JWT_CLAIM_USER_ROLE).asString());
-			return new UserAccountAuthentication(userName, true, List.of(authority));
+
+			return new UserAccountAuthentication(userAccount.get(), true, List.of(authority));
 		}
 		return null;
 	}

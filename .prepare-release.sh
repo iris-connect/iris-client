@@ -108,12 +108,13 @@ printf "\n  Set version to POMs and build BFF image and JAR  \n\n"
 # Set new version in pom.xml using mvn versions:set command
 mvn versions:set -DnewVersion=$VERSION -DprocessAllModules=true
 
+BFF_IMAGE_NAME="$NAMESPACE/iris-client-bff"
+
 # Package the new version and copy it to release folder
 # These files will be upload to github by @semantic-release/github
-mvn -B clean verify spring-boot:repackage spring-boot:build-image -Dspring-boot.build-image.publish=false
+mvn -B clean verify spring-boot:repackage spring-boot:build-image -Dspring-boot.build-image.publish=false -Dimage.tag=$BFF_IMAGE_NAME:$VERSION
 mkdir release && cp ./iris-client-bff/target/*.jar release
 
-BFF_IMAGE_NAME="$NAMESPACE/iris-client-bff"
 docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:latest
 docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:$MAJOR_LATEST
 docker tag $BFF_IMAGE_NAME:$VERSION $BFF_IMAGE_NAME:$MINOR_LATEST
@@ -168,6 +169,49 @@ cd ../../infrastructure/stand-alone-deployment && zip -qr ../../release/stand-al
 
 
 cd ../../
+
+printf "\n  Signing images and tags with DCT  \n\n"
+
+# print identifier of used dct signing key
+echo "signing-key identifier = $DCT_PRIVATE_KEY_IDENTIFIER"
+export DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE="$DCT_PRIVATE_KEY_PASSPHRASE"
+export DOCKER_CONTENT_TRUST=1
+
+docker trust sign --local $NGINX_IMAGE_NAME:$VERSION
+docker trust sign --local $NGINX_IMAGE_NAME:$MAJOR_LATEST
+docker trust sign --local $NGINX_IMAGE_NAME:$MINOR_LATEST
+docker trust sign --local $IRIS_CLIENT_EPS_IMAGE_NAME:$VERSION
+docker trust sign --local $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR_LATEST
+docker trust sign --local $IRIS_CLIENT_EPS_IMAGE_NAME:$MINOR_LATEST
+docker trust sign --local $IRIS_CLIENT_PROXY_IMAGE_NAME:$VERSION
+docker trust sign --local $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR_LATEST
+docker trust sign --local $IRIS_CLIENT_PROXY_IMAGE_NAME:$MINOR_LATEST
+docker trust sign --local $APP_EPS_IMAGE_NAME:$VERSION
+docker trust sign --local $APP_EPS_IMAGE_NAME:$MAJOR_LATEST
+docker trust sign --local $APP_EPS_IMAGE_NAME:$MINOR_LATEST
+docker trust sign --local $FE_IMAGE_NAME:$VERSION
+docker trust sign --local $FE_IMAGE_NAME:$MAJOR_LATEST
+docker trust sign --local $FE_IMAGE_NAME:$MINOR_LATEST
+docker trust sign --local $BFF_IMAGE_NAME:latest
+docker trust sign --local $BFF_IMAGE_NAME:$MAJOR_LATEST
+docker trust sign --local $BFF_IMAGE_NAME:$MINOR_LATEST
+
+if (( $RELEASE )); then
+  	docker trust sign --local $NGINX_IMAGE_NAME:$MAJOR
+  	docker trust sign --local $NGINX_IMAGE_NAME:$MINOR
+  	docker trust sign --local $IRIS_CLIENT_EPS_IMAGE_NAME:$MAJOR
+  	docker trust sign --local $IRIS_CLIENT_EPS_IMAGE_NAME:$MINOR
+  	docker trust sign --local $IRIS_CLIENT_PROXY_IMAGE_NAME:$MAJOR
+  	docker trust sign --local $IRIS_CLIENT_PROXY_IMAGE_NAME:$MINOR
+  	docker trust sign --local $APP_EPS_IMAGE_NAME:$MAJOR
+  	docker trust sign --local $APP_EPS_IMAGE_NAME:$MINOR
+  	docker trust sign --local $FE_IMAGE_NAME:$MAJOR
+  	docker trust sign --local $FE_IMAGE_NAME:$MINOR
+  	docker trust sign --local $BFF_IMAGE_NAME:$MAJOR
+  	docker trust sign --local $BFF_IMAGE_NAME:$MINOR
+fi
+
+export DOCKER_CONTENT_TRUST=0
 
 printf "\n  Push images and tags to docker registry  \n\n"
 

@@ -168,11 +168,14 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("getDataTableRow", (accessor, table) => {
+  cy.getBy(table || ".v-data-table").as("dataTable");
+  cy.get("@dataTable").should("not.have.class", "is-loading");
   cy.getBy("input{search}")
     .should("exist")
     .clear()
     .type(accessor, { log: false });
-  cy.getBy(table || ".v-data-table")
+  cy.get("@dataTable")
+    .should("not.have.class", "is-loading")
     .contains(accessor, { log: false })
     .closest("tr");
 });
@@ -190,6 +193,70 @@ Cypress.Commands.add("visitUserByAccessor", (accessor) => {
   });
   cy.location("pathname").should("contain", "/admin/user/edit");
 });
+
+Cypress.Commands.add("getRootMessageFolder", (context) => {
+  cy.location("pathname").should("equal", "/iris-messages/list");
+  cy.getBy("message-folders-data-tree").should("exist");
+  return cy
+    .getBy(`{message-folders-data-tree} {select.${context}}`)
+    .should("exist")
+    .first();
+});
+
+Cypress.Commands.add("getMessageDataTableRow", (accessor, context) => {
+  cy.location("pathname").should("equal", "/iris-messages/list");
+  cy.getRootMessageFolder(context).click();
+  cy.getDataTableRow(accessor, "view.data-table").should("exist");
+});
+
+Cypress.Commands.add(
+  "selectOwnIrisMessageContact",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2) => {
+    // arg1 = selector, arg2 = menu
+    const menu = subject ? arg1 : arg2;
+    if (subject) {
+      cy.wrap(subject).as("field");
+    } else {
+      cy.getBy(arg1).as("field");
+    }
+    cy.get("@field").closest(".v-input").should("not.have.class", "is-empty");
+    cy.getApp().then((app) => {
+      const contacts = app.$store.state.irisMessageCreate.contacts;
+      const ownContact = contacts.find((c) => c.isOwn === true);
+      cy.wrap(ownContact).should("exist").should("not.be.empty");
+      cy.get("@field").selectAutocompleteValue(menu, ownContact.name);
+    });
+    return cy.get("@field");
+  }
+);
+
+Cypress.Commands.add(
+  "selectAutocompleteValue",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2, arg3) => {
+    // arg1 = selector, arg2 = menu, arg3 = value
+    const menu = subject ? arg1 : arg2;
+    const value = subject ? arg2 : arg3;
+    if (subject) {
+      cy.wrap(subject).as("field");
+    } else {
+      cy.getBy(arg1).as("field");
+    }
+    cy.get("@field")
+      .type(value)
+      .closest(".v-input")
+      .click()
+      .closest("#app")
+      .find(menu)
+      .should("exist")
+      .within(() => {
+        cy.contains(value).as("value").click();
+      });
+    cy.get("@field").assertInputValid().should("have.value", value);
+    return cy.get("@field");
+  }
+);
 
 Cypress.Commands.add(
   "selectFieldValue",
