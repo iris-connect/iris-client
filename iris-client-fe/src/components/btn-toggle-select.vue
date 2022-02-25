@@ -10,11 +10,11 @@
       text
       v-for="selectOption in selectOptions"
       :key="selectOption.value"
-      :data-test="`btn.select.${selectOption.value}`"
+      :data-test="`${dataTestKey}.select.${selectOption.value}`"
     >
       {{ selectOption.text }}
     </v-btn>
-    <v-btn text data-test="btn.select.all"> Alle </v-btn>
+    <v-btn text :data-test="`${dataTestKey}.select.all`"> Alle </v-btn>
   </v-btn-toggle>
 </template>
 
@@ -35,6 +35,10 @@ const BtnToggleSelectProps = Vue.extend({
     selectOptions: {
       type: Array as PropType<SelectOption[]>,
       default: () => [],
+    },
+    dataTestKey: {
+      type: String,
+      default: "btn",
     },
   },
 });

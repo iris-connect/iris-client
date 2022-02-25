@@ -18,6 +18,7 @@
           :items-per-page.sync="query.size"
           :server-items-length="totalElements"
           @click:row="handleRowClick"
+          data-test="view.data-table"
         >
           <template v-slot:item.address="{ item }">
             <span class="text-pre-line"> {{ item.address }} </span>

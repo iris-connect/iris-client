@@ -10,6 +10,7 @@
         </span>
         <btn-toggle-select
           :select-options="statusSelectOptions"
+          data-test-key="status"
           v-model="status"
         />
       </div>
@@ -24,13 +25,18 @@
         show-select
         show-select-all
         :filter="dataTableFilter"
+        data-test="vaccination-report.employee.data-table"
       >
         <template v-slot:item.address="{ item }">
           <span class="text-pre-line"> {{ item.address }} </span>
         </template>
         <template v-slot:item.vaccinationStatus="{ item }">
-          <v-chip :color="getStatusColor(item.vaccinationStatus)" dark>
-            {{ item.vaccinationStatus }}
+          <v-chip
+            :color="getStatusColor(item.vaccinationStatus)"
+            :data-test="`status.${item.vaccinationStatus}`"
+            dark
+          >
+            {{ getStatusName(item.vaccinationStatus) }}
           </v-chip>
         </template>
       </iris-data-table>
@@ -117,9 +123,7 @@ export default class VaccinationReportDetailsView extends Mixins(
         firstName: employee.firstName || "-",
         address: getFormattedAddress(employee.address),
         vaccination: employee.vaccination || "-",
-        vaccinationStatus: vaccinationReportConstants.getStatusName(
-          employee.vaccinationStatus
-        ),
+        vaccinationStatus: employee.vaccinationStatus || "-",
         raw: employee,
       };
     });
@@ -144,10 +148,10 @@ export default class VaccinationReportDetailsView extends Mixins(
     });
   }
   getStatusColor = vaccinationReportConstants.getStatusColor;
+  getStatusName = vaccinationReportConstants.getStatusName;
   dataTableFilter(value: VREmployeeTableRow) {
     if (this.status) {
-      const statusName = vaccinationReportConstants.getStatusName(this.status);
-      return value.vaccinationStatus === statusName;
+      return value.vaccinationStatus === this.status;
     }
     return true;
   }
