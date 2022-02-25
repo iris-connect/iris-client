@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.*;
 
 import io.vavr.control.Try;
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.core.EmailAddress;
 import iris.client_bff.core.mail.EmailSender.AbstractTemplatedEmail;
 import iris.client_bff.core.mail.EmailSender.TemplatedEmail.ConfiguredRecipient;
 import iris.client_bff.core.mail.EmailSender.TemplatedEmail.Recipient;
 import iris.client_bff.core.mail.EmailTemplates.Key;
+import iris.client_bff.core.model.EmailAddress;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Locale;

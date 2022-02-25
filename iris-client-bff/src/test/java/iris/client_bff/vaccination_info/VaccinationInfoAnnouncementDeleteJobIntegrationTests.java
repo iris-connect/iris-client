@@ -32,12 +32,12 @@ class VaccinationInfoAnnouncementDeleteJobIntegrationTests {
 		// in time
 		dateTimeProvider.setDelta(Duration.ofMinutes(-119));
 
-		createAnnouncement(faker.idNumber().valid(), faker.idNumber().valid());
+		createAnnouncement();
 
 		// to old
 		dateTimeProvider.setDelta(Duration.ofMinutes(-121));
 
-		var oldAnnouncement = createAnnouncement(faker.idNumber().valid(), faker.idNumber().valid());
+		var oldAnnouncement = createAnnouncement();
 
 		dateTimeProvider.reset();
 
@@ -54,7 +54,7 @@ class VaccinationInfoAnnouncementDeleteJobIntegrationTests {
 				.doesNotContain(oldAnnouncement.getExternalId());
 	}
 
-	private VaccinationInfoAnnouncement createAnnouncement(String externalId, String announcementToken) {
-		return announcements.save(VaccinationInfoAnnouncement.of(externalId, announcementToken));
+	private VaccinationInfoAnnouncement createAnnouncement() {
+		return announcements.save(VaccinationInfoAnnouncement.of(faker.idNumber().valid(), faker.idNumber().valid()));
 	}
 }
