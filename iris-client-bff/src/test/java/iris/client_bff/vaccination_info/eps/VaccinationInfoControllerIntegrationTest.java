@@ -3,7 +3,6 @@ package iris.client_bff.vaccination_info.eps;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static iris.client_bff.matchers.IrisMatchers.*;
 import static iris.client_bff.vaccination_info.eps.VaccinationInfoAnnouncmentTestData.*;
-import static iris.client_bff.vaccination_info.eps.VaccinationInfoSubmissionTestData.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.HamcrestCondition.*;
 import static org.hamcrest.Matchers.*;
