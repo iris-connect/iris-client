@@ -3,11 +3,9 @@ package iris.client_bff.vaccination_info;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
-import iris.client_bff.vaccination_info.VaccinationInfo.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.Duration;
 import java.time.Instant;
 
 import org.springframework.stereotype.Service;
@@ -21,15 +19,16 @@ import org.springframework.stereotype.Service;
 public class VaccinationInfoService {
 
 	private final ProxyServiceClient proxyClient;
-	private final VaccinationInfoRepository vacInfos;
+	private final VaccinationInfoAnnouncementRepository vacInfos;
+	private final VaccinationInfoProperties properties;
 
-	public VaccinationInfo announceVaccinationInfo(String externalId) {
+	public VaccinationInfoAnnouncement announceVaccinationInfo(String externalId) {
 
 		log.trace("Create VaccinationInfo and announcement");
 
 		String announcementToken;
 		try {
-			announcementToken = proxyClient.announce(Instant.now().plus(Duration.ofHours(2)));
+			announcementToken = proxyClient.announce(Instant.now().plus(properties.getExpirationDuration()));
 		} catch (IRISAnnouncementException e) {
 
 			log.error("Announcement failed: ", e);
@@ -37,7 +36,7 @@ public class VaccinationInfoService {
 			throw new IRISDataRequestException(e);
 		}
 
-		var vacInfo = VaccinationInfo.of(externalId, announcementToken, Status.ANNOUNCED);
+		var vacInfo = VaccinationInfoAnnouncement.of(externalId, announcementToken);
 
 		log.debug("Created VaccinationInfo and announcement successful");
 

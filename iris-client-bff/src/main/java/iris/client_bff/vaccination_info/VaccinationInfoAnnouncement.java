@@ -2,7 +2,7 @@ package iris.client_bff.vaccination_info;
 
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
-import iris.client_bff.vaccination_info.VaccinationInfo.VaccinationInfoIdentifier;
+import iris.client_bff.vaccination_info.VaccinationInfoAnnouncement.AnnouncementIdentifier;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,11 +15,8 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 /**
  * @author Jens Kutzsche
@@ -30,38 +27,34 @@ import javax.persistence.Enumerated;
 @EqualsAndHashCode(callSuper = true, of = {})
 @AllArgsConstructor(staticName = "of")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class VaccinationInfo extends Aggregate<VaccinationInfo, VaccinationInfoIdentifier> {
+public class VaccinationInfoAnnouncement extends Aggregate<VaccinationInfoAnnouncement, AnnouncementIdentifier> {
 
 	{
-		id = VaccinationInfoIdentifier.random();
+		id = AnnouncementIdentifier.random();
 	}
 
 	private String externalId;
 	private String announcementToken;
 
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private Status status;
-
 	@Embeddable
 	@EqualsAndHashCode
 	@RequiredArgsConstructor(staticName = "of")
 	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-	public static class VaccinationInfoIdentifier implements Id, Serializable {
+	public static class AnnouncementIdentifier implements Id, Serializable {
 
 		private static final long serialVersionUID = 6389647206633809409L;
 
 		@Getter
 		final UUID id;
 
-		static VaccinationInfoIdentifier random() {
+		static AnnouncementIdentifier random() {
 			return of(UUID.randomUUID());
 		}
 
 		/**
 		 * for JSON deserialization
 		 */
-		static VaccinationInfoIdentifier of(String uuid) {
+		static AnnouncementIdentifier of(String uuid) {
 			return of(UUID.fromString(uuid));
 		}
 
@@ -69,9 +62,5 @@ public class VaccinationInfo extends Aggregate<VaccinationInfo, VaccinationInfoI
 		public String toString() {
 			return id.toString();
 		}
-	}
-
-	public enum Status {
-		ANNOUNCED
 	}
 }

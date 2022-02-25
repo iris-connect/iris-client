@@ -18,7 +18,7 @@ import io.restassured.path.json.JsonPath;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.proxy.EPSProxyServiceServiceClient;
 import iris.client_bff.vaccination_info.EncryptionService;
-import iris.client_bff.vaccination_info.VaccinationInfoRepository;
+import iris.client_bff.vaccination_info.VaccinationInfoAnnouncementRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.security.GeneralSecurityException;
@@ -51,7 +51,7 @@ class VaccinationInfoControllerIntegrationTest {
 	static final String JSON_RPC = "application/json-rpc";
 
 	final MockMvc mvc;
-	final VaccinationInfoRepository vacInfos;
+	final VaccinationInfoAnnouncementRepository vacInfos;
 	final EncryptionService encryptionService;
 
 	@SpyBean

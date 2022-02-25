@@ -2,7 +2,7 @@ package iris.client_bff.vaccination_info.eps;
 
 import iris.client_bff.config.JsonRpcDataValidator;
 import iris.client_bff.vaccination_info.EncryptionService;
-import iris.client_bff.vaccination_info.VaccinationInfo;
+import iris.client_bff.vaccination_info.VaccinationInfoAnnouncement;
 import iris.client_bff.vaccination_info.VaccinationInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,7 @@ class VaccinationInfoControllerImpl implements VaccinationInfoController {
 		return encryptAndCreateResult(vacInfo, announcementData.submitterPublicKey());
 	}
 
-	private AnnouncementResultDto encryptAndCreateResult(VaccinationInfo vacInfo, String submitterPublicKeyBase64)
+	private AnnouncementResultDto encryptAndCreateResult(VaccinationInfoAnnouncement vacInfo, String submitterPublicKeyBase64)
 			throws GeneralSecurityException {
 
 		var tokens = new Tokens(
