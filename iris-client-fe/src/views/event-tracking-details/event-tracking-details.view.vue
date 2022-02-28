@@ -5,6 +5,7 @@
         Die Kontaktdaten zu diesem Ereignis wurden angefragt.
       </template>
     </alert-component>
+    <entry-meta-data :entry="eventTrackingDetails" />
     <event-tracking-details-component
       :table-rows="guests"
       :event-data="eventData"
@@ -49,6 +50,7 @@ import EventTrackingDetailsComponent from "@/views/event-tracking-details/compon
 import AlertComponent from "@/components/alerts/alert.component.vue";
 import EventTrackingDetailsDataExport from "@/views/event-tracking-details/components/data-export/event-tracking-details-data-export.vue";
 import { getValidPhoneNumber } from "@/utils/misc";
+import EntryMetaData from "@/components/entry-meta-data.vue";
 
 export type FormData = {
   name?: string;
@@ -100,6 +102,7 @@ function sanitiseFieldForDisplay(text = ""): string {
 
 @Component({
   components: {
+    EntryMetaData,
     EventTrackingDetailsDataExport,
     EventTrackingDetailsComponent,
     EventTrackingStatusChange,

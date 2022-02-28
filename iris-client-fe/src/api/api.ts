@@ -424,7 +424,7 @@ export interface DataRequestCaseClient {
  * @export
  * @interface DataRequestCaseData
  */
-export interface DataRequestCaseData {
+export interface DataRequestCaseData extends MetaData {
   /**
    * External case identifier. E.g. CaseID in Sormas.
    * @type {string}
@@ -732,7 +732,7 @@ export interface DataRequestClientUpdate {
  * @export
  * @interface DataRequestDetails
  */
-export interface DataRequestDetails {
+export interface DataRequestDetails extends MetaData {
   /**
    * Comments on given data request from GA employees
    * @type {string}
@@ -1502,7 +1502,7 @@ export enum Sex {
  * @export
  * @interface User
  */
-export interface User {
+export interface User extends MetaData {
   /**
    *
    * @type {string}
@@ -1892,6 +1892,13 @@ export interface Sort {
   empty?: boolean;
   sorted?: boolean;
   unsorted?: boolean;
+}
+
+export interface MetaData {
+  createdBy?: string;
+  createdAt?: string;
+  lastModifiedBy?: string;
+  lastModifiedAt?: string;
 }
 
 export interface Page<Content> {
