@@ -10,9 +10,6 @@ import { cancelTokenProvider, DataQuery } from "@/api/common";
 import { IrisMessageDataSelectionPayload, IrisMessageInsert } from "@/api";
 import { normalizeIrisMessageHdContacts } from "@/views/iris-message-create/iris-message-create.data";
 import { apiBundleProvider } from "@/utils/api";
-// disabled file attachments
-// import fileDownload from "@/utils/fileDownload";
-// import { AxiosResponse } from "axios";
 
 const createMessage = () => {
   const action = async (data: IrisMessageInsert) => {
@@ -32,13 +29,6 @@ const fetchRecipients = () => {
       (await authClient.irisMessageHdContactsGet(requestOptions)).data,
       true
     );
-  };
-  return asyncAction(action);
-};
-
-const fetchAllowedFileTypes = () => {
-  const action = async () => {
-    return (await authClient.irisMessageAllowedFileTypesGet()).data;
   };
   return asyncAction(action);
 };
@@ -131,35 +121,9 @@ export const getMessageDataViewData = () => {
   return asyncAction(action);
 };
 
-export const downloadFileAttachment = () => {
-  // disabled file attachments
-  // const action = async (fileId: string) => {
-  //   const response = await authClient.irisMessageFileDownload(fileId);
-  //   const fileName = extractFileName(response);
-  //   return fileDownload.download(response.data, fileName);
-  // };
-  const action = () => null;
-  return asyncAction(action);
-};
-
-// disabled file attachments
-/*
-const extractFileName = (response: AxiosResponse): string => {
-  const fileName = (response.headers["content-disposition"] || "")
-    .split("filename=")[1]
-    .split(";")[0]
-    .replace(/['"]/g, "");
-  if (fileName.length <= 0) {
-    throw new Error("invalid file name");
-  }
-  return fileName;
-};
-*/
-
 export const irisMessageApi = {
   createMessage,
   fetchRecipients,
-  fetchAllowedFileTypes,
   fetchMessages,
   fetchMessageFolders,
   fetchMessage,
@@ -168,7 +132,6 @@ export const irisMessageApi = {
   importDataAttachmentAndUpdate,
   getMessageDataImportSelectionViewData,
   getMessageDataViewData,
-  downloadFileAttachment,
 };
 
 export const bundleIrisMessageApi = apiBundleProvider(irisMessageApi);

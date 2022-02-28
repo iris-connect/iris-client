@@ -7,6 +7,9 @@ CREATE TABLE  iris_message_data (
     is_imported bool NULL,
     created timestamp NOT NULL,
     last_modified timestamp NOT NULL,
-    PRIMARY KEY (id),
-    CONSTRAINT iris_message_data_message_fk FOREIGN KEY (message_id) REFERENCES iris_message(id)
+    created_by uuid NULL,
+    last_modified_by uuid NULL,
+    CONSTRAINT iris_message_data_message_fk FOREIGN KEY (message_id) REFERENCES iris_message(id),
+    FOREIGN KEY (created_by) REFERENCES user_accounts(user_id),
+    FOREIGN KEY (last_modified_by) REFERENCES user_accounts(user_id)
 );

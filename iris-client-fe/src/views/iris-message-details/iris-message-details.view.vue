@@ -108,9 +108,7 @@ export default class IrisMessageDetailsView extends Vue {
     return getApiLoading(this.messageApi);
   }
   get errors(): ErrorMessage[] {
-    return [
-      ...getApiErrorMessages(this.messageApi),
-    ];
+    return getApiErrorMessages(this.messageApi);
   }
   get messageLoaded(): boolean {
     const messageState = this.messageApi.fetchMessage.state;

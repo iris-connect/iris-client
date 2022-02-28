@@ -5,12 +5,20 @@ import iris.client_bff.hd_search.HealthDepartment;
 import iris.client_bff.hd_search.eps.EPSHdSearchClient;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
+import iris.client_bff.iris_messages.data.IrisMessageData;
+import iris.client_bff.iris_messages.data.IrisMessageData.IrisMessageDataIdentifier;
+import iris.client_bff.iris_messages.data.IrisMessageDataException;
+import iris.client_bff.iris_messages.data.IrisMessageDataProcessor;
+import iris.client_bff.iris_messages.data.IrisMessageDataProcessors;
+import iris.client_bff.iris_messages.data.IrisMessageDataRepository;
+import iris.client_bff.iris_messages.data.IrisMessageDataViewData;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -62,7 +70,7 @@ public class IrisMessageService {
         return folderRepository.findAll();
     }
 
-    public IrisMessageDataProcessor getMessageDataProcessor(UUID messageDataId) throws IrisMessageDataException {
+    public IrisMessageDataProcessor getMessageDataProcessor(IrisMessageDataIdentifier messageDataId) throws IrisMessageDataException {
         IrisMessageData messageData = this.getMessageData(messageDataId);
         return this.getMessageDataProcessor(messageData.getDiscriminator());
     }
@@ -71,15 +79,15 @@ public class IrisMessageService {
         return this.messageDataProcessors.getProcessor(discriminator);
     }
 
-    private IrisMessageData getMessageData(UUID messageDataId) {
-        Optional<IrisMessageData> optionalIrisMessageData = this.dataRepository.findById(IrisMessageData.IrisMessageDataIdentifier.of(messageDataId));
+    private IrisMessageData getMessageData(IrisMessageDataIdentifier messageDataId) {
+        Optional<IrisMessageData> optionalIrisMessageData = this.dataRepository.findById(messageDataId);
         if (optionalIrisMessageData.isEmpty()) {
             throw new IrisMessageDataException("missing message data");
         }
         return optionalIrisMessageData.get();
     }
 
-    public IrisMessageDataViewData getMessageDataViewData(UUID messageDataId) {
+    public IrisMessageDataViewData getMessageDataViewData(IrisMessageDataIdentifier messageDataId) {
         IrisMessageData messageData = this.getMessageData(messageDataId);
         IrisMessageDataProcessor processor = this.getMessageDataProcessor(messageData.getDiscriminator());
         return new IrisMessageDataViewData()
@@ -89,7 +97,7 @@ public class IrisMessageService {
     }
 
 
-    public IrisMessageDataViewData getMessageDataImportSelectionViewData(UUID messageDataId, UUID importTargetId) {
+    public IrisMessageDataViewData getMessageDataImportSelectionViewData(IrisMessageDataIdentifier messageDataId, UUID importTargetId) {
         IrisMessageData messageData = this.getMessageData(messageDataId);
         IrisMessageDataProcessor processor = this.getMessageDataProcessor(messageData.getDiscriminator());
         return new IrisMessageDataViewData()
@@ -98,7 +106,7 @@ public class IrisMessageService {
                 .setPayload(processor.getImportSelectionViewPayload(messageData.getPayload(), importTargetId));
     }
 
-    public void importMessageData(UUID messageDataId) {
+    public void importMessageData(IrisMessageDataIdentifier messageDataId) {
         IrisMessageData messageData = this.getMessageData(messageDataId);
         IrisMessageDataProcessor processor = this.getMessageDataProcessor(messageData.getDiscriminator());
         processor.importPayload(messageData.getPayload());
@@ -106,7 +114,7 @@ public class IrisMessageService {
         this.dataRepository.save(messageData);
     }
 
-    public void importMessageData(UUID messageDataId, UUID importTargetId, String importSelection) {
+    public void importMessageData(IrisMessageDataIdentifier messageDataId, UUID importTargetId, String importSelection) {
         IrisMessageData messageData = this.getMessageData(messageDataId);
         IrisMessageDataProcessor processor = this.getMessageDataProcessor(messageData.getDiscriminator());
         processor.importPayload(

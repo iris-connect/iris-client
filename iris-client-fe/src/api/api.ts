@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {
-  ApiResponse,
-  assertParamExists,
-  DataQuery,
-  RequestOptions,
-} from "./common";
+import { ApiResponse, assertParamExists, RequestOptions } from "./common";
 import { BaseAPI } from "./base";
 import { UserSession } from "@/views/user-login/user-login.store";
 
@@ -2392,12 +2387,12 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @memberof IrisClientFrontendApi
    */
   public importIrisMessageDataAndAdd(
-      messageDataId: string,
-      options?: RequestOptions
+    messageDataId: string,
+    options?: RequestOptions
   ): ApiResponse {
     assertParamExists("irisMessageDataImport", "messageDataId", messageDataId);
     const path = `/iris-messages/data/${encodeURIComponent(
-        messageDataId
+      messageDataId
     )}/import/add`;
     return this.apiRequest("POST", path, null, options);
   }
@@ -2412,23 +2407,23 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @memberof IrisClientFrontendApi
    */
   public importIrisMessageDataAndUpdate(
-      messageDataId: string,
-      data: IrisMessageDataSelectionPayload,
-      options?: RequestOptions
+    messageDataId: string,
+    data: IrisMessageDataSelectionPayload,
+    options?: RequestOptions
   ): ApiResponse {
     assertParamExists(
-        "importIrisMessageDataAndUpdate",
-        "messageDataId",
-        messageDataId
+      "importIrisMessageDataAndUpdate",
+      "messageDataId",
+      messageDataId
     );
     assertParamExists(
-        "importIrisMessageDataAndUpdate",
-        "importTargetId",
-        options?.params?.importTargetId
+      "importIrisMessageDataAndUpdate",
+      "importTargetId",
+      options?.params?.importTargetId
     );
     assertParamExists("importIrisMessageDataAndUpdate", "data", data);
     const path = `/iris-messages/data/${encodeURIComponent(
-        messageDataId
+      messageDataId
     )}/import/update`;
     return this.apiRequest("POST", path, data, options);
   }
@@ -2442,21 +2437,21 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @memberof IrisClientFrontendApi
    */
   public messageDataImportSelectionViewDataGet(
-      messageDataId: string,
-      options?: RequestOptions
+    messageDataId: string,
+    options?: RequestOptions
   ): ApiResponse<IrisMessageDataViewData> {
     assertParamExists(
-        "messageDataImportSelectionViewDataGet",
-        "messageDataId",
-        messageDataId
+      "messageDataImportSelectionViewDataGet",
+      "messageDataId",
+      messageDataId
     );
     assertParamExists(
-        "messageDataImportSelectionViewDataGet",
-        "importTargetId",
-        options?.params?.importTargetId
+      "messageDataImportSelectionViewDataGet",
+      "importTargetId",
+      options?.params?.importTargetId
     );
     const path = `/iris-messages/data/${encodeURIComponent(
-        messageDataId
+      messageDataId
     )}/import/select`;
     return this.apiRequest("GET", path, null, options);
   }
@@ -2470,16 +2465,16 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @memberof IrisClientFrontendApi
    */
   public irisMessageDataViewDataGet(
-      messageDataId: string,
-      options?: RequestOptions
+    messageDataId: string,
+    options?: RequestOptions
   ): ApiResponse<IrisMessageDataViewData> {
     assertParamExists(
-        "irisMessageDataViewDataGet",
-        "messageDataId",
-        messageDataId
+      "irisMessageDataViewDataGet",
+      "messageDataId",
+      messageDataId
     );
     const path = `/iris-messages/data/${encodeURIComponent(
-        messageDataId
+      messageDataId
     )}/view`;
     return this.apiRequest("GET", path, null, options);
   }

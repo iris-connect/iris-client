@@ -1,13 +1,18 @@
 package iris.client_bff.iris_messages.eps;
 
+import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageContext;
 import iris.client_bff.iris_messages.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolderRepository;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
+import iris.client_bff.iris_messages.data.IrisMessageData;
+import iris.client_bff.iris_messages.data.IrisMessageDataException;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -21,6 +26,8 @@ class IrisMessageBuilderEps {
 	private final IrisMessageFolderRepository folderRepository;
 	private final EPSIrisMessageClient irisMessageClient;
 	private final MessageSourceAccessor messages;
+
+	private final ValidationHelper validationHelper;
 
 	public IrisMessage build(IrisMessageTransferDto messageTransfer) throws IrisMessageException {
 
@@ -46,14 +53,41 @@ class IrisMessageBuilderEps {
 
 		IrisMessage message = new IrisMessage();
 
+		List<IrisMessageData> dataList = new ArrayList<>();
+		try {
+			if (messageTransfer.getDataAttachments() != null) {
+				for (IrisMessageTransferDto.DataAttachment dataAttachment : messageTransfer.getDataAttachments()) {
+					// we do not process and / or defuse the payload when receiving it to be able to
+					// store yet unknown payload types.
+					// We defuse it while importing / viewing
+					// To minimize the risk of possible attacks, we check the keys & values of the
+					// payloads JSON string
+					this.validateMessageDataPayload(dataAttachment.getPayload(), dataAttachment.getDiscriminator());
+					IrisMessageData irisMessageData = new IrisMessageData().setMessage(message)
+							.setDiscriminator(dataAttachment.getDiscriminator())
+							.setDescription(dataAttachment.getDescription()).setPayload(dataAttachment.getPayload());
+					dataList.add(irisMessageData);
+				}
+			}
+		} catch (Throwable e) {
+			throw new IrisMessageException(messages.getMessage("iris_message.invalid_message_data"));
+		}
+
 		message
 				.setHdAuthor(hdAuthor)
 				.setHdRecipient(hdRecipient)
 				.setSubject(messageTransfer.getSubject())
 				.setBody(messageTransfer.getBody())
 				.setFolder(folder.get())
-				.setRead(false);
+				.setRead(false)
+				.setDataAttachments(dataList);
 
 		return message;
+	}
+
+	private void validateMessageDataPayload(String value, String field) {
+		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, false)) {
+			throw new IrisMessageDataException(messages.getMessage("iris_message.invalid_message_data"));
+		}
 	}
 }

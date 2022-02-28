@@ -8,11 +8,13 @@ import iris.client_bff.events.EventDataSubmissionService;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.DataRequestDetails;
 import iris.client_bff.iris_messages.data.*;
+import iris.client_bff.iris_messages.data.IrisMessageDataException;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,15 +41,12 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
     private final EventMessageDataPayloadDefuse payloadDefuse;
 
     private final Validator validator;
+    private final MessageSourceAccessor messages;
 
     @Override
     public void validateInsert(String insert) throws ResponseStatusException {
         EventMessageDataInsertPayload payload = EventMessageDataInsertPayload.toModel(insert);
         this.validatePayload(payload);
-        this.validateUUID(payload.getEvent(), "payload.eventId", ErrorMessages.INVALID_IRIS_MESSAGE_DATA);
-        for ( String guestId : payload.getGuests() ) {
-            this.validateUUID(guestId, "payload.messageDataSelectId", ErrorMessages.INVALID_IRIS_MESSAGE_DATA);
-        }
     }
 
     @Override
@@ -60,9 +59,6 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
     public void validateImportSelection(String importSelection) throws ResponseStatusException {
         EventMessageDataImportSelectionPayload payload = EventMessageDataImportSelectionPayload.toModel(importSelection);
         this.validatePayload(payload);
-        for ( String guestId : payload.getGuests() ) {
-            this.validateUUID(guestId, "payload.messageDataSelectId", ErrorMessages.INVALID_IRIS_MESSAGE_DATA);
-        }
     }
 
     @Override
@@ -118,7 +114,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
     private EventDataRequest getEventDataRequest(UUID requestId) {
         Optional<EventDataRequest> eventDataRequest = this.requestService.findById(requestId);
         if (eventDataRequest.isEmpty()) {
-            throw new IrisMessageDataException(ErrorMessages.INVALID_IRIS_MESSAGE_DATA_IMPORT_TARGET);
+            throw new IrisMessageDataException(messages.getMessage("iris_message.invalid_message_data_import_target"));
         }
         return eventDataRequest.get();
     }
@@ -126,19 +122,13 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
     private EventDataSubmission getEventDataSubmission(EventDataRequest eventDataRequest) {
         Optional<EventDataSubmission> eventDataSubmission = this.submissionRepository.findAllByRequest(eventDataRequest).get().findFirst();
         if (eventDataSubmission.isEmpty()) {
-            throw new IrisMessageDataException(ErrorMessages.INVALID_IRIS_MESSAGE_DATA_IMPORT_TARGET);
+            throw new IrisMessageDataException(messages.getMessage("iris_message.invalid_message_data_import_target"));
         }
         return eventDataSubmission.get();
     }
 
     private EventDataSubmission getEventDataSubmission(UUID requestId) {
         return this.getEventDataSubmission(this.getEventDataRequest(requestId));
-    }
-
-    private void validateUUID(String value, String field, String errorMessage) {
-        if (value == null || !ValidationHelper.isUUIDInputValid(value, field)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage + ": " + field);
-        }
     }
 
     private EventMessageDataPayload getDefusedPayload(String payload) throws IrisMessageDataException {

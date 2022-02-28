@@ -177,8 +177,6 @@ export default class IrisMessageCreateView extends Vue {
       hdRecipient: "",
       dataAttachments:
         this.$store.state.irisMessageCreate.dataAttachments || [],
-      // disabled file attachments
-      // fileAttachments: [],
     },
     valid: false,
   };

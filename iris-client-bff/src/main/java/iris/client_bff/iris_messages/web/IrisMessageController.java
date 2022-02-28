@@ -8,6 +8,10 @@ import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import iris.client_bff.iris_messages.IrisMessageService;
+import iris.client_bff.iris_messages.data.IrisMessageDataException;
+import iris.client_bff.iris_messages.data.IrisMessageDataInsert;
+import iris.client_bff.iris_messages.data.IrisMessageDataProcessor;
+import iris.client_bff.iris_messages.data.IrisMessageDataProcessors;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -61,6 +66,7 @@ public class IrisMessageController {
 	private final ValidationHelper validationHelper;
 
 	private final IrisMessageDataProcessors messageDataProcessors;
+	private final MessageSourceAccessor messages;
 
 	@GetMapping()
 	public Page<IrisMessageListItemDto> getMessages(
@@ -206,7 +212,7 @@ public class IrisMessageController {
 
 	private void validateMessageDataPayload(String value, String field) {
 		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, false)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_IRIS_MESSAGE_DATA + ": "+ field);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, messages.getMessage("iris_message.invalid_message_data") + ": "+ field);
 		}
 	}
 

@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -47,15 +46,6 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
 
 		log.warn("Unmapped exception occurred", ex);
 		throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, getInternalMessage(ex));
-	}
-
-	@ExceptionHandler(MaxUploadSizeExceededException.class)
-	public void handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
-		float maxSize = ex.getMaxUploadSize() / 1024;
-		throw new ResponseStatusException(
-				HttpStatus.PAYLOAD_TOO_LARGE,
-				ErrorMessages.MAX_UPLOAD_FILE_SIZE.replace("{{max}}", (maxSize + " MB"))
-		);
 	}
 
 	private String getInternalMessage(Exception ex) {

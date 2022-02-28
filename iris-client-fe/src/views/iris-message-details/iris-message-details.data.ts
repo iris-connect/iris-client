@@ -32,8 +32,16 @@ export const normalizeIrisMessageDetails = (
 ): IrisMessageDetails => {
   return normalizeData(
     source,
-    () => {
-      const normalized: IrisMessageDetails = normalizeIrisMessage(source);
+    (normalizer) => {
+      const normalized: IrisMessageDetails = {
+        ...normalizeIrisMessage(source),
+        context: normalizer("context", IrisMessageContext.Unknown),
+        dataAttachments: source?.dataAttachments
+          ? source.dataAttachments.map((item) =>
+              normalizeIrisMessageDataAttachment(item)
+            )
+          : undefined,
+      };
       return normalized;
     },
     parse,

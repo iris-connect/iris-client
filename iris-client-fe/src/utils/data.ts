@@ -93,7 +93,7 @@ const validateType = (value: unknown, type: string): boolean => {
   return typeof value === type;
 };
 
-const parseData = <T>(data: T): T => {
+export const parseData = <T>(data: T): T => {
   try {
     return JSON.parse(JSON.stringify(data));
   } catch {

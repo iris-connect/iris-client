@@ -11,9 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
-import java.util.UUID;
-
 /**
  * A guest who attended a queried event or location in the queried time.
  */

@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static iris.client_bff.ui.messages.ErrorMessages.INVALID_INPUT_STRING;
 
 @Service
@@ -32,12 +35,12 @@ public class IrisMessageTransferDefuse {
                 .setName(this.defuse(contact.getName(), field + ".id", IrisMessageHdContact.NAME_MAX_LENGTH));
     }
 
-    private List<IrisMessageTransfer.DataAttachment> defuseDataList(List<IrisMessageTransfer.DataAttachment> dataAttachments) {
+    private List<IrisMessageTransferDto.DataAttachment> defuseDataList(List<IrisMessageTransferDto.DataAttachment> dataAttachments) {
         return dataAttachments.stream().map(this::defuse).collect(Collectors.toList());
     }
 
-    private IrisMessageTransfer.DataAttachment defuse(IrisMessageTransfer.DataAttachment dataAttachment) {
-        return new IrisMessageTransfer.DataAttachment()
+    private IrisMessageTransferDto.DataAttachment defuse(IrisMessageTransferDto.DataAttachment dataAttachment) {
+        return new IrisMessageTransferDto.DataAttachment()
                 .setDiscriminator(this.defuse(dataAttachment.getDiscriminator(), "dataAttachment.discriminator", IrisMessageData.DISCRIMINATOR_MAX_LENGTH))
                 .setPayload(this.defuseDataPayload(dataAttachment.getPayload(), "dataAttachment.payload", IrisMessageData.PAYLOAD_MAX_LENGTH))
                 .setDescription(this.defuse(dataAttachment.getDescription(), "dataAttachment.description", IrisMessageData.DESCRIPTION_MAX_LENGTH));
