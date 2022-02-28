@@ -16,7 +16,8 @@ Pre-publication checklist:
 - [ ] Have new methods for communication been enabled in the SD?
 
 Work after the construction of the release:
-- [ ] Update guide for new release added and adjusted.
-- [ ] Changelog checked and adjusted if necessary.
-- [ ] Added link to update guide in changelog.
-- [ ] AKDB and others informed about release in Slack.
+- [ ] Update guide for new release added and adjusted?
+- [ ] Changelog checked and adjusted if necessary?
+- [ ] Added link to update guide in changelog?
+- [ ] AKDB and others informed about release in Slack?
+- [ ] Branch `main` merged into `develop`?
