@@ -45,13 +45,22 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PW }}
 
       - name: Build and push to docker.io
-        uses: docker/build-push-action@v2.7.0
+        uses: docker/build-push-action@v2.9.0
         with:
           context: ./infrastructure/docker/app-eps/
           tags: ${{ steps.meta.outputs.tags }}
-          push: true
+          push: false
+          load: true
           labels: |
             app-eps.image.revision=${{ github.sha }}
+
+      - name: Sign and push docker image
+        uses: sudo-bot/action-docker-sign@latest
+        with:
+          image-ref: ${{steps.meta.outputs.tags}}
+          private-key-id: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}
+          private-key: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY }}
+          private-key-passphrase: ${{ secrets.DOCKER_HUB_DCT_PASSPHRASE }}
 
   container_scan:
     name: Container Scan

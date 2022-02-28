@@ -19,11 +19,9 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 @Entity
-@Indexed
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

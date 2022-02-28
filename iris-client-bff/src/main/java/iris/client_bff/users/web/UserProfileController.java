@@ -25,7 +25,7 @@ public class UserProfileController {
 		if (byUsername.isEmpty()) {
 			return null;
 		} else {
-			return UserMappers.map(byUsername.get());
+			return UserMappers.map(byUsername.get(), userService);
 		}
 	}
 }

@@ -7,7 +7,7 @@ import lombok.Value;
 import java.time.Instant;
 
 @Value
-public class IrisMessageListItemDto {
+class IrisMessageListItemDto {
 
     private String id;
     private String subject;
@@ -18,9 +18,6 @@ public class IrisMessageListItemDto {
     private Boolean hasAttachments;
 
     public static IrisMessageListItemDto fromEntity(IrisMessage message) {
-        // disabled file attachments
-//        Boolean hasFileAttachments = message.getFileAttachments() != null && message.getFileAttachments().size() > 0;
-        Boolean hasFileAttachments = false;
         Boolean hasDataAttachments = message.getDataAttachments() != null && message.getDataAttachments().size() > 0;
         return new IrisMessageListItemDto(
                 message.getId().toString(),
@@ -28,8 +25,8 @@ public class IrisMessageListItemDto {
                 message.getHdAuthor(),
                 message.getHdRecipient(),
                 message.getMetadata().getCreated(),
-                message.getIsRead(),
-                hasFileAttachments || hasDataAttachments
+                message.isRead(),
+                hasDataAttachments
         );
     }
 }

@@ -13,10 +13,10 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
  * @author Jens Kutzsche
  */
 @Configuration
-public class ValidationConfig {
+class ValidationConfig {
 
 	@Bean
-	public LocalValidatorFactoryBean localValidatorFactoryBean(MessageSource messageSource) {
+	LocalValidatorFactoryBean localValidatorFactoryBean(MessageSource messageSource) {
 
 		LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean() {
 			@Override
@@ -31,7 +31,7 @@ public class ValidationConfig {
 		return bean;
 	}
 
-	public class DataSizeValueExtractor implements ValueExtractor<@ExtractedValue(type = Long.class) DataSize> {
+	static class DataSizeValueExtractor implements ValueExtractor<@ExtractedValue(type = Long.class) DataSize> {
 
 		@Override
 		public void extractValues(DataSize originalValue, ValueReceiver receiver) {

@@ -84,14 +84,6 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 		this.announcementToken = announcementToken;
 	}
 
-	public Instant getLastModifiedAt() {
-		return this.getMetadata().getLastModified();
-	}
-
-	public Instant getCreatedAt() {
-		return this.getMetadata().getCreated();
-	}
-
 	@Embeddable
 	@EqualsAndHashCode
 	@RequiredArgsConstructor(staticName = "of")

@@ -8,13 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class IrisMessageFolderDto {
+class IrisMessageFolderDto {
 
     private String id;
     private String name;
     private IrisMessageContext context;
     private List<IrisMessageFolderDto> items;
-    private Boolean isDefault;
 
     private static IrisMessageFolderDto findParentFolderDto(List<IrisMessageFolderDto> folderDtoList, IrisMessageFolder folder) {
         if (folder.getParentFolder() == null) {
@@ -39,7 +38,6 @@ public class IrisMessageFolderDto {
                 .setId(folder.getId().toString())
                 .setName(folder.getName())
                 .setContext(folder.getContext())
-                .setIsDefault(folder.getIsDefault())
                 .setItems(new ArrayList<>());
     }
 

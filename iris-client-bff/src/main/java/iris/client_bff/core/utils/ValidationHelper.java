@@ -27,8 +27,6 @@ public class ValidationHelper {
 	private final AlertService alertService;
 	private final CentralConfigurationService configService;
 
-	public static final Pattern UUID_REGEX = Pattern
-			.compile("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})");
 	public static final Pattern PW_REGEX = Pattern
 			.compile(
 					"^(?=.*[0123456789_\\-#()@§!$].*[0123456789_\\-#()@§!$])(?=.*[ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞabcdefghijklmnopqrstuvwxyzäöüß])([ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞ]|[abcdefghijklmnopqrstuvwxyzäöüß]|[0123456789]|[_\\-#()@§!$]){8,}$");
@@ -100,16 +98,6 @@ public class ValidationHelper {
 			{ "CREATE", "TABLE" }, { "DROP", "TABLE" }, { "ALTER", "TABLE" },
 			{ "CREATE", "INDEX" }, { "DROP", "INDEX" }, { "CREATE", "VIEW" }, { "DROP", "VIEW" }
 	};
-
-	public static boolean isUUIDInputValid(String id, String idName) {
-
-		if (UUID_REGEX.matcher(id).matches()) {
-			return true;
-		}
-
-		log.warn(ErrorMessages.INVALID_INPUT + idName + id);
-		return false;
-	}
 
 	public boolean isPasswordValid(String password) {
 		return PW_REGEX.matcher(password).matches();

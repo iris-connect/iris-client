@@ -101,32 +101,6 @@
               </div>
               <iris-message-data-select-dialog @input="addDataAttachment" />
             </v-col>
-            <v-col cols="12">
-              <!--
-              <v-file-input
-                label="Datei(en) anfügen"
-                :value="form.model.fileAttachments"
-                @change="addFileAttachments"
-                @click:clear="clearFileAttachments"
-                multiple
-                data-test="fileAttachments"
-                :accept="allowedFileTypes.join(',')"
-              >
-                <template v-slot:selection="{ index, text }">
-                  <v-chip
-                    :key="index"
-                    dark
-                    color="blue"
-                    close
-                    @click:close="removeFileAttachment(index)"
-                    data-test="fileAttachments.remove"
-                  >
-                    {{ text }}
-                  </v-chip>
-                </template>
-              </v-file-input>
-              -->
-            </v-col>
           </v-row>
         </v-card-text>
         <v-card-actions>
@@ -166,8 +140,6 @@ import {
   IrisMessageDataDiscriminator,
 } from "@/api";
 import rules from "@/common/validation-rules";
-// disabled file attachments
-// import _unionBy from "lodash/unionBy";
 import { ErrorMessage } from "@/utils/axios";
 import _debounce from "lodash/debounce";
 import IrisMessageDataSelectDialog from "@/views/iris-message-create/components/iris-message-data-select-dialog.vue";
@@ -198,7 +170,6 @@ export default class IrisMessageCreateView extends Vue {
     form: HTMLFormElement;
   };
   messageApi = bundleIrisMessageApi(["createMessage", "fetchRecipients"]);
-  messageFileApi = bundleIrisMessageApi(["fetchAllowedFileTypes"]);
   form: IrisMessageCreateForm = {
     model: {
       subject: "",
@@ -212,13 +183,6 @@ export default class IrisMessageCreateView extends Vue {
     valid: false,
   };
 
-  // disabled file attachments
-  /*
-  mounted() {
-    this.messageFileApi.fetchAllowedFileTypes.execute();
-  }
-  */
-
   search: string | null = "";
   handleSearch = _debounce(async (value: string | null) => {
     this.search = value;
@@ -228,27 +192,7 @@ export default class IrisMessageCreateView extends Vue {
   get errors(): ErrorMessage[] {
     return getApiErrorMessages(this.messageApi);
   }
-  // disabled file attachments
-  /*
-  addFileAttachments(files: File[]) {
-    this.form.model.fileAttachments = _unionBy(
-      this.form.model.fileAttachments,
-      files,
-      "name"
-    );
-  }
-  removeFileAttachment(index: number) {
-    if (this.form.model.fileAttachments) {
-      this.form.model.fileAttachments.splice(index, 1);
-    }
-  }
-  clearFileAttachments() {
-    this.form.model.fileAttachments = [];
-  }
-  get allowedFileTypes(): string[] {
-    return this.messageFileApi.fetchAllowedFileTypes.state.result || [];
-  }
-  */
+
   addDataAttachment(messageData: IrisMessageDataInsert) {
     if (!this.form.model.dataAttachments) {
       this.form.model.dataAttachments = [];

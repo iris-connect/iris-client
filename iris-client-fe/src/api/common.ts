@@ -10,8 +10,6 @@ import globalAxios, {
   Method,
 } from "axios";
 import axios from "axios";
-import { serialize } from "object-to-formdata";
-
 /**
  *
  * @export
@@ -22,7 +20,7 @@ export type DataQuery = {
   sort?: string | null;
   status?: DataRequestStatus | null;
   search?: string | null;
-  folder?: string;
+  sortOrderDesc?: boolean;
 };
 
 export type RequestQuery = {
@@ -31,7 +29,6 @@ export type RequestQuery = {
 
 export interface RequestOptions<D = any> extends AxiosRequestConfig<D> {
   query?: RequestQuery;
-  multipart?: boolean;
 }
 
 export type ApiResponse<T = any> = Promise<AxiosResponse<T>>;
@@ -126,13 +123,9 @@ export const apiRequestBuilder =
   ): ApiResponse<T> => {
     const url = new URL(path, "https://example.com");
     url.search = createSearchParams(url, options?.query || {});
-    const requestData =
-      options?.multipart && data
-        ? serialize(data, { indices: true, dotsForObjectNotation: true })
-        : data;
     return axiosInstance.request({
       url: toPathString(url),
-      data: requestData,
+      data,
       method,
       ...options,
     });

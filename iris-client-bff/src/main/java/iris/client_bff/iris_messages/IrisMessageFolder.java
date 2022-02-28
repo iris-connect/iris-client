@@ -2,70 +2,70 @@ package iris.client_bff.iris_messages;
 
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.*;
+
 @Entity
 @Table(name = "iris_message_folder")
-@SecondaryTable(name = "iris_message_folder_default")
 @Data
 @EqualsAndHashCode(callSuper = true, exclude = "messages")
 @NoArgsConstructor
 public class IrisMessageFolder extends Aggregate<IrisMessageFolder, IrisMessageFolder.IrisMessageFolderIdentifier> {
 
-    {
-        id = IrisMessageFolder.IrisMessageFolderIdentifier.of(UUID.randomUUID());
-    }
+	{
+		id = IrisMessageFolder.IrisMessageFolderIdentifier.of(UUID.randomUUID());
+	}
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<IrisMessage> messages;
+	@ToString.Exclude
+	@OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<IrisMessage> messages;
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String name;
 
-    @Enumerated(EnumType.STRING)
-    private IrisMessageContext context;
+	@Enumerated(EnumType.STRING)
+	private IrisMessageContext context;
 
-    @Column(name = "id", table = "iris_message_folder_default", insertable = false, updatable = false)
-    private UUID defaultFolder;
+	@Embedded
+	@AttributeOverride(name = "id", column = @Column(name = "parent_folder"))
+	private IrisMessageFolderIdentifier parentFolder;
 
-    private UUID parentFolder;
+	@Embeddable
+	@EqualsAndHashCode
+	@RequiredArgsConstructor(staticName = "of")
+	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+	public static class IrisMessageFolderIdentifier implements Id, Serializable {
 
-    public Boolean getIsDefault() {
-        return this.getId().toUUID().equals(this.defaultFolder);
-    }
+		@Serial
+		private static final long serialVersionUID = -8255216015747810442L;
 
-    @Embeddable
-    @EqualsAndHashCode
-    @RequiredArgsConstructor(staticName = "of")
-    @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-    public static class IrisMessageFolderIdentifier implements Id, Serializable {
+		final UUID id;
 
-        @Serial
-        private static final long serialVersionUID = -8255216015747810442L;
+		/**
+		 * for JSON deserialization
+		 */
+		public static IrisMessageFolder.IrisMessageFolderIdentifier of(String uuid) {
+			return of(UUID.fromString(uuid));
+		}
 
-        final UUID id;
+		@Override
+		public String toString() {
+			return id.toString();
+		}
 
-        /**
-         * for JSON deserialization
-         */
-        public static IrisMessageFolder.IrisMessageFolderIdentifier of(String uuid) {
-            return of(UUID.fromString(uuid));
-        }
-
-        @Override
-        public String toString() {
-            return id.toString();
-        }
-
-        public UUID toUUID() {
-            return id;
-        }
-    }
+		public UUID toUUID() {
+			return id;
+		}
+	}
 }

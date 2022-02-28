@@ -173,64 +173,76 @@ describe("Events", () => {
     cy.getBy("event.location").should("contain", event.location);
     cy.getBy("event.requestDetails").should("contain", event.requestDetails);
   });
-  it("event status: requested: should trigger the cancel dialog", () => {
+  it("event status: requested (if exists): should trigger the cancel dialog", () => {
     cy.visit("/events/list");
     cy.getBy("view.data-table")
       .filterDataTableByStatus("requested")
-      .visitByStatus("requested");
-    cy.getBy("event.status")
-      .should("contain", "Angefragt")
-      .within(() => {
-        cy.getBy(".v-btn{event.cancel}").should("exist").click();
+      .then(($table) => {
+        if (!$table.hasClass("is-empty")) {
+          cy.getBy("view.data-table").visitByStatus("requested");
+          cy.getBy("event.status")
+            .should("contain", "Angefragt")
+            .within(() => {
+              cy.getBy(".v-btn{event.cancel}").should("exist").click();
+            });
+          cy.getBy("confirm-dialog")
+            .should("exist")
+            .and("contain", "Anfrage abbrechen")
+            .within(() => {
+              cy.getBy(".v-btn{cancel}").should("exist").click();
+            });
+          cy.getBy("confirm-dialog").should("not.be.visible");
+        }
       });
-    cy.getBy("confirm-dialog")
-      .should("exist")
-      .and("contain", "Anfrage abbrechen")
-      .within(() => {
-        cy.getBy(".v-btn{cancel}").should("exist").click();
-      });
-    cy.getBy("confirm-dialog").should("not.be.visible");
   });
-  it("event status: received: should mark and unmark as edited / closed", () => {
+  it("event status: received (if exists): should mark and unmark as edited / closed", () => {
     cy.visit("/events/list");
     cy.getBy("view.data-table")
       .filterDataTableByStatus("received")
-      .visitByStatus("received");
-    cy.getBy("event.status")
-      .should("contain", "Geliefert")
-      .within(() => {
-        cy.getBy(".v-btn{event.close}").should("exist").click();
-      });
-    cy.getBy("event.status")
-      .should("contain", "Bearbeitet")
-      .within(() => {
-        cy.getBy(".v-btn{event.resume}").should("exist").click();
-      });
-    cy.getBy("event.status")
-      .should("contain", "Geliefert")
-      .within(() => {
-        cy.getBy(".v-btn{event.close}").should("exist");
+      .then(($table) => {
+        if (!$table.hasClass("is-empty")) {
+          cy.getBy("view.data-table").visitByStatus("received");
+          cy.getBy("event.status")
+            .should("contain", "Geliefert")
+            .within(() => {
+              cy.getBy(".v-btn{event.close}").should("exist").click();
+            });
+          cy.getBy("event.status")
+            .should("contain", "Bearbeitet")
+            .within(() => {
+              cy.getBy(".v-btn{event.resume}").should("exist").click();
+            });
+          cy.getBy("event.status")
+            .should("contain", "Geliefert")
+            .within(() => {
+              cy.getBy(".v-btn{event.close}").should("exist");
+            });
+        }
       });
   });
-  it("event status: closed: should mark and unmark as edited / closed", () => {
+  it("event status: closed (if exists): should mark and unmark as edited / closed", () => {
     cy.visit("/events/list");
     cy.getBy("view.data-table")
       .filterDataTableByStatus("closed")
-      .visitByStatus("closed");
-    cy.getBy("event.status")
-      .should("contain", "Bearbeitet")
-      .within(() => {
-        cy.getBy(".v-btn{event.resume}").should("exist").click();
-      });
-    cy.getBy("event.status")
-      .should("contain", "Geliefert")
-      .within(() => {
-        cy.getBy(".v-btn{event.close}").should("exist").click();
-      });
-    cy.getBy("event.status")
-      .should("contain", "Bearbeitet")
-      .within(() => {
-        cy.getBy(".v-btn{event.resume}").should("exist");
+      .then(($table) => {
+        if (!$table.hasClass("is-empty")) {
+          cy.getBy("view.data-table").visitByStatus("closed");
+          cy.getBy("event.status")
+            .should("contain", "Bearbeitet")
+            .within(() => {
+              cy.getBy(".v-btn{event.resume}").should("exist").click();
+            });
+          cy.getBy("event.status")
+            .should("contain", "Geliefert")
+            .within(() => {
+              cy.getBy(".v-btn{event.close}").should("exist").click();
+            });
+          cy.getBy("event.status")
+            .should("contain", "Bearbeitet")
+            .within(() => {
+              cy.getBy(".v-btn{event.resume}").should("exist");
+            });
+        }
       });
   });
   it("should edit an existing event", () => {

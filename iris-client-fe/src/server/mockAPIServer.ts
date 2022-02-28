@@ -6,6 +6,7 @@ import {
   DataRequestStatus,
   ExistingDataRequestClientWithLocation,
   IrisMessage,
+  IrisMessageQuery,
   User,
   UserRole,
 } from "@/api";
@@ -38,10 +39,7 @@ import {
   dummyIrisMessageList,
   dummyIrisMessageHdContacts,
   getDummyMessageFromRequest,
-  // disabled file attachments
-  // dummyIrisMessageFileAttachments,
 } from "@/server/data/dummy-iris-messages";
-import { DataQuery } from "@/api/common";
 
 const loginResponse = (role: UserRole): Response => {
   return new Response(200, {
@@ -304,7 +302,7 @@ export function makeMockAPIServer() {
       });
 
       this.get("/iris-messages", (schema, request) => {
-        const query: Partial<DataQuery> = request.queryParams;
+        const query: Partial<IrisMessageQuery> = request.queryParams;
         return authResponse(
           request,
           queriedPage(dummyIrisMessageList as IrisMessage[], query)
@@ -354,24 +352,6 @@ export function makeMockAPIServer() {
           dummyIrisMessageList.filter((item) => !item.isRead).length
         );
       });
-
-      this.get("/iris-messages/allowed-file-types", (schema, request) => {
-        return authResponse(request, ["image/*"]);
-      });
-      // disabled file attachments
-      /*
-      this.get("/iris-messages/files/:fileId/download", (schema, request) => {
-        let fileAttachment = dummyIrisMessageFileAttachments.find(
-          (item) => item.id === request.params.fileId
-        );
-        if (!fileAttachment) {
-          fileAttachment = dummyIrisMessageFileAttachments[0];
-        }
-        return authResponse(request, "dummy file content", {
-          "content-disposition": `filename="${fileAttachment.name}.txt"`,
-        });
-      });
-       */
     },
   });
 

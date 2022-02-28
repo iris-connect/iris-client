@@ -35,7 +35,6 @@ const normalizeIrisMessageFolder = (
           ? normalizeIrisMessageFolders(source?.items)
           : undefined,
         context: normalizer("context", IrisMessageContext.Unknown),
-        isDefault: normalizer("isDefault", undefined, "boolean"),
       };
       return normalized;
     },
@@ -68,7 +67,7 @@ export const normalizeIrisMessageHdContact = (
       const normalized: Complete<IrisMessageHdContact> = {
         id: normalizer("id", ""),
         name: normalizer("name", ""),
-        isOwn: normalizer("isOwn", undefined, "boolean"),
+        own: normalizer("own", undefined, "boolean"),
       };
       return normalized;
     },

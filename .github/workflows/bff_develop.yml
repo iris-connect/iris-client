@@ -44,10 +44,21 @@ jobs:
 
       - name: build, package and publish the image
         run: |
-          mvn -B clean verify spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=true -Dversion.tag=${{ steps.meta.outputs.version }}
-        env:
-          DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
-          DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PW }}
+          mvn -B clean verify spring-boot:build-image -am -pl iris-client-bff -Dspring-boot.build-image.publish=false -Dimage.tag=${{ steps.meta.outputs.tags }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PW }}
+
+      - name: Sign and push docker image
+        uses: sudo-bot/action-docker-sign@latest
+        with:
+          image-ref: ${{steps.meta.outputs.tags}}
+          private-key-id: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY_IDENTIFIER }}
+          private-key: ${{ secrets.DOCKER_HUB_DCT_PRIVATE_KEY }}
+          private-key-passphrase: ${{ secrets.DOCKER_HUB_DCT_PASSPHRASE }}
           
       - name: Upload Test Reports
         if: always()

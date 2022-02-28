@@ -1,16 +1,26 @@
 package iris.client_bff.cases.web;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequest.Status;
-import iris.client_bff.cases.eps.dto.*;
+import iris.client_bff.cases.eps.dto.CaseDataProvider;
+import iris.client_bff.cases.eps.dto.ContactCategory;
+import iris.client_bff.cases.eps.dto.ContactInformation;
+import iris.client_bff.cases.eps.dto.ContactPerson;
+import iris.client_bff.cases.eps.dto.Contacts;
+import iris.client_bff.cases.eps.dto.Events;
+import iris.client_bff.cases.eps.dto.WorkPlace;
 import iris.client_bff.cases.model.CaseDataSubmission;
 import iris.client_bff.cases.model.CaseEvent;
 import iris.client_bff.cases.model.Contact;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
+import iris.client_bff.users.UserDetailsServiceImpl;
+import iris.client_bff.users.entities.UserAccount;
 import iris.client_bff.utils.DtoSupplier;
 
 import java.time.Instant;
@@ -41,8 +51,14 @@ class IndexCaseMapperTest {
 
 	@Test
 	void mapDetailed() {
+
+		var userService = mock(UserDetailsServiceImpl.class);
+		when(userService.findByUuid(any()))
+				.thenReturn(Optional.of(new UserAccount().setFirstName("Max").setLastName("Muster")));
+
 		var request = getRequest();
-		var mapped = IndexCaseMapper.mapDetailed(request);
+		var mapped = IndexCaseMapper.mapDetailed(request, userService);
+		var name = "Max Muster";
 
 		var expected = IndexCaseDetailsDTO.builder()
 				.name("request_name")
@@ -52,6 +68,8 @@ class IndexCaseMapperTest {
 				.end(END)
 				.comment("a-comment-here")
 				.caseId(request.getId().toString())
+				.createdBy(name)
+				.lastModifiedBy(name)
 				.build();
 
 		assertEquals(expected, mapped);
@@ -92,7 +110,8 @@ class IndexCaseMapperTest {
 		assertEquals(contact.getPhone(), expectedContact.getPhone());
 		assertEquals(contact.getMobilePhone(), expectedContact.getMobilePhone());
 		assertEquals(contact.getEmail(), expectedContact.getEmail());
-		assertEquals(contact.getContactCategory().toString(), expectedContact.getContactInformation().getContactCategory().toString());
+		assertEquals(contact.getContactCategory().toString(),
+				expectedContact.getContactInformation().getContactCategory().toString());
 		assertEquals(contact.getFirstContactDate(), expectedContact.getContactInformation().getFirstContactDate());
 		assertEquals(contact.getLastContactDate(), expectedContact.getContactInformation().getLastContactDate());
 		assertEquals(contact.getBasicConditions(), expectedContact.getContactInformation().getBasicConditions());
@@ -104,7 +123,8 @@ class IndexCaseMapperTest {
 		assertEquals(contact.getWorkplacePointOfContact(), expectedContact.getWorkPlace().getPointOfContact());
 		assertEquals(contact.getWorkplacePhone(), expectedContact.getWorkPlace().getPhone());
 		assertEquals(contact.getWorkplaceAddress().getStreet(), expectedContact.getWorkPlace().getAddress().getStreet());
-		assertEquals(contact.getWorkplaceAddress().getHouseNumber(), expectedContact.getWorkPlace().getAddress().getHouseNumber());
+		assertEquals(contact.getWorkplaceAddress().getHouseNumber(),
+				expectedContact.getWorkPlace().getAddress().getHouseNumber());
 		assertEquals(contact.getWorkplaceAddress().getZipCode(), expectedContact.getWorkPlace().getAddress().getZipCode());
 		assertEquals(contact.getWorkplaceAddress().getCity(), expectedContact.getWorkPlace().getAddress().getCity());
 

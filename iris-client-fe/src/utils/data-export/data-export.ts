@@ -1,6 +1,7 @@
-import XLSX, { FullProperties } from "xlsx";
+import { utils, writeFile, CellObject, FullProperties, WorkSheet } from "xlsx";
 import sanitization from "@/utils/data-export/sanitization";
 import appConfig from "@/config";
+import dayjs from "@/utils/date";
 
 export type Row = Record<string, unknown>;
 export type Header =
@@ -19,12 +20,76 @@ export interface ExportConfigCSV extends ExportConfig {
   quoted?: boolean;
 }
 
-export type ExportConfigXLSX = ExportConfig & FullProperties;
+type ExportConfigXLSXFormat = {
+  colFormats?: Record<string, string>;
+  autoFormat?: boolean;
+};
+
+export type ExportConfigXLSX = ExportConfig &
+  FullProperties &
+  ExportConfigXLSXFormat;
+
+type WorksheetRange = {
+  sRow?: number;
+  sCol?: number;
+  eRow: number;
+  eCol: number;
+};
 
 const getHeaderRow = (headers: Header[]): string[] => {
   return headers.map((header) => {
     if (typeof header === "string") return header;
     return header.text;
+  });
+};
+
+const formatXlsxCells = (
+  ws: WorkSheet,
+  range: WorksheetRange,
+  config: ExportConfigXLSXFormat
+) => {
+  const defaultFmt = "@";
+  for (let c = range.sCol || 0; c <= range.eCol; c++) {
+    const colHeader = ws[utils.encode_cell({ r: 0, c })];
+    for (let r = range.sRow || 0; r <= range.eRow; r++) {
+      const cell = ws[utils.encode_cell({ r, c })];
+      cell.z = defaultFmt;
+      if (config.autoFormat) {
+        autoFormatXlsxCell(cell);
+      }
+      // in addition to autoFormat we can define formats for columns
+      const colFormat = config.colFormats?.[colHeader.v];
+      if (colFormat) {
+        cell.z = colFormat;
+      }
+    }
+  }
+};
+
+// DD.MM.YYYY
+const LOCALIZED_DATE_FORMAT = dayjs.localeData().longDateFormat("L");
+
+export const EXPORT_DATE_FORMAT = {
+  APP: LOCALIZED_DATE_FORMAT,
+  XLSX: LOCALIZED_DATE_FORMAT,
+};
+
+// 24hr time format: dayjs: HH:mm, xlsx: hh:mm
+export const EXPORT_DATE_TIME_FORMAT = {
+  APP: LOCALIZED_DATE_FORMAT + " HH:mm",
+  XLSX: LOCALIZED_DATE_FORMAT + " hh:mm",
+};
+
+const EXPORT_DATE_FORMATS = [EXPORT_DATE_TIME_FORMAT, EXPORT_DATE_FORMAT];
+
+const autoFormatXlsxCell = (cell: CellObject): void => {
+  const cellValue = cell.v;
+  if (typeof cellValue === "boolean") return;
+  EXPORT_DATE_FORMATS.forEach((format) => {
+    if (dayjs(cellValue, format.APP, true).isValid()) {
+      cell.z = format.XLSX;
+      return;
+    }
   });
 };
 
@@ -34,7 +99,7 @@ const exportXlsx = (
   config: ExportConfigXLSX
 ) => {
   const sanitizedRows = sanitization.sanitizeRows(rows, headers, false);
-  const wb = XLSX.utils.book_new();
+  const wb = utils.book_new();
   if (!wb.Props) {
     wb.Props = {
       Version: appConfig.appVersionId,
@@ -44,9 +109,15 @@ const exportXlsx = (
     get: (o, p: keyof FullProperties) =>
       p === "Application" ? "IRIS connect" : o[p],
   });
-  const ws = XLSX.utils.aoa_to_sheet([getHeaderRow(headers), ...sanitizedRows]);
-  XLSX.utils.book_append_sheet(wb, ws, "Tabelle1");
-  XLSX.writeFile(wb, `${config.fileName}.xlsx`);
+  const headerRow = getHeaderRow(headers);
+  const ws = utils.aoa_to_sheet([headerRow, ...sanitizedRows]);
+  formatXlsxCells(
+    ws,
+    { eRow: sanitizedRows.length, eCol: headerRow.length - 1 },
+    config
+  );
+  utils.book_append_sheet(wb, ws, "Tabelle1");
+  writeFile(wb, `${config.fileName}.xlsx`);
 };
 
 const exportCsv = (
@@ -75,11 +146,8 @@ const exportCsv = (
           return row.map((field) => (field ? field : '"'));
         });
       }
-      const ws = XLSX.utils.aoa_to_sheet([
-        getHeaderRow(headers),
-        ...sanitizedRows,
-      ]);
-      let csv = XLSX.utils.sheet_to_csv(ws, {
+      const ws = utils.aoa_to_sheet([getHeaderRow(headers), ...sanitizedRows]);
+      let csv = utils.sheet_to_csv(ws, {
         FS: delimiter,
         forceQuotes,
       });

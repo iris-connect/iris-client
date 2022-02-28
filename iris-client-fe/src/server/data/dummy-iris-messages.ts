@@ -4,7 +4,7 @@ import {
   IrisMessageContext,
   IrisMessageDetails,
   IrisMessageFolder,
-  IrisMessageFileAttachment,
+  IrisMessageInsert,
 } from "@/api";
 import { Request } from "miragejs";
 
@@ -13,7 +13,6 @@ export const dummyIrisMessageFolders: IrisMessageFolder[] = [
     id: "inbox",
     name: "Posteingang",
     context: IrisMessageContext.Inbox,
-    isDefault: true,
     items: [
       {
         id: "inbox_1",
@@ -50,7 +49,7 @@ export const dummyIrisMessageHdContacts: IrisMessageHdContact[] = [
   {
     id: "1",
     name: "Eigenes GA",
-    isOwn: true,
+    own: true,
   },
   {
     id: "2",
@@ -70,23 +69,6 @@ export const dummyIrisMessageHdContacts: IrisMessageHdContact[] = [
   },
 ];
 
-// disabled file attachments
-export const dummyIrisMessageFileAttachments: IrisMessageFileAttachment[] = [];
-/*
-export const dummyIrisMessageFileAttachments: IrisMessageFileAttachment[] = [
-  {
-    id: "file_1",
-    name: "Anhang 1",
-    type: "pdf",
-  },
-  {
-    id: "file_2",
-    name: "Liste 2",
-    type: "csv",
-  },
-];
- */
-
 export const dummyIrisMessageList: IrisMessageDetails[] = [
   {
     hdAuthor: dummyIrisMessageHdContacts[1],
@@ -98,7 +80,6 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     createdAt: daysAgo(3),
     isRead: false,
-    fileAttachments: dummyIrisMessageFileAttachments,
   },
   {
     hdAuthor: dummyIrisMessageHdContacts[0],
@@ -121,7 +102,6 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     body: "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     createdAt: daysAgo(5),
     isRead: false,
-    fileAttachments: dummyIrisMessageFileAttachments,
   },
   {
     hdAuthor: dummyIrisMessageHdContacts[0],
@@ -151,12 +131,10 @@ export const getDummyMessageFromRequest = (
   request: Request,
   id?: string
 ): IrisMessageDetails => {
-  const form = request.requestBody as unknown as FormData;
-  const subject = form.get("subject") as string;
-  const body = form.get("body") as string;
-  const recipient = form.get("recipient") as string;
-  // disabled file attachments
-  // const fileAttachments = form.getAll("fileAttachments");
+  const form: IrisMessageInsert = JSON.parse(request.requestBody);
+  const subject = form.subject;
+  const body = form.body;
+  const recipient = form.hdRecipient;
   return {
     id: id || new Date().getTime() + "",
     subject,
@@ -169,16 +147,5 @@ export const getDummyMessageFromRequest = (
       dummyIrisMessageHdContacts.find((c) => c.id === recipient) ||
       dummyIrisMessageHdContacts[1],
     createdAt: new Date().getTime() + "",
-    // disabled file attachments
-    /*
-    fileAttachments: fileAttachments.map((fileAttachment) => {
-      const a = fileAttachment as File;
-      return {
-        id: new Date().getTime() + "",
-        name: a.name,
-        type: a.type,
-      };
-    }),
-     */
   };
 };

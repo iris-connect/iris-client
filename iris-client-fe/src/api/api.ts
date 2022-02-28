@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ApiResponse, assertParamExists, RequestOptions } from "./common";
+import {
+  ApiResponse,
+  assertParamExists,
+  DataQuery,
+  RequestOptions,
+} from "./common";
 import { BaseAPI } from "./base";
 import { UserSession } from "@/views/user-login/user-login.store";
 
@@ -1906,12 +1911,6 @@ export interface Page<Content> {
 
 export type PageIrisMessages = Page<IrisMessage>;
 
-export interface IrisMessageFileAttachment {
-  id: string;
-  name: string;
-  type?: string;
-}
-
 export interface IrisMessageDataAttachment {
   id: string;
   discriminator?: IrisMessageDataDiscriminator;
@@ -1934,7 +1933,6 @@ export interface IrisMessage {
 
 export interface IrisMessageDetails extends IrisMessage {
   context: IrisMessageContext;
-  fileAttachments?: IrisMessageFileAttachment[];
   dataAttachments?: IrisMessageDataAttachment[];
 }
 
@@ -1967,8 +1965,6 @@ export interface IrisMessageInsert {
   subject: string;
   body: string;
   dataAttachments?: IrisMessageDataInsert[];
-  // disabled file attachments
-  // fileAttachments?: File[];
 }
 
 export enum IrisMessageContext {
@@ -1982,13 +1978,12 @@ export type IrisMessageFolder = {
   name: string;
   items?: IrisMessageFolder[];
   context?: IrisMessageContext;
-  isDefault?: boolean;
 };
 
 export interface IrisMessageHdContact {
   id: string;
   name: string;
-  isOwn?: boolean;
+  own?: boolean;
 }
 
 /**
@@ -2332,38 +2327,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     options?: RequestOptions
   ): ApiResponse {
     assertParamExists("irisMessagesPost", "data", data);
-    return this.apiRequest(
-      "POST",
-      "/iris-messages",
-      {
-        ...data,
-        dataAttachments: data.dataAttachments?.map((insert) => ({
-          ...insert,
-          payload: JSON.stringify(insert.payload),
-        })),
-      },
-      {
-        ...options,
-        multipart: true,
-      }
-    );
-  }
-
-  /**
-   * @summary Fetches allowed file types for iris message fileAttachments
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof IrisClientFrontendApi
-   */
-  public irisMessageAllowedFileTypesGet(
-    options?: RequestOptions
-  ): ApiResponse<string[]> {
-    return this.apiRequest(
-      "GET",
-      "/iris-messages/allowed-file-types",
-      null,
-      options
-    );
+    return this.apiRequest("POST", "/iris-messages", data, options);
   }
 
   /**
@@ -2428,12 +2392,12 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @memberof IrisClientFrontendApi
    */
   public importIrisMessageDataAndAdd(
-    messageDataId: string,
-    options?: RequestOptions
+      messageDataId: string,
+      options?: RequestOptions
   ): ApiResponse {
     assertParamExists("irisMessageDataImport", "messageDataId", messageDataId);
     const path = `/iris-messages/data/${encodeURIComponent(
-      messageDataId
+        messageDataId
     )}/import/add`;
     return this.apiRequest("POST", path, null, options);
   }
@@ -2448,23 +2412,23 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @memberof IrisClientFrontendApi
    */
   public importIrisMessageDataAndUpdate(
-    messageDataId: string,
-    data: IrisMessageDataSelectionPayload,
-    options?: RequestOptions
+      messageDataId: string,
+      data: IrisMessageDataSelectionPayload,
+      options?: RequestOptions
   ): ApiResponse {
     assertParamExists(
-      "importIrisMessageDataAndUpdate",
-      "messageDataId",
-      messageDataId
+        "importIrisMessageDataAndUpdate",
+        "messageDataId",
+        messageDataId
     );
     assertParamExists(
-      "importIrisMessageDataAndUpdate",
-      "importTargetId",
-      options?.params?.importTargetId
+        "importIrisMessageDataAndUpdate",
+        "importTargetId",
+        options?.params?.importTargetId
     );
     assertParamExists("importIrisMessageDataAndUpdate", "data", data);
     const path = `/iris-messages/data/${encodeURIComponent(
-      messageDataId
+        messageDataId
     )}/import/update`;
     return this.apiRequest("POST", path, data, options);
   }
@@ -2478,21 +2442,21 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @memberof IrisClientFrontendApi
    */
   public messageDataImportSelectionViewDataGet(
-    messageDataId: string,
-    options?: RequestOptions
+      messageDataId: string,
+      options?: RequestOptions
   ): ApiResponse<IrisMessageDataViewData> {
     assertParamExists(
-      "messageDataImportSelectionViewDataGet",
-      "messageDataId",
-      messageDataId
+        "messageDataImportSelectionViewDataGet",
+        "messageDataId",
+        messageDataId
     );
     assertParamExists(
-      "messageDataImportSelectionViewDataGet",
-      "importTargetId",
-      options?.params?.importTargetId
+        "messageDataImportSelectionViewDataGet",
+        "importTargetId",
+        options?.params?.importTargetId
     );
     const path = `/iris-messages/data/${encodeURIComponent(
-      messageDataId
+        messageDataId
     )}/import/select`;
     return this.apiRequest("GET", path, null, options);
   }
@@ -2506,37 +2470,17 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @memberof IrisClientFrontendApi
    */
   public irisMessageDataViewDataGet(
-    messageDataId: string,
-    options?: RequestOptions
+      messageDataId: string,
+      options?: RequestOptions
   ): ApiResponse<IrisMessageDataViewData> {
     assertParamExists(
-      "irisMessageDataViewDataGet",
-      "messageDataId",
-      messageDataId
+        "irisMessageDataViewDataGet",
+        "messageDataId",
+        messageDataId
     );
     const path = `/iris-messages/data/${encodeURIComponent(
-      messageDataId
+        messageDataId
     )}/view`;
     return this.apiRequest("GET", path, null, options);
   }
-
-  // disabled file attachments
-  /**
-   * @summary Download file
-   * @param {string} fileId
-   * @param {*} options Override http request option.
-   */
-  /*
-  public irisMessageFileDownload(
-    fileId: string,
-    options?: RequestOptions
-  ): ApiResponse {
-    assertParamExists("irisMessageFileDownload", "fileId", fileId);
-    const path = `/iris-messages/files/${encodeURIComponent(fileId)}/download`;
-    return this.apiRequest("GET", path, null, {
-      ...options,
-      responseType: "blob",
-    });
-  }
-   */
 }

@@ -1,5 +1,100 @@
 # Changelog
 
+## [1.3.1](https://github.com/iris-connect/iris-client/compare/v1.3.0...v1.3.1) (2022-02-01)
+
+
+### Bug Fixes
+
+* D-Trust root certificates were missing and are now included in docker-images ([7ea894a](https://github.com/iris-connect/iris-client/commit/7ea894a579979861b36d1c5651cacf60a2a39ea2))
+
+# [1.3.0](https://github.com/iris-connect/iris-client/compare/v1.2.1...v1.3.0) (2022-02-01)
+
+
+### Bug Fixes
+
+* Avoids irrelevant but logged ClassNotFoundException. It is correct that the class iris.backend_service.configurations.CentralConfigurationException is missing. ([89c2da8](https://github.com/iris-connect/iris-client/commit/89c2da81bc1b009e10026a1d9802386ad3f6a2de)), closes [#527](https://github.com/iris-connect/iris-client/issues/527)
+* Changes the certificate paths to the new schema introduced with new EPS. ([6772bdc](https://github.com/iris-connect/iris-client/commit/6772bdc8c98939a0684e890946232ffa399d929c))
+* Changes the certificate paths to the new schema introduced with new EPS. ([fe1a0b3](https://github.com/iris-connect/iris-client/commit/fe1a0b3c89abb306f178e88f963881c684b36540))
+* Cleans the `.env(.sample)` from values that are prescribed for the environments. Admins in the HDs do not have to do anything with it now, instead the correct values are set internally based on the `IRIS_ENV`. ([0211219](https://github.com/iris-connect/iris-client/commit/0211219f794160f294664f27e77452dbe4bc0a53)), closes [#566](https://github.com/iris-connect/iris-client/issues/566)
+* **Deps:** Sets new log4j version to fix current vulnerability in versions ≤2.17.0 ([c57d32f](https://github.com/iris-connect/iris-client/commit/c57d32ff1907124e6466b32f5fba5331fa74596f))
+* from version 0.22.0 Trivy scans POMs and disables JAR detection ([ce5f37b](https://github.com/iris-connect/iris-client/commit/ce5f37b4be3183bfdf87ba23b5348029d9a7b1ed))
+* ignores vulnerability with unclear reason ([5fdc9db](https://github.com/iris-connect/iris-client/commit/5fdc9dbf95bbf36fab44d9485f9a820554a635d9))
+* Removes a few default values for configurations that do not work in general, but hide the lack of an individual configuration. If the `.env(.sample)` has been filled in according to the notes it contains, then all mandatory values are already set correctly and no action is required. ([c61dc00](https://github.com/iris-connect/iris-client/commit/c61dc00cd179361b158ea625d7a749c386bb1399)), closes [#561](https://github.com/iris-connect/iris-client/issues/561)
+* Removes the long deprecated environment variable TRUSTED_CA_CRT from `.env.sample`. This has not had any effect for some time. ([1e19b7e](https://github.com/iris-connect/iris-client/commit/1e19b7ea62f48f87999b78cf7d73037e6f22a6ee)), closes [#554](https://github.com/iris-connect/iris-client/issues/554) [#555](https://github.com/iris-connect/iris-client/issues/555)
+* Stack traces are not included in error responses now to avoid giving too many internal details to the outside world for error conditions. ([07c6476](https://github.com/iris-connect/iris-client/commit/07c647615acb9581f2a71f8442554f5bdf05a2db)), closes [#560](https://github.com/iris-connect/iris-client/issues/560)
+* **Standalone installation:** The announcement database file is now relative to the execution path by default and can be additionally configured with ANNOUNCEMENT_DB_FOLDER. ([f9e5bf9](https://github.com/iris-connect/iris-client/commit/f9e5bf91b60a10a8d533e61d2dc26502ff05b196)), closes [#222](https://github.com/iris-connect/iris-client/issues/222) [#528](https://github.com/iris-connect/iris-client/issues/528)
+* The property `SECURITY_JWT_SHARED_SECRET` is now deprecated and is no longer considered. Instead, the secret is set randomly. This relieves the administrators of the IRIS client from this technically necessary detail. ([1bfe801](https://github.com/iris-connect/iris-client/commit/1bfe801dcc4637aa5a8fc8d9f14c9e3362813b8a)), closes [#553](https://github.com/iris-connect/iris-client/issues/553) [#556](https://github.com/iris-connect/iris-client/issues/556)
+* Updates EPS from version from v0.1.69 to v0.2.1 ([fc4e767](https://github.com/iris-connect/iris-client/commit/fc4e7671e531159d40df86233687969bc0ad7287)), closes [#526](https://github.com/iris-connect/iris-client/issues/526)
+
+
+### Features
+
+* Adds alerts about configuration mismatch of proxy target subdomain. ([7327bf8](https://github.com/iris-connect/iris-client/commit/7327bf8f18876ec5532e93608c304daa628f6e12)), closes [#529](https://github.com/iris-connect/iris-client/issues/529)
+* **Codescan:** adds more queries to the CodeQL scan to be more helpful ([8fb828c](https://github.com/iris-connect/iris-client/commit/8fb828c4e5b7ab1adf275195c39fbeb7ffaeef1f))
+* **Database:** Updates the integrated PostgreSQL database (Docker-Compose installation) to the version `13.5`. ([60ed899](https://github.com/iris-connect/iris-client/commit/60ed8995745cf4a51a92ce9961b134f7c1fe3dff)), closes [#540](https://github.com/iris-connect/iris-client/issues/540)
+* set content specific cell formats to excel export for octoware ([5d2854d](https://github.com/iris-connect/iris-client/commit/5d2854d286c5340aabd0f015df5837e3f7633fe2)), closes [iris-connect/iris-backlog#264](https://github.com/iris-connect/iris-backlog/issues/264)
+* **Standalone installation:** Provides a script to check and import the now required root certificates to the key store of the used Java installation. This script runs together with 'start-iris-client-bff.sh'. ([ed691f8](https://github.com/iris-connect/iris-client/commit/ed691f8ee801e59601cfbb13fbfaca68012b78a8)), closes [iris-connect/iris-backlog#226](https://github.com/iris-connect/iris-backlog/issues/226) [#586](https://github.com/iris-connect/iris-client/issues/586)
+* The certificate of the local EPS is validated by the IRIS Client now. This will further improve security within the health department installation. ([870ae47](https://github.com/iris-connect/iris-client/commit/870ae4747980039c19284c8b6142562b2f7840a3)), closes [iris-connect/iris-backlog#226](https://github.com/iris-connect/iris-backlog/issues/226) [#568](https://github.com/iris-connect/iris-client/issues/568)
+* To protect against flooding with very large amounts of data, submissions is now limited. This concerns both the pure amount of data and the number of elements per data submission. ([7733fe8](https://github.com/iris-connect/iris-client/commit/7733fe84d91480512d3e1a1a479d6cdadfb04a4a)), closes [iris-backlog/issues#180](https://github.com/iris-backlog/issues/issues/180) [#573](https://github.com/iris-connect/iris-client/issues/573)
+
+
+### Reverts
+
+* Revert "chore: test of templates for PRs" ([15b92dd](https://github.com/iris-connect/iris-client/commit/15b92dd5b6e573e1ebed38329227f37f8008461a))
+* Revert "chore: test of templates for issuess" ([b96fbeb](https://github.com/iris-connect/iris-client/commit/b96fbeb4cf6078ae226db169a2f2c2cefec742b1))
+
+# [1.3.0-rc.3](https://github.com/iris-connect/iris-client/compare/v1.3.0-rc.2...v1.3.0-rc.3) (2022-02-01)
+
+
+### Bug Fixes
+
+* Changes the certificate paths to the new schema introduced with new EPS. ([6772bdc](https://github.com/iris-connect/iris-client/commit/6772bdc8c98939a0684e890946232ffa399d929c))
+
+
+### Features
+
+* **Standalone installation:** Provides a script to check and import the now required root certificates to the key store of the used Java installation. This script runs together with 'start-iris-client-bff.sh'. ([ed691f8](https://github.com/iris-connect/iris-client/commit/ed691f8ee801e59601cfbb13fbfaca68012b78a8)), closes [iris-connect/iris-backlog#226](https://github.com/iris-connect/iris-backlog/issues/226) [#586](https://github.com/iris-connect/iris-client/issues/586)
+
+# [1.3.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.3.0-rc.1...v1.3.0-rc.2) (2022-01-26)
+
+
+### Bug Fixes
+
+* Changes the certificate paths to the new schema introduced with new EPS. ([fe1a0b3](https://github.com/iris-connect/iris-client/commit/fe1a0b3c89abb306f178e88f963881c684b36540))
+
+# [1.3.0-rc.1](https://github.com/iris-connect/iris-client/compare/v1.2.1...v1.3.0-rc.1) (2022-01-26)
+
+
+### Bug Fixes
+
+* Avoids irrelevant but logged ClassNotFoundException. It is correct that the class iris.backend_service.configurations.CentralConfigurationException is missing. ([89c2da8](https://github.com/iris-connect/iris-client/commit/89c2da81bc1b009e10026a1d9802386ad3f6a2de)), closes [#527](https://github.com/iris-connect/iris-client/issues/527)
+* Cleans the `.env(.sample)` from values that are prescribed for the environments. Admins in the HDs do not have to do anything with it now, instead the correct values are set internally based on the `IRIS_ENV`. ([0211219](https://github.com/iris-connect/iris-client/commit/0211219f794160f294664f27e77452dbe4bc0a53)), closes [#566](https://github.com/iris-connect/iris-client/issues/566)
+* **Deps:** Sets new log4j version to fix current vulnerability in versions ≤2.17.0 ([c57d32f](https://github.com/iris-connect/iris-client/commit/c57d32ff1907124e6466b32f5fba5331fa74596f))
+* from version 0.22.0 Trivy scans POMs and disables JAR detection ([ce5f37b](https://github.com/iris-connect/iris-client/commit/ce5f37b4be3183bfdf87ba23b5348029d9a7b1ed))
+* ignores vulnerability with unclear reason ([5fdc9db](https://github.com/iris-connect/iris-client/commit/5fdc9dbf95bbf36fab44d9485f9a820554a635d9))
+* Removes a few default values for configurations that do not work in general, but hide the lack of an individual configuration. If the `.env(.sample)` has been filled in according to the notes it contains, then all mandatory values are already set correctly and no action is required. ([c61dc00](https://github.com/iris-connect/iris-client/commit/c61dc00cd179361b158ea625d7a749c386bb1399)), closes [#561](https://github.com/iris-connect/iris-client/issues/561)
+* Removes the long deprecated environment variable TRUSTED_CA_CRT from `.env.sample`. This has not had any effect for some time. ([1e19b7e](https://github.com/iris-connect/iris-client/commit/1e19b7ea62f48f87999b78cf7d73037e6f22a6ee)), closes [#554](https://github.com/iris-connect/iris-client/issues/554) [#555](https://github.com/iris-connect/iris-client/issues/555)
+* Stack traces are not included in error responses now to avoid giving too many internal details to the outside world for error conditions. ([07c6476](https://github.com/iris-connect/iris-client/commit/07c647615acb9581f2a71f8442554f5bdf05a2db)), closes [#560](https://github.com/iris-connect/iris-client/issues/560)
+* **Standalone installation:** The announcement database file is now relative to the execution path by default and can be additionally configured with ANNOUNCEMENT_DB_FOLDER. ([f9e5bf9](https://github.com/iris-connect/iris-client/commit/f9e5bf91b60a10a8d533e61d2dc26502ff05b196)), closes [#222](https://github.com/iris-connect/iris-client/issues/222) [#528](https://github.com/iris-connect/iris-client/issues/528)
+* The property `SECURITY_JWT_SHARED_SECRET` is now deprecated and is no longer considered. Instead, the secret is set randomly. This relieves the administrators of the IRIS client from this technically necessary detail. ([1bfe801](https://github.com/iris-connect/iris-client/commit/1bfe801dcc4637aa5a8fc8d9f14c9e3362813b8a)), closes [#553](https://github.com/iris-connect/iris-client/issues/553) [#556](https://github.com/iris-connect/iris-client/issues/556)
+* Updates EPS from version from v0.1.69 to v0.2.1 ([fc4e767](https://github.com/iris-connect/iris-client/commit/fc4e7671e531159d40df86233687969bc0ad7287)), closes [#526](https://github.com/iris-connect/iris-client/issues/526)
+
+
+### Features
+
+* Adds alerts about configuration mismatch of proxy target subdomain. ([7327bf8](https://github.com/iris-connect/iris-client/commit/7327bf8f18876ec5532e93608c304daa628f6e12)), closes [#529](https://github.com/iris-connect/iris-client/issues/529)
+* **Codescan:** adds more queries to the CodeQL scan to be more helpful ([8fb828c](https://github.com/iris-connect/iris-client/commit/8fb828c4e5b7ab1adf275195c39fbeb7ffaeef1f))
+* **Database:** Updates the integrated PostgreSQL database (Docker-Compose installation) to the version `13.5`. ([60ed899](https://github.com/iris-connect/iris-client/commit/60ed8995745cf4a51a92ce9961b134f7c1fe3dff)), closes [#540](https://github.com/iris-connect/iris-client/issues/540)
+* set content specific cell formats to excel export for octoware ([5d2854d](https://github.com/iris-connect/iris-client/commit/5d2854d286c5340aabd0f015df5837e3f7633fe2)), closes [iris-connect/iris-backlog#264](https://github.com/iris-connect/iris-backlog/issues/264)
+* The certificate of the local EPS is validated by the IRIS Client now. This will further improve security within the health department installation. ([870ae47](https://github.com/iris-connect/iris-client/commit/870ae4747980039c19284c8b6142562b2f7840a3)), closes [iris-connect/iris-backlog#226](https://github.com/iris-connect/iris-backlog/issues/226) [#568](https://github.com/iris-connect/iris-client/issues/568)
+* To protect against flooding with very large amounts of data, submissions is now limited. This concerns both the pure amount of data and the number of elements per data submission. ([7733fe8](https://github.com/iris-connect/iris-client/commit/7733fe84d91480512d3e1a1a479d6cdadfb04a4a)), closes [iris-backlog/issues#180](https://github.com/iris-backlog/issues/issues/180) [#573](https://github.com/iris-connect/iris-client/issues/573)
+
+
+### Reverts
+
+* Revert "chore: test of templates for PRs" ([15b92dd](https://github.com/iris-connect/iris-client/commit/15b92dd5b6e573e1ebed38329227f37f8008461a))
+* Revert "chore: test of templates for issuess" ([b96fbeb](https://github.com/iris-connect/iris-client/commit/b96fbeb4cf6078ae226db169a2f2c2cefec742b1))
+
 ## [1.2.1](https://github.com/iris-connect/iris-client/compare/v1.2.0...v1.2.1) (2021-12-14)
 
 

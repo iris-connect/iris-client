@@ -46,7 +46,7 @@ chore/{issue number}-{name} ⇒ which is neither feature nor bugfix
 [[java]]
 === Java parts
 
-We use *Java 11* and the following code style. 
+We use *Java 17* and the following code style. 
 
 ==== Eclipse
 

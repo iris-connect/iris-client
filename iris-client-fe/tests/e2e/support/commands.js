@@ -223,7 +223,7 @@ Cypress.Commands.add(
     cy.get("@field").closest(".v-input").should("not.have.class", "is-empty");
     cy.getApp().then((app) => {
       const contacts = app.$store.state.irisMessageCreate.contacts;
-      const ownContact = contacts.find((c) => c.isOwn === true);
+      const ownContact = contacts.find((c) => c.own === true);
       cy.wrap(ownContact).should("exist").should("not.be.empty");
       cy.get("@field").selectAutocompleteValue(menu, ownContact.name);
     });

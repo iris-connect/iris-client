@@ -27,41 +27,6 @@
           :readonly="!isInbox"
           @import:done="handleImportDone"
         />
-        <!--
-        <div v-if="message.fileAttachments.length > 0">
-          <v-divider class="my-4" />
-          <p class="font-weight-bold">Anhang</p>
-          <div class="elevation-1 mt-4">
-            <template
-              v-for="(fileAttachment, index) in message.fileAttachments"
-            >
-              <v-list-item
-                dense
-                :key="`item_${index}`"
-                @click="openFileAttachment(fileAttachment.id)"
-                :disabled="fileAttachmentLoading"
-              >
-                <v-list-item-icon>
-                  <v-icon>mdi-download</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ fileAttachment.name }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle v-if="fileAttachment.type">
-                    {{ fileAttachment.type }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-              <v-divider
-                inset
-                :key="`divider_${index}`"
-                v-if="index < message.fileAttachments.length - 1"
-              />
-            </template>
-          </div>
-        </div>
-        -->
       </v-card-text>
       <v-card-actions>
         <v-btn text @click="goBack"> Zurück </v-btn>
@@ -78,7 +43,6 @@ import {
   IrisMessageContext,
   IrisMessageDataAttachment,
   IrisMessageDetails,
-  IrisMessageFileAttachment,
 } from "@/api";
 import { ErrorMessage } from "@/utils/axios";
 import { getFormattedDate } from "@/utils/date";
@@ -96,7 +60,6 @@ type MessageData = {
   subject: string;
   body: string;
   dataAttachments: IrisMessageDataAttachment[];
-  fileAttachments: IrisMessageFileAttachment[];
 };
 
 @Component({
@@ -114,7 +77,6 @@ type MessageData = {
 })
 export default class IrisMessageDetailsView extends Vue {
   messageApi = bundleIrisMessageApi(["fetchMessage", "markAsRead"]);
-  messageFileApi = bundleIrisMessageApi(["downloadFileAttachment"]);
 
   mounted() {
     this.messageApi.fetchMessage.execute(this.$route.params.messageId);
@@ -137,7 +99,6 @@ export default class IrisMessageDetailsView extends Vue {
       subject: message?.subject || "-",
       body: message?.body || "-",
       dataAttachments: message?.dataAttachments || [],
-      fileAttachments: message?.fileAttachments || [],
     };
   }
   get isInbox(): boolean {
@@ -146,13 +107,9 @@ export default class IrisMessageDetailsView extends Vue {
   get messageLoading(): boolean {
     return getApiLoading(this.messageApi);
   }
-  get fileAttachmentLoading(): boolean {
-    return getApiLoading(this.messageFileApi);
-  }
   get errors(): ErrorMessage[] {
     return [
       ...getApiErrorMessages(this.messageApi),
-      ...getApiErrorMessages(this.messageFileApi),
     ];
   }
   get messageLoaded(): boolean {
@@ -174,12 +131,7 @@ export default class IrisMessageDetailsView extends Vue {
   handleImportDone() {
     this.messageApi.fetchMessage.execute(this.$route.params.messageId);
   }
-  // disabled file attachments
-  /*
-  openFileAttachment(id: string) {
-    this.messageApi.downloadFileAttachment.execute(id);
-  }
-   */
+
   goBack() {
     if (this.prevLocation === "iris-message-list") {
       return this.$router.back();

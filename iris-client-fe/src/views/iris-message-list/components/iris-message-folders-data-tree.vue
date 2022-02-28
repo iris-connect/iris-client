@@ -22,7 +22,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { PropType } from "vue";
-import { IrisMessageFolder } from "@/api";
+import { IrisMessageContext, IrisMessageFolder } from "@/api";
 import DataTree from "@/components/data-tree/data-tree.vue";
 
 const extractFolder = (
@@ -66,7 +66,12 @@ export default class IrisMessageFoldersDataTree extends IrisMessageFoldersDataTr
     return extractFolder(this.folders || [], ["id", this.value]);
   }
   get defaultFolder(): IrisMessageFolder | undefined {
-    return extractFolder(this.folders || [], ["isDefault", true]);
+    // this.folders = root level of folder tree without any parent folders
+    // defaultFolder = root inbox folder
+    return extractFolder(this.folders || [], [
+      "context",
+      IrisMessageContext.Inbox,
+    ]);
   }
   get model() {
     return this.value;

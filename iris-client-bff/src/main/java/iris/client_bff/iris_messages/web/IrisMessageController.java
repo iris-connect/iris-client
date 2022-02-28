@@ -1,258 +1,213 @@
 package iris.client_bff.iris_messages.web;
 
 import iris.client_bff.core.utils.ValidationHelper;
-import iris.client_bff.iris_messages.*;
 import iris.client_bff.iris_messages.IrisMessage;
+import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
 import iris.client_bff.iris_messages.IrisMessageException;
-import iris.client_bff.iris_messages.data.*;
-import iris.client_bff.iris_messages.validation.FileTypeValidator;
+import iris.client_bff.iris_messages.IrisMessageFolder;
+import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
+import iris.client_bff.iris_messages.IrisMessageHdContact;
+import iris.client_bff.iris_messages.IrisMessageService;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Size;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-@Slf4j
 @RestController
 @AllArgsConstructor
 @Validated
 @RequestMapping("/iris-messages")
 public class IrisMessageController {
 
-    private static final String FOLDER_ID = "folderId";
-    private static final String MESSAGE_ID = "messageId";
-    private static final String FILE_ID = "fileId";
+	private static final String FIELD_SEARCH = "search";
 
-    private static final String FIELD_SEARCH = "search";
+	private static final String FIELD_HD_RECIPIENT = "hdRecipient";
+	private static final String FIELD_SUBJECT = "subject";
+	private static final String FIELD_BODY = "body";
 
-    private static final String FIELD_HD_RECIPIENT = "hdRecipient";
-    private static final String FIELD_SUBJECT = "subject";
-    private static final String FIELD_BODY = "body";
-    private static final String FIELD_FILE_ATTACHMENT = "fileAttachment";
+	private static final String FIELD_DATA_DISCRIMINATOR = "discriminator";
+	private static final String FIELD_DATA_DESCRIPTION = "description";
+	private static final String FIELD_DATA_PAYLOAD = "payload";
 
-    private static final String FIELD_DATA_DISCRIMINATOR = "discriminator";
-    private static final String FIELD_DATA_DESCRIPTION = "description";
-    private static final String FIELD_DATA_PAYLOAD = "payload";
+	private IrisMessageService irisMessageService;
+	private final IrisMessageBuilderWeb irisMessageBuilder;
+	private final ValidationHelper validationHelper;
 
-    private IrisMessageService irisMessageService;
-    private final ValidationHelper validationHelper;
+	private final IrisMessageDataProcessors messageDataProcessors;
 
-    private final IrisMessageDataProcessors messageDataProcessors;
+	@GetMapping()
+	public Page<IrisMessageListItemDto> getMessages(
+			@RequestParam() IrisMessageFolderIdentifier folder,
+			@RequestParam(required = false) String search,
+			@PageableDefault(sort = "metadata.created", direction = Sort.Direction.DESC) Pageable pageable) {
+		this.validateField(search, FIELD_SEARCH);
+		return this.irisMessageService.search(folder, search, pageable).map(IrisMessageListItemDto::fromEntity);
+	}
 
-    @GetMapping()
-    public Page<IrisMessageListItemDto> getMessages(
-            @RequestParam() UUID folder,
-            @RequestParam(required = false) String search,
-            @PageableDefault(sort = "metadata.created", direction = Sort.Direction.DESC) Pageable pageable
-    ) {
-        this.validateUUID(folder, FOLDER_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FOLDER_ID);
-        this.validateField(search, FIELD_SEARCH);
-        return this.irisMessageService.search(folder, search, pageable).map(IrisMessageListItemDto::fromEntity);
-    }
+	@PostMapping()
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<URI> createAndSendMessage(@Valid @RequestBody IrisMessageInsertDto irisMessageInsert,
+			BindingResult bindingResult) {
+		this.validateConstraints(bindingResult);
+		this.validateIrisMessageInsert(irisMessageInsert);
+		try {
+			IrisMessage message = irisMessageBuilder.build(irisMessageInsert);
+			IrisMessage sentMessage = irisMessageService.sendMessage(message);
+			URI location = ServletUriComponentsBuilder
+					.fromCurrentRequest()
+					.path("/{id}")
+					.buildAndExpand(sentMessage.getId())
+					.toUri();
+			return ResponseEntity.created(location).build();
+		} catch (Throwable e) {
+			String errorMessage = e instanceof IrisMessageException ime
+					? ime.getErrorMessage()
+					: "iris_message.submission_error";
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+		}
+	}
 
-    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<URI> createMessage(@Valid @ModelAttribute IrisMessageInsert irisMessageInsert, BindingResult bindingResult) {
-        this.validateConstraints(bindingResult);
-        this.validateIrisMessageInsert(irisMessageInsert);
-        try {
-            IrisMessage message = irisMessageService.sendMessage(irisMessageInsert);
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(message.getId())
-                    .toUri();
-            return ResponseEntity.created(location).build();
-        } catch (Throwable e) {
-            String errorMessage = e instanceof IrisMessageException
-                    ? ((IrisMessageException) e).getErrorMessage()
-                    : ErrorMessages.IRIS_MESSAGE_SUBMISSION;
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
-        }
-    }
+	private void validateIrisMessageInsert(IrisMessageInsertDto irisMessageInsert) {
+		if (irisMessageInsert == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "iris_message.submission_error");
+		}
+		this.validateField(irisMessageInsert.getHdRecipient(), FIELD_HD_RECIPIENT);
+		this.validateField(irisMessageInsert.getSubject(), FIELD_SUBJECT);
+		this.validateField(irisMessageInsert.getBody(), FIELD_BODY);
 
-    private void validateIrisMessageInsert(IrisMessageInsert irisMessageInsert) {
-        if (irisMessageInsert == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.IRIS_MESSAGE_SUBMISSION);
-        }
-        this.validateField(irisMessageInsert.getHdRecipient(), FIELD_HD_RECIPIENT);
-        this.validateField(irisMessageInsert.getSubject(), FIELD_SUBJECT);
-        this.validateField(irisMessageInsert.getBody(), FIELD_BODY);
+		if (irisMessageInsert.getDataAttachments() != null) {
+			for ( IrisMessageDataInsert data : irisMessageInsert.getDataAttachments() ) {
+				this.validateField(data.getDiscriminator(), FIELD_DATA_DISCRIMINATOR);
+				// The validation of the insert payload is handled by the data processor
+				// Doesn't hurt to validate the keys & values of the payloads JSON string
+				this.validateMessageDataPayload(data.getPayload(), FIELD_DATA_PAYLOAD);
+				this.validateField(data.getDescription(), FIELD_DATA_DESCRIPTION);
+				try {
+					IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(data.getDiscriminator());
+					processor.validateInsert(data.getPayload());
+				} catch (IrisMessageDataException e) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+				}
+			}
+		}
+	}
 
-        if (irisMessageInsert.getDataAttachments() != null) {
-            for ( IrisMessageDataInsert data : irisMessageInsert.getDataAttachments() ) {
-                this.validateField(data.getDiscriminator(), FIELD_DATA_DISCRIMINATOR);
-                // The validation of the insert payload is handled by the data processor
-                // Doesn't hurt to validate the keys & values of the payloads JSON string
-                this.validateMessageDataPayload(data.getPayload(), FIELD_DATA_PAYLOAD);
-                this.validateField(data.getDescription(), FIELD_DATA_DESCRIPTION);
-                try {
-                    IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(data.getDiscriminator());
-                    processor.validateInsert(data.getPayload());
-                } catch (IrisMessageDataException e) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-                }
-            }
-        }
+	@GetMapping("/{messageId}")
+	public ResponseEntity<IrisMessageDetailsDto> getMessageDetails(@PathVariable IrisMessageIdentifier messageId) {
+		Optional<IrisMessage> irisMessage = this.irisMessageService.findById(messageId);
 
-        // disabled file attachments
-        /*
-        if (irisMessageInsert.getFileAttachments() != null) {
-            for ( MultipartFile file : irisMessageInsert.getFileAttachments() ) {
-                this.validateField(file.getOriginalFilename(), FIELD_FILE_ATTACHMENT);
-            }
-        }
-         */
-    }
+		return irisMessage
+				.map(IrisMessageDetailsDto::fromEntity)
+				.map(ResponseEntity::ok)
+				.orElseGet(ResponseEntity.notFound()::build);
+	}
 
-    @GetMapping("/allowed-file-types")
-    public ResponseEntity<String[]> getAllowedFileTypes() {
-        return ResponseEntity.ok(FileTypeValidator.ALLOWED_TYPES);
-    }
+	@PatchMapping("/{messageId}")
+	public ResponseEntity<IrisMessageDetailsDto> updateMessage(
+			@PathVariable IrisMessageIdentifier messageId,
+			@RequestBody @Valid IrisMessageUpdateDto irisMessageUpdate,
+			BindingResult bindingResult) {
+		this.validateConstraints(bindingResult);
+		this.validateIrisMessageUpdate(irisMessageUpdate);
 
-    @GetMapping("/{messageId}")
-    public ResponseEntity<IrisMessageDetailsDto> getMessageDetails(@PathVariable UUID messageId) {
-        this.validateUUID(messageId, MESSAGE_ID, ErrorMessages.INVALID_IRIS_MESSAGE_ID);
-        Optional<IrisMessage> irisMessage = this.irisMessageService.findById(messageId);
-        if (irisMessage.isPresent()) {
-            IrisMessageDetailsDto messageDetailsDto = IrisMessageDetailsDto.fromEntity(irisMessage.get());
-            return ResponseEntity.ok(messageDetailsDto);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+		var updatedMessage = this.irisMessageService.updateReadState(messageId, irisMessageUpdate.getIsRead());
 
-    @PatchMapping("/{messageId}")
-    public ResponseEntity<IrisMessageDetailsDto> updateMessage(
-            @PathVariable UUID messageId,
-            @RequestBody @Valid IrisMessageUpdate irisMessageUpdate
-    ) {
-        this.validateUUID(messageId, MESSAGE_ID, ErrorMessages.INVALID_IRIS_MESSAGE_ID);
-        this.validateIrisMessageUpdate(irisMessageUpdate);
-        Optional<IrisMessage> message = this.irisMessageService.findById(messageId);
-        if (message.isPresent()) {
-            IrisMessage updatedMessage = this.irisMessageService.updateMessage(message.get(), irisMessageUpdate);
-            return ResponseEntity.ok(IrisMessageDetailsDto.fromEntity(updatedMessage));
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+		return updatedMessage
+				.map(IrisMessageDetailsDto::fromEntity)
+				.map(ResponseEntity::ok)
+				.orElseGet(ResponseEntity.notFound()::build);
+	}
 
-    private void validateIrisMessageUpdate(IrisMessageUpdate irisMessageUpdate) {
-        if (irisMessageUpdate == null || irisMessageUpdate.getIsRead() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
-        }
-    }
+	private void validateIrisMessageUpdate(IrisMessageUpdateDto irisMessageUpdate) {
+		if (irisMessageUpdate == null || irisMessageUpdate.getIsRead() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+		}
+	}
 
-    @GetMapping("/folders")
-    public ResponseEntity<List<IrisMessageFolderDto>> getMessageFolders() {
-        List<IrisMessageFolder> irisMessageFolders = irisMessageService.getFolders();
-        // there should always be at least one inbox and one outbox folder. No folders at all = error
-        if (irisMessageFolders.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(IrisMessageFolderDto.fromEntity(irisMessageFolders));
-    }
+	@GetMapping("/folders")
+	public ResponseEntity<List<IrisMessageFolderDto>> getMessageFolders() {
+		List<IrisMessageFolder> irisMessageFolders = irisMessageService.getFolders();
+		// there should always be at least one inbox and one outbox folder. No folders at all = error
+		if (irisMessageFolders.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return ResponseEntity.ok(IrisMessageFolderDto.fromEntity(irisMessageFolders));
+	}
 
-    // disabled file attachments
-    /*
-    @GetMapping("/files/{id}/download")
-    public ResponseEntity<byte[]> downloadMessageFile(@PathVariable UUID id) {
-        this.validateUUID(id, FILE_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FILE_ID);
-        Optional<IrisMessageFile> file = this.irisMessageService.findFileById(id);
-        if (file.isPresent()) {
-            try {
-                IrisMessageFile messageFile = file.get();
-                int contentLength = 0;
-                MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
-                if (messageFile.getContent() != null) {
-                    contentLength = messageFile.getContent().length;
-                    Tika tika = new Tika();
-                    String contentType = tika.detect(messageFile.getContent(), messageFile.getName());
-                    mediaType = MediaType.valueOf(contentType);
-                }
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + messageFile.getName() + "\"")
-                        .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION)
-                        .contentLength(contentLength)
-                        .contentType(mediaType)
-                        .body(messageFile.getContent());
-            } catch(Throwable e) {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ErrorMessages.INVALID_IRIS_MESSAGE_FILE);
-            }
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-     */
+	@GetMapping("/hd-contacts")
+	public ResponseEntity<List<IrisMessageHdContact>> getMessageHdContacts(
+			@Valid @Size(max = 100) @RequestParam(required = false) String search,
+			@RequestParam(defaultValue = "false") boolean includeOwn) {
+		validateField(search, FIELD_SEARCH);
+		try {
+			ArrayList<IrisMessageHdContact> irisMessageContacts = new ArrayList<>(irisMessageService.getHdContacts(search));
+			if (!includeOwn) {
+				IrisMessageHdContact ownContact = this.irisMessageService.getOwnHdContact();
+				irisMessageContacts.removeIf(c -> c.getId().equals(ownContact.getId()));
+			}
+			return ResponseEntity.ok(irisMessageContacts);
+		} catch (Throwable e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "iris_message.missing_hd_contacts");
+		}
+	}
 
-    @GetMapping("/hd-contacts")
-    public ResponseEntity<List<IrisMessageHdContact>> getMessageHdContacts(
-            @Valid @Size(max = 100) @RequestParam(required = false) String search,
-            @RequestParam(defaultValue = "false") boolean includeOwn
-    ) {
-        validateField(search, FIELD_SEARCH);
-        try {
-            ArrayList<IrisMessageHdContact> irisMessageContacts = new ArrayList<>(irisMessageService.getHdContacts(search));
-            if (includeOwn) {
-                irisMessageContacts.add(irisMessageService.getOwnHdContact());
-            }
-            return ResponseEntity.ok(irisMessageContacts);
-        } catch (Throwable e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.MISSING_IRIS_MESSAGE_HD_CONTACTS);
-        }
-    }
+	@GetMapping("/count/unread")
+	public ResponseEntity<Integer> getUnreadMessageCount(
+			@RequestParam(required = false) IrisMessageFolderIdentifier folder) {
 
-    @GetMapping("/count/unread")
-    public ResponseEntity<Integer> getUnreadMessageCount(@RequestParam(required = false) UUID folder) {
-        if (folder == null) {
-            return ResponseEntity.ok(irisMessageService.getCountUnread());
-        }
-        this.validateUUID(folder, FOLDER_ID, ErrorMessages.INVALID_IRIS_MESSAGE_FOLDER_ID);
-        return ResponseEntity.ok(irisMessageService.getCountUnreadByFolderId(folder));
-    }
+		var count = folder == null
+				? irisMessageService.getCountUnread()
+				: irisMessageService.getCountUnreadByFolderId(folder);
 
-    private void validateConstraints(BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            String message = ErrorMessages.INVALID_INPUT + ": " + bindingResult.getFieldErrors().stream()
-                    .map(fieldError -> String.format("%s: %s", fieldError.getField(), fieldError.getDefaultMessage())).collect(Collectors.joining(", "));
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
-        }
-    }
+		return ResponseEntity.ok(count);
+	}
 
-    private void validateField(String value, String field) {
-        if (validationHelper.isPossibleAttack(value, field, false)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT + ": "+ field);
-        }
-    }
+	private void validateConstraints(BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			String message = ErrorMessages.INVALID_INPUT + ": " + bindingResult.getFieldErrors().stream()
+					.map(fieldError -> String.format("%s: %s", fieldError.getField(), fieldError.getDefaultMessage()))
+					.collect(Collectors.joining(", "));
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+		}
+	}
 
-    private void validateUUID(UUID value, String field, String errorMessage) {
-        if (value == null || !ValidationHelper.isUUIDInputValid(value.toString(), field)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage + ": "+ field);
-        }
-    }
+	private void validateField(String value, String field) {
+		if (validationHelper.isPossibleAttack(value, field, false)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
+		}
+	}
 
-    private void validateMessageDataPayload(String value, String field) {
-        if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, false)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_IRIS_MESSAGE_DATA + ": "+ field);
-        }
-    }
+	private void validateMessageDataPayload(String value, String field) {
+		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, false)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_IRIS_MESSAGE_DATA + ": "+ field);
+		}
+	}
 
 }

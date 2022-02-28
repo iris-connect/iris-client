@@ -2,9 +2,10 @@ package iris.client_bff.iris_messages;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+
+import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
@@ -15,16 +16,14 @@ public class IrisMessageFolderInitializer {
 
 	@PostConstruct
 	protected void createMessageFoldersIfNotExist() {
-		if (folderRepository.findAll().isEmpty()) {
+		if (folderRepository.count() == 0) {
 			IrisMessageFolder inboxFolder = new IrisMessageFolder();
 			inboxFolder
 					.setName("Posteingang")
-					.setDefaultFolder(inboxFolder.getId().toUUID())
 					.setContext(IrisMessageContext.INBOX);
 			IrisMessageFolder outboxFolder = new IrisMessageFolder();
 			outboxFolder
 					.setName("Postausgang")
-					.setDefaultFolder(inboxFolder.getId().toUUID())
 					.setContext(IrisMessageContext.OUTBOX);
 			folderRepository.save(inboxFolder);
 			folderRepository.save(outboxFolder);
