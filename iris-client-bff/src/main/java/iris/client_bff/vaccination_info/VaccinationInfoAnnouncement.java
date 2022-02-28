@@ -54,7 +54,7 @@ public class VaccinationInfoAnnouncement extends Aggregate<VaccinationInfoAnnoun
 		/**
 		 * for JSON deserialization
 		 */
-		static AnnouncementIdentifier of(String uuid) {
+		public static AnnouncementIdentifier of(String uuid) {
 			return of(UUID.fromString(uuid));
 		}
 
