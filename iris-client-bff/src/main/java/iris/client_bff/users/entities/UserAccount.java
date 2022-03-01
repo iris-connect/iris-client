@@ -41,7 +41,8 @@ public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
 
 	private String lastName;
 
-	@Enumerated(EnumType.STRING) @Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private UserRole role;
 
 	@Embeddable
@@ -58,7 +59,7 @@ public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
 		/**
 		 * for JSON deserialization
 		 */
-		private static UserAccountIdentifier of(String uuid) {
+		public static UserAccountIdentifier of(String uuid) {
 			return of(UUID.fromString(uuid));
 		}
 

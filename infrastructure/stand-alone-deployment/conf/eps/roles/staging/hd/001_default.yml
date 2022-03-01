@@ -54,6 +54,14 @@ channels: # defines all the channels that we want to open when starting the serv
     type: jsonrpc_client
     settings:
       endpoint: "$IRIS_CLIENT_BFF_ENDPOINT"
+  - name: main gRPC server # accepts incoming gRPC connections to deliver and receive messages
+    type: grpc_server
+    settings:
+      bind_address: "0.0.0.0:8888"
+      tls:
+        ca_certificate_files: *CA_FILES
+        certificate_file: *CERT_FILE
+        key_file: *KEY_FILE
   - name: main gRPC client # creates outgoing gRPC connections to deliver and receive messages
     type: grpc_client
     settings:
