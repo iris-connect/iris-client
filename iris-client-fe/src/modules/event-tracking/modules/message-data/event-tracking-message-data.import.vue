@@ -66,10 +66,8 @@ import { Component, Ref, Vue } from "vue-property-decorator";
 import { PropType } from "vue";
 import ConfirmDialog from "@/components/confirm-dialog.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import SelectEvent from "@/views/event-tracking-message-data/components/select-event.vue";
-import EventTrackingDetailsPreview from "@/views/event-tracking-message-data/event-tracking-details.preview.vue";
-import SelectGuests from "@/views/event-tracking-message-data/components/select-guests.vue";
-import SelectGuestsDataTable from "@/views/event-tracking-message-data/components/select-guests-data-table.vue";
+import SelectEvent from "@/modules/event-tracking/modules/message-data/components/select-event.vue";
+import SelectGuestsDataTable from "@/modules/event-tracking/modules/message-data/components/select-guests-data-table.vue";
 import { Guest } from "@/api";
 import { parseData } from "@/utils/data";
 import rules from "@/common/validation-rules";
@@ -102,8 +100,6 @@ type EventTrackingMessageDataImportForm = {
   components: {
     ValidationInputField,
     SelectGuestsDataTable,
-    SelectGuests,
-    EventTrackingDetailsPreview,
     SelectEvent,
     ConfirmDialog,
     ErrorMessageAlert,

@@ -25,7 +25,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { RouteConfig } from "vue-router";
 import { PropType } from "vue";
-import { fetchUnreadMessageCountApi } from "@/modules/iris-message/api";
+import { fetchUnreadMessageCountApi } from "@/modules/iris-message/services/api";
 
 const IrisMessageListNavLinkProps = Vue.extend({
   inheritAttrs: false,

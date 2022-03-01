@@ -36,6 +36,7 @@ public class IrisMessageTransferDefuse {
     }
 
     private List<IrisMessageTransferDto.DataAttachment> defuseDataList(List<IrisMessageTransferDto.DataAttachment> dataAttachments) {
+        if (dataAttachments == null) return null;
         return dataAttachments.stream().map(this::defuse).collect(Collectors.toList());
     }
 

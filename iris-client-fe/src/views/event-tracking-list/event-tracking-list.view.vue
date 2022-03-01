@@ -40,13 +40,7 @@
               <span class="text-pre-wrap"> {{ item.address }} </span>
             </template>
             <template v-slot:[itemStatusSlotName]="{ item }">
-              <v-chip
-                :color="getStatusColor(item.status)"
-                dark
-                :data-test="`status.${getStatusTestLabel(item.status)}`"
-              >
-                {{ getStatusName(item.status) }}
-              </v-chip>
+              <data-table-item-status :status="item.status" />
             </template>
             <template v-slot:[itemActionSlotName]="{ item }">
               <!-- TODO use imported route name -->
@@ -69,23 +63,21 @@
 </template>
 
 <script lang="ts">
-import { DataRequestStatus } from "@/api";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingFormView from "../event-tracking-form/event-tracking-form.view.vue";
-import StatusColors from "@/constants/StatusColors";
-import StatusMessages from "@/constants/StatusMessages";
 import { DataQuery } from "@/api/common";
-import StatusTestLabel from "@/constants/StatusTestLabel";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import { getEventTrackingListTableRows } from "@/views/event-tracking-list/utils/mappeData";
-import { bundleEventTrackingApi } from "@/modules/event-tracking/api";
+import { bundleEventTrackingApi } from "@/modules/event-tracking/services/api";
 import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import SearchField from "@/components/pageable/search-field.vue";
 import StatusSelect from "@/components/pageable/status-select.vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
+import DataTableItemStatus from "@/components/data-table-item-status.vue";
 
 @Component({
   components: {
+    DataTableItemStatus,
     SortableDataTable,
     StatusSelect,
     SearchField,
@@ -139,18 +131,6 @@ export default class EventTrackingListView extends Vue {
 
   get itemAddressSlotName(): string {
     return "item.address";
-  }
-
-  getStatusColor(status: DataRequestStatus): string {
-    return StatusColors.getColor(status);
-  }
-
-  getStatusName(status: DataRequestStatus): string {
-    return StatusMessages.getMessage(status);
-  }
-
-  getStatusTestLabel(status: DataRequestStatus): string {
-    return StatusTestLabel.getStatusTestLabel(status);
   }
 }
 </script>

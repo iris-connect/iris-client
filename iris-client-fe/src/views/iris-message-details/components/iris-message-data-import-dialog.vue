@@ -27,12 +27,12 @@ import {
   IrisMessageDataDiscriminator,
   IrisMessageDataSelectionPayload,
 } from "@/api";
-import { bundleIrisMessageApi } from "@/modules/iris-message/api";
+import { bundleIrisMessageApi } from "@/modules/iris-message/services/api";
 import { ErrorMessage } from "@/utils/axios";
 import { getApiErrorMessages, getApiLoading } from "@/utils/api";
 import IrisMessageDataView, {
   IrisMessageDataViewSource,
-} from "@/modules/iris-message/components/iris-message-data-view.vue";
+} from "@/modules/iris-message/modules/message-data/components/iris-message-data-view.vue";
 import { normalizeGuests } from "@/views/event-tracking-details/event-tracking-details.data";
 
 type IrisMessageDataViewPayload = {
@@ -46,7 +46,7 @@ const dataViewSource: DataViewSource = {
     normalize: normalizeGuests,
     component: () =>
       import(
-        /* webpackChunkName: "event-tracking-message-data.import" */ "../../event-tracking-message-data/event-tracking-message-data.import.vue"
+        /* webpackChunkName: "event-tracking-message-data.import" */ "../../../modules/event-tracking/modules/message-data/event-tracking-message-data.import.vue"
       ),
   },
 };

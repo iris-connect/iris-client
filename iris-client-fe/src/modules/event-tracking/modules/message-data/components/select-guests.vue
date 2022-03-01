@@ -13,9 +13,9 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { PropType } from "vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { bundleEventTrackingApi } from "@/modules/event-tracking/api";
+import { bundleEventTrackingApi } from "@/modules/event-tracking/services/api";
 import { Guest } from "@/api";
-import SelectGuestsDataTable from "@/views/event-tracking-message-data/components/select-guests-data-table.vue";
+import SelectGuestsDataTable from "@/modules/event-tracking/modules/message-data/components/select-guests-data-table.vue";
 const SelectGuestsProps = Vue.extend({
   inheritAttrs: false,
   props: {

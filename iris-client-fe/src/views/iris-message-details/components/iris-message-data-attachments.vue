@@ -40,7 +40,7 @@
       </template>
     </div>
     <iris-message-data-preview-dialog v-model="previewId">
-      <template #data-import>
+      <template #dialog-actions>
         <iris-message-data-import-menu
           :disabled="!isImportEnabled(previewId)"
           @import:update="importDataAttachmentAndUpdate(previewId)"
@@ -78,7 +78,7 @@ import AlertComponent from "@/components/alerts/alert-component.vue";
 import IrisMessageDataImportDialog, {
   IrisMessageImportData,
 } from "@/views/iris-message-details/components/iris-message-data-import-dialog.vue";
-import { bundleIrisMessageApi } from "@/modules/iris-message/api";
+import { bundleIrisMessageApi } from "@/modules/iris-message/services/api";
 import IrisMessageDataImportMenu from "@/views/iris-message-details/components/iris-message-data-import-menu.vue";
 import { getApiErrorMessages, getApiLoading } from "@/utils/api";
 import IrisMessageDataPreviewDialog from "@/views/iris-message-details/components/iris-message-data-preview-dialog.vue";

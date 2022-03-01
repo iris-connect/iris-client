@@ -19,7 +19,7 @@ import { IrisMessageDataDiscriminator } from "@/api";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import IrisMessageDataComponent, {
   IrisMessageDataComponentSource,
-} from "@/modules/iris-message/components/iris-message-data-component.vue";
+} from "@/modules/iris-message/modules/message-data/components/iris-message-data-component.vue";
 import { DataNormalizer } from "@/utils/data";
 
 type IrisMessageDataNormalizePayloadSource<

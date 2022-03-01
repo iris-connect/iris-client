@@ -51,7 +51,7 @@ import {
   GuestListTableRow,
 } from "@/views/event-tracking-details/utils/mappedData";
 import IrisMessageDataExportDialog from "@/views/iris-message-create/components/iris-message-data-export-dialog.vue";
-import { bundleEventTrackingApi } from "@/modules/event-tracking/api";
+import { bundleEventTrackingApi } from "@/modules/event-tracking/services/api";
 import { getApiErrorMessages, getApiLoading } from "@/utils/api";
 
 @Component({

@@ -12,7 +12,7 @@
           Schließen
         </v-btn>
         <v-spacer></v-spacer>
-        <slot name="data-import" v-if="errors.length <= 0" />
+        <slot name="dialog-actions" v-if="errors.length <= 0" />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { bundleIrisMessageApi } from "@/modules/iris-message/api";
+import { bundleIrisMessageApi } from "@/modules/iris-message/services/api";
 import { ErrorMessage } from "@/utils/axios";
 import { getApiErrorMessages } from "@/utils/api";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
@@ -28,7 +28,7 @@ import { DataRequestDetails, IrisMessageDataDiscriminator } from "@/api";
 import { normalizeDataRequestDetails } from "@/views/event-tracking-details/event-tracking-details.data";
 import IrisMessageDataView, {
   IrisMessageDataViewSource,
-} from "@/modules/iris-message/components/iris-message-data-view.vue";
+} from "@/modules/iris-message/modules/message-data/components/iris-message-data-view.vue";
 
 type IrisMessageDataViewPayload = {
   [IrisMessageDataDiscriminator.EventTracking]: DataRequestDetails;
@@ -41,7 +41,7 @@ const dataViewSource: DataViewSource = {
     normalize: normalizeDataRequestDetails,
     component: () =>
       import(
-        /* webpackChunkName: "event-tracking-details.preview" */ "../../event-tracking-message-data/event-tracking-details.preview.vue"
+        /* webpackChunkName: "event-tracking-message-data.preview" */ "../../../modules/event-tracking/modules/message-data/event-tracking-message-data.preview.vue"
       ),
   },
 };

@@ -38,9 +38,9 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import IrisDataTable from "@/components/iris-data-table.vue";
 import EventTrackingFormView from "@/views/event-tracking-form/event-tracking-form.view.vue";
-import SelectEvent from "@/views/event-tracking-message-data/components/select-event.vue";
+import SelectEvent from "@/modules/event-tracking/modules/message-data/components/select-event.vue";
 import { IrisMessageDataSelectionPayload } from "@/api";
-import SelectGuests from "@/views/event-tracking-message-data/components/select-guests.vue";
+import SelectGuests from "@/modules/event-tracking/modules/message-data/components/select-guests.vue";
 import { PropType } from "vue";
 import rules from "@/common/validation-rules";
 

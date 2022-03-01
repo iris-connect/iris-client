@@ -19,7 +19,14 @@
       :page.sync="query.page"
       :items-per-page.sync="query.size"
       :server-items-length="totalElements"
-    />
+    >
+      <template v-slot:item.address="{ item }">
+        <span class="text-pre-wrap"> {{ item.address }} </span>
+      </template>
+      <template v-slot:item.status="{ item }">
+        <data-table-item-status :status="item.status" />
+      </template>
+    </sortable-data-table>
     <error-message-alert :errors="[eventApi.fetchPageEvent.state.error]" />
   </data-query-handler>
 </template>
@@ -37,7 +44,8 @@ import {
 import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import { DataQuery } from "@/api/common";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { bundleEventTrackingApi } from "@/modules/event-tracking/api";
+import { bundleEventTrackingApi } from "@/modules/event-tracking/services/api";
+import DataTableItemStatus from "@/components/data-table-item-status.vue";
 
 const SelectEventProps = Vue.extend({
   inheritAttrs: false,
@@ -62,6 +70,7 @@ const SelectEventProps = Vue.extend({
 });
 @Component({
   components: {
+    DataTableItemStatus,
     ErrorMessageAlert,
     DataQueryHandler,
     SearchField,

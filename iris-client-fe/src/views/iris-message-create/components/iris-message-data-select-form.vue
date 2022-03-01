@@ -25,6 +25,7 @@
             <v-input
               :rules="validationRules.defined"
               v-model="form.model.payload"
+              class="iris-message-data-select-component"
             >
               <iris-message-data-component
                 v-bind="dataComponentConfig"
@@ -58,7 +59,7 @@ import rules from "@/common/validation-rules";
 import { parseData } from "@/utils/data";
 import IrisMessageDataComponent, {
   IrisMessageDataComponentSource,
-} from "@/modules/iris-message/components/iris-message-data-component.vue";
+} from "@/modules/iris-message/modules/message-data/components/iris-message-data-component.vue";
 
 type IrisMessageDataForm = {
   model: {
@@ -78,7 +79,7 @@ const dataComponentSource: IrisMessageDataComponentSource = {
   [IrisMessageDataDiscriminator.EventTracking]: {
     component: () =>
       import(
-        /* webpackChunkName: "event-tracking-message-data.export" */ "../../event-tracking-message-data/event-tracking-message-data.export.vue"
+        /* webpackChunkName: "event-tracking-message-data.export" */ "../../../modules/event-tracking/modules/message-data/event-tracking-message-data.export.vue"
       ),
   },
 };
@@ -153,3 +154,13 @@ export default class IrisMessageDataSelectForm extends IrisMessageDataSelectForm
   }
 }
 </script>
+
+<style lang="scss">
+.iris-message-data-select-component {
+  & > .v-input__control {
+    & > .v-input__slot {
+      display: block;
+    }
+  }
+}
+</style>

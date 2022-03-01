@@ -49,7 +49,7 @@ import { getFormattedDate } from "@/utils/date";
 import {
   bundleIrisMessageApi,
   fetchUnreadMessageCountApi,
-} from "@/modules/iris-message/api";
+} from "@/modules/iris-message/services/api";
 import { getApiErrorMessages, getApiLoading } from "@/utils/api";
 import IrisMessageDataAttachments from "@/views/iris-message-details/components/iris-message-data-attachments.vue";
 

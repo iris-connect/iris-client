@@ -62,7 +62,7 @@ import { getApiErrorMessages } from "@/utils/api";
 import {
   bundleIrisMessageApi,
   fetchUnreadMessageCountApi,
-} from "@/modules/iris-message/api";
+} from "@/modules/iris-message/services/api";
 
 @Component({
   components: {

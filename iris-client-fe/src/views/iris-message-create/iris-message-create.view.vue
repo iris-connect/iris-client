@@ -24,11 +24,17 @@
                 item-value="id"
                 data-test="hdRecipient"
                 :loading="recipientsLoading"
+                hide-details="auto"
                 :class="{
                   'is-loading': recipientsLoading,
                   'is-empty': recipients.length <= 0,
                 }"
-              ></v-autocomplete>
+              />
+              <p class="text-caption mt-2">
+                Tippen Sie den Bezeichner des Gesundheitsamtes, die
+                <strong>Postleitzahl</strong> oder den <strong>Ort</strong> ein,
+                um nach dem Empfänger zu suchen.
+              </p>
             </v-col>
             <v-col cols="12">
               <v-text-field
@@ -146,7 +152,7 @@ import IrisMessageDataSelectDialog from "@/views/iris-message-create/components/
 import Discriminators from "@/constants/Discriminators";
 import ConfirmDialog from "@/components/confirm-dialog.vue";
 import { getApiErrorMessages } from "@/utils/api";
-import { bundleIrisMessageApi } from "@/modules/iris-message/api";
+import { bundleIrisMessageApi } from "@/modules/iris-message/services/api";
 import store from "@/store";
 
 type IrisMessageCreateForm = {

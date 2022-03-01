@@ -31,7 +31,7 @@ import {
 } from "@/views/event-tracking-details/utils/mappedData";
 import { PropType } from "vue";
 
-const EventTrackingDetailsPreviewProps = Vue.extend({
+const EventTrackingMessageDataPreviewProps = Vue.extend({
   props: {
     data: {
       type: Object as PropType<DataRequestDetails | null>,
@@ -50,7 +50,7 @@ const EventTrackingDetailsPreviewProps = Vue.extend({
     EventTrackingDetailsDataExport,
   },
 })
-export default class EventTrackingDetailsPreview extends EventTrackingDetailsPreviewProps {
+export default class EventTrackingMessageDataPreview extends EventTrackingMessageDataPreviewProps {
   get formData(): FormData {
     return getFormData(this.data);
   }
