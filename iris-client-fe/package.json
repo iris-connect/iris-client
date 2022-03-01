@@ -1,6 +1,6 @@
 {
   "name": "iris-client-frontend",
-  "version": "1.4.0-POST-RELEASE",
+  "version": "1.4.1-POST-RELEASE",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

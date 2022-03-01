@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1](https://github.com/iris-connect/iris-client/compare/v1.4.0...v1.4.1) (2022-03-01)
+
+
+### Bug Fixes
+
+* Adds grpc server to client EPS. Still not reachable from outside, but necessary for communication between health departments. ([5ac3206](https://github.com/iris-connect/iris-client/commit/5ac3206960b99ff4060b8ff50425be25db831aeb)), closes [#637](https://github.com/iris-connect/iris-client/issues/637)
+* Fixes an error when changing user data (IllegalStateException: Cannot convert value of type 'java.lang.String' […] no matching editors or conversion strategy found). ([2b41d0a](https://github.com/iris-connect/iris-client/commit/2b41d0a596d0794fb89593d60e4025d52661d5cc))
+
 # [1.4.0](https://github.com/iris-connect/iris-client/compare/v1.3.1...v1.4.0) (2022-02-25)
 
 
