@@ -1,4 +1,4 @@
-package iris.client_bff.iris_messages.data;
+package iris.client_bff.iris_messages;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

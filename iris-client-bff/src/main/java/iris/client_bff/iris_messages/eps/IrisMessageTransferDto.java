@@ -2,7 +2,7 @@ package iris.client_bff.iris_messages.eps;
 
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
-import iris.client_bff.iris_messages.data.IrisMessageData;
+import iris.client_bff.iris_messages.IrisMessageData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

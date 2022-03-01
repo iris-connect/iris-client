@@ -2,7 +2,6 @@ package iris.client_bff.iris_messages;
 
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
-import iris.client_bff.iris_messages.data.IrisMessageData;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

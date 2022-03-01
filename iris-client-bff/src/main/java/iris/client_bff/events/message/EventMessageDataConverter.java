@@ -4,7 +4,7 @@ import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestRepository;
 import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.model.EventDataSubmission;
-import iris.client_bff.iris_messages.data.IrisMessageDataException;
+import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

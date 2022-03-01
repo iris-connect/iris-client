@@ -8,7 +8,7 @@ import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageFolderRepository;
 import iris.client_bff.iris_messages.IrisMessageTestData;
-import iris.client_bff.iris_messages.data.IrisMessageDataProcessors;
+import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 
 import java.util.Optional;

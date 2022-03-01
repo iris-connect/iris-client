@@ -2,9 +2,8 @@ package iris.client_bff.iris_messages.web;
 
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.*;
-import iris.client_bff.iris_messages.data.*;
-import iris.client_bff.iris_messages.data.IrisMessageData.IrisMessageDataIdentifier;
-import iris.client_bff.iris_messages.data.IrisMessageDataException;
+import iris.client_bff.iris_messages.IrisMessageData.IrisMessageDataIdentifier;
+import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -25,7 +24,11 @@ public class IrisMessageDataController {
     private static final String FIELD_DATA_IMPORT_SELECTION = "selection";
 
     private IrisMessageService irisMessageService;
+    private IrisMessageDataViewProvider irisMessageDataViewProvider;
+    private final IrisMessageDataProcessors messageDataProcessors;
+
     private final ValidationHelper validationHelper;
+
     private final MessageSourceAccessor messages;
 
     @PostMapping("/{messageDataId}/import/add")
@@ -42,7 +45,7 @@ public class IrisMessageDataController {
     ) {
         this.validateMessageDataPayload(importSelection, FIELD_DATA_IMPORT_SELECTION);
         try {
-            IrisMessageDataProcessor processor = this.irisMessageService.getMessageDataProcessor(messageDataId);
+            IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageDataId);
             processor.validateImportSelection(importSelection);
         } catch (IrisMessageDataException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -52,17 +55,17 @@ public class IrisMessageDataController {
     }
 
     @GetMapping("/{messageDataId}/import/select")
-    public ResponseEntity<IrisMessageDataViewData> getMessageDataImportSelectionViewData(
+    public ResponseEntity<IrisMessageDataViewDataDto> getMessageDataImportSelectionViewData(
             @PathVariable IrisMessageDataIdentifier messageDataId,
             @RequestParam(required = false) UUID importTargetId
     ) {
-        IrisMessageDataViewData messageData = this.irisMessageService.getMessageDataImportSelectionViewData(messageDataId, importTargetId);
+        IrisMessageDataViewDataDto messageData = this.irisMessageDataViewProvider.getViewData(messageDataId, importTargetId);
         return ResponseEntity.ok(messageData);
     }
 
     @GetMapping("/{messageDataId}/view")
-    public ResponseEntity<IrisMessageDataViewData> getMessageDataViewData(@PathVariable IrisMessageDataIdentifier messageDataId) {
-        IrisMessageDataViewData messageData = this.irisMessageService.getMessageDataViewData(messageDataId);
+    public ResponseEntity<IrisMessageDataViewDataDto> getMessageDataViewData(@PathVariable IrisMessageDataIdentifier messageDataId) {
+        IrisMessageDataViewDataDto messageData = this.irisMessageDataViewProvider.getViewData(messageDataId);
         return ResponseEntity.ok(messageData);
     }
 

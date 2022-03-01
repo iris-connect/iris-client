@@ -18,7 +18,7 @@ import { PropType } from "vue";
 
 const DataTableItemStatusProps = Vue.extend({
   props: {
-    status: Object as PropType<DataRequestStatus | null>,
+    status: String as PropType<DataRequestStatus | null>,
   },
 });
 

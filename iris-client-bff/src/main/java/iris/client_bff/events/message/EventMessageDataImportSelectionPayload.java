@@ -1,7 +1,7 @@
 package iris.client_bff.events.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import iris.client_bff.iris_messages.data.IrisMessageDataException;
+import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import lombok.Data;
 
 import javax.validation.Valid;

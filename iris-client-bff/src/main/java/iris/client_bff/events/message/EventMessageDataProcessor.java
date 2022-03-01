@@ -1,14 +1,13 @@
 package iris.client_bff.events.message;
 
-import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.EventDataSubmissionService;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.DataRequestDetails;
-import iris.client_bff.iris_messages.data.*;
-import iris.client_bff.iris_messages.data.IrisMessageDataException;
+import iris.client_bff.iris_messages.IrisMessageDataProcessor;
+import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -3,7 +3,7 @@ package iris.client_bff.iris_messages.web;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageContext;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
-import iris.client_bff.iris_messages.data.IrisMessageData;
+import iris.client_bff.iris_messages.IrisMessageData;
 import lombok.*;
 
 import java.time.Instant;

@@ -3,7 +3,7 @@ package iris.client_bff.iris_messages.eps;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
-import iris.client_bff.iris_messages.data.IrisMessageData;
+import iris.client_bff.iris_messages.IrisMessageData;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;

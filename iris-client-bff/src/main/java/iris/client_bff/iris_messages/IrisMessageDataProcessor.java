@@ -1,5 +1,6 @@
-package iris.client_bff.iris_messages.data;
+package iris.client_bff.iris_messages;
 
+import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;

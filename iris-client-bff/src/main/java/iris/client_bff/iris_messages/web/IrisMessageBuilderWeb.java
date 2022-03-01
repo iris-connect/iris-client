@@ -3,15 +3,14 @@ package iris.client_bff.iris_messages.web;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageContext;
-import iris.client_bff.iris_messages.IrisMessageException;
+import iris.client_bff.iris_messages.exceptions.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolderRepository;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
-import iris.client_bff.iris_messages.data.IrisMessageData;
-import iris.client_bff.iris_messages.data.IrisMessageDataException;
-import iris.client_bff.iris_messages.data.IrisMessageDataInsert;
-import iris.client_bff.iris_messages.data.IrisMessageDataProcessor;
-import iris.client_bff.iris_messages.data.IrisMessageDataProcessors;
+import iris.client_bff.iris_messages.IrisMessageData;
+import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
+import iris.client_bff.iris_messages.IrisMessageDataProcessor;
+import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import lombok.RequiredArgsConstructor;
 
@@ -52,15 +51,15 @@ class IrisMessageBuilderWeb {
 		List<IrisMessageData> dataList = new ArrayList<>();
 		try {
 			if (messageInsert.getDataAttachments() != null) {
-				for (IrisMessageDataInsert dataInsert : messageInsert.getDataAttachments()) {
+				for (IrisMessageInsertDto.IrisMessageDataAttachment data : messageInsert.getDataAttachments()) {
 					IrisMessageDataProcessor processor = this.messageDataProcessors
-							.getProcessor(dataInsert.getDiscriminator());
-					String payload = processor.getPayloadFromInsert(dataInsert.getPayload());
+							.getProcessor(data.getDiscriminator());
+					String payload = processor.getPayloadFromInsert(data.getPayload());
 					// The payload should be fine as it is composed of already validated data
 					// Doesn't hurt to validate the keys & values of the payloads JSON string
-					this.validateMessageDataPayload(payload, dataInsert.getDiscriminator());
+					this.validateMessageDataPayload(payload, data.getDiscriminator());
 					IrisMessageData irisMessageData = new IrisMessageData().setMessage(message)
-							.setDiscriminator(dataInsert.getDiscriminator()).setDescription(dataInsert.getDescription())
+							.setDiscriminator(data.getDiscriminator()).setDescription(data.getDescription())
 							.setPayload(payload);
 					dataList.add(irisMessageData);
 				}

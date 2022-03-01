@@ -2,7 +2,7 @@ package iris.client_bff.events.message;
 
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.events.eps.EventDataDefuse;
-import iris.client_bff.iris_messages.data.IrisMessageDataException;
+import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;

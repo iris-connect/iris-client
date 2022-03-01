@@ -1,8 +1,7 @@
-package iris.client_bff.iris_messages.data;
+package iris.client_bff.iris_messages;
 
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
-import iris.client_bff.iris_messages.IrisMessage;
 import lombok.*;
 
 import javax.persistence.*;

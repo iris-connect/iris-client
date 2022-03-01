@@ -7,7 +7,7 @@ import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.events.web.dto.GuestListDataProvider;
-import iris.client_bff.iris_messages.data.IrisMessageDataException;
+import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
