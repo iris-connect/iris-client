@@ -5,6 +5,7 @@
         Die Kontaktdaten zu diesem Indexfall wurden angefragt.
       </template>
     </alert-component>
+    <entry-meta-data :entry="indexTrackingDetails" />
     <v-card>
       <v-card-title data-test="case.externalId">
         Details für Indexfall ID: {{ indexData.extID }}
@@ -204,6 +205,7 @@
 import {
   Address,
   ContactPersonAllOfWorkPlace,
+  DataRequestCaseData,
   DataRequestStatus,
   Sex,
 } from "@/api";
@@ -221,6 +223,7 @@ import IrisDataTable from "@/components/iris-data-table.vue";
 import exportStandardEvents from "@/views/index-tracking-details/components/data-export/utils/exportStandardEvents";
 import exportStandardContacts from "@/views/index-tracking-details/components/data-export/utils/exportStandardContacts";
 import { getExportLabel } from "@/utils/data-export/common";
+import EntryMetaData from "@/components/entry-meta-data.vue";
 
 type IndexData = {
   extID: string;
@@ -286,6 +289,7 @@ function getFormattedAddress(address?: Address | null): string {
 
 @Component({
   components: {
+    EntryMetaData,
     IrisDataTable,
     IndexTrackingSubmissionUrl,
     IndexTrackingDetailsView: IndexTrackingDetailsView,
@@ -397,8 +401,12 @@ export default class IndexTrackingDetailsView extends Vue {
     ],
   };
 
+  get indexTrackingDetails(): DataRequestCaseData | null {
+    return store.state.indexTrackingDetails.indexTrackingDetails;
+  }
+
   get indexData(): IndexData {
-    const dataRequest = store.state.indexTrackingDetails.indexTrackingDetails;
+    const dataRequest = this.indexTrackingDetails;
     const contacts =
       dataRequest?.submissionData?.contacts?.contactPersons || [];
     const events = dataRequest?.submissionData?.events?.events || [];

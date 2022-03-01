@@ -1,18 +1,19 @@
 import { User, UserRole } from "@/api";
-import { Complete, normalizeData } from "@/utils/data";
+import { normalizeData } from "@/utils/data";
+import { normalizeMetaData } from "@/common/normalizer";
 
 export const normalizeUser = (source?: User, parse?: boolean): User => {
   return normalizeData(
     source,
     (normalizer) => {
-      const normalized: Complete<User> = {
+      return {
         id: normalizer("id", undefined),
         firstName: normalizer("firstName", undefined),
         lastName: normalizer("lastName", undefined),
         userName: normalizer("userName", ""),
         role: normalizer("role", UserRole.User),
+        ...normalizeMetaData(source),
       };
-      return normalized;
     },
     parse,
     "User"

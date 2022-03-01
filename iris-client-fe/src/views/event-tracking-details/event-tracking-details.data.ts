@@ -12,6 +12,7 @@ import {
 } from "@/api";
 import { Complete, normalizeData } from "@/utils/data";
 import _isNil from "lodash/isNil";
+import { normalizeMetaData } from "@/common/normalizer";
 
 const normalizeLocationAddress = (
   source?: LocationAddress,
@@ -209,7 +210,7 @@ export const normalizeDataRequestDetails = (
   return normalizeData(
     source,
     (normalizer) => {
-      const normalized: Complete<DataRequestDetails> = {
+      return {
         comment: normalizer("comment", undefined),
         status: normalizer("status", undefined),
         code: normalizer("code", undefined),
@@ -226,8 +227,8 @@ export const normalizeDataRequestDetails = (
         submissionData: source?.submissionData
           ? normalizeGuestList(source?.submissionData)
           : undefined,
+        ...normalizeMetaData(source),
       };
-      return normalized;
     },
     parse,
     "DataRequestDetails"
