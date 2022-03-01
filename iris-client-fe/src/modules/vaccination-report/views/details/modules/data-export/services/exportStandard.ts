@@ -11,7 +11,23 @@ const getHeaders = () => {
       text: "Nachname",
       value: "lastName",
     },
+    {
+      text: "Geschlecht",
+      value: "sex",
+    },
+    {
+      text: "Geburtsdatum",
+      value: "dateOfBirth",
+    },
     composeAddressHeader(),
+    {
+      text: "E-Mail",
+      value: "eMail",
+    },
+    {
+      text: "Telefon",
+      value: "phone",
+    },
     {
       text: "Erreger",
       value: "vaccination",

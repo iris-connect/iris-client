@@ -16,14 +16,17 @@
       </div>
       <search-field :debounce="0" v-model="search" />
       <iris-data-table
-        v-model="selection"
+        v-model="table.selection"
         class="mt-5"
-        :headers="tableHeaders"
+        :headers="table.headers"
         :items="tableRows"
         :search="search"
         :loading="vrApi.state.loading"
+        group-by="vaccination"
         show-select
         show-select-all
+        show-expand
+        :expanded.sync="table.expanded"
         :filter="dataTableFilter"
         data-test="vaccination-report.employee.data-table"
       >
@@ -39,6 +42,15 @@
             {{ getStatusName(item.vaccinationStatus) }}
           </v-chip>
         </template>
+        <template v-slot:expanded-item="{ headers, item }">
+          <td></td>
+          <td :colspan="headers.length - 1">
+            <expanded-data-table-item
+              :expanded-headers="table.expandedHeaders"
+              :item="item"
+            />
+          </td>
+        </template>
       </iris-data-table>
       <error-message-alert :errors="[vrApi.state.error]" />
     </v-card-text>
@@ -47,7 +59,7 @@
       <v-spacer />
       <vaccination-report-data-export
         :report="vaccinationReport"
-        :selection="selection"
+        :selection="table.selection"
         :total="tableRows.length"
       />
     </v-card-actions>
@@ -71,6 +83,8 @@ import { getEnumKeys } from "@/utils/data";
 import BtnToggleSelect from "@/components/btn-toggle-select.vue";
 import VaccinationReportFacilityInfo from "@/modules/vaccination-report/views/details/components/vaccination-report-facility-info.vue";
 import VaccinationReportDataExport from "@/modules/vaccination-report/views/details/modules/data-export/components/vaccination-report-data-export.vue";
+import ExpandedDataTableItem from "@/components/expanded-data-table-item.vue";
+import Genders from "@/constants/Genders";
 
 export type VREmployeeTableRow = {
   id: number | string;
@@ -79,11 +93,16 @@ export type VREmployeeTableRow = {
   address: string;
   vaccination: string;
   vaccinationStatus: string;
+  eMail: string;
+  phone: string;
+  dateOfBirth: string;
+  sex: string;
   raw: VREmployee;
 };
 
 @Component({
   components: {
+    ExpandedDataTableItem,
     VaccinationReportDataExport,
     VaccinationReportFacilityInfo,
     BtnToggleSelect,
@@ -99,14 +118,24 @@ export default class VaccinationReportDetailsView extends Mixins(
 ) {
   search = "";
   status = "";
-  selection = [];
-  tableHeaders = [
-    { text: "Nachname", value: "lastName", sortable: true },
-    { text: "Vorname", value: "firstName", sortable: true },
-    { text: "Adresse", value: "address", sortable: true },
-    { text: "Erreger", value: "vaccination", sortable: true },
-    { text: "Impfstatus", value: "vaccinationStatus", sortable: true },
-  ];
+  table = {
+    selection: [],
+    expanded: [],
+    headers: [
+      { text: "Nachname", value: "lastName", sortable: true },
+      { text: "Vorname", value: "firstName", sortable: true },
+      { text: "E-Mail", value: "eMail", sortable: true },
+      { text: "Telefon", value: "phone", sortable: true },
+      { text: "Erreger", value: "vaccination", sortable: true },
+      { text: "Impfstatus", value: "vaccinationStatus", sortable: true },
+      { text: "", value: "data-table-expand" },
+    ],
+    expandedHeaders: [
+      { text: "Adresse", value: "address" },
+      { text: "Geburtsdatum", value: "dateOfBirth" },
+      { text: "Geschlecht", value: "sex" },
+    ],
+  };
   vrApi = vaccinationReportApi.fetchVaccinationReportDetails();
   mounted() {
     this.vrApi.execute(this.$route.params.id);
@@ -124,6 +153,10 @@ export default class VaccinationReportDetailsView extends Mixins(
         address: getFormattedAddress(employee.address),
         vaccination: employee.vaccination || "-",
         vaccinationStatus: employee.vaccinationStatus || "-",
+        sex: Genders.getName(employee.sex) || "-",
+        dateOfBirth: getFormattedDate(employee.dateOfBirth, "L"),
+        eMail: employee.eMail || "-",
+        phone: employee.phone || "-",
         raw: employee,
       };
     });

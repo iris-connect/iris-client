@@ -25,6 +25,10 @@ export const normalizeVREmployee = (
         address: normalizeAddress(source?.address),
         vaccination: normalizer("vaccination", undefined),
         vaccinationStatus: normalizer("vaccinationStatus", undefined),
+        eMail: normalizer("eMail", undefined),
+        phone: normalizer("phone", undefined),
+        dateOfBirth: normalizer("dateOfBirth", undefined, "dateString"),
+        sex: normalizer("sex", undefined),
       };
     },
     parse,

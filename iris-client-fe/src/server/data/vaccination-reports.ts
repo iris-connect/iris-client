@@ -1,12 +1,13 @@
 import {
   Address,
+  Sex,
   VaccinationReport,
   VaccinationReportDetails,
   VaccinationStatus,
   VREmployee,
   VRFacilityContactPerson,
 } from "@/api";
-import { daysAgo } from "@/server/utils/date";
+import { timeAgo } from "@/server/utils/date";
 import { getEnumKeys } from "@/utils/data";
 import _sample from "lodash/sample";
 import _random from "lodash/random";
@@ -30,6 +31,10 @@ const createEmployee = (): VREmployee => {
     vaccination: "Covid-19",
     vaccinationStatus:
       VaccinationStatus[enumKeys[_random(0, enumKeys.length - 1)]],
+    eMail: _sample(["max@employee.de", "mitarbeiter@beispiel.com"]),
+    phone: _sample(["555123456", "321654987"]),
+    dateOfBirth: timeAgo(_random(18, 70), "years"),
+    sex: _sample([Sex.Female, Sex.Male, Sex.Other]),
   };
 };
 
@@ -71,7 +76,7 @@ const createReport = (id: string) => {
       contactPerson: createContactPerson(),
     },
     employees: employees,
-    reportedAt: daysAgo(_random(1, 5)),
+    reportedAt: timeAgo(_random(1, 5), "days"),
     vaccinationStatusCount: getVaccinationStatusCount(employees),
   };
 };

@@ -1980,6 +1980,10 @@ export interface VREmployee {
   address?: Address;
   vaccination?: string;
   vaccinationStatus?: VaccinationStatus;
+  eMail?: string;
+  phone?: string;
+  dateOfBirth?: string;
+  sex?: Sex;
 }
 
 export type VaccinationStatusCount = {
