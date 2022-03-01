@@ -247,6 +247,7 @@ describe("Events", () => {
   });
   it("should edit an existing event", () => {
     cy.visit("/events/list");
+    cy.getBy("view.data-table").should("not.have.class", "is-loading");
     cy.getBy("view.data-table")
       .contains("e2e_test")
       .first()
