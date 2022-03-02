@@ -11,6 +11,7 @@ Pre-publication checklist:
 - [ ] Are the EPS images from the client up to date with EPS?
 - [ ] Is the EPS version in the gateway up to date? (`epsRepoTag` in `/iris-gateway/infrastructure/iris-gateway/values.yaml`)
 - [ ] Is a current compatible version installed on the gateway?
+- [ ] Was the manual update of the second client in the test environment carried out (https://ga-deployment.test.iris-gateway.de/)?
 - [ ] Has the release been sufficiently tested on the test environment?
 - [ ] Have all necessary configurations been made in the SD?
 - [ ] Have new methods for communication been enabled in the SD?
