@@ -5,8 +5,6 @@ import iris.client_bff.hd_search.HealthDepartment;
 import iris.client_bff.hd_search.eps.EPSHdSearchClient;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
-import iris.client_bff.iris_messages.IrisMessageData.IrisMessageDataIdentifier;
-import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import iris.client_bff.iris_messages.exceptions.IrisMessageException;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -30,12 +27,9 @@ public class IrisMessageService {
 
     private final IrisMessageRepository messageRepository;
     private final IrisMessageFolderRepository folderRepository;
-    private final IrisMessageDataRepository dataRepository;
     private final HibernateSearcher searcher;
     private final EPSIrisMessageClient irisMessageClient;
     private final EPSHdSearchClient hdSearchClient;
-
-    private final IrisMessageDataProcessors messageDataProcessors;
 
     public Optional<IrisMessage> findById(IrisMessageIdentifier messageId) {
         return messageRepository.findById(messageId);
@@ -64,34 +58,6 @@ public class IrisMessageService {
 
     public List<IrisMessageFolder> getFolders() {
         return folderRepository.findAll();
-    }
-
-    public IrisMessageData getMessageData(IrisMessageData.IrisMessageDataIdentifier messageDataId) {
-        Optional<IrisMessageData> optionalIrisMessageData = this.dataRepository.findById(messageDataId);
-        if (optionalIrisMessageData.isEmpty()) {
-            throw new IrisMessageDataException("iris_message.missing_message_data");
-        }
-        return optionalIrisMessageData.get();
-    }
-
-    public void importMessageData(IrisMessageDataIdentifier messageDataId) {
-        IrisMessageData messageData = this.getMessageData(messageDataId);
-        IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageDataId);
-        processor.importPayload(messageData.getPayload());
-        messageData.setIsImported(true);
-        this.dataRepository.save(messageData);
-    }
-
-    public void importMessageData(IrisMessageDataIdentifier messageDataId, UUID importTargetId, String importSelection) {
-        IrisMessageData messageData = this.getMessageData(messageDataId);
-        IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageDataId);
-        processor.importPayload(
-                messageData.getPayload(),
-                importTargetId,
-                importSelection
-        );
-        messageData.setIsImported(true);
-        this.dataRepository.save(messageData);
     }
 
     public List<IrisMessageHdContact> getHdContacts(String search) throws IrisMessageException {

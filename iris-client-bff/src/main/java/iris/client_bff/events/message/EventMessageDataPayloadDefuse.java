@@ -13,35 +13,36 @@ import static iris.client_bff.ui.messages.ErrorMessages.INVALID_INPUT_STRING;
 @RequiredArgsConstructor
 public class EventMessageDataPayloadDefuse {
 
-    private final ValidationHelper validationHelper;
+	private final ValidationHelper validationHelper;
 
-    private final EventDataDefuse eventDataDefuse;
+	private final EventDataDefuse eventDataDefuse;
 
-    void defuse(EventMessageDataPayload payload) {
-        this.defuse(payload.getEventDataRequestPayload());
-        this.defuse(payload.getEventDataSubmissionPayload());
-    }
+	void defuse(EventMessageDataPayload payload) {
+		this.defuse(payload.getEventDataRequestPayload());
+		this.defuse(payload.getEventDataSubmissionPayload());
+	}
 
-    void defuse(EventMessageDataPayload.EventDataRequestPayload payload) {
-        payload
-                .setRefId(this.defuse(payload.getRefId(), "refId", 100))
-                .setName(this.defuse(payload.getName(), "name", 500));
-    }
+	void defuse(EventMessageDataPayload.EventDataRequestPayload payload) {
+		payload
+				.setRefId(this.defuse(payload.getRefId(), "refId", 100))
+				.setName(this.defuse(payload.getName(), "name", 500));
+	}
 
-    void defuse(EventMessageDataPayload.EventDataSubmissionPayload payload) {
-        try {
-            this.eventDataDefuse.defuseGuestList(payload.getGuestList());
-        } catch (Throwable e) {
-            throw new IrisMessageDataException(e);
-        }
-    }
+	void defuse(EventMessageDataPayload.EventDataSubmissionPayload payload) {
+		try {
+			this.eventDataDefuse.defuseGuestList(payload.getGuestList());
+		} catch (Throwable e) {
+			throw new IrisMessageDataException(e);
+		}
+	}
 
-    private String defuse(String input, String field, int maxLength) {
-        if (input == null) return null;
-        if (this.validationHelper.isPossibleAttack(input, field, true)) {
-            return INVALID_INPUT_STRING;
-        }
-        return StringUtils.truncate(input, maxLength);
-    }
+	private String defuse(String input, String field, int maxLength) {
+		if (input == null)
+			return null;
+		if (this.validationHelper.isPossibleAttack(input, field, true)) {
+			return INVALID_INPUT_STRING;
+		}
+		return StringUtils.truncate(input, maxLength);
+	}
 
 }

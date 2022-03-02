@@ -116,7 +116,7 @@ public class IrisMessageController {
 				this.validateField(data.getDescription(), FIELD_DATA_DESCRIPTION);
 				try {
 					IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(data.getDiscriminator());
-					processor.validateInsert(data.getPayload());
+					processor.validateExportSelection(data.getPayload());
 				} catch (IrisMessageDataException e) {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 				}

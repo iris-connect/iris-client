@@ -39,7 +39,8 @@
             </v-stepper-step>
             <v-stepper-content step="2">
               <select-guests-data-table
-                :items="data"
+                :items="selectableGuests"
+                :duplicates="duplicateGuests"
                 v-bind="attrs"
                 v-on="on"
               />
@@ -68,15 +69,15 @@ import ConfirmDialog from "@/components/confirm-dialog.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import SelectEvent from "@/modules/event-tracking/modules/message-data/components/select-event.vue";
 import SelectGuestsDataTable from "@/modules/event-tracking/modules/message-data/components/select-guests-data-table.vue";
-import { Guest } from "@/api";
 import { parseData } from "@/utils/data";
 import rules from "@/common/validation-rules";
 import ValidationInputField from "@/components/form/validation-input-field.vue";
+import { EventTrackingMessageDataImportSelection } from "@/modules/event-tracking/modules/message-data/services/normalizer";
 
 const EventTrackingMessageDataImportProps = Vue.extend({
   props: {
     data: {
-      type: Array as PropType<Guest[] | null>,
+      type: Object as PropType<EventTrackingMessageDataImportSelection | null>,
       default: null,
     },
     disabled: {
@@ -118,6 +119,14 @@ export default class EventTrackingMessageDataImport extends EventTrackingMessage
       },
     },
   };
+
+  get selectableGuests() {
+    return this.data?.selectables?.guests;
+  }
+
+  get duplicateGuests() {
+    return this.data?.duplicates?.guests;
+  }
 
   onTargetChange(value: string) {
     if (value === this.form.model.target) return;

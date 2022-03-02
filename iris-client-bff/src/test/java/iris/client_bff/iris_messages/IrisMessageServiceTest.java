@@ -35,15 +35,10 @@ public class IrisMessageServiceTest {
 	IrisMessageFolderRepository folderRepository;
 
 	@Mock
-	IrisMessageDataRepository dataRepository;
-	@Mock
 	HibernateSearcher searcher;
 
 	@Mock
 	EPSIrisMessageClient irisMessageClient;
-
-	@Mock
-	IrisMessageDataProcessors messageDataProcessors;
 
 	@Mock
 	EPSHdSearchClient hdSearchClient;
@@ -58,12 +53,9 @@ public class IrisMessageServiceTest {
 		this.service = new IrisMessageService(
 				this.messageRepository,
 				this.folderRepository,
-				this.dataRepository,
 				this.searcher,
 				this.irisMessageClient,
-				this.hdSearchClient,
-				this.messageDataProcessors
-		);
+				this.hdSearchClient);
 	}
 
 	@Test

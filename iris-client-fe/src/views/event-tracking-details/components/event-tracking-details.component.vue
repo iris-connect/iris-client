@@ -109,7 +109,7 @@
       ></v-text-field>
       <iris-data-table
         :loading="loading"
-        :headers="tableHeaders"
+        :headers="tableHeaders.headers"
         :items="tableRows"
         :items-per-page="5"
         class="elevation-1 mt-5"
@@ -130,30 +130,12 @@
           </span>
         </template>
         <template v-slot:expanded-item="{ headers, item }">
-          <td></td>
-          <td :colspan="headers.length - 1">
-            <v-row>
-              <template
-                v-for="(expandedHeader, ehIndex) in tableData.expandedHeaders"
-              >
-                <v-col :key="ehIndex" cols="12" sm="4" md="2">
-                  <v-list-item two-line dense>
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        {{ expandedHeader.text }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="text-pre-line">
-                        {{
-                          item[expandedHeader.value]
-                            ? item[expandedHeader.value]
-                            : "-"
-                        }}
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-col>
-              </template>
-            </v-row>
+          <td v-if="selectEnabled"></td>
+          <td :colspan="selectEnabled ? headers.length - 1 : headers.length">
+            <expanded-data-table-item
+              :item="item"
+              :expanded-headers="tableHeaders.expandedHeaders"
+            />
           </td>
         </template>
       </iris-data-table>
@@ -192,9 +174,11 @@ import _map from "lodash/map";
 import {
   EventData,
   FormData,
+  getGuestListTableHeaders,
   GuestListTableRow,
 } from "@/views/event-tracking-details/utils/mappedData";
 import { PropType } from "vue";
+import ExpandedDataTableItem from "@/components/expanded-data-table-item.vue";
 
 const EventTrackingDetailsComponentProps = Vue.extend({
   props: {
@@ -231,6 +215,7 @@ const EventTrackingDetailsComponentProps = Vue.extend({
 
 @Component({
   components: {
+    ExpandedDataTableItem,
     IrisDataTable,
     ErrorMessageAlert,
     EventTrackingDetailsLocationInfo,
@@ -240,65 +225,12 @@ const EventTrackingDetailsComponentProps = Vue.extend({
 })
 export default class EventTrackingDetailsComponent extends EventTrackingDetailsComponentProps {
   get tableHeaders() {
-    const headers = [
-      {
-        text: "Nachname",
-        value: "lastName",
-        align: "start",
-      },
-      {
-        text: "Vorname",
-        value: "firstName",
-      },
-      {
-        text: "Check-In",
-        value: "checkInTime",
-      },
-      {
-        text: "Check-Out",
-        value: "checkOutTime",
-      },
-      {
-        text: "max. Kontaktdauer",
-        value: "maxDuration",
-      },
-      {
-        text: "Kommentar",
-        value: "comment",
-      },
-      { text: "", value: "data-table-expand" },
-    ];
-    if (this.selectEnabled) {
-      return [{ text: "", value: "data-table-select" }, ...headers];
-    }
-    return headers;
+    return getGuestListTableHeaders(this.selectEnabled);
   }
   tableData = {
     search: "",
     expanded: [],
     select: [],
-    expandedHeaders: [
-      {
-        text: "Geschlecht",
-        value: "sex",
-      },
-      {
-        text: "E-Mail",
-        value: "email",
-      },
-      {
-        text: "Telefon",
-        value: "phone",
-      },
-      {
-        text: "Mobil",
-        value: "mobilePhone",
-      },
-      {
-        text: "Adresse",
-        value: "address",
-      },
-    ],
   };
 
   validationRules = {

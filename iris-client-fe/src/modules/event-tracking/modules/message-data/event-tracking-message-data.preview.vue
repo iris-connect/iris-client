@@ -4,23 +4,14 @@
     :event-data="eventData"
     :form-data="formData"
     :is-preview="true"
-    :select-enabled="selectEnabled"
-  >
-    <template #data-export="{ selection }">
-      <event-tracking-details-data-export
-        :event="data"
-        :items-length="tableRows.length"
-        :selection="selection"
-      />
-    </template>
-  </event-tracking-details-component>
+    :select-enabled="false"
+  />
 </template>
 <style></style>
 <script lang="ts">
 import { DataRequestDetails } from "@/api";
 import { Component, Vue } from "vue-property-decorator";
 import EventTrackingDetailsComponent from "@/views/event-tracking-details/components/event-tracking-details.component.vue";
-import EventTrackingDetailsDataExport from "@/views/event-tracking-details/components/data-export/event-tracking-details-data-export.vue";
 import {
   EventData,
   FormData,
@@ -37,17 +28,12 @@ const EventTrackingMessageDataPreviewProps = Vue.extend({
       type: Object as PropType<DataRequestDetails | null>,
       default: null,
     },
-    selectEnabled: {
-      type: Boolean,
-      default: false,
-    },
   },
 });
 
 @Component({
   components: {
     EventTrackingDetailsComponent,
-    EventTrackingDetailsDataExport,
   },
 })
 export default class EventTrackingMessageDataPreview extends EventTrackingMessageDataPreviewProps {

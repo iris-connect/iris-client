@@ -10,7 +10,7 @@
           data-test="message-data-export-dialog.activator"
           :disabled="disabled"
         >
-          Daten per Nachricht senden
+          Daten senden
         </v-btn>
       </slot>
     </template>

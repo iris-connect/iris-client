@@ -8,6 +8,7 @@ import {
 import { getFormattedDate } from "@/utils/date";
 import Genders from "@/constants/Genders";
 import { getValidPhoneNumber } from "@/utils/misc";
+import { DataTableHeader } from "vuetify";
 
 export type FormData = {
   name?: string;
@@ -76,6 +77,70 @@ export const getEventData = (event: DataRequestDetails | null): EventData => {
     lastChange: getFormattedDate(event?.lastModifiedAt),
     location: event?.locationInformation,
     additionalInformation: event?.requestDetails || "-",
+  };
+};
+
+type DataTableHeaders = {
+  [K in "headers" | "expandedHeaders"]: DataTableHeader[];
+};
+
+export const getGuestListTableHeaders = (
+  selectable: boolean
+): DataTableHeaders => {
+  const headers: DataTableHeader[] = [
+    {
+      text: "Nachname",
+      value: "lastName",
+      align: "start",
+    },
+    {
+      text: "Vorname",
+      value: "firstName",
+    },
+    {
+      text: "Check-In",
+      value: "checkInTime",
+    },
+    {
+      text: "Check-Out",
+      value: "checkOutTime",
+    },
+    {
+      text: "max. Kontaktdauer",
+      value: "maxDuration",
+    },
+    {
+      text: "Kommentar",
+      value: "comment",
+    },
+    { text: "", value: "data-table-expand" },
+  ];
+  return {
+    headers: selectable
+      ? [{ text: "", value: "data-table-select" }, ...headers]
+      : headers,
+    expandedHeaders: [
+      {
+        text: "Geschlecht",
+        value: "sex",
+      },
+      {
+        text: "E-Mail",
+        value: "email",
+      },
+      {
+        text: "Telefon",
+        value: "phone",
+      },
+      {
+        text: "Mobil",
+        value: "mobilePhone",
+      },
+      {
+        text: "Adresse",
+        value: "address",
+      },
+    ],
   };
 };
 

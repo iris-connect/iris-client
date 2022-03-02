@@ -30,6 +30,8 @@ type IrisMessageDataNormalizePayloadSource<
   };
 };
 
+type PayloadSource = { [Key in IrisMessageDataDiscriminator]: unknown };
+
 export type IrisMessageDataViewSource<
   P extends { [Key in IrisMessageDataDiscriminator]: P[Key] }
 > = IrisMessageDataNormalizePayloadSource<P> & IrisMessageDataComponentSource;
@@ -46,7 +48,7 @@ const IrisMessageDataViewProps = Vue.extend({
       default: null,
     },
     source: {
-      type: Object as PropType<IrisMessageDataViewSource<any> | null>,
+      type: Object as PropType<IrisMessageDataViewSource<PayloadSource> | null>,
       default: null,
     },
   },

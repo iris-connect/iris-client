@@ -1,5 +1,10 @@
 <template>
-  <v-input class="validation-input-field" :value="value" :rules="rules">
+  <v-input
+    hide-details="auto"
+    class="validation-input-field"
+    :value="value"
+    :rules="rules"
+  >
     <div class="w-100">
       <slot
         v-bind="{

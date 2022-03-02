@@ -1,9 +1,10 @@
 package iris.client_bff.iris_messages.web;
 
 import iris.client_bff.iris_messages.IrisMessageData;
+import iris.client_bff.iris_messages.IrisMessageData.IrisMessageDataIdentifier;
 import iris.client_bff.iris_messages.IrisMessageDataProcessor;
 import iris.client_bff.iris_messages.IrisMessageDataProcessors;
-import iris.client_bff.iris_messages.IrisMessageService;
+import iris.client_bff.iris_messages.IrisMessageDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,24 +14,32 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class IrisMessageDataViewProvider {
 
-	private final IrisMessageService messageService;
+	private final IrisMessageDataService messageDataService;
 	private final IrisMessageDataProcessors messageDataProcessors;
 
-	public IrisMessageDataViewDataDto getViewData(IrisMessageData.IrisMessageDataIdentifier messageDataId) {
-		IrisMessageData messageData = this.messageService.getMessageData(messageDataId);
+	public IrisMessageDataViewDataDto getViewData(IrisMessageDataIdentifier messageDataId) {
+		IrisMessageData messageData = this.messageDataService.getMessageData(messageDataId);
 		IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageData.getDiscriminator());
-		return new IrisMessageDataViewDataDto().setId(messageData.getId().toString())
-				.setDiscriminator(messageData.getDiscriminator())
-				.setPayload(processor.getViewPayload(messageData.getPayload()));
+		return this.buildViewData(messageData, processor.getViewPayload(messageData.getPayload()));
 	}
 
-	public IrisMessageDataViewDataDto getViewData(
-			IrisMessageData.IrisMessageDataIdentifier messageDataId, UUID importTargetId) {
-		IrisMessageData messageData = this.messageService.getMessageData(messageDataId);
+	public IrisMessageDataViewDataDto getImportSelectionViewData(
+			IrisMessageDataIdentifier messageDataId,
+			UUID importTargetId
+	) {
+		IrisMessageData messageData = this.messageDataService.getMessageData(messageDataId);
 		IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageData.getDiscriminator());
-		return new IrisMessageDataViewDataDto().setId(messageData.getId().toString())
+		return this.buildViewData(
+				messageData,
+				processor.getImportSelectionViewPayload(messageData.getPayload(), importTargetId)
+		);
+	}
+
+	private IrisMessageDataViewDataDto buildViewData(IrisMessageData messageData, Object payload) {
+		return new IrisMessageDataViewDataDto()
+				.setId(messageData.getId().toString())
 				.setDiscriminator(messageData.getDiscriminator())
-				.setPayload(processor.getImportSelectionViewPayload(messageData.getPayload(), importTargetId));
+				.setPayload(payload);
 	}
 
 }

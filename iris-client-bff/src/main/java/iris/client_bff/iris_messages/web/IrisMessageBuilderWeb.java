@@ -54,7 +54,7 @@ class IrisMessageBuilderWeb {
 				for (IrisMessageInsertDto.IrisMessageDataAttachment data : messageInsert.getDataAttachments()) {
 					IrisMessageDataProcessor processor = this.messageDataProcessors
 							.getProcessor(data.getDiscriminator());
-					String payload = processor.getPayloadFromInsert(data.getPayload());
+					String payload = processor.buildPayload(data.getPayload());
 					// The payload should be fine as it is composed of already validated data
 					// Doesn't hurt to validate the keys & values of the payloads JSON string
 					this.validateMessageDataPayload(payload, data.getDiscriminator());

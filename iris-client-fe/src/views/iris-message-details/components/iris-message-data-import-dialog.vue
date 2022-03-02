@@ -23,7 +23,6 @@ import { PropType } from "vue";
 import ConfirmDialog from "@/components/confirm-dialog.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import {
-  Guest,
   IrisMessageDataDiscriminator,
   IrisMessageDataSelectionPayload,
 } from "@/api";
@@ -33,17 +32,20 @@ import { getApiErrorMessages, getApiLoading } from "@/utils/api";
 import IrisMessageDataView, {
   IrisMessageDataViewSource,
 } from "@/modules/iris-message/modules/message-data/components/iris-message-data-view.vue";
-import { normalizeGuests } from "@/views/event-tracking-details/event-tracking-details.data";
+import {
+  EventTrackingMessageDataImportSelection,
+  normalizeEventTrackingMessageDataImportSelection,
+} from "@/modules/event-tracking/modules/message-data/services/normalizer";
 
 type IrisMessageDataViewPayload = {
-  [IrisMessageDataDiscriminator.EventTracking]: Guest[];
+  [IrisMessageDataDiscriminator.EventTracking]: EventTrackingMessageDataImportSelection;
 };
 
 type DataViewSource = IrisMessageDataViewSource<IrisMessageDataViewPayload>;
 
 const dataViewSource: DataViewSource = {
   [IrisMessageDataDiscriminator.EventTracking]: {
-    normalize: normalizeGuests,
+    normalize: normalizeEventTrackingMessageDataImportSelection,
     component: () =>
       import(
         /* webpackChunkName: "event-tracking-message-data.import" */ "../../../modules/event-tracking/modules/message-data/event-tracking-message-data.import.vue"
