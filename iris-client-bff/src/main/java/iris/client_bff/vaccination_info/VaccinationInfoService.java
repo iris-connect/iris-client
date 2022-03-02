@@ -1,8 +1,8 @@
 package iris.client_bff.vaccination_info;
 
-import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
+import iris.client_bff.vaccination_info.VaccinationInfoAnnouncement.AnnouncementIdentifier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,15 +31,20 @@ public class VaccinationInfoService {
 			announcementToken = proxyClient.announce(Instant.now().plus(properties.getExpirationDuration()));
 		} catch (IRISAnnouncementException e) {
 
-			log.error("Announcement failed: ", e);
+			var msg = "Proxy announcement failed";
+			log.error(msg + ": ", e);
 
-			throw new IRISDataRequestException(e);
+			throw new VaccinationInfoAnnouncementException(msg, e);
 		}
 
-		var vacInfo = VaccinationInfoAnnouncement.of(externalId, announcementToken);
+		var announcement = VaccinationInfoAnnouncement.of(externalId, announcementToken);
 
 		log.debug("Created VaccinationInfo and announcement successful");
 
-		return vacInfos.save(vacInfo);
+		return vacInfos.save(announcement);
+	}
+
+	public void deleteAnnouncement(AnnouncementIdentifier id) {
+		vacInfos.deleteById(id);
 	}
 }

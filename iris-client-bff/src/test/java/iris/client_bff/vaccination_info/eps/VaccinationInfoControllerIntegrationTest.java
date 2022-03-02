@@ -88,7 +88,7 @@ class VaccinationInfoControllerIntegrationTest {
 	@DisplayName("announce vaccination info list: valid JSON ⇒ 💾 vaccination info + 🔙 encrypted tokens")
 	void announceVaccinationInfoList_ValidJson_ReturnsEncryptedTokens() throws Throwable {
 
-		assertThat(vacInfos.count()).isZero();
+		var count = vacInfos.count();
 
 		var keyPair = encryptionService.generateKeyPair();
 		var pubKeyBase64 = encryptionService.encodeToBase64(keyPair.getPublic());
@@ -119,7 +119,7 @@ class VaccinationInfoControllerIntegrationTest {
 		assertThat(tokens.getString("cat")).is(matching(isCatWith(".proxy.dev.test-gesundheitsamt.de")));
 		assertThat(tokens.getString("dat")).is(matching(isUuid()));
 
-		assertThat(vacInfos.count()).isNotZero();
+		assertThat(vacInfos.count()).isEqualTo(count + 1);
 
 		verify(proxyClient).announce(announcementCaptor.capture());
 
@@ -137,12 +137,51 @@ class VaccinationInfoControllerIntegrationTest {
 		return tokenJson;
 	}
 
+	@Test
+	@DisplayName("announce vaccination info list: invalid Base64 of public key ⇒ 💾 nothing + 🔙 validation error")
+	void announceVaccinationInfoList_InvalidBase64PublicKey_ReturnsValidationErrors() {
+
+		var count = vacInfos.count();
+
+		given()
+				.body(String.format(VALID_ANNOUNCEMENT, "x x"))
+
+				.when()
+				.post("/data-submission-rpc")
+
+				.then()
+				.status(BAD_REQUEST)
+				.body("error.data.message", containsString("submitterPublicKey: No valid Base64 encoding"));
+
+		assertThat(vacInfos.count()).isEqualTo(count);
+	}
+
+	@Test
+	@DisplayName("announce vaccination info list: invalid public key ⇒ 💾 nothing + 🔙 500")
+	void announceVaccinationInfoList_InvalidPublicKey_Returns500() {
+
+		var count = vacInfos.count();
+
+		given()
+				.body(String.format(VALID_ANNOUNCEMENT, "XXX"))
+
+				.when()
+				.post("/data-submission-rpc")
+
+				.then()
+				.status(BAD_REQUEST)
+				.body("error.message",
+						containsString("submitterPublicKey: The passed public key contains errors and cannot be used"));
+
+		assertThat(vacInfos.count()).isEqualTo(count);
+	}
+
 	@ParameterizedTest(name = "{1}")
 	@MethodSource(value = "getJsonInput")
 	@DisplayName("announce vaccination info list: invalid JSON ⇒ 💾 nothing + 🔙 validation errors")
 	void announceVaccinationInfoList_InvalidJson_ReturnsValidationErrors(String json, String hint, String errorMessage) {
 
-		var savedInfos = vacInfos.count();
+		var count = vacInfos.count();
 
 		given()
 				.body(json)
@@ -156,7 +195,7 @@ class VaccinationInfoControllerIntegrationTest {
 						containsString("externalId: " + errorMessage),
 						containsString("submitterPublicKey: " + errorMessage)));
 
-		assertThat(vacInfos.count()).isEqualTo(savedInfos);
+		assertThat(vacInfos.count()).isEqualTo(count);
 	}
 
 	String[][] getJsonInput() {

@@ -3,13 +3,13 @@ package iris.client_bff.vaccination_info.eps;
 import iris.client_bff.config.JsonRpcDataValidator;
 import iris.client_bff.vaccination_info.EncryptionService;
 import iris.client_bff.vaccination_info.VaccinationInfoAnnouncement;
+import iris.client_bff.vaccination_info.VaccinationInfoAnnouncementException;
 import iris.client_bff.vaccination_info.VaccinationInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.security.GeneralSecurityException;
-import java.util.List;
-import java.util.UUID;
+import java.security.PublicKey;
 
 import org.springframework.stereotype.Service;
 
@@ -30,8 +30,7 @@ class VaccinationInfoControllerImpl implements VaccinationInfoController {
 	private final ObjectMapper mapper;
 
 	@Override
-	public AnnouncementResultDto announceVaccinationInfoList(AnnouncementDataDto announcementData)
-			throws GeneralSecurityException {
+	public AnnouncementResultDto announceVaccinationInfoList(AnnouncementDataDto announcementData) {
 
 		log.debug("Start announce vaccination info list (JSON-RPC interface)");
 
@@ -44,15 +43,27 @@ class VaccinationInfoControllerImpl implements VaccinationInfoController {
 		return encryptAndCreateResult(vacInfo, announcementData.submitterPublicKey());
 	}
 
-	private AnnouncementResultDto encryptAndCreateResult(VaccinationInfoAnnouncement vacInfo, String submitterPublicKeyBase64)
-			throws GeneralSecurityException {
+	private AnnouncementResultDto encryptAndCreateResult(VaccinationInfoAnnouncement announcement,
+			String submitterPublicKeyBase64) {
 
 		var tokens = new Tokens(
-				vacInfo.getAnnouncementToken(),
-				vacInfo.getId().toString());
+				announcement.getAnnouncementToken(),
+				announcement.getId().toString());
+
+		PublicKey submitterPublicKey;
+		try {
+			submitterPublicKey = encryptionService.decodeFromBase64(submitterPublicKeyBase64);
+		} catch (GeneralSecurityException e) {
+
+			var msg = "The passed public key contains errors and cannot be used";
+			log.error(msg + ": ", e);
+
+			service.deleteAnnouncement(announcement.getId());
+
+			throw new InvalidPublicKeyException("submitterPublicKey: " + msg, e);
+		}
 
 		try {
-			var submitterPublicKey = encryptionService.decodeFromBase64(submitterPublicKeyBase64);
 			var keyPair = encryptionService.generateKeyPair();
 			var key = encryptionService.generateAgreedKey(keyPair.getPrivate(), submitterPublicKey);
 
@@ -62,9 +73,14 @@ class VaccinationInfoControllerImpl implements VaccinationInfoController {
 			return new AnnouncementResultDto(pubKeyBase64, encryptionData.iv(), encryptionData.data());
 		} catch (JsonProcessingException | GeneralSecurityException e) {
 
-			e.printStackTrace();
+			var msg = e instanceof JsonProcessingException
+					? "Can't write tokens to JSON"
+					: "Error during token encryption (response to the announcement)";
+			log.error(msg + ": ", e);
 
-			throw new RuntimeException(e);
+			service.deleteAnnouncement(announcement.getId());
+
+			throw new VaccinationInfoAnnouncementException(msg, e);
 		}
 	}
 }
