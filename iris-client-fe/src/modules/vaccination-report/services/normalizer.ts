@@ -12,10 +12,7 @@ import { Complete, getEnumKeys, normalizeData } from "@/utils/data";
 import { normalizeAddress } from "@/views/event-tracking-details/event-tracking-details.data";
 import { normalizePage } from "@/common/normalizer";
 
-export const normalizeVREmployee = (
-  source?: VREmployee,
-  parse?: boolean
-): VREmployee => {
+export const normalizeVREmployee = (source?: VREmployee, parse?: boolean) => {
   return normalizeData(
     source,
     (normalizer) => {
@@ -39,14 +36,13 @@ export const normalizeVREmployee = (
 export const normalizeVaccinationReportDetails = (
   source?: VaccinationReportDetails,
   parse?: boolean
-): VaccinationReportDetails => {
+) => {
   return normalizeData(
     source,
     (normalizer) => {
       const employees = normalizer("employees", undefined, "array") || [];
-      const report = normalizeVaccinationReport(source);
       return {
-        ...(report as Complete<typeof report>),
+        ...normalizeVaccinationReport(source),
         employees: employees.map((employee) => normalizeVREmployee(employee)),
       };
     },
@@ -58,7 +54,7 @@ export const normalizeVaccinationReportDetails = (
 export const normalizeVRFacilityContactPerson = (
   source?: VRFacilityContactPerson,
   parse?: boolean
-): VRFacilityContactPerson => {
+) => {
   return normalizeData(
     source,
     (normalizer) => {
@@ -74,10 +70,7 @@ export const normalizeVRFacilityContactPerson = (
   );
 };
 
-export const normalizeVRFacility = (
-  source?: VRFacility,
-  parse?: boolean
-): VRFacility => {
+export const normalizeVRFacility = (source?: VRFacility, parse?: boolean) => {
   return normalizeData(
     source,
     (normalizer) => {
@@ -95,7 +88,7 @@ export const normalizeVRFacility = (
 export const normalizeVaccinationStatusCount = (
   source?: VaccinationStatusCount,
   parse?: boolean
-): VaccinationStatusCount => {
+) => {
   return normalizeData(
     source,
     (normalizer) => {
@@ -114,7 +107,7 @@ export const normalizeVaccinationStatusCount = (
 export const normalizeVaccinationReport = (
   source?: VaccinationReport,
   parse?: boolean
-): VaccinationReport => {
+) => {
   return normalizeData(
     source,
     (normalizer) => {
@@ -135,6 +128,6 @@ export const normalizeVaccinationReport = (
 export const normalizePageVaccinationReport = (
   source?: Page<VaccinationReport>,
   parse?: boolean
-): Page<VaccinationReport> => {
+) => {
   return normalizePage(normalizeVaccinationReport, source, parse);
 };

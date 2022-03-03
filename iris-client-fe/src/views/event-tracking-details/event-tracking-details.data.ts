@@ -219,7 +219,6 @@ export const normalizeDataRequestDetails = (
         start: normalizer("start", undefined, "dateString"),
         end: normalizer("end", undefined, "dateString"),
         requestedAt: normalizer("requestedAt", undefined, "dateString"),
-        lastModifiedAt: normalizer("lastModifiedAt", undefined, "dateString"),
         requestDetails: normalizer("requestDetails", undefined),
         locationInformation: source?.locationInformation
           ? normalizeLocationInformation(source?.locationInformation)

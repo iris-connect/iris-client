@@ -24,7 +24,7 @@ export const normalizeData = <T>(
   callback: (n: EntryNormalizer<T>) => Complete<T>,
   parse?: boolean,
   message?: string
-): T => {
+): Complete<T> => {
   if (!isEnabled()) return source as T;
   const normalizer = entryNormalizer(source);
   return finalizeData(callback(normalizer), source, parse, message) as T;

@@ -30,20 +30,16 @@ export const normalizePage = <T>(
   );
 };
 
-export const normalizeMetaData = (
-  source?: MetaData,
-  parse?: boolean
-): MetaData => {
+export const normalizeMetaData = (source?: MetaData, parse?: boolean) => {
   return normalizeData(
     source,
     (normalizer) => {
-      const normalized: Complete<MetaData> = {
+      return {
         createdBy: normalizer("createdBy", undefined),
         createdAt: normalizer("createdAt", undefined, "dateString"),
         lastModifiedBy: normalizer("lastModifiedBy", undefined),
         lastModifiedAt: normalizer("lastModifiedAt", undefined, "dateString"),
       };
-      return normalized;
     },
     parse,
     "MetaData"
