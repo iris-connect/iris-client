@@ -23,7 +23,7 @@ const DataQueryHandlerProps = Vue.extend({
 
 @Component
 export default class DataQueryHandler extends DataQueryHandlerProps {
-  initialized = false;
+  isMounted = false;
 
   query: DataQuery = {
     size: DEFAULT_PAGE_SIZE,
@@ -45,12 +45,16 @@ export default class DataQueryHandler extends DataQueryHandlerProps {
         folder: getParamFromRoute("folder", this.$route),
       };
     }
-    this.initialized = true;
+    this.isMounted = true;
+  }
+
+  beforeDestroy() {
+    this.isMounted = false;
   }
 
   @Watch("query", { immediate: true, deep: true })
   onQueryChange(newValue: DataQuery) {
-    if (this.routeControl && !this.initialized) return;
+    if (this.routeControl && !this.isMounted) return;
     const query = {
       ...newValue,
       sort: mapSortAttributes(newValue.sort),
