@@ -1,3 +1,4 @@
+/* eslint-disable   @typescript-eslint/no-explicit-any */
 import _get from "lodash/get";
 import dayjs from "./date";
 import _transform from "lodash/transform";
@@ -6,7 +7,7 @@ import _isObject from "lodash/isObject";
 import _isEmpty from "lodash/isEmpty";
 import store from "@/store";
 
-export type DataNormalizer<T> = (source?: T, parse?: boolean) => T;
+export type DataNormalizer<T = any> = (source?: T, parse?: boolean) => T;
 
 export const normalizeData = <T>(
   source: T | undefined,

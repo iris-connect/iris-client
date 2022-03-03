@@ -18,7 +18,7 @@ import { IrisMessageDataDiscriminator } from "@/api";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 
 export type IrisMessageDataComponentSource = {
-  [key in IrisMessageDataDiscriminator]?: {
+  [key in IrisMessageDataDiscriminator]: {
     component: ComponentOptions<Vue> | typeof Vue | AsyncComponent;
   };
 };

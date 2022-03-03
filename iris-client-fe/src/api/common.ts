@@ -9,7 +9,6 @@ import globalAxios, {
   CancelTokenSource,
   Method,
 } from "axios";
-import axios from "axios";
 /**
  *
  * @export
@@ -132,11 +131,11 @@ export const apiRequestBuilder =
   };
 
 export const cancelTokenProvider = () => {
-  let source: CancelTokenSource = axios.CancelToken.source();
+  let source: CancelTokenSource = globalAxios.CancelToken.source();
   return (): CancelToken => {
     try {
       source.cancel("request canceled");
-      source = axios.CancelToken.source();
+      source = globalAxios.CancelToken.source();
     } catch (e) {
       // ignored
     }

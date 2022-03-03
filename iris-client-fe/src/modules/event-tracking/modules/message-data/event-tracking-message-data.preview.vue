@@ -24,7 +24,7 @@ import { PropType } from "vue";
 
 const EventTrackingMessageDataPreviewProps = Vue.extend({
   props: {
-    data: {
+    payload: {
       type: Object as PropType<DataRequestDetails | null>,
       default: null,
     },
@@ -38,16 +38,16 @@ const EventTrackingMessageDataPreviewProps = Vue.extend({
 })
 export default class EventTrackingMessageDataPreview extends EventTrackingMessageDataPreviewProps {
   get formData(): FormData {
-    return getFormData(this.data);
+    return getFormData(this.payload);
   }
   get eventData(): EventData {
-    return getEventData(this.data);
+    return getEventData(this.payload);
   }
   get tableRows(): GuestListTableRow[] {
     return getGuestListTableRows(
-      this.data?.submissionData?.guests,
-      this.data?.start,
-      this.data?.end
+      this.payload?.submissionData?.guests,
+      this.payload?.start,
+      this.payload?.end
     );
   }
 }

@@ -5,7 +5,7 @@
       v-on="$listeners"
       :source="source"
       :discriminator="discriminator"
-      :data="dataPayload"
+      :payload="normalizedPayload"
     />
     <error-message-alert :errors="errors" />
   </div>
@@ -36,6 +36,12 @@ export type IrisMessageDataViewSource<
   P extends { [Key in IrisMessageDataDiscriminator]: P[Key] }
 > = IrisMessageDataNormalizePayloadSource<P> & IrisMessageDataComponentSource;
 
+export interface IrisMessageDataViewConfig {
+  discriminator?: IrisMessageDataDiscriminator;
+  source?: IrisMessageDataViewSource<PayloadSource>;
+  payload?: unknown;
+}
+
 const IrisMessageDataViewProps = Vue.extend({
   inheritAttrs: false,
   props: {
@@ -60,7 +66,7 @@ const IrisMessageDataViewProps = Vue.extend({
   },
 })
 export default class IrisMessageDataView extends IrisMessageDataViewProps {
-  get dataPayload() {
+  get normalizedPayload() {
     try {
       if (this.source && this.discriminator && this.payload) {
         return this.source[this.discriminator].normalize(this.payload);
@@ -73,7 +79,7 @@ export default class IrisMessageDataView extends IrisMessageDataViewProps {
   get errors(): ErrorMessage[] {
     if (!this.discriminator || !this.source || !this.payload) return [];
     return [
-      !this.dataPayload
+      !this.normalizedPayload
         ? "Der Datensatz wurde nicht gefunden oder konnte nicht verarbeitet werden."
         : null,
     ].filter((v) => v);

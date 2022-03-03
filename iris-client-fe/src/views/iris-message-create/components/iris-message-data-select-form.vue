@@ -22,17 +22,12 @@
             ></v-text-field>
           </v-col>
           <v-col cols="12">
-            <v-input
-              :rules="validationRules.defined"
+            <iris-message-data-component
+              v-bind="dataComponentConfig"
               v-model="form.model.payload"
-              class="iris-message-data-select-component"
-            >
-              <iris-message-data-component
-                v-bind="dataComponentConfig"
-                v-model="form.model.payload"
-                :description.sync="form.model.description"
-              />
-            </v-input>
+              :description.sync="form.model.description"
+              :disabled="disabled"
+            />
           </v-col>
         </v-row>
       </v-card-text>

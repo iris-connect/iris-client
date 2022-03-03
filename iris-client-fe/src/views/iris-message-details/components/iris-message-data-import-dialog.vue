@@ -3,24 +3,21 @@
     <template v-slot:activator="{ attrs, on }">
       <slot name="activator" v-bind="{ attrs, on }" />
     </template>
-    <v-sheet>
-      <iris-message-data-view
-        :disabled="loading"
-        v-bind="dataComponentConfig"
-        :payload="importSelectionViewPayload"
-        @update:target="onSelectTarget"
-        @submit="handleSubmit"
-        @cancel="dialog = false"
-      />
-      <error-message-alert class="mb-n4" :errors="errors" />
-    </v-sheet>
+    <iris-message-data-import-form
+      :import-data="value"
+      :disabled="loading"
+      :errors="errors"
+      :data-view-config="dataViewConfig"
+      @update:target="onUpdateTarget"
+      @submit="onSubmit"
+      @cancel="dialog = false"
+    />
   </v-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { PropType } from "vue";
-import ConfirmDialog from "@/components/confirm-dialog.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import {
   IrisMessageDataDiscriminator,
@@ -29,19 +26,19 @@ import {
 import { bundleIrisMessageApi } from "@/modules/iris-message/services/api";
 import { ErrorMessage } from "@/utils/axios";
 import { getApiErrorMessages, getApiLoading } from "@/utils/api";
-import IrisMessageDataView, {
-  IrisMessageDataViewSource,
-} from "@/modules/iris-message/modules/message-data/components/iris-message-data-view.vue";
+import { IrisMessageDataViewSource } from "@/modules/iris-message/modules/message-data/components/iris-message-data-view.vue";
 import {
   EventTrackingMessageDataImportSelection,
   normalizeEventTrackingMessageDataImportSelection,
 } from "@/modules/event-tracking/modules/message-data/services/normalizer";
+import IrisMessageDataImportForm from "@/views/iris-message-details/components/iris-message-data-import-form.vue";
 
 type IrisMessageDataViewPayload = {
   [IrisMessageDataDiscriminator.EventTracking]: EventTrackingMessageDataImportSelection;
 };
 
-type DataViewSource = IrisMessageDataViewSource<IrisMessageDataViewPayload>;
+export type DataViewSource =
+  IrisMessageDataViewSource<IrisMessageDataViewPayload>;
 
 const dataViewSource: DataViewSource = {
   [IrisMessageDataDiscriminator.EventTracking]: {
@@ -69,8 +66,7 @@ const IrisMessageDataImportDialogProps = Vue.extend({
 
 @Component({
   components: {
-    IrisMessageDataView,
-    ConfirmDialog,
+    IrisMessageDataImportForm,
     ErrorMessageAlert,
   },
 })
@@ -86,12 +82,14 @@ export default class IrisMessageDataImportDialog extends IrisMessageDataImportDi
   set dialog(value) {
     this.$emit("input", null);
   }
+
   get importSelectionViewPayload() {
     const viewData =
       this.messageDataApi.getMessageDataImportSelectionViewData.state.result;
     return viewData?.payload;
   }
-  onSelectTarget(value: string | null) {
+
+  onUpdateTarget(value: string | null) {
     if (this.value?.id && value) {
       this.messageDataApi.getMessageDataImportSelectionViewData.execute(
         this.value?.id,
@@ -99,19 +97,25 @@ export default class IrisMessageDataImportDialog extends IrisMessageDataImportDi
       );
     }
   }
-  get dataComponentConfig() {
+
+  get dataViewConfig() {
+    const viewData =
+      this.messageDataApi.getMessageDataImportSelectionViewData.state.result;
     return {
       discriminator: this.value?.discriminator,
       source: dataViewSource,
+      payload: viewData?.payload,
     };
   }
+
   get loading(): boolean {
     return getApiLoading(this.messageDataApi);
   }
   get errors(): ErrorMessage[] {
     return getApiErrorMessages(this.messageDataApi);
   }
-  async handleSubmit(messageData: {
+
+  async onSubmit(messageData: {
     target: string;
     selection: IrisMessageDataSelectionPayload;
   }) {

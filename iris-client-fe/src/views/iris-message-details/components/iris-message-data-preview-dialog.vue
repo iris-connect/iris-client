@@ -4,7 +4,7 @@
       <slot name="activator" v-bind="{ attrs, on }" />
     </template>
     <v-card>
-      <iris-message-data-view v-bind="dataComponentConfig" />
+      <iris-message-data-view v-bind="dataViewConfig" />
       <error-message-alert :dense="true" :errors="errors" />
       <v-divider></v-divider>
       <v-card-actions>
@@ -69,7 +69,7 @@ export default class IrisMessageDataPreviewDialog extends IrisMessageDataPreview
   set dialog(value) {
     this.$emit("input", null);
   }
-  get dataComponentConfig() {
+  get dataViewConfig() {
     const viewData = this.messageDataApi.getMessageDataViewData.state.result;
     return {
       discriminator: viewData?.discriminator,

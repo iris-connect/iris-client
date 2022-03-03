@@ -1,48 +1,45 @@
 <template>
   <v-stepper vertical v-model="step" flat>
-    <v-stepper-step
-      :rules="validationRules.event"
-      editable
-      :complete="!!selection.event"
+    <stepper-input-field
+      :value="model.event"
+      @input="onEventChange"
+      :rules="validationRules.defined"
+      :disabled="disabled"
+      label="Ereignis wählen"
       step="1"
+      #default="{ attrs, on }"
     >
-      Ereignis wählen
-    </v-stepper-step>
-    <v-stepper-content step="1">
       <select-event
-        :value="selection.event"
-        @input="onEventChange"
+        v-bind="attrs"
+        v-on="on"
         :description="description"
         @update:description="$emit('update:description', $event)"
       />
-    </v-stepper-content>
-    <v-stepper-step
-      :rules="validationRules.guests"
-      :editable="!!selection.event"
-      :complete="selection.guests.length > 0"
+    </stepper-input-field>
+    <stepper-input-field
+      v-model="model.guests"
+      :rules="validationRules.defined"
+      :disabled="disabled"
+      :editable="!!model.event"
+      label="Gäste wählen"
       step="2"
+      #default="{ attrs, on }"
     >
-      Gäste wählen
-    </v-stepper-step>
-    <v-stepper-content step="2">
-      <select-guests
-        :event-id="selection.event"
-        :value="selection.guests"
-        @input="onGuestsChange"
-      />
-    </v-stepper-content>
+      <select-guests :event-id="model.event" v-bind="attrs" v-on="on" />
+    </stepper-input-field>
   </v-stepper>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import IrisDataTable from "@/components/iris-data-table.vue";
-import EventTrackingFormView from "@/views/event-tracking-form/event-tracking-form.view.vue";
 import SelectEvent from "@/modules/event-tracking/modules/message-data/components/select-event.vue";
 import { IrisMessageDataSelectionPayload } from "@/api";
 import SelectGuests from "@/modules/event-tracking/modules/message-data/components/select-guests.vue";
 import { PropType } from "vue";
 import rules from "@/common/validation-rules";
+import _values from "lodash/values";
+import _every from "lodash/every";
+import StepperInputField from "@/components/form/stepper-input-field.vue";
 
 const EventTrackingMessageDataExportProps = Vue.extend({
   props: {
@@ -54,41 +51,31 @@ const EventTrackingMessageDataExportProps = Vue.extend({
       type: Object as PropType<IrisMessageDataSelectionPayload | null>,
       default: null,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
 });
 
 @Component({
   components: {
+    StepperInputField,
     SelectGuests,
     SelectEvent,
-    IrisDataTable,
-    EventTrackingFormView,
   },
 })
 export default class EventTrackingMessageDataExport extends EventTrackingMessageDataExportProps {
   step = 1;
 
-  touched: Record<string, boolean | undefined> = {};
-  selection: IrisMessageDataSelectionPayload = this.value || {
+  model: IrisMessageDataSelectionPayload = this.value || {
     event: "",
     guests: [],
   };
 
-  validate(key: string, touched?: boolean) {
-    const result = rules.defined(this.selection[key]);
-    return (touched ? this.touched[key] : true) ? result : true;
-  }
-
-  get validationRules(): Record<string, Array<unknown>> {
-    return {
-      event: [() => this.validate("event", true)],
-      guests: [() => this.validate("guests", true)],
-    };
-  }
-
-  @Watch("selection", { immediate: true, deep: true })
-  onSelectionChange(newValue: IrisMessageDataSelectionPayload) {
-    if (this.validate("event") === true && this.validate("guests") === true) {
+  @Watch("model", { immediate: true, deep: true })
+  onModelChange(newValue: IrisMessageDataSelectionPayload) {
+    if (_every(_values(newValue), (v) => rules.defined(v) === true)) {
       this.$emit("input", newValue);
     } else {
       this.$emit("input", null);
@@ -96,18 +83,20 @@ export default class EventTrackingMessageDataExport extends EventTrackingMessage
   }
 
   onEventChange(value: string) {
-    if (value === this.selection.event) return;
-    this.selection.event = value;
-    this.touched.event = true;
-    this.selection.guests = [];
+    if (value === this.model.event) return;
+    this.model.event = value;
+    if (this.model.guests.length > 0) {
+      this.model.guests = [];
+    }
     if (value) {
       this.step = 2;
     }
   }
 
-  onGuestsChange(value: string[]) {
-    this.selection.guests = value;
-    this.touched.guests = true;
+  get validationRules(): Record<string, Array<unknown>> {
+    return {
+      defined: [rules.defined],
+    };
   }
 }
 </script>

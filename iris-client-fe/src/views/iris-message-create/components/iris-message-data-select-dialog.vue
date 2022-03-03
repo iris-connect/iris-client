@@ -19,7 +19,7 @@
       v-bind="$attrs"
       :form-values="value"
       :disabled="disabled"
-      @submit="handleSubmit"
+      @submit="onSubmit"
       @cancel="dialog = false"
     />
   </v-dialog>
@@ -51,7 +51,7 @@ const IrisMessageDataSelectDialogProps = Vue.extend({
 })
 export default class IrisMessageDataSelectDialog extends IrisMessageDataSelectDialogProps {
   dialog = false;
-  handleSubmit(messageData: IrisMessageDataInsert) {
+  onSubmit(messageData: IrisMessageDataInsert) {
     this.$emit("input", messageData);
     this.dialog = false;
   }
