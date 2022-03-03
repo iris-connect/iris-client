@@ -9,7 +9,8 @@ import globalAxios, {
   CancelTokenSource,
   Method,
 } from "axios";
-import axios from "axios";
+import _castArray from "lodash/castArray";
+import { join } from "@/utils/misc";
 /**
  *
  * @export
@@ -17,10 +18,10 @@ import axios from "axios";
 export type DataQuery = {
   size: number;
   page: number;
-  sort?: string | null;
+  sort?: string | string[] | null;
   status?: DataRequestStatus | null;
   search?: string | null;
-  sortOrderDesc?: boolean;
+  folder?: string;
 };
 
 export type RequestQuery = {
@@ -113,6 +114,18 @@ export const getSortAttribute = function (key: string): string {
   return sortAttributes[key];
 };
 
+const mapSortAttribute = (sort: string): string => {
+  const sortArgs = sort.split(",");
+  return join([getSortAttribute(sortArgs[0]) || sortArgs[0], sortArgs[1]], ",");
+};
+
+export const mapSortAttributes = (
+  sort: DataQuery["sort"]
+): DataQuery["sort"] => {
+  if (!sort) return sort;
+  return _castArray(sort).map(mapSortAttribute);
+};
+
 export const apiRequestBuilder =
   (axiosInstance: AxiosInstance = globalAxios): ApiRequestFunction =>
   <T = any, D = any>(
@@ -132,11 +145,11 @@ export const apiRequestBuilder =
   };
 
 export const cancelTokenProvider = () => {
-  let source: CancelTokenSource = axios.CancelToken.source();
+  let source: CancelTokenSource = globalAxios.CancelToken.source();
   return (): CancelToken => {
     try {
       source.cancel("request canceled");
-      source = axios.CancelToken.source();
+      source = globalAxios.CancelToken.source();
     } catch (e) {
       // ignored
     }

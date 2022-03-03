@@ -206,6 +206,29 @@ export const routes: Array<RouteConfig> = [
       ),
   },
   {
+    path: "/vaccination-report/list",
+    name: "vaccination-report-list" /* Caution: This acts as an identifier! */,
+    meta: {
+      menu: true,
+      menuName: "Impfberichte",
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "vaccination-report-list" */ "../modules/vaccination-report/views/list/vaccination-report-list.view.vue"
+      ),
+  },
+  {
+    path: "/vaccination-report/details/:id",
+    name: "vaccination-report-details" /* Caution: This acts as an identifier! */,
+    meta: {
+      menu: false,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "vaccination-report-details" */ "../modules/vaccination-report/views/details/vaccination-report-details.view.vue"
+      ),
+  },
+  {
     path: "/about",
     name: "about" /* Caution: This acts as an identifier! */,
     meta: {

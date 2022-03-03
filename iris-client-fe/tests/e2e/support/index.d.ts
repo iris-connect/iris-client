@@ -51,7 +51,36 @@ declare global {
         selector: string,
         date: dayjs.ConfigType
       ): Chainable<Subject>;
-      getDataTableRow(accessor: string, table?: string): Chainable<Subject>;
+      findDataTableRow(
+        column: number,
+        content: string | number | RegExp
+      ): Chainable<Subject>;
+      findDataTableRow(
+        selector: string,
+        column: number,
+        content: string | number | RegExp
+      ): Chainable<Subject>;
+      sortDataTable(column: number, sortDir: string): Chainable<Subject>;
+      sortDataTable(
+        selector: string,
+        column: number,
+        sortDir: string
+      ): Chainable<Subject>;
+      visitByDataTableCellValue(
+        column: number,
+        content: string | number | RegExp
+      ): Chainable<Subject>;
+      visitByDataTableCellValue(
+        selector: string,
+        column: number,
+        content: string | number | RegExp
+      ): Chainable<Subject>;
+      getDataTableRow(accessor: string, search?: boolean): Chainable<Subject>;
+      getDataTableRow(
+        selector: string,
+        accessor: string,
+        search?: boolean
+      ): Chainable<Subject>;
       editInputField(
         selector: string,
         config?: {

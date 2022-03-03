@@ -6,9 +6,9 @@ import {
   DataRequestStatus,
   ExistingDataRequestClientWithLocation,
   IrisMessage,
-  IrisMessageQuery,
   User,
   UserRole,
+  VaccinationReport,
 } from "@/api";
 import { dummyLocations } from "@/server/data/dummy-locations";
 import {
@@ -40,6 +40,8 @@ import {
   dummyIrisMessageHdContacts,
   getDummyMessageFromRequest,
 } from "@/server/data/dummy-iris-messages";
+import { DataQuery } from "@/api/common";
+import { vaccinationReportList } from "@/server/data/vaccination-reports";
 
 const loginResponse = (role: UserRole): Response => {
   return new Response(200, {
@@ -302,7 +304,7 @@ export function makeMockAPIServer() {
       });
 
       this.get("/iris-messages", (schema, request) => {
-        const query: Partial<IrisMessageQuery> = request.queryParams;
+        const query: Partial<DataQuery> = request.queryParams;
         return authResponse(
           request,
           queriedPage(dummyIrisMessageList as IrisMessage[], query)
@@ -351,6 +353,21 @@ export function makeMockAPIServer() {
           request,
           dummyIrisMessageList.filter((item) => !item.isRead).length
         );
+      });
+
+      this.get("/vaccination-reports", (schema, request) => {
+        const query: Partial<DataQuery> = request.queryParams;
+        return authResponse(
+          request,
+          queriedPage(vaccinationReportList as VaccinationReport[], query)
+        );
+      });
+
+      this.get("/vaccination-reports/:id", (schema, request) => {
+        const item = vaccinationReportList.find(
+          (it) => it.id === request.params.id
+        );
+        return authResponse(request, item);
       });
     },
   });

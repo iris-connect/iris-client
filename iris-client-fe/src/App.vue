@@ -1,9 +1,32 @@
 <template>
   <v-app>
     <v-app-bar app color="white" flat data-test="app-bar">
+      <template v-if="authenticated">
+        <v-app-bar-nav-icon class="hidden-md-and-up" @click="showMenu = true" />
+        <v-menu v-model="showMenu" content-class="hidden-md-and-up">
+          <v-list>
+            <template v-for="link in links">
+              <v-list-item
+                :key="link.name"
+                v-if="link.meta.menu"
+                :to="link.path"
+                :exact="link.meta.menuExact"
+                :disabled="isLinkDisabled(link)"
+                :data-test="`app-bar.nav.link.${link.name}`"
+              >
+                <component v-bind:is="link.meta.menuComponent || 'span'">
+                  <v-list-item-title>
+                    {{ link.meta.menuName }}
+                  </v-list-item-title>
+                </component>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
+      </template>
       <v-img
         alt="IRIS Logo"
-        class="shrink"
+        :class="{ shrink: true, 'hidden-sm-and-down': authenticated }"
         contain
         src="@/assets/logo-iris-connect.png"
         transition="scale-transition"
@@ -12,27 +35,25 @@
         position="0 45%"
       />
       <template v-if="authenticated">
-        <template v-for="link in links">
-          <div :key="link.name" v-if="link.meta.menu">
-            <component
-              v-if="link.meta.menuComponent"
-              v-bind:is="link.meta.menuComponent"
-              :link="link"
-            ></component>
+        <v-toolbar-items class="hidden-sm-and-down">
+          <template v-for="link in links">
             <v-btn
-              v-else
+              :key="link.name"
+              v-if="link.meta.menu"
               :to="link.path"
               :exact="link.meta.menuExact"
               :disabled="isLinkDisabled(link)"
               text
               :data-test="`app-bar.nav.link.${link.name}`"
             >
-              {{ link.meta.menuName }}
+              <component v-bind:is="link.meta.menuComponent || 'span'">
+                {{ link.meta.menuName }}
+              </component>
             </v-btn>
-          </div>
-        </template>
+          </template>
+        </v-toolbar-items>
         <v-spacer></v-spacer>
-        <app-menu />
+        <app-settings-menu />
         <user-menu
           :display-name="userDisplayName"
           :role="userRole"
@@ -56,13 +77,13 @@ import { routes, setInterceptRoute } from "@/router";
 import UserMenu from "@/views/user-login/components/user-menu.vue";
 import { RouteConfig } from "vue-router";
 import { UserRole } from "@/api";
-import AppMenu from "@/components/app-menu.vue";
+import AppSettingsMenu from "@/components/app-settings-menu.vue";
 
 // @todo: move user functionality to a dedicated user-module?
 export default Vue.extend({
   name: "App",
   components: {
-    AppMenu,
+    AppSettingsMenu,
     UserMenu,
   },
   created() {
@@ -70,6 +91,7 @@ export default Vue.extend({
   },
   data: () => ({
     links: routes,
+    showMenu: false,
   }),
   computed: {
     authenticated(): boolean {

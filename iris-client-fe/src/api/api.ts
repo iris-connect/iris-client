@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {
-  ApiResponse,
-  assertParamExists,
-  DataQuery,
-  RequestOptions,
-} from "./common";
+import { ApiResponse, assertParamExists, RequestOptions } from "./common";
 import { BaseAPI } from "./base";
 import { UserSession } from "@/views/user-login/user-login.store";
 
@@ -1915,12 +1910,6 @@ export interface Page<Content> {
   empty?: boolean;
 }
 
-export type IrisMessageQuery = DataQuery & {
-  folder?: string;
-};
-
-export type PageIrisMessages = Page<IrisMessage>;
-
 export interface IrisMessage {
   id: string;
   folder: string;
@@ -1958,6 +1947,58 @@ export interface IrisMessageHdContact {
   id: string;
   name: string;
   own?: boolean;
+}
+
+export interface VRFacilityContactPerson {
+  firstName?: string;
+  lastName?: string;
+  eMail?: string;
+  phone?: string;
+}
+
+export interface VRFacility {
+  name?: string;
+  address?: Address;
+  contactPerson?: VRFacilityContactPerson;
+}
+
+export enum VaccinationStatus {
+  NOT_VACCINATED = "notVaccinated",
+  SUSPICIOUS_PROOF = "suspiciousProof",
+}
+
+export enum VaccinationExtendedStatus {
+  VACCINATED = "vaccinated",
+  NOT_VACCINATED = "notVaccinated",
+  SUSPICIOUS_PROOF = "suspiciousProof",
+  UNKNOWN = "unknown",
+}
+
+export interface VREmployee {
+  firstName?: string;
+  lastName?: string;
+  address?: Address;
+  vaccination?: string;
+  vaccinationStatus?: VaccinationStatus;
+  eMail?: string;
+  phone?: string;
+  dateOfBirth?: string;
+  sex?: Sex;
+}
+
+export type VaccinationStatusCount = {
+  [K in VaccinationStatus]?: number;
+};
+
+export interface VaccinationReport {
+  id?: string;
+  facility?: VRFacility;
+  reportedAt?: string;
+  vaccinationStatusCount?: VaccinationStatusCount;
+}
+
+export interface VaccinationReportDetails extends VaccinationReport {
+  employees?: VREmployee[];
 }
 
 /**
@@ -2267,7 +2308,7 @@ export class IrisClientFrontendApi extends BaseAPI {
    */
   public irisMessagesGet(
     options?: RequestOptions
-  ): ApiResponse<PageIrisMessages> {
+  ): ApiResponse<Page<IrisMessage>> {
     assertParamExists("irisMessagesGet", "folder", options?.params?.folder);
     return this.apiRequest("GET", "/iris-messages", null, options);
   }
@@ -2355,5 +2396,35 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("irisMessagesSetIsRead", "messageId", messageId);
     const path = `/iris-messages/${encodeURIComponent(messageId)}`;
     return this.apiRequest("PATCH", path, { isRead: true }, options);
+  }
+
+  /**
+   *
+   * @summary Fetches paginated vaccination-report
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public pageVaccinationReportGet(
+    options?: RequestOptions
+  ): ApiResponse<Page<VaccinationReport>> {
+    return this.apiRequest("GET", "/vaccination-reports", null, options);
+  }
+
+  /**
+   *
+   * @summary Fetches vaccination-report details
+   * @param {string} id for vaccination report.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public vaccinationReportDetailsGet(
+    id: string,
+    options?: RequestOptions
+  ): ApiResponse<VaccinationReportDetails> {
+    assertParamExists("vaccinationReportDetailsGet", "id", id);
+    const path = `/vaccination-reports/${encodeURIComponent(id)}`;
+    return this.apiRequest("GET", path, null, options);
   }
 }

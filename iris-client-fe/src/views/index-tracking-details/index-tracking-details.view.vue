@@ -541,7 +541,7 @@ export default class IndexTrackingDetailsView extends Vue {
     return getExportLabel(
       this.tableDataContacts.select.length,
       this.contacts.length,
-      ["Kontaktdaten", "Kontaktdaten"]
+      ["Kontaktdaten"]
     );
   }
 
@@ -549,7 +549,7 @@ export default class IndexTrackingDetailsView extends Vue {
     return getExportLabel(
       this.tableDataEvents.select.length,
       this.events.length,
-      ["Ereignisdaten", "Ereignisdaten"]
+      ["Ereignisdaten"]
     );
   }
 

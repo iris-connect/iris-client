@@ -1,6 +1,6 @@
 import { Sex } from "@/api";
 
-const getName = function (sex: string): string {
+const getName = function (sex?: string): string {
   switch (sex) {
     case Sex.Male:
       return "männlich";
