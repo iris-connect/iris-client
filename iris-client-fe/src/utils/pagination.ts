@@ -4,6 +4,10 @@ import { DataRequestStatus } from "@/api";
 export const DEFAULT_PAGE_SIZE = 20;
 export const DEFAULT_ITEMS_PER_PAGE_OPTIONS = [10, 20, 30, 50];
 
+type PickByType<T, Value> = {
+  [P in keyof T as T[P] extends Value | undefined ? P : never]: T[P];
+};
+
 type QueryParams = {
   page: number;
   size: number;
@@ -25,11 +29,15 @@ export const getParamFromRoute = <T extends keyof QueryParams>(
 };
 
 export function getStringParamFromRouteWithOptionalFallback(
-  param: keyof QueryParams,
+  param: keyof PickByType<QueryParams, string>,
   route: Route,
   fallback?: string
 ): string | undefined {
-  return `${getParamFromRoute(param, route)}` || fallback;
+  const routeParam = getParamFromRoute(param, route);
+  if (typeof routeParam === "string") {
+    return routeParam || fallback;
+  }
+  return fallback;
 }
 
 export function getPageSizeFromRouteWithDefault(route: Route): number {

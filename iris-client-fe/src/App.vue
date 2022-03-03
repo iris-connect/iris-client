@@ -14,9 +14,11 @@
                 :disabled="isLinkDisabled(link)"
                 :data-test="`app-bar.nav.link.${link.name}`"
               >
-                <v-list-item-title>
-                  {{ link.meta.menuName }}
-                </v-list-item-title>
+                <component v-bind:is="link.meta.menuComponent || 'span'">
+                  <v-list-item-title>
+                    {{ link.meta.menuName }}
+                  </v-list-item-title>
+                </component>
               </v-list-item>
             </template>
           </v-list>
@@ -44,7 +46,9 @@
               text
               :data-test="`app-bar.nav.link.${link.name}`"
             >
-              {{ link.meta.menuName }}
+              <component v-bind:is="link.meta.menuComponent || 'span'">
+                {{ link.meta.menuName }}
+              </component>
             </v-btn>
           </template>
         </v-toolbar-items>

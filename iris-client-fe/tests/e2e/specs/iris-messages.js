@@ -99,24 +99,26 @@ describe("IrisMessages", () => {
   });
   it("should display the unread message count in a badge in the app-bar and and decrease it by opening an unread message", () => {
     cy.visit("/iris-messages/list");
-    cy.getBy("app-bar.nav.link.iris-message-list")
-      .as("navLink")
-      .should("not.have.class", "is-loading");
     cy.getBy("{iris-messages.unread.count} .v-badge__badge")
       .as("badge")
+      .should("not.have.class", "is-loading");
+    cy.get("@badge")
       .should("be.visible")
       .invoke("text")
       .then((textContent) => {
         const count = parseInt(textContent);
         expect(count).to.be.gte(1);
         cy.getRootMessageFolder("INBOX").click();
-        cy.get(".v-data-table tr.font-weight-bold").should("exist").click();
+        cy.get(".v-data-table tr.font-weight-bold")
+          .should("exist")
+          .first()
+          .click();
         cy.location("pathname").should("contain", "/iris-messages/details");
         cy.getBy("view.iris-message-details").should(
           "not.have.class",
           "v-card--loading"
         );
-        cy.get("@navLink").should("not.have.class", "is-loading");
+        cy.get("@badge").should("not.have.class", "is-loading");
         if (count <= 1) {
           cy.get("@badge").should("not.be.visible");
         } else {

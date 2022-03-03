@@ -21,7 +21,6 @@
             :folders="folders"
             :loading="foldersLoading"
             v-model="query.folder"
-            @input="clearMessageList"
           >
             <template #data-table="{ context }">
               <search-field
