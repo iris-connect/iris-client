@@ -93,7 +93,9 @@ describe("VaccinationReport", () => {
           .should("exist")
           .should("not.have.class", "is-loading")
           .within(() => {
-            cy.get("tbody tr").should("have.length.at.least", 1);
+            cy.get("tbody tr")
+              .not(".v-row-group__header")
+              .should("have.length.at.least", 1);
             cy.get("thead .v-simple-checkbox").click();
           });
         cy.getBy(".v-btn{export.default}").should("not.be.disabled").click();

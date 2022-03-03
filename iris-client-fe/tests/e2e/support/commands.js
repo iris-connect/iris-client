@@ -108,19 +108,21 @@ Cypress.Commands.add(
         cy.log(`data-table has no items with status '${status}'`);
       } else {
         cy.get("@dataTable").within(() => {
-          cy.get("tbody tr").each(($item) => {
-            cy.wrap($item).within(() => {
-              if (status === "all") {
-                cy.getByLike("status.").should("exist");
-              } else {
-                cy.getByLike("status.").should(
-                  "have.attr",
-                  "data-test",
-                  `status.${status}`
-                );
-              }
+          cy.get("tbody tr")
+            .not(".v-row-group__header")
+            .each(($item) => {
+              cy.wrap($item).within(() => {
+                if (status === "all") {
+                  cy.getByLike("status.").should("exist");
+                } else {
+                  cy.getByLike("status.").should(
+                    "have.attr",
+                    "data-test",
+                    `status.${status}`
+                  );
+                }
+              });
             });
-          });
         });
       }
     });
