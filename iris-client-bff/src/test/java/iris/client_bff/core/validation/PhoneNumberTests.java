@@ -28,7 +28,8 @@ class PhoneNumberTests {
 	@ParameterizedTest(name = "\"{0}\"")
 	@ValueSource(
 			strings = { "035156789", "(0351) 56789", "+49 351 67833", "+4935112345678", "+49 351/12345678",
-					"+49 (351) 12345678", "0172 11156789", "0172/11156789", "0222 6578-22", "0351A56789" })
+					"+49 (351) 12345678", "0172 11156789", "0172/11156789", "0222 6578-22", "0351A56789", "+61403123456",
+					"+43 316 787 400" })
 	@DisplayName("with valide value")
 	void validate_withValidValue_getNoViolations(String value) {
 
