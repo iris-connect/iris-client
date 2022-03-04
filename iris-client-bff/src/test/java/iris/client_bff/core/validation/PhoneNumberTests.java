@@ -27,9 +27,8 @@ class PhoneNumberTests {
 
 	@ParameterizedTest(name = "\"{0}\"")
 	@ValueSource(
-			strings = { "035156789", "(0351) 56789", "+49 351 67833", "+4935112345678", "+49 351/12345678",
-					"+49 (351) 12345678", "0172 11156789", "0172/11156789", "0222 6578-22", "0351A56789", "+61403123456",
-					"+43 316 787 400" })
+			strings = { "+49 351 67833", "+4935112345678", "+49 351/12345678", "+49 (351) 12345678", "+49172 11156789",
+					"+49/172/11156789", "+61403123456", "+43 316 787 400" })
 	@DisplayName("with valide value")
 	void validate_withValidValue_getNoViolations(String value) {
 
@@ -39,8 +38,9 @@ class PhoneNumberTests {
 	}
 
 	@ParameterizedTest(name = "\"{0}\"")
-	@ValueSource(strings = { "", "0351%56789", "0351 473+11", "0123456*89", "0", "1234567", "0172 111567"/*to short*/,
-			"+49 12345 67833" /*prefix invalid*/ })
+	@ValueSource(strings = { "", "+49351%56789", "+49 351 473+11", "+49123456*89", "0", "1234567",
+			"+49172 111567"/*to short*/, "+49 12345 67833" /*area code invalid*/, "035156789" /*missing country code*/,
+			"(0351) 56789", "0172 11156789", "0172/11156789", "0222 6578-22", "0351A56789" })
 	@DisplayName("with invalide value")
 	void validate_withInvalidValue_getViolations(String value) {
 
