@@ -13,19 +13,11 @@
       <v-btn
         v-on="on"
         v-bind="attrs"
-        color="white"
+        color="primary"
         :disabled="selection.length <= 0"
         data-test="export-dialog.activator"
       >
-        Exportformat wählen
-      </v-btn>
-      <v-btn
-        color="primary"
-        @click="exportStandard('csv')"
-        :disabled="selection.length <= 0"
-        data-test="export.csv.standard"
-      >
-        {{ exportLabel }}
+        exportieren
       </v-btn>
     </template>
   </data-export-dialog>

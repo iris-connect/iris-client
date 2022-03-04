@@ -36,20 +36,26 @@ export const resolveAtomicAddressHeader = () => {
 export const getExportLabel = (
   selectionCount: number,
   totalCount: number,
-  dataLabel?: string[] | null
+  dataLabel?: string[] | null,
+  actionLabel?: string | null | false
 ) => {
   const singular = dataLabel?.[0] || "Datensatz";
   const plural = dataLabel?.[1] || dataLabel?.[0] || "Datensätze";
   const ofLabel = (dataLabel || []).length === 1 ? "von" : "der";
+  const action = actionLabel === false ? "" : actionLabel || "exportieren";
   if (totalCount <= 0) {
-    return `${plural} exportieren`;
+    return joinLabels([plural, action]);
   }
   if (totalCount === 1) {
-    return `${singular} exportieren`;
+    return joinLabels([singular, action]);
   }
   const exportCountLabel =
     selectionCount > 0 && selectionCount >= totalCount
       ? "Alle"
-      : [selectionCount, ofLabel, totalCount].join(" ");
-  return [exportCountLabel, plural, "exportieren"].join(" ");
+      : joinLabels([selectionCount, ofLabel, totalCount]);
+  return [exportCountLabel, plural, action].join(" ");
+};
+
+const joinLabels = (arr: (number | string)[]): string => {
+  return arr.join(" ").replace(/\s+/g, " ");
 };

@@ -15,17 +15,26 @@
       @field-edit="handleEditableField"
       @status-update="updateRequestStatus"
     >
-      <template #data-export="{ selection }">
+      <template #data-actions="{ selection, disabled, messageData }">
+        <data-export-label
+          :selected="selection.length"
+          :total="tableRows.length"
+          :action-label="false"
+          #default="{ exportLabel }"
+        >
+          <span class="mr-3">
+            {{ exportLabel }}
+          </span>
+        </data-export-label>
         <event-tracking-details-data-export
           :event="eventTrackingDetails"
           :items-length="tableRows.length"
           :selection="selection"
         />
-      </template>
-      <template #data-message="{ messageData, disabled }">
         <iris-message-data-export-dialog
           :data="messageData"
           :disabled="disabled"
+          label="senden"
         />
       </template>
     </event-tracking-details-component>
@@ -55,9 +64,11 @@ import IrisMessageDataExportDialog from "@/views/iris-message-create/components/
 import { bundleEventTrackingApi } from "@/modules/event-tracking/services/api";
 import { getApiErrorMessages, getApiLoading } from "@/utils/api";
 import EntryMetaData from "@/components/entry-meta-data.vue";
+import DataExportLabel from "@/components/data-export/data-export-label.vue";
 
 @Component({
   components: {
+    DataExportLabel,
     IrisMessageDataExportDialog,
     EntryMetaData,
     EventTrackingDetailsDataExport,

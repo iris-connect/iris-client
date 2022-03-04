@@ -149,13 +149,3 @@ export default class IrisMessageDataSelectForm extends IrisMessageDataSelectForm
   }
 }
 </script>
-
-<style lang="scss">
-.iris-message-data-select-component {
-  & > .v-input__control {
-    & > .v-input__slot {
-      display: block;
-    }
-  }
-}
-</style>

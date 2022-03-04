@@ -58,7 +58,10 @@ import IrisMessageDataTable from "@/views/iris-message-list/components/iris-mess
 import { DataQuery } from "@/api/common";
 import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import { getApiErrorMessages } from "@/utils/api";
-import { bundleIrisMessageApi, fetchUnreadMessageCountApi, } from "@/modules/iris-message/services/api";
+import {
+  bundleIrisMessageApi,
+  fetchUnreadMessageCountApi,
+} from "@/modules/iris-message/services/api";
 import { IrisMessageContext, IrisMessageFolder } from "@/api";
 
 @Component({
@@ -99,7 +102,7 @@ export default class IrisMessageListView extends Vue {
 
   get currentMessageContext(): IrisMessageContext {
     const folders: IrisMessageFolder[] | null =
-      this.messageApi.fetchMessages.state.result;
+      this.messageApi.fetchMessageFolders.state.result;
     const currentFolder = folders?.find(
       (folder) => folder.id === this.messageQuery?.folder
     );

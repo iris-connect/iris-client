@@ -3,7 +3,7 @@ import asyncAction from "@/utils/asyncAction";
 import { normalizeIrisMessageDetails } from "@/views/iris-message-details/iris-message-details.data";
 import {
   normalizeIrisMessageFolders,
-  normalizePageIrisMessages,
+  normalizePageIrisMessage,
   normalizeUnreadIrisMessageCount,
 } from "@/views/iris-message-list/iris-message-list.data";
 import { cancelTokenProvider, DataQuery } from "@/api/common";
@@ -35,7 +35,7 @@ const fetchRecipients = () => {
 
 const fetchMessages = () => {
   const action = async (query: DataQuery) => {
-    return normalizePageIrisMessages(
+    return normalizePageIrisMessage(
       (await authClient.irisMessagesGet({ params: query })).data,
       true
     );

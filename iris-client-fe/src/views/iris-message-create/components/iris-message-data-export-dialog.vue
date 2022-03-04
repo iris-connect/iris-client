@@ -10,7 +10,7 @@
           data-test="message-data-export-dialog.activator"
           :disabled="disabled"
         >
-          Daten senden
+          {{ label || "Daten senden" }}
         </v-btn>
       </slot>
     </template>
@@ -82,6 +82,10 @@ const IrisMessageDataExportDialogProps = Vue.extend({
     disabled: {
       type: Boolean,
       default: false,
+    },
+    label: {
+      type: String,
+      default: null,
     },
   },
 });

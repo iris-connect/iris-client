@@ -90,7 +90,7 @@ const normalize = <T, K extends keyof T>(
 export const getNormalizedValue = <T>(
   value: T | undefined,
   fallback: T,
-  type: DataTypeArg
+  type: DataTypeArg = "string"
 ): T => {
   if (value !== undefined && validateType(value, type)) return value;
   return fallback;

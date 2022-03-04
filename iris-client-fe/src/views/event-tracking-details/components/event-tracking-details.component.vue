@@ -144,11 +144,13 @@
     <v-card-actions v-if="!isPreview">
       <v-btn color="white" :to="{ name: 'event-list' }" replace> Zurück </v-btn>
       <v-spacer />
-      <slot name="data-export" v-bind:selection="tableData.select" />
       <slot
-        name="data-message"
-        v-bind:messageData="messageData"
-        v-bind:disabled="tableData.select.length <= 0"
+        name="data-actions"
+        v-bind="{
+          selection: tableData.select,
+          messageData: messageData,
+          disabled: tableData.select.length <= 0,
+        }"
       />
     </v-card-actions>
   </v-card>

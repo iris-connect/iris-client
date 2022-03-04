@@ -77,10 +77,7 @@ export const normalizeIrisMessageHdContact = (
   );
 };
 
-export const normalizeIrisMessage = (
-  source?: IrisMessage,
-  parse?: boolean
-): IrisMessage => {
+export const normalizeIrisMessage = (source?: IrisMessage, parse?: boolean) => {
   return normalizeData(
     source,
     (normalizer) => {
