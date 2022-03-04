@@ -30,13 +30,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.search.engine.backend.types.Sortable;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 /**
  * @author Jens Kutzsche
  */
 @Entity
 @Table(name = "vaccination_infos")
+@Indexed
 @Data
 @Setter(AccessLevel.PACKAGE)
 @EqualsAndHashCode(callSuper = true, of = {})
@@ -49,6 +53,8 @@ public class VaccinationInfo extends Aggregate<VaccinationInfo, VaccinationInfoI
 	}
 
 	private String externalId;
+
+	@IndexedEmbedded
 	private Facility facility;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -91,7 +97,11 @@ public class VaccinationInfo extends Aggregate<VaccinationInfo, VaccinationInfoI
 	public static class Facility {
 
 		@Column(name = "facility_name")
+		@FullTextField(name = "name_search", analyzer = "german")
+		@GenericField(sortable = Sortable.YES)
 		private String name;
+
+		@IndexedEmbedded
 		private Address address;
 		private ContactPerson contactPerson;
 	}

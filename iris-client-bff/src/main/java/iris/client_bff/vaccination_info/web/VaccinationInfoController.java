@@ -1,6 +1,7 @@
 package iris.client_bff.vaccination_info.web;
 
 import iris.client_bff.core.Sex;
+import iris.client_bff.core.validation.NoSignOfAttack;
 import iris.client_bff.core.web.dto.Address;
 import iris.client_bff.vaccination_info.VaccinationInfo;
 import iris.client_bff.vaccination_info.VaccinationInfo.Employee;
@@ -13,29 +14,37 @@ import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/vaccination-reports")
+@Validated
 public class VaccinationInfoController {
 
 	private final VaccinationInfoService service;
 
 	@GetMapping()
-	public Page<VaccinationReportDto> getVaccinationInfos(Pageable pageable) {
+	public Page<VaccinationReportDto> getVaccinationInfos(
+			@RequestParam Optional<@NoSignOfAttack String> search,
+			Pageable pageable) {
 
-		var vaccInfos = service.getAll(pageable);
+		var vaccInfos = search
+				.map(it -> service.search(it, pageable))
+				.orElseGet(() -> service.getAll(pageable));
 
 		return vaccInfos.map(this::map);
 	}

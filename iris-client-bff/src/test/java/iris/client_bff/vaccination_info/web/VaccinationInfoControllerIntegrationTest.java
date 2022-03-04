@@ -80,13 +80,50 @@ class VaccinationInfoControllerIntegrationTest {
 
 				.then()
 				.status(OK)
-				.body("numberOfElements", is((int) count),
-						"content.facility.name", everyItem(not(blankOrNullString())),
-						"content.facility.address", everyItem(notNullValue()),
-						"content.facility.contactPerson", everyItem(notNullValue()),
-						"content.reportedAt", everyItem(notNullValue()),
-						"content.vaccinationStatusCount.NOT_VACCINATED", everyItem(not(0)),
-						"pageable.offset", is(0));
+				.body("numberOfElements", is((int) count), getCommonChecks());
+	}
+
+	@Test
+	@DisplayName("getVaccinationInfos: with search string ⇒ 🔙 filtered overview")
+	void getVaccinationInfos_WithSearchString_ReturnsFiltered() {
+
+		var path = BASE_URL + "?search={search}";
+
+		when()
+				.get(path, "For Search")
+
+				.then()
+				.status(OK)
+				.body("numberOfElements", is(2), getCommonChecks());
+
+		when()
+				.get(path, "Search City")
+
+				.then()
+				.status(OK)
+				.body("numberOfElements", is(1), getCommonChecks());
+	}
+
+	private Object[] getCommonChecks() {
+
+		return new Object[] { "content.facility.name", everyItem(not(blankOrNullString())),
+				"content.facility.address", everyItem(notNullValue()),
+				"content.facility.contactPerson", everyItem(notNullValue()),
+				"content.reportedAt", everyItem(notNullValue()),
+				"content.vaccinationStatusCount.NOT_VACCINATED", everyItem(not(0)),
+				"pageable.offset", is(0) };
+	}
+
+	@Test
+	@DisplayName("getVaccinationInfos: invalid search string ⇒ 🔙 validation errors")
+	void getVaccinationInfos_WithInvalidSearchString_ReturnsValidationErrors() {
+
+		when()
+				.get(BASE_URL + "?search={search}", "@Search")
+
+				.then()
+				.status(BAD_REQUEST)
+				.body(containsString("search: Contains illegal characters"));
 	}
 
 	@Test
