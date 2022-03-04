@@ -1,6 +1,6 @@
 <template>
   <div class="my-3">
-    <v-card :loading="messageLoading" data-test="view.iris-message-details">
+    <v-card :loading="loading" data-test="view.iris-message-details">
       <v-card-subtitle class="pb-0 text-right" data-test="message.createdAt">
         {{ message.createdAt }}
       </v-card-subtitle>
@@ -104,10 +104,8 @@ export default class IrisMessageDetailsView extends Vue {
   get isInbox(): boolean {
     return this.messageDetails?.context === IrisMessageContext.Inbox;
   }
-  get messageLoading(): boolean {
-    return (
-      getApiLoading(this.messageApi) || fetchUnreadMessageCountApi.state.loading
-    );
+  get loading(): boolean {
+    return getApiLoading(this.messageApi);
   }
   get errors(): ErrorMessage[] {
     return getApiErrorMessages(this.messageApi);
