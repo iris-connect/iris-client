@@ -9,7 +9,7 @@ import { normalizeIrisMessage } from "@/views/iris-message-list/iris-message-lis
 const normalizeIrisMessageDataAttachment = (
   source?: IrisMessageDataAttachment,
   parse?: boolean
-): IrisMessageDataAttachment => {
+) => {
   return normalizeData(
     source,
     (normalizer) => {
@@ -29,11 +29,11 @@ const normalizeIrisMessageDataAttachment = (
 export const normalizeIrisMessageDetails = (
   source?: IrisMessageDetails,
   parse?: boolean
-): IrisMessageDetails => {
+) => {
   return normalizeData(
     source,
     (normalizer) => {
-      const normalized: IrisMessageDetails = {
+      return {
         ...normalizeIrisMessage(source),
         context: normalizer("context", IrisMessageContext.Unknown),
         dataAttachments: source?.dataAttachments
@@ -42,7 +42,6 @@ export const normalizeIrisMessageDetails = (
             )
           : undefined,
       };
-      return normalized;
     },
     parse,
     "IrisMessageDetails"

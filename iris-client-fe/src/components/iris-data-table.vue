@@ -1,18 +1,19 @@
 <template>
   <v-data-table
     v-bind="$attrs"
-    v-on="$listeners"
+    v-on="listeners"
     :loading="loading"
-    :items="items"
+    :items="filteredItems"
+    :server-items-length="serverItemsLength"
     v-model="model"
     :class="[
       $attrs.class,
       {
         'is-loading': loading,
-        'is-empty': items.length <= 0,
+        'is-empty': filteredItems.length <= 0,
       },
     ]"
-    @current-items="(items) => (currentItems = items)"
+    @current-items="(cItems) => (currentItems = cItems)"
   >
     <template v-if="showSelectAll" #header.data-table-select>
       <data-table-select-all
@@ -30,6 +31,10 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import DataTableSelectAll from "@/components/data-table-select-all.vue";
+import { PropType } from "vue";
+import _omit from "lodash/omit";
+
+type FilterFunction = <T>(value: T, index: number, array: T[]) => boolean;
 
 const IrisDataTableProps = Vue.extend({
   inheritAttrs: false,
@@ -50,6 +55,14 @@ const IrisDataTableProps = Vue.extend({
       type: Array,
       default: () => [],
     },
+    filter: {
+      type: Function as PropType<FilterFunction | null>,
+      default: null,
+    },
+    serverItemsLength: {
+      type: Number,
+      default: -1,
+    },
   },
 });
 @Component({
@@ -58,7 +71,17 @@ const IrisDataTableProps = Vue.extend({
   },
 })
 export default class IrisDataTable extends IrisDataTableProps {
+  get listeners(): Record<string, unknown> {
+    return _omit(this.$listeners, ["input"]);
+  }
   currentItems = [];
+  get filteredItems() {
+    // use filter only for local data -> this.serverItemsLength <= -1
+    if (this.filter && this.serverItemsLength <= -1) {
+      return this.items.filter(this.filter);
+    }
+    return this.items;
+  }
   get model() {
     return this.value;
   }

@@ -3,11 +3,12 @@
 
 ## IRIS-Client - Docker Compose Installation
 
-### 1.3.x ⇒ 1.4.0
+### 1.3.x ⇒ 1.4.1
 
+[Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.4.1) finden Sie Informationen zum Release 1.4.1.  
 [Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.4.0) finden Sie Informationen zum Release 1.4.0.  
 
-1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.4.0/deployment-1.4.0.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
+1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.4.1/deployment-1.4.1.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
 2. Wechseln Sie in das aktuelle `Installationsverzeichnis`.
 3. Ersetzen Sie ihre aktuelle `docker-compose.yml` mit der Version aus dem neuen Release. 
     ```
@@ -31,7 +32,7 @@
     ```
     $ docker-compose up -d
     ```
-9. Loggen Sie sich mit Ihrem Benutzer ein und gehen Sie auf `Über IRIS`. Unter Version sollten Sie die neue Version `1.4.0` vorfinden.
+9. Loggen Sie sich mit Ihrem Benutzer ein und gehen Sie auf `Über IRIS`. Unter Version sollten Sie die neue Version `1.4.1` vorfinden.
 
 ### 1.2.x -> 1.3.1
 
@@ -127,8 +128,9 @@
 
 ## IRIS-Client - Stand-Alone Installation
 
-### 1.3.x ⇒ 1.4.0
+### 1.3.x ⇒ 1.4.1
 
+[Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.4.1) finden Sie Informationen zum Release 1.4.1.  
 [Hier](https://github.com/iris-connect/iris-client/releases/tag/v1.4.0) finden Sie Informationen zum Release 1.4.0.  
 
 Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installationsverzeichnis` installiert haben und dabei die Stand-Alone Ordner Struktur benutzen.
@@ -145,7 +147,7 @@ Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installa
 
 #### IRIS Client BFF
 
-1. Laden Sie sich die [aktuelle Version vom IRIS CLient BFF](https://github.com/iris-connect/iris-client/releases/download/v1.4.0/iris-client-bff-1.4.0.jar) herunter. 
+1. Laden Sie sich die [aktuelle Version vom IRIS CLient BFF](https://github.com/iris-connect/iris-client/releases/download/v1.4.1/iris-client-bff-1.4.1.jar) herunter. 
 
 2. Kopieren sie die ausführbare Datei in den `bin` Ordner vom `Installationsverzeichnis`.  
 
@@ -155,7 +157,7 @@ Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installa
 
 #### IRIS CLient Frontend
 
-1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.4.0/iris-client-fe-1.4.0.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
+1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.4.1/iris-client-fe-1.4.1.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
 
 2. Kopieren Sie den gesamten Inhalt vom `Zielverzeichnis` in den `public` Ordner vom `Installationsverzeichnis`.
     > Sollten Sie einen eigenen Webserver betreiben, müssen Sie den Pfad entsprechend anpassen. 
@@ -165,7 +167,7 @@ Dieser Upgrade-Guide geht davon aus, dass Sie den IRIS Client in einem `Installa
 
 #### Konfigurations-Dateien
 
-1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.4.0/stand-alone-deployment-1.4.0.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
+1. Laden Sie sich [das neue Release](https://github.com/iris-connect/iris-client/releases/download/v1.4.1/stand-alone-deployment-1.4.1.zip) herunter und entpacken Sie es in ein `Zielverzeichnis`. 
 
 2. Kopieren und ersetzen Sie den gesamten Inhalt der EPS Konfiguration in den entsprechenden Ordner vom `Installationsverzeichnis`.
     ```

@@ -9,15 +9,26 @@ import store from "@/store";
 
 export type DataNormalizer<T = any> = (source?: T, parse?: boolean) => T;
 
+enum DataType {
+  string = "string",
+  array = "array",
+  dateString = "dateString",
+  boolean = "boolean",
+  number = "number",
+  any = "any",
+}
+
+type DataTypeArg = keyof typeof DataType;
+
 export const normalizeData = <T>(
   source: T | undefined,
-  callback: (n: EntryNormalizer<T>) => T,
+  callback: (n: EntryNormalizer<T>) => Complete<T>,
   parse?: boolean,
   message?: string
-): T => {
+): Complete<T> => {
   if (!isEnabled()) return source as T;
   const normalizer = entryNormalizer(source);
-  return finalizeData(callback(normalizer), source, parse, message);
+  return finalizeData(callback(normalizer), source, parse, message) as T;
 };
 
 export const normalizeValue = <T>(
@@ -31,11 +42,11 @@ export const normalizeValue = <T>(
   return finalizeData(callback(normalizer), source, parse, message);
 };
 
-export type ValueNormalizer<T> = (fallback: T, type?: string) => T;
+export type ValueNormalizer<T> = (fallback: T, type?: DataTypeArg) => T;
 
 export const valueNormalizer =
   <T>(value?: T) =>
-  (fallback: T, type = "string"): T => {
+  (fallback: T, type: DataTypeArg = "string"): T => {
     return getNormalizedValue(value, fallback, type);
   };
 
@@ -53,12 +64,16 @@ export const isEnabled = (): boolean => {
 export type EntryNormalizer<T> = <K extends keyof T>(
   key: K,
   fallback: T[K],
-  type?: string
+  type?: DataTypeArg
 ) => T[K];
 
 const entryNormalizer =
   <T>(obj?: T) =>
-  <K extends keyof T>(key: K, fallback: T[K], type = "string"): T[K] => {
+  <K extends keyof T>(
+    key: K,
+    fallback: T[K],
+    type: DataTypeArg = "string"
+  ): T[K] => {
     return normalize<T, K>(obj, key, fallback, type);
   };
 
@@ -66,7 +81,7 @@ const normalize = <T, K extends keyof T>(
   obj: T | unknown | undefined,
   key: K,
   fallback: T[K],
-  type = "string"
+  type: DataTypeArg = "string"
 ): T[K] => {
   const value: T[K] = _get(obj, key);
   return getNormalizedValue(value, fallback, type);
@@ -75,20 +90,20 @@ const normalize = <T, K extends keyof T>(
 export const getNormalizedValue = <T>(
   value: T | undefined,
   fallback: T,
-  type = "string"
+  type: DataTypeArg
 ): T => {
   if (value !== undefined && validateType(value, type)) return value;
   return fallback;
 };
 
-const validateType = (value: unknown, type: string): boolean => {
-  if (type === "array") {
+const validateType = (value: unknown, type: DataTypeArg): boolean => {
+  if (type === DataType.array) {
     return Array.isArray(value);
   }
-  if (type === "dateString") {
+  if (type === DataType.dateString) {
     return typeof value === "string" && dayjs(value).isValid();
   }
-  if (type === "any") {
+  if (type === DataType.any) {
     return true;
   }
   return typeof value === type;
@@ -154,6 +169,13 @@ const difference = <A extends Record<string, any>, B extends A>(
     }
   });
 };
+
 export const getObjectKeys = <T>(obj: T): Array<keyof T> => {
   return Object.keys(obj) as Array<keyof typeof obj>;
+};
+
+export const getEnumKeys = <O extends object, K extends keyof O = keyof O>(
+  obj: O
+): K[] => {
+  return Object.keys(obj).filter((k) => Number.isNaN(+k)) as K[];
 };

@@ -419,7 +419,7 @@ export interface DataRequestCaseClient {
  * @export
  * @interface DataRequestCaseData
  */
-export interface DataRequestCaseData {
+export interface DataRequestCaseData extends MetaData {
   /**
    * External case identifier. E.g. CaseID in Sormas.
    * @type {string}
@@ -727,7 +727,7 @@ export interface DataRequestClientUpdate {
  * @export
  * @interface DataRequestDetails
  */
-export interface DataRequestDetails {
+export interface DataRequestDetails extends MetaData {
   /**
    * Comments on given data request from GA employees
    * @type {string}
@@ -1498,7 +1498,7 @@ export enum Sex {
  * @export
  * @interface User
  */
-export interface User {
+export interface User extends MetaData {
   /**
    *
    * @type {string}
@@ -1890,6 +1890,13 @@ export interface Sort {
   unsorted?: boolean;
 }
 
+export interface MetaData {
+  createdBy?: string;
+  createdAt?: string;
+  lastModifiedBy?: string;
+  lastModifiedAt?: string;
+}
+
 export interface Page<Content> {
   totalElements?: number;
   totalPages?: number;
@@ -1903,8 +1910,6 @@ export interface Page<Content> {
   pageable?: Pageable;
   empty?: boolean;
 }
-
-export type PageIrisMessages = Page<IrisMessage>;
 
 export interface IrisMessageDataAttachment {
   id: string;
@@ -1979,6 +1984,58 @@ export interface IrisMessageHdContact {
   id: string;
   name: string;
   own?: boolean;
+}
+
+export interface VRFacilityContactPerson {
+  firstName?: string;
+  lastName?: string;
+  eMail?: string;
+  phone?: string;
+}
+
+export interface VRFacility {
+  name?: string;
+  address?: Address;
+  contactPerson?: VRFacilityContactPerson;
+}
+
+export enum VaccinationStatus {
+  NOT_VACCINATED = "notVaccinated",
+  SUSPICIOUS_PROOF = "suspiciousProof",
+}
+
+export enum VaccinationExtendedStatus {
+  VACCINATED = "vaccinated",
+  NOT_VACCINATED = "notVaccinated",
+  SUSPICIOUS_PROOF = "suspiciousProof",
+  UNKNOWN = "unknown",
+}
+
+export interface VREmployee {
+  firstName?: string;
+  lastName?: string;
+  address?: Address;
+  vaccination?: string;
+  vaccinationStatus?: VaccinationStatus;
+  eMail?: string;
+  phone?: string;
+  dateOfBirth?: string;
+  sex?: Sex;
+}
+
+export type VaccinationStatusCount = {
+  [K in VaccinationStatus]?: number;
+};
+
+export interface VaccinationReport {
+  id?: string;
+  facility?: VRFacility;
+  reportedAt?: string;
+  vaccinationStatusCount?: VaccinationStatusCount;
+}
+
+export interface VaccinationReportDetails extends VaccinationReport {
+  employees?: VREmployee[];
 }
 
 /**
@@ -2288,7 +2345,7 @@ export class IrisClientFrontendApi extends BaseAPI {
    */
   public irisMessagesGet(
     options?: RequestOptions
-  ): ApiResponse<PageIrisMessages> {
+  ): ApiResponse<Page<IrisMessage>> {
     assertParamExists("irisMessagesGet", "folder", options?.params?.folder);
     return this.apiRequest("GET", "/iris-messages", null, options);
   }
@@ -2476,6 +2533,36 @@ export class IrisClientFrontendApi extends BaseAPI {
     const path = `/iris-messages/data/${encodeURIComponent(
       messageDataId
     )}/view`;
+    return this.apiRequest("GET", path, null, options);
+  }
+
+  /**
+   *
+   * @summary Fetches paginated vaccination-report
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public pageVaccinationReportGet(
+    options?: RequestOptions
+  ): ApiResponse<Page<VaccinationReport>> {
+    return this.apiRequest("GET", "/vaccination-reports", null, options);
+  }
+
+  /**
+   *
+   * @summary Fetches vaccination-report details
+   * @param {string} id for vaccination report.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public vaccinationReportDetailsGet(
+    id: string,
+    options?: RequestOptions
+  ): ApiResponse<VaccinationReportDetails> {
+    assertParamExists("vaccinationReportDetailsGet", "id", id);
+    const path = `/vaccination-reports/${encodeURIComponent(id)}`;
     return this.apiRequest("GET", path, null, options);
   }
 }

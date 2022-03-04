@@ -14,14 +14,13 @@
       <v-card-text>
         <data-query-handler
           ref="queryHandler"
-          @query:update="handleQueryUpdate"
+          @query:update="messageQuery = $event"
           #default="{ query }"
         >
           <iris-message-folders-data-tree
             :folders="messageApi.fetchMessageFolders.state.result"
             :loading="messageApi.fetchMessageFolders.state.loading"
             v-model="query.folder"
-            @input="clearMessageList"
           >
             <template #data-table="{ context }">
               <search-field
@@ -50,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import SearchField from "@/components/pageable/search-field.vue";
 import DataTree from "@/components/data-tree/data-tree.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
@@ -59,10 +58,8 @@ import IrisMessageDataTable from "@/views/iris-message-list/components/iris-mess
 import { DataQuery } from "@/api/common";
 import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import { getApiErrorMessages } from "@/utils/api";
-import {
-  bundleIrisMessageApi,
-  fetchUnreadMessageCountApi,
-} from "@/modules/iris-message/services/api";
+import { bundleIrisMessageApi, fetchUnreadMessageCountApi, } from "@/modules/iris-message/services/api";
+import { IrisMessageContext, IrisMessageFolder } from "@/api";
 
 @Component({
   components: {
@@ -86,15 +83,34 @@ export default class IrisMessageListView extends Vue {
     return getApiErrorMessages(this.messageApi);
   }
 
-  clearMessageList() {
-    this.messageApi.fetchMessages.reset(["result"]);
+  messageQuery: DataQuery | null = null;
+
+  get unreadMessageCountLoading() {
+    return fetchUnreadMessageCountApi.state.loading;
+  }
+  @Watch("unreadMessageCountLoading")
+  onUnreadMessageCountLoadingChange(newValue: boolean) {
+    if (!newValue && !this.messageApi.fetchMessages.state.loading) {
+      if (this.currentMessageContext === IrisMessageContext.Inbox) {
+        this.fetchMessages(this.messageQuery);
+      }
+    }
   }
 
-  handleQueryUpdate(newValue: DataQuery) {
-    if (newValue.folder) {
-      this.messageApi.fetchMessages.execute(newValue);
+  get currentMessageContext(): IrisMessageContext {
+    const folders: IrisMessageFolder[] | null =
+      this.messageApi.fetchMessages.state.result;
+    const currentFolder = folders?.find(
+      (folder) => folder.id === this.messageQuery?.folder
+    );
+    return currentFolder?.context || IrisMessageContext.Unknown;
+  }
+
+  fetchMessages(query: DataQuery | null) {
+    if (query?.folder) {
+      this.messageApi.fetchMessages.execute(query);
     } else {
-      this.clearMessageList();
+      this.messageApi.fetchMessages.reset(["result"]);
     }
   }
 

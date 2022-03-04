@@ -9,6 +9,8 @@ import globalAxios, {
   CancelTokenSource,
   Method,
 } from "axios";
+import _castArray from "lodash/castArray";
+import { join } from "@/utils/misc";
 /**
  *
  * @export
@@ -16,7 +18,7 @@ import globalAxios, {
 export type DataQuery = {
   size: number;
   page: number;
-  sort?: string | null;
+  sort?: string | string[] | null;
   status?: DataRequestStatus | null;
   search?: string | null;
   folder?: string;
@@ -110,6 +112,18 @@ export const getSortAttribute = function (key: string): string {
     phone: "contactPhone",
   };
   return sortAttributes[key];
+};
+
+const mapSortAttribute = (sort: string): string => {
+  const sortArgs = sort.split(",");
+  return join([getSortAttribute(sortArgs[0]) || sortArgs[0], sortArgs[1]], ",");
+};
+
+export const mapSortAttributes = (
+  sort: DataQuery["sort"]
+): DataQuery["sort"] => {
+  if (!sort) return sort;
+  return _castArray(sort).map(mapSortAttribute);
 };
 
 export const apiRequestBuilder =

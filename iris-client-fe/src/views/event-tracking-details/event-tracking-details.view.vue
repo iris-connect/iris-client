@@ -5,6 +5,7 @@
         Die Kontaktdaten zu diesem Ereignis wurden angefragt.
       </template>
     </alert-component>
+    <entry-meta-data :entry="eventTrackingDetails" />
     <event-tracking-details-component
       :table-rows="tableRows"
       :event-data="eventData"
@@ -53,10 +54,12 @@ import {
 import IrisMessageDataExportDialog from "@/views/iris-message-create/components/iris-message-data-export-dialog.vue";
 import { bundleEventTrackingApi } from "@/modules/event-tracking/services/api";
 import { getApiErrorMessages, getApiLoading } from "@/utils/api";
+import EntryMetaData from "@/components/entry-meta-data.vue";
 
 @Component({
   components: {
     IrisMessageDataExportDialog,
+    EntryMetaData,
     EventTrackingDetailsDataExport,
     EventTrackingDetailsComponent,
     AlertComponent,

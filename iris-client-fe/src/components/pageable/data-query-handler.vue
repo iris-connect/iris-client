@@ -6,16 +6,10 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { DataQuery, getSortAttribute } from "@/api/common";
-import {
-  DEFAULT_PAGE_SIZE,
-  getPageFromRouteWithDefault,
-  getPageSizeFromRouteWithDefault,
-  getStatusFilterFromRoute,
-  getStringParamFromRouteWithOptionalFallback,
-} from "@/utils/pagination";
+import { DataQuery, mapSortAttributes } from "@/api/common";
+import { DEFAULT_PAGE_SIZE, getParamFromRoute } from "@/utils/pagination";
 import _mapValues from "lodash/mapValues";
-import { join } from "@/utils/misc";
+import { Location } from "vue-router";
 
 const DataQueryHandlerProps = Vue.extend({
   inheritAttrs: false,
@@ -24,20 +18,12 @@ const DataQueryHandlerProps = Vue.extend({
       type: Boolean,
       default: true,
     },
-    debounce: {
-      type: Number,
-      default: 1000,
-    },
-    minLength: {
-      type: Number,
-      default: 2,
-    },
   },
 });
 
 @Component
 export default class DataQueryHandler extends DataQueryHandlerProps {
-  initialized = false;
+  isMounted = false;
 
   query: DataQuery = {
     size: DEFAULT_PAGE_SIZE,
@@ -51,56 +37,50 @@ export default class DataQueryHandler extends DataQueryHandlerProps {
   mounted() {
     if (this.routeControl) {
       this.query = {
-        size: getPageSizeFromRouteWithDefault(this.$route),
-        page: Math.max(0, getPageFromRouteWithDefault(this.$route) - 1),
-        status: getStatusFilterFromRoute(this.$route),
-        sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
-        search: getStringParamFromRouteWithOptionalFallback(
-          "search",
-          this.$route
-        ),
-        folder: getStringParamFromRouteWithOptionalFallback(
-          "folder",
-          this.$route
-        ),
+        size: getParamFromRoute("size", this.$route) || DEFAULT_PAGE_SIZE,
+        page: Math.max(0, (getParamFromRoute("page", this.$route) || 1) - 1),
+        status: getParamFromRoute("status", this.$route),
+        sort: getParamFromRoute("sort", this.$route),
+        search: getParamFromRoute("search", this.$route),
+        folder: getParamFromRoute("folder", this.$route),
       };
     }
-    this.initialized = true;
+    this.isMounted = true;
+  }
+
+  beforeDestroy() {
+    this.isMounted = false;
   }
 
   @Watch("query", { immediate: true, deep: true })
   onQueryChange(newValue: DataQuery) {
-    if (this.routeControl && !this.initialized) return;
-    let sort = newValue.sort;
-    if (sort) {
-      const sortModel = sort.split(",");
-      sort = join(
-        [getSortAttribute(sortModel[0]) || sortModel[0], sortModel[1]],
-        ","
-      );
-    }
+    if (this.routeControl && !this.isMounted) return;
     const query = {
       ...newValue,
-      sort,
+      sort: mapSortAttributes(newValue.sort),
     };
     if (this.routeControl) {
-      this.updateRoute(query);
+      this.updateLocation(query);
     }
     this.$emit("query:update", query);
   }
 
-  updateRoute(query: DataQuery): void {
-    const routeQuery: Record<string, unknown> = {
-      ...this.$route.query,
-      ...query,
-      page: `${(query?.page || 0) + 1}`,
-    };
+  updateLocation(query: DataQuery): void {
+    const locationQuery: Location["query"] = _mapValues(
+      {
+        ...this.$route.query,
+        ...query,
+        page: `${(query?.page || 0) + 1}`,
+      },
+      (val) => {
+        if (Array.isArray(val)) return val;
+        return val ? `${val}` : undefined;
+      }
+    );
     this.$router
       .replace({
-        name: this.$route.name as string | undefined,
-        query: _mapValues(routeQuery, (val) => {
-          return val ? `${val}` : undefined;
-        }),
+        name: this.$route.name || undefined,
+        query: locationQuery,
       })
       .catch(() => {
         // ignored

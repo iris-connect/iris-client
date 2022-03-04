@@ -1,7 +1,18 @@
 <template>
   <v-dialog v-model="dialog" max-width="500">
-    <template v-slot:activator="scope">
-      <slot name="activator" v-bind="scope" />
+    <template v-slot:activator="{ on, attrs }">
+      <slot name="activator" v-bind="{ on, attrs }">
+        <v-btn
+          v-on="on"
+          v-bind="attrs"
+          color="white"
+          :disabled="disabled"
+          data-test="export-dialog.activator"
+        >
+          Exportformat wählen
+        </v-btn>
+      </slot>
+      <slot name="activator.prepend" />
     </template>
     <v-card data-test="export-dialog">
       <v-card-title> {{ title }} </v-card-title>
@@ -22,6 +33,7 @@
                 icon
                 @click="$emit(item.csv.action)"
                 :data-test="item.csv.test"
+                :disabled="disabled"
               >
                 <v-icon> mdi-download </v-icon>
               </v-btn>
@@ -32,6 +44,7 @@
                 icon
                 @click="$emit(item.xlsx.action)"
                 :data-test="item.xlsx.test"
+                :disabled="disabled"
               >
                 <v-icon> mdi-download </v-icon>
               </v-btn>
@@ -54,18 +67,18 @@
 import { Component, Vue } from "vue-property-decorator";
 import { PropType } from "vue";
 
-export interface DataExportFormat {
+interface DataExportAction {
   action: string;
   test: string;
 }
 
-export interface DataExportItem {
+export interface DataExportFormat {
   label: string;
-  csv?: DataExportFormat;
-  xlsx?: DataExportFormat;
+  csv?: DataExportAction;
+  xlsx?: DataExportAction;
 }
 
-const ExportDialogProps = Vue.extend({
+const DataExportDialogProps = Vue.extend({
   inheritAttrs: false,
   props: {
     title: {
@@ -73,13 +86,17 @@ const ExportDialogProps = Vue.extend({
       default: "Daten exportieren",
     },
     items: {
-      type: Array as PropType<DataExportItem[]>,
+      type: Array as PropType<DataExportFormat[]>,
       default: () => [],
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
 });
 @Component
-export default class ExportDialog extends ExportDialogProps {
+export default class DataExportDialog extends DataExportDialogProps {
   dialog = false;
 }
 </script>

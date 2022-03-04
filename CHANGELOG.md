@@ -1,5 +1,57 @@
 # Changelog
 
+## [1.4.1](https://github.com/iris-connect/iris-client/compare/v1.4.0...v1.4.1) (2022-03-01)
+
+
+### Bug Fixes
+
+* Adds grpc server to client EPS. Still not reachable from outside, but necessary for communication between health departments. ([5ac3206](https://github.com/iris-connect/iris-client/commit/5ac3206960b99ff4060b8ff50425be25db831aeb)), closes [#637](https://github.com/iris-connect/iris-client/issues/637)
+* Fixes an error when changing user data (IllegalStateException: Cannot convert value of type 'java.lang.String' […] no matching editors or conversion strategy found). ([2b41d0a](https://github.com/iris-connect/iris-client/commit/2b41d0a596d0794fb89593d60e4025d52661d5cc))
+
+# [1.4.0](https://github.com/iris-connect/iris-client/compare/v1.3.1...v1.4.0) (2022-02-25)
+
+
+### Bug Fixes
+
+* **deps:** Updates Postgresql JDBC driver (now 42.3.2) to fix a vulnerability in this dependency. ([7dd2641](https://github.com/iris-connect/iris-client/commit/7dd2641b44ced77146461622c4b84f8fa2eb48ac))
+* Removes license reference for code from SORMAS that isn't used anymore. ([00db4a4](https://github.com/iris-connect/iris-client/commit/00db4a410fad6edc69ae7437c73030309a74ca5a))
+* Updates data-export code to handle breaking changes of sheetJS module export. ([f4f38c8](https://github.com/iris-connect/iris-client/commit/f4f38c81e7c3626d52bbedd837a128b569c522fb)), closes [#628](https://github.com/iris-connect/iris-client/issues/628)
+
+
+### Features
+
+* Extends the audit metadata in BFF to save who create and last modify an entity. ([246eaa5](https://github.com/iris-connect/iris-client/commit/246eaa5833cbe85d765093420df9f729221875dd)), closes [iris-connect/iris-backlog#234](https://github.com/iris-connect/iris-backlog/issues/234) [#597](https://github.com/iris-connect/iris-client/issues/597)
+* Health departments with IRIS can send messages to each other, encrypted and secured via the IRIS-Connect secure network. There is a central output and input for messages. Currently, only text messages are possible. In the near future, data sets as attachments will follow. ([6922f2c](https://github.com/iris-connect/iris-client/commit/6922f2c8dd3f7bbf0eed4b576625c45762450379)), closes [iris-connect/iris-backlog#256](https://github.com/iris-connect/iris-backlog/issues/256) [iris-connect/iris-backlog#259](https://github.com/iris-connect/iris-backlog/issues/259) [#541](https://github.com/iris-connect/iris-client/issues/541)
+* Images are signed before uploading to docker to insure their integrity. ([20f4381](https://github.com/iris-connect/iris-client/commit/20f4381115bb24d5f0ecc550c9ba66bb1c3f5b86)), closes [#569](https://github.com/iris-connect/iris-client/issues/569)
+
+# [1.4.0-rc.3](https://github.com/iris-connect/iris-client/compare/v1.4.0-rc.2...v1.4.0-rc.3) (2022-02-21)
+
+
+### Bug Fixes
+
+* Removes license reference for code from SORMAS that isn't used anymore. ([00db4a4](https://github.com/iris-connect/iris-client/commit/00db4a410fad6edc69ae7437c73030309a74ca5a))
+
+# [1.4.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.4.0-rc.1...v1.4.0-rc.2) (2022-02-21)
+
+
+### Bug Fixes
+
+* **deps:** Updates Postgresql JDBC driver (now 42.3.2) to fix a vulnerability in this dependency. ([7dd2641](https://github.com/iris-connect/iris-client/commit/7dd2641b44ced77146461622c4b84f8fa2eb48ac))
+* Updates data-export code to handle breaking changes of sheetJS module export. ([f4f38c8](https://github.com/iris-connect/iris-client/commit/f4f38c81e7c3626d52bbedd837a128b569c522fb)), closes [#628](https://github.com/iris-connect/iris-client/issues/628)
+
+
+### Features
+
+* Extends the audit metadata in BFF to save who create and last modify an entity. ([246eaa5](https://github.com/iris-connect/iris-client/commit/246eaa5833cbe85d765093420df9f729221875dd)), closes [iris-connect/iris-backlog#234](https://github.com/iris-connect/iris-backlog/issues/234) [#597](https://github.com/iris-connect/iris-client/issues/597)
+* Health departments with IRIS can send messages to each other, encrypted and secured via the IRIS-Connect secure network. There is a central output and input for messages. Currently, only text messages are possible. In the near future, data sets as attachments will follow. ([6922f2c](https://github.com/iris-connect/iris-client/commit/6922f2c8dd3f7bbf0eed4b576625c45762450379)), closes [iris-connect/iris-backlog#256](https://github.com/iris-connect/iris-backlog/issues/256) [iris-connect/iris-backlog#259](https://github.com/iris-connect/iris-backlog/issues/259) [#541](https://github.com/iris-connect/iris-client/issues/541)
+
+# [1.4.0-rc.1](https://github.com/iris-connect/iris-client/compare/v1.3.1...v1.4.0-rc.1) (2022-02-04)
+
+
+### Features
+
+* Images are signed before uploading to docker to insure their integrity. ([20f4381](https://github.com/iris-connect/iris-client/commit/20f4381115bb24d5f0ecc550c9ba66bb1c3f5b86)), closes [#569](https://github.com/iris-connect/iris-client/issues/569)
+
 ## [1.3.1](https://github.com/iris-connect/iris-client/compare/v1.3.0...v1.3.1) (2022-02-01)
 
 

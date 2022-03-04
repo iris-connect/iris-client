@@ -1,7 +1,7 @@
 <template>
   <iris-data-table
     v-bind="$attrs"
-    v-on="$listeners"
+    v-on="listeners"
     :sort-by.sync="sortBy"
     :sort-desc.sync="sortDesc"
     :page.sync="tablePage"
@@ -20,6 +20,8 @@ import { TableSort, TableSortDirection } from "@/server/utils/pagination";
 import _omit from "lodash/omit";
 import { PropType } from "vue";
 import { DEFAULT_ITEMS_PER_PAGE_OPTIONS } from "@/utils/pagination";
+import _map from "lodash/map";
+import _castArray from "lodash/castArray";
 
 export const getSortDir = (dir: unknown): TableSortDirection | undefined => {
   switch (dir) {
@@ -36,7 +38,9 @@ const SortableDataTableProps = Vue.extend({
   inheritAttrs: false,
   props: {
     sort: {
-      type: [Object, String],
+      type: [Array, String] as PropType<
+        string | TableSort | (string | TableSort)[] | undefined
+      >,
       default: undefined,
     },
     querySort: {
@@ -60,7 +64,7 @@ const SortableDataTableProps = Vue.extend({
 })
 export default class SortableDataTable extends SortableDataTableProps {
   get listeners(): Record<string, unknown> {
-    return _omit(this.$listeners, ["update:page"]);
+    return _omit(this.$listeners, ["update:page", "update:sort"]);
   }
   get tablePage(): number {
     return this.page + 1;
@@ -76,51 +80,58 @@ export default class SortableDataTable extends SortableDataTableProps {
     };
   }
 
-  get sortBy(): string[] {
-    return this.sortModel?.col ? [this.sortModel.col] : [];
+  get sortBy(): string | string[] | undefined {
+    const s = _map(this.sortModel, "col");
+    return s.length <= 1 ? s[0] : s;
   }
 
-  set sortBy(value: string[]) {
-    this.sortModel =
-      value.length > 0
-        ? {
-            col: value[0],
-            dir: this.sortModel?.dir || TableSortDirection.ASC,
-          }
-        : undefined;
-  }
-
-  get sortDesc(): boolean | undefined {
-    return this.sortModel?.dir === TableSortDirection.DESC;
-  }
-
-  set sortDesc(value: boolean | undefined) {
-    this.sortModel = this.sortModel?.col
-      ? {
-          col: this.sortModel.col,
-          dir: value ? TableSortDirection.DESC : TableSortDirection.ASC,
-        }
-      : undefined;
-  }
-
-  get sortModel(): TableSort | undefined {
-    if (this.querySort) {
-      const sort = typeof this.sort === "string" ? this.sort : "";
-      const sortArgs = sort.split(",");
-      const col = sortArgs[0];
-      const dir = getSortDir(sortArgs[1]);
-      return col && dir ? { col, dir } : undefined;
+  set sortBy(value: string | string[] | undefined) {
+    if (!value || value.length <= 0) {
+      this.sortModel = [];
+    } else {
+      this.sortModel = _castArray(value).map((col, index) => {
+        return {
+          col: col,
+          dir: this.sortModel[index]?.dir || TableSortDirection.ASC,
+        };
+      });
     }
-    return typeof this.sort === "string" ? undefined : this.sort;
   }
 
-  set sortModel(value) {
+  get sortDesc(): boolean[] | boolean | undefined {
+    const s = this.sortModel.map((s) => s.dir === TableSortDirection.DESC);
+    return s.length <= 1 ? s[0] : s;
+  }
+
+  set sortDesc(value: boolean[] | boolean | undefined) {
+    this.sortModel = this.sortModel.map((s, index) => {
+      const sortDesc = Array.isArray(value) ? value[index] : value;
+      return {
+        col: s.col,
+        dir: sortDesc ? TableSortDirection.DESC : TableSortDirection.ASC,
+      };
+    });
+  }
+
+  get sortModel(): TableSort[] {
+    if (this.sort) {
+      return _castArray(this.sort).map((s) => {
+        if (typeof s !== "string") return s;
+        const sortArgs = s.split(",");
+        return {
+          col: sortArgs[0],
+          dir: sortArgs[1] as TableSortDirection,
+        };
+      });
+    }
+    return [];
+  }
+
+  set sortModel(value: TableSort[]) {
     const sort = this.querySort
-      ? value
-        ? [value.col, value.dir].join(",")
-        : undefined
+      ? value.map((s) => [s.col, s.dir].join(","))
       : value;
-    this.$emit("update:sort", sort);
+    this.$emit("update:sort", sort.length <= 1 ? sort[0] : sort);
   }
 }
 </script>
