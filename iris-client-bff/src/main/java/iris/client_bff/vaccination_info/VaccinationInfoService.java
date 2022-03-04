@@ -6,13 +6,17 @@ import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
 import iris.client_bff.vaccination_info.VaccinationInfo.Employee;
 import iris.client_bff.vaccination_info.VaccinationInfo.Facility;
+import iris.client_bff.vaccination_info.VaccinationInfo.VaccinationInfoIdentifier;
 import iris.client_bff.vaccination_info.VaccinationInfoAnnouncement.AnnouncementIdentifier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -78,5 +82,13 @@ public class VaccinationInfoService {
 		vaccInfos.save(vaccInfo);
 
 		log.debug("Created VaccinationInfo successful");
+	}
+
+	public Page<VaccinationInfo> getAll(Pageable pageable) {
+		return vaccInfos.findAll(pageable);
+	}
+
+	public Optional<VaccinationInfo> find(VaccinationInfoIdentifier id) {
+		return vaccInfos.findById(id);
 	}
 }

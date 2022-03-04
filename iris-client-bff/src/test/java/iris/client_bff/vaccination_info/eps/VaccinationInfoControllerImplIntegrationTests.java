@@ -51,7 +51,8 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IrisWebIntegrationTest
 @RequiredArgsConstructor
-@Tag("vaccination-proof")
+@Tag("vaccination-info")
+@Tag("json-rpc-controller")
 @DisplayName("IT of JSON-RPC controller for vaccination info")
 class VaccinationInfoControllerImplIntegrationTests {
 
