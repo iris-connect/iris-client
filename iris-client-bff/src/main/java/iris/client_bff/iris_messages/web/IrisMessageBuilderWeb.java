@@ -51,7 +51,7 @@ class IrisMessageBuilderWeb {
 		List<IrisMessageData> dataList = new ArrayList<>();
 		try {
 			if (messageInsert.getDataAttachments() != null) {
-				for (IrisMessageInsertDto.IrisMessageDataAttachment data : messageInsert.getDataAttachments()) {
+				for (IrisMessageInsertDto.DataAttachment data : messageInsert.getDataAttachments()) {
 					IrisMessageDataProcessor processor = this.messageDataProcessors
 							.getProcessor(data.getDiscriminator());
 					String payload = processor.buildPayload(data.getPayload());

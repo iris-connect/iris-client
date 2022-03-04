@@ -105,22 +105,20 @@ export default class IrisMessageDetailsView extends Vue {
     return this.messageDetails?.context === IrisMessageContext.Inbox;
   }
   get messageLoading(): boolean {
-    return getApiLoading(this.messageApi);
+    return (
+      getApiLoading(this.messageApi) || fetchUnreadMessageCountApi.state.loading
+    );
   }
   get errors(): ErrorMessage[] {
     return getApiErrorMessages(this.messageApi);
   }
-  get messageLoaded(): boolean {
-    const messageState = this.messageApi.fetchMessage.state;
-    return (
-      !messageState.loading &&
-      messageState.error === null &&
-      messageState.result !== null
-    );
+  get shouldMarkAsRead(): boolean {
+    const isRead = this.messageApi.fetchMessage.state.result?.isRead;
+    return this.isInbox && isRead === false;
   }
-  @Watch("messageLoaded")
-  async onMessageLoaded(newValue: boolean) {
-    if (newValue && !this.messageDetails?.isRead) {
+  @Watch("shouldMarkAsRead")
+  async onShouldMarkAsRead(newValue: boolean) {
+    if (newValue) {
       await this.messageApi.markAsRead.execute(this.$route.params.messageId);
       await fetchUnreadMessageCountApi.execute();
     }

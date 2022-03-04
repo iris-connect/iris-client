@@ -108,7 +108,7 @@ public class IrisMessageController {
 		this.validateField(irisMessageInsert.getBody(), FIELD_BODY);
 
 		if (irisMessageInsert.getDataAttachments() != null) {
-			for ( IrisMessageInsertDto.IrisMessageDataAttachment data : irisMessageInsert.getDataAttachments() ) {
+			for ( IrisMessageInsertDto.DataAttachment data : irisMessageInsert.getDataAttachments() ) {
 				this.validateField(data.getDiscriminator(), FIELD_DATA_DISCRIMINATOR);
 				// The validation of the insert payload is handled by the data processor
 				// Doesn't hurt to validate the keys & values of the payloads JSON string

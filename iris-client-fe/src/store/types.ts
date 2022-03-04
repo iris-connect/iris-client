@@ -13,6 +13,7 @@ import { NormalizeSettingsState } from "@/views/app-settings/normalize-settings.
 import { ChunkLoaderState } from "@/views/app-settings/chunk-loader.store";
 import { CheckinAppStatusListState } from "@/views/checkin-app-status-list/checkin-app-status-list.store";
 import { IrisMessageCreateState } from "@/views/iris-message-create/iris-message-create.store";
+import { E2ETestsStoreState } from "@/modules/e2e-tests/e2e-tests.store";
 
 export type RootState = {
   home: HomeState;
@@ -30,4 +31,5 @@ export type RootState = {
   chunkLoader: ChunkLoaderState;
   checkinAppStatusList: CheckinAppStatusListState;
   irisMessageCreate: IrisMessageCreateState;
+  e2eTests: E2ETestsStoreState;
 };

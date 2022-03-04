@@ -168,6 +168,7 @@ type IrisMessageCreateForm = {
   },
   beforeRouteLeave(to, from, next) {
     store.commit("irisMessageCreate/reset");
+    store.commit("e2eTests/setIrisMessageHdContacts", null);
     next();
   },
 })
@@ -217,7 +218,9 @@ export default class IrisMessageCreateView extends Vue {
   }
 
   get recipients(): IrisMessageHdContact[] {
-    return this.messageApi.fetchRecipients.state.result || [];
+    const recipients = this.messageApi.fetchRecipients.state.result || [];
+    store.commit("e2eTests/setIrisMessageHdContacts", recipients);
+    return recipients;
   }
 
   get recipientsLoading(): boolean {

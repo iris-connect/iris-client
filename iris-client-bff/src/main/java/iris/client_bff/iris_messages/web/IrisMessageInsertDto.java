@@ -29,10 +29,10 @@ public class IrisMessageInsertDto {
     private String body;
 
     @Valid
-    private List<IrisMessageDataAttachment> dataAttachments;
+    private List<DataAttachment> dataAttachments;
 
     @Data
-    public static class IrisMessageDataAttachment {
+    public static class DataAttachment {
 
         @NotBlank
         @Size(max = IrisMessageData.DISCRIMINATOR_MAX_LENGTH)

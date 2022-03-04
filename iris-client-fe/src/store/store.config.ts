@@ -13,6 +13,7 @@ import normalizeSettings from "@/views/app-settings/normalize-settings.store";
 import chunkLoader from "@/views/app-settings/chunk-loader.store";
 import checkinAppStatusList from "@/views/checkin-app-status-list/checkin-app-status-list.store";
 import irisMessageCreate from "@/views/iris-message-create/iris-message-create.store";
+import e2eTests from "@/modules/e2e-tests/e2e-tests.store";
 
 import { StoreOptions } from "vuex";
 import { RootState } from "@/store/types";
@@ -40,6 +41,7 @@ export const storeOptions: StoreOptions<RootState> = {
     chunkLoader,
     checkinAppStatusList,
     irisMessageCreate,
+    e2eTests,
   },
   plugins: [
     createPersistedState({
