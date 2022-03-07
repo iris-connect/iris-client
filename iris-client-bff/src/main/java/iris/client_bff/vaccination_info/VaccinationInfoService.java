@@ -2,17 +2,23 @@ package iris.client_bff.vaccination_info;
 
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.log.LogHelper;
+import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
 import iris.client_bff.vaccination_info.VaccinationInfo.Employee;
 import iris.client_bff.vaccination_info.VaccinationInfo.Facility;
+import iris.client_bff.vaccination_info.VaccinationInfo.VaccinationInfoIdentifier;
 import iris.client_bff.vaccination_info.VaccinationInfoAnnouncement.AnnouncementIdentifier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,11 +29,15 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class VaccinationInfoService {
 
+	private static final String[] FIELDS = { "facility.name_search", "facility.address.street",
+			"facility.address.zipCode", "facility.address.city" };
+
 	private final ProxyServiceClient proxyClient;
 	private final VaccinationInfoAnnouncementRepository announcements;
 	private final VaccinationInfoRepository vaccInfos;
 	private final VaccinationInfoProperties properties;
 	private final AlertService alertService;
+	private final HibernateSearcher searcher;
 
 	public VaccinationInfoAnnouncement announceVaccinationInfo(String externalId) {
 
@@ -78,5 +88,25 @@ public class VaccinationInfoService {
 		vaccInfos.save(vaccInfo);
 
 		log.debug("Created VaccinationInfo successful");
+	}
+
+	public Page<VaccinationInfo> getAll(Pageable pageable) {
+		return vaccInfos.findAll(pageable);
+	}
+
+	public Page<VaccinationInfo> search(String searchString, Pageable pageable) {
+
+		var result = searcher.search(
+				searchString,
+				pageable,
+				FIELDS,
+				it -> it,
+				VaccinationInfo.class);
+
+		return new PageImpl<>(result.hits(), pageable, result.total().hitCount());
+	}
+
+	public Optional<VaccinationInfo> find(VaccinationInfoIdentifier id) {
+		return vaccInfos.findById(id);
 	}
 }

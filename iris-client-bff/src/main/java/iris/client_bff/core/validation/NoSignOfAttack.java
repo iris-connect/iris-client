@@ -19,7 +19,7 @@ import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintVa
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
 @Constraint(validatedBy = NoSignOfAttackValidator.class)
 @Documented
