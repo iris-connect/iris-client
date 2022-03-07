@@ -37,6 +37,8 @@ public class DataSubmissionConfig {
 	private CompositeJsonServiceExporter createCompositeJsonServiceExporter() {
 
 		CompositeJsonServiceExporter compositeJsonServiceExporter = new CompositeJsonServiceExporter();
+		compositeJsonServiceExporter.setServiceInterfaces(new Class[] { CaseDataController.class, EventDataController.class,
+				IrisMessageDataController.class, VaccinationInfoController.class });
 		compositeJsonServiceExporter.setServices(new Object[] { caseDataController, eventDataController,
 				irisMessageDataController, vaccinationProofController });
 		compositeJsonServiceExporter.setAllowExtraParams(true); // Used to allow the EPS to add common parameters (e.g. a

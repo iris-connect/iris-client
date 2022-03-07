@@ -1,9 +1,9 @@
 package iris.client_bff.core.mail;
 
 import io.vavr.control.Try;
-import iris.client_bff.core.EmailAddress;
 import iris.client_bff.core.mail.EmailTemplates.EmailType;
 import iris.client_bff.core.mail.EmailTemplates.Key;
+import iris.client_bff.core.model.EmailAddress;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
