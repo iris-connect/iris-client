@@ -29,7 +29,7 @@
 		<version.tag>${project.version}</version.tag>
 		<image.tag>${docker.image.prefix}/${project.artifactId}:${version.tag}</image.tag>
 		<vavr-version>0.10.4</vavr-version>
-		<greenmail-version>1.6.6</greenmail-version>
+		<greenmail-version>1.6.7</greenmail-version>
 		<testcontainers-version>1.16.3</testcontainers-version>
 		<hibernate-search-version>6.1.1.Final</hibernate-search-version>
 	</properties>
