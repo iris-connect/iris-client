@@ -59,7 +59,7 @@ class IrisMessageDetailsDto {
                     data.getId().toString(),
                     data.getDiscriminator(),
                     data.getDescription(),
-                    data.getIsImported()
+                    data.isImported()
             );
         }
     }

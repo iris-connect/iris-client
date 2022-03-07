@@ -26,7 +26,7 @@ public class IrisMessageDataService {
         IrisMessageData messageData = this.getMessageData(messageDataId);
         IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageDataId);
         processor.importPayload(messageData.getPayload());
-        messageData.setIsImported(true);
+        messageData.setImported(true);
         this.messageDataRepository.save(messageData);
     }
 
@@ -38,7 +38,7 @@ public class IrisMessageDataService {
                 importTargetId,
                 importSelection
         );
-        messageData.setIsImported(true);
+        messageData.setImported(true);
         this.messageDataRepository.save(messageData);
     }
 

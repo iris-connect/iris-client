@@ -38,7 +38,7 @@ public class IrisMessageData extends Aggregate<IrisMessageData, IrisMessageData.
     @JoinColumn(name="message_id")
     private IrisMessage message;
 
-    private Boolean isImported;
+    private boolean isImported;
 
     @Embeddable
     @EqualsAndHashCode
