@@ -249,6 +249,11 @@
 			<artifactId>jsr305</artifactId>
 			<version>3.0.2</version>
 		</dependency>
+		<dependency>
+			<groupId>com.googlecode.libphonenumber</groupId>
+			<artifactId>libphonenumber</artifactId>
+			<version>8.12.44</version>
+		</dependency>
 
 		<!-- Security -->
 		<dependency>
@@ -264,6 +269,11 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bc-fips</artifactId>
+			<version>1.0.2.3</version>
 		</dependency>
 
 		<!-- for health checks -->

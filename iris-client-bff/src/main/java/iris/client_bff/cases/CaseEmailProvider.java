@@ -15,10 +15,10 @@
 package iris.client_bff.cases;
 
 import io.vavr.control.Try;
-import iris.client_bff.core.EmailAddress;
 import iris.client_bff.core.mail.EmailProvider;
 import iris.client_bff.core.mail.EmailSender;
 import iris.client_bff.core.mail.EmailSender.TemplatedEmail.ConfiguredRecipient;
+import iris.client_bff.core.model.EmailAddress;
 import iris.client_bff.core.mail.EmailTemplates;
 import lombok.AccessLevel;
 import lombok.Setter;
