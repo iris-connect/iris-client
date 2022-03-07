@@ -124,6 +124,10 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     createdAt: daysAgo(3),
     isRead: false,
     dataAttachments: [dummyIrisMessageData],
+    attachmentCount: {
+      total: 1,
+      imported: 0,
+    },
   },
   {
     hdAuthor: dummyIrisMessageHdContacts[0],

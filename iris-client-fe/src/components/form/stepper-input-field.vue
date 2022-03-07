@@ -1,28 +1,39 @@
 <template>
-  <validation-input-field
-    v-bind="$attrs"
-    v-on="$listeners"
-    #default="{ attrs, on }"
+  <v-input
+    hide-details="auto"
+    class="stepper-input-field"
+    :value="value"
+    :rules="rules"
   >
-    <v-stepper-step
-      :editable="editable"
-      :complete="isComplete(attrs.value)"
-      :rules="attrs.stepperRules"
-      :step="step"
-    >
-      {{ label }}
-    </v-stepper-step>
-    <v-stepper-content :step="step">
-      <slot name="default" v-bind="{ attrs, on }"></slot>
-    </v-stepper-content>
-  </validation-input-field>
+    <div class="stepper-input" :data-test="dataTest">
+      <v-stepper-step
+        :editable="editable"
+        :complete="complete"
+        :rules="stepperRules"
+        :step="step"
+      >
+        {{ label }}
+      </v-stepper-step>
+      <v-stepper-content :step="step">
+        <slot
+          name="default"
+          v-bind="{
+            attrs: { ...$attrs, value },
+            on: { ...listeners, input: handleInput },
+          }"
+        />
+      </v-stepper-content>
+    </div>
+  </v-input>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import ValidationInputField from "@/components/form/validation-input-field.vue";
+import _map from "lodash/map";
+import _omit from "lodash/omit";
 
 const StepperInputFieldProps = Vue.extend({
+  inheritAttrs: false,
   props: {
     label: {
       type: String,
@@ -36,16 +47,45 @@ const StepperInputFieldProps = Vue.extend({
       type: Boolean,
       default: true,
     },
+    value: {
+      type: [Array, String],
+      default: "",
+    },
+    rules: {
+      type: Array,
+      default: () => [],
+    },
+    dataTest: {
+      type: String,
+      default: null,
+    },
   },
 });
-@Component({
-  components: {
-    ValidationInputField,
-  },
-})
+@Component
 export default class StepperInputField extends StepperInputFieldProps {
-  isComplete(value: string | string[]): boolean {
-    return !!value && value.length > 0;
+  get listeners(): Record<string, unknown> {
+    return _omit(this.$listeners, ["input"]);
+  }
+  get complete(): boolean {
+    return !!this.value && this.value.length > 0;
+  }
+  touched = false;
+  handleInput(value: unknown) {
+    this.touched = true;
+    this.$emit("input", value);
+  }
+  get stepperRules(): unknown[] {
+    return _map(
+      this.rules,
+      (rule: (value: unknown) => string | boolean) => () =>
+        this.touched ? rule(this.value) : true
+    );
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.stepper-input-field .stepper-input {
+  width: 100%;
+}
+</style>

@@ -1918,6 +1918,11 @@ export interface IrisMessageDataAttachment {
   isImported?: boolean;
 }
 
+export interface IrisMessageDataAttachmentCount {
+  total?: number;
+  imported?: number;
+}
+
 export interface IrisMessage {
   id: string;
   folder: string;
@@ -1928,7 +1933,7 @@ export interface IrisMessage {
   hdRecipient: IrisMessageHdContact;
   createdAt: string;
   isRead?: boolean;
-  hasAttachments?: boolean;
+  attachmentCount?: IrisMessageDataAttachmentCount;
 }
 
 export interface IrisMessageDetails extends IrisMessage {

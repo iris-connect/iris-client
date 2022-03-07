@@ -8,6 +8,7 @@
       label="Ereignis wählen"
       step="1"
       #default="{ attrs, on }"
+      data-test="payload.event"
     >
       <select-event
         v-bind="attrs"
@@ -25,6 +26,7 @@
       label="Gäste wählen"
       step="2"
       #default="{ attrs, on }"
+      data-test="payload.guests"
     >
       <select-guests :event-id="model.event" v-bind="attrs" v-on="on" />
     </stepper-input-field>
@@ -43,6 +45,7 @@ import _every from "lodash/every";
 import StepperInputField from "@/components/form/stepper-input-field.vue";
 
 const EventTrackingMessageDataExportProps = Vue.extend({
+  inheritAttrs: false,
   props: {
     description: {
       type: String,

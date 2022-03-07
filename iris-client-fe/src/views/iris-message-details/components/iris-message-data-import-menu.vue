@@ -1,8 +1,23 @@
 <template>
-  <v-menu offset-y :disabled="disabled">
+  <v-menu
+    offset-y
+    :disabled="disabled"
+    content-class="menu-message-data-import"
+  >
     <template v-slot:activator="{ on, attrs }">
-      <slot name="activator" v-bind="{ on, ...{ ...attrs, disabled } }">
-        <v-btn :disabled="disabled" v-on="on" v-bind="attrs" icon>
+      <slot
+        name="activator"
+        v-bind="{
+          on,
+          attrs: activatorAttrs(attrs),
+        }"
+      >
+        <v-btn
+          v-on="on"
+          v-bind="activatorAttrs(attrs)"
+          icon
+          data-test="message-data.import.activator"
+        >
           <v-icon>mdi-download</v-icon>
         </v-btn>
       </slot>
@@ -14,12 +29,19 @@
         @confirm="$emit('import:add')"
       >
         <template #activator="{ on, attrs }">
-          <v-list-item v-on="on" v-bind="attrs">
+          <v-list-item
+            v-on="on"
+            v-bind="attrs"
+            data-test="message-data.import.add"
+          >
             <v-list-item-title> Neuen Datensatz anlegen </v-list-item-title>
           </v-list-item>
         </template>
       </confirm-dialog>
-      <v-list-item @click="$emit('import:update')">
+      <v-list-item
+        @click="$emit('import:update')"
+        data-test="message-data.import.update"
+      >
         <v-list-item-title>
           Bestehenden Datensatz aktualisieren
         </v-list-item-title>
@@ -46,5 +68,13 @@ const IrisMessageDataImportMenuProps = Vue.extend({
     ConfirmDialog,
   },
 })
-export default class IrisMessageDataImportMenu extends IrisMessageDataImportMenuProps {}
+export default class IrisMessageDataImportMenu extends IrisMessageDataImportMenuProps {
+  activatorAttrs(attrs: Record<string, unknown>) {
+    return {
+      ...attrs,
+      dataTest: "message-data.import.activator",
+      disabled: this.disabled,
+    };
+  }
+}
 </script>

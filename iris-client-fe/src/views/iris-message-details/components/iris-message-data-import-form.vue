@@ -1,5 +1,11 @@
 <template>
-  <v-form v-bind="$attrs" ref="form" v-model="form.valid" lazy-validation>
+  <v-form
+    v-bind="$attrs"
+    ref="form"
+    v-model="form.valid"
+    lazy-validation
+    data-test="message-data.import-form"
+  >
     <v-card>
       <v-card-title>Daten importieren</v-card-title>
       <v-card-text>
@@ -13,7 +19,13 @@
       <error-message-alert :dense="true" :errors="errors" />
       <v-divider></v-divider>
       <v-card-actions>
-        <v-btn color="secondary" text @click="cancel" :disabled="disabled">
+        <v-btn
+          color="secondary"
+          text
+          @click="cancel"
+          :disabled="disabled"
+          data-test="cancel"
+        >
           Abbrechen
         </v-btn>
         <v-spacer></v-spacer>
@@ -28,6 +40,7 @@
               v-on="on"
               v-bind="attrs"
               :disabled="disabled"
+              data-test="submit"
             >
               Daten importieren
             </v-btn>

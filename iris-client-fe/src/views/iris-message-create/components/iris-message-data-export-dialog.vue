@@ -7,7 +7,7 @@
           class="ml-2"
           v-on="on"
           v-bind="attrs"
-          data-test="message-data-export-dialog.activator"
+          data-test="message-data.export-dialog.activator"
           :disabled="disabled"
         >
           {{ label || "Daten senden" }}
@@ -15,7 +15,7 @@
       </slot>
     </template>
     <v-form ref="form" v-model="form.valid" lazy-validation>
-      <v-card data-test="message-data-export-dialog">
+      <v-card data-test="message-data.export-dialog">
         <v-card-title> Daten senden </v-card-title>
         <v-card-text>
           <v-row>

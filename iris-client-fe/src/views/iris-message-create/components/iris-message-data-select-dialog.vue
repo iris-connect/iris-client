@@ -7,7 +7,7 @@
           dark
           v-on="on"
           v-bind="attrs"
-          data-test="message-data-export-dialog.activator"
+          data-test="message-data.export-dialog.activator"
           :disabled="disabled"
         >
           Daten hinzufügen

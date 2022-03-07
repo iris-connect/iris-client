@@ -1,6 +1,7 @@
 import {
   IrisMessage,
   IrisMessageContext,
+  IrisMessageDataAttachmentCount,
   IrisMessageFolder,
   IrisMessageHdContact,
   Page,
@@ -77,6 +78,23 @@ export const normalizeIrisMessageHdContact = (
   );
 };
 
+export const normalizeIrisMessageDataAttachmentCount = (
+  source?: IrisMessageDataAttachmentCount,
+  parse?: boolean
+) => {
+  return normalizeData(
+    source,
+    (normalizer) => {
+      return {
+        total: normalizer("total", undefined, "number"),
+        imported: normalizer("imported", undefined, "number"),
+      };
+    },
+    parse,
+    "IrisMessageDataAttachmentCount"
+  );
+};
+
 export const normalizeIrisMessage = (source?: IrisMessage, parse?: boolean) => {
   return normalizeData(
     source,
@@ -91,7 +109,9 @@ export const normalizeIrisMessage = (source?: IrisMessage, parse?: boolean) => {
         hdRecipient: normalizeIrisMessageHdContact(source?.hdRecipient),
         createdAt: normalizer("createdAt", "", "dateString"),
         isRead: normalizer("isRead", undefined, "boolean"),
-        hasAttachments: normalizer("hasAttachments", undefined, "boolean"),
+        attachmentCount: normalizeIrisMessageDataAttachmentCount(
+          source?.attachmentCount
+        ),
       };
       return normalized;
     },

@@ -190,7 +190,8 @@ Cypress.Commands.add(
     cy.get("@dataTable")
       .should("not.have.class", "is-loading")
       .contains(accessor, { log: false })
-      .closest("tr");
+      .closest("tr")
+      .first();
   }
 );
 
@@ -213,7 +214,17 @@ Cypress.Commands.add(
       } else {
         cy.get("@dataTable").within(() => {
           cy.get(`tbody tr td:nth-child(${column})`).each(($cell) => {
-            if ($cell.text().match(content) !== null) {
+            let isMatch = false;
+            if (typeof content === "string" && content.startsWith(".")) {
+              if ($cell.find(content).length > 0) {
+                isMatch = true;
+              }
+            } else {
+              if ($cell.text().match(content) !== null) {
+                isMatch = true;
+              }
+            }
+            if (isMatch) {
               cy.wrap($cell).closest("tr").should("exist").as("tableRow");
               return false;
             }
@@ -308,6 +319,28 @@ Cypress.Commands.add("getMessageDataTableRow", (accessor, context) => {
   cy.location("pathname").should("equal", "/iris-messages/list");
   cy.getRootMessageFolder(context).click();
   cy.getDataTableRow("view.data-table", accessor).should("exist");
+});
+
+Cypress.Commands.add("visitMessageDetailsWithAttachments", () => {
+  const gteOne = /^[1-9][0-9]*$/;
+  cy.visit("/iris-messages/list");
+  cy.findDataTableRow("view.data-table", 1, gteOne).should("exist").click();
+  cy.location("pathname").should("contain", "/iris-messages/details");
+});
+
+Cypress.Commands.add("getMessageDataAttachmentItem", (imported) => {
+  if (imported === true) {
+    cy.getBy("{message-data.list-item}.is-imported")
+      .should("exist")
+      .first();
+  } else if (imported === false) {
+    cy.getBy("message-data.list-item")
+      .not(".is-imported")
+      .should("exist")
+      .first();
+  } else {
+    cy.getBy("message-data.list-item").should("exist").first();
+  }
 });
 
 Cypress.Commands.add(

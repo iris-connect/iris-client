@@ -1,5 +1,11 @@
 <template>
-  <v-form v-bind="$attrs" ref="form" v-model="form.valid" lazy-validation>
+  <v-form
+    v-bind="$attrs"
+    ref="form"
+    v-model="form.valid"
+    lazy-validation
+    data-test="message-data.export-form"
+  >
     <v-card>
       <v-card-title> Daten wählen </v-card-title>
       <v-card-text>
@@ -10,6 +16,10 @@
               :items="discriminatorOptions"
               v-model="form.model.discriminator"
               :rules="validationRules.defined"
+              data-test="discriminator"
+              :menu-props="{
+                contentClass: 'select-menu-message-data-discriminator',
+              }"
             />
           </v-col>
           <v-col cols="12">
@@ -33,9 +43,13 @@
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
-        <v-btn color="secondary" text @click="cancel"> Abbrechen </v-btn>
+        <v-btn color="secondary" text @click="cancel" data-test="cancel">
+          Abbrechen
+        </v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="primary" @click="submit"> Daten übernehmen </v-btn>
+        <v-btn color="primary" @click="submit" data-test="submit">
+          Daten übernehmen
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-form>

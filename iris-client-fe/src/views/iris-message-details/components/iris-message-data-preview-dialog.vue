@@ -3,7 +3,7 @@
     <template v-slot:activator="{ attrs, on }">
       <slot name="activator" v-bind="{ attrs, on }" />
     </template>
-    <v-card>
+    <v-card data-test="message-data.preview.dialog">
       <iris-message-data-view v-bind="dataViewConfig" />
       <error-message-alert :dense="true" :errors="errors" />
       <v-divider></v-divider>

@@ -8,6 +8,7 @@
       label="Ereignis wählen"
       step="1"
       #default="{ attrs, on }"
+      data-test="payload.event"
     >
       <select-event v-bind="attrs" v-on="on" />
     </stepper-input-field>
@@ -19,6 +20,7 @@
       label="Gäste wählen"
       step="2"
       #default="{ attrs, on }"
+      data-test="payload.guests"
     >
       <select-guests-data-table
         :items="selectableGuests"

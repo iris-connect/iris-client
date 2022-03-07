@@ -54,9 +54,13 @@ const fetchMessageFolders = () => {
 };
 
 const fetchUnreadMessageCount = () => {
+  const cancel_fetchUnreadMessageCount = cancelTokenProvider();
   const action = async () => {
+    const requestOptions = {
+      cancelToken: cancel_fetchUnreadMessageCount(),
+    };
     return normalizeUnreadIrisMessageCount(
-      (await authClient.irisUnreadMessageCountGet()).data,
+      (await authClient.irisUnreadMessageCountGet(requestOptions)).data,
       true
     );
   };

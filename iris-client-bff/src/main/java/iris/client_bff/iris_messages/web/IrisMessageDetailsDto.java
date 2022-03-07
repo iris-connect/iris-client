@@ -23,10 +23,14 @@ class IrisMessageDetailsDto {
     private Boolean isRead;
     private IrisMessageContext context;
     private List<DataAttachment> dataAttachments;
-    private Boolean hasAttachments;
+    private DataAttachmentCount attachmentCount;
 
     public static IrisMessageDetailsDto fromEntity(IrisMessage message) {
         List<DataAttachment> dataAttachments = DataAttachment.fromEntity(message.getDataAttachments());
+        DataAttachmentCount count = new DataAttachmentCount(
+                dataAttachments.size(),
+                dataAttachments.stream().filter((a) -> a.isImported).collect(Collectors.toList()).size()
+        );
         return new IrisMessageDetailsDto(
                 message.getId().toString(),
                 message.getSubject(),
@@ -37,8 +41,21 @@ class IrisMessageDetailsDto {
                 message.isRead(),
                 message.getFolder().getContext(),
                 dataAttachments,
-                dataAttachments.size() > 0
+                count
         );
+    }
+
+    @Value
+    public static class DataAttachmentCount {
+        private int total;
+        private int imported;
+        public static DataAttachmentCount fromEntity(List<IrisMessageData> dataList) {
+            List<DataAttachment> dataAttachments = DataAttachment.fromEntity(dataList);
+            return new DataAttachmentCount(
+                    dataAttachments.size(),
+                    (int) dataAttachments.stream().filter((a) -> a.isImported).count()
+            );
+        }
     }
 
     @Value

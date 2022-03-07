@@ -118,7 +118,9 @@ export default class IrisMessageDetailsView extends Vue {
   async onShouldMarkAsRead(newValue: boolean) {
     if (newValue) {
       await this.messageApi.markAsRead.execute(this.$route.params.messageId);
-      await fetchUnreadMessageCountApi.execute();
+      await fetchUnreadMessageCountApi.execute().catch(() => {
+        // ignored
+      });
     }
   }
 

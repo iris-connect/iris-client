@@ -1,13 +1,21 @@
 <template>
   <div v-if="dataAttachments.length > 0">
-    <alert-component v-if="dataImportAlert">
+    <alert-component
+      v-if="dataImportAlert"
+      data-test="message-data.import.success"
+    >
       <template v-slot:message> Die Daten wurden importiert. </template>
     </alert-component>
     <v-divider class="my-4" />
     <p class="font-weight-bold">Daten</p>
     <div class="elevation-1 mt-4">
       <template v-for="(dataAttachment, index) in dataAttachments">
-        <v-list-item dense :key="`item_${index}`">
+        <v-list-item
+          dense
+          :key="`item_${index}`"
+          data-test="message-data.list-item"
+          :class="dataAttachment.isImported ? 'is-imported' : ''"
+        >
           <v-list-item-content>
             <v-list-item-title>
               {{ dataAttachment.description }}
@@ -19,6 +27,7 @@
                 icon
                 @click="previewId = dataAttachment.id"
                 :disabled="dataAttachmentLoading"
+                data-test="message-data.preview"
               >
                 <v-icon>mdi-eye</v-icon>
               </v-btn>
@@ -46,14 +55,8 @@
           @import:update="importDataAttachmentAndUpdate(previewId)"
           @import:add="importDataAttachmentAndAdd(previewId)"
         >
-          <template #activator="{ attrs, on, disabled }">
-            <v-btn
-              v-on="on"
-              v-bind="attrs"
-              color="primary"
-              data-test="import-data"
-              :disabled="disabled"
-            >
+          <template #activator="{ attrs, on }">
+            <v-btn v-on="on" v-bind="attrs" color="primary">
               Daten importieren
             </v-btn>
           </template>
