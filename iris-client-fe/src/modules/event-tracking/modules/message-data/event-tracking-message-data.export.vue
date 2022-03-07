@@ -12,6 +12,7 @@
       <select-event
         v-bind="attrs"
         v-on="on"
+        :select-query="selectEventQuery"
         :description="description"
         @update:description="$emit('update:description', $event)"
       />
@@ -33,7 +34,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import SelectEvent from "@/modules/event-tracking/modules/message-data/components/select-event.vue";
-import { IrisMessageDataSelectionPayload } from "@/api";
+import { DataRequestStatus, IrisMessageDataSelectionPayload } from "@/api";
 import SelectGuests from "@/modules/event-tracking/modules/message-data/components/select-guests.vue";
 import { PropType } from "vue";
 import rules from "@/common/validation-rules";
@@ -67,6 +68,8 @@ const EventTrackingMessageDataExportProps = Vue.extend({
 })
 export default class EventTrackingMessageDataExport extends EventTrackingMessageDataExportProps {
   step = 1;
+
+  selectEventQuery = { status: DataRequestStatus.DataReceived };
 
   model: IrisMessageDataSelectionPayload = this.value || {
     event: "",

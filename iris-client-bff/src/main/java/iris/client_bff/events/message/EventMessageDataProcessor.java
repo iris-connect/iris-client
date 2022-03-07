@@ -121,7 +121,11 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	private List<String> getDuplicateGuests(List<Guest> guests, UUID importTargetId) {
 		ModelMapper modelMapper = new ModelMapper();
 		EventDataSubmission eventDataSubmission = this.getEventDataSubmission(importTargetId);
-		List<Person> targetPeople = eventDataSubmission.getGuests().stream()
+		var targetGuests = eventDataSubmission.getGuests();
+		if (guests == null || targetGuests == null) {
+			return null;
+		}
+		List<Person> targetPeople = targetGuests.stream()
 				.map(guest -> modelMapper.map(guest, Person.class)).collect(Collectors.toList());
 		modelMapper.createTypeMap(Guest.class, Person.class);
 		return guests.stream().filter(guest -> {

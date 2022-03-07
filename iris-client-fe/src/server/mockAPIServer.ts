@@ -39,6 +39,9 @@ import {
   dummyIrisMessageList,
   dummyIrisMessageHdContacts,
   getDummyMessageFromRequest,
+  getDummyIrisMessageEventImportSelection,
+  getDummyIrisMessageEventViewData,
+  dummyIrisMessageData,
 } from "@/server/data/dummy-iris-messages";
 import { DataQuery } from "@/api/common";
 import { vaccinationReportList } from "@/server/data/vaccination-reports";
@@ -353,6 +356,29 @@ export function makeMockAPIServer() {
           request,
           dummyIrisMessageList.filter((item) => !item.isRead).length
         );
+      });
+
+      this.post("/iris-messages/data/:id/import/add", (schema, request) => {
+        dummyIrisMessageData.isImported = true;
+        return authResponse(request);
+      });
+
+      this.post("/iris-messages/data/:id/import/update", (schema, request) => {
+        dummyIrisMessageData.isImported = true;
+        return authResponse(request);
+      });
+
+      this.get("/iris-messages/data/:id/import/select", (schema, request) => {
+        const id = request.params.id;
+        return authResponse(
+          request,
+          getDummyIrisMessageEventImportSelection(id)
+        );
+      });
+
+      this.get("/iris-messages/data/:id/view", (schema, request) => {
+        const id = request.params.id;
+        return authResponse(request, getDummyIrisMessageEventViewData(id));
       });
 
       this.get("/vaccination-reports", (schema, request) => {

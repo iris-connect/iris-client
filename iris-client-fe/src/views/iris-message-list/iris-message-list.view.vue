@@ -117,10 +117,9 @@ export default class IrisMessageListView extends Vue {
   }
 
   fetchMessages(query: DataQuery | null) {
+    this.messageApi.fetchMessages.reset(["result"]);
     if (query?.folder) {
       this.messageApi.fetchMessages.execute(query);
-    } else {
-      this.messageApi.fetchMessages.reset(["result"]);
     }
   }
 

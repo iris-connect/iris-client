@@ -56,7 +56,9 @@ export const getEventTrackingListTableRows = (
       code: dataRequest?.code || "",
       name: dataRequest?.name || "-",
       status: dataRequest?.status?.toString() || "-",
-      isSelectable: dataRequest?.status === DataRequestStatus.DataReceived,
+      isSelectable:
+        dataRequest?.status === DataRequestStatus.DataRequested ||
+        dataRequest.status === DataRequestStatus.DataReceived,
     };
   });
 };

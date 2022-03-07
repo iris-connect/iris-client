@@ -4,6 +4,7 @@
       <slot name="activator" v-bind="{ attrs, on }" />
     </template>
     <iris-message-data-import-form
+      v-if="dialog"
       :import-data="value"
       :disabled="loading"
       :errors="errors"

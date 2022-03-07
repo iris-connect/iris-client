@@ -1,12 +1,17 @@
 import { daysAgo } from "@/server/utils/date";
 import {
-  IrisMessageHdContact,
   IrisMessageContext,
+  IrisMessageDataAttachment,
+  IrisMessageDataDiscriminator,
+  IrisMessageDataViewData,
   IrisMessageDetails,
   IrisMessageFolder,
+  IrisMessageHdContact,
   IrisMessageInsert,
 } from "@/api";
 import { Request } from "miragejs";
+import { getDummyDetailsWithStatus } from "@/server/data/data-requests";
+import { EventTrackingMessageDataImportSelection } from "@/modules/event-tracking/modules/message-data/services/normalizer";
 
 export const dummyIrisMessageFolders: IrisMessageFolder[] = [
   {
@@ -69,6 +74,44 @@ export const dummyIrisMessageHdContacts: IrisMessageHdContact[] = [
   },
 ];
 
+export const getDummyIrisMessageEventViewData = (
+  messageDataId: string
+): IrisMessageDataViewData => {
+  const requestDetails = getDummyDetailsWithStatus("");
+  return {
+    discriminator: IrisMessageDataDiscriminator.EventTracking,
+    id: messageDataId,
+    payload: requestDetails,
+  };
+};
+
+export const getDummyIrisMessageEventImportSelection = (
+  messageDataId: string
+): IrisMessageDataViewData => {
+  const sourceEvent = getDummyDetailsWithStatus("");
+  const guests = sourceEvent.submissionData?.guests || [];
+  const payload: EventTrackingMessageDataImportSelection = {
+    selectables: {
+      guests: guests,
+    },
+    duplicates: {
+      guests: [guests?.[0]?.messageDataSelectId || ""].filter((v) => v),
+    },
+  };
+  return {
+    discriminator: IrisMessageDataDiscriminator.EventTracking,
+    id: messageDataId,
+    payload,
+  };
+};
+
+export const dummyIrisMessageData: IrisMessageDataAttachment = {
+  id: "m1md1",
+  discriminator: IrisMessageDataDiscriminator.EventTracking,
+  isImported: false,
+  description: "event tracking data attachment",
+};
+
 export const dummyIrisMessageList: IrisMessageDetails[] = [
   {
     hdAuthor: dummyIrisMessageHdContacts[1],
@@ -80,6 +123,7 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     createdAt: daysAgo(3),
     isRead: false,
+    dataAttachments: [dummyIrisMessageData],
   },
   {
     hdAuthor: dummyIrisMessageHdContacts[0],

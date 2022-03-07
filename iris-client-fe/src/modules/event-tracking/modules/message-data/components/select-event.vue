@@ -2,6 +2,7 @@
   <data-query-handler
     @query:update="handleQueryUpdate"
     :route-control="false"
+    :data-query="selectQuery"
     #default="{ query }"
   >
     <search-field v-model="query.search" />
@@ -11,6 +12,7 @@
       v-model="selection"
       :headers="tableHeaders"
       item-key="id"
+      :item-class="getItemClass"
       :sort.sync="query.sort"
       :items="tableRows"
       :loading="eventApi.fetchPageEvent.state.loading"
@@ -65,6 +67,10 @@ const SelectEventProps = Vue.extend({
     description: {
       type: String,
       default: "",
+    },
+    selectQuery: {
+      type: Object as PropType<Partial<DataQuery> | null>,
+      default: null,
     },
   },
 });
@@ -123,5 +129,21 @@ export default class SelectEvent extends SelectEventProps {
   get totalElements(): boolean {
     return this.eventApi.fetchPageEvent.state.result?.totalElements;
   }
+  getItemClass(item: { isSelectable?: boolean }): string {
+    return item.isSelectable === false ? "is-disabled" : "is-selectable";
+  }
 }
 </script>
+
+<style lang="scss">
+.v-data-table {
+  tbody tr {
+    &.is-disabled {
+      opacity: 0.5;
+      &:hover {
+        background: transparent !important;
+      }
+    }
+  }
+}
+</style>
