@@ -122,6 +122,7 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
     return item.isRead ? "cursor-pointer" : "cursor-pointer font-weight-bold";
   }
   countOpenAttachments(count: IrisMessageDataAttachmentCount): number {
+    if (this.context !== IrisMessageContext.Inbox) return 0;
     return (count.total || 0) - (count.imported || 0);
   }
 }
