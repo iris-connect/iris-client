@@ -47,13 +47,13 @@ class VaccinationInfoDataInitializer implements DataInitializer {
 		announcements.save(announcement);
 
 		var facility = createFacility();
-		facility.setName(facility.getName() + " For Search");
+		facility.setName(facility.getName() + " For SearchingAB");
 		vaccInfos.save(VaccinationInfo.of(EXTERNAL_ID, facility, createEmployees(3)));
 
 		facility = createFacility();
-		facility.setName(facility.getName() + "For Search XXX");
+		facility.setName(facility.getName() + "For SearchingAB XXX");
 		var address = facility.getAddress();
-		address.setCity(address.getCity() + " Search City XXX");
+		address.setCity(address.getCity() + " SearchingAB City XXX");
 		vaccInfos.save(VaccinationInfo.of(EXTERNAL_ID, facility, createEmployees(1)));
 		vaccInfos.save(VaccinationInfo.of(EXTERNAL_ID, createFacility(), createEmployees(5)));
 	}

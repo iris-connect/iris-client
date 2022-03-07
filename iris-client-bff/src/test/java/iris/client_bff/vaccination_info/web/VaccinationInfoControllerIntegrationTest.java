@@ -90,14 +90,14 @@ class VaccinationInfoControllerIntegrationTest {
 		var path = BASE_URL + "?search={search}";
 
 		when()
-				.get(path, "For Search")
+				.get(path, "For SearchingAB")
 
 				.then()
 				.status(OK)
 				.body("numberOfElements", is(2), getCommonChecks());
 
 		when()
-				.get(path, "Search City")
+				.get(path, "SearchingAB City")
 
 				.then()
 				.status(OK)
