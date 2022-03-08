@@ -9,7 +9,6 @@ import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.events.web.dto.GuestListDataProvider;
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 
 import java.time.Instant;

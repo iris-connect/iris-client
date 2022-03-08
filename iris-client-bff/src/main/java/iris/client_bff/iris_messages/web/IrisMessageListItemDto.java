@@ -15,7 +15,7 @@ class IrisMessageListItemDto {
     private IrisMessageHdContact hdRecipient;
     private Instant createdAt;
     private Boolean isRead;
-    private IrisMessageDetailsDto.DataAttachmentCount attachmentCount;
+    private IrisMessageDataAttachmentCountDto attachmentCount;
 
     public static IrisMessageListItemDto fromEntity(IrisMessage message) {
         return new IrisMessageListItemDto(
@@ -25,7 +25,7 @@ class IrisMessageListItemDto {
                 message.getHdRecipient(),
                 message.getMetadata().getCreated(),
                 message.isRead(),
-                IrisMessageDetailsDto.DataAttachmentCount.fromEntity(message.getDataAttachments())
+                IrisMessageDataAttachmentCountDto.fromEntity(message.getDataAttachments())
         );
     }
 
