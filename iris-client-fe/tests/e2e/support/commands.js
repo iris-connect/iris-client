@@ -330,9 +330,7 @@ Cypress.Commands.add("visitMessageDetailsWithAttachments", () => {
 
 Cypress.Commands.add("getMessageDataAttachmentItem", (imported) => {
   if (imported === true) {
-    cy.getBy("{message-data.list-item}.is-imported")
-      .should("exist")
-      .first();
+    cy.getBy("{message-data.list-item}.is-imported").should("exist").first();
   } else if (imported === false) {
     cy.getBy("message-data.list-item")
       .not(".is-imported")

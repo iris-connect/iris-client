@@ -115,14 +115,6 @@ describe("IrisMessages", () => {
           .first()
           .click();
         cy.location("pathname").should("contain", "/iris-messages/details");
-        cy.getBy("view.iris-message-details").should(
-          "have.class",
-          "v-card--loading"
-        );
-        cy.getBy("view.iris-message-details").should(
-          "not.have.class",
-          "v-card--loading"
-        );
         cy.get("@badgeWrapper").should("have.class", "is-loading");
         cy.get("@badgeWrapper").should("not.have.class", "is-loading");
         if (count <= 1) {
