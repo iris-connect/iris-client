@@ -106,7 +106,7 @@ module name | license | repository
 @babel/types@7.16.8 | MIT | https://github.com/babel/babel
 @cypress/request@2.88.10 | Apache-2.0 | https://github.com/cypress-io/request
 @cypress/xvfb@1.2.4 | MIT | https://github.com/cypress-io/xvfb
-@eslint/eslintrc@1.1.0 | MIT | https://github.com/eslint/eslintrc
+@eslint/eslintrc@1.2.0 | MIT | https://github.com/eslint/eslintrc
 @hapi/hoek@9.2.1 | BSD-3-Clause | https://github.com/hapijs/hoek
 @hapi/topo@5.1.0 | BSD-3-Clause | https://github.com/hapijs/topo
 @humanwhocodes/config-array@0.9.2 | Apache-2.0 | https://github.com/humanwhocodes/config-array
@@ -365,8 +365,8 @@ cssnano@5.0.10 | MIT | https://github.com/cssnano/cssnano
 csso@4.2.0 | MIT | https://github.com/css/csso
 csv-parse@4.15.4 | MIT | https://github.com/wdavidw/node-csv-parse
 csv2md@1.1.0 | MIT | https://github.com/pstaender/csv2md
-cypress-fail-fast@3.3.0 | MIT | https://github.com/javierbrea/cypress-fail-fast
-cypress@9.5.0 | MIT | https://github.com/cypress-io/cypress
+cypress-fail-fast@3.4.1 | MIT | https://github.com/javierbrea/cypress-fail-fast
+cypress@9.5.1 | MIT | https://github.com/cypress-io/cypress
 dashdash@1.14.1 | MIT | https://github.com/trentm/node-dashdash
 de-indent@1.0.2 | MIT | https://github.com/yyx990803/de-indent
 debug@2.6.9 | MIT | https://github.com/visionmedia/debug
@@ -413,7 +413,7 @@ emoji-regex@9.2.2 | MIT | https://github.com/mathiasbynens/emoji-regex
 emojis-list@3.0.0 | MIT | https://github.com/kikobeats/emojis-list
 encodeurl@1.0.2 | MIT | https://github.com/pillarjs/encodeurl
 end-of-stream@1.4.4 | MIT | https://github.com/mafintosh/end-of-stream
-enhanced-resolve@5.8.3 | MIT | https://github.com/webpack/enhanced-resolve
+enhanced-resolve@5.9.2 | MIT | https://github.com/webpack/enhanced-resolve
 enquirer@2.3.6 | MIT | https://github.com/enquirer/enquirer
 entities@2.2.0 | BSD-2-Clause | https://github.com/fb55/entities
 error-ex@1.3.2 | MIT | https://github.com/qix-/node-error-ex
@@ -423,10 +423,10 @@ escalade@3.1.1 | MIT | https://github.com/lukeed/escalade
 escape-html@1.0.3 | MIT | https://github.com/component/escape-html
 escape-string-regexp@1.0.5 | MIT | https://github.com/sindresorhus/escape-string-regexp
 escape-string-regexp@4.0.0 | MIT | https://github.com/sindresorhus/escape-string-regexp
-eslint-config-prettier@8.3.0 | MIT | https://github.com/prettier/eslint-config-prettier
+eslint-config-prettier@8.5.0 | MIT | https://github.com/prettier/eslint-config-prettier
 eslint-plugin-cypress@2.12.1 | MIT | https://github.com/cypress-io/eslint-plugin-cypress
 eslint-plugin-prettier@4.0.0 | MIT | https://github.com/prettier/eslint-plugin-prettier
-eslint-plugin-vue@8.4.1 | MIT | https://github.com/vuejs/eslint-plugin-vue
+eslint-plugin-vue@8.5.0 | MIT | https://github.com/vuejs/eslint-plugin-vue
 eslint-scope@5.1.1 | BSD-2-Clause | https://github.com/eslint/eslint-scope
 eslint-scope@6.0.0 | BSD-2-Clause | https://github.com/eslint/eslint-scope
 eslint-scope@7.1.1 | BSD-2-Clause | https://github.com/eslint/eslint-scope
@@ -435,7 +435,7 @@ eslint-visitor-keys@2.1.0 | Apache-2.0 | https://github.com/eslint/eslint-visito
 eslint-visitor-keys@3.1.0 | Apache-2.0 | https://github.com/eslint/eslint-visitor-keys
 eslint-visitor-keys@3.3.0 | Apache-2.0 | https://github.com/eslint/eslint-visitor-keys
 eslint-webpack-plugin@3.1.0 | MIT | https://github.com/webpack-contrib/eslint-webpack-plugin
-eslint@8.9.0 | MIT | https://github.com/eslint/eslint
+eslint@8.10.0 | MIT | https://github.com/eslint/eslint
 espree@9.3.1 | BSD-2-Clause | https://github.com/eslint/espree
 esquery@1.4.0 | BSD-3-Clause | https://github.com/estools/esquery
 esrecurse@4.3.0 | BSD-2-Clause | https://github.com/estools/esrecurse
@@ -559,7 +559,7 @@ invert-kv@2.0.0 | MIT | https://github.com/sindresorhus/invert-kv
 ip@1.1.5 | MIT | https://github.com/indutny/node-ip
 ipaddr.js@1.9.1 | MIT | https://github.com/whitequark/ipaddr.js
 ipaddr.js@2.0.1 | MIT | https://github.com/whitequark/ipaddr.js
-iris-client-frontend@1.4.1-POST-RELEASE | UNLICENSED | 
+iris-client-frontend@1.5.0-rc.1-POST-RELEASE | UNLICENSED | 
 is-absolute-url@3.0.3 | MIT | https://github.com/sindresorhus/is-absolute-url
 is-arguments@1.1.1 | MIT | https://github.com/inspect-js/is-arguments
 is-arrayish@0.2.1 | MIT | https://github.com/qix-/node-is-arrayish
@@ -630,7 +630,7 @@ levn@0.4.1 | MIT | https://github.com/gkz/levn
 license-checker@25.0.1 | BSD-3-Clause | https://github.com/davglass/license-checker
 lilconfig@2.0.4 | MIT | https://github.com/antonk52/lilconfig
 lines-and-columns@1.1.6 | MIT | https://github.com/eventualbuddha/lines-and-columns
-lint-staged@12.3.4 | MIT | https://github.com/okonet/lint-staged
+lint-staged@12.3.5 | MIT | https://github.com/okonet/lint-staged
 listr2@3.13.5 | MIT | https://github.com/cenk1cenk2/listr2
 listr2@4.0.1 | MIT | https://github.com/cenk1cenk2/listr2
 loader-runner@4.2.0 | MIT | https://github.com/webpack/loader-runner
@@ -1016,7 +1016,7 @@ validate-npm-package-license@3.0.4 | Apache-2.0 | https://github.com/kemitchell/
 vary@1.1.2 | MIT | https://github.com/jshttp/vary
 vendors@1.0.4 | MIT | https://github.com/wooorm/vendors
 verror@1.10.0 | MIT | https://github.com/davepacheco/node-verror
-vue-cli-plugin-vuetify@2.4.5 | MIT | https://github.com/vuetifyjs/vue-cli-plugin-vuetify
+vue-cli-plugin-vuetify@2.4.7 | MIT | https://github.com/vuetifyjs/vue-cli-plugin-vuetify
 vue-eslint-parser@8.0.1 | MIT | https://github.com/vuejs/vue-eslint-parser
 vue-hot-reload-api@2.3.4 | MIT | https://github.com/vuejs/vue-hot-reload-api
 vue-loader@15.9.8 | MIT | https://github.com/vuejs/vue-loader
@@ -1036,7 +1036,7 @@ webpack-dev-server@4.7.3 | MIT | https://github.com/webpack/webpack-dev-server
 webpack-merge@5.8.0 | MIT | https://github.com/survivejs/webpack-merge
 webpack-sources@3.2.3 | MIT | https://github.com/webpack/webpack-sources
 webpack-virtual-modules@0.4.3 | MIT | https://github.com/sysgears/webpack-virtual-modules
-webpack@5.69.1 | MIT | https://github.com/webpack/webpack
+webpack@5.70.0 | MIT | https://github.com/webpack/webpack
 websocket-driver@0.7.4 | Apache-2.0 | https://github.com/faye/websocket-driver-node
 websocket-extensions@0.1.4 | Apache-2.0 | https://github.com/faye/websocket-extensions-node
 whatwg-fetch@3.6.2 | MIT | https://github.com/github/fetch
