@@ -2,14 +2,18 @@ package iris.client_bff.vaccination_info.web;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.collection.IsIterableContainingInOrder.*;
 import static org.hamcrest.text.IsBlankString.*;
 import static org.springframework.http.HttpStatus.*;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.vaccination_info.VaccinationInfo;
+import iris.client_bff.vaccination_info.VaccinationInfoDataInitializer;
 import iris.client_bff.vaccination_info.VaccinationInfoRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -19,13 +23,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
 
 @IrisWebIntegrationTest
 @WithMockUser
+// removes saved entities before this test so that other tests not affected this one
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 @RequiredArgsConstructor
+@TestInstance(Lifecycle.PER_METHOD)
 @Tag("vaccination-info")
 @Tag("rest-controller")
 @DisplayName("IT of web controller for vaccination info")
@@ -36,6 +48,9 @@ class VaccinationInfoControllerIntegrationTest {
 
 	final MockMvc mvc;
 	final VaccinationInfoRepository vaccInfos;
+
+	@Autowired
+	VaccinationInfoDataInitializer dataInitializer;
 
 	@BeforeEach
 	void init() {
@@ -112,6 +127,73 @@ class VaccinationInfoControllerIntegrationTest {
 				"content.reportedAt", everyItem(notNullValue()),
 				"content.vaccinationStatusCount.NOT_VACCINATED", everyItem(not(0)),
 				"pageable.offset", is(0) };
+	}
+
+	@Test
+	@DisplayName("getVaccinationInfos: with 'reportedAt' sorting ⇒ 🔙 sorted overview")
+	void getVaccinationInfos_WithReportedAtSorting_ReturnsSorted() {
+
+		var size = 2;
+
+		var ids = dataInitializer.getInfoList().stream()
+				.sorted(Comparator.comparing(VaccinationInfo::getCreatedAt).reversed())
+				.map(this::getId)
+				.limit(size)
+				.toArray();
+
+		when()
+				.get(BASE_URL + "?size={size}&sort=reportedAt,desc", size)
+
+				.then()
+				.status(OK)
+				.body("numberOfElements", is(size),
+						"content.id", contains(ids));
+
+		ids = dataInitializer.getInfoList().stream()
+				.sorted(Comparator.comparing(VaccinationInfo::getCreatedAt))
+				.map(this::getId)
+				.limit(size)
+				.toArray();
+
+		when()
+				.get(BASE_URL + "?size={size}&sort=reportedAt,asc", size)
+
+				.then()
+				.status(OK)
+				.body("numberOfElements", is(size),
+						"content.id", contains(ids));
+	}
+
+	@Test
+	@DisplayName("getVaccinationInfos: with state 'NOT_VACCINATED' sorting ⇒ 🔙 sorted overview")
+	void getVaccinationInfos_WithStateNotVaccinatedSorting_ReturnsSorted() {
+
+		var size = 2;
+
+		var infoList = dataInitializer.getInfoList();
+		String[] ids = { getId(infoList.get(2)), getId(infoList.get(0)) };
+
+		when()
+				.get(BASE_URL + "?size={size}&sort=vaccinationStatusCount.notVaccinated,desc", size)
+
+				.then()
+				.status(OK)
+				.body("numberOfElements", is(size),
+						"content.id", contains(ids));
+
+		ids = new String[] { getId(infoList.get(1)), getId(infoList.get(0)) };
+
+		when()
+				.get(BASE_URL + "?size={size}&sort=vaccinationStatusCount.notVaccinated,asc", size)
+
+				.then()
+				.status(OK)
+				.body("numberOfElements", is(size),
+						"content.id", contains(ids));
+	}
+
+	private String getId(VaccinationInfo vaccinationInfo) {
+		return vaccinationInfo.getId().toString();
 	}
 
 	@Test
