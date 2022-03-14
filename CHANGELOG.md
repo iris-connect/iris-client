@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.5.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.5.0-rc.1...v1.5.0-rc.2) (2022-03-14)
+
+
+### Features
+
+* **Docker Compose:** Adds scope labels to the services in the Docker Compose file to avoid conflicts with possibly existing other instances of Watchtower on the same Docker host. ([499267f](https://github.com/iris-connect/iris-client/commit/499267f05d61e74a0100649be80863a0bb508563)), closes [#666](https://github.com/iris-connect/iris-client/issues/666)
+
 # [1.5.0-rc.1](https://github.com/iris-connect/iris-client/compare/v1.4.1...v1.5.0-rc.1) (2022-03-09)
 
 
