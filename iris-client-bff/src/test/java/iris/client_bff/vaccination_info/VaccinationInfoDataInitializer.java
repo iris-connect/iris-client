@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,13 +29,15 @@ import com.github.javafaker.Faker;
 @RequiredArgsConstructor
 @Slf4j
 @Order(20)
-class VaccinationInfoDataInitializer implements DataInitializer {
+public class VaccinationInfoDataInitializer implements DataInitializer {
 
 	static final String EXTERNAL_ID = "ec3ca901-762a-4832-be49-90d09d41ff94";
 	static final String ANNOUNCEMENT_TOKEN = "dc9970d7-9cba-4830-8f30-0b63bbd21a47.proxy.dev.test-gesundheitsamt.de";
 
 	private final VaccinationInfoAnnouncementRepository announcements;
 	private final VaccinationInfoRepository vaccInfos;
+
+	private List<VaccinationInfo> infoList = new ArrayList<>();
 
 	private Faker faker = Faker.instance(Locale.GERMANY);
 
@@ -48,14 +52,17 @@ class VaccinationInfoDataInitializer implements DataInitializer {
 
 		var facility = createFacility();
 		facility.setName(facility.getName() + " For SearchingAB");
-		vaccInfos.save(VaccinationInfo.of(EXTERNAL_ID, facility, createEmployees(3)));
+
+		infoList.add(vaccInfos.save(VaccinationInfo.of(EXTERNAL_ID, facility, createEmployees(3))));
 
 		facility = createFacility();
 		facility.setName(facility.getName() + "For SearchingAB XXX");
 		var address = facility.getAddress();
 		address.setCity(address.getCity() + " SearchingAB City XXX");
-		vaccInfos.save(VaccinationInfo.of(EXTERNAL_ID, facility, createEmployees(1)));
-		vaccInfos.save(VaccinationInfo.of(EXTERNAL_ID, createFacility(), createEmployees(5)));
+
+		infoList.add(vaccInfos.save(VaccinationInfo.of(EXTERNAL_ID, facility, createEmployees(1))));
+
+		infoList.add(vaccInfos.save(VaccinationInfo.of(EXTERNAL_ID, createFacility(), createEmployees(5))));
 	}
 
 	private Facility createFacility() {
@@ -106,5 +113,9 @@ class VaccinationInfoDataInitializer implements DataInitializer {
 				faker.phoneNumber().phoneNumber(),
 				VaccinationType.COVID_19,
 				VaccinationStatus.NOT_VACCINATED);
+	}
+
+	public List<VaccinationInfo> getInfoList() {
+		return infoList;
 	}
 }
