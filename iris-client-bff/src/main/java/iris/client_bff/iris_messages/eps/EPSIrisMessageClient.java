@@ -5,6 +5,7 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import iris.client_bff.config.RPCClientProperties;
 import iris.client_bff.iris_messages.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Version;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
@@ -16,6 +17,8 @@ import java.util.*;
 public class EPSIrisMessageClient {
 
     private static final int READ_TIMEOUT = 12 * 1000;
+
+	private static final Version MESSAGE_CLIENT_MIN_VERSION = new Version(0, 2, 4);
 
     private final JsonRpcHttpClient epsRpcClient;
     private final RPCClientProperties rpcClientProps;
@@ -46,14 +49,24 @@ public class EPSIrisMessageClient {
         }
     }
 
-		private boolean isHealthDepartmentWithInterGaCommunication(DirectoryEntry directoryEntry) {
-			
-			return 
-					directoryEntry.groups() != null &&
-					directoryEntry.groups().contains("health-departments") &&
-					directoryEntry.services() != null &&
-					directoryEntry.services().stream().anyMatch(service -> service.name().equals("inter-ga-communication"));					
+	private boolean isHealthDepartment(DirectoryEntry directoryEntry) {
+		return 
+				directoryEntry.groups() != null &&
+				directoryEntry.groups().contains("health-departments");
+	}
+
+	private boolean isHealthDepartmentWithInterGaCommunication(DirectoryEntry directoryEntry) {
+		if (!isHealthDepartment(directoryEntry)) return false;
+		var methodName = directoryEntry.name + "._ping";
+		try {
+			Ping ping = epsRpcClient.invoke(methodName, null, Ping.class);
+			String semver = ping.version.replaceAll("^v", "");
+			Version version = Version.parse(semver);
+			return version.isGreaterThanOrEqualTo(MESSAGE_CLIENT_MIN_VERSION);
+		} catch (Throwable t) {
+			return false;
 		}
+	}
 
     public void createIrisMessage(IrisMessage message) throws IrisMessageException {
         String methodName = message.getHdRecipient().getId() + ".createIrisMessage";
@@ -73,9 +86,9 @@ public class EPSIrisMessageClient {
     record Directory(@NotNull List<@Valid DirectoryEntry> entries) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    record DirectoryEntry(@NotNull String name, Set<String> groups, List<@Valid DirectoryEntryService> services) {}
+    record DirectoryEntry(@NotNull String name, Set<String> groups) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    record DirectoryEntryService(@NotNull String name) {}
+    record Ping(String version) {};
 
 }
