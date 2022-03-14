@@ -8,11 +8,16 @@ import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -36,6 +41,12 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
 	@ExceptionHandler(BlockLimitExceededException.class)
 	public void handleBlockLimitExceededException(BlockLimitExceededException ex) {
 		log.info("Request failed with exception: {}", getInternalMessage(ex));
+	}
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException e, WebRequest request) {
+
+		return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
 	@ExceptionHandler(Exception.class)
