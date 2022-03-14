@@ -1,4 +1,4 @@
-import { VaccinationExtendedStatus } from "@/api";
+import { VaccinationExtendedStatus, VaccinationType } from "@/api";
 
 const getStatusName = (status?: string): string => {
   switch (status) {
@@ -29,9 +29,19 @@ const getStatusColor = (status?: string): string => {
   }
 };
 
+const getVaccinationType = (type?: string): string => {
+  switch (type) {
+    case VaccinationType.COVID_19:
+      return "Covid-19";
+    default:
+      return VaccinationType.COVID_19;
+  }
+};
+
 const vaccinationReportConstants = {
   getStatusColor,
   getStatusName,
+  getVaccinationType,
 };
 
 export default vaccinationReportConstants;

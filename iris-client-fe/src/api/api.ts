@@ -1962,16 +1962,20 @@ export interface VRFacility {
   contactPerson?: VRFacilityContactPerson;
 }
 
+export enum VaccinationType {
+  COVID_19 = "COVID_19",
+}
+
 export enum VaccinationStatus {
-  NOT_VACCINATED = "notVaccinated",
-  SUSPICIOUS_PROOF = "suspiciousProof",
+  NOT_VACCINATED = "NOT_VACCINATED",
+  SUSPICIOUS_PROOF = "SUSPICIOUS_PROOF",
 }
 
 export enum VaccinationExtendedStatus {
-  VACCINATED = "vaccinated",
-  NOT_VACCINATED = "notVaccinated",
-  SUSPICIOUS_PROOF = "suspiciousProof",
-  UNKNOWN = "unknown",
+  VACCINATED = "VACCINATED",
+  NOT_VACCINATED = "NOT_VACCINATED",
+  SUSPICIOUS_PROOF = "SUSPICIOUS_PROOF",
+  UNKNOWN = "UNKNOWN",
 }
 
 export interface VREmployee {

@@ -22,7 +22,6 @@
         :items="tableRows"
         :search="search"
         :loading="vrApi.state.loading"
-        group-by="vaccination"
         show-select
         show-select-all
         show-expand
@@ -126,7 +125,6 @@ export default class VaccinationReportDetailsView extends Mixins(
       { text: "Vorname", value: "firstName", sortable: true },
       { text: "E-Mail", value: "eMail", sortable: true },
       { text: "Telefon", value: "phone", sortable: true },
-      { text: "Erreger", value: "vaccination", sortable: true },
       { text: "Impfstatus", value: "vaccinationStatus", sortable: true },
       { text: "", value: "data-table-expand" },
     ],
@@ -151,7 +149,9 @@ export default class VaccinationReportDetailsView extends Mixins(
         lastName: employee.lastName || "-",
         firstName: employee.firstName || "-",
         address: getFormattedAddress(employee.address),
-        vaccination: employee.vaccination || "-",
+        vaccination:
+          vaccinationReportConstants.getVaccinationType(employee.vaccination) ||
+          "-",
         vaccinationStatus: employee.vaccinationStatus || "-",
         sex: Genders.getName(employee.sex) || "-",
         dateOfBirth: getFormattedDate(employee.dateOfBirth, "L"),

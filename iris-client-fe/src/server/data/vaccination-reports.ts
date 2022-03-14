@@ -4,6 +4,7 @@ import {
   VaccinationReport,
   VaccinationReportDetails,
   VaccinationStatus,
+  VaccinationType,
   VREmployee,
   VRFacilityContactPerson,
 } from "@/api";
@@ -28,7 +29,7 @@ const createEmployee = (): VREmployee => {
     firstName: _sample(["Max", "Bärbel", "Gabi", "Lena", "Klaus"]),
     lastName: _sample(["Muster", "Kulli", "Glasklar", "Taff"]),
     address: createAddress(),
-    vaccination: "Covid-19",
+    vaccination: VaccinationType.COVID_19,
     vaccinationStatus:
       VaccinationStatus[enumKeys[_random(0, enumKeys.length - 1)]],
     eMail: _sample(["max@employee.de", "mitarbeiter@beispiel.com"]),
