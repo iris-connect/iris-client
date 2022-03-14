@@ -252,7 +252,7 @@
 		<dependency>
 			<groupId>com.googlecode.libphonenumber</groupId>
 			<artifactId>libphonenumber</artifactId>
-			<version>8.12.44</version>
+			<version>8.12.45</version>
 		</dependency>
 
 		<!-- Security -->
