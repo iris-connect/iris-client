@@ -1,12 +1,13 @@
 package iris.client_bff.search_client.web;
 
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
 import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.net.ConnectException;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
@@ -34,12 +36,18 @@ class LocationSearchControllerTests {
 	@MockBean
 	private SearchClient searchClient;
 
+	@BeforeEach
+	void init() {
+		RestAssuredMockMvc.mockMvc(mvc);
+	}
+
 	@Test
 	@WithAnonymousUser
 	void endpointShouldBeProtected() throws Exception {
 
-		given().mockMvc(mvc)
-				.when().get("/search/{search_keyword}", "Test")
+		when()
+				.get("/search/{search_keyword}", "Test")
+
 				.then()
 				.statusCode(HttpStatus.FORBIDDEN.value());
 	}
@@ -54,8 +62,9 @@ class LocationSearchControllerTests {
 
 		when(searchClient.search(anyString(), any(Pageable.class))).thenReturn(locList);
 
-		given().mockMvc(mvc)
-				.when().get("/search/?search={search_keyword}", searchString)
+		when()
+				.get("/search/?search={search_keyword}", searchString)
+
 				.then()
 				.statusCode(200)
 				.body("locations[0].id", equalTo("id"))
@@ -70,8 +79,9 @@ class LocationSearchControllerTests {
 
 		var searchString = "Tes";
 
-		given().mockMvc(mvc)
-				.when().get("/search/?search={search_keyword}", searchString)
+		when()
+				.get("/search/?search={search_keyword}", searchString)
+
 				.then()
 				.statusCode(400);
 	}
@@ -84,8 +94,9 @@ class LocationSearchControllerTests {
 		when(searchClient.search(anyString(), any(Pageable.class)))
 				.thenThrow(new IRISSearchException(new ConnectException("Connection refused")));
 
-		given().mockMvc(mvc)
-				.when().get("/search/?search={search_keyword}", searchString)
+		when()
+				.get("/search/?search={search_keyword}", searchString)
+
 				.then()
 				.statusCode(503);
 	}
@@ -95,8 +106,9 @@ class LocationSearchControllerTests {
 
 		var searchString = "+Test";
 
-		given().mockMvc(mvc)
-				.when().get("/search/?search={search_keyword}", searchString)
+		when()
+				.get("/search/?search={search_keyword}", searchString)
+
 				.then()
 				.statusCode(400);
 
