@@ -1,8 +1,8 @@
 describe("VaccinationReport", () => {
   const reportTableCol = {
     all: 3,
-    notVaccinated: 4,
-    suspiciousProof: 5,
+    NOT_VACCINATED: 4,
+    SUSPICIOUS_PROOF: 5,
   };
   const gteOne = /^[1-9][0-9]*$/;
   beforeEach(() => {
@@ -33,7 +33,7 @@ describe("VaccinationReport", () => {
     cy.sortDataTable("view.data-table", 4, "desc");
     cy.visitByDataTableCellValue(
       "view.data-table",
-      reportTableCol.notVaccinated,
+      reportTableCol.NOT_VACCINATED,
       gteOne
     ).then((success) => {
       if (success) {
@@ -49,7 +49,7 @@ describe("VaccinationReport", () => {
     cy.sortDataTable("view.data-table", 5, "desc");
     cy.visitByDataTableCellValue(
       "view.data-table",
-      reportTableCol.suspiciousProof,
+      reportTableCol.SUSPICIOUS_PROOF,
       gteOne
     ).then((success) => {
       if (success) {
@@ -73,8 +73,8 @@ describe("VaccinationReport", () => {
           "/vaccination-report/details"
         );
         cy.getBy("vaccination-report.employee.data-table")
-          .filterDataTableByStatus("notVaccinated")
-          .filterDataTableByStatus("suspiciousProof")
+          .filterDataTableByStatus("NOT_VACCINATED")
+          .filterDataTableByStatus("SUSPICIOUS_PROOF")
           .filterDataTableByStatus("all");
       }
     });

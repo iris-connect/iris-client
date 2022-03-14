@@ -1,8 +1,8 @@
 import {
   Page,
+  VaccinationExtendedStatus,
   VaccinationReport,
   VaccinationReportDetails,
-  VaccinationStatus,
   VaccinationStatusCount,
   VREmployee,
   VRFacility,
@@ -93,8 +93,8 @@ export const normalizeVaccinationStatusCount = (
     source,
     (normalizer) => {
       const count: VaccinationStatusCount = {};
-      getEnumKeys(VaccinationStatus).forEach((key) => {
-        const status = VaccinationStatus[key];
+      getEnumKeys(VaccinationExtendedStatus).forEach((key) => {
+        const status = VaccinationExtendedStatus[key];
         count[status] = normalizer(status, undefined, "number");
       });
       return count as Complete<typeof count>;
