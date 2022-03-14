@@ -1,5 +1,7 @@
 import dataExport, { Row } from "@/utils/data-export/data-export";
 import { composeAddressHeader } from "@/utils/data-export/common";
+import vaccinationReportConstants from "@/modules/vaccination-report/services/constants";
+import _get from "lodash/get";
 
 const getHeaders = () => {
   return [
@@ -35,6 +37,13 @@ const getHeaders = () => {
     {
       text: "Impfstatus",
       value: "vaccinationStatus",
+      compose: (row: Row) => {
+        const status = _get(row, "vaccinationStatus");
+        if (typeof status === "string") {
+          return vaccinationReportConstants.getStatusName(status);
+        }
+        return "";
+      },
     },
   ];
 };
