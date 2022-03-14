@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -57,15 +59,21 @@ public class EPSIrisMessageClient {
 
 	private boolean isHealthDepartmentWithInterGaCommunication(DirectoryEntry directoryEntry) {
 		if (!isHealthDepartment(directoryEntry)) return false;
+		if (HdCache.isCached(directoryEntry.name)) {
+			return HdCache.getCache(directoryEntry.name).valid();
+		}
 		var methodName = directoryEntry.name + "._ping";
+		boolean isValid;
 		try {
 			Ping ping = epsRpcClient.invoke(methodName, null, Ping.class);
 			String semver = ping.version.replaceAll("^v", "");
 			Version version = Version.parse(semver);
-			return version.isGreaterThanOrEqualTo(MESSAGE_CLIENT_MIN_VERSION);
+			isValid = version.isGreaterThanOrEqualTo(MESSAGE_CLIENT_MIN_VERSION);
 		} catch (Throwable t) {
-			return false;
+			isValid = false;
 		}
+		HdCache.setCache(directoryEntry.name, isValid);
+		return isValid;
 	}
 
     public void createIrisMessage(IrisMessage message) throws IrisMessageException {
@@ -90,5 +98,26 @@ public class EPSIrisMessageClient {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     record Ping(String version) {};
+
+	private static class HdCache {
+
+		private static final Map<String, MapEntry> cacheMap = new ConcurrentHashMap<>();
+		record MapEntry(long validatedAt, boolean valid) {};
+
+		public static boolean isCached(String key) {
+			if (!cacheMap.containsKey(key)) return false;
+			long diffInMs = Math.abs(new Date().getTime() - cacheMap.get(key).validatedAt());
+			long diff = TimeUnit.MINUTES.convert(diffInMs, TimeUnit.MILLISECONDS);
+			return diff <= 30;
+		}
+
+		public static MapEntry getCache(String key) {
+			return cacheMap.get(key);
+		}
+
+		public static void setCache(String key, boolean valid) {
+			cacheMap.put(key, new MapEntry(new Date().getTime(), valid));
+		}
+	}
 
 }
