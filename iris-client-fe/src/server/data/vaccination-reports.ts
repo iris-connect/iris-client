@@ -1,9 +1,9 @@
 import {
   Address,
   Sex,
+  VaccinationExtendedStatus,
   VaccinationReport,
   VaccinationReportDetails,
-  VaccinationStatus,
   VaccinationType,
   VREmployee,
   VRFacilityContactPerson,
@@ -24,14 +24,14 @@ const createAddress = (): Address => {
 };
 
 const createEmployee = (): VREmployee => {
-  const enumKeys = getEnumKeys(VaccinationStatus);
+  const enumKeys = getEnumKeys(VaccinationExtendedStatus);
   return {
     firstName: _sample(["Max", "Bärbel", "Gabi", "Lena", "Klaus"]),
     lastName: _sample(["Muster", "Kulli", "Glasklar", "Taff"]),
     address: createAddress(),
     vaccination: VaccinationType.COVID_19,
     vaccinationStatus:
-      VaccinationStatus[enumKeys[_random(0, enumKeys.length - 1)]],
+      VaccinationExtendedStatus[enumKeys[_random(0, enumKeys.length - 1)]],
     eMail: _sample(["max@employee.de", "mitarbeiter@beispiel.com"]),
     phone: _sample(["555123456", "321654987"]),
     dateOfBirth: timeAgo(_random(18, 70), "years"),
@@ -43,9 +43,9 @@ const getVaccinationStatusCount = (
   employees: VREmployee[]
 ): VaccinationReport["vaccinationStatusCount"] => {
   const count: VaccinationReport["vaccinationStatusCount"] = {};
-  for (const value of getEnumKeys(VaccinationStatus)) {
-    count[VaccinationStatus[value]] = employees.filter(
-      (e) => e.vaccinationStatus === VaccinationStatus[value]
+  for (const value of getEnumKeys(VaccinationExtendedStatus)) {
+    count[VaccinationExtendedStatus[value]] = employees.filter(
+      (e) => e.vaccinationStatus === VaccinationExtendedStatus[value]
     ).length;
   }
   return count;

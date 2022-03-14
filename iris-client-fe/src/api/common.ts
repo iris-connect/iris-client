@@ -115,6 +115,7 @@ export const getSortAttribute = function (key: string): string {
       "vaccinationStatusCount.notVaccinated",
     "vaccinationStatusCount.SUSPICIOUS_PROOF":
       "vaccinationStatusCount.suspiciousProof",
+    "vaccinationStatusCount.UNKNOWN": "vaccinationStatusCount.unknown",
   };
   return sortAttributes[key];
 };

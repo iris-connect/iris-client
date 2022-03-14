@@ -1983,7 +1983,7 @@ export interface VREmployee {
   lastName?: string;
   address?: Address;
   vaccination?: string;
-  vaccinationStatus?: VaccinationStatus;
+  vaccinationStatus?: VaccinationExtendedStatus;
   eMail?: string;
   phone?: string;
   dateOfBirth?: string;
@@ -1991,7 +1991,7 @@ export interface VREmployee {
 }
 
 export type VaccinationStatusCount = {
-  [K in VaccinationStatus]?: number;
+  [K in VaccinationExtendedStatus]?: number;
 };
 
 export interface VaccinationReport {
