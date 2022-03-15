@@ -112,7 +112,7 @@ public class EPSIrisMessageClient {
 			return version.isGreaterThanOrEqualTo(MESSAGE_CLIENT_MIN_VERSION);
 		} catch (Throwable t) {
 			
-			log.warn("Can't ping hd client " + name, t);
+			log.warn("Can't ping hd client " + name);
 			
 			return false;
 		}
