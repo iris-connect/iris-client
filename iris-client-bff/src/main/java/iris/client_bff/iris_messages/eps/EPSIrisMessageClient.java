@@ -107,17 +107,12 @@ public class EPSIrisMessageClient {
 
 		try {
 			Ping ping = epsRpcClient.invoke(methodName, null, Ping.class);
-            log.info(String.format("EPS version of %s is %s", name, ping.version));
 			String semver = ping.version.replaceAll("^v", "");
-            log.info(String.format("EPS semver of %s is %s", name, semver));
 			Version version = Version.parse(semver);
-            log.info(String.format("EPS parsed version of %s is %s", name, version));
-            log.info(String.format("EPS version of %s is greater than %s: %b", name, MESSAGE_CLIENT_MIN_VERSION, version.isGreaterThanOrEqualTo(MESSAGE_CLIENT_MIN_VERSION)));
-
 			return version.isGreaterThanOrEqualTo(MESSAGE_CLIENT_MIN_VERSION);
 		} catch (Throwable t) {
 			
-			log.warn("Can't ping hd client " + name);
+			log.warn("Can't ping hd client " + name, t);
 			
 			return false;
 		}
