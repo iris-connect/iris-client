@@ -1,26 +1,39 @@
 package iris.client_bff.iris_messages.eps;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import iris.client_bff.config.RPCClientProperties;
-import iris.client_bff.iris_messages.*;
+import iris.client_bff.iris_messages.IrisMessage;
+import iris.client_bff.iris_messages.IrisMessageException;
+import iris.client_bff.iris_messages.IrisMessageHdContact;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.util.Version;
-import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
+
+import org.springframework.data.util.Version;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
 @Service
 @RequiredArgsConstructor
 public class EPSIrisMessageClient {
 
     private static final int READ_TIMEOUT = 12 * 1000;
+	  private static final Duration CACHING_TIME = Duration.ofMinutes(30);
 
 	private static final Version MESSAGE_CLIENT_MIN_VERSION = new Version(0, 2, 4);
+
+	  private static final Map<String, MapEntry> hdCache = new ConcurrentHashMap<>();
 
     private final JsonRpcHttpClient epsRpcClient;
     private final RPCClientProperties rpcClientProps;
@@ -58,22 +71,18 @@ public class EPSIrisMessageClient {
 	}
 
 	private boolean isHealthDepartmentWithInterGaCommunication(DirectoryEntry directoryEntry) {
-		if (!isHealthDepartment(directoryEntry)) return false;
-		if (HdCache.isCached(directoryEntry.name)) {
-			return HdCache.getCache(directoryEntry.name).valid();
+
+		if (!isHealthDepartment(directoryEntry))
+			return false;
+
+		return hdCache.compute(directoryEntry.name, (key, value) -> {
+
+			if (value == null || value.validatedAt().isBefore(Instant.now().minus(CACHING_TIME))) {
+				return new MapEntry(Instant.now(), checkIfEpsVersionGreatEnough(directoryEntry.name));
 		}
-		var methodName = directoryEntry.name + "._ping";
-		boolean isValid;
-		try {
-			Ping ping = epsRpcClient.invoke(methodName, null, Ping.class);
-			String semver = ping.version.replaceAll("^v", "");
-			Version version = Version.parse(semver);
-			isValid = version.isGreaterThanOrEqualTo(MESSAGE_CLIENT_MIN_VERSION);
-		} catch (Throwable t) {
-			isValid = false;
-		}
-		HdCache.setCache(directoryEntry.name, isValid);
-		return isValid;
+
+			return value;
+		}).valid();
 	}
 
     public void createIrisMessage(IrisMessage message) throws IrisMessageException {
@@ -90,6 +99,20 @@ public class EPSIrisMessageClient {
         }
     }
 
+	private boolean checkIfEpsVersionGreatEnough(String name) {
+
+		var methodName = name + "._ping";
+
+		try {
+			Ping ping = epsRpcClient.invoke(methodName, null, Ping.class);
+			String semver = ping.version.replaceAll("^v", "");
+			Version version = Version.parse(semver);
+			return version.isGreaterThanOrEqualTo(MESSAGE_CLIENT_MIN_VERSION);
+		} catch (Throwable t) {
+			return false;
+		}
+	}
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     record Directory(@NotNull List<@Valid DirectoryEntry> entries) {}
 
@@ -99,25 +122,5 @@ public class EPSIrisMessageClient {
     @JsonIgnoreProperties(ignoreUnknown = true)
     record Ping(String version) {};
 
-	private static class HdCache {
-
-		private static final Map<String, MapEntry> cacheMap = new ConcurrentHashMap<>();
-		record MapEntry(long validatedAt, boolean valid) {};
-
-		public static boolean isCached(String key) {
-			if (!cacheMap.containsKey(key)) return false;
-			long diffInMs = Math.abs(new Date().getTime() - cacheMap.get(key).validatedAt());
-			long diff = TimeUnit.MINUTES.convert(diffInMs, TimeUnit.MILLISECONDS);
-			return diff <= 30;
-		}
-
-		public static MapEntry getCache(String key) {
-			return cacheMap.get(key);
-		}
-
-		public static void setCache(String key, boolean valid) {
-			cacheMap.put(key, new MapEntry(new Date().getTime(), valid));
-		}
-	}
-
+	private record MapEntry(Instant validatedAt, boolean valid) {};
 }
