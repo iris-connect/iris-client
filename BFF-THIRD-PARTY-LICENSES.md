@@ -66,7 +66,7 @@ List of third-party dependencies grouped by their license type.
         * flyway-core (org.flywaydb:flyway-core:8.0.5 - https://flywaydb.org/flyway-core)
         * Apache FreeMarker (org.freemarker:freemarker:2.3.31 - https://freemarker.apache.org/)
         * Java Annotation Indexer (org.jboss:jandex:2.4.2.Final - http://www.jboss.org/jandex)
-        * ModelMapper (org.modelmapper:modelmapper:3.0.0 - http://modelmapper.org/modelmapper)
+        * ModelMapper (org.modelmapper:modelmapper:3.1.0 - http://modelmapper.org/modelmapper)
         * Objenesis (org.objenesis:objenesis:3.2 - http://objenesis.org/objenesis)
         * Spring AOP (org.springframework:spring-aop:5.3.16 - https://github.com/spring-projects/spring-framework)
         * Spring Aspects (org.springframework:spring-aspects:5.3.16 - https://github.com/spring-projects/spring-framework)
@@ -383,7 +383,7 @@ List of third-party dependencies grouped by their license type.
         * WireMock (com.github.tomakehurst:wiremock-jre8-standalone:2.31.0 - http://wiremock.org)
         * FindBugs-jsr305 (com.google.code.findbugs:jsr305:3.0.2 - http://findbugs.sourceforge.net/)
         * Guava: Google Core Libraries for Java (com.google.guava:guava:16.0.1 - http://code.google.com/p/guava-libraries/guava)
-        * libphonenumber (com.googlecode.libphonenumber:libphonenumber:8.12.44 - https://github.com/google/libphonenumber/)
+        * libphonenumber (com.googlecode.libphonenumber:libphonenumber:8.12.45 - https://github.com/google/libphonenumber/)
         * project ':json-path' (com.jayway.jsonpath:json-path:2.6.0 - https://github.com/jayway/JsonPath)
         * HikariCP (com.zaxxer:HikariCP:4.0.3 - https://github.com/brettwooldridge/HikariCP)
         * Apache Commons Logging (commons-logging:commons-logging:1.2 - http://commons.apache.org/proper/commons-logging/)
@@ -431,6 +431,6 @@ List of third-party dependencies grouped by their license type.
 
     The MIT License (MIT):
 
-        * java jwt (com.auth0:java-jwt:3.18.3 - https://github.com/auth0/java-jwt)
+        * java jwt (com.auth0:java-jwt:3.19.0 - https://github.com/auth0/java-jwt)
         * Jsonrpc4j (com.github.briandilley.jsonrpc4j:jsonrpc4j:1.6 - https://github.com/briandilley/jsonrpc4j)
         * ClassGraph (io.github.classgraph:classgraph:4.8.138 - https://github.com/classgraph/classgraph)

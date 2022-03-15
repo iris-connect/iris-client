@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.5.0-rc.3](https://github.com/iris-connect/iris-client/compare/v1.5.0-rc.2...v1.5.0-rc.3) (2022-03-15)
+
+
+### Features
+
+* **Messages:** Uses `_ping` and the EPS version check when building the recipient list to determine if a health department is able to receive messages. This avoids additional configuration and enables faster propagation of the feature. ([446da17](https://github.com/iris-connect/iris-client/commit/446da176fa26cc3dd81151048b6133a30e964b54)), closes [#668](https://github.com/iris-connect/iris-client/issues/668)
+
 # [1.5.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.5.0-rc.1...v1.5.0-rc.2) (2022-03-14)
 
 
