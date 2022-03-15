@@ -5,6 +5,7 @@ import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -26,6 +27,7 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EPSIrisMessageClient {
 
     private static final int READ_TIMEOUT = 12 * 1000;
@@ -109,6 +111,9 @@ public class EPSIrisMessageClient {
 			Version version = Version.parse(semver);
 			return version.isGreaterThanOrEqualTo(MESSAGE_CLIENT_MIN_VERSION);
 		} catch (Throwable t) {
+			
+			log.warn("Can't ping hd client " + name, t);
+			
 			return false;
 		}
 	}
