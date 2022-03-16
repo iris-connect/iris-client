@@ -1,6 +1,7 @@
 <template>
-  <div v-if="errorMessages.length > 0" class="mt-4">
+  <div v-if="errorMessages.length > 0" :class="{ 'mt-4': !dense }">
     <v-alert
+      :class="{ 'mb-0': dense }"
       v-for="(errorMessage, index) in errorMessages"
       text
       type="error"
@@ -18,6 +19,10 @@ const ErrorMessageAlertProps = Vue.extend({
     errors: {
       type: Array,
       default: () => [],
+    },
+    dense: {
+      type: Boolean,
+      default: false,
     },
   },
 });

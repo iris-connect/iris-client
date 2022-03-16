@@ -12,6 +12,7 @@ import {
 import { Complete, normalizeData } from "@/utils/data";
 import { normalizeAddress } from "@/views/event-tracking-details/event-tracking-details.data";
 import _isNil from "lodash/isNil";
+import { normalizeMetaData } from "@/common/normalizer";
 
 const normalizeContactsAndEventsDataProvider = (
   source?: ContactsAndEventsDataProvider,
@@ -200,7 +201,7 @@ export const normalizeDataRequestCaseData = (
   return normalizeData(
     source,
     (normalizer) => {
-      const normalized: Complete<DataRequestCaseData> = {
+      return {
         externalCaseId: normalizer("externalCaseId", ""),
         name: normalizer("name", undefined),
         comment: normalizer("comment", undefined),
@@ -214,8 +215,8 @@ export const normalizeDataRequestCaseData = (
         submissionData: source?.submissionData
           ? normalizeContactsAndEvents(source?.submissionData)
           : source?.submissionData,
+        ...normalizeMetaData(source),
       };
-      return normalized;
     },
     parse,
     "DataRequestCaseData"

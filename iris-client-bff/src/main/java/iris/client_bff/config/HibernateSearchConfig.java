@@ -7,6 +7,8 @@ import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.model.Location.LocationIdentifier;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageFolder;
+import iris.client_bff.vaccination_info.VaccinationInfo;
+import iris.client_bff.vaccination_info.VaccinationInfo.VaccinationInfoIdentifier;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -206,6 +208,24 @@ class HibernateSearchConfig {
 								String value,
 								IdentifierBridgeFromDocumentIdentifierContext context) {
 							return value == null ? null : IrisMessageFolder.IrisMessageFolderIdentifier.of(value);
+						}
+					});
+
+			context.bridges().exactType(VaccinationInfo.VaccinationInfoIdentifier.class)
+					.identifierBridge(new IdentifierBridge<>() {
+
+						@Override
+						public String toDocumentIdentifier(
+								VaccinationInfoIdentifier value,
+								IdentifierBridgeToDocumentIdentifierContext context) {
+							return value.toString();
+						}
+
+						@Override
+						public VaccinationInfoIdentifier fromDocumentIdentifier(
+								String value,
+								IdentifierBridgeFromDocumentIdentifierContext context) {
+							return value == null ? null : VaccinationInfoIdentifier.of(value);
 						}
 					});
 

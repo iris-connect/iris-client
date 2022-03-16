@@ -112,6 +112,7 @@ import { DataOptions } from "vuetify";
 import {
   getPageFromRouteWithDefault,
   getPageSizeFromRouteWithDefault,
+  getParamFromRoute,
   getStatusFilterFromRoute,
   getStringParamFromRouteWithOptionalFallback,
 } from "@/utils/pagination";
@@ -165,7 +166,7 @@ export default class IndexTrackingListView extends Vue {
       const query: DataQuery = {
         size: getPageSizeFromRouteWithDefault(this.$route),
         page: 0,
-        sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
+        sort: getParamFromRoute("sort", this.$route),
         status: getStatusFilterFromRoute(this.$route),
         search: search,
       };
@@ -188,7 +189,7 @@ export default class IndexTrackingListView extends Vue {
     const query: DataQuery = {
       size: getPageSizeFromRouteWithDefault(this.$route),
       page: 0,
-      sort: getStringParamFromRouteWithOptionalFallback("sort", this.$route),
+      sort: getParamFromRoute("sort", this.$route),
       status: target,
       search: getStringParamFromRouteWithOptionalFallback(
         "search",

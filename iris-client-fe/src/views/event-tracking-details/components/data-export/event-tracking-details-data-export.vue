@@ -1,5 +1,5 @@
 <template>
-  <export-dialog
+  <data-export-dialog
     :title="exportLabel"
     :items="exportList"
     @export-csv-standard="exportStandard('csv')"
@@ -28,7 +28,7 @@
         {{ exportLabel }}
       </v-btn>
     </template>
-  </export-dialog>
+  </data-export-dialog>
 </template>
 
 <script lang="ts">
@@ -36,18 +36,18 @@ import { Component, Vue } from "vue-property-decorator";
 import { TableRow } from "@/views/event-tracking-details/event-tracking-details.view.vue";
 import { PropType } from "vue";
 import { DataRequestDetails } from "@/api";
-import ExportDialog, {
-  DataExportItem,
-} from "@/views/event-tracking-details/components/data-export/export-dialog.vue";
 import exportStandard from "@/views/event-tracking-details/components/data-export/utils/exportStandard";
 import exportOctoware from "@/views/event-tracking-details/components/data-export/utils/exportOctoware";
 import exportSormasEventParticipants from "@/views/event-tracking-details/components/data-export/utils/exportSormasEventParticipants";
 import exportSormasContactPersons from "@/views/event-tracking-details/components/data-export/utils/exportSormasContactPersons";
 import { getExportLabel } from "@/utils/data-export/common";
+import DataExportDialog, {
+  DataExportFormat,
+} from "@/components/data-export/data-export-dialog.vue";
 
 type FileType = "csv" | "xlsx";
 
-const exportList: DataExportItem[] = [
+const exportList: DataExportFormat[] = [
   {
     label: "Standard",
     csv: {
@@ -108,7 +108,7 @@ const EventTrackingDetailsDataExportProps = Vue.extend({
 });
 @Component({
   components: {
-    ExportDialog,
+    DataExportDialog,
   },
 })
 export default class EventTrackingDetailsDataExport extends EventTrackingDetailsDataExportProps {

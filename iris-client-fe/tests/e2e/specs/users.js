@@ -255,7 +255,7 @@ describe("Users", () => {
         cy.getBy(".v-btn{submit}").click();
       });
     cy.location("pathname").should("equal", "/admin/user/list");
-    cy.getDataTableRow(userAccessor, "view.data-table").should(
+    cy.getDataTableRow("view.data-table", userAccessor).should(
       "contain",
       "Administration"
     );
@@ -271,7 +271,7 @@ describe("Users", () => {
     cy.login();
     cy.fetchUser();
     cy.visit("/admin/user/list");
-    cy.getDataTableRow(userAccessor, "view.data-table").within(() => {
+    cy.getDataTableRow("view.data-table", userAccessor).within(() => {
       cy.getBy(".v-btn{delete}").click();
     });
     cy.getBy("user-delete.confirm-dialog")

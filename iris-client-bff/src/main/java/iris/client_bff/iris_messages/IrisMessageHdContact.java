@@ -28,7 +28,7 @@ public class IrisMessageHdContact {
 
     @ToString.Exclude
     @Transient
-    private boolean isOwn;
+    private boolean own;
 
     public IrisMessageHdContact(String id, String name) {
         this.id = id;
@@ -37,6 +37,6 @@ public class IrisMessageHdContact {
 
     public IrisMessageHdContact(String id, String name, boolean isOwn) {
         this(id, name);
-        this.isOwn = isOwn;
+        this.own = isOwn;
     }
 }

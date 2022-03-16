@@ -1,39 +1,20 @@
 <template>
-  <v-btn
-    v-if="link.meta.menu"
-    :key="link.name"
-    :to="link.path"
-    :exact="link.meta.menuExact"
-    :disabled="link.meta.disabled"
-    text
-    :class="{ 'is-loading': unreadMessageCountLoading }"
-    :data-test="`app-bar.nav.link.${link.name}`"
+  <v-badge
+    color="blue"
+    :content="unreadMessageCount"
+    :value="unreadMessageCount > 0"
+    :class="{ badge: true, 'is-loading': unreadMessageCountLoading }"
+    data-test="iris-messages.unread.count"
   >
-    <v-badge
-      color="blue"
-      :content="unreadMessageCount"
-      :value="unreadMessageCount > 0"
-      class="badge"
-      data-test="iris-messages.unread.count"
-    >
-      {{ link.meta.menuName }}
-    </v-badge>
-  </v-btn>
+    <slot name="default" />
+  </v-badge>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { RouteConfig } from "vue-router";
-import { PropType } from "vue";
 
 const IrisMessageListNavLinkProps = Vue.extend({
   inheritAttrs: false,
-  props: {
-    link: {
-      type: Object as PropType<RouteConfig>,
-      default: () => ({}),
-    },
-  },
 });
 
 @Component

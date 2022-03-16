@@ -22,11 +22,17 @@
             item-value="id"
             data-test="hdRecipient"
             :loading="recipientsLoading"
+            hide-details="auto"
             :class="{
               'is-loading': recipientsLoading,
               'is-empty': recipients.length <= 0,
             }"
-          ></v-autocomplete>
+          />
+          <p class="text-caption mt-2">
+            Tippen Sie den Bezeichner des Gesundheitsamtes, die
+            <strong>Postleitzahl</strong> oder den <strong>Ort</strong> ein, um
+            nach dem Empfänger zu suchen.
+          </p>
           <v-text-field
             v-model="form.model.subject"
             label="Betreff"

@@ -1,5 +1,36 @@
 # Changelog
 
+# [1.5.0-rc.3](https://github.com/iris-connect/iris-client/compare/v1.5.0-rc.2...v1.5.0-rc.3) (2022-03-15)
+
+
+### Features
+
+* **Messages:** Uses `_ping` and the EPS version check when building the recipient list to determine if a health department is able to receive messages. This avoids additional configuration and enables faster propagation of the feature. ([446da17](https://github.com/iris-connect/iris-client/commit/446da176fa26cc3dd81151048b6133a30e964b54)), closes [#668](https://github.com/iris-connect/iris-client/issues/668)
+
+# [1.5.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.5.0-rc.1...v1.5.0-rc.2) (2022-03-14)
+
+
+### Features
+
+* **Docker Compose:** Adds scope labels to the services in the Docker Compose file to avoid conflicts with possibly existing other instances of Watchtower on the same Docker host. ([499267f](https://github.com/iris-connect/iris-client/commit/499267f05d61e74a0100649be80863a0bb508563)), closes [#666](https://github.com/iris-connect/iris-client/issues/666)
+
+# [1.5.0-rc.1](https://github.com/iris-connect/iris-client/compare/v1.4.1...v1.5.0-rc.1) (2022-03-09)
+
+
+### Bug Fixes
+
+* Adds grpc server to client EPS. Still not reachable from outside, but necessary for communication between health departments. ([679c08e](https://github.com/iris-connect/iris-client/commit/679c08e13ed2e40fe2bcbf8be486f50641e31af5)), closes [#637](https://github.com/iris-connect/iris-client/issues/637)
+* Fixes an error when changing user data (IllegalStateException: Cannot convert value of type 'java.lang.String' […] no matching editors or conversion strategy found). ([58b3d42](https://github.com/iris-connect/iris-client/commit/58b3d425f71098f53ab54e52fea51cad2ccc9e10))
+
+
+### Features
+
+* Adds a hint to search for hd-contacts by postal code or city into the message input frontend. ([032a648](https://github.com/iris-connect/iris-client/commit/032a6482d9e43b426b34b3ff3dff25ca53c77fc9)), closes [#632](https://github.com/iris-connect/iris-client/issues/632) [#636](https://github.com/iris-connect/iris-client/issues/636)
+* Displays meta-data (who and when created/last modified an entity) on event-tracking, index-tracking and user detail pages. ([da1b7a6](https://github.com/iris-connect/iris-client/commit/da1b7a66097d864e6ab0f93b296d1476675b19c8)), closes [iris-connect/iris-backlog#234](https://github.com/iris-connect/iris-backlog/issues/234) [#638](https://github.com/iris-connect/iris-client/issues/638)
+* **vaccination report:** Apps connected to EPS can announce the submission of a vaccination report via the JSON-RPC method `announceVaccinationInfoList`. A transmission channel is then opened briefly for the respective user of the app. ([c38078a](https://github.com/iris-connect/iris-client/commit/c38078a4aadc98d14fb6e4995aab34a312cc3279)), closes [iris-connect/iris-backlog#273](https://github.com/iris-connect/iris-backlog/issues/273) [#635](https://github.com/iris-connect/iris-client/issues/635)
+* **vaccination report:** Apps connected to EPS can submit a vaccination report via the JSON-RPC method `submitVaccinationInfoList`. The information is saved and made available to health department staff via the front end. ([72b1f74](https://github.com/iris-connect/iris-client/commit/72b1f7452e17957392db5f430da0b9909744859d)), closes [iris-connect/iris-backlog#274](https://github.com/iris-connect/iris-backlog/issues/274) [#651](https://github.com/iris-connect/iris-client/issues/651)
+* **vaccination report:** There is a new view in the front end with an overview of submitted vaccination reports. In the details view of a vaccination report, the submitted persons are displayed with their vaccination status. ([00e93e8](https://github.com/iris-connect/iris-client/commit/00e93e88dcfea4c4eb71577127bf80d5d892b70a)), closes [iris-connect/iris-backlog#275](https://github.com/iris-connect/iris-backlog/issues/275) [#629](https://github.com/iris-connect/iris-client/issues/629)
+
 ## [1.4.1](https://github.com/iris-connect/iris-client/compare/v1.4.0...v1.4.1) (2022-03-01)
 
 

@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
+
 @Embeddable
 @Data
 @Builder
@@ -17,8 +21,13 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class Address {
 
+	@FullTextField(analyzer = "german")
 	private String street;
 	private String houseNumber;
+
+	@GenericField
 	private String zipCode;
+
+	@KeywordField(normalizer = "german")
 	private String city;
 }

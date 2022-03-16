@@ -27,7 +27,7 @@ const sanitizeWhitelist = (field: string): string => {
 
 const sanitizeTrigger = (field: string): string => {
   // Ensure the string has no trigger characters at the beginning or preceded by a delimiter character to mitigate Formula injection
-  if (isPhoneNumberLike(field)) {
+  if (isPhoneNumberLike(field) && !isLocalizedDateLike(field)) {
     return ` ${field}`;
   } else {
     const regex_trigger_beginning = /^[=+\-@\t\r\n ]+/g;
@@ -38,9 +38,12 @@ const sanitizeTrigger = (field: string): string => {
   }
 };
 
+const isLocalizedDateLike = (field: string): boolean => {
+  // check if field is a localized date string of type yyyy/mm/dd (e.g. locale de: dd.mm.yyyy)
+  return dayjs(field, "L", true).isValid();
+};
+
 const isPhoneNumberLike = (field: string): boolean => {
-  // skip if field is a localized date string of type yyyy/mm/dd (e.g. locale de: dd.mm.yyyy)
-  if (dayjs(field, "L", true).isValid()) return false;
   const regex_phone = /^\+?[0-9][/.() \-0-9]{6,}?[0-9]$/g;
   return regex_phone.test(field);
 };
@@ -107,7 +110,14 @@ const sanitizeRows = (
     const sRow: string[] = [];
     headers.forEach((header) => {
       const field = getFieldValue(row, header);
-      sRow.push(sanitizeField(_toString(field), replaceDelimiters));
+      let replace = replaceDelimiters;
+      if (
+        typeof header !== "string" &&
+        typeof header.replaceDelimiters === "boolean"
+      ) {
+        replace = header.replaceDelimiters;
+      }
+      sRow.push(sanitizeField(_toString(field), replace));
     });
     return sRow;
   });

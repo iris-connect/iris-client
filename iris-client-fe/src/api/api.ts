@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {
-  ApiResponse,
-  assertParamExists,
-  DataQuery,
-  RequestOptions,
-} from "./common";
+import { ApiResponse, assertParamExists, RequestOptions } from "./common";
 import { BaseAPI } from "./base";
 import { UserSession } from "@/views/user-login/user-login.store";
 
@@ -424,7 +419,7 @@ export interface DataRequestCaseClient {
  * @export
  * @interface DataRequestCaseData
  */
-export interface DataRequestCaseData {
+export interface DataRequestCaseData extends MetaData {
   /**
    * External case identifier. E.g. CaseID in Sormas.
    * @type {string}
@@ -732,7 +727,7 @@ export interface DataRequestClientUpdate {
  * @export
  * @interface DataRequestDetails
  */
-export interface DataRequestDetails {
+export interface DataRequestDetails extends MetaData {
   /**
    * Comments on given data request from GA employees
    * @type {string}
@@ -1502,7 +1497,7 @@ export enum Sex {
  * @export
  * @interface User
  */
-export interface User {
+export interface User extends MetaData {
   /**
    *
    * @type {string}
@@ -1894,6 +1889,13 @@ export interface Sort {
   unsorted?: boolean;
 }
 
+export interface MetaData {
+  createdBy?: string;
+  createdAt?: string;
+  lastModifiedBy?: string;
+  lastModifiedAt?: string;
+}
+
 export interface Page<Content> {
   totalElements?: number;
   totalPages?: number;
@@ -1907,12 +1909,6 @@ export interface Page<Content> {
   pageable?: Pageable;
   empty?: boolean;
 }
-
-export type IrisMessageQuery = DataQuery & {
-  folder?: string;
-};
-
-export type PageIrisMessages = Page<IrisMessage>;
 
 export interface IrisMessage {
   id: string;
@@ -1950,7 +1946,63 @@ export type IrisMessageFolder = {
 export interface IrisMessageHdContact {
   id: string;
   name: string;
-  isOwn?: boolean;
+  own?: boolean;
+}
+
+export interface VRFacilityContactPerson {
+  firstName?: string;
+  lastName?: string;
+  eMail?: string;
+  phone?: string;
+}
+
+export interface VRFacility {
+  name?: string;
+  address?: Address;
+  contactPerson?: VRFacilityContactPerson;
+}
+
+export enum VaccinationType {
+  COVID_19 = "COVID_19",
+}
+
+export enum VaccinationStatus {
+  NOT_VACCINATED = "NOT_VACCINATED",
+  SUSPICIOUS_PROOF = "SUSPICIOUS_PROOF",
+}
+
+export enum VaccinationExtendedStatus {
+  VACCINATED = "VACCINATED",
+  NOT_VACCINATED = "NOT_VACCINATED",
+  SUSPICIOUS_PROOF = "SUSPICIOUS_PROOF",
+  UNKNOWN = "UNKNOWN",
+}
+
+export interface VREmployee {
+  firstName?: string;
+  lastName?: string;
+  address?: Address;
+  vaccination?: string;
+  vaccinationStatus?: VaccinationExtendedStatus;
+  eMail?: string;
+  phone?: string;
+  dateOfBirth?: string;
+  sex?: Sex;
+}
+
+export type VaccinationStatusCount = {
+  [K in VaccinationExtendedStatus]?: number;
+};
+
+export interface VaccinationReport {
+  id?: string;
+  facility?: VRFacility;
+  reportedAt?: string;
+  vaccinationStatusCount?: VaccinationStatusCount;
+}
+
+export interface VaccinationReportDetails extends VaccinationReport {
+  employees?: VREmployee[];
 }
 
 /**
@@ -2260,7 +2312,7 @@ export class IrisClientFrontendApi extends BaseAPI {
    */
   public irisMessagesGet(
     options?: RequestOptions
-  ): ApiResponse<PageIrisMessages> {
+  ): ApiResponse<Page<IrisMessage>> {
     assertParamExists("irisMessagesGet", "folder", options?.params?.folder);
     return this.apiRequest("GET", "/iris-messages", null, options);
   }
@@ -2348,5 +2400,35 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("irisMessagesSetIsRead", "messageId", messageId);
     const path = `/iris-messages/${encodeURIComponent(messageId)}`;
     return this.apiRequest("PATCH", path, { isRead: true }, options);
+  }
+
+  /**
+   *
+   * @summary Fetches paginated vaccination-report
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public pageVaccinationReportGet(
+    options?: RequestOptions
+  ): ApiResponse<Page<VaccinationReport>> {
+    return this.apiRequest("GET", "/vaccination-reports", null, options);
+  }
+
+  /**
+   *
+   * @summary Fetches vaccination-report details
+   * @param {string} id for vaccination report.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public vaccinationReportDetailsGet(
+    id: string,
+    options?: RequestOptions
+  ): ApiResponse<VaccinationReportDetails> {
+    assertParamExists("vaccinationReportDetailsGet", "id", id);
+    const path = `/vaccination-reports/${encodeURIComponent(id)}`;
+    return this.apiRequest("GET", path, null, options);
   }
 }

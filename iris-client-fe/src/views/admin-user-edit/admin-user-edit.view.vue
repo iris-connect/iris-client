@@ -1,141 +1,144 @@
 <template>
-  <v-card class="my-3">
-    <v-form
-      ref="form"
-      v-model="form.valid"
-      lazy-validation
-      :disabled="isBusy"
-      :class="{ 'is-loading': userLoading }"
-    >
-      <v-card-title>Konto bearbeiten</v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col cols="12" md="6">
-            <conditional-field
-              :config="fieldsConfig['firstName']"
-              :rules="validationRules.names"
-              v-slot="scope"
-            >
-              <v-text-field
-                v-bind="scope"
-                v-model="form.model.firstName"
-                label="Vorname"
-                maxlength="50"
-                data-test="firstName"
-              ></v-text-field>
-            </conditional-field>
-          </v-col>
-          <v-col cols="12" md="6">
-            <conditional-field
-              :config="fieldsConfig['lastName']"
-              :rules="validationRules.names"
-              v-slot="scope"
-            >
-              <v-text-field
-                v-bind="scope"
-                v-model="form.model.lastName"
-                label="Nachname"
-                maxlength="50"
-                data-test="lastName"
-              ></v-text-field>
-            </conditional-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" md="6">
-            <conditional-field
-              :config="fieldsConfig['userName']"
-              :rules="validationRules.userName"
-              v-slot="scope"
-            >
-              <v-text-field
-                v-bind="scope"
-                v-model="form.model.userName"
-                label="Anmeldename"
-                maxlength="50"
-                data-test="userName"
-              ></v-text-field>
-            </conditional-field>
-          </v-col>
-          <v-col cols="12" md="6">
-            <conditional-field :config="fieldsConfig['role']" v-slot="scope">
-              <v-select
-                v-bind="scope"
-                v-model="form.model.role"
-                label="Rolle"
-                :items="roleSelectOptions"
-                data-test="role"
-                :menu-props="{ contentClass: 'select-menu-role' }"
-              ></v-select>
-            </conditional-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" md="6">
-            <password-input-field
-              v-model="form.model.password"
-              label="Passwort"
-              :rules="validationRules.password"
-              data-test="password"
-            />
-          </v-col>
-          <v-col v-if="oldPasswordRequired" cols="12" md="6">
-            <password-input-field
-              v-model="form.model.oldPassword"
-              label="Altes Passwort"
-              :rules="validationRules.oldPassword"
-              data-test="oldPassword"
-            />
-            <v-alert
-              class="caption mt-3"
-              icon="mdi-shield-lock-outline"
-              text
-              type="info"
-            >
-              Bitte geben Sie zur Bestätigung der Änderung Ihr altes Passwort
-              ein.
-            </v-alert>
-          </v-col>
-        </v-row>
-        <v-row v-if="hasError">
-          <v-col>
-            <v-alert v-if="userLoadingError" text type="error">
-              {{ userLoadingError }}
-            </v-alert>
-            <v-alert
-              v-if="userSavingError"
-              text
-              type="error"
-              data-test="error.edit"
-            >
-              {{ userSavingError }}
-            </v-alert>
-          </v-col>
-        </v-row>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn
-          color="secondary"
-          :disabled="isBusy"
-          plain
-          :to="{ name: 'admin-user-list' }"
-          replace
-          data-test="cancel"
-        >
-          Abbrechen
-        </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn
-          :disabled="isBusy || !userId"
-          color="primary"
-          @click="editUser"
-          data-test="submit"
-        >
-          Änderungen übernehmen
-        </v-btn>
-      </v-card-actions>
-    </v-form>
-  </v-card>
+  <div>
+    <entry-meta-data :entry="user" />
+    <v-card class="my-3">
+      <v-form
+        ref="form"
+        v-model="form.valid"
+        lazy-validation
+        :disabled="isBusy"
+        :class="{ 'is-loading': userLoading }"
+      >
+        <v-card-title>Konto bearbeiten</v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" md="6">
+              <conditional-field
+                :config="fieldsConfig['firstName']"
+                :rules="validationRules.names"
+                v-slot="scope"
+              >
+                <v-text-field
+                  v-bind="scope"
+                  v-model="form.model.firstName"
+                  label="Vorname"
+                  maxlength="50"
+                  data-test="firstName"
+                ></v-text-field>
+              </conditional-field>
+            </v-col>
+            <v-col cols="12" md="6">
+              <conditional-field
+                :config="fieldsConfig['lastName']"
+                :rules="validationRules.names"
+                v-slot="scope"
+              >
+                <v-text-field
+                  v-bind="scope"
+                  v-model="form.model.lastName"
+                  label="Nachname"
+                  maxlength="50"
+                  data-test="lastName"
+                ></v-text-field>
+              </conditional-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" md="6">
+              <conditional-field
+                :config="fieldsConfig['userName']"
+                :rules="validationRules.userName"
+                v-slot="scope"
+              >
+                <v-text-field
+                  v-bind="scope"
+                  v-model="form.model.userName"
+                  label="Anmeldename"
+                  maxlength="50"
+                  data-test="userName"
+                ></v-text-field>
+              </conditional-field>
+            </v-col>
+            <v-col cols="12" md="6">
+              <conditional-field :config="fieldsConfig['role']" v-slot="scope">
+                <v-select
+                  v-bind="scope"
+                  v-model="form.model.role"
+                  label="Rolle"
+                  :items="roleSelectOptions"
+                  data-test="role"
+                  :menu-props="{ contentClass: 'select-menu-role' }"
+                ></v-select>
+              </conditional-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" md="6">
+              <password-input-field
+                v-model="form.model.password"
+                label="Passwort"
+                :rules="validationRules.password"
+                data-test="password"
+              />
+            </v-col>
+            <v-col v-if="oldPasswordRequired" cols="12" md="6">
+              <password-input-field
+                v-model="form.model.oldPassword"
+                label="Altes Passwort"
+                :rules="validationRules.oldPassword"
+                data-test="oldPassword"
+              />
+              <v-alert
+                class="caption mt-3"
+                icon="mdi-shield-lock-outline"
+                text
+                type="info"
+              >
+                Bitte geben Sie zur Bestätigung der Änderung Ihr altes Passwort
+                ein.
+              </v-alert>
+            </v-col>
+          </v-row>
+          <v-row v-if="hasError">
+            <v-col>
+              <v-alert v-if="userLoadingError" text type="error">
+                {{ userLoadingError }}
+              </v-alert>
+              <v-alert
+                v-if="userSavingError"
+                text
+                type="error"
+                data-test="error.edit"
+              >
+                {{ userSavingError }}
+              </v-alert>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            color="secondary"
+            :disabled="isBusy"
+            plain
+            :to="{ name: 'admin-user-list' }"
+            replace
+            data-test="cancel"
+          >
+            Abbrechen
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            :disabled="isBusy || !userId"
+            color="primary"
+            @click="editUser"
+            data-test="submit"
+          >
+            Änderungen übernehmen
+          </v-btn>
+        </v-card-actions>
+      </v-form>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -149,6 +152,7 @@ import { omitBy } from "lodash";
 import ConditionalField from "@/views/admin-user-edit/components/conditional-field.vue";
 import _defaults from "lodash/defaults";
 import _isEmpty from "lodash/isEmpty";
+import EntryMetaData from "@/components/entry-meta-data.vue";
 
 type AdminUserEditForm = {
   model: UserUpdate;
@@ -203,6 +207,7 @@ const fieldsConfigByRole: Record<UserRole, FieldsConfig> = {
 
 @Component({
   components: {
+    EntryMetaData,
     ConditionalField,
     PasswordInputField,
   },

@@ -9,7 +9,8 @@ import globalAxios, {
   CancelTokenSource,
   Method,
 } from "axios";
-import axios from "axios";
+import _castArray from "lodash/castArray";
+import { join } from "@/utils/misc";
 /**
  *
  * @export
@@ -17,10 +18,10 @@ import axios from "axios";
 export type DataQuery = {
   size: number;
   page: number;
-  sort?: string | null;
+  sort?: string | string[] | null;
   status?: DataRequestStatus | null;
   search?: string | null;
-  sortOrderDesc?: boolean;
+  folder?: string;
 };
 
 export type RequestQuery = {
@@ -109,8 +110,26 @@ export const getSortAttribute = function (key: string): string {
     representative: "contactRepresentative",
     email: "contactEmail",
     phone: "contactPhone",
+    "vaccinationStatusCount.VACCINATED": "vaccinationStatusCount.vaccinated",
+    "vaccinationStatusCount.NOT_VACCINATED":
+      "vaccinationStatusCount.notVaccinated",
+    "vaccinationStatusCount.SUSPICIOUS_PROOF":
+      "vaccinationStatusCount.suspiciousProof",
+    "vaccinationStatusCount.UNKNOWN": "vaccinationStatusCount.unknown",
   };
   return sortAttributes[key];
+};
+
+const mapSortAttribute = (sort: string): string => {
+  const sortArgs = sort.split(",");
+  return join([getSortAttribute(sortArgs[0]) || sortArgs[0], sortArgs[1]], ",");
+};
+
+export const mapSortAttributes = (
+  sort: DataQuery["sort"]
+): DataQuery["sort"] => {
+  if (!sort) return sort;
+  return _castArray(sort).map(mapSortAttribute);
 };
 
 export const apiRequestBuilder =
@@ -132,11 +151,11 @@ export const apiRequestBuilder =
   };
 
 export const cancelTokenProvider = () => {
-  let source: CancelTokenSource = axios.CancelToken.source();
+  let source: CancelTokenSource = globalAxios.CancelToken.source();
   return (): CancelToken => {
     try {
       source.cancel("request canceled");
-      source = axios.CancelToken.source();
+      source = globalAxios.CancelToken.source();
     } catch (e) {
       // ignored
     }

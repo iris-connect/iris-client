@@ -108,19 +108,21 @@ Cypress.Commands.add(
         cy.log(`data-table has no items with status '${status}'`);
       } else {
         cy.get("@dataTable").within(() => {
-          cy.get("tbody tr").each(($item) => {
-            cy.wrap($item).within(() => {
-              if (status === "all") {
-                cy.getByLike("status.").should("exist");
-              } else {
-                cy.getByLike("status.").should(
-                  "have.attr",
-                  "data-test",
-                  `status.${status}`
-                );
-              }
+          cy.get("tbody tr")
+            .not(".v-row-group__header")
+            .each(($item) => {
+              cy.wrap($item).within(() => {
+                if (status === "all") {
+                  cy.getByLike("status.").should("exist");
+                } else {
+                  cy.getByLike("status.").should(
+                    "have.attr",
+                    "data-test",
+                    `status.${status}`
+                  );
+                }
+              });
             });
-          });
         });
       }
     });
@@ -167,22 +169,121 @@ Cypress.Commands.add(
   }
 );
 
-Cypress.Commands.add("getDataTableRow", (accessor, table) => {
-  cy.getBy(table || ".v-data-table").as("dataTable");
-  cy.get("@dataTable").should("not.have.class", "is-loading");
-  cy.getBy("input{search}")
-    .should("exist")
-    .clear()
-    .type(accessor, { log: false });
-  cy.get("@dataTable")
-    .should("not.have.class", "is-loading")
-    .contains(accessor, { log: false })
-    .closest("tr");
-});
+Cypress.Commands.add(
+  "getDataTableRow",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2, arg3) => {
+    const accessor = subject ? arg1 : arg2;
+    const search = subject ? arg2 : arg3;
+    if (subject) {
+      cy.wrap(subject).as("dataTable");
+    } else {
+      cy.getBy(arg1).as("dataTable");
+    }
+    cy.get("@dataTable").should("not.have.class", "is-loading");
+    if (search !== false) {
+      cy.getBy("input{search}")
+        .should("exist")
+        .clear()
+        .type(accessor, { log: false });
+    }
+    cy.get("@dataTable")
+      .should("not.have.class", "is-loading")
+      .contains(accessor, { log: false })
+      .closest("tr");
+  }
+);
+
+Cypress.Commands.add(
+  "findDataTableRow",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2, arg3) => {
+    const column = subject ? arg1 : arg2;
+    const content = subject ? arg2 : arg3;
+    if (subject) {
+      cy.wrap(subject).as("dataTable");
+    } else {
+      cy.getBy(arg1).as("dataTable");
+    }
+    cy.wrap(null).as("tableRow");
+    cy.get("@dataTable").should("not.have.class", "is-loading");
+    cy.get("@dataTable").then(($table) => {
+      if ($table.hasClass("is-empty")) {
+        cy.log("data-table has no items");
+      } else {
+        cy.get("@dataTable").within(() => {
+          cy.get(`tbody tr td:nth-child(${column})`).each(($cell) => {
+            if ($cell.text().match(content) !== null) {
+              cy.wrap($cell).closest("tr").should("exist").as("tableRow");
+              return false;
+            }
+          });
+        });
+      }
+    });
+    return cy.get("@tableRow");
+  }
+);
+
+Cypress.Commands.add(
+  "sortDataTable",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2, arg3) => {
+    const column = subject ? arg1 : arg2;
+    const sortDir = subject ? arg2 : arg3;
+    if (subject) {
+      cy.wrap(subject).as("dataTable");
+    } else {
+      cy.getBy(arg1).as("dataTable");
+    }
+    cy.get("@dataTable").should("not.have.class", "is-loading");
+    cy.get("@dataTable").within(() => {
+      cy.get(`thead tr th:nth-child(${column})`)
+        .should("have.class", "sortable")
+        .as("tableSort")
+        .then(() => {
+          for (let i = 0; i < 3; i++) {
+            cy.get("@tableSort").then(($tableSort) => {
+              if (!$tableSort.hasClass(sortDir)) {
+                cy.get("@tableSort").click();
+              }
+            });
+          }
+          cy.get("@tableSort").should("have.class", sortDir);
+        });
+    });
+  }
+);
+
+Cypress.Commands.add(
+  "visitByDataTableCellValue",
+  { prevSubject: "optional" },
+  (subject, arg1, arg2, arg3) => {
+    const column = subject ? arg1 : arg2;
+    const content = subject ? arg2 : arg3;
+    cy.wrap(false).as("rowExists");
+    if (subject) {
+      cy.wrap(subject).as("dataTable");
+    } else {
+      cy.getBy(arg1).as("dataTable");
+    }
+    cy.get("@dataTable")
+      .findDataTableRow(column, content)
+      .then(($row) => {
+        if ($row) {
+          cy.wrap(true).as("rowExists");
+          cy.wrap($row).click();
+        } else {
+          cy.log("data-table has no matching items");
+        }
+      });
+    return cy.get("@rowExists");
+  }
+);
 
 Cypress.Commands.add("visitUserByAccessor", (accessor) => {
   cy.location("pathname").should("equal", "/admin/user/list");
-  cy.getDataTableRow(accessor, "view.data-table").within(() => {
+  cy.getDataTableRow("view.data-table", accessor).within(() => {
     cy.getBy(".v-btn{edit}")
       .within(() => {
         cy.root()
@@ -206,7 +307,7 @@ Cypress.Commands.add("getRootMessageFolder", (context) => {
 Cypress.Commands.add("getMessageDataTableRow", (accessor, context) => {
   cy.location("pathname").should("equal", "/iris-messages/list");
   cy.getRootMessageFolder(context).click();
-  cy.getDataTableRow(accessor, "view.data-table").should("exist");
+  cy.getDataTableRow("view.data-table", accessor).should("exist");
 });
 
 Cypress.Commands.add(
@@ -223,7 +324,7 @@ Cypress.Commands.add(
     cy.get("@field").closest(".v-input").should("not.have.class", "is-empty");
     cy.getApp().then((app) => {
       const contacts = app.$store.state.irisMessageCreate.contacts;
-      const ownContact = contacts.find((c) => c.isOwn === true);
+      const ownContact = contacts.find((c) => c.own === true);
       cy.wrap(ownContact).should("exist").should("not.be.empty");
       cy.get("@field").selectAutocompleteValue(menu, ownContact.name);
     });

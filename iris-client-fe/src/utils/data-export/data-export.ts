@@ -2,6 +2,9 @@ import { utils, writeFile, CellObject, FullProperties, WorkSheet } from "xlsx";
 import sanitization from "@/utils/data-export/sanitization";
 import appConfig from "@/config";
 import dayjs from "@/utils/date";
+import _deburr from "lodash/deburr";
+
+export type ExportFileType = "csv" | "xlsx";
 
 export type Row = Record<string, unknown>;
 export type Header =
@@ -10,6 +13,7 @@ export type Header =
       text: string;
       value: string;
       compose?: (row: Row, header?: Header) => string;
+      replaceDelimiters?: boolean; // this overrides the config value
     };
 
 export interface ExportConfig {
@@ -18,6 +22,7 @@ export interface ExportConfig {
 
 export interface ExportConfigCSV extends ExportConfig {
   quoted?: boolean;
+  replaceDelimiters?: boolean;
 }
 
 type ExportConfigXLSXFormat = {
@@ -117,7 +122,7 @@ const exportXlsx = (
     config
   );
   utils.book_append_sheet(wb, ws, "Tabelle1");
-  writeFile(wb, `${config.fileName}.xlsx`);
+  writeFile(wb, `${sanitizeFileName(config.fileName)}.xlsx`);
 };
 
 const exportCsv = (
@@ -129,12 +134,10 @@ const exportCsv = (
     try {
       const forceQuotes = config.quoted !== false;
       const delimiter = forceQuotes ? "," : ";";
-      const replaceDelimiters =
-        window.irisAppContext?.csvExportStandardAtomicAddress !== "true";
       let sanitizedRows = sanitization.sanitizeRows(
         rows,
         headers,
-        replaceDelimiters
+        config.replaceDelimiters !== false
       );
       // sheetjs doesn't apply quotes for empty cells. => ("a","b",,"c",,)
       // We have to do it ourself to ensure backwards compatibility => ("a","b","","c","","")
@@ -168,6 +171,7 @@ type LegacyNavigator = Navigator & {
 };
 
 const downloadCsvFile = function (fileName: string, csv: string): void {
+  const fName = sanitizeFileName(fileName);
   const legacyNavigator = navigator as LegacyNavigator;
   if (legacyNavigator.msSaveBlob) {
     // IE10
@@ -175,7 +179,7 @@ const downloadCsvFile = function (fileName: string, csv: string): void {
       new Blob([csv], {
         type: "application/octet-stream",
       }),
-      `${fileName}.csv`
+      `${fName}.csv`
     );
   } else {
     // HTML5
@@ -184,11 +188,15 @@ const downloadCsvFile = function (fileName: string, csv: string): void {
       "href",
       encodeURI("data:text/csv;charset=utf-8," + "\uFEFF" + csv)
     );
-    link.setAttribute("download", `${fileName}.csv`);
+    link.setAttribute("download", `${fName}.csv`);
     document.body.appendChild(link); // required for FF
     link.click();
     document.body.removeChild(link);
   }
+};
+
+const sanitizeFileName = (fileName: string): string => {
+  return _deburr(fileName).replace(/\s+/, "_");
 };
 
 const dataExport = {

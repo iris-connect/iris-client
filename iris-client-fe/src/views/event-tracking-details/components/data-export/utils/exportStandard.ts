@@ -1,5 +1,5 @@
 import dataExport, { Row } from "@/utils/data-export/data-export";
-import { getAddressHeaders } from "@/utils/data-export/common";
+import { resolveAtomicAddressHeader } from "@/utils/data-export/common";
 
 const getHeaders = () => {
   return [
@@ -43,7 +43,7 @@ const getHeaders = () => {
       text: "Mobil",
       value: "mobilePhone",
     },
-    ...getAddressHeaders(),
+    resolveAtomicAddressHeader(),
   ];
 };
 

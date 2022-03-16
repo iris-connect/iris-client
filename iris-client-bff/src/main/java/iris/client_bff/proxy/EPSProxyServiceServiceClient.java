@@ -49,13 +49,16 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 		return domain;
 	}
 
-	@Override
-	public String announce() throws IRISAnnouncementException {
+	public String announce(Instant expirationTime) throws IRISAnnouncementException {
 		var domain = UUID.randomUUID()
 				+ "."
 				+ config.getTargetSubdomain();
-		var oneWeekFromNow = Instant.now().plus(Period.ofWeeks(1));
-		return this.sendAnnouncement(domain, oneWeekFromNow);
+		return this.sendAnnouncement(domain, expirationTime);
+	}
+
+	@Override
+	public String announce() throws IRISAnnouncementException {
+		return this.announce(Instant.now().plus(Period.ofWeeks(1)));
 	}
 
 	@Override
