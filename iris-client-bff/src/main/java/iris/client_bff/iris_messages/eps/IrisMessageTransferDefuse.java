@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static iris.client_bff.ui.messages.ErrorMessages.INVALID_INPUT_STRING;
 
@@ -37,7 +36,7 @@ public class IrisMessageTransferDefuse {
 
     private List<IrisMessageTransferDto.DataAttachment> defuseDataList(List<IrisMessageTransferDto.DataAttachment> dataAttachments) {
         if (dataAttachments == null) return null;
-        return dataAttachments.stream().map(this::defuse).collect(Collectors.toList());
+        return dataAttachments.stream().map(this::defuse).toList();
     }
 
     private IrisMessageTransferDto.DataAttachment defuse(IrisMessageTransferDto.DataAttachment dataAttachment) {

@@ -68,7 +68,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 		EventMessageDataPayload messagePayload = this.getDefusedPayload(payload);
 		EventMessageDataPayload.EventDataRequestPayload requestPayload = messagePayload.getEventDataRequestPayload();
 		EventDataRequest eventDataRequest = EventDataRequest.builder()
-				.refId(requestPayload.getRefId())
+				.refId("-")
 				.name(requestPayload.getName())
 				.requestStart(requestPayload.getRequestStart())
 				.requestEnd(requestPayload.getRequestEnd())
@@ -126,12 +126,12 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 			return null;
 		}
 		List<Person> targetPeople = targetGuests.stream()
-				.map(guest -> modelMapper.map(guest, Person.class)).collect(Collectors.toList());
+				.map(guest -> modelMapper.map(guest, Person.class)).toList();
 		modelMapper.createTypeMap(Guest.class, Person.class);
 		return guests.stream().filter(guest -> {
 			Person mapped = modelMapper.map(guest, Person.class);
 			return targetPeople.contains(mapped);
-		}).map(Guest::getMessageDataSelectId).collect(Collectors.toList());
+		}).map(Guest::getMessageDataSelectId).toList();
 	}
 
 	private EventDataRequest getEventDataRequest(UUID requestId) {

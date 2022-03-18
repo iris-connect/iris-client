@@ -28,8 +28,7 @@ public class IrisMessageInsertDto {
     @Size(max = IrisMessage.BODY_MAX_LENGTH)
     private String body;
 
-    @Valid
-    private List<DataAttachment> dataAttachments;
+    private List<@Valid DataAttachment> dataAttachments;
 
     @Data
     public static class DataAttachment {

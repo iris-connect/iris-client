@@ -64,7 +64,7 @@ class IrisMessageBuilderWeb {
 					dataList.add(irisMessageData);
 				}
 			}
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new IrisMessageException("iris_message.invalid_message_data");
 		}
 

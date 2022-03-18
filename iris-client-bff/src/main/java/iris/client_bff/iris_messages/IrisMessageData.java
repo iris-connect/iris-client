@@ -27,6 +27,7 @@ public class IrisMessageData extends Aggregate<IrisMessageData, IrisMessageData.
     @Column(nullable = false)
     private String discriminator;
 
+    @Lob
     @Column(nullable = false)
     private String payload;
 

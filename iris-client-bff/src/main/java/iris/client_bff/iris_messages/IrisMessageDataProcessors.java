@@ -1,7 +1,6 @@
 package iris.client_bff.iris_messages;
 
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
@@ -13,24 +12,19 @@ import java.util.stream.Collectors;
 @Service
 public class IrisMessageDataProcessors {
 
-	private IrisMessageDataRepository irisMessageDataRepository;
+	private final IrisMessageDataRepository irisMessageDataRepository;
 
-	@Autowired
-	public void setIrisMessageDataRepository(IrisMessageDataRepository irisMessageDataRepository) {
-		this.irisMessageDataRepository = irisMessageDataRepository;
-	}
-
-	private MessageSourceAccessor messages;
-
-	@Autowired
-	public void setMessageSourceAccessor(MessageSourceAccessor messages) {
-		this.messages = messages;
-	}
+	private final MessageSourceAccessor messages;
 
 	private final Map<String, IrisMessageDataProcessor> processors;
 
-	@Autowired
-	public IrisMessageDataProcessors(List<IrisMessageDataProcessor> converters) {
+	public IrisMessageDataProcessors(
+			IrisMessageDataRepository irisMessageDataRepository,
+			MessageSourceAccessor messages,
+			List<IrisMessageDataProcessor> converters
+	) {
+		this.irisMessageDataRepository = irisMessageDataRepository;
+		this.messages = messages;
 		this.processors = converters.stream()
 				.collect(Collectors.toMap(IrisMessageDataProcessor::getDiscriminator, Function.identity()));
 	}
@@ -38,7 +32,7 @@ public class IrisMessageDataProcessors {
 	public IrisMessageDataProcessor getProcessor(String discriminator) {
 		try {
 			return this.processors.get(discriminator);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new IrisMessageDataException(
 					messages.getMessage("iris_message.invalid_message_data_discriminator") + ": " + discriminator);
 		}
@@ -48,7 +42,7 @@ public class IrisMessageDataProcessors {
 		try {
 			IrisMessageData messageData = this.irisMessageDataRepository.getById(messageDataId);
 			return this.processors.get(messageData.getDiscriminator());
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new IrisMessageDataException(
 					messages.getMessage("iris_message.invalid_message_data_id") + ": " + messageDataId);
 		}

@@ -9,7 +9,6 @@ import lombok.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Value
 class IrisMessageDetailsDto {
@@ -51,7 +50,7 @@ class IrisMessageDetailsDto {
 
         public static List<DataAttachment> fromEntity(List<IrisMessageData> dataList) {
             if (dataList == null) return new ArrayList<>();
-            return dataList.stream().map(DataAttachment::fromEntity).collect(Collectors.toList());
+            return dataList.stream().map(DataAttachment::fromEntity).toList();
         }
 
         public static DataAttachment fromEntity(IrisMessageData data) {

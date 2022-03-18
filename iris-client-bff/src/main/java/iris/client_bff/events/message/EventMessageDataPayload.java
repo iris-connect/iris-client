@@ -14,7 +14,6 @@ import org.modelmapper.ModelMapper;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Data
 public class EventMessageDataPayload {
@@ -34,7 +33,7 @@ public class EventMessageDataPayload {
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.registerModule(new JavaTimeModule());
 			return objectMapper.writeValueAsString(payload);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new IrisMessageDataException(e);
 		}
 	}
@@ -44,7 +43,7 @@ public class EventMessageDataPayload {
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.registerModule(new JavaTimeModule());
 			return objectMapper.readValue(payload, EventMessageDataPayload.class);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new IrisMessageDataException(e);
 		}
 	}
@@ -52,14 +51,12 @@ public class EventMessageDataPayload {
 	@Data
 	static class EventDataRequestPayload {
 
-		private String refId;
 		private String name;
 		private Instant requestStart;
 		private Instant requestEnd;
 
 		public static EventDataRequestPayload fromModel(EventDataRequest eventDataRequest) {
 			return new EventDataRequestPayload()
-					.setRefId(eventDataRequest.getRefId())
 					.setName(eventDataRequest.getName())
 					.setRequestStart(eventDataRequest.getRequestStart())
 					.setRequestEnd(eventDataRequest.getRequestEnd());
@@ -75,13 +72,13 @@ public class EventMessageDataPayload {
 				List<String> guestIds) {
 			ModelMapper mapper = new ModelMapper();
 			List<Guest> guests = eventDataSubmission.getGuests().stream()
-					.filter((guest -> guestIds.size() <= 0 || guestIds.contains(guest.getGuestId().toString())))
+					.filter((guest -> guestIds.isEmpty() || guestIds.contains(guest.getGuestId().toString())))
 					.map(it -> {
 						Guest mapped = mapper.map(it, Guest.class);
 						mapped.setGuestId(null);
 						mapped.setMessageDataSelectId(UUID.randomUUID().toString());
 						return mapped;
-					}).collect(Collectors.toList());
+					}).toList();
 			GuestList guestList = GuestList.builder()
 					.guests(guests)
 					.dataProvider(mapper.map(eventDataSubmission.getDataProvider(), GuestListDataProvider.class))

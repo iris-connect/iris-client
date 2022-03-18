@@ -69,7 +69,7 @@ class IrisMessageBuilderEps {
 					dataList.add(irisMessageData);
 				}
 			}
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new IrisMessageException(messages.getMessage("iris_message.invalid_message_data"));
 		}
 

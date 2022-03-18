@@ -12,7 +12,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -84,7 +83,7 @@ public class IrisMessageTransferDto {
         private String description;
 
         public static List<DataAttachment> fromEntity(List<IrisMessageData> dataList) {
-            return dataList.stream().map(DataAttachment::fromEntity).collect(Collectors.toList());
+            return dataList.stream().map(DataAttachment::fromEntity).toList();
         }
 
         public static DataAttachment fromEntity(IrisMessageData data) {

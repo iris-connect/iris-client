@@ -23,7 +23,7 @@ public class ExportSelectionDto {
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			return objectMapper.readValue(payload, ExportSelectionDto.class);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new IrisMessageDataException("iris_message.invalid_message_data");
 		}
 	}

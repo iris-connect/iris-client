@@ -77,7 +77,7 @@ public class IrisMessageDataController {
 	private void validateMessageDataPayload(String value, String field) {
 		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, false)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					messages.getMessage("iris_message.invalid_message_data") + ": " + field);
+					messages.getMessage("iris_message.invalid_message_data"));
 		}
 	}
 }

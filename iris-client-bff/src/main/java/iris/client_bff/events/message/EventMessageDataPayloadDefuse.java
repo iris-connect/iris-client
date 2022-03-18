@@ -24,14 +24,13 @@ public class EventMessageDataPayloadDefuse {
 
 	void defuse(EventMessageDataPayload.EventDataRequestPayload payload) {
 		payload
-				.setRefId(this.defuse(payload.getRefId(), "refId", 100))
 				.setName(this.defuse(payload.getName(), "name", 500));
 	}
 
 	void defuse(EventMessageDataPayload.EventDataSubmissionPayload payload) {
 		try {
 			this.eventDataDefuse.defuseGuestList(payload.getGuestList());
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new IrisMessageDataException(e);
 		}
 	}

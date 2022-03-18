@@ -30,7 +30,7 @@ class IrisMessageDataControllerImpl implements IrisMessageDataController {
 			IrisMessage message = this.irisMessageBuilder.build(this.messageTransferDefuse.defuse(messageTransfer));
 			IrisMessage savedMessage = this.irisMessageService.saveMessage(message);
 			return IrisMessageTransferDto.fromEntity(savedMessage);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new IrisMessageException(e);
 		}
 	}
