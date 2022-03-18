@@ -1,22 +1,41 @@
 package iris.client_bff.iris_messages.eps;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import iris.client_bff.config.RPCClientProperties;
-import iris.client_bff.iris_messages.*;
-import iris.client_bff.iris_messages.exceptions.IrisMessageException;
+import iris.client_bff.iris_messages.IrisMessage;
+import iris.client_bff.iris_messages.IrisMessageException;
+import iris.client_bff.iris_messages.IrisMessageHdContact;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+
+import org.springframework.data.util.Version;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EPSIrisMessageClient {
 
     private static final int READ_TIMEOUT = 12 * 1000;
+	  private static final Duration CACHING_TIME = Duration.ofMinutes(30);
+
+	private static final Version MESSAGE_CLIENT_MIN_VERSION = new Version(0, 2, 4);
+
+	  private static final Map<String, MapEntry> hdCache = new ConcurrentHashMap<>();
 
     private final JsonRpcHttpClient epsRpcClient;
     private final RPCClientProperties rpcClientProps;
@@ -47,14 +66,26 @@ public class EPSIrisMessageClient {
         }
     }
 
-		private boolean isHealthDepartmentWithInterGaCommunication(DirectoryEntry directoryEntry) {
-			
-			return 
-					directoryEntry.groups() != null &&
-					directoryEntry.groups().contains("health-departments") &&
-					directoryEntry.services() != null &&
-					directoryEntry.services().stream().anyMatch(service -> service.name().equals("inter-ga-communication"));					
+	private boolean isHealthDepartment(DirectoryEntry directoryEntry) {
+		return 
+				directoryEntry.groups() != null &&
+				directoryEntry.groups().contains("health-departments");
+	}
+
+	private boolean isHealthDepartmentWithInterGaCommunication(DirectoryEntry directoryEntry) {
+
+		if (!isHealthDepartment(directoryEntry))
+			return false;
+
+		return hdCache.compute(directoryEntry.name, (key, value) -> {
+
+			if (value == null || value.validatedAt().isBefore(Instant.now().minus(CACHING_TIME))) {
+				return new MapEntry(Instant.now(), checkIfEpsVersionGreatEnough(directoryEntry.name));
 		}
+
+			return value;
+		}).valid();
+	}
 
     public void createIrisMessage(IrisMessage message) throws IrisMessageException {
         String methodName = message.getHdRecipient().getId() + ".createIrisMessage";
@@ -70,13 +101,31 @@ public class EPSIrisMessageClient {
         }
     }
 
+	private boolean checkIfEpsVersionGreatEnough(String name) {
+
+		var methodName = name + "._ping";
+
+		try {
+			Ping ping = epsRpcClient.invoke(methodName, null, Ping.class);
+			String semver = ping.version.replaceAll("^v", "");
+			Version version = Version.parse(semver);
+			return version.isGreaterThanOrEqualTo(MESSAGE_CLIENT_MIN_VERSION);
+		} catch (Throwable t) {
+			
+			log.warn("Can't ping hd client " + name);
+			
+			return false;
+		}
+	}
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     record Directory(@NotNull List<@Valid DirectoryEntry> entries) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    record DirectoryEntry(@NotNull String name, Set<String> groups, List<@Valid DirectoryEntryService> services) {}
+    record DirectoryEntry(@NotNull String name, Set<String> groups) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    record DirectoryEntryService(@NotNull String name) {}
+    record Ping(String version) {};
 
+	private record MapEntry(Instant validatedAt, boolean valid) {};
 }

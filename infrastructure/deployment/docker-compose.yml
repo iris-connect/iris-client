@@ -34,10 +34,12 @@ services:
     depends_on:
       - logger
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
   # IRIS Client backend for frontend
   iris-client:
-    image: inoeg/iris-client-bff:1.4
+    image: inoeg/iris-client-bff:1.5
     expose:
       - 8092
     environment:
@@ -63,10 +65,12 @@ services:
       timeout: 3s
       retries: 2
       start_period: 10s
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
   # IRIS Client Frontend for users
   iris-frontend:
-    image: inoeg/iris-client-frontend:1.4
+    image: inoeg/iris-client-frontend:1.5
     expose:
       - 28080
     environment:
@@ -78,10 +82,12 @@ services:
     depends_on:
       - iris-client
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
   # Endpoint server to communicate with Apps and IRIS Connect central services
   eps:
-    image: inoeg/iris-client-eps:1.4
+    image: inoeg/iris-client-eps:1.5
     expose:
       - 4446
       - 5556
@@ -98,10 +104,12 @@ services:
       EPS_CLIENT_CERT:
       EPS_CLIENT_CERT_KEY:
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
   # Proxy for inbound connections.
   private-proxy:
-    image: inoeg/iris-client-proxy:1.4
+    image: inoeg/iris-client-proxy:1.5
     expose:
       - 5545
       - 8877
@@ -124,9 +132,11 @@ services:
       - logger
       - private-proxy-eps
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
   private-proxy-eps:
-    image: inoeg/iris-client-eps:1.4
+    image: inoeg/iris-client-eps:1.5
     expose:
       - 7766 # JSON-RPC server for internal connections from iris-client
       - 7776 # gRPC protocol
@@ -143,10 +153,12 @@ services:
     depends_on:
       - logger
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
   # Reverse Proxy
   nginx:
-    image: inoeg/iris-client-nginx:1.4
+    image: inoeg/iris-client-nginx:1.5
     ports:
       - ${IRIS_CLIENT_PORT:-443}:443
     environment:
@@ -159,6 +171,8 @@ services:
       - iris-client
       - iris-frontend
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
   # Watchtower for auto-updates
   watchtower:
@@ -172,9 +186,12 @@ services:
       TZ: Europe/Berlin
       WATCHTOWER_SCHEDULE: 0 0 3 * * *
       WATCHTOWER_NO_PULL: "true"
+      WATCHTOWER_SCOPE: "${IRIS_CLIENT_DOMAIN}"
     depends_on:
       - nginx
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
   # Log shipper
   logger:
@@ -196,6 +213,8 @@ services:
       - ${LOG_FOLDER:-./logs}:/srv/logs
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
 volumes:
   psqldata_iris:

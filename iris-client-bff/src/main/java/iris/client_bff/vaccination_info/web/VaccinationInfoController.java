@@ -19,7 +19,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,11 +44,29 @@ public class VaccinationInfoController {
 			@RequestParam Optional<@NoSignOfAttack String> search,
 			Pageable pageable) {
 
+		var newPageable = adaptPageable(pageable);
+
 		var vaccInfos = search
 				.map(it -> service.search(it, pageable))
-				.orElseGet(() -> service.getAll(pageable));
+				.orElseGet(() -> service.getAll(newPageable));
 
 		return vaccInfos.map(this::map);
+	}
+
+	private PageRequest adaptPageable(Pageable pageable) {
+
+		var sort = pageable.getSort();
+		var orders = sort.map(it -> {
+			if (it.getProperty().equals("reportedAt")) {
+				return it.withProperty("metadata.created");
+			}
+
+			return it;
+		}).toList();
+
+		sort = Sort.by(orders);
+
+		return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 	}
 
 	@GetMapping("/{id}")

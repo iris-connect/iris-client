@@ -12,7 +12,7 @@
 	</parent>
 	<groupId>iris-gateway</groupId>
 	<artifactId>iris-client-bff</artifactId>
-	<version>1.4.1-POST-RELEASE</version>
+	<version>1.5.0-POST-RELEASE</version>
 	<name>IRIS Client Backend for Frontend</name>
 	<description>Backend for frontend (BFF) of the client for the health departments. Communicates directly with the SORMAS of this department.</description>
 	<licenses>
@@ -29,7 +29,7 @@
 		<version.tag>${project.version}</version.tag>
 		<image.tag>${docker.image.prefix}/${project.artifactId}:${version.tag}</image.tag>
 		<vavr-version>0.10.4</vavr-version>
-		<greenmail-version>1.6.6</greenmail-version>
+		<greenmail-version>1.6.7</greenmail-version>
 		<testcontainers-version>1.16.3</testcontainers-version>
 		<hibernate-search-version>6.1.1.Final</hibernate-search-version>
 	</properties>
@@ -237,7 +237,7 @@
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
-			<version>3.0.0</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.vavr</groupId>
@@ -252,7 +252,7 @@
 		<dependency>
 			<groupId>com.googlecode.libphonenumber</groupId>
 			<artifactId>libphonenumber</artifactId>
-			<version>8.12.44</version>
+			<version>8.12.45</version>
 		</dependency>
 
 		<!-- Security -->
@@ -263,7 +263,7 @@
 		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
-			<version>3.18.3</version>
+			<version>3.19.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>

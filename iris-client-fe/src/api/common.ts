@@ -110,6 +110,12 @@ export const getSortAttribute = function (key: string): string {
     representative: "contactRepresentative",
     email: "contactEmail",
     phone: "contactPhone",
+    "vaccinationStatusCount.VACCINATED": "vaccinationStatusCount.vaccinated",
+    "vaccinationStatusCount.NOT_VACCINATED":
+      "vaccinationStatusCount.notVaccinated",
+    "vaccinationStatusCount.SUSPICIOUS_PROOF":
+      "vaccinationStatusCount.suspiciousProof",
+    "vaccinationStatusCount.UNKNOWN": "vaccinationStatusCount.unknown",
   };
   return sortAttributes[key];
 };

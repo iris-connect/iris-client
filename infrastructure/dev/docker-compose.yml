@@ -32,6 +32,8 @@ services:
       timeout: 3s
       retries: 4
       start_period: 30s
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
   # IRIS Client backend for frontend (autoupdated by watchtower)
   iris-client:
@@ -39,7 +41,7 @@ services:
     expose:
       - 8092
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_USER}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
@@ -83,7 +85,7 @@ services:
     expose:
       - 28080
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
     environment:
       SORMAS_SIDECAR_BASE_URL: /api
       CSV_EXPORT_STANDARD_ATOMIC_ADDRESS: "true"
@@ -104,6 +106,8 @@ services:
     environment:
       - EPS_SETTINGS=settings/roles/hd-1
     command: ["--level", "debug", "server", "run"]
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
   # Reverse Proxy
   nginx:
@@ -111,7 +115,7 @@ services:
     ports:
       - ${NGINX_PORT}:443
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
     environment:
       IRIS_CLIENT_DOMAIN:
       IRIS_CLIENT_DOMAIN_CERT:
@@ -135,6 +139,8 @@ services:
       - PROXY_SETTINGS=settings/roles/private-proxy-1
       - MOUNT_POINTS=/app/settings,/private-proxy
     command: [ "--level", "trace", "run", "private" ]
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
   private-proxy-1:
     image: inoeg/eps:${EPS_VERSION}
@@ -146,6 +152,19 @@ services:
     environment:
       - EPS_SETTINGS=settings/roles/private-proxy-eps-1
     command: [ "--level", "trace", "server", "run" ]
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      TZ: Europe/Berlin
+      WATCHTOWER_POLL_INTERVAL: 60
+      WATCHTOWER_SCOPE: "${IRIS_CLIENT_DOMAIN}"
+    labels:
+      - "com.centurylinklabs.watchtower.scope=${IRIS_CLIENT_DOMAIN}"
 
 volumes:
   psqldata_iris:
