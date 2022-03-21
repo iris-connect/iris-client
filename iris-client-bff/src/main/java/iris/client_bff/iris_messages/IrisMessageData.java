@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Entity
@@ -27,9 +28,20 @@ public class IrisMessageData extends Aggregate<IrisMessageData, IrisMessageData.
     @Column(nullable = false)
     private String discriminator;
 
-    @Lob
+    // H2 and Postgres are using the same SQL migration files, because their Dialects are very similar.
+    // There are differences, on how the "text" type in combination with the @Lob Annotation is handled.
+    // To avoid creating dedicated Postgres migration files, we use a byte-array as the common data type.
     @Column(nullable = false)
-    private String payload;
+    private byte[] payload;
+
+    public IrisMessageData setPayload(String payload) {
+        this.payload = payload.getBytes(StandardCharsets.UTF_8);
+        return this;
+    }
+
+    public String getPayload() {
+        return new String(payload, StandardCharsets.UTF_8);
+    }
 
     @Column(nullable = false)
     private String description;

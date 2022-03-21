@@ -1,4 +1,4 @@
-package iris.client_bff.events.eps;
+package iris.client_bff.events;
 
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.core.web.dto.Address;

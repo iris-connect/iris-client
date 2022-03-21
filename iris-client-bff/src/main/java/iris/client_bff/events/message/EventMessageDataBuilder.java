@@ -8,7 +8,6 @@ import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -21,8 +20,7 @@ public class EventMessageDataBuilder {
 	private final EventDataRequestRepository requestRepository;
 	private final EventDataSubmissionRepository submissionRepository;
 
-	EventMessageDataPayload buildPayload(String exportSelection) throws IrisMessageDataException {
-		ExportSelectionDto exportSelectionDto = ExportSelectionDto.toModel(exportSelection);
+	EventMessageDataPayload buildPayload(ExportSelectionDto exportSelectionDto) throws IrisMessageDataException {
 		EventDataRequest.DataRequestIdentifier eventId = EventDataRequest.DataRequestIdentifier
 				.of(exportSelectionDto.getEvent());
 		EventDataRequest eventDataRequest = this.getEventDataRequest(eventId);

@@ -1,5 +1,6 @@
 package iris.client_bff.events.message;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import iris.client_bff.core.web.dto.Person;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
@@ -45,21 +46,24 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	private final Validator validator;
 	private final MessageSourceAccessor messages;
 
+	private final ObjectMapper objectMapper;
+
 	@Override
 	public void validateExportSelection(String exportSelection) throws IrisMessageDataException {
-		ExportSelectionDto payload = ExportSelectionDto.toModel(exportSelection);
+		ExportSelectionDto payload = parseJSON(exportSelection, ExportSelectionDto.class);
 		this.validatePayload(payload);
 	}
 
 	@Override
 	public void validateImportSelection(String importSelection) throws IrisMessageDataException {
-		ImportSelectionDto payload = ImportSelectionDto.toModel(importSelection);
+		ImportSelectionDto payload = parseJSON(importSelection, ImportSelectionDto.class);
 		this.validatePayload(payload);
 	}
 
 	@Override
 	public String buildPayload(String exportSelection) throws IrisMessageDataException {
-		EventMessageDataPayload payload = this.dataBuilder.buildPayload(exportSelection);
+		ExportSelectionDto exportSelectionDto = parseJSON(exportSelection, ExportSelectionDto.class);
+		EventMessageDataPayload payload = this.dataBuilder.buildPayload(exportSelectionDto);
 		return EventMessageDataPayload.toString(payload);
 	}
 
@@ -68,7 +72,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 		EventMessageDataPayload messagePayload = this.getDefusedPayload(payload);
 		EventMessageDataPayload.EventDataRequestPayload requestPayload = messagePayload.getEventDataRequestPayload();
 		EventDataRequest eventDataRequest = EventDataRequest.builder()
-				.refId("-")
+				.refId("nicht vergeben (importierter Datensatz)")
 				.name(requestPayload.getName())
 				.requestStart(requestPayload.getRequestStart())
 				.requestEnd(requestPayload.getRequestEnd())
@@ -81,7 +85,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	public void importPayload(String payload, UUID importTargetId, String selection) throws IrisMessageDataException {
 		EventMessageDataPayload messagePayload = this.getDefusedPayload(payload);
 		EventDataSubmission eventDataSubmission = this.getEventDataSubmission(importTargetId);
-		ImportSelectionDto importSelection = ImportSelectionDto.toModel(selection);
+		ImportSelectionDto importSelection = parseJSON(selection, ImportSelectionDto.class);
 		ModelMapper mapper = new ModelMapper();
 		messagePayload.getEventDataSubmissionPayload().getGuestList().getGuests().stream()
 				.filter(it -> importSelection.getGuests().contains(it.getMessageDataSelectId()))
@@ -168,6 +172,14 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 					+ constraintViolations.stream().map(
 							violation -> String.format("%s: %s", violation.getPropertyPath(), violation.getMessage()))
 							.collect(Collectors.joining(", ")));
+	}
+
+	private <T> T parseJSON(String value, Class<T> valueType) {
+		try {
+			return objectMapper.readValue(value, valueType);
+		} catch (Exception e) {
+			throw new IrisMessageDataException("iris_message.invalid_message_data");
+		}
 	}
 
 }

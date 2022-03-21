@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 import iris.client_bff.config.JsonRpcDataValidator;
 import iris.client_bff.config.SuspiciouslyEventRequestProperties;
 import iris.client_bff.core.utils.ValidationHelper;
+import iris.client_bff.events.EventDataDefuse;
 import iris.client_bff.events.EventDataSubmissionService;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.ui.messages.ErrorMessages;

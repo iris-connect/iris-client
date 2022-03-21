@@ -2,7 +2,7 @@ CREATE TABLE  iris_message_data (
     id binary(16) NOT NULL,
     message_id binary(16) NOT NULL,
     discriminator varchar(255) NOT NULL,
-    payload text NOT NULL,
+    payload mediumblob NOT NULL,
     description varchar(255) NOT NULL,
     is_imported bool NULL,
     created datetime NOT NULL,
