@@ -1,4 +1,4 @@
-FROM inoeg/eps:v0.2.4
+FROM inoeg/eps:v0.2.5
 
 COPY conf /app/settings
 COPY ca /app/settings/ca
