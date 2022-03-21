@@ -31,7 +31,7 @@ public class IrisMessageData extends Aggregate<IrisMessageData, IrisMessageData.
     // H2 and Postgres are using the same SQL migration files, because their Dialects are very similar.
     // There are differences, on how the "text" type in combination with the @Lob Annotation is handled.
     // To avoid creating dedicated Postgres migration files, we use a byte-array as the common data type.
-    @Column(nullable = false)
+    @Column(nullable = false, length = 16777215)
     private byte[] payload;
 
     public IrisMessageData setPayload(String payload) {
