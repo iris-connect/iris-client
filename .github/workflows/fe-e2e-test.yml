@@ -37,6 +37,8 @@ jobs:
           CYPRESS_baseUrl: http://localhost:8080/
           CYPRESS_auth_username: ${{ secrets.FE_TEST_AUTH_USERNAME }}
           CYPRESS_auth_password: ${{ secrets.FE_TEST_AUTH_PASSWORD }}
+          CYPRESS_USE_DEDICATED_TEST_USER: true
+          CYPRESS_TEST_RUN_ID: ${{ github.run_id }}
           VUE_APP_API_BASE_URL: ${{ secrets.FE_TEST_API_BASE_URL }}
           VUE_APP_ENABLE_MOCK_SERVER: false
 
