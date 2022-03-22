@@ -149,6 +149,7 @@ public class IrisMessageServiceTest {
 	void getHdContacts() {
 
 		when(this.irisMessageClient.getIrisMessageHdContacts()).thenReturn(List.of(this.testData.MOCK_CONTACT_OTHER));
+		service.buildRecipientList();
 
 		var contacts = this.service.getHdContacts(null);
 

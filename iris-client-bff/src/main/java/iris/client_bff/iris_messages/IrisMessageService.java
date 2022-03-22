@@ -1,5 +1,6 @@
 package iris.client_bff.iris_messages;
 
+import io.vavr.control.Try;
 import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.hd_search.HealthDepartment;
 import iris.client_bff.hd_search.eps.EPSHdSearchClient;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +31,13 @@ public class IrisMessageService {
     private final HibernateSearcher searcher;
     private final EPSIrisMessageClient irisMessageClient;
     private final EPSHdSearchClient hdSearchClient;
+
+		private Try<List<IrisMessageHdContact>> recipientListHolder = Try.success(List.of());
+	
+		@Scheduled(fixedDelayString = "${iris.client.message.build-recipient-list.delay:-}")
+		void buildRecipientList() {
+			recipientListHolder = Try.of(irisMessageClient::getIrisMessageHdContacts);
+		}
 
     public Optional<IrisMessage> findById(IrisMessageIdentifier messageId) {
         return messageRepository.findById(messageId);
@@ -61,10 +70,8 @@ public class IrisMessageService {
 
     public List<IrisMessageHdContact> getHdContacts(String search) throws IrisMessageException {
 
-        List<IrisMessageHdContact> contacts = this.irisMessageClient.getIrisMessageHdContacts();
-
         if (search == null || search.equals("")) {
-            return contacts;
+        	return recipientListHolder.get();
         }
 
         List<HealthDepartment> healthDepartments = this.hdSearchClient.searchForHd(search);
@@ -74,10 +81,10 @@ public class IrisMessageService {
                 .filter(Objects::nonNull)
                 .toList();
 
-        return contacts
+		return recipientListHolder.get()
                 .stream()
-				.filter(contact -> hdEpsNames.contains(contact.getId()) || contact.getName().contains(search)
-						|| contact.getId().contains(search))
+								.filter(contact -> hdEpsNames.contains(contact.getId()) || contact.getName().contains(search)
+										|| contact.getId().contains(search))
                 .toList();
     }
 
