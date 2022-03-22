@@ -6,6 +6,7 @@ describe("AppBar", () => {
     "event-list": "/events/list",
     "index-list": "/cases/list",
     "iris-message-list": "/iris-messages/list",
+    "vaccination-report-list": "/vaccination-report/list",
     about: "/about",
   };
   beforeEach(() => {
