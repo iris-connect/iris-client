@@ -22,7 +22,6 @@ describe("AdminCreate", () => {
           role: "ADMIN",
         });
       });
-      cy.logout();
     }
   });
 });
