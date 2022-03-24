@@ -83,7 +83,7 @@ public class EPSIrisMessageClient {
         try {
 
         	return epsRpcClient.invoke(methodName, null, Directory.class)
-              .entries().stream()
+              .entries().parallelStream()
               .filter(this::isHealthDepartmentWithInterGaCommunication)
               .map(directoryEntry -> {
 
