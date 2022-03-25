@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1-rc.2](https://github.com/iris-connect/iris-client/compare/v1.5.1-rc.1...v1.5.1-rc.2) (2022-03-25)
+
+
+### Bug Fixes
+
+* Updates EPS to version v0.2.6 ([2cd3a4a](https://github.com/iris-connect/iris-client/commit/2cd3a4a482255971e326414a203cd16fe1b2192a))
+
 ## [1.5.1-rc.1](https://github.com/iris-connect/iris-client/compare/v1.5.0...v1.5.1-rc.1) (2022-03-25)
 
 

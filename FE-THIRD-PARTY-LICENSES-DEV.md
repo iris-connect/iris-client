@@ -559,7 +559,7 @@ invert-kv@2.0.0 | MIT | https://github.com/sindresorhus/invert-kv
 ip@1.1.5 | MIT | https://github.com/indutny/node-ip
 ipaddr.js@1.9.1 | MIT | https://github.com/whitequark/ipaddr.js
 ipaddr.js@2.0.1 | MIT | https://github.com/whitequark/ipaddr.js
-iris-client-frontend@1.5.1-rc.1-POST-RELEASE | UNLICENSED | 
+iris-client-frontend@1.5.1-rc.2-POST-RELEASE | UNLICENSED | 
 is-absolute-url@3.0.3 | MIT | https://github.com/sindresorhus/is-absolute-url
 is-arguments@1.1.1 | MIT | https://github.com/inspect-js/is-arguments
 is-arrayish@0.2.1 | MIT | https://github.com/qix-/node-is-arrayish
