@@ -8,6 +8,7 @@ import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class IrisMessageService {
 
 	private static final String[] SEARCH_FIELDS = { "subject_search", "hdAuthor.name_search", "hdRecipient.name_search" };
@@ -36,7 +38,16 @@ public class IrisMessageService {
 	
 		@Scheduled(fixedDelayString = "${iris.client.message.build-recipient-list.delay:-}")
 		void buildRecipientList() {
+			
+			log.info("Job 'buildRecipientList' was started.");
+			
 			recipientListHolder = Try.of(irisMessageClient::getIrisMessageHdContacts);
+			
+			if (recipientListHolder.isFailure()) {
+				log.info("Job 'buildRecipientList' has an exception.", recipientListHolder.getCause());
+			}
+			
+			log.debug("Job 'buildRecipientList' is finished.");
 		}
 
     public Optional<IrisMessage> findById(IrisMessageIdentifier messageId) {

@@ -80,7 +80,7 @@ public class IrisMessageController {
 					.buildAndExpand(sentMessage.getId())
 					.toUri();
 			return ResponseEntity.created(location).build();
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			String errorMessage = e instanceof IrisMessageException ime
 					? ime.getErrorMessage()
 					: "iris_message.submission_error";
@@ -145,14 +145,19 @@ public class IrisMessageController {
 			@RequestParam(defaultValue = "false") boolean includeOwn) {
 		validateField(search, FIELD_SEARCH);
 		try {
-			ArrayList<IrisMessageHdContact> irisMessageContacts = new ArrayList<>(irisMessageService.getHdContacts(search));
+			List<IrisMessageHdContact> irisMessageContacts = new ArrayList<>(irisMessageService.getHdContacts(search));
 			if (!includeOwn) {
 				IrisMessageHdContact ownContact = this.irisMessageService.getOwnHdContact();
 				irisMessageContacts.removeIf(c -> c.getId().equals(ownContact.getId()));
 			}
 			return ResponseEntity.ok(irisMessageContacts);
-		} catch (Throwable e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "iris_message.missing_hd_contacts");
+		} catch (Exception e) {
+
+			String errorMessage = e instanceof IrisMessageException ime
+					? ime.getErrorMessage()
+					: "iris_message.missing_hd_contacts";
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
 		}
 	}
 
