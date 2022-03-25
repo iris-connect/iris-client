@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.1-rc.1](https://github.com/iris-connect/iris-client/compare/v1.5.0...v1.5.1-rc.1) (2022-03-25)
+
+
+### Bug Fixes
+
+* **Messages:** Improves the performance of the . The list of possible recipients for messages is now created cyclically in a background job and is immediately available for the frontend. ([73cda44](https://github.com/iris-connect/iris-client/commit/73cda44780a74c24638e6841eb1ba4d3e245348a)), closes [#678](https://github.com/iris-connect/iris-client/issues/678) [#680](https://github.com/iris-connect/iris-client/issues/680)
+* Removes long deprecated environment variables from `.env.sample`. This variables have had no effect for some time. ([9bf0a55](https://github.com/iris-connect/iris-client/commit/9bf0a559c9e9227f2d6325cb2a5ce63a06d8c2ff)), closes [#679](https://github.com/iris-connect/iris-client/issues/679)
+* RPC methods can now be extended with additional parameters while still remaining compatible with legacy RPC clients if default values are used. ([4320b23](https://github.com/iris-connect/iris-client/commit/4320b23e77b4b53a0f2de0ea0fa59df29ca935d3)), closes [iris-connect/iris-backlog#278](https://github.com/iris-connect/iris-backlog/issues/278)
+
 # [1.5.0](https://github.com/iris-connect/iris-client/compare/v1.4.1...v1.5.0) (2022-03-16)
 
 
