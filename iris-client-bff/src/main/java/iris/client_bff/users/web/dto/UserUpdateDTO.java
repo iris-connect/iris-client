@@ -1,6 +1,12 @@
 package iris.client_bff.users.web.dto;
 
+import iris.client_bff.core.validation.NoSignOfAttack;
+import iris.client_bff.core.validation.NoSignOfAttack.Password;
+import iris.client_bff.users.web.ValidPassword;
+
 import java.util.Objects;
+
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,18 +22,29 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class UserUpdateDTO {
 	public static final String JSON_PROPERTY_FIRST_NAME = "firstName";
+	@Size(max = 200)
+	@NoSignOfAttack
 	private String firstName;
 
 	public static final String JSON_PROPERTY_LAST_NAME = "lastName";
+	@Size(max = 200)
+	@NoSignOfAttack
 	private String lastName;
 
 	public static final String JSON_PROPERTY_USER_NAME = "userName";
+	@Size(max = 50)
+	@NoSignOfAttack
 	private String userName;
 
 	public static final String JSON_PROPERTY_PASSWORD = "password";
+	@ValidPassword
+	@Size(max = 200)
+	@NoSignOfAttack(payload = Password.class)
 	private String password;
 
 	public static final String JSON_PROPERTY_OLD_PASSWORD = "oldPassword";
+	@Size(max = 200)
+	@NoSignOfAttack(payload = Password.class)
 	private String oldPassword;
 
 	public static final String JSON_PROPERTY_ROLE = "role";

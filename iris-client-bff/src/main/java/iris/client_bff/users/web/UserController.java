@@ -4,24 +4,19 @@ import static iris.client_bff.users.web.UserMappers.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.auth.db.UserAccountAuthentication;
-import iris.client_bff.core.utils.ValidationHelper;
-import iris.client_bff.ui.messages.ErrorMessages;
 import iris.client_bff.users.UserDetailsServiceImpl;
 import iris.client_bff.users.entities.UserAccount.UserAccountIdentifier;
 import iris.client_bff.users.web.dto.UserDTO;
 import iris.client_bff.users.web.dto.UserInsertDTO;
 import iris.client_bff.users.web.dto.UserListDTO;
-import iris.client_bff.users.web.dto.UserRoleDTO;
 import iris.client_bff.users.web.dto.UserUpdateDTO;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 import java.security.Principal;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,22 +30,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-@Slf4j
 @RestController()
-@AllArgsConstructor
 @RequestMapping("/users")
-public class UserController {
+@RequiredArgsConstructor
+class UserController {
 
-	private static final String FIELD_ROLE = "role";
-	private static final String FIELD_PASSWORD = "password";
-	private static final String FIELD_USER_NAME = "userName";
-	private static final String FIELD_LAST_NAME = "lastName";
-	private static final String FIELD_FIRST_NAME = "firstName";
 	private final UserDetailsServiceImpl userService;
-	private final ValidationHelper validationHelper;
 
 	@GetMapping
-	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserListDTO getAllUsers() {
 		return new UserListDTO()
@@ -63,11 +50,9 @@ public class UserController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserDTO createUser(@RequestBody @Valid UserInsertDTO userInsert) {
 
-		var userInsertValidated = validateUserInsertDTO(userInsert);
+		checkUniqueUsername(userInsert.getUserName());
 
-		checkUniqueUsername(userInsertValidated.getUserName());
-
-		return map(userService.create(userInsertValidated), userService);
+		return map(userService.create(userInsert), userService);
 	}
 
 	@PatchMapping("/{id}")
@@ -75,13 +60,10 @@ public class UserController {
 	public UserDTO updateUser(@PathVariable UserAccountIdentifier id, @RequestBody @Valid UserUpdateDTO userUpdateDTO,
 			UserAccountAuthentication authentication) {
 
-		var userUpdateDTOValidated = validateUserUpdateDTO(userUpdateDTO);
-		var userName = userUpdateDTOValidated.getUserName();
+		checkUniqueUsername(userUpdateDTO.getUserName(), id);
+		checkOldPassword(userUpdateDTO.getOldPassword(), userUpdateDTO.getPassword(), authentication, id);
 
-		checkUniqueUsername(userName, id);
-		checkOldPassword(userUpdateDTOValidated.getOldPassword(), userUpdateDTOValidated.getPassword(), authentication, id);
-
-		return map(userService.update(id, userUpdateDTOValidated, authentication), userService);
+		return map(userService.update(id, userUpdateDTO, authentication), userService);
 	}
 
 	@DeleteMapping("/{id}")
@@ -89,97 +71,6 @@ public class UserController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public void deleteUser(@PathVariable UserAccountIdentifier id, Principal principal) {
 		this.userService.deleteById(id, principal.getName());
-	}
-
-	private UserUpdateDTO validateUserUpdateDTO(UserUpdateDTO userUpdateDTO) {
-
-		if (userUpdateDTO == null
-				|| isToLong(userUpdateDTO.getUserName(), 50)
-				|| isToLong(userUpdateDTO.getPassword(), 200)
-				|| isToLong(userUpdateDTO.getOldPassword(), 200)
-				|| isToLong(userUpdateDTO.getFirstName(), 200)
-				|| isToLong(userUpdateDTO.getLastName(), 200)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
-		}
-
-		if (validationHelper.isPossibleAttack(userUpdateDTO.getFirstName(), FIELD_FIRST_NAME, true)) {
-			userUpdateDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
-		}
-
-		if (validationHelper.isPossibleAttack(userUpdateDTO.getLastName(), FIELD_LAST_NAME, true)) {
-			userUpdateDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
-		}
-
-		var isInvalid = false;
-
-		var userName = userUpdateDTO.getUserName();
-		var password = userUpdateDTO.getPassword();
-
-		if ((isNoneBlank(userName) && validationHelper.isPossibleAttack(userName, FIELD_USER_NAME, false))
-				|| (isNotBlank(password) && validationHelper.isPossibleAttackForPassword(password, FIELD_PASSWORD))) {
-			isInvalid = true;
-		}
-
-		var role = userUpdateDTO.getRole();
-
-		if (role != null && !(role == UserRoleDTO.ADMIN || role == UserRoleDTO.USER)) {
-			log.warn(ErrorMessages.INVALID_INPUT + FIELD_ROLE + role);
-			isInvalid = true;
-		}
-
-		if (isInvalid) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
-		}
-
-		if (isNoneBlank(password) && !validationHelper.isPasswordValid(password)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.PW_ERROR_MESSAGE);
-		}
-
-		return userUpdateDTO;
-	}
-
-	private UserInsertDTO validateUserInsertDTO(UserInsertDTO userInsertDTO) {
-		if (userInsertDTO == null
-				|| isToLong(userInsertDTO.getUserName(), 50)
-				|| isToLong(userInsertDTO.getPassword(), 200)
-				|| isToLong(userInsertDTO.getFirstName(), 200)
-				|| isToLong(userInsertDTO.getLastName(), 200)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
-		}
-
-		if (validationHelper.isPossibleAttack(userInsertDTO.getFirstName(), FIELD_FIRST_NAME, true)) {
-			userInsertDTO.setFirstName(ErrorMessages.INVALID_INPUT_STRING);
-		}
-
-		if (validationHelper.isPossibleAttack(userInsertDTO.getLastName(), FIELD_LAST_NAME, true)) {
-			userInsertDTO.setLastName(ErrorMessages.INVALID_INPUT_STRING);
-		}
-
-		var isInvalid = false;
-
-		if (validationHelper.isPossibleAttackForRequiredValue(userInsertDTO.getUserName(), FIELD_USER_NAME, false)
-				|| validationHelper.isPossibleAttackForPassword(userInsertDTO.getPassword(), FIELD_PASSWORD)) {
-			isInvalid = true;
-		}
-
-		if (!(userInsertDTO.getRole() == UserRoleDTO.ADMIN || userInsertDTO.getRole() == UserRoleDTO.USER)) {
-			log.warn(ErrorMessages.INVALID_INPUT + FIELD_ROLE + userInsertDTO.getRole());
-			isInvalid = true;
-		}
-
-		if (isInvalid) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
-		}
-
-		if (!validationHelper.isPasswordValid(userInsertDTO.getPassword())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.PW_ERROR_MESSAGE);
-		}
-
-		return userInsertDTO;
-	}
-
-	private boolean isToLong(String value, int maxLength) {
-		return StringUtils.length(value) > maxLength;
 	}
 
 	private void checkUniqueUsername(String username) {

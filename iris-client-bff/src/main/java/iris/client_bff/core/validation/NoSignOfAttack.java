@@ -3,7 +3,6 @@ package iris.client_bff.core.validation;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
-import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.core.validation.NoSignOfAttack.NoSignOfAttackValidator;
 
 import java.lang.annotation.Documented;
@@ -35,10 +34,12 @@ public @interface NoSignOfAttack {
 
 	public interface Phone extends Payload {}
 
-	public static class NoSignOfAttackValidator implements ConstraintValidator<NoSignOfAttack, String> {
+	public interface Password extends Payload {}
+
+	static class NoSignOfAttackValidator implements ConstraintValidator<NoSignOfAttack, String> {
 
 		@Autowired
-		private ValidationHelper validationHelper;
+		private AttackDetector validationHelper;
 
 		private Class<? extends Payload> type;
 
@@ -64,6 +65,8 @@ public @interface NoSignOfAttack {
 
 			if (type == Phone.class) {
 				return !validationHelper.isPossibleAttackForPhone(text, path, true);
+			} else if (type == Password.class) {
+				return !validationHelper.isPossibleAttackForPassword(text, path);
 			}
 
 			return !validationHelper.isPossibleAttack(text, path, true);
