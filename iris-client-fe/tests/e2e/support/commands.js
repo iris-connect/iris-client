@@ -44,6 +44,29 @@ const validationRules = {
   location: "Bitte wählen Sie einen Ereignisort aus",
 };
 
+export const useDedicatedTestUser = () => {
+  return (
+    Cypress.env("USE_DEDICATED_TEST_USER") === true ||
+    Cypress.env("USE_DEDICATED_TEST_USER") === "true"
+  );
+};
+
+const credentialsBuilder = (key) => {
+  if (useDedicatedTestUser()) {
+    return [Cypress.env(key), Cypress.env("TEST_RUN_ID")]
+      .filter((v) => v)
+      .join("_");
+  }
+  return Cypress.env(key);
+};
+
+export const getTestAdminCredentials = () => {
+  return {
+    userName: credentialsBuilder("auth_username"),
+    password: credentialsBuilder("auth_password"),
+  };
+};
+
 Cypress.Commands.add("getBy", (selector, options) => {
   let alias = selector.replace(/{(\S+)}/g, '[data-test="$1"]');
   if (!/data-test/.test(alias)) {
@@ -79,9 +102,10 @@ Cypress.Commands.add("logout", () => {
 Cypress.Commands.add("login", (credentials) => {
   cy.getApp().then((app) => {
     cy.log("authenticate user");
+    const defaultCredentials = getTestAdminCredentials();
     return app.$store.dispatch("userLogin/authenticate", {
-      userName: credentials?.userName ?? Cypress.env("auth_username"),
-      password: credentials?.password ?? Cypress.env("auth_password"),
+      userName: credentials?.userName ?? defaultCredentials.userName,
+      password: credentials?.password ?? defaultCredentials.password,
     });
   });
   cy.visit("/");

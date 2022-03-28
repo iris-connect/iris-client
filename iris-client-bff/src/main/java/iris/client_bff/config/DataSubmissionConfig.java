@@ -41,8 +41,11 @@ public class DataSubmissionConfig {
 				IrisMessageDataController.class, VaccinationInfoController.class });
 		compositeJsonServiceExporter.setServices(new Object[] { caseDataController, eventDataController,
 				irisMessageDataController, vaccinationProofController });
-		compositeJsonServiceExporter.setAllowExtraParams(true); // Used to allow the EPS to add common parameters (e.g. a
-																														// signature) and not have to change all methods.
+		// Used to allow the EPS to add common parameters (e.g. a signature) and not have to change all methods.
+		compositeJsonServiceExporter.setAllowExtraParams(true);
+		// Used to allow extension of an RPC method to include new parameters with default values while remaining compatible
+		// with old RPC clients.
+		compositeJsonServiceExporter.setAllowLessParams(true);
 
 		return compositeJsonServiceExporter;
 	}

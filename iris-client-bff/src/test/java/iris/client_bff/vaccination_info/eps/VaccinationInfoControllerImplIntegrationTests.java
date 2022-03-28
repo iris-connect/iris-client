@@ -273,8 +273,8 @@ class VaccinationInfoControllerImplIntegrationTests {
 				.post("/data-submission-rpc")
 
 				.then()
-				.status(INTERNAL_SERVER_ERROR)
-				.body("error.message", is("method parameters invalid"));
+				.status(BAD_REQUEST)
+				.body("error.data.message", containsString("employees: must not be empty"));
 
 		assertThat(announcements.count()).isEqualTo(savedInfos);
 	}

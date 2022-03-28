@@ -1,5 +1,7 @@
 // https://docs.cypress.io/api/introduction/api.html
 
+import {getTestAdminCredentials} from "../support/commands";
+
 describe("Login", () => {
   beforeEach(() => {
     cy.clearLocalStorage();
@@ -10,7 +12,8 @@ describe("Login", () => {
     cy.location("pathname").should("equal", "/user/login");
   });
   it("should authenticate user and redirect to dashboard or the intercepted auth route", () => {
-    cy.loginUsingUi(Cypress.env("auth_username"), Cypress.env("auth_password"));
+    const credentials = getTestAdminCredentials();
+    cy.loginUsingUi(credentials.userName, credentials.password);
     cy.location("pathname").should("not.equal", "/user/login");
     cy.getBy("user-menu.activator").should("exist");
     cy.logout();
