@@ -3,8 +3,12 @@ package iris.client_bff.iris_messages;
 import iris.client_bff.iris_messages.web.IrisMessageInsertDto;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class IrisMessageTestData {
+
+	private final IrisMessageDataTestData testData = new IrisMessageDataTestData();
 
 	private final IrisMessageFolder MOCK_DEFAULT_FOLDER = getTestDefaultMessageFolder();
 
@@ -64,7 +68,8 @@ public class IrisMessageTestData {
 				.setFolder(folder)
 				.setHdAuthor(this.getTestMessageHdContactOwn())
 				.setHdRecipient(this.getTestMessageHdContactOther())
-				.setRead(true);
+				.setRead(true)
+				.setDataAttachments(List.of(testData.getMessageData(message)));
 		return message;
 	}
 
@@ -76,7 +81,8 @@ public class IrisMessageTestData {
 				.setFolder(folder)
 				.setHdAuthor(this.getTestMessageHdContactOther())
 				.setHdRecipient(this.getTestMessageHdContactOwn())
-				.setRead(false);
+				.setRead(false)
+				.setDataAttachments(List.of(testData.getMessageData(message)));
 		return message;
 	}
 
@@ -84,6 +90,7 @@ public class IrisMessageTestData {
 		return new IrisMessageInsertDto()
 				.setSubject(message.getSubject())
 				.setBody(message.getBody())
-				.setHdRecipient(message.getHdRecipient().getId());
+				.setHdRecipient(message.getHdRecipient().getId())
+				.setDataAttachments(List.of(testData.getExportDataAttachment()));
 	}
 }

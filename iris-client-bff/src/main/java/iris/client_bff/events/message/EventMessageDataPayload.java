@@ -1,13 +1,10 @@
 package iris.client_bff.events.message;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.events.web.dto.GuestListDataProvider;
-import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
@@ -28,28 +25,8 @@ public class EventMessageDataPayload {
 				.setEventDataSubmissionPayload(EventDataSubmissionPayload.fromModel(eventDataSubmission, guestIds));
 	}
 
-	public static String toString(EventMessageDataPayload payload) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule());
-			return objectMapper.writeValueAsString(payload);
-		} catch (Exception e) {
-			throw new IrisMessageDataException(e);
-		}
-	}
-
-	public static EventMessageDataPayload toModel(String payload) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule());
-			return objectMapper.readValue(payload, EventMessageDataPayload.class);
-		} catch (Exception e) {
-			throw new IrisMessageDataException(e);
-		}
-	}
-
 	@Data
-	static class EventDataRequestPayload {
+	public static class EventDataRequestPayload {
 
 		private String name;
 		private Instant requestStart;
@@ -64,7 +41,7 @@ public class EventMessageDataPayload {
 	}
 
 	@Data
-	static class EventDataSubmissionPayload {
+	public static class EventDataSubmissionPayload {
 
 		private GuestList guestList;
 

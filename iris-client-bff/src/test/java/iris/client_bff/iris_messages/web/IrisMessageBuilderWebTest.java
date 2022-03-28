@@ -2,10 +2,12 @@ package iris.client_bff.iris_messages.web;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
+import iris.client_bff.iris_messages.IrisMessageDataProcessor;
 import iris.client_bff.iris_messages.IrisMessageFolderRepository;
 import iris.client_bff.iris_messages.IrisMessageTestData;
 import iris.client_bff.iris_messages.IrisMessageDataProcessors;
@@ -18,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.support.MessageSourceAccessor;
 
 @ExtendWith(MockitoExtension.class)
 public class IrisMessageBuilderWebTest {
@@ -32,13 +33,13 @@ public class IrisMessageBuilderWebTest {
 	EPSIrisMessageClient irisMessageClient;
 
 	@Mock
+	IrisMessageDataProcessor irisMessageDataProcessor;
+
+	@Mock
 	IrisMessageDataProcessors irisMessageDataProcessors;
 
 	@Mock
 	ValidationHelper validationHelper;
-
-	@Mock
-	MessageSourceAccessor messages;
 
 	IrisMessageBuilderWeb builder;
 
@@ -66,12 +67,19 @@ public class IrisMessageBuilderWebTest {
 		when(this.irisMessageClient.findIrisMessageHdContactById(any(String.class)))
 				.thenReturn(Optional.of(this.testData.MOCK_CONTACT_OTHER));
 
+		when(this.irisMessageDataProcessors.getProcessor(anyString())).thenReturn(this.irisMessageDataProcessor);
+		when(this.irisMessageDataProcessor.buildPayload(messageInsert.getDataAttachments().get(0).getPayload()))
+				.thenReturn(message.getDataAttachments().get(0).getPayload());
+
 		var builtMessage = this.builder.build(messageInsert);
 
 		verify(this.folderRepository).findFirstByContextAndParentFolderIsNull(any());
 
 		verify(this.irisMessageClient).getOwnIrisMessageHdContact();
 		verify(this.irisMessageClient).findIrisMessageHdContactById(any(String.class));
+
+		verify(this.irisMessageDataProcessors).getProcessor(anyString());
+		verify(this.irisMessageDataProcessor).buildPayload(anyString());
 
 		// messages should be identical except ID: toString removes the ID
 		assertEquals(message.toString(), builtMessage.toString());

@@ -1,6 +1,7 @@
 package iris.client_bff.events.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import iris.client_bff.core.web.dto.Person;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
@@ -64,7 +65,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	public String buildPayload(String exportSelection) throws IrisMessageDataException {
 		ExportSelectionDto exportSelectionDto = parseJSON(exportSelection, ExportSelectionDto.class);
 		EventMessageDataPayload payload = this.dataBuilder.buildPayload(exportSelectionDto);
-		return EventMessageDataPayload.toString(payload);
+		return this.stringifyJSON(payload);
 	}
 
 	@Override
@@ -160,7 +161,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	}
 
 	private EventMessageDataPayload getDefusedPayload(String payload) throws IrisMessageDataException {
-		EventMessageDataPayload messagePayload = EventMessageDataPayload.toModel(payload);
+		EventMessageDataPayload messagePayload = this.parseJSON(payload, EventMessageDataPayload.class);
 		this.payloadDefuse.defuse(messagePayload);
 		return messagePayload;
 	}
@@ -176,7 +177,17 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 
 	private <T> T parseJSON(String value, Class<T> valueType) {
 		try {
+			objectMapper.registerModule(new JavaTimeModule());
 			return objectMapper.readValue(value, valueType);
+		} catch (Exception e) {
+			throw new IrisMessageDataException("iris_message.invalid_message_data");
+		}
+	}
+
+	private <T> String stringifyJSON(T value) {
+		try {
+			objectMapper.registerModule(new JavaTimeModule());
+			return objectMapper.writeValueAsString(value);
 		} catch (Exception e) {
 			throw new IrisMessageDataException("iris_message.invalid_message_data");
 		}

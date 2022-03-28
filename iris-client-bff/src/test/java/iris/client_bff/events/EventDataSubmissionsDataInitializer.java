@@ -28,10 +28,7 @@ public class EventDataSubmissionsDataInitializer implements DataInitializer {
 
 	private final EventDataSubmissionRepository submissions;
 
-	@Override
-	public void initialize() {
-
-		log.debug("Test data: creating data submissions …");
+	public static EventDataSubmission createDataSubmission() {
 
 		var guests = new HashSet<Guest>();
 
@@ -59,6 +56,13 @@ public class EventDataSubmissionsDataInitializer implements DataInitializer {
 				"0815", "4711", Boolean.FALSE, address, addInfos);
 		guests.add(guest);
 
+		return submission;
+	}
+
+	@Override
+	public void initialize() {
+		log.debug("Test data: creating data submissions …");
+		var submission = createDataSubmission();
 		submissions.save(submission);
 	}
 }
