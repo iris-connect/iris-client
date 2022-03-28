@@ -34,7 +34,7 @@ public class IrisMessageService {
 
 		private Try<List<IrisMessageHdContact>> recipientListHolder = Try.success(List.of());
 	
-		@Scheduled(fixedDelayString = "${iris.client.message.build-recipient-list.delay:-}")
+		@Scheduled(fixedDelayString = "${iris.client.message.build-recipient-list.delay}")
 		void buildRecipientList() {
 			recipientListHolder = Try.of(irisMessageClient::getIrisMessageHdContacts);
 		}
