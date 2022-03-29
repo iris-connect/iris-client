@@ -5,11 +5,14 @@ import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.*;
 
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.hd_search.HealthDepartment;
+import iris.client_bff.hd_search.eps.EPSHdSearchClient;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageContext;
 import iris.client_bff.iris_messages.IrisMessageException;
@@ -20,10 +23,13 @@ import iris.client_bff.iris_messages.IrisMessageTestData;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -39,6 +45,15 @@ class IrisMessageDataControllerTest {
 	EPSIrisMessageClient messageClient;
 	MessageSourceAccessor messages;
 	MockMvc mvc;
+
+	@MockBean
+	EPSHdSearchClient hdSearchClient;
+
+	@BeforeAll
+	void init() {
+		when(hdSearchClient.getAllHds()).thenReturn(
+				List.of(HealthDepartment.of("HD-1", "99.00.0.00.", "hd-1", null, null, null, null, null)));
+	}
 
 	@Test
 	void createIrisMessage() {
