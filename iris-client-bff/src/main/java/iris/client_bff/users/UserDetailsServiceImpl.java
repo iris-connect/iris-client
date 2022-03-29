@@ -121,11 +121,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change his role!");
 
-		} else if (isRemoveLastAdmin(userAccount, newRoleDto)) {
-
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The role of the last admin can't be changed!");
-
 		} else if (newRoleDto != null) {
+
+			if (isRemoveLastAdmin(userAccount, newRoleDto)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The role of the last admin can't be changed!");
+			}
 
 			var newRole = UserRole.valueOf(newRoleDto.name());
 
