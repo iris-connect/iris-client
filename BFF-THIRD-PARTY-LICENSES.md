@@ -43,6 +43,7 @@ List of third-party dependencies grouped by their license type.
         * CDI APIs (javax.enterprise:cdi-api:1.0 - http://www.seamframework.org/Weld/cdi-api)
         * Byte Buddy (without dependencies) (net.bytebuddy:byte-buddy:1.11.22 - https://bytebuddy.net/byte-buddy)
         * Byte Buddy agent (net.bytebuddy:byte-buddy-agent:1.11.22 - https://bytebuddy.net/byte-buddy-agent)
+        * Apache Commons Collections (org.apache.commons:commons-collections4:4.4 - https://commons.apache.org/proper/commons-collections/)
         * Apache Commons Compress (org.apache.commons:commons-compress:1.21 - https://commons.apache.org/proper/commons-compress/)
         * Apache Commons Lang (org.apache.commons:commons-lang3:3.12.0 - https://commons.apache.org/proper/commons-lang/)
         * Apache Commons Text (org.apache.commons:commons-text:1.9 - https://commons.apache.org/proper/commons-text)
@@ -283,11 +284,11 @@ List of third-party dependencies grouped by their license type.
 
     GNU Lesser General Public License v2.1 or later:
 
-        * Hibernate Search Backend - Lucene (org.hibernate.search:hibernate-search-backend-lucene:6.1.1.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-backend-lucene/)
-        * Hibernate Search Engine (org.hibernate.search:hibernate-search-engine:6.1.1.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-engine/)
-        * Hibernate Search ORM Integration (org.hibernate.search:hibernate-search-mapper-orm:6.1.1.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-mapper-orm/)
-        * Hibernate Search Mapper - POJO Base (org.hibernate.search:hibernate-search-mapper-pojo-base:6.1.1.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-mapper-pojo-base/)
-        * Hibernate Search Utils - Common (org.hibernate.search:hibernate-search-util-common:6.1.1.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-util-common/)
+        * Hibernate Search Backend - Lucene (org.hibernate.search:hibernate-search-backend-lucene:6.1.3.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-backend-lucene/)
+        * Hibernate Search Engine (org.hibernate.search:hibernate-search-engine:6.1.3.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-engine/)
+        * Hibernate Search ORM Integration (org.hibernate.search:hibernate-search-mapper-orm:6.1.3.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-mapper-orm/)
+        * Hibernate Search Mapper - POJO Base (org.hibernate.search:hibernate-search-mapper-pojo-base:6.1.3.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-mapper-pojo-base/)
+        * Hibernate Search Utils - Common (org.hibernate.search:hibernate-search-util-common:6.1.3.Final - http://hibernate.org/search/hibernate-search-parent-public/hibernate-search-util-common/)
 
     GNU Library General Public License v2.1 or later:
 
