@@ -106,8 +106,6 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.3.3</version><!-- Added to fix current vulnerability until 
-				Spring is adjusted. avd.aquasec.com/nvd/cve-2022-21724 -->
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
