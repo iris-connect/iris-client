@@ -10,7 +10,6 @@ import ch.qos.logback.classic.LoggerContext;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.MemoryAppender;
 import iris.client_bff.core.alert.AlertService;
-import iris.client_bff.core.utils.ValidationHelper;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Locale;
@@ -51,7 +50,7 @@ class NoSignOfAttackTests {
 
 	@BeforeEach
 	public void setup() {
-		Logger logger = (Logger) LoggerFactory.getLogger(ValidationHelper.class);
+		Logger logger = (Logger) LoggerFactory.getLogger(AttackDetector.class);
 		logAppender = new MemoryAppender();
 		logAppender.setContext((LoggerContext) LoggerFactory.getILoggerFactory());
 		logger.setLevel(Level.DEBUG);

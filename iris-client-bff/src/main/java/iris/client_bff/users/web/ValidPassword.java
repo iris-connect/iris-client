@@ -18,8 +18,7 @@ import javax.validation.constraints.Pattern;
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
 @Documented
-// @ReportAsSingleViolation
-@interface ValidPassword {
+public @interface ValidPassword {
 
 	String message() default "";
 
