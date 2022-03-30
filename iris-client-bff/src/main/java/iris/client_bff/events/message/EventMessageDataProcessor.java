@@ -1,5 +1,6 @@
 package iris.client_bff.events.message;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import iris.client_bff.core.web.dto.Person;
@@ -187,6 +188,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	private <T> String stringifyJSON(T value) {
 		try {
 			objectMapper.registerModule(new JavaTimeModule());
+			objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 			return objectMapper.writeValueAsString(value);
 		} catch (Exception e) {
 			throw new IrisMessageDataException("iris_message.invalid_message_data");

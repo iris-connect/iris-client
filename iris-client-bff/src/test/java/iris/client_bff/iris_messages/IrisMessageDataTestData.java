@@ -1,109 +1,46 @@
 package iris.client_bff.iris_messages;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import iris.client_bff.events.EventDataSubmissionsDataInitializer;
 
-import iris.client_bff.events.message.EventMessageDataPayload;
-import iris.client_bff.events.message.dto.ExportSelectionDto;
-import iris.client_bff.events.message.dto.ImportSelectionDto;
-import iris.client_bff.events.message.dto.ImportSelectionViewPayloadDto;
-import iris.client_bff.events.model.EventDataSubmission;
-import iris.client_bff.events.web.dto.DataRequestDetails;
-import iris.client_bff.events.web.dto.Guest;
+import iris.client_bff.events.message.EventMessageTestData;
 import iris.client_bff.iris_messages.web.IrisMessageDataViewDataDto;
 import iris.client_bff.iris_messages.web.IrisMessageInsertDto;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 public class IrisMessageDataTestData {
 
-	private final EventDataSubmission MOCK_EVENT_DATA_SUBMISSION = EventDataSubmissionsDataInitializer.createDataSubmission();
+	// as an example, we use the event data for testing the message data attachment
+	private final EventMessageTestData eventMessageTestData = new EventMessageTestData();
+
+	public final IrisMessageData MOCK_MESSAGE_DATA = getMessageData(new IrisMessage());
+
+	public final IrisMessageDataViewDataDto MOCK_IMPORT_SELECTION_VIEW_DATA = getImportSelectionDataViewDataDto();
+	public final IrisMessageDataViewDataDto MOCK_DATA_VIEW_DATA = getDataViewDataDto();
+
+	public final IrisMessageInsertDto.DataAttachment MOCK_EXPORT_DATA_ATTACHMENT = eventMessageTestData.MOCK_EVENT_MESSAGE_EXPORT_DATA_ATTACHMENT;
 
 	public IrisMessageData getMessageData(IrisMessage message) {
-		return new IrisMessageData()
-				.setImported(false)
-				.setMessage(message)
-				.setDiscriminator("event-tracking")
-				.setDescription("test description")
-				.setPayload(stringifyJSON(getMessageDataPayload()));
+		return this.eventMessageTestData.getMessageData(message);
 	}
 
-	public IrisMessageInsertDto.DataAttachment getExportDataAttachment() {
-		return new IrisMessageInsertDto.DataAttachment()
-				.setDiscriminator("event-tracking")
-				.setDescription("test description")
-				.setPayload(getPayloadPojo(getExportSelection()).toString());
-	}
-
-	private EventMessageDataPayload getMessageDataPayload() {
-		return EventMessageDataPayload.fromModel(
-				MOCK_EVENT_DATA_SUBMISSION.getRequest(),
-				MOCK_EVENT_DATA_SUBMISSION,
-				getExportSelection().getGuests()
-		);
-	}
-
-	private ExportSelectionDto getExportSelection() {
-		List<String> guests = MOCK_EVENT_DATA_SUBMISSION.getGuests().stream().map((guest -> guest.getGuestId().toString())).toList();
-		return new ExportSelectionDto()
-				.setEvent(MOCK_EVENT_DATA_SUBMISSION.getRequest().getId().toString())
-				.setGuests(guests);
-	}
-
-	public ImportSelectionDto getImportSelection() {
-		List<String> guests = MOCK_EVENT_DATA_SUBMISSION.getGuests().stream().map((guest -> guest.getGuestId().toString())).toList();
-		return new ImportSelectionDto()
-				.setGuests(guests);
-	}
-
-	public IrisMessageDataViewDataDto getImportSelectionDataViewDataDto(IrisMessage message) {
-		IrisMessageData messageData = getMessageData(message);
-		var payload = parseJSON(messageData.getPayload(), EventMessageDataPayload.class);
-		assert payload != null;
-		var guests = payload.getEventDataSubmissionPayload().getGuestList().getGuests();
-		ImportSelectionViewPayloadDto viewPayloadDto = ImportSelectionViewPayloadDto.builder()
-				.selectables(ImportSelectionViewPayloadDto.Selectables.builder().guests(guests).build())
-				.duplicates(ImportSelectionViewPayloadDto.Duplicates.builder().guests(guests.stream().map(Guest::getMessageDataSelectId).toList()).build())
-				.build();
+	private IrisMessageDataViewDataDto getImportSelectionDataViewDataDto() {
+		IrisMessageData messageData = this.MOCK_MESSAGE_DATA;
 		return new IrisMessageDataViewDataDto()
 				.setId(messageData.getId().toString())
 				.setDiscriminator(messageData.getDiscriminator())
-				.setPayload(getPayloadPojo(viewPayloadDto));
+				.setPayload(getPayloadPojo(this.eventMessageTestData.MOCK_EVENT_MESSAGE_IMPORT_SELECTION_VIEW_PAYLOAD));
 	}
 
-	public IrisMessageDataViewDataDto getDataViewDataDto(IrisMessage message) {
-		IrisMessageData messageData = getMessageData(message);
-		var payload = parseJSON(messageData.getPayload(), EventMessageDataPayload.class);
-		assert payload != null;
-		var requestPayload = payload.getEventDataRequestPayload();
-		var submissionPayload = payload.getEventDataSubmissionPayload();
-		DataRequestDetails details = DataRequestDetails.builder()
-				.name(requestPayload.getName())
-				.start(requestPayload.getRequestStart())
-				.end(requestPayload.getRequestEnd())
-				.submissionData(submissionPayload.getGuestList())
-				.build();
+	private IrisMessageDataViewDataDto getDataViewDataDto() {
+		IrisMessageData messageData = this.MOCK_MESSAGE_DATA;
 		return new IrisMessageDataViewDataDto()
 				.setId(messageData.getId().toString())
 				.setDiscriminator(messageData.getDiscriminator())
-				.setPayload(getPayloadPojo(details));
-	}
-
-	private <T> T parseJSON(String value, Class<T> valueType) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule());
-			return objectMapper.readValue(value, valueType);
-		} catch (Exception e) {
-			return null;
-		}
+				.setPayload(getPayloadPojo(this.eventMessageTestData.MOCK_EVENT_MESSAGE_DATA_VIEW_PAYLOAD));
 	}
 
 	private <T> String stringifyJSON(T value) {
@@ -117,7 +54,7 @@ public class IrisMessageDataTestData {
 		}
 	}
 
-	public Object getPayloadPojo(Object payload) {
+	private Object getPayloadPojo(Object payload) {
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.registerModule(new JavaTimeModule());

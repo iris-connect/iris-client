@@ -3,11 +3,14 @@ package iris.client_bff.iris_messages.web;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import iris.client_bff.events.message.EventMessageTestData;
 import iris.client_bff.iris_messages.IrisMessageData;
 import iris.client_bff.iris_messages.IrisMessageDataService;
 import iris.client_bff.iris_messages.IrisMessageDataTestData;
@@ -42,6 +45,7 @@ class IrisMessageDataControllerTest {
 	private final MockMvc mockMvc;
 	private final ObjectMapper om;
 
+	private final EventMessageTestData eventMessageTestData;
 	private final IrisMessageTestData messageTestData;
 	private final IrisMessageDataTestData messageDataTestData;
 
@@ -67,9 +71,12 @@ class IrisMessageDataControllerTest {
 	@Test
 	@WithMockUser()
 	void importMessageDataAndAdd() throws Exception {
-		IrisMessageData messageData = messageTestData.MOCK_INBOX_MESSAGE.getDataAttachments().get(0);
+		IrisMessageData messageData = spy(messageTestData.MOCK_INBOX_MESSAGE.getDataAttachments().get(0));
 
-		doNothing().when(irisMessageDataService).importMessageData(any(IrisMessageData.IrisMessageDataIdentifier.class));
+		doAnswer(invocation -> {
+			messageData.setImported(true);
+			return null;
+		}).when(irisMessageDataService).importMessageData(any(IrisMessageData.IrisMessageDataIdentifier.class));
 
 		var result = mockMvc
 				.perform(
@@ -79,16 +86,21 @@ class IrisMessageDataControllerTest {
 				.andReturn();
 
 		assertThat(result.getResponse().getContentAsString()).isEmpty();
+		assertThat(messageData.isImported()).isTrue();
 
-		verify(irisMessageDataService).importMessageData(any(IrisMessageData.IrisMessageDataIdentifier.class));
+		verify(irisMessageDataService).importMessageData(messageData.getId());
+		verify(messageData).setImported(true);
 	}
 
 	@Test
 	@WithMockUser()
 	void importMessageDataAndUpdate() throws Exception {
-		IrisMessageData messageData = messageTestData.MOCK_INBOX_MESSAGE.getDataAttachments().get(0);
+		IrisMessageData messageData = spy(messageTestData.MOCK_INBOX_MESSAGE.getDataAttachments().get(0));
 
-		doNothing().when(irisMessageDataService).importMessageData(
+		doAnswer(invocation -> {
+			messageData.setImported(true);
+			return null;
+		}).when(irisMessageDataService).importMessageData(
 				any(IrisMessageData.IrisMessageDataIdentifier.class),
 				any(UUID.class),
 				anyString()
@@ -101,13 +113,14 @@ class IrisMessageDataControllerTest {
 				.perform(
 						MockMvcRequestBuilders.post(baseUrl + "/" + messageData.getId() + "/import/update")
 								.queryParam("importTargetId", UUID.randomUUID().toString())
-								.content(om.writeValueAsString(messageDataTestData.getImportSelection()))
+								.content(this.eventMessageTestData.MOCK_EVENT_MESSAGE_IMPORT_SELECTION_STRING)
 								.contentType(MediaType.APPLICATION_JSON)
 				)
 				.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 				.andReturn();
 
 		assertThat(result.getResponse().getContentAsString()).isEmpty();
+		assertThat(messageData.isImported()).isTrue();
 
 		verify(irisMessageDataService).importMessageData(
 				any(IrisMessageData.IrisMessageDataIdentifier.class),
@@ -115,14 +128,15 @@ class IrisMessageDataControllerTest {
 				anyString()
 		);
 
-		verify(irisMessageDataProcessors).getProcessor(any(IrisMessageData.IrisMessageDataIdentifier.class));
+		verify(irisMessageDataProcessors).getProcessor(messageData.getId());
 		verify(irisMessageDataProcessor).validateImportSelection(anyString());
+		verify(messageData).setImported(true);
 	}
 
 	@Test
 	@WithMockUser()
 	void getMessageDataImportSelectionViewData() throws Exception {
-		var viewDataDto = messageDataTestData.getImportSelectionDataViewDataDto(messageTestData.MOCK_INBOX_MESSAGE);
+		var viewDataDto = messageDataTestData.MOCK_IMPORT_SELECTION_VIEW_DATA;
 
 		when(irisMessageDataViewProvider.getImportSelectionViewData(
 				any(IrisMessageData.IrisMessageDataIdentifier.class),
@@ -147,7 +161,7 @@ class IrisMessageDataControllerTest {
 	@Test
 	@WithMockUser()
 	void getMessageDataViewData() throws Exception {
-		var viewDataDto = messageDataTestData.getDataViewDataDto(messageTestData.MOCK_INBOX_MESSAGE);
+		var viewDataDto = messageDataTestData.MOCK_DATA_VIEW_DATA;
 
 		when(irisMessageDataViewProvider.getViewData(any(IrisMessageData.IrisMessageDataIdentifier.class)))
 				.thenReturn(viewDataDto);

@@ -91,6 +91,6 @@ public class IrisMessageTestData {
 				.setSubject(message.getSubject())
 				.setBody(message.getBody())
 				.setHdRecipient(message.getHdRecipient().getId())
-				.setDataAttachments(List.of(testData.getExportDataAttachment()));
+				.setDataAttachments(List.of(testData.MOCK_EXPORT_DATA_ATTACHMENT));
 	}
 }
