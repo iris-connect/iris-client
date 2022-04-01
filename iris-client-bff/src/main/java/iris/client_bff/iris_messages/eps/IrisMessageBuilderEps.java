@@ -86,7 +86,7 @@ class IrisMessageBuilderEps {
 	}
 
 	private void validateMessageDataPayload(String value, String field) {
-		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, false)) {
+		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, true)) {
 			throw new IrisMessageDataException(messages.getMessage("iris_message.invalid_message_data"));
 		}
 	}

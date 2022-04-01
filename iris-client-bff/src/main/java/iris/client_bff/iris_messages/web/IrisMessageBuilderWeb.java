@@ -8,7 +8,6 @@ import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolderRepository;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import iris.client_bff.iris_messages.IrisMessageData;
-import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import iris.client_bff.iris_messages.IrisMessageDataProcessor;
 import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
@@ -28,7 +27,6 @@ class IrisMessageBuilderWeb {
 	private final EPSIrisMessageClient irisMessageClient;
 
 	private final IrisMessageDataProcessors messageDataProcessors;
-	private final ValidationHelper validationHelper;
 
 	public IrisMessage build(IrisMessageInsertDto messageInsert) throws IrisMessageException {
 
@@ -55,9 +53,6 @@ class IrisMessageBuilderWeb {
 					IrisMessageDataProcessor processor = this.messageDataProcessors
 							.getProcessor(data.getDiscriminator());
 					String payload = processor.buildPayload(data.getPayload());
-					// The payload should be fine as it is composed of already validated data
-					// Doesn't hurt to validate the keys & values of the payloads JSON string
-					this.validateMessageDataPayload(payload, data.getDiscriminator());
 					IrisMessageData irisMessageData = new IrisMessageData().setMessage(message)
 							.setDiscriminator(data.getDiscriminator()).setDescription(data.getDescription())
 							.setPayload(payload);
@@ -78,12 +73,6 @@ class IrisMessageBuilderWeb {
 				.setDataAttachments(dataList);
 
 		return message;
-	}
-
-	private void validateMessageDataPayload(String value, String field) {
-		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, false)) {
-			throw new IrisMessageDataException("iris_message.invalid_message_data");
-		}
 	}
 
 }

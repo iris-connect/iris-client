@@ -74,7 +74,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 		EventMessageDataPayload messagePayload = this.getDefusedPayload(payload);
 		EventMessageDataPayload.EventDataRequestPayload requestPayload = messagePayload.getEventDataRequestPayload();
 		EventDataRequest eventDataRequest = EventDataRequest.builder()
-				.refId("nicht vergeben (importierter Datensatz)")
+				.refId(messages.getMessage("iris_message.message_data_substitution"))
 				.name(requestPayload.getName())
 				.requestStart(requestPayload.getRequestStart())
 				.requestEnd(requestPayload.getRequestEnd())
@@ -178,7 +178,6 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 
 	private <T> T parseJSON(String value, Class<T> valueType) {
 		try {
-			objectMapper.registerModule(new JavaTimeModule());
 			return objectMapper.readValue(value, valueType);
 		} catch (Exception e) {
 			throw new IrisMessageDataException("iris_message.invalid_message_data");
@@ -187,7 +186,6 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 
 	private <T> String stringifyJSON(T value) {
 		try {
-			objectMapper.registerModule(new JavaTimeModule());
 			objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 			return objectMapper.writeValueAsString(value);
 		} catch (Exception e) {

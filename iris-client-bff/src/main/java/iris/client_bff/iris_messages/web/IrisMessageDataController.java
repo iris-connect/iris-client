@@ -31,17 +31,27 @@ public class IrisMessageDataController {
 
 	private final MessageSourceAccessor messages;
 
-	@PostMapping("/{messageDataId}/import/add")
-	public ResponseEntity<?> importMessageDataAndAdd(@PathVariable IrisMessageDataIdentifier messageDataId) {
+	@PostMapping("/{messageDataId}/import")
+	public ResponseEntity<?> importMessageDataAndAdd(
+			@PathVariable IrisMessageDataIdentifier messageDataId,
+			@RequestParam(required = false) UUID importTargetId,
+			@RequestBody(required = false) String importSelection
+	) {
+		if (importTargetId == null) {
+			return importMessageDataAndAdd(messageDataId);
+		}
+		return importMessageDataAndUpdate(messageDataId, importTargetId, importSelection);
+	}
+
+	private ResponseEntity<?> importMessageDataAndAdd(IrisMessageDataIdentifier messageDataId) {
 		this.messageDataService.importMessageData(messageDataId);
 		return ResponseEntity.ok(null);
 	}
 
-	@PostMapping("/{messageDataId}/import/update")
-	public ResponseEntity<?> importMessageDataAndUpdate(
-			@PathVariable IrisMessageDataIdentifier messageDataId,
-			@RequestParam UUID importTargetId,
-			@RequestBody String importSelection
+	private ResponseEntity<?> importMessageDataAndUpdate(
+			IrisMessageDataIdentifier messageDataId,
+			UUID importTargetId,
+			String importSelection
 	) {
 		this.validateMessageDataPayload(importSelection, FIELD_DATA_IMPORT_SELECTION);
 		try {
@@ -54,7 +64,7 @@ public class IrisMessageDataController {
 		return ResponseEntity.ok(null);
 	}
 
-	@GetMapping("/{messageDataId}/import/select")
+	@GetMapping("/{messageDataId}/import-selection-view")
 	public ResponseEntity<IrisMessageDataViewDataDto> getMessageDataImportSelectionViewData(
 			@PathVariable IrisMessageDataIdentifier messageDataId,
 			@RequestParam(required = false) UUID importTargetId
@@ -75,7 +85,7 @@ public class IrisMessageDataController {
 	}
 
 	private void validateMessageDataPayload(String value, String field) {
-		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, false)) {
+		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, true)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					messages.getMessage("iris_message.invalid_message_data"));
 		}

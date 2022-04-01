@@ -204,13 +204,13 @@ public class IrisMessageController {
 	}
 
 	private void validateField(String value, String field) {
-		if (validationHelper.isPossibleAttack(value, field, false)) {
+		if (validationHelper.isPossibleAttack(value, field, true)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 	}
 
 	private void validateMessageDataPayload(String value, String field) {
-		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, false)) {
+		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, true)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, messages.getMessage("iris_message.invalid_message_data"));
 		}
 	}

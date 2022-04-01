@@ -37,7 +37,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { PropType } from "vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
-import { Page } from "@/api";
+import { DataRequestStatus, Page } from "@/api";
 import SearchField from "@/components/pageable/search-field.vue";
 import {
   EventTrackingListTableRow,
@@ -72,6 +72,10 @@ const SelectEventProps = Vue.extend({
       type: Object as PropType<Partial<DataQuery> | null>,
       default: null,
     },
+    selectableStatus: {
+      type: Array as PropType<DataRequestStatus[] | null>,
+      default: null,
+    },
   },
 });
 @Component({
@@ -104,7 +108,8 @@ export default class SelectEvent extends SelectEventProps {
 
   get tableRows() {
     return getEventTrackingListTableRows(
-      this.eventApi.fetchPageEvent.state.result?.content || []
+      this.eventApi.fetchPageEvent.state.result?.content || [],
+      this.selectableStatus
     );
   }
 

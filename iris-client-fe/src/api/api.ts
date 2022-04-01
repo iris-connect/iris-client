@@ -2459,7 +2459,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("irisMessageDataImport", "messageDataId", messageDataId);
     const path = `/iris-messages/data/${encodeURIComponent(
       messageDataId
-    )}/import/add`;
+    )}/import`;
     return this.apiRequest("POST", path, null, options);
   }
 
@@ -2490,7 +2490,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("importIrisMessageDataAndUpdate", "data", data);
     const path = `/iris-messages/data/${encodeURIComponent(
       messageDataId
-    )}/import/update`;
+    )}/import`;
     return this.apiRequest("POST", path, data, options);
   }
 
@@ -2518,7 +2518,7 @@ export class IrisClientFrontendApi extends BaseAPI {
     );
     const path = `/iris-messages/data/${encodeURIComponent(
       messageDataId
-    )}/import/select`;
+    )}/import-selection-view`;
     return this.apiRequest("GET", path, null, options);
   }
 

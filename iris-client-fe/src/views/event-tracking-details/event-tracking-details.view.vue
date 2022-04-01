@@ -33,7 +33,7 @@
         />
         <iris-message-data-export-dialog
           :data="messageData"
-          :disabled="disabled"
+          :disabled="isMessageDisabled(disabled)"
           label="senden"
         />
       </template>
@@ -65,6 +65,7 @@ import { bundleEventTrackingApi } from "@/modules/event-tracking/services/api";
 import { getApiErrorMessages, getApiLoading } from "@/utils/api";
 import EntryMetaData from "@/components/entry-meta-data.vue";
 import DataExportLabel from "@/components/data-export/data-export-label.vue";
+import { exportableStatus } from "@/modules/event-tracking/modules/message-data/services/config";
 
 @Component({
   components: {
@@ -83,6 +84,11 @@ export default class EventTrackingDetailsView extends Vue {
 
   mounted() {
     this.eventApi.fetchEventDetails.execute(this.$route.params.id);
+  }
+
+  isMessageDisabled(disabled: boolean) {
+    if (disabled || !this.eventTrackingDetails?.status) return true;
+    return exportableStatus.indexOf(this.eventTrackingDetails?.status) <= -1;
   }
 
   get eventTrackingDetails(): DataRequestDetails | null {

@@ -10,7 +10,11 @@
       #default="{ attrs, on }"
       data-test="payload.event"
     >
-      <select-event v-bind="attrs" v-on="on" />
+      <select-event
+        v-bind="attrs"
+        v-on="on"
+        :selectable-status="importableStatus"
+      />
     </stepper-input-field>
     <stepper-input-field
       v-model="model.selection.guests"
@@ -42,6 +46,7 @@ import { EventTrackingMessageDataImportSelection } from "@/modules/event-trackin
 import { IrisMessageDataSelectionPayload } from "@/api";
 import _every from "lodash/every";
 import StepperInputField from "@/components/form/stepper-input-field.vue";
+import { importableStatus } from "@/modules/event-tracking/modules/message-data/services/config";
 
 type ImportValue = {
   target?: string;
@@ -76,6 +81,8 @@ const EventTrackingMessageDataImportProps = Vue.extend({
 })
 export default class EventTrackingMessageDataImport extends EventTrackingMessageDataImportProps {
   step = 1;
+
+  importableStatus = importableStatus;
 
   model: ImportValue = {
     target: this.value?.target,

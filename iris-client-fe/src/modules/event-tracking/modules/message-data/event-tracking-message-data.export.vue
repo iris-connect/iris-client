@@ -13,8 +13,8 @@
       <select-event
         v-bind="attrs"
         v-on="on"
-        :select-query="selectEventQuery"
         :description="description"
+        :selectable-status="exportableStatus"
         @update:description="$emit('update:description', $event)"
       />
     </stepper-input-field>
@@ -36,13 +36,14 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import SelectEvent from "@/modules/event-tracking/modules/message-data/components/select-event.vue";
-import { DataRequestStatus, IrisMessageDataSelectionPayload } from "@/api";
+import { IrisMessageDataSelectionPayload } from "@/api";
 import SelectGuests from "@/modules/event-tracking/modules/message-data/components/select-guests.vue";
 import { PropType } from "vue";
 import rules from "@/common/validation-rules";
 import _values from "lodash/values";
 import _every from "lodash/every";
 import StepperInputField from "@/components/form/stepper-input-field.vue";
+import { exportableStatus } from "@/modules/event-tracking/modules/message-data/services/config";
 
 const EventTrackingMessageDataExportProps = Vue.extend({
   inheritAttrs: false,
@@ -72,7 +73,7 @@ const EventTrackingMessageDataExportProps = Vue.extend({
 export default class EventTrackingMessageDataExport extends EventTrackingMessageDataExportProps {
   step = 1;
 
-  selectEventQuery = { status: DataRequestStatus.DataReceived };
+  exportableStatus = exportableStatus;
 
   model: IrisMessageDataSelectionPayload = this.value || {
     event: "",

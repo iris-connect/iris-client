@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageDataProcessor;
 import iris.client_bff.iris_messages.IrisMessageFolderRepository;
@@ -38,9 +37,6 @@ public class IrisMessageBuilderWebTest {
 	@Mock
 	IrisMessageDataProcessors irisMessageDataProcessors;
 
-	@Mock
-	ValidationHelper validationHelper;
-
 	IrisMessageBuilderWeb builder;
 
 	@BeforeEach
@@ -49,8 +45,7 @@ public class IrisMessageBuilderWebTest {
 		this.builder = new IrisMessageBuilderWeb(
 				this.folderRepository,
 				this.irisMessageClient,
-				this.irisMessageDataProcessors,
-				this.validationHelper
+				this.irisMessageDataProcessors
 		);
 	}
 

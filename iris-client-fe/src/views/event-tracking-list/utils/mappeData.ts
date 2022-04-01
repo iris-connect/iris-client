@@ -42,7 +42,8 @@ export type EventTrackingListTableRow = {
 };
 
 export const getEventTrackingListTableRows = (
-  eventTrackingList: ExistingDataRequestClientWithLocation[] | undefined
+  eventTrackingList: ExistingDataRequestClientWithLocation[] | undefined,
+  selectableStatus?: DataRequestStatus[] | null
 ): EventTrackingListTableRow[] => {
   return (eventTrackingList || []).map((dataRequest) => {
     return {
@@ -57,8 +58,9 @@ export const getEventTrackingListTableRows = (
       name: dataRequest?.name || "-",
       status: dataRequest?.status?.toString() || "-",
       isSelectable:
-        dataRequest?.status === DataRequestStatus.DataRequested ||
-        dataRequest.status === DataRequestStatus.DataReceived,
+        selectableStatus && dataRequest?.status
+          ? selectableStatus.indexOf(dataRequest?.status) >= 0
+          : true,
     };
   });
 };

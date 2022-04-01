@@ -56,7 +56,7 @@ public class IrisMessageTransferDefuse {
 
     private String defuseDataPayload(String input, String field, int maxLength) {
         if (input == null) return null;
-        if (this.validationHelper.isPossibleAttackForMessageDataPayload(input, field, false) || input.length() > maxLength) {
+        if (this.validationHelper.isPossibleAttackForMessageDataPayload(input, field, true) || input.length() > maxLength) {
             return "";
         }
         return input;
