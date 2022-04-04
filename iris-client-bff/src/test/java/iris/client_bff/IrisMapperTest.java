@@ -2,7 +2,6 @@ package iris.client_bff;
 
 import iris.client_bff.IrisMapperTest.MapperTestContextBootstrapper;
 import iris.client_bff.IrisMapperTest.MapperTypeExcludeFilter;
-import iris.client_bff.core.AggregateMapper;
 import iris.client_bff.core.ConversionServiceAdapter;
 import iris.client_bff.core.MetadataMapper;
 
@@ -135,8 +134,7 @@ public @interface IrisMapperTest {
 				GenericConverter.class,
 				GenericConversionService.class,
 				ConversionServiceAdapter.class,
-				MetadataMapper.class,
-				AggregateMapper.class);
+				MetadataMapper.class);
 
 		private final Class<?>[] mappers;
 
