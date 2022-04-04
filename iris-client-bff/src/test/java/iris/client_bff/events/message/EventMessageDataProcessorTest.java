@@ -18,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.util.Streamable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.validation.Validator;
 import java.util.Optional;
 import java.util.Set;
@@ -64,6 +66,7 @@ public class EventMessageDataProcessorTest {
 		this.eventMessageTestData = new EventMessageTestData();
 		this.objectMapper = new ObjectMapper();
 		this.objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
 		this.messageDataProcessor = new EventMessageDataProcessor(
 				this.requestService,

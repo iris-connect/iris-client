@@ -185,7 +185,6 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 
 	private <T> String stringifyJSON(T value) {
 		try {
-			objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 			return objectMapper.writeValueAsString(value);
 		} catch (Exception e) {
 			throw new IrisMessageDataException("iris_message.invalid_message_data");
