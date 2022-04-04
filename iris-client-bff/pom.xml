@@ -259,7 +259,7 @@
 		<dependency>
 			<groupId>com.googlecode.libphonenumber</groupId>
 			<artifactId>libphonenumber</artifactId>
-			<version>8.12.45</version>
+			<version>8.12.46</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish</groupId>
