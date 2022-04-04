@@ -32,7 +32,7 @@ class VaccinationInfoControllerImpl implements VaccinationInfoController {
 	private final VaccinationInfoService service;
 	private final EncryptionService encryptionService;
 	private final ObjectMapper objectMapper;
-	private final DtoMapper mapper;
+	private final VaccinationInfoMapper vaccinationInfoMapper;
 
 	@Override
 	public AnnouncementResultDto announceVaccinationInfoList(AnnouncementDataDto announcementData) {
@@ -51,8 +51,9 @@ class VaccinationInfoControllerImpl implements VaccinationInfoController {
 
 		log.debug("Start submit vaccination info list (JSON-RPC interface)");
 
-		service.createVaccinationInfo(AnnouncementIdentifier.of(dataAuthorizationToken), mapper.mapDto2Entity(facility),
-				mapper.mapDtos2Entities(employees));
+		service.createVaccinationInfo(AnnouncementIdentifier.of(dataAuthorizationToken),
+				vaccinationInfoMapper.fromFacilityDto(facility),
+				vaccinationInfoMapper.fromEmployeeDtos(employees));
 
 		log.trace("Finish submit vaccination info list (JSON-RPC interface)");
 
@@ -101,12 +102,12 @@ class VaccinationInfoControllerImpl implements VaccinationInfoController {
 	}
 
 	@Mapper(config = MapStructCentralConfig.class)
-	static interface DtoMapper {
+	static interface VaccinationInfoMapper {
 
-		VaccinationInfo.Facility mapDto2Entity(Facility facilityDto);
+		VaccinationInfo.Facility fromFacilityDto(Facility facilityDto);
 
-		Set<VaccinationInfo.Employee> mapDtos2Entities(Set<Employee> employees);
+		Set<VaccinationInfo.Employee> fromEmployeeDtos(Set<Employee> employees);
 
-		VaccinationInfo.Employee mapDto2Entity(Employee employee);
+		VaccinationInfo.Employee fromEmployeeDto(Employee employee);
 	}
 }

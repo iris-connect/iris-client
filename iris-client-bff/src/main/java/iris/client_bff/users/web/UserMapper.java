@@ -13,5 +13,5 @@ interface UserMapper {
 
 	@Mapping(target = "createdBy", qualifiedBy = UserNameMetadata.class)
 	@Mapping(target = "lastModifiedBy", qualifiedBy = UserNameMetadata.class)
-	UserDTO mapEntity2Dto(UserAccount source);
+	UserDTO toDto(UserAccount source);
 }

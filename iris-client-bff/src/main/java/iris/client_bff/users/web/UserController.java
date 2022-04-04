@@ -40,7 +40,7 @@ class UserController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserListDTO getAllUsers() {
 		return new UserListDTO()
-				.users(this.userService.loadAll().stream().map(userMapper::mapEntity2Dto).toList());
+				.users(this.userService.loadAll().stream().map(userMapper::toDto).toList());
 	}
 
 	@PostMapping
@@ -50,7 +50,7 @@ class UserController {
 
 		checkUniqueUsername(userInsert.getUserName());
 
-		return userMapper.mapEntity2Dto(userService.create(userInsert));
+		return userMapper.toDto(userService.create(userInsert));
 	}
 
 	@PatchMapping("/{id}")
@@ -61,7 +61,7 @@ class UserController {
 		checkUniqueUsername(userUpdateDTO.getUserName(), id);
 		checkOldPassword(userUpdateDTO.getOldPassword(), userUpdateDTO.getPassword(), authentication, id);
 
-		return userMapper.mapEntity2Dto(userService.update(id, userUpdateDTO, authentication));
+		return userMapper.toDto(userService.update(id, userUpdateDTO, authentication));
 	}
 
 	@DeleteMapping("/{id}")

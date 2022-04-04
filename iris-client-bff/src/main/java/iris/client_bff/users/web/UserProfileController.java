@@ -21,8 +21,8 @@ public class UserProfileController {
 	@GetMapping
 	public UserDTO getUserProfile(Principal principal) {
 
-		var userOpt = userService.findByUsername(principal.getName());
+		var user = userService.findByUsername(principal.getName());
 
-		return userOpt.map(userMapper::mapEntity2Dto).orElse(null);
+		return user.map(userMapper::toDto).orElse(null);
 	}
 }

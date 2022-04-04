@@ -79,7 +79,7 @@ class UserDtoMappingTests {
 
 		setMetadata(user, createdAt, lastModified, userUuid, userUuid);
 
-		var dto = mapper.mapEntity2Dto(user);
+		var dto = mapper.toDto(user);
 
 		var expected = UserDTO.builder()
 				.id(user.getId().toString())

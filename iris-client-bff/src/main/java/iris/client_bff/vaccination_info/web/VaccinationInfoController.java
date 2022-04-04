@@ -40,7 +40,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class VaccinationInfoController {
 
 	private final VaccinationInfoService service;
-	private final DtoMapper mapper;
+	private final VaccinationInfoMapper mapper;
 
 	@GetMapping()
 	public Page<VaccinationReportDto> getVaccinationInfos(
@@ -53,7 +53,7 @@ public class VaccinationInfoController {
 				.map(it -> service.search(it, pageable))
 				.orElseGet(() -> service.getAll(newPageable));
 
-		return vaccInfos.map(mapper::mapEntity2Dto);
+		return vaccInfos.map(mapper::toVaccinationReportDto);
 	}
 
 	private PageRequest adaptPageable(Pageable pageable) {
@@ -76,7 +76,7 @@ public class VaccinationInfoController {
 	public VaccinationReportDetailsDto getDetails(@PathVariable VaccinationInfoIdentifier id) {
 
 		return service.find(id)
-				.map(mapper::mapEntity2DetailsDto)
+				.map(mapper::toVaccinationReportDetailsDto)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid identifier"));
 	}
 
@@ -119,19 +119,19 @@ public class VaccinationInfoController {
 			VaccinationStatus vaccinationStatus) {}
 
 	@Mapper(config = MapStructCentralConfig.class)
-	static interface DtoMapper {
+	static interface VaccinationInfoMapper {
 
 		@Mapping(target = "reportedAt", source = "lastModifiedAt")
-		VaccinationReportDto mapEntity2Dto(VaccinationInfo vaccInfo);
+		VaccinationReportDto toVaccinationReportDto(VaccinationInfo vaccInfo);
 
 		@Mapping(target = "reportedAt", source = "lastModifiedAt")
-		VaccinationReportDetailsDto mapEntity2DetailsDto(VaccinationInfo vaccInfo);
+		VaccinationReportDetailsDto toVaccinationReportDetailsDto(VaccinationInfo vaccInfo);
 
 		@Mapping(target = "eMail", source = "EMail")
-		ContactPersonDto mapEntity2Dto(VaccinationInfo.ContactPerson contactPerson);
+		ContactPersonDto toContactPersonDto(VaccinationInfo.ContactPerson contactPerson);
 
 		@Mapping(target = "eMail", source = "email")
-		EmployeeDto mapEntity2Dto(Employee employee);
+		EmployeeDto toEmployeeDto(Employee employee);
 
 		default Map<VaccinationStatus, Long> vaccinationStatusCount(VaccinationInfo.VaccinationStatusCount statusCount) {
 
