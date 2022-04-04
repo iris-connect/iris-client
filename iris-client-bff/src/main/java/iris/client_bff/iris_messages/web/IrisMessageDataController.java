@@ -55,8 +55,8 @@ public class IrisMessageDataController {
 	) {
 		this.validateMessageDataPayload(importSelection, FIELD_DATA_IMPORT_SELECTION);
 		try {
-			IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageDataId);
-			processor.validateImportSelection(importSelection);
+			this.messageDataProcessors.withProcessorFor(messageDataId)
+					.validateImportSelection(importSelection);
 		} catch (IrisMessageDataException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

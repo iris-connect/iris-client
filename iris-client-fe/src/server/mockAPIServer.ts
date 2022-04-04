@@ -358,23 +358,26 @@ export function makeMockAPIServer() {
         );
       });
 
-      this.post("/iris-messages/data/:id/import/add", (schema, request) => {
+      this.post("/iris-messages/data/:id/import", (schema, request) => {
         dummyIrisMessageData.isImported = true;
         return authResponse(request);
       });
 
-      this.post("/iris-messages/data/:id/import/update", (schema, request) => {
+      this.post("/iris-messages/data/:id/import", (schema, request) => {
         dummyIrisMessageData.isImported = true;
         return authResponse(request);
       });
 
-      this.get("/iris-messages/data/:id/import/select", (schema, request) => {
-        const id = request.params.id;
-        return authResponse(
-          request,
-          getDummyIrisMessageEventImportSelection(id)
-        );
-      });
+      this.get(
+        "/iris-messages/data/:id/import-selection-view",
+        (schema, request) => {
+          const id = request.params.id;
+          return authResponse(
+            request,
+            getDummyIrisMessageEventImportSelection(id)
+          );
+        }
+      );
 
       this.get("/iris-messages/data/:id/view", (schema, request) => {
         const id = request.params.id;

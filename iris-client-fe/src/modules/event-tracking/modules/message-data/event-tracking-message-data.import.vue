@@ -1,39 +1,43 @@
 <template>
-  <v-stepper vertical v-model="step" flat>
-    <stepper-input-field
-      :value="model.target"
-      @input="onTargetChange"
-      :rules="validationRules.defined"
-      :disabled="disabled"
-      label="Ereignis wählen"
-      step="1"
-      #default="{ attrs, on }"
-      data-test="payload.event"
-    >
-      <select-event
-        v-bind="attrs"
-        v-on="on"
-        :selectable-status="importableStatus"
-      />
-    </stepper-input-field>
-    <stepper-input-field
-      v-model="model.selection.guests"
-      :rules="validationRules.defined"
-      :disabled="disabled"
-      :editable="!!model.target"
-      label="Gäste wählen"
-      step="2"
-      #default="{ attrs, on }"
-      data-test="payload.guests"
-    >
-      <select-guests-data-table
-        :items="selectableGuests"
-        :duplicates="duplicateGuests"
-        v-bind="attrs"
-        v-on="on"
-      />
-    </stepper-input-field>
-  </v-stepper>
+  <vertical-stepper v-model="step">
+    <vertical-stepper-step :active-step="step" step="1">
+      <stepper-input-field
+        :value="model.target"
+        @input="onTargetChange"
+        :rules="validationRules.defined"
+        :disabled="disabled"
+        label="Ereignis wählen"
+        step="1"
+        #default="{ attrs, on }"
+        data-test="payload.event"
+      >
+        <select-event
+          v-bind="attrs"
+          v-on="on"
+          :selectable-status="importableStatus"
+        />
+      </stepper-input-field>
+    </vertical-stepper-step>
+    <vertical-stepper-step :active-step="step" step="2">
+      <stepper-input-field
+        v-model="model.selection.guests"
+        :rules="validationRules.defined"
+        :disabled="disabled"
+        :editable="!!model.target"
+        label="Gäste wählen"
+        step="2"
+        #default="{ attrs, on }"
+        data-test="payload.guests"
+      >
+        <select-guests-data-table
+          :items="selectableGuests"
+          :duplicates="duplicateGuests"
+          v-bind="attrs"
+          v-on="on"
+        />
+      </stepper-input-field>
+    </vertical-stepper-step>
+  </vertical-stepper>
 </template>
 
 <script lang="ts">
@@ -47,6 +51,8 @@ import { IrisMessageDataSelectionPayload } from "@/api";
 import _every from "lodash/every";
 import StepperInputField from "@/components/form/stepper-input-field.vue";
 import { importableStatus } from "@/modules/event-tracking/modules/message-data/services/config";
+import VerticalStepper from "@/components/stepper/vertical-stepper.vue";
+import VerticalStepperStep from "@/components/stepper/vertical-stepper-step.vue";
 
 type ImportValue = {
   target?: string;
@@ -74,6 +80,8 @@ const EventTrackingMessageDataImportProps = Vue.extend({
 
 @Component({
   components: {
+    VerticalStepperStep,
+    VerticalStepper,
     StepperInputField,
     SelectGuestsDataTable,
     SelectEvent,

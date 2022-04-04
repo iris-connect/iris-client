@@ -99,7 +99,7 @@ class IrisMessageControllerTest {
 		when(irisMessageService.sendMessage(any())).thenReturn(irisMessage);
 		when(irisMessageService.findById(irisMessage.getId())).thenReturn(Optional.of(irisMessage));
 
-		when(irisMessageDataProcessors.getProcessor(anyString())).thenReturn(irisMessageDataProcessor);
+		when(irisMessageDataProcessors.withProcessorFor(anyString())).thenReturn(irisMessageDataProcessor);
 		doNothing().when(irisMessageDataProcessor).validateExportSelection(anyString());
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -131,7 +131,7 @@ class IrisMessageControllerTest {
 		assertThat(messageDetailsDto.getSubject()).isEqualTo(messageInsert.getSubject());
 		assertThat(messageDetailsDto.getBody()).isEqualTo(messageInsert.getBody());
 
-		verify(irisMessageDataProcessors).getProcessor(anyString());
+		verify(irisMessageDataProcessors).withProcessorFor(anyString());
 		verify(irisMessageDataProcessor).validateExportSelection(anyString());
 	}
 

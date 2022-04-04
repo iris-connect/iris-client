@@ -24,20 +24,20 @@ public class IrisMessageDataService {
 
     public void importMessageData(IrisMessageData.IrisMessageDataIdentifier messageDataId) {
         IrisMessageData messageData = this.getMessageData(messageDataId);
-        IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageDataId);
-        processor.importPayload(messageData.getPayload());
+        this.messageDataProcessors.withProcessorFor(messageDataId)
+                .importPayload(messageData.getPayload());
         messageData.setImported(true);
         this.messageDataRepository.save(messageData);
     }
 
     public void importMessageData(IrisMessageData.IrisMessageDataIdentifier messageDataId, UUID importTargetId, String importSelection) {
         IrisMessageData messageData = this.getMessageData(messageDataId);
-        IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageDataId);
-        processor.importPayload(
-                messageData.getPayload(),
-                importTargetId,
-                importSelection
-        );
+        this.messageDataProcessors.withProcessorFor(messageDataId)
+                .importPayload(
+                    messageData.getPayload(),
+                    importTargetId,
+                    importSelection
+                );
         messageData.setImported(true);
         this.messageDataRepository.save(messageData);
     }

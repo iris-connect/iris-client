@@ -1,11 +1,13 @@
 <template>
-  <v-dialog v-model="dialog">
+  <v-dialog v-model="dialog" scrollable>
     <template v-slot:activator="{ attrs, on }">
       <slot name="activator" v-bind="{ attrs, on }" />
     </template>
     <v-card data-test="message-data.preview.dialog">
-      <iris-message-data-view v-bind="dataViewConfig" />
-      <error-message-alert :dense="true" :errors="errors" />
+      <v-card-text class="pa-0">
+        <iris-message-data-view v-bind="dataViewConfig" />
+        <error-message-alert :dense="true" :errors="errors" />
+      </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
         <v-btn color="secondary" text @click="dialog = false" data-test="close">

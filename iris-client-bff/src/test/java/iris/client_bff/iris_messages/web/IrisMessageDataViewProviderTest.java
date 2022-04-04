@@ -53,7 +53,7 @@ public class IrisMessageDataViewProviderTest {
 		when(this.messageDataService.getMessageData(any(IrisMessageData.IrisMessageDataIdentifier.class)))
 				.thenReturn(messageData);
 
-		when(this.messageDataProcessors.getProcessor(anyString())).thenReturn(this.messageDataProcessor);
+		when(this.messageDataProcessors.withProcessorFor(anyString())).thenReturn(this.messageDataProcessor);
 		when(this.messageDataProcessor.getViewPayload(messageData.getPayload()))
 				.thenReturn(viewDataDto.getPayload());
 
@@ -61,7 +61,7 @@ public class IrisMessageDataViewProviderTest {
 
 		verify(this.messageDataService).getMessageData(messageData.getId());
 
-		verify(this.messageDataProcessors).getProcessor(anyString());
+		verify(this.messageDataProcessors).withProcessorFor(anyString());
 		verify(this.messageDataProcessor).getViewPayload(messageData.getPayload());
 
 		assertEquals(viewDataDto, result);
@@ -78,7 +78,7 @@ public class IrisMessageDataViewProviderTest {
 		when(this.messageDataService.getMessageData(any(IrisMessageData.IrisMessageDataIdentifier.class)))
 				.thenReturn(messageData);
 
-		when(this.messageDataProcessors.getProcessor(anyString())).thenReturn(this.messageDataProcessor);
+		when(this.messageDataProcessors.withProcessorFor(anyString())).thenReturn(this.messageDataProcessor);
 		when(this.messageDataProcessor.getImportSelectionViewPayload(messageData.getPayload(), targetId))
 				.thenReturn(viewDataDto.getPayload());
 
@@ -86,7 +86,7 @@ public class IrisMessageDataViewProviderTest {
 
 		verify(this.messageDataService).getMessageData(messageData.getId());
 
-		verify(this.messageDataProcessors).getProcessor(anyString());
+		verify(this.messageDataProcessors).withProcessorFor(anyString());
 		verify(this.messageDataProcessor).getImportSelectionViewPayload(messageData.getPayload(), targetId);
 
 		assertEquals(viewDataDto, result);

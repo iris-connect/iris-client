@@ -9,8 +9,8 @@
     <v-card>
       <v-card-title> Daten wählen </v-card-title>
       <v-card-text>
-        <v-row>
-          <v-col cols="12">
+        <div class="d-flex flex-column fill-height vertical-row">
+          <div class="flex-grow-0">
             <v-select
               label="Datentyp"
               :items="discriminatorOptions"
@@ -21,8 +21,8 @@
                 contentClass: 'select-menu-message-data-discriminator',
               }"
             />
-          </v-col>
-          <v-col cols="12">
+          </div>
+          <div class="flex-grow-0 py-3">
             <v-text-field
               v-model="form.model.description"
               label="Kurzbeschreibung"
@@ -30,16 +30,16 @@
               maxlength="255"
               data-test="description"
             ></v-text-field>
-          </v-col>
-          <v-col cols="12">
+          </div>
+          <div class="flex-grow-1 flex-scroll-container">
             <iris-message-data-component
               v-bind="dataComponentConfig"
               v-model="form.model.payload"
               :description.sync="form.model.description"
               :disabled="disabled"
             />
-          </v-col>
-        </v-row>
+          </div>
+        </div>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
@@ -163,3 +163,9 @@ export default class IrisMessageDataSelectForm extends IrisMessageDataSelectForm
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.flex-scroll-container {
+  min-height: 0;
+}
+</style>

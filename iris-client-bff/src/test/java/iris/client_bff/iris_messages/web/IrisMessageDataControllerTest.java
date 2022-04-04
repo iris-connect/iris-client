@@ -40,8 +40,6 @@ class IrisMessageDataControllerTest {
 
 	private final String baseUrl = "/iris-messages/data";
 
-	TypeReference<RestResponsePage<IrisMessageListItemDto>> PAGE_TYPE = new TypeReference<>() {};
-
 	private final MockMvc mockMvc;
 	private final ObjectMapper om;
 
@@ -80,7 +78,7 @@ class IrisMessageDataControllerTest {
 
 		var result = mockMvc
 				.perform(
-						MockMvcRequestBuilders.post(baseUrl + "/" + messageData.getId() + "/import/add")
+						MockMvcRequestBuilders.post(baseUrl + "/" + messageData.getId() + "/import")
 				)
 				.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 				.andReturn();
@@ -106,12 +104,12 @@ class IrisMessageDataControllerTest {
 				anyString()
 		);
 
-		when(irisMessageDataProcessors.getProcessor(any(IrisMessageData.IrisMessageDataIdentifier.class))).thenReturn(irisMessageDataProcessor);
+		when(irisMessageDataProcessors.withProcessorFor(any(IrisMessageData.IrisMessageDataIdentifier.class))).thenReturn(irisMessageDataProcessor);
 		doNothing().when(irisMessageDataProcessor).validateImportSelection(anyString());
 
 		var result = mockMvc
 				.perform(
-						MockMvcRequestBuilders.post(baseUrl + "/" + messageData.getId() + "/import/update")
+						MockMvcRequestBuilders.post(baseUrl + "/" + messageData.getId() + "/import")
 								.queryParam("importTargetId", UUID.randomUUID().toString())
 								.content(this.eventMessageTestData.MOCK_EVENT_MESSAGE_IMPORT_SELECTION_STRING)
 								.contentType(MediaType.APPLICATION_JSON)
@@ -128,7 +126,7 @@ class IrisMessageDataControllerTest {
 				anyString()
 		);
 
-		verify(irisMessageDataProcessors).getProcessor(messageData.getId());
+		verify(irisMessageDataProcessors).withProcessorFor(messageData.getId());
 		verify(irisMessageDataProcessor).validateImportSelection(anyString());
 		verify(messageData).setImported(true);
 	}
@@ -145,7 +143,7 @@ class IrisMessageDataControllerTest {
 
 		var result = mockMvc
 				.perform(
-						MockMvcRequestBuilders.get(baseUrl + "/" + viewDataDto.getId() + "/import/select")
+						MockMvcRequestBuilders.get(baseUrl + "/" + viewDataDto.getId() + "/import-selection-view")
 								.queryParam("importTargetId", UUID.randomUUID().toString())
 				)
 				.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())

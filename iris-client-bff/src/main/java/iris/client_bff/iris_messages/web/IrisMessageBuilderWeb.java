@@ -1,6 +1,5 @@
 package iris.client_bff.iris_messages.web;
 
-import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageContext;
 import iris.client_bff.iris_messages.exceptions.IrisMessageException;
@@ -50,9 +49,8 @@ class IrisMessageBuilderWeb {
 		try {
 			if (messageInsert.getDataAttachments() != null) {
 				for (IrisMessageInsertDto.DataAttachment data : messageInsert.getDataAttachments()) {
-					IrisMessageDataProcessor processor = this.messageDataProcessors
-							.getProcessor(data.getDiscriminator());
-					String payload = processor.buildPayload(data.getPayload());
+					String payload = this.messageDataProcessors.withProcessorFor(data.getDiscriminator())
+							.buildPayload(data.getPayload());
 					IrisMessageData irisMessageData = new IrisMessageData().setMessage(message)
 							.setDiscriminator(data.getDiscriminator()).setDescription(data.getDescription())
 							.setPayload(payload);

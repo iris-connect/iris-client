@@ -2,7 +2,6 @@ package iris.client_bff.iris_messages.web;
 
 import iris.client_bff.iris_messages.IrisMessageData;
 import iris.client_bff.iris_messages.IrisMessageData.IrisMessageDataIdentifier;
-import iris.client_bff.iris_messages.IrisMessageDataProcessor;
 import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.IrisMessageDataService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +18,9 @@ public class IrisMessageDataViewProvider {
 
 	public IrisMessageDataViewDataDto getViewData(IrisMessageDataIdentifier messageDataId) {
 		IrisMessageData messageData = this.messageDataService.getMessageData(messageDataId);
-		IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageData.getDiscriminator());
-		return this.buildViewData(messageData, processor.getViewPayload(messageData.getPayload()));
+		var payload = this.messageDataProcessors.withProcessorFor(messageData.getDiscriminator())
+				.getViewPayload(messageData.getPayload());
+		return this.buildViewData(messageData, payload);
 	}
 
 	public IrisMessageDataViewDataDto getImportSelectionViewData(
@@ -28,11 +28,9 @@ public class IrisMessageDataViewProvider {
 			UUID importTargetId
 	) {
 		IrisMessageData messageData = this.messageDataService.getMessageData(messageDataId);
-		IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(messageData.getDiscriminator());
-		return this.buildViewData(
-				messageData,
-				processor.getImportSelectionViewPayload(messageData.getPayload(), importTargetId)
-		);
+		var payload = this.messageDataProcessors.withProcessorFor(messageData.getDiscriminator())
+				.getImportSelectionViewPayload(messageData.getPayload(), importTargetId);
+		return this.buildViewData(messageData, payload);
 	}
 
 	private IrisMessageDataViewDataDto buildViewData(IrisMessageData messageData, Object payload) {

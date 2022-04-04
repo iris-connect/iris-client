@@ -1,14 +1,13 @@
 <template>
-  <div>
-    <iris-message-data-component
-      v-bind="$attrs"
-      v-on="$listeners"
-      :source="source"
-      :discriminator="discriminator"
-      :payload="normalizedPayload"
-    />
-    <error-message-alert :errors="errors" />
-  </div>
+  <iris-message-data-component
+    v-if="errors.length <= 0"
+    v-bind="$attrs"
+    v-on="$listeners"
+    :source="source"
+    :discriminator="discriminator"
+    :payload="normalizedPayload"
+  />
+  <error-message-alert v-else :errors="errors" />
 </template>
 
 <script lang="ts">

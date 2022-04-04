@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <component
-      v-bind="$attrs"
-      v-on="$listeners"
-      v-if="dataComponent"
-      v-bind:is="dataComponent"
-    />
-    <error-message-alert :errors="errors" />
-  </div>
+  <component
+    v-if="dataComponent && errors.length <= 0"
+    v-bind="$attrs"
+    v-on="$listeners"
+    v-bind:is="dataComponent"
+  />
+  <error-message-alert v-else :errors="errors" />
 </template>
 
 <script lang="ts">

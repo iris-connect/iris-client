@@ -29,7 +29,7 @@ public class IrisMessageDataProcessors {
 				.collect(Collectors.toMap(IrisMessageDataProcessor::getDiscriminator, Function.identity()));
 	}
 
-	public IrisMessageDataProcessor getProcessor(String discriminator) {
+	public IrisMessageDataProcessor withProcessorFor(String discriminator) {
 		try {
 			return this.processors.get(discriminator);
 		} catch (Exception e) {
@@ -38,7 +38,7 @@ public class IrisMessageDataProcessors {
 		}
 	}
 
-	public IrisMessageDataProcessor getProcessor(IrisMessageData.IrisMessageDataIdentifier messageDataId) {
+	public IrisMessageDataProcessor withProcessorFor(IrisMessageData.IrisMessageDataIdentifier messageDataId) {
 		try {
 			IrisMessageData messageData = this.irisMessageDataRepository.getById(messageDataId);
 			return this.processors.get(messageData.getDiscriminator());

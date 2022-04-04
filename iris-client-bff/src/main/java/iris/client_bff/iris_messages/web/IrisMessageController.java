@@ -9,7 +9,6 @@ import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifi
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import iris.client_bff.iris_messages.IrisMessageService;
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
-import iris.client_bff.iris_messages.IrisMessageDataProcessor;
 import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
@@ -115,8 +114,8 @@ public class IrisMessageController {
 				this.validateMessageDataPayload(data.getPayload(), FIELD_DATA_PAYLOAD);
 				this.validateField(data.getDescription(), FIELD_DATA_DESCRIPTION);
 				try {
-					IrisMessageDataProcessor processor = this.messageDataProcessors.getProcessor(data.getDiscriminator());
-					processor.validateExportSelection(data.getPayload());
+					this.messageDataProcessors.withProcessorFor(data.getDiscriminator())
+							.validateExportSelection(data.getPayload());
 				} catch (IrisMessageDataException e) {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 				}

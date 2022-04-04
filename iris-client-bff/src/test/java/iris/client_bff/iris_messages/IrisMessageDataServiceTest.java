@@ -71,7 +71,7 @@ public class IrisMessageDataServiceTest {
 		when(this.messageDataRepository.save(any(IrisMessageData.class)))
 				.thenReturn(messageData);
 
-		when(this.messageDataProcessors.getProcessor(any(IrisMessageData.IrisMessageDataIdentifier.class)))
+		when(this.messageDataProcessors.withProcessorFor(any(IrisMessageData.IrisMessageDataIdentifier.class)))
 				.thenReturn(this.messageDataProcessor);
 
 		doNothing().when(this.messageDataProcessor).importPayload(anyString());
@@ -80,7 +80,7 @@ public class IrisMessageDataServiceTest {
 
 		verify(this.messageDataRepository).findById(messageData.getId());
 		verify(this.messageDataRepository).save(messageData);
-		verify(this.messageDataProcessors).getProcessor(messageData.getId());
+		verify(this.messageDataProcessors).withProcessorFor(messageData.getId());
 		verify(this.messageDataProcessor).importPayload(messageData.getPayload());
 
 		assertTrue(messageData.isImported());
@@ -100,7 +100,7 @@ public class IrisMessageDataServiceTest {
 		when(this.messageDataRepository.save(any(IrisMessageData.class)))
 				.thenReturn(messageData);
 
-		when(this.messageDataProcessors.getProcessor(any(IrisMessageData.IrisMessageDataIdentifier.class)))
+		when(this.messageDataProcessors.withProcessorFor(any(IrisMessageData.IrisMessageDataIdentifier.class)))
 				.thenReturn(this.messageDataProcessor);
 
 		doNothing().when(this.messageDataProcessor).importPayload(anyString(), any(UUID.class), anyString());
@@ -109,7 +109,7 @@ public class IrisMessageDataServiceTest {
 
 		verify(this.messageDataRepository).findById(messageData.getId());
 		verify(this.messageDataRepository).save(messageData);
-		verify(this.messageDataProcessors).getProcessor(messageData.getId());
+		verify(this.messageDataProcessors).withProcessorFor(messageData.getId());
 		verify(this.messageDataProcessor).importPayload(messageData.getPayload(), targetId, selection);
 
 		assertTrue(messageData.isImported());

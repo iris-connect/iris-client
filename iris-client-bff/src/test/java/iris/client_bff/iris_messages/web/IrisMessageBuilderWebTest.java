@@ -62,7 +62,7 @@ public class IrisMessageBuilderWebTest {
 		when(this.irisMessageClient.findIrisMessageHdContactById(any(String.class)))
 				.thenReturn(Optional.of(this.testData.MOCK_CONTACT_OTHER));
 
-		when(this.irisMessageDataProcessors.getProcessor(anyString())).thenReturn(this.irisMessageDataProcessor);
+		when(this.irisMessageDataProcessors.withProcessorFor(anyString())).thenReturn(this.irisMessageDataProcessor);
 		when(this.irisMessageDataProcessor.buildPayload(messageInsert.getDataAttachments().get(0).getPayload()))
 				.thenReturn(message.getDataAttachments().get(0).getPayload());
 
@@ -73,7 +73,7 @@ public class IrisMessageBuilderWebTest {
 		verify(this.irisMessageClient).getOwnIrisMessageHdContact();
 		verify(this.irisMessageClient).findIrisMessageHdContactById(any(String.class));
 
-		verify(this.irisMessageDataProcessors).getProcessor(anyString());
+		verify(this.irisMessageDataProcessors).withProcessorFor(anyString());
 		verify(this.irisMessageDataProcessor).buildPayload(anyString());
 
 		// messages should be identical except ID: toString removes the ID
