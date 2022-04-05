@@ -1,6 +1,4 @@
-import { EventTrackingListState } from "@/views/event-tracking-list/event-tracking-list.store";
 import { EventTrackingFormState } from "@/views/event-tracking-form/event-tracking-form.store";
-import { EventTrackingDetailsState } from "@/views/event-tracking-details/event-tracking-details.store";
 import { IndexTrackingListState } from "@/views/index-tracking-list/index-tracking-list.store";
 import { IndexTrackingFormState } from "@/views/index-tracking-form/index-tracking-form.store";
 import { IndexTrackingDetailsState } from "@/views/index-tracking-details/index-tracking-details.store";
@@ -14,15 +12,12 @@ import { IndexTrackingSettingsState } from "@/views/app-settings/index-tracking-
 import { NormalizeSettingsState } from "@/views/app-settings/normalize-settings.store";
 import { ChunkLoaderState } from "@/views/app-settings/chunk-loader.store";
 import { CheckinAppStatusListState } from "@/views/checkin-app-status-list/checkin-app-status-list.store";
-import { IrisMessageListState } from "@/views/iris-message-list/iris-message-list.store";
-import { IrisMessageDetailsState } from "@/views/iris-message-details/iris-message-details.store";
 import { IrisMessageCreateState } from "@/views/iris-message-create/iris-message-create.store";
+import { E2ETestsStoreState } from "@/modules/e2e-tests/e2e-tests.store";
 
 export type RootState = {
   home: HomeState;
   eventTrackingForm: EventTrackingFormState;
-  eventTrackingList: EventTrackingListState;
-  eventTrackingDetails: EventTrackingDetailsState;
   userLogin: UserLoginState;
   indexTrackingForm: IndexTrackingFormState;
   indexTrackingList: IndexTrackingListState;
@@ -35,7 +30,6 @@ export type RootState = {
   normalizeSettings: NormalizeSettingsState;
   chunkLoader: ChunkLoaderState;
   checkinAppStatusList: CheckinAppStatusListState;
-  irisMessageList: IrisMessageListState;
-  irisMessageDetails: IrisMessageDetailsState;
   irisMessageCreate: IrisMessageCreateState;
+  e2eTests: E2ETestsStoreState;
 };

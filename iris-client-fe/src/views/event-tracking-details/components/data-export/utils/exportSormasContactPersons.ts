@@ -1,5 +1,5 @@
 import dataExport from "@/utils/data-export/data-export";
-import { TableRow } from "@/views/event-tracking-details/event-tracking-details.view.vue";
+import { GuestListTableRow } from "@/views/event-tracking-details/utils/mappedData";
 import { DataRequestDetails } from "@/api";
 
 export type ContactCaseData = {
@@ -60,7 +60,7 @@ const getHeaders = () => [
 
 const mapData = (
   event: DataRequestDetails | null,
-  tableRows: TableRow[]
+  tableRows: GuestListTableRow[]
 ): ContactCaseData[] => {
   const data: ContactCaseData[] = [];
   tableRows.forEach((element) => {

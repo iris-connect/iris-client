@@ -10,6 +10,8 @@ import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
+import iris.client_bff.iris_messages.IrisMessageDataProcessor;
+import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
@@ -52,6 +54,12 @@ class IrisMessageControllerTest {
 	@MockBean
 	private IrisMessageBuilderWeb irisMessageBuilder;
 
+	@MockBean
+	IrisMessageDataProcessor irisMessageDataProcessor;
+
+	@MockBean
+	IrisMessageDataProcessors irisMessageDataProcessors;
+
 	@Test
 	void endpointShouldBeProtected() throws Exception {
 		mockMvc.perform(get(baseUrl))
@@ -91,6 +99,9 @@ class IrisMessageControllerTest {
 		when(irisMessageService.sendMessage(any())).thenReturn(irisMessage);
 		when(irisMessageService.findById(irisMessage.getId())).thenReturn(Optional.of(irisMessage));
 
+		when(irisMessageDataProcessors.withProcessorFor(anyString())).thenReturn(irisMessageDataProcessor);
+		doNothing().when(irisMessageDataProcessor).validateExportSelection(anyString());
+
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		var postResult = mockMvc
@@ -101,7 +112,7 @@ class IrisMessageControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isCreated())
 				.andReturn();
 
-		verify(irisMessageBuilder).build(messageInsert);
+		verify(irisMessageBuilder).build(any(IrisMessageInsertDto.class));
 		verify(irisMessageService).sendMessage(any());
 
 		String location = postResult.getResponse().getHeader("location");
@@ -120,6 +131,8 @@ class IrisMessageControllerTest {
 		assertThat(messageDetailsDto.getSubject()).isEqualTo(messageInsert.getSubject());
 		assertThat(messageDetailsDto.getBody()).isEqualTo(messageInsert.getBody());
 
+		verify(irisMessageDataProcessors).withProcessorFor(anyString());
+		verify(irisMessageDataProcessor).validateExportSelection(anyString());
 	}
 
 	@Test

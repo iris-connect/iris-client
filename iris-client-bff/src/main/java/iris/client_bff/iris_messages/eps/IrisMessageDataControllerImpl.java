@@ -2,7 +2,7 @@ package iris.client_bff.iris_messages.eps;
 
 import iris.client_bff.config.JsonRpcDataValidator;
 import iris.client_bff.iris_messages.IrisMessage;
-import iris.client_bff.iris_messages.IrisMessageException;
+import iris.client_bff.iris_messages.exceptions.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageService;
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +30,7 @@ class IrisMessageDataControllerImpl implements IrisMessageDataController {
 			IrisMessage message = this.irisMessageBuilder.build(this.messageTransferDefuse.defuse(messageTransfer));
 			IrisMessage savedMessage = this.irisMessageService.saveMessage(message);
 			return IrisMessageTransferDto.fromEntity(savedMessage);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new IrisMessageException(e);
 		}
 	}

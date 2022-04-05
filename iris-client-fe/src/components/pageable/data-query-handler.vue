@@ -10,6 +10,7 @@ import { DataQuery, mapSortAttributes } from "@/api/common";
 import { DEFAULT_PAGE_SIZE, getParamFromRoute } from "@/utils/pagination";
 import _mapValues from "lodash/mapValues";
 import { Location } from "vue-router";
+import { PropType } from "vue";
 
 const DataQueryHandlerProps = Vue.extend({
   inheritAttrs: false,
@@ -17,6 +18,10 @@ const DataQueryHandlerProps = Vue.extend({
     routeControl: {
       type: Boolean,
       default: true,
+    },
+    dataQuery: {
+      type: Object as PropType<Partial<DataQuery> | null>,
+      default: null,
     },
   },
 });
@@ -26,12 +31,12 @@ export default class DataQueryHandler extends DataQueryHandlerProps {
   isMounted = false;
 
   query: DataQuery = {
-    size: DEFAULT_PAGE_SIZE,
-    page: 0,
-    sort: undefined,
-    search: undefined,
-    status: undefined,
-    folder: undefined,
+    size: this.dataQuery?.size || DEFAULT_PAGE_SIZE,
+    page: this.dataQuery?.page || 0,
+    sort: this.dataQuery?.sort,
+    search: this.dataQuery?.search,
+    status: this.dataQuery?.status,
+    folder: this.dataQuery?.folder,
   };
 
   mounted() {

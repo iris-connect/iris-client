@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageFolderRepository;
 import iris.client_bff.iris_messages.IrisMessageTestData;
@@ -31,12 +32,20 @@ public class IrisMessageBuilderEpsTest {
 	@Mock
 	MessageSourceAccessor messages;
 
+	@Mock
+	ValidationHelper validationHelper;
+
 	IrisMessageBuilderEps builder;
 
 	@BeforeEach
 	void setUp() {
 		this.testData = new IrisMessageTestData();
-		this.builder = new IrisMessageBuilderEps(this.folderRepository, this.irisMessageClient, this.messages);
+		this.builder = new IrisMessageBuilderEps(
+				this.folderRepository,
+				this.irisMessageClient,
+				this.messages,
+				this.validationHelper
+		);
 	}
 
 	@Test

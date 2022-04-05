@@ -19,12 +19,21 @@ const DataExportLabelProps = Vue.extend({
       type: Array as PropType<string[] | null>,
       default: null,
     },
+    actionLabel: {
+      type: [String, Boolean] as PropType<string | false | null>,
+      default: null,
+    },
   },
   render() {
     const defaultSlot = this.$scopedSlots.default;
     if (!defaultSlot) return;
     return defaultSlot({
-      exportLabel: getExportLabel(this.selected, this.total, this.label),
+      exportLabel: getExportLabel(
+        this.selected,
+        this.total,
+        this.label,
+        this.actionLabel
+      ),
     }) as any;
   },
 });

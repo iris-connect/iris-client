@@ -3,11 +3,13 @@ package iris.client_bff.iris_messages.web;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
-import iris.client_bff.iris_messages.IrisMessageException;
+import iris.client_bff.iris_messages.exceptions.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import iris.client_bff.iris_messages.IrisMessageService;
+import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
+import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -52,9 +55,16 @@ public class IrisMessageController {
 	private static final String FIELD_SUBJECT = "subject";
 	private static final String FIELD_BODY = "body";
 
+	private static final String FIELD_DATA_DISCRIMINATOR = "discriminator";
+	private static final String FIELD_DATA_DESCRIPTION = "description";
+	private static final String FIELD_DATA_PAYLOAD = "payload";
+
 	private IrisMessageService irisMessageService;
 	private final IrisMessageBuilderWeb irisMessageBuilder;
 	private final ValidationHelper validationHelper;
+
+	private final IrisMessageDataProcessors messageDataProcessors;
+	private final MessageSourceAccessor messages;
 
 	@GetMapping()
 	public Page<IrisMessageListItemDto> getMessages(
@@ -95,6 +105,22 @@ public class IrisMessageController {
 		this.validateField(irisMessageInsert.getHdRecipient(), FIELD_HD_RECIPIENT);
 		this.validateField(irisMessageInsert.getSubject(), FIELD_SUBJECT);
 		this.validateField(irisMessageInsert.getBody(), FIELD_BODY);
+
+		if (irisMessageInsert.getDataAttachments() != null) {
+			for ( IrisMessageInsertDto.DataAttachment data : irisMessageInsert.getDataAttachments() ) {
+				this.validateField(data.getDiscriminator(), FIELD_DATA_DISCRIMINATOR);
+				// The validation of the insert payload is handled by the data processor
+				// Doesn't hurt to validate the keys & values of the payloads JSON string
+				this.validateMessageDataPayload(data.getPayload(), FIELD_DATA_PAYLOAD);
+				this.validateField(data.getDescription(), FIELD_DATA_DESCRIPTION);
+				try {
+					this.messageDataProcessors.withProcessorFor(data.getDiscriminator())
+							.validateExportSelection(data.getPayload());
+				} catch (IrisMessageDataException e) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+				}
+			}
+		}
 	}
 
 	@GetMapping("/{messageId}")
@@ -182,8 +208,15 @@ public class IrisMessageController {
 	}
 
 	private void validateField(String value, String field) {
-		if (validationHelper.isPossibleAttack(value, field, false)) {
+		if (validationHelper.isPossibleAttack(value, field, true)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
 	}
+
+	private void validateMessageDataPayload(String value, String field) {
+		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, true)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, messages.getMessage("iris_message.invalid_message_data"));
+		}
+	}
+
 }

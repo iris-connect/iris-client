@@ -5,10 +5,14 @@
     </template>
     <v-card data-test="confirm-dialog">
       <v-card-title>
-        <slot name="title" />
+        <slot name="title">
+          {{ title }}
+        </slot>
       </v-card-title>
       <v-card-text>
-        <slot name="text" />
+        <slot name="text">
+          {{ text }}
+        </slot>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
@@ -37,6 +41,14 @@ const ConfirmDialogProps = Vue.extend({
     color: {
       type: String,
       default: "error",
+    },
+    title: {
+      type: String,
+      default: "",
+    },
+    text: {
+      type: String,
+      default: "",
     },
   },
 });

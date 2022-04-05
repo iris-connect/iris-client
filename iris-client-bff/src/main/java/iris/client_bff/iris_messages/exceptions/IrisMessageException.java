@@ -1,4 +1,4 @@
-package iris.client_bff.iris_messages;
+package iris.client_bff.iris_messages.exceptions;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

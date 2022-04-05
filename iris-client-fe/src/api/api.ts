@@ -979,6 +979,7 @@ export interface ExistingDataRequestClientWithLocationList {
  * @interface Guest
  */
 export interface Guest {
+  messageDataSelectId?: string;
   /**
    *
    * @type {string}
@@ -1910,6 +1911,18 @@ export interface Page<Content> {
   empty?: boolean;
 }
 
+export interface IrisMessageDataAttachment {
+  id: string;
+  discriminator?: IrisMessageDataDiscriminator;
+  description: string;
+  isImported?: boolean;
+}
+
+export interface IrisMessageDataAttachmentCount {
+  total?: number;
+  imported?: number;
+}
+
 export interface IrisMessage {
   id: string;
   folder: string;
@@ -1920,14 +1933,43 @@ export interface IrisMessage {
   hdRecipient: IrisMessageHdContact;
   createdAt: string;
   isRead?: boolean;
+  attachmentCount?: IrisMessageDataAttachmentCount;
 }
 
-export type IrisMessageDetails = IrisMessage;
+export interface IrisMessageDetails extends IrisMessage {
+  context: IrisMessageContext;
+  dataAttachments?: IrisMessageDataAttachment[];
+}
+
+export type IrisMessageDataSelectionPayload = {
+  [key: string]:
+    | string
+    | string[]
+    | IrisMessageDataSelectionPayload
+    | IrisMessageDataSelectionPayload[];
+};
+
+export enum IrisMessageDataDiscriminator {
+  EventTracking = "event-tracking",
+}
+
+export interface IrisMessageDataInsert {
+  description: string;
+  payload: IrisMessageDataSelectionPayload;
+  discriminator: IrisMessageDataDiscriminator;
+}
+
+export type IrisMessageDataViewData = {
+  id: string;
+  discriminator: IrisMessageDataDiscriminator;
+  payload: any;
+};
 
 export interface IrisMessageInsert {
   hdRecipient: string;
   subject: string;
   body: string;
+  dataAttachments?: IrisMessageDataInsert[];
 }
 
 export enum IrisMessageContext {
@@ -2400,6 +2442,107 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("irisMessagesSetIsRead", "messageId", messageId);
     const path = `/iris-messages/${encodeURIComponent(messageId)}`;
     return this.apiRequest("PATCH", path, { isRead: true }, options);
+  }
+
+  /**
+   *
+   * @summary Import data from message attachment
+   * @param {string} messageDataId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public importIrisMessageDataAndAdd(
+    messageDataId: string,
+    options?: RequestOptions
+  ): ApiResponse {
+    assertParamExists("irisMessageDataImport", "messageDataId", messageDataId);
+    const path = `/iris-messages/data/${encodeURIComponent(
+      messageDataId
+    )}/import`;
+    return this.apiRequest("POST", path, null, options);
+  }
+
+  /**
+   *
+   * @summary Import data from message attachment to an existing entry
+   * @param {string} messageDataId
+   * @param {IrisMessageDataSelectionPayload} data
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public importIrisMessageDataAndUpdate(
+    messageDataId: string,
+    data: IrisMessageDataSelectionPayload,
+    options?: RequestOptions
+  ): ApiResponse {
+    assertParamExists(
+      "importIrisMessageDataAndUpdate",
+      "messageDataId",
+      messageDataId
+    );
+    assertParamExists(
+      "importIrisMessageDataAndUpdate",
+      "importTargetId",
+      options?.params?.importTargetId
+    );
+    assertParamExists("importIrisMessageDataAndUpdate", "data", data);
+    const path = `/iris-messages/data/${encodeURIComponent(
+      messageDataId
+    )}/import`;
+    return this.apiRequest("POST", path, data, options);
+  }
+
+  /**
+   *
+   * @summary get select options for importable message attachment
+   * @param {string} messageDataId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public messageDataImportSelectionViewDataGet(
+    messageDataId: string,
+    options?: RequestOptions
+  ): ApiResponse<IrisMessageDataViewData> {
+    assertParamExists(
+      "messageDataImportSelectionViewDataGet",
+      "messageDataId",
+      messageDataId
+    );
+    assertParamExists(
+      "messageDataImportSelectionViewDataGet",
+      "importTargetId",
+      options?.params?.importTargetId
+    );
+    const path = `/iris-messages/data/${encodeURIComponent(
+      messageDataId
+    )}/import-selection-view`;
+    return this.apiRequest("GET", path, null, options);
+  }
+
+  /**
+   *
+   * @summary View data from message attachment
+   * @param {string} messageDataId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessageDataViewDataGet(
+    messageDataId: string,
+    options?: RequestOptions
+  ): ApiResponse<IrisMessageDataViewData> {
+    assertParamExists(
+      "irisMessageDataViewDataGet",
+      "messageDataId",
+      messageDataId
+    );
+    const path = `/iris-messages/data/${encodeURIComponent(
+      messageDataId
+    )}/view`;
+    return this.apiRequest("GET", path, null, options);
   }
 
   /**

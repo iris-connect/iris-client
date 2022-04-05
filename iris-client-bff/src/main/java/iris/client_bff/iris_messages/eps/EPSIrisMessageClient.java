@@ -7,8 +7,8 @@ import iris.client_bff.config.RPCClientProperties;
 import iris.client_bff.hd_search.HealthDepartment;
 import iris.client_bff.hd_search.eps.EPSHdSearchClient;
 import iris.client_bff.iris_messages.IrisMessage;
-import iris.client_bff.iris_messages.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
+import iris.client_bff.iris_messages.exceptions.IrisMessageException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.util.Version;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,7 @@ public class EPSIrisMessageClient {
 
 		private IrisMessageHdContact ownContact;
 		private Instant ownContactCreated;
+	private final MessageSourceAccessor messages;
 
     public IrisMessageHdContact getOwnIrisMessageHdContact() {
 
@@ -96,7 +98,7 @@ public class EPSIrisMessageClient {
               .sorted(Comparator.comparing(IrisMessageHdContact::getName, String.CASE_INSENSITIVE_ORDER))
               .toList();
         } catch (Throwable t) {
-            throw new IrisMessageException(t);
+            throw new IrisMessageException(messages.getMessage("iris_message.missing_hd_contacts"));
         }
     }
 
@@ -118,7 +120,7 @@ public class EPSIrisMessageClient {
             this.epsRpcClient.setReadTimeoutMillis(READ_TIMEOUT);
             this.epsRpcClient.invoke(methodName, payload);
         } catch (Throwable t) {
-            throw new IrisMessageException(t);
+            throw new IrisMessageException(messages.getMessage("iris_message.submission_error"));
         } finally {
             this.epsRpcClient.setReadTimeoutMillis(defaultReadTimeout);
         }
@@ -129,13 +131,13 @@ public class EPSIrisMessageClient {
 		var methodName = name + "._ping";
 
 		try {
-			
+
 			Ping ping = epsRpcClient.invoke(methodName, null, Ping.class);
 			String semver = ping.version.replaceAll("^v", "");
 			Version version = Version.parse(semver);
-			
+
 			return version.isGreaterThanOrEqualTo(MESSAGE_CLIENT_MIN_VERSION);
-			
+
 		} catch (Throwable t) {
 			
 			log.warn("Can't ping hd client " + name);

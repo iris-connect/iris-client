@@ -9,6 +9,7 @@
         v-slot="{ entry }"
         @submit="handleEditableField"
         required
+        :disabled="isPreview"
       >
         Details für Ereignis ID:
         {{ entry }}
@@ -25,6 +26,7 @@
             v-slot="{ entry }"
             @submit="handleEditableField"
             required
+            :disabled="isPreview"
           >
             <strong> Name: </strong><br />
             {{ entry }}
@@ -40,6 +42,7 @@
             @submit="handleEditableField"
             component="v-textarea"
             default-value="-"
+            :disabled="isPreview"
           >
             <strong> Kommentar: </strong><br />
             <div class="white-space-pre-line">
@@ -74,6 +77,7 @@
               <event-tracking-status-change
                 :status="eventData.status"
                 @update="handleStatusUpdate"
+                v-if="!isPreview"
               />
             </v-col>
           </v-row>
@@ -105,13 +109,13 @@
       ></v-text-field>
       <iris-data-table
         :loading="loading"
-        :headers="tableData.headers"
+        :headers="tableHeaders.headers"
         :items="tableRows"
         :items-per-page="5"
         class="elevation-1 mt-5"
         :search="tableData.search"
-        show-select
-        show-select-all
+        :show-select="selectEnabled"
+        :show-select-all="selectEnabled"
         v-model="tableData.select"
         show-expand
         single-expand
@@ -126,39 +130,28 @@
           </span>
         </template>
         <template v-slot:expanded-item="{ headers, item }">
-          <td></td>
-          <td :colspan="headers.length - 1">
-            <v-row>
-              <template
-                v-for="(expandedHeader, ehIndex) in tableData.expandedHeaders"
-              >
-                <v-col :key="ehIndex" cols="12" sm="4" md="2">
-                  <v-list-item two-line dense>
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        {{ expandedHeader.text }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="text-pre-line">
-                        {{
-                          item[expandedHeader.value]
-                            ? item[expandedHeader.value]
-                            : "-"
-                        }}
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-col>
-              </template>
-            </v-row>
+          <td v-if="selectEnabled"></td>
+          <td :colspan="selectEnabled ? headers.length - 1 : headers.length">
+            <expanded-data-table-item
+              :item="item"
+              :expanded-headers="tableHeaders.expandedHeaders"
+            />
           </td>
         </template>
       </iris-data-table>
       <error-message-alert :errors="errors" />
     </v-card-text>
-    <v-card-actions>
+    <v-card-actions v-if="!isPreview">
       <v-btn color="white" :to="{ name: 'event-list' }" replace> Zurück </v-btn>
       <v-spacer />
-      <slot name="data-export" v-bind:selection="tableData.select" />
+      <slot
+        name="data-actions"
+        v-bind="{
+          selection: tableData.select,
+          messageData: messageData,
+          disabled: tableData.select.length <= 0,
+        }"
+      />
     </v-card-actions>
   </v-card>
 </template>
@@ -167,23 +160,32 @@ import { Component, Vue } from "vue-property-decorator";
 import EditableField from "@/components/form/editable-field.vue";
 import EventTrackingStatusChange from "@/views/event-tracking-details/components/event-tracking-status-change.vue";
 import EventTrackingDetailsLocationInfo from "@/views/event-tracking-details/components/event-tracking-details-location-info.vue";
-import {
-  EventData,
-  TableRow,
-  FormData,
-} from "@/views/event-tracking-details/event-tracking-details.view.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import rules from "@/common/validation-rules";
-import { DataRequestStatus, DataRequestStatusUpdateByUser } from "@/api";
+import {
+  DataRequestStatus,
+  DataRequestStatusUpdateByUser,
+  IrisMessageDataDiscriminator,
+  IrisMessageDataInsert,
+} from "@/api";
 import StatusMessages from "@/constants/StatusMessages";
 import StatusColors from "@/constants/StatusColors";
 import { ErrorMessage } from "@/utils/axios";
 import IrisDataTable from "@/components/iris-data-table.vue";
+import _map from "lodash/map";
+import {
+  EventData,
+  FormData,
+  getGuestListTableHeaders,
+  GuestListTableRow,
+} from "@/views/event-tracking-details/utils/mappedData";
+import { PropType } from "vue";
+import ExpandedDataTableItem from "@/components/expanded-data-table-item.vue";
 
 const EventTrackingDetailsComponentProps = Vue.extend({
   props: {
     tableRows: {
-      type: Array as () => TableRow[],
+      type: Array as PropType<GuestListTableRow[]>,
       default: () => [],
     },
     loading: {
@@ -191,22 +193,31 @@ const EventTrackingDetailsComponentProps = Vue.extend({
       default: false,
     },
     errors: {
-      type: Array as () => ErrorMessage[],
+      type: Array as PropType<ErrorMessage[]>,
       default: () => [],
     },
     eventData: {
-      type: Object as () => EventData,
+      type: Object as PropType<EventData | null>,
       default: null,
     },
     formData: {
-      type: Object as () => FormData,
-      default: () => ({}),
+      type: Object as PropType<FormData | null>,
+      default: null,
+    },
+    isPreview: {
+      type: Boolean,
+      default: false,
+    },
+    selectEnabled: {
+      type: Boolean,
+      default: true,
     },
   },
 });
 
 @Component({
   components: {
+    ExpandedDataTableItem,
     IrisDataTable,
     ErrorMessageAlert,
     EventTrackingDetailsLocationInfo,
@@ -215,61 +226,13 @@ const EventTrackingDetailsComponentProps = Vue.extend({
   },
 })
 export default class EventTrackingDetailsComponent extends EventTrackingDetailsComponentProps {
+  get tableHeaders() {
+    return getGuestListTableHeaders(this.selectEnabled);
+  }
   tableData = {
     search: "",
     expanded: [],
     select: [],
-    headers: [
-      { text: "", value: "data-table-select" },
-      {
-        text: "Nachname",
-        value: "lastName",
-        align: "start",
-      },
-      {
-        text: "Vorname",
-        value: "firstName",
-      },
-      {
-        text: "Check-In",
-        value: "checkInTime",
-      },
-      {
-        text: "Check-Out",
-        value: "checkOutTime",
-      },
-      {
-        text: "max. Kontaktdauer",
-        value: "maxDuration",
-      },
-      {
-        text: "Kommentar",
-        value: "comment",
-      },
-      { text: "", value: "data-table-expand" },
-    ],
-    expandedHeaders: [
-      {
-        text: "Geschlecht",
-        value: "sex",
-      },
-      {
-        text: "E-Mail",
-        value: "email",
-      },
-      {
-        text: "Telefon",
-        value: "phone",
-      },
-      {
-        text: "Mobil",
-        value: "mobilePhone",
-      },
-      {
-        text: "Adresse",
-        value: "address",
-      },
-    ],
   };
 
   validationRules = {
@@ -288,6 +251,21 @@ export default class EventTrackingDetailsComponent extends EventTrackingDetailsC
 
   get statusColor(): string {
     return StatusColors.getColor(this.eventData?.status);
+  }
+
+  get messageData(): IrisMessageDataInsert {
+    const guests: string[] = _map(
+      this.tableData.select,
+      "raw.messageDataSelectId"
+    );
+    return {
+      discriminator: IrisMessageDataDiscriminator.EventTracking,
+      description: this.formData?.name || "",
+      payload: {
+        event: this.eventData?.code || "",
+        guests,
+      },
+    };
   }
 
   handleEditableField(

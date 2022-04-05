@@ -7,6 +7,21 @@
       v-on="$listeners"
       :item-class="itemClass"
     >
+      <template v-slot:header.attachmentCount>
+        <v-icon dense>mdi-paperclip</v-icon>
+      </template>
+      <template v-slot:item.attachmentCount="{ item }">
+        <v-badge
+          color="blue"
+          overlap
+          :value="countOpenAttachments(item.attachmentCount) > 0"
+          :content="countOpenAttachments(item.attachmentCount)"
+        >
+          <v-icon dense v-if="item.attachmentCount.total > 0">
+            mdi-paperclip
+          </v-icon>
+        </v-badge>
+      </template>
       <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
         <slot :name="slot" v-bind="scope" />
       </template>
@@ -17,7 +32,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { IrisMessage, IrisMessageContext, Page } from "@/api";
+import {
+  IrisMessage,
+  IrisMessageContext,
+  IrisMessageDataAttachmentCount,
+  Page,
+} from "@/api";
 import { DataTableHeader } from "vuetify";
 import { getFormattedDate } from "@/utils/date";
 import { PropType } from "vue";
@@ -50,6 +70,7 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
   get tableHeaders(): DataTableHeader[] {
     if (this.context === IrisMessageContext.Inbox) {
       return [
+        { text: "", value: "attachmentCount", sortable: false, width: 0 },
         { text: "Von", value: "hdAuthor.name", sortable: true },
         {
           text: "Betreff",
@@ -61,6 +82,7 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
     }
     if (this.context === IrisMessageContext.Outbox) {
       return [
+        { text: "", value: "attachmentCount", sortable: false, width: 0 },
         { text: "An", value: "hdRecipient.name", sortable: true },
         {
           text: "Betreff",
@@ -83,6 +105,10 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
           created: getFormattedDate(message.createdAt, "L LT"),
         },
         isRead: message.isRead,
+        attachmentCount: {
+          total: message.attachmentCount?.total || 0,
+          imported: message.attachmentCount?.imported || 0,
+        },
       };
     });
     return {
@@ -94,6 +120,10 @@ export default class IrisMessageDataTable extends IrisMessageDataTableProps {
   }
   itemClass(item: { isRead: boolean }) {
     return item.isRead ? "cursor-pointer" : "cursor-pointer font-weight-bold";
+  }
+  countOpenAttachments(count: IrisMessageDataAttachmentCount): number {
+    if (this.context !== IrisMessageContext.Inbox) return 0;
+    return (count.total || 0) - (count.imported || 0);
   }
 }
 </script>

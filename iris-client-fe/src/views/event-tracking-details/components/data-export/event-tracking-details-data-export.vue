@@ -13,19 +13,11 @@
       <v-btn
         v-on="on"
         v-bind="attrs"
-        color="white"
+        color="primary"
         :disabled="selection.length <= 0"
         data-test="export-dialog.activator"
       >
-        Exportformat wählen
-      </v-btn>
-      <v-btn
-        color="primary"
-        @click="exportStandard('csv')"
-        :disabled="selection.length <= 0"
-        data-test="export.csv.standard"
-      >
-        {{ exportLabel }}
+        exportieren
       </v-btn>
     </template>
   </data-export-dialog>
@@ -33,7 +25,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { TableRow } from "@/views/event-tracking-details/event-tracking-details.view.vue";
+import { GuestListTableRow } from "@/views/event-tracking-details/utils/mappedData";
 import { PropType } from "vue";
 import { DataRequestDetails } from "@/api";
 import exportStandard from "@/views/event-tracking-details/components/data-export/utils/exportStandard";
@@ -97,7 +89,7 @@ const EventTrackingDetailsDataExportProps = Vue.extend({
       default: null,
     },
     selection: {
-      type: Array as PropType<TableRow[]>,
+      type: Array as PropType<GuestListTableRow[]>,
       default: () => [],
     },
     itemsLength: {

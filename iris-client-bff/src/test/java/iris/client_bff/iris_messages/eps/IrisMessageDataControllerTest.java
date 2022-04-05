@@ -15,7 +15,7 @@ import iris.client_bff.hd_search.HealthDepartment;
 import iris.client_bff.hd_search.eps.EPSHdSearchClient;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageContext;
-import iris.client_bff.iris_messages.IrisMessageException;
+import iris.client_bff.iris_messages.exceptions.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolderRepository;
 import iris.client_bff.iris_messages.IrisMessageRepository;

@@ -1,3 +1,4 @@
+/* eslint-disable   @typescript-eslint/no-explicit-any */
 import _get from "lodash/get";
 import dayjs from "./date";
 import _transform from "lodash/transform";
@@ -6,7 +7,7 @@ import _isObject from "lodash/isObject";
 import _isEmpty from "lodash/isEmpty";
 import store from "@/store";
 
-export type DataNormalizer<T> = (source?: T, parse?: boolean) => T;
+export type DataNormalizer<T = any> = (source?: T, parse?: boolean) => T;
 
 enum DataType {
   string = "string",
@@ -89,7 +90,7 @@ const normalize = <T, K extends keyof T>(
 export const getNormalizedValue = <T>(
   value: T | undefined,
   fallback: T,
-  type: DataTypeArg
+  type: DataTypeArg = "string"
 ): T => {
   if (value !== undefined && validateType(value, type)) return value;
   return fallback;

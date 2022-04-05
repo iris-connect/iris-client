@@ -7,6 +7,7 @@ import iris.client_bff.hd_search.eps.EPSHdSearchClient;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
+import iris.client_bff.iris_messages.exceptions.IrisMessageException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

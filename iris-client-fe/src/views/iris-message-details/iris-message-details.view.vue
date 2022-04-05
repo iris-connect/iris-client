@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-card :loading="messageLoading" data-test="view.iris-message-details">
+  <div class="my-3">
+    <v-card :loading="loading" data-test="view.iris-message-details">
       <v-card-subtitle class="pb-0 text-right" data-test="message.createdAt">
         {{ message.createdAt }}
       </v-card-subtitle>
@@ -22,6 +22,11 @@
         <div class="body-1" data-test="message.body">
           {{ message.body }}
         </div>
+        <iris-message-data-attachments
+          :data-attachments="message.dataAttachments"
+          :readonly="!isInbox"
+          @import:done="handleImportDone"
+        />
       </v-card-text>
       <v-card-actions>
         <v-btn text @click="goBack"> Zurück </v-btn>
@@ -33,11 +38,20 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import store from "@/store";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { IrisMessageDetails } from "@/api";
+import {
+  IrisMessageContext,
+  IrisMessageDataAttachment,
+  IrisMessageDetails,
+} from "@/api";
 import { ErrorMessage } from "@/utils/axios";
 import { getFormattedDate } from "@/utils/date";
+import {
+  bundleIrisMessageApi,
+  fetchUnreadMessageCountApi,
+} from "@/modules/iris-message/services/api";
+import { getApiErrorMessages, getApiLoading } from "@/utils/api";
+import IrisMessageDataAttachments from "@/views/iris-message-details/components/iris-message-data-attachments.vue";
 
 type MessageData = {
   author: string;
@@ -45,30 +59,37 @@ type MessageData = {
   createdAt: string;
   subject: string;
   body: string;
+  dataAttachments: IrisMessageDataAttachment[];
 };
 
 @Component({
   components: {
+    IrisMessageDataAttachments,
     ErrorMessageAlert,
   },
   beforeRouteEnter(to, from, next) {
-    store.dispatch("irisMessageDetails/fetchMessage", to.params.messageId);
     next((vm) => {
       if (typeof from.name === "string") {
         (vm as IrisMessageDetailsView).prevLocation = from.name;
       }
     });
   },
-  beforeRouteLeave(to, from, next) {
-    store.commit("irisMessageDetails/reset");
-    next();
-  },
 })
 export default class IrisMessageDetailsView extends Vue {
+  messageApi = bundleIrisMessageApi(["fetchMessage", "markAsRead"]);
+
+  mounted() {
+    this.messageApi.fetchMessage.execute(this.$route.params.messageId);
+  }
+
+  get messageDetails(): IrisMessageDetails | null {
+    return this.messageApi.fetchMessage.state.result;
+  }
+
   prevLocation: null | string = null;
+
   get message(): MessageData {
-    const message: IrisMessageDetails | null =
-      this.$store.state.irisMessageDetails.message;
+    const message = this.messageDetails;
     return {
       author: message?.hdAuthor?.name || "-",
       recipient: message?.hdRecipient?.name || "-",
@@ -77,38 +98,36 @@ export default class IrisMessageDetailsView extends Vue {
         : "-",
       subject: message?.subject || "-",
       body: message?.body || "-",
+      dataAttachments: message?.dataAttachments || [],
     };
   }
-  get messageLoading(): boolean {
-    return (
-      this.$store.state.irisMessageDetails.messageLoading ||
-      this.$store.state.irisMessageDetails.messageSaving
-    );
+  get isInbox(): boolean {
+    return this.messageDetails?.context === IrisMessageContext.Inbox;
+  }
+  get loading(): boolean {
+    return getApiLoading(this.messageApi);
   }
   get errors(): ErrorMessage[] {
-    return [
-      this.$store.state.irisMessageDetails.messageLoadingError,
-      this.$store.state.irisMessageDetails.messageSavingError,
-    ];
+    return getApiErrorMessages(this.messageApi);
   }
-  get messageLoaded(): boolean {
-    return (
-      this.$store.state.irisMessageDetails.messageLoading !== true &&
-      this.$store.state.irisMessageDetails.messageLoadingError === null &&
-      this.$store.state.irisMessageDetails.message !== null
-    );
+  get shouldMarkAsRead(): boolean {
+    const isRead = this.messageApi.fetchMessage.state.result?.isRead;
+    return this.isInbox && isRead === false;
   }
-  @Watch("messageLoaded")
-  async onMessageLoaded(newValue: boolean) {
-    const message = store.state.irisMessageDetails.message;
-    if (newValue && !message?.isRead) {
-      await this.$store.dispatch(
-        "irisMessageDetails/markAsRead",
-        this.$route.params.messageId
-      );
-      await this.$store.dispatch("irisMessageList/fetchUnreadMessageCount");
+  @Watch("shouldMarkAsRead")
+  async onShouldMarkAsRead(newValue: boolean) {
+    if (newValue) {
+      await this.messageApi.markAsRead.execute(this.$route.params.messageId);
+      await fetchUnreadMessageCountApi.execute().catch(() => {
+        // ignored
+      });
     }
   }
+
+  handleImportDone() {
+    this.messageApi.fetchMessage.execute(this.$route.params.messageId);
+  }
+
   goBack() {
     if (this.prevLocation === "iris-message-list") {
       return this.$router.back();

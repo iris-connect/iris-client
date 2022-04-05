@@ -37,8 +37,9 @@ a:hover {
 .alertOverlay {
   position: fixed;
   z-index: 9999;
-  left: 20%;
-  right: 20%;
+  bottom: 1rem;
+  left: 2rem;
+  right: 2rem;
 }
 
 .cursor-pointer {

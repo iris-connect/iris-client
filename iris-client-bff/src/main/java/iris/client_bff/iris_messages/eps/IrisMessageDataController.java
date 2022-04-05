@@ -1,7 +1,7 @@
 package iris.client_bff.iris_messages.eps;
 
 import com.googlecode.jsonrpc4j.JsonRpcParam;
-import iris.client_bff.iris_messages.IrisMessageException;
+import iris.client_bff.iris_messages.exceptions.IrisMessageException;
 
 import javax.validation.Valid;
 
