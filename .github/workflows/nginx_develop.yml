@@ -65,8 +65,30 @@ jobs:
           private-key-passphrase: ${{ secrets.DOCKER_HUB_DCT_PASSPHRASE }}
 
   container_scan:
-    name: Container Scan
+    name: Trivy Container Scan
     needs: build_and_push
-    uses: iris-connect/iris-client/.github/workflows/trivy-container-scan.yml@develop
-    with:
-      image-refs: "[ '${{needs.build_and_push.outputs.image-ref}}' ]"
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create image tag
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: inoeg/iris-client-nginx
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ steps.meta.outputs.tags }}'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH,MEDIUM'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
