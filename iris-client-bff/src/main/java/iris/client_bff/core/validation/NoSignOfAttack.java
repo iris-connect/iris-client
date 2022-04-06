@@ -30,11 +30,15 @@ public @interface NoSignOfAttack {
 
 	Class<?>[] groups() default {};
 
+	boolean obfuscateLogging() default true;
+
 	Class<? extends Payload>[] payload() default {};
 
 	public interface Phone extends Payload {}
 
 	public interface Password extends Payload {}
+
+	public interface MessageDataPayload extends Payload {}
 
 	static class NoSignOfAttackValidator implements ConstraintValidator<NoSignOfAttack, String> {
 
@@ -42,10 +46,12 @@ public @interface NoSignOfAttack {
 		private AttackDetector validationHelper;
 
 		private Class<? extends Payload> type;
+		private boolean obfuscateLogging;
 
 		@Override
 		public void initialize(NoSignOfAttack constraintAnnotation) {
 
+			obfuscateLogging = constraintAnnotation.obfuscateLogging();
 			var payloads = constraintAnnotation.payload();
 
 			Assert.isTrue(payloads.length <= 1, "Only one type can be defined!");
@@ -64,13 +70,16 @@ public @interface NoSignOfAttack {
 			}
 
 			if (type == Phone.class) {
-				return !validationHelper.isPossibleAttackForPhone(text, path, true);
+				return !validationHelper.isPossibleAttackForPhone(text, path, obfuscateLogging);
 			}
 			if (type == Password.class) {
 				return !validationHelper.isPossibleAttackForPassword(text, path);
+			} 
+			if (type == MessageDataPayload.class) {
+				return !validationHelper.isPossibleAttackForMessageDataPayload(text, path, obfuscateLogging);
 			}
 
-			return !validationHelper.isPossibleAttack(text, path, true);
+			return !validationHelper.isPossibleAttack(text, path, obfuscateLogging);
 		}
 	}
 }

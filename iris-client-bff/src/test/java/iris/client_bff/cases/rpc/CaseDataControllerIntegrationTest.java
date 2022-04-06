@@ -76,7 +76,7 @@ class CaseDataControllerIntegrationTest {
 		assertEquals("OK", result);
 
 		// compare
-		var detailsDTO = requestController.getDetails(dataRequest.getId().getRequestId()).getBody();
+		var detailsDTO = requestController.getDetails(dataRequest.getId()).getBody();
 		assertNotNull(detailsDTO);
 		var submissionData = detailsDTO.getSubmissionData();
 		assertNotNull(submissionData);
@@ -118,7 +118,7 @@ class CaseDataControllerIntegrationTest {
 		assertEquals("OK", result);
 
 		// compare
-		var detailsDTO = requestController.getDetails(dataRequest.getId().getRequestId()).getBody();
+		var detailsDTO = requestController.getDetails(dataRequest.getId()).getBody();
 		assertNotNull(detailsDTO);
 		var submissionData = detailsDTO.getSubmissionData();
 		assertNotNull(submissionData);
