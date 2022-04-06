@@ -5,56 +5,39 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import iris.client_bff.core.AggregateMapperImpl;
-import iris.client_bff.core.ConversionServiceAdapter;
-import iris.client_bff.core.MetadataMapperImpl;
+import iris.client_bff.IrisMapperTest;
 import iris.client_bff.users.UserDetailsServiceImpl;
 import iris.client_bff.users.entities.UserAccount;
 import iris.client_bff.users.entities.UserRole;
 import iris.client_bff.users.web.dto.UserDTO;
 import iris.client_bff.users.web.dto.UserRoleDTO;
+import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.github.javafaker.Faker;
 
 /**
  * @author Jens Kutzsche
  */
-@ExtendWith(MockitoExtension.class)
-@Tag("mappings")
+@IrisMapperTest(UserMapperImpl.class)
 @DisplayName("Entity ⇔ DTO mapping ⇒ User")
+@RequiredArgsConstructor
 class UserDtoMappingTests {
 
-	@Mock
+	@MockBean
 	UserDetailsServiceImpl userService;
 
-	@InjectMocks
-	MetadataMapperImpl metadataMapper;
-
-	@Mock
-	ConversionServiceAdapter conversion;
-
-	UserMapperImpl mapper;
+	final UserMapper mapper;
 
 	final Faker faker = Faker.instance();
-
-	@BeforeEach
-	void init() {
-		mapper = new UserMapperImpl(conversion, metadataMapper);
-	}
 
 	@Test
 	@DisplayName("UserAccount ⇒ UserDTO")
@@ -62,7 +45,6 @@ class UserDtoMappingTests {
 
 		when(userService.findByUuid(any()))
 				.thenReturn(Optional.of(new UserAccount("admin", "admin", "admin", "admin", UserRole.ADMIN)));
-		when(conversion.mapIdToString(any())).thenAnswer(it -> new AggregateMapperImpl().convert(it.getArgument(0)));
 
 		var firstName = faker.name().firstName();
 		var lastName = faker.name().lastName();
