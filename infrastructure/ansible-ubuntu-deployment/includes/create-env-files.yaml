@@ -1,0 +1,43 @@
+- name: "Create envs folder for {{ client.name }}"
+  file:
+    path: "{{ env_dir }}/{{ client.name }}"
+    state: directory  
+
+- name: "Create eps certs folder for {{ client.name }}"
+  file:
+    path: "{{ env_dir }}/{{ client.name }}/certs/eps"
+    state: directory
+
+- name: "Create nginx certs folder for {{ client.name }}"
+  file:
+    path: "{{ env_dir }}/{{ client.name }}/certs/nginx"
+    state: directory
+
+- name: "Copy all certificates for {{ client.name }}"
+  ansible.builtin.copy:
+    src: "certs"
+    dest: "{{ env_dir }}/{{ client.name }}"    
+
+- name: "Create docker-compose.yml for {{ client.name }}"
+  ansible.builtin.template:
+    src: templates/docker-compose.yaml.j2
+    dest: "{{ env_dir }}/{{ client.name }}/docker-compose.yaml"    
+
+# ENVS
+
+- name: "Create JWT secret for {{ client.name }}"
+  set_fact:
+    jwt_secret: "{{ lookup('password', '/dev/null chars=chars=ascii_letters,digits length=64') }}"
+
+- name: "Create Admin start password for {{ client.name }}"
+  set_fact:
+    admin_password: "{{ lookup('password',  passwords_dir + '/' + client.name + '-admin chars=chars=ascii_letters,digits length=16') }}"
+
+- name: "Create Admin start password for {{ client.name }}"
+  set_fact:
+    postgres_password: "{{ lookup('password',  passwords_dir + '/' + client.name + '-postgres chars=chars=ascii_letters,digits length=16') }}"
+
+- name: "Create .env file for {{ client.name }}"
+  ansible.builtin.template:
+    src: templates/env.j2
+    dest: "{{ env_dir }}/{{ client.name }}/.env"

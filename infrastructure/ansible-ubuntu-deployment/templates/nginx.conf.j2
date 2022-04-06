@@ -1,0 +1,36 @@
+server {
+
+    include mime.types;
+
+    access_log {{ install_dir }}/logs/{{client.name}}-access.log;
+    server_name {{ client.domain }};
+    listen 443 ssl;
+
+    ssl_certificate {{install_dir}}/certs/nginx/{{ nginx.cert }};
+    ssl_certificate_key {{install_dir}}/certs/nginx/{{ nginx.key }};
+
+    # Proxy headers
+    proxy_set_header Upgrade           $http_upgrade;
+    proxy_set_header Host              $host;
+    proxy_set_header X-Real-IP         $remote_addr;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Host  $host;
+    proxy_set_header X-Forwarded-Port  $server_port;
+
+    proxy_http_version                 1.1;
+    proxy_cache_bypass                 $http_upgrade;
+
+    # Proxy timeouts
+    proxy_connect_timeout              10s;
+    proxy_send_timeout                 10s;
+    proxy_read_timeout                 10s;
+
+    root    public;
+    index   index.html;
+
+    location / {
+        proxy_pass  https://localhost:{{ 8443 + index }}/;
+    }
+
+}
