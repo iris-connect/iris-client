@@ -62,7 +62,9 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 	private String dataAuthorizationToken;
 	private String readableToken;
 
-	@Column(nullable = false) @Enumerated(EnumType.STRING) @GenericField(sortable = Sortable.YES)
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	@GenericField(sortable = Sortable.YES)
 	private Status status = Status.DATA_REQUESTED;
 
 	@Builder

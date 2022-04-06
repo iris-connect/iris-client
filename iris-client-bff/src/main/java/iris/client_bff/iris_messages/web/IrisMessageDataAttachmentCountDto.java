@@ -8,13 +8,13 @@ import java.util.List;
 
 @Value
 class IrisMessageDataAttachmentCountDto {
-    private int total;
-    private int imported;
-    public static IrisMessageDataAttachmentCountDto fromEntity(List<IrisMessageData> dataList) {
-        List<IrisMessageData> attachments = dataList == null ? new ArrayList<>() : dataList;
-        return new IrisMessageDataAttachmentCountDto(
-                attachments.size(),
-                (int) attachments.stream().filter(IrisMessageData::isImported).count()
-        );
-    }
+	private int total;
+	private int imported;
+
+	public static IrisMessageDataAttachmentCountDto fromEntity(List<IrisMessageData> dataList) {
+		List<IrisMessageData> attachments = dataList == null ? new ArrayList<>() : dataList;
+		return new IrisMessageDataAttachmentCountDto(
+				attachments.size(),
+				(int) attachments.stream().filter(IrisMessageData::isImported).count());
+	}
 }

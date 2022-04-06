@@ -61,8 +61,7 @@ public class IrisMessageDataController {
 	private void importMessageDataAndUpdate(
 			IrisMessageDataIdentifier messageDataId,
 			UUID importTargetId,
-			String importSelection
-	) {
+			String importSelection) {
 		this.validateMessageDataPayload(importSelection, FIELD_DATA_IMPORT_SELECTION);
 		try {
 			this.messageDataProcessors.withProcessorFor(messageDataId)
@@ -76,19 +75,16 @@ public class IrisMessageDataController {
 	@GetMapping("/{messageDataId}/import-selection-view")
 	public ResponseEntity<IrisMessageDataViewDataDto> getMessageDataImportSelectionViewData(
 			@PathVariable IrisMessageDataIdentifier messageDataId,
-			@RequestParam(required = false) UUID importTargetId
-	) {
+			@RequestParam(required = false) UUID importTargetId) {
 		IrisMessageDataViewDataDto viewData = this.messageDataViewProvider.getImportSelectionViewData(
 				messageDataId,
-				importTargetId
-		);
+				importTargetId);
 		return ResponseEntity.ok(viewData);
 	}
 
 	@GetMapping("/{messageDataId}/view")
 	public ResponseEntity<IrisMessageDataViewDataDto> getMessageDataViewData(
-			@PathVariable IrisMessageDataIdentifier messageDataId
-	) {
+			@PathVariable IrisMessageDataIdentifier messageDataId) {
 		IrisMessageDataViewDataDto viewData = this.messageDataViewProvider.getViewData(messageDataId);
 		return ResponseEntity.ok(viewData);
 	}

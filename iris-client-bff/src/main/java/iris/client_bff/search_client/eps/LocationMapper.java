@@ -1,10 +1,10 @@
 package iris.client_bff.search_client.eps;
 
 import iris.client_bff.events.model.Location;
-
 import iris.client_bff.search_client.web.dto.LocationInformation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
 import org.modelmapper.ModelMapper;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

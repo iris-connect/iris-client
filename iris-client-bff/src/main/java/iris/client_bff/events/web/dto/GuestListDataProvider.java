@@ -19,6 +19,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor(access = PRIVATE)
 public class GuestListDataProvider {
 
-  private String name;
-  private @NotNull @Valid Address address;
+	private String name;
+	private @NotNull @Valid Address address;
 }

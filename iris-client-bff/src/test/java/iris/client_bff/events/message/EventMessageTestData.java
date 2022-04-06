@@ -1,9 +1,5 @@
 package iris.client_bff.events.message;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestsDataInitializer;
 import iris.client_bff.events.EventDataSubmissionsDataInitializer;
@@ -16,15 +12,22 @@ import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageData;
 import iris.client_bff.iris_messages.web.IrisMessageInsertDto;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Component
 public class EventMessageTestData {
 
 	public final EventDataRequest MOCK_EVENT_DATA_REQUEST = EventDataRequestsDataInitializer.DATA_REQUEST_1;
-	public final EventDataSubmission MOCK_EVENT_DATA_SUBMISSION = EventDataSubmissionsDataInitializer.createDataSubmission();
+	public final EventDataSubmission MOCK_EVENT_DATA_SUBMISSION = EventDataSubmissionsDataInitializer
+			.createDataSubmission();
 
 	public final EventMessageDataPayload MOCK_EVENT_MESSAGE_DATA_PAYLOAD = getMessageDataPayload();
 	public final String MOCK_EVENT_MESSAGE_DATA_PAYLOAD_STRING = stringifyJSON(MOCK_EVENT_MESSAGE_DATA_PAYLOAD);
@@ -54,8 +57,7 @@ public class EventMessageTestData {
 		return EventMessageDataPayload.fromModel(
 				MOCK_EVENT_DATA_SUBMISSION.getRequest(),
 				MOCK_EVENT_DATA_SUBMISSION,
-				getExportSelection().getGuests()
-		);
+				getExportSelection().getGuests());
 	}
 
 	private IrisMessageInsertDto.DataAttachment getExportDataAttachment() {
@@ -66,7 +68,8 @@ public class EventMessageTestData {
 	}
 
 	private ExportSelectionDto getExportSelection() {
-		List<String> guests = MOCK_EVENT_DATA_SUBMISSION.getGuests().stream().map((guest -> guest.getGuestId().toString())).toList();
+		List<String> guests = MOCK_EVENT_DATA_SUBMISSION.getGuests().stream().map((guest -> guest.getGuestId().toString()))
+				.toList();
 		return new ExportSelectionDto()
 				.setEvent(MOCK_EVENT_DATA_SUBMISSION.getRequest().getId().toString())
 				.setGuests(guests);
@@ -76,7 +79,8 @@ public class EventMessageTestData {
 		var guests = this.MOCK_EVENT_MESSAGE_DATA_PAYLOAD.getEventDataSubmissionPayload().getGuestList().getGuests();
 		return ImportSelectionViewPayloadDto.builder()
 				.selectables(ImportSelectionViewPayloadDto.Selectables.builder().guests(guests).build())
-				.duplicates(ImportSelectionViewPayloadDto.Duplicates.builder().guests(guests.stream().map(Guest::getMessageDataSelectId).toList()).build())
+				.duplicates(ImportSelectionViewPayloadDto.Duplicates.builder()
+						.guests(guests.stream().map(Guest::getMessageDataSelectId).toList()).build())
 				.build();
 	}
 
@@ -92,7 +96,8 @@ public class EventMessageTestData {
 	}
 
 	private ImportSelectionDto getImportSelection() {
-		List<String> guests = MOCK_EVENT_DATA_SUBMISSION.getGuests().stream().map((guest -> guest.getGuestId().toString())).toList();
+		List<String> guests = MOCK_EVENT_DATA_SUBMISSION.getGuests().stream().map((guest -> guest.getGuestId().toString()))
+				.toList();
 		return new ImportSelectionDto()
 				.setGuests(guests);
 	}

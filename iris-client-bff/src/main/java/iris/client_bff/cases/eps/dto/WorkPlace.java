@@ -1,7 +1,7 @@
 
 package iris.client_bff.cases.eps.dto;
 
-import static lombok.AccessLevel.PRIVATE;
+import static lombok.AccessLevel.*;
 
 import iris.client_bff.core.web.dto.Address;
 import lombok.AllArgsConstructor;

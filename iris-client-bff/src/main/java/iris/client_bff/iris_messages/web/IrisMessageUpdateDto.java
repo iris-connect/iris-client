@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 class IrisMessageUpdateDto {
 
-    @NotNull
-    private Boolean isRead;
+	@NotNull
+	private Boolean isRead;
 
 }

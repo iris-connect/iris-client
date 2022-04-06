@@ -2,8 +2,8 @@ package iris.client_bff.iris_messages.eps;
 
 import iris.client_bff.config.JsonRpcDataValidator;
 import iris.client_bff.iris_messages.IrisMessage;
-import iris.client_bff.iris_messages.exceptions.IrisMessageException;
 import iris.client_bff.iris_messages.IrisMessageService;
+import iris.client_bff.iris_messages.exceptions.IrisMessageException;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.support.MessageSourceAccessor;

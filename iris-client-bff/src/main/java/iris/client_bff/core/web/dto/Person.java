@@ -1,6 +1,6 @@
 package iris.client_bff.core.web.dto;
 
-import static lombok.AccessLevel.PROTECTED;
+import static lombok.AccessLevel.*;
 
 import iris.client_bff.core.Sex;
 import lombok.AllArgsConstructor;

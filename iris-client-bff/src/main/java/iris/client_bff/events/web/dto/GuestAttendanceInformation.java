@@ -17,8 +17,8 @@ import java.time.Instant;
 @AllArgsConstructor(access = PRIVATE)
 public class GuestAttendanceInformation {
 
-  private String descriptionOfParticipation;
-  private Instant attendFrom;
-  private Instant attendTo;
-  private String additionalInformation;
+	private String descriptionOfParticipation;
+	private Instant attendFrom;
+	private Instant attendTo;
+	private String additionalInformation;
 }

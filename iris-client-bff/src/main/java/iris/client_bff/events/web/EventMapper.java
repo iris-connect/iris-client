@@ -1,11 +1,11 @@
 package iris.client_bff.events.web;
 
+import static lombok.AccessLevel.*;
+
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation.StatusEnum;
 import lombok.NoArgsConstructor;
-
-import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public class EventMapper {

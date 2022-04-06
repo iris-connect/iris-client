@@ -5,9 +5,10 @@ import iris.client_bff.iris_messages.IrisMessageData.IrisMessageDataIdentifier;
 import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.IrisMessageDataService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +26,7 @@ public class IrisMessageDataViewProvider {
 
 	public IrisMessageDataViewDataDto getImportSelectionViewData(
 			IrisMessageDataIdentifier messageDataId,
-			UUID importTargetId
-	) {
+			UUID importTargetId) {
 		IrisMessageData messageData = this.messageDataService.getMessageData(messageDataId);
 		var payload = this.messageDataProcessors.withProcessorFor(messageData.getDiscriminator())
 				.getImportSelectionViewPayload(messageData.getPayload(), importTargetId);

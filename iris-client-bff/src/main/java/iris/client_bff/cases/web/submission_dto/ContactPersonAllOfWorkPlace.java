@@ -16,8 +16,8 @@ import lombok.ToString;
 @AllArgsConstructor(access = PRIVATE)
 public class ContactPersonAllOfWorkPlace {
 
-  private String name;
-  private String pointOfContact;
-  private String phone;
-  private Address address;
+	private String name;
+	private String pointOfContact;
+	private String phone;
+	private Address address;
 }

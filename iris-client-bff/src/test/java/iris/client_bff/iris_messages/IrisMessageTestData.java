@@ -1,9 +1,10 @@
 package iris.client_bff.iris_messages;
 
 import iris.client_bff.iris_messages.web.IrisMessageInsertDto;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import org.springframework.stereotype.Component;
 
 @Component
 public class IrisMessageTestData {

@@ -16,11 +16,11 @@ import java.time.Instant;
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
 public class IndexCaseDTO {
-  private String caseId;
-  private String comment;
-  private String externalCaseId;
-  private String name;
-  private Instant start;
-  private Instant end;
-  private IndexCaseStatusDTO status;
+	private String caseId;
+	private String comment;
+	private String externalCaseId;
+	private String name;
+	private Instant start;
+	private Instant end;
+	private IndexCaseStatusDTO status;
 }

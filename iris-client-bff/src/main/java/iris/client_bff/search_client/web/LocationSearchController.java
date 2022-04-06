@@ -30,7 +30,8 @@ public class LocationSearchController {
 
 	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
-	public LocationQueryResult searchSearchKeywordGet(@Size(min = 4, max = 100) @RequestParam String search, Pageable pageable) {
+	public LocationQueryResult searchSearchKeywordGet(@Size(min = 4, max = 100) @RequestParam String search,
+			Pageable pageable) {
 		if (isSearchInputValid(search)) {
 			return searchClient.search(search, pageable);
 		} else {

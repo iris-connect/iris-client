@@ -1,6 +1,6 @@
 package iris.client_bff.auth.db;
 
-import static iris.client_bff.auth.db.SecurityConstants.BEARER_TOKEN_PREFIX;
+import static iris.client_bff.auth.db.SecurityConstants.*;
 
 import iris.client_bff.auth.db.jwt.JWTService;
 import lombok.AllArgsConstructor;

@@ -39,7 +39,7 @@ public class EventDataControllerImpl implements EventDataController {
 	public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
 
 		log.trace("Start submission {}", dataAuthorizationToken);
-		
+
 		if (validHelper.isPostOutOfLimit(guestList.getGuests(), client.getName(),
 				suspiciouslyRequest.getDataBlockingThreshold(), suspiciouslyRequest.getDataWarningThreshold(),
 				"guests")) {

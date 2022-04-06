@@ -1,19 +1,22 @@
 package iris.client_bff.iris_messages.web;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
+import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.events.message.EventMessageTestData;
 import iris.client_bff.iris_messages.IrisMessageData;
+import iris.client_bff.iris_messages.IrisMessageDataProcessor;
+import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.IrisMessageDataService;
 import iris.client_bff.iris_messages.IrisMessageDataTestData;
+import iris.client_bff.iris_messages.IrisMessageTestData;
+import lombok.RequiredArgsConstructor;
+
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -22,17 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.RestResponsePage;
-import iris.client_bff.iris_messages.IrisMessageDataProcessor;
-import iris.client_bff.iris_messages.IrisMessageDataProcessors;
-import iris.client_bff.iris_messages.IrisMessageTestData;
-import lombok.RequiredArgsConstructor;
-
-import java.util.UUID;
 
 @IrisWebIntegrationTest
 @RequiredArgsConstructor
@@ -78,8 +71,7 @@ class IrisMessageDataControllerTest {
 
 		var result = mockMvc
 				.perform(
-						MockMvcRequestBuilders.post(baseUrl + "/" + messageData.getId() + "/import")
-				)
+						MockMvcRequestBuilders.post(baseUrl + "/" + messageData.getId() + "/import"))
 				.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 				.andReturn();
 
@@ -101,10 +93,10 @@ class IrisMessageDataControllerTest {
 		}).when(irisMessageDataService).importMessageData(
 				any(IrisMessageData.IrisMessageDataIdentifier.class),
 				any(UUID.class),
-				anyString()
-		);
+				anyString());
 
-		when(irisMessageDataProcessors.withProcessorFor(any(IrisMessageData.IrisMessageDataIdentifier.class))).thenReturn(irisMessageDataProcessor);
+		when(irisMessageDataProcessors.withProcessorFor(any(IrisMessageData.IrisMessageDataIdentifier.class)))
+				.thenReturn(irisMessageDataProcessor);
 		doNothing().when(irisMessageDataProcessor).validateImportSelection(anyString());
 
 		var result = mockMvc
@@ -112,8 +104,7 @@ class IrisMessageDataControllerTest {
 						MockMvcRequestBuilders.post(baseUrl + "/" + messageData.getId() + "/import")
 								.queryParam("importTargetId", UUID.randomUUID().toString())
 								.content(this.eventMessageTestData.MOCK_EVENT_MESSAGE_IMPORT_SELECTION_STRING)
-								.contentType(MediaType.APPLICATION_JSON)
-				)
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 				.andReturn();
 
@@ -123,8 +114,7 @@ class IrisMessageDataControllerTest {
 		verify(irisMessageDataService).importMessageData(
 				any(IrisMessageData.IrisMessageDataIdentifier.class),
 				any(UUID.class),
-				anyString()
-		);
+				anyString());
 
 		verify(irisMessageDataProcessors).withProcessorFor(messageData.getId());
 		verify(irisMessageDataProcessor).validateImportSelection(anyString());
@@ -138,14 +128,12 @@ class IrisMessageDataControllerTest {
 
 		when(irisMessageDataViewProvider.getImportSelectionViewData(
 				any(IrisMessageData.IrisMessageDataIdentifier.class),
-				any(UUID.class)
-				)).thenReturn(viewDataDto);
+				any(UUID.class))).thenReturn(viewDataDto);
 
 		var result = mockMvc
 				.perform(
 						MockMvcRequestBuilders.get(baseUrl + "/" + viewDataDto.getId() + "/import-selection-view")
-								.queryParam("importTargetId", UUID.randomUUID().toString())
-				)
+								.queryParam("importTargetId", UUID.randomUUID().toString()))
 				.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 				.andReturn();
 
@@ -153,7 +141,8 @@ class IrisMessageDataControllerTest {
 
 		assertThat(viewDataDto).isEqualTo(resultViewDataDto);
 
-		verify(irisMessageDataViewProvider).getImportSelectionViewData(any(IrisMessageData.IrisMessageDataIdentifier.class), any(UUID.class));
+		verify(irisMessageDataViewProvider).getImportSelectionViewData(any(IrisMessageData.IrisMessageDataIdentifier.class),
+				any(UUID.class));
 	}
 
 	@Test
@@ -167,8 +156,7 @@ class IrisMessageDataControllerTest {
 		var result = mockMvc
 				.perform(
 						MockMvcRequestBuilders.get(baseUrl + "/" + viewDataDto.getId() + "/view")
-								.queryParam("importTargetId", UUID.randomUUID().toString())
-				)
+								.queryParam("importTargetId", UUID.randomUUID().toString()))
 				.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 				.andReturn();
 

@@ -1,8 +1,8 @@
 package iris.client_bff.auth.db.jwt;
 
-import com.auth0.jwt.JWTCreator.Builder;
-
 import java.time.Instant;
+
+import com.auth0.jwt.JWTCreator.Builder;
 
 public interface JWTSigner {
 

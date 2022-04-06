@@ -8,9 +8,10 @@ import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Optional;
+
+import org.springframework.stereotype.Component;
 
 @Component
 @Getter

@@ -164,7 +164,8 @@ public class ValidationHelper {
 		// remove "+" from forbiddenSymbols as it is allowed for phone numbers
 		String[] forbiddenSymbols = ArrayUtils.removeElement(FORBIDDEN_SYMBOLS, "+");
 		// check if any json key or value is a possible attack
-		return Arrays.stream(inputValues).anyMatch(v -> isPossibleAttack(v, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES, forbiddenSymbols));
+		return Arrays.stream(inputValues)
+				.anyMatch(v -> isPossibleAttack(v, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES, forbiddenSymbols));
 	}
 
 	public boolean isPossibleAttack(String input, String field, boolean obfuscateLogging,

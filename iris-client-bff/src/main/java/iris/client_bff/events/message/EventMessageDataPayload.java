@@ -6,11 +6,12 @@ import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.events.web.dto.GuestListDataProvider;
 import lombok.Data;
-import org.modelmapper.ModelMapper;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+
+import org.modelmapper.ModelMapper;
 
 @Data
 public class EventMessageDataPayload {

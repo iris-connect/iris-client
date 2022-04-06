@@ -44,8 +44,7 @@ public class IrisMessageBuilderEpsTest {
 				this.folderRepository,
 				this.irisMessageClient,
 				this.messages,
-				this.validationHelper
-		);
+				this.validationHelper);
 	}
 
 	@Test

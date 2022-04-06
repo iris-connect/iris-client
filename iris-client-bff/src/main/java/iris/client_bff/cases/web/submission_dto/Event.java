@@ -16,8 +16,8 @@ import lombok.ToString;
 @AllArgsConstructor(access = PRIVATE)
 public class Event {
 
-  private String name;
-  private String phone;
-  private Address address;
-  private String additionalInformation;
+	private String name;
+	private String phone;
+	private Address address;
+	private String additionalInformation;
 }

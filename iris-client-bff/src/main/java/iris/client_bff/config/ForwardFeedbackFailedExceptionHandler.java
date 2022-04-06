@@ -23,8 +23,9 @@ public class ForwardFeedbackFailedExceptionHandler extends ResponseEntityExcepti
 	 * @return error response with request object
 	 */
 	@ExceptionHandler(value = {
-		RestClientException.class })
+			RestClientException.class })
 	protected ResponseEntity<Object> handleConstraintViolation(RestClientException e, WebRequest request) {
-		return handleExceptionInternal(e, "The connection is currently not available.", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+		return handleExceptionInternal(e, "The connection is currently not available.", new HttpHeaders(),
+				HttpStatus.INTERNAL_SERVER_ERROR, request);
 	}
 }

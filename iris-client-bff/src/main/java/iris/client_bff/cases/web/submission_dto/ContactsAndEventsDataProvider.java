@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor(access = PRIVATE)
 public class ContactsAndEventsDataProvider {
 
-  private String firstName;
-  private String lastName;
-  private LocalDate dateOfBirth;
+	private String firstName;
+	private String lastName;
+	private LocalDate dateOfBirth;
 }

@@ -1,9 +1,9 @@
 package iris.client_bff.statistics.web;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.cases.CaseDataRequest;
@@ -35,7 +35,7 @@ public class StatisticsControllerTest {
 	private ObjectMapper om;
 
 	@MockBean
-    CaseDataRequestService caseDataRequestService;
+	CaseDataRequestService caseDataRequestService;
 
 	@MockBean
 	EventDataRequestService eventService;

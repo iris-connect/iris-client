@@ -14,8 +14,8 @@ import lombok.ToString;
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
 public class IndexCaseUpdateDTO {
-  private String comment;
-  private String externalCaseId;
-  private String name;
-  private IndexCaseStatusDTO status;
+	private String comment;
+	private String externalCaseId;
+	private String name;
+	private IndexCaseStatusDTO status;
 }

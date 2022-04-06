@@ -282,7 +282,8 @@ class IrisMessageControllerTest {
 	@WithMockUser()
 	void getMessageHdContactsIncludingOwn() throws Exception {
 
-		when(irisMessageService.getHdContacts(null)).thenReturn(List.of(testData.MOCK_CONTACT_OTHER, testData.MOCK_CONTACT_OWN));
+		when(irisMessageService.getHdContacts(null))
+				.thenReturn(List.of(testData.MOCK_CONTACT_OTHER, testData.MOCK_CONTACT_OWN));
 
 		var res = mockMvc
 				.perform(get(baseUrl + "/hd-contacts").queryParam("includeOwn", "true"))

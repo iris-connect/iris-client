@@ -18,10 +18,10 @@ import lombok.ToString;
 @AllArgsConstructor(access = PRIVATE)
 public class LocationContact {
 
-  private String officialName;
-  private String representative;
-  private LocationAddress address;
-  private String ownerEmail;
-  private String email;
-  private String phone;
+	private String officialName;
+	private String representative;
+	private LocationAddress address;
+	private String ownerEmail;
+	private String email;
+	private String phone;
 }

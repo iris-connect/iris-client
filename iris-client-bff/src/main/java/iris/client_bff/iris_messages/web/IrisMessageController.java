@@ -3,13 +3,13 @@ package iris.client_bff.iris_messages.web;
 import iris.client_bff.core.utils.ValidationHelper;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
-import iris.client_bff.iris_messages.exceptions.IrisMessageException;
+import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.IrisMessageFolder;
 import iris.client_bff.iris_messages.IrisMessageFolder.IrisMessageFolderIdentifier;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
 import iris.client_bff.iris_messages.IrisMessageService;
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
-import iris.client_bff.iris_messages.IrisMessageDataProcessors;
+import iris.client_bff.iris_messages.exceptions.IrisMessageException;
 import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 
@@ -107,7 +107,7 @@ public class IrisMessageController {
 		this.validateField(irisMessageInsert.getBody(), FIELD_BODY);
 
 		if (irisMessageInsert.getDataAttachments() != null) {
-			for ( IrisMessageInsertDto.DataAttachment data : irisMessageInsert.getDataAttachments() ) {
+			for (IrisMessageInsertDto.DataAttachment data : irisMessageInsert.getDataAttachments()) {
 				this.validateField(data.getDiscriminator(), FIELD_DATA_DISCRIMINATOR);
 				// The validation of the insert payload is handled by the data processor
 				// Doesn't hurt to validate the keys & values of the payloads JSON string
@@ -215,7 +215,8 @@ public class IrisMessageController {
 
 	private void validateMessageDataPayload(String value, String field) {
 		if (validationHelper.isPossibleAttackForMessageDataPayload(value, field, true)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, messages.getMessage("iris_message.invalid_message_data"));
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					messages.getMessage("iris_message.invalid_message_data"));
 		}
 	}
 

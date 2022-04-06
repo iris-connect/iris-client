@@ -1,13 +1,14 @@
 package iris.client_bff.iris_messages;
 
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Service;
 
 @Service
 public class IrisMessageDataProcessors {
@@ -21,8 +22,7 @@ public class IrisMessageDataProcessors {
 	public IrisMessageDataProcessors(
 			IrisMessageDataRepository irisMessageDataRepository,
 			MessageSourceAccessor messages,
-			List<IrisMessageDataProcessor> converters
-	) {
+			List<IrisMessageDataProcessor> converters) {
 		this.irisMessageDataRepository = irisMessageDataRepository;
 		this.messages = messages;
 		this.processors = converters.stream()

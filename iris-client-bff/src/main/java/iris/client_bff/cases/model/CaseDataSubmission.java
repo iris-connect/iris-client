@@ -51,9 +51,9 @@ public class CaseDataSubmission extends Aggregate<CaseDataSubmission, CaseDataSu
 	private Instant eventsEndDate;
 
 	public CaseDataSubmission(CaseDataRequest request,
-							  Set<Contact> contacts, Instant contactsStartDate, Instant contactsEndDate,
-							  Set<CaseEvent> events, Instant eventsStartDate, Instant eventsEndDate,
-							  CaseDataProvider dataProvider) {
+			Set<Contact> contacts, Instant contactsStartDate, Instant contactsEndDate,
+			Set<CaseEvent> events, Instant eventsStartDate, Instant eventsEndDate,
+			CaseDataProvider dataProvider) {
 
 		super();
 

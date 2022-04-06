@@ -8,11 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
@@ -21,10 +22,10 @@ import java.util.List;
 @AllArgsConstructor(access = PRIVATE)
 public class GuestList {
 
-  @Builder.Default
-  private List<Guest> guests = new ArrayList<>();
-  private @NotNull @Valid GuestListDataProvider dataProvider;
-  private String additionalInformation;
-  private Instant startDate;
-  private Instant endDate;
+	@Builder.Default
+	private List<Guest> guests = new ArrayList<>();
+	private @NotNull @Valid GuestListDataProvider dataProvider;
+	private String additionalInformation;
+	private Instant startDate;
+	private Instant endDate;
 }

@@ -19,8 +19,8 @@ import java.util.List;
 @AllArgsConstructor(access = PRIVATE)
 public class EventList {
 
-  @Builder.Default
-  private List<Event> events = new ArrayList<>();
-  private LocalDate startDate;
-  private LocalDate endDate;
+	@Builder.Default
+	private List<Event> events = new ArrayList<>();
+	private LocalDate startDate;
+	private LocalDate endDate;
 }

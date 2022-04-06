@@ -1,23 +1,21 @@
 package iris.client_bff.iris_messages;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import iris.client_bff.events.message.EventMessageTestData;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import iris.client_bff.events.message.EventMessageTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @ExtendWith(MockitoExtension.class)
 public class IrisMessageDataServiceTest {
@@ -42,8 +40,7 @@ public class IrisMessageDataServiceTest {
 		this.testData = new IrisMessageDataTestData();
 		this.service = new IrisMessageDataService(
 				this.messageDataRepository,
-				this.messageDataProcessors
-		);
+				this.messageDataProcessors);
 	}
 
 	@Test

@@ -1,6 +1,11 @@
 package iris.client_bff.search_client.eps.dto;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import org.springframework.data.domain.Sort;
 
 @Builder

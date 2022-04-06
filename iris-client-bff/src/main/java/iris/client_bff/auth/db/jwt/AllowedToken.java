@@ -1,11 +1,14 @@
 package iris.client_bff.auth.db.jwt;
 
-import lombok.*;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.Instant;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "allowed_tokens")
@@ -24,5 +27,3 @@ public class AllowedToken implements Serializable {
 	@Column(nullable = false)
 	private Instant created;
 }
-
-

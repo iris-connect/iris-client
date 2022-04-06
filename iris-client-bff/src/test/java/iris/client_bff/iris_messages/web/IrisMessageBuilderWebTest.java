@@ -2,14 +2,13 @@ package iris.client_bff.iris_messages.web;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageDataProcessor;
+import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.IrisMessageFolderRepository;
 import iris.client_bff.iris_messages.IrisMessageTestData;
-import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;
 
 import java.util.Optional;
@@ -45,8 +44,7 @@ public class IrisMessageBuilderWebTest {
 		this.builder = new IrisMessageBuilderWeb(
 				this.folderRepository,
 				this.irisMessageClient,
-				this.irisMessageDataProcessors
-		);
+				this.irisMessageDataProcessors);
 	}
 
 	@Test

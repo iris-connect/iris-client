@@ -9,24 +9,23 @@ import java.time.Instant;
 @Value
 class IrisMessageListItemDto {
 
-    private String id;
-    private String subject;
-    private IrisMessageHdContact hdAuthor;
-    private IrisMessageHdContact hdRecipient;
-    private Instant createdAt;
-    private Boolean isRead;
-    private IrisMessageDataAttachmentCountDto attachmentCount;
+	private String id;
+	private String subject;
+	private IrisMessageHdContact hdAuthor;
+	private IrisMessageHdContact hdRecipient;
+	private Instant createdAt;
+	private Boolean isRead;
+	private IrisMessageDataAttachmentCountDto attachmentCount;
 
-    public static IrisMessageListItemDto fromEntity(IrisMessage message) {
-        return new IrisMessageListItemDto(
-                message.getId().toString(),
-                message.getSubject(),
-                message.getHdAuthor(),
-                message.getHdRecipient(),
-                message.getMetadata().getCreated(),
-                message.isRead(),
-                IrisMessageDataAttachmentCountDto.fromEntity(message.getDataAttachments())
-        );
-    }
+	public static IrisMessageListItemDto fromEntity(IrisMessage message) {
+		return new IrisMessageListItemDto(
+				message.getId().toString(),
+				message.getSubject(),
+				message.getHdAuthor(),
+				message.getHdRecipient(),
+				message.getMetadata().getCreated(),
+				message.isRead(),
+				IrisMessageDataAttachmentCountDto.fromEntity(message.getDataAttachments()));
+	}
 
 }

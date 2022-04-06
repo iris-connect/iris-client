@@ -1,14 +1,15 @@
 package iris.client_bff.iris_messages;
 
+import iris.client_bff.events.message.EventMessageTestData;
+import iris.client_bff.iris_messages.web.IrisMessageDataViewDataDto;
+import iris.client_bff.iris_messages.web.IrisMessageInsertDto;
+
+import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import iris.client_bff.events.message.EventMessageTestData;
-import iris.client_bff.iris_messages.web.IrisMessageDataViewDataDto;
-import iris.client_bff.iris_messages.web.IrisMessageInsertDto;
-import org.springframework.stereotype.Component;
 
 @Component
 public class IrisMessageDataTestData {

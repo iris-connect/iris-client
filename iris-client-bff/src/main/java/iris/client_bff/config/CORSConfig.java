@@ -1,7 +1,6 @@
 package iris.client_bff.config;
 
-import static iris.client_bff.config.DataSubmissionConfig.DATA_SUBMISSION_ENDPOINT;
-import static iris.client_bff.config.DataSubmissionConfig.DATA_SUBMISSION_ENDPOINT_WITH_SLASH;
+import static iris.client_bff.config.DataSubmissionConfig.*;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,37 +11,37 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CORSConfig {
 
-  @Bean
-  public WebMvcConfigurer configureCorsForJsonRPC() {
-    return new WebMvcConfigurer() {
-      @Override
-      public void addCorsMappings(CorsRegistry registry) {
-        registry
-            .addMapping(DATA_SUBMISSION_ENDPOINT)
-            .allowedOrigins("*")
-            .allowedMethods("OPTIONS", "POST")
-            .allowedHeaders("*");
-        registry
-            .addMapping(DATA_SUBMISSION_ENDPOINT_WITH_SLASH)
-            .allowedOrigins("*")
-            .allowedMethods("OPTIONS", "POST")
-            .allowedHeaders("*");
-      }
-    };
-  }
+	@Bean
+	public WebMvcConfigurer configureCorsForJsonRPC() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry
+						.addMapping(DATA_SUBMISSION_ENDPOINT)
+						.allowedOrigins("*")
+						.allowedMethods("OPTIONS", "POST")
+						.allowedHeaders("*");
+				registry
+						.addMapping(DATA_SUBMISSION_ENDPOINT_WITH_SLASH)
+						.allowedOrigins("*")
+						.allowedMethods("OPTIONS", "POST")
+						.allowedHeaders("*");
+			}
+		};
+	}
 
-  @Bean
-  @Profile({ "local", "dev" })
-  public WebMvcConfigurer configureCorsForLocalDev() {
-    return new WebMvcConfigurer() {
-      @Override
-      public void addCorsMappings(CorsRegistry registry) {
-        registry
-            .addMapping("/**")
-            .allowedOrigins("*")
-            .allowedMethods("*")
-            .allowedHeaders("*");
-      }
-    };
-  }
+	@Bean
+	@Profile({ "local", "dev" })
+	public WebMvcConfigurer configureCorsForLocalDev() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry
+						.addMapping("/**")
+						.allowedOrigins("*")
+						.allowedMethods("*")
+						.allowedHeaders("*");
+			}
+		};
+	}
 }

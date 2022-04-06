@@ -12,13 +12,13 @@
 
 package iris.client_bff.search_client.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({
 		LocationQueryResult.JSON_PROPERTY_LOCATIONS,
@@ -107,7 +107,6 @@ public class LocationQueryResult {
 	public void setPage(int page) {
 		this.page = page;
 	}
-
 
 	/**
 	 * Get totalElements

@@ -14,8 +14,8 @@ import lombok.ToString;
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
 public class EventUpdateDTO {
-  private String comment;
-  private String externalRequestId;
-  private String name;
-  private EventStatusDTO status;
+	private String comment;
+	private String externalRequestId;
+	private String name;
+	private EventStatusDTO status;
 }

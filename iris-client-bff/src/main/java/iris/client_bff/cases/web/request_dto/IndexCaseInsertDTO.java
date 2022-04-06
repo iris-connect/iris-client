@@ -18,12 +18,12 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
 public class IndexCaseInsertDTO {
-  private String comment;
-  private String externalCaseId;
-  private String name;
+	private String comment;
+	private String externalCaseId;
+	private String name;
 
-  @NotNull
-  private Instant start;
+	@NotNull
+	private Instant start;
 
-  private Instant end;
+	private Instant end;
 }

@@ -26,28 +26,28 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class Guest {
 
-  @Id
-  private UUID guestId = UUID.randomUUID();
+	@Id
+	private UUID guestId = UUID.randomUUID();
 
-  @ManyToOne //
-  @JoinColumn(name = "submission_id")
-  private EventDataSubmission submission;
+	@ManyToOne //
+	@JoinColumn(name = "submission_id")
+	private EventDataSubmission submission;
 
-  private String firstName;
-  private String lastName;
-  private LocalDate dateOfBirth;
+	private String firstName;
+	private String lastName;
+	private LocalDate dateOfBirth;
 
-  @Enumerated(EnumType.STRING)
-  private Sex sex = Sex.UNKNOWN;
+	@Enumerated(EnumType.STRING)
+	private Sex sex = Sex.UNKNOWN;
 
-  private String email;
-  private String phone;
-  private String mobilePhone;
-  private Boolean identityChecked;
+	private String email;
+	private String phone;
+	private String mobilePhone;
+	private Boolean identityChecked;
 
-  @Embedded
-  private Address address;
+	@Embedded
+	private Address address;
 
-  @Embedded
-  private AttendanceInformation attendanceInformation;
+	@Embedded
+	private AttendanceInformation attendanceInformation;
 }
