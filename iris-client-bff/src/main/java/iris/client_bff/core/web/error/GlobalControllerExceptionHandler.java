@@ -41,8 +41,9 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
 	@ExceptionHandler(Exception.class)
 	public void handleException(Exception ex) throws Exception {
 		// If the exception is annotated with @ResponseStatus rethrow it and let the framework handle it.
-		if (AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class) != null)
+		if (AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class) != null) {
 			throw ex;
+		}
 
 		log.warn("Unmapped exception occurred", ex);
 		throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, getInternalMessage(ex));

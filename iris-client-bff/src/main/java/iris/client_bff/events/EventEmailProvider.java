@@ -39,7 +39,7 @@ import org.springframework.util.Assert;
 
 /**
  * Helper to send out emails during event processing
- * 
+ *
  * @author Jens Kutzsche
  */
 @Component

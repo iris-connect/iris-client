@@ -18,7 +18,7 @@ import com.googlecode.jsonrpc4j.IJsonRpcClient;
 /**
  * DataFeedbackEndpointConnector is responsible for sending a post encrypted request with feedback data to Iris-Public
  * Server.
- * 
+ *
  * @author Ostfalia Gruppe 12
  * @author Jens Kutzsche
  */

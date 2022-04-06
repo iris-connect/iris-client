@@ -11,7 +11,7 @@ import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
  * message properties of the validation annotations `{...}` are resolved and translated. This is different when using
  * `@Validated` and is not done there. So if a custom translated message is needed, it should be derived from this class
  * and not use `@Validated`.
- * 
+ *
  * @author Jens Kutzsche
  */
 public class ValidatedProperties implements Validator {

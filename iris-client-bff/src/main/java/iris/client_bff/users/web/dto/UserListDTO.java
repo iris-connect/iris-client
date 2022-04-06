@@ -28,7 +28,7 @@ public class UserListDTO {
 
 	/**
 	 * Get users
-	 * 
+	 *
 	 * @return users
 	 */
 	@Valid

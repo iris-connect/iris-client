@@ -28,7 +28,7 @@ public class LocationContext {
 
 	/**
 	 * Interne ID des Kontext
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty(JSON_PROPERTY_ID)
@@ -50,7 +50,7 @@ public class LocationContext {
 
 	/**
 	 * Bezeichnung
-	 * 
+	 *
 	 * @return name
 	 **/
 	@JsonProperty(JSON_PROPERTY_NAME)

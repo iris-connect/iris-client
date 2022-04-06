@@ -76,7 +76,7 @@ class EmailConfig {
 
 	/**
 	 * Checks if all templates can be loaded in all supported languages.
-	 * 
+	 *
 	 * @param event
 	 * @throws IOException
 	 */

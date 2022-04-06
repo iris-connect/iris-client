@@ -26,7 +26,7 @@ public interface EventDataRequestRepository extends JpaRepository<EventDataReque
 
 	/**
 	 * Returns the {@link EventDataRequest}s created before the given {@link Instant}.
-	 * 
+	 *
 	 * @param refDate must not be {@literal null}.
 	 * @return
 	 */

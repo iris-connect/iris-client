@@ -137,8 +137,9 @@ class EventDataControllerIntegrationTest {
 		clientDto.setName(refId);
 
 		var guests = new ArrayList<Guest>(10010);
-		for (int i = 0; i < 10010; i++)
+		for (int i = 0; i < 10010; i++) {
 			guests.add(Guest.builder().firstName("fn").lastName("ln").build());
+		}
 
 		var guestList = GuestList.builder()
 				.startDate(requestStart)

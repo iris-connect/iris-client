@@ -78,8 +78,6 @@ public class EventDataRequest extends Aggregate<EventDataRequest, EventDataReque
 	public EventDataRequest(String refId, String name, Instant requestStart, Instant requestEnd, String comment,
 			String requestDetails, String hdUserId, Location location, String announcementToken) {
 
-		super();
-
 		this.refId = refId;
 		this.name = name;
 		this.requestStart = requestStart;

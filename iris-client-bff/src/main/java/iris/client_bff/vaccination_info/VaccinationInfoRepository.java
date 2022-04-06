@@ -14,7 +14,7 @@ public interface VaccinationInfoRepository extends JpaRepository<VaccinationInfo
 
 	/**
 	 * Returns the {@link VaccinationInfo}s created before the given {@link Instant}.
-	 * 
+	 *
 	 * @param refDate must not be {@literal null}.
 	 * @return
 	 */

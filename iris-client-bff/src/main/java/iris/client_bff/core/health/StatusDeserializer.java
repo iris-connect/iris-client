@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 /**
  * Deserializer for the {@link Status} from backend service (formerly called location service).
- * 
+ *
  * @author Jens Kutzsche
  */
 @JsonComponent

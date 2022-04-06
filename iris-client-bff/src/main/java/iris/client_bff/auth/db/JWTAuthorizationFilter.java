@@ -31,8 +31,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 	private final UserDetailsServiceImpl userService;
 
 	public JWTAuthorizationFilter(JWTVerifier jwtVerifier, UserDetailsServiceImpl userService) {
-		super();
-
 		this.jwtVerifier = jwtVerifier;
 		this.userService = userService;
 	}
@@ -71,7 +69,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	/**
 	 * This method is called if the user supplied a jwt token.
-	 * 
+	 *
 	 * @param token JSON Web Token
 	 * @return
 	 */

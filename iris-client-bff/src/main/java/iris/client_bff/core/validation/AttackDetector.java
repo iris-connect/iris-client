@@ -150,7 +150,7 @@ class AttackDetector {
 
 	/**
 	 * Searches for any occurrence of given keyword tuples and stops at first match.
-	 * 
+	 *
 	 * @param str String to be tested
 	 * @param keywordTuples Array of tuples with keywords to find
 	 * @return If found: range of first matching tuple in tested string starting at beginning of first keyword, ending at
@@ -166,7 +166,7 @@ class AttackDetector {
 
 	/**
 	 * Searches for the keyword tuple in the input string.
-	 * 
+	 *
 	 * @param input String to be tested
 	 * @param keywordTuple tuple with keywords to find
 	 * @return If found: range in tested string starting at beginning of first keyword, ending at end of last keyword.

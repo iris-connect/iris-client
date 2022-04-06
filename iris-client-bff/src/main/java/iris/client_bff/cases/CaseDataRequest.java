@@ -71,8 +71,6 @@ public class CaseDataRequest extends Aggregate<CaseDataRequest, CaseDataRequest.
 	public CaseDataRequest(String refId, String name, Instant requestStart, Instant requestEnd,
 			String hdUserId, String comment, @NonNull IdentifierToken identifierToken, String announcementToken) {
 
-		super();
-
 		id = DataRequestIdentifier.of(UUID.randomUUID());
 
 		this.refId = refId;

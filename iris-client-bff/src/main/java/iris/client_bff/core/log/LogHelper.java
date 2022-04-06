@@ -52,12 +52,16 @@ public class LogHelper {
 	}
 
 	public static String obfuscate(String s, boolean fromEnd, int obfuscateAmount) {
-		if (s == null)
+
+		if (s == null) {
 			return null;
+		}
 
 		String regex = ".{0," + obfuscateAmount + "}";
-		if (fromEnd)
+		if (fromEnd) {
 			regex += "$";
+		}
+
 		return s.replaceFirst(regex, "*".repeat(Math.max(0, obfuscateAmount)));
 	}
 

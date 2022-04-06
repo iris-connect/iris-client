@@ -2,6 +2,7 @@ package iris.client_bff.dbms;
 
 import static org.assertj.core.api.Assertions.*;
 
+import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequestDataInitializer;
 import iris.client_bff.cases.CaseDataRequestRepository;
 import iris.client_bff.cases.CaseDataRequestService;
@@ -88,7 +89,7 @@ abstract class DatabasesystemIT {
 	void caseRequests() {
 
 		assertThat(caseRequests.findAll()).hasSize(3)
-				.extracting(it -> it.getRefId()).contains(CaseDataRequestDataInitializer.REQ_ID_1.toString(),
+				.extracting(CaseDataRequest::getRefId).contains(CaseDataRequestDataInitializer.REQ_ID_1.toString(),
 						CaseDataRequestDataInitializer.REQ_ID_2.toString(), CaseDataRequestDataInitializer.REQ_ID_3.toString());
 
 		assertThat(caseRequests.getCountSinceDate(Instant.ofEpochMilli(0l))).isEqualTo(3);

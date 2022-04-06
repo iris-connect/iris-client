@@ -27,7 +27,7 @@ public interface CaseDataRequestRepository extends JpaRepository<CaseDataRequest
 
 	/**
 	 * Returns the {@link CaseDataRequest}s created before the given {@link Instant}.
-	 * 
+	 *
 	 * @param refDate must not be {@literal null}.
 	 * @return
 	 */

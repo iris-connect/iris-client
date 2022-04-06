@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * This class provides an endpoint for post requests from Iris-Client-Frontend. This post requests contain feedback data
  * of users.
- * 
+ *
  * @author Ostfalia Gruppe 12
  * @author Jens Kutzsche
  */
@@ -26,7 +26,7 @@ public class FeedbackRestAPI {
 
 	/**
 	 * Post endpoint for feedback json data.
-	 * 
+	 *
 	 * @param sent feedback json of Iris-Client-Frontend
 	 * @return response of the request to Iris-Public-Server
 	 */

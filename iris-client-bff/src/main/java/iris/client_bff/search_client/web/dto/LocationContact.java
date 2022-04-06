@@ -44,7 +44,7 @@ public class LocationContact {
 
 	/**
 	 * Offizieller Unternehmensname
-	 * 
+	 *
 	 * @return officialName
 	 **/
 	@javax.annotation.Nullable
@@ -67,7 +67,7 @@ public class LocationContact {
 
 	/**
 	 * Ansprechpartner für dieses Unternehmen
-	 * 
+	 *
 	 * @return representative
 	 **/
 	@javax.annotation.Nullable
@@ -90,7 +90,7 @@ public class LocationContact {
 
 	/**
 	 * Get address
-	 * 
+	 *
 	 * @return address
 	 **/
 	@JsonProperty(JSON_PROPERTY_ADDRESS)
@@ -112,7 +112,7 @@ public class LocationContact {
 
 	/**
 	 * E-Mail des Inhabers
-	 * 
+	 *
 	 * @return ownerEmail
 	 **/
 	@javax.annotation.Nullable
@@ -135,7 +135,7 @@ public class LocationContact {
 
 	/**
 	 * ggf. E-Mail einer weiteren Kontaktperson
-	 * 
+	 *
 	 * @return email
 	 **/
 	@javax.annotation.Nullable
@@ -158,7 +158,7 @@ public class LocationContact {
 
 	/**
 	 * Telefonnummer eines Ansprechpartners
-	 * 
+	 *
 	 * @return phone
 	 **/
 	@javax.annotation.Nullable

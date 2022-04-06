@@ -45,8 +45,6 @@ public class EventDataSubmission extends Aggregate<EventDataSubmission, EventDat
 			String additionalInformation,
 			Instant startDate, Instant endDate) {
 
-		super();
-
 		id = DataSubmissionIdentifier.random();
 		this.request = request;
 		this.guests = guests;

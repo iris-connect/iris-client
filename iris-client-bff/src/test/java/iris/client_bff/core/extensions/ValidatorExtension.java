@@ -25,7 +25,7 @@ import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
  * The {@link MessageInterpolator} is set and use the {@code messages_en.properties}. English is set as locale for the
  * interpolation in the tests.
  * </p>
- * 
+ *
  * @author Jens Kutzsche
  */
 public class ValidatorExtension implements BeforeAllCallback {

@@ -15,7 +15,7 @@ public interface VaccinationInfoAnnouncementRepository
 
 	/**
 	 * Returns the {@link VaccinationInfoAnnouncement}s created before the given {@link Instant}.
-	 * 
+	 *
 	 * @param refDate must not be {@literal null}.
 	 * @return
 	 */

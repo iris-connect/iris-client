@@ -37,12 +37,15 @@ public class EventMessageDataPayloadDefuse {
 	}
 
 	private String defuse(String input, String field, int maxLength) {
-		if (input == null)
+
+		if (input == null) {
 			return null;
+		}
+
 		if (this.validationHelper.isPossibleAttack(input, field, true)) {
 			return INVALID_INPUT_STRING;
 		}
+
 		return StringUtils.truncate(input, maxLength);
 	}
-
 }

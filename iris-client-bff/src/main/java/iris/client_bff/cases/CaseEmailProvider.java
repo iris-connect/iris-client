@@ -39,7 +39,7 @@ import org.springframework.util.Assert;
 
 /**
  * Helper to send out emails during index case processing
- * 
+ *
  * @author Jens Kutzsche
  */
 @Component
@@ -76,7 +76,7 @@ public class CaseEmailProvider extends EmailProvider {
 			return AsyncResult.forValue(Try.success(null));
 		}
 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("caseId", caseData.getName());
 		parameters.put("externalId", caseData.getRefId());
 		parameters.put("startTime", caseData.getRequestStart());

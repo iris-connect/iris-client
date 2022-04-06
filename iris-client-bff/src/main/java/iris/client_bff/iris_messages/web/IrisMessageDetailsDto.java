@@ -48,8 +48,9 @@ class IrisMessageDetailsDto {
 		private Boolean isImported;
 
 		public static List<DataAttachment> fromEntity(List<IrisMessageData> dataList) {
-			if (dataList == null)
+			if (dataList == null) {
 				return new ArrayList<>();
+			}
 			return dataList.stream().map(DataAttachment::fromEntity).toList();
 		}
 

@@ -35,7 +35,7 @@ import com.icegreen.greenmail.util.ServerSetup;
  * <p>
  * The received e-mails are logged with their basic data (from, to, date and subject).
  * </p>
- * 
+ *
  * @author Jens Kutzsche
  */
 @Slf4j

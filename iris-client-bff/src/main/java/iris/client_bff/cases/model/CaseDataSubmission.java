@@ -55,8 +55,6 @@ public class CaseDataSubmission extends Aggregate<CaseDataSubmission, CaseDataSu
 			Set<CaseEvent> events, Instant eventsStartDate, Instant eventsEndDate,
 			CaseDataProvider dataProvider) {
 
-		super();
-
 		id = DataSubmissionIdentifier.random();
 		this.request = request;
 		this.contacts = contacts;

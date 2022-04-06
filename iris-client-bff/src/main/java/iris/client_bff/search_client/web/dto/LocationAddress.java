@@ -32,7 +32,7 @@ public class LocationAddress {
 
 	/**
 	 * street + number
-	 * 
+	 *
 	 * @return street
 	 **/
 	@JsonProperty(JSON_PROPERTY_STREET)
@@ -54,7 +54,7 @@ public class LocationAddress {
 
 	/**
 	 * Stadt
-	 * 
+	 *
 	 * @return city
 	 **/
 	@JsonProperty(JSON_PROPERTY_CITY)
@@ -76,7 +76,7 @@ public class LocationAddress {
 
 	/**
 	 * Postleitzahl
-	 * 
+	 *
 	 * @return zip
 	 **/
 	@JsonProperty(JSON_PROPERTY_ZIP)

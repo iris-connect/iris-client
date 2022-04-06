@@ -34,10 +34,8 @@ public class StatusService {
 				log.error("Can't determine app status: Can't connect client EPS: {}", e.getMessage());
 			} else if (e instanceof AppStatusInternalException) {
 				log.error("Can't determine app status: Internal exception: ", e);
-			} else {
-				if (status == AppStatus.UNKNOWN_ERROR) {
-					log.info("CheckApp for {} ends with an unknown error; the origin message was: {}", appName, e.getMessage());
-				}
+			} else if (status == AppStatus.UNKNOWN_ERROR) {
+				log.info("CheckApp for {} ends with an unknown error; the origin message was: {}", appName, e.getMessage());
 			}
 
 			return new AppInfo(appName, "").setStatus(status);

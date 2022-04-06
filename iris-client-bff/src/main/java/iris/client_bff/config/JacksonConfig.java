@@ -33,7 +33,7 @@ public class JacksonConfig {
 	Module module(MessageSourceAccessor messages) {
 
 		var module = new SimpleModule();
-		module.addSerializer(new StdSerializer<MessageSourceResolvable>(MessageSourceResolvable.class) {
+		module.addSerializer(new StdSerializer<>(MessageSourceResolvable.class) {
 
 			private static final long serialVersionUID = 5598637634112288197L;
 

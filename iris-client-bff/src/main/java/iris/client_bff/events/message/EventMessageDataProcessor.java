@@ -173,11 +173,12 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 
 	private <T> void validatePayload(T payload) {
 		Set<ConstraintViolation<T>> constraintViolations = validator.validate(payload);
-		if (!constraintViolations.isEmpty())
+		if (!constraintViolations.isEmpty()) {
 			throw new IrisMessageDataException(ErrorMessages.INVALID_INPUT + ": "
 					+ constraintViolations.stream().map(
 							violation -> String.format("%s: %s", violation.getPropertyPath(), violation.getMessage()))
 							.collect(Collectors.joining(", ")));
+		}
 	}
 
 	private <T> T parseJSON(String value, Class<T> valueType) {

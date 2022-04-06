@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
  * It is inspired by: <a>https://mflash.dev/blog/2021/03/01/java-based-health-check-for-docker/</a>
  * <p />
  * Use it with:
- * 
+ *
  * <pre>
  * {@code
  * healthcheck:
@@ -29,7 +29,7 @@ import org.springframework.web.client.RestTemplate;
  *   start_period: 10s
  * }
  * </pre>
- * 
+ *
  * @author Jens Kutzsche
  */
 public class HealthChecker {

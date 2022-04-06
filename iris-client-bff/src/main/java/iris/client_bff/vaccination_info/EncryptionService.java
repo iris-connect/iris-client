@@ -26,11 +26,11 @@ import org.springframework.stereotype.Service;
 public class EncryptionService {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final String ALGORITHM = "AES/GCM/NoPadding";
 	/**
-	 * 
+	 *
 	 */
 	private static final String PROVIDER = "BCFIPS";
 

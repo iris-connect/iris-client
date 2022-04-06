@@ -57,7 +57,7 @@ public class UserInsertDTO {
 
 	/**
 	 * Get firstName
-	 * 
+	 *
 	 * @return firstName
 	 **/
 	@javax.annotation.Nullable
@@ -80,7 +80,7 @@ public class UserInsertDTO {
 
 	/**
 	 * Get lastName
-	 * 
+	 *
 	 * @return lastName
 	 **/
 	@javax.annotation.Nullable
@@ -103,7 +103,7 @@ public class UserInsertDTO {
 
 	/**
 	 * Get userName
-	 * 
+	 *
 	 * @return userName
 	 **/
 	@JsonProperty(JSON_PROPERTY_USER_NAME)
@@ -125,7 +125,7 @@ public class UserInsertDTO {
 
 	/**
 	 * Get password
-	 * 
+	 *
 	 * @return password
 	 **/
 	@JsonProperty(JSON_PROPERTY_PASSWORD)
@@ -147,7 +147,7 @@ public class UserInsertDTO {
 
 	/**
 	 * Get role
-	 * 
+	 *
 	 * @return role
 	 **/
 	@JsonProperty(JSON_PROPERTY_ROLE)

@@ -43,7 +43,7 @@ public class LocationInformation {
 
 	/**
 	 * Interne ID (beim Provider)
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty(JSON_PROPERTY_ID)
@@ -65,7 +65,7 @@ public class LocationInformation {
 
 	/**
 	 * ID des App providers
-	 * 
+	 *
 	 * @return providerId
 	 **/
 	@JsonProperty(JSON_PROPERTY_PROVIDER_ID)
@@ -87,7 +87,7 @@ public class LocationInformation {
 
 	/**
 	 * Name des Standorts
-	 * 
+	 *
 	 * @return name
 	 **/
 	@JsonProperty(JSON_PROPERTY_NAME)
@@ -109,7 +109,7 @@ public class LocationInformation {
 
 	/**
 	 * Öffentlicher Schlüssel, ggf. für Nachrichtenaustausch
-	 * 
+	 *
 	 * @return publicKey
 	 **/
 	@javax.annotation.Nullable
@@ -132,7 +132,7 @@ public class LocationInformation {
 
 	/**
 	 * Get contact
-	 * 
+	 *
 	 * @return contact
 	 **/
 	@JsonProperty(JSON_PROPERTY_CONTACT)
@@ -162,7 +162,7 @@ public class LocationInformation {
 
 	/**
 	 * Get contexts
-	 * 
+	 *
 	 * @return contexts
 	 **/
 	@javax.annotation.Nullable

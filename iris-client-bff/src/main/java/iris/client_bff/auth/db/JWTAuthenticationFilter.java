@@ -41,8 +41,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTSigner jwtSigner,
 			LoginAttemptsService loginAttempts) {
 
-		super();
-
 		this.authenticationManager = authenticationManager;
 		this.jwtSigner = jwtSigner;
 		this.loginAttempts = loginAttempts;

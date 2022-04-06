@@ -22,7 +22,7 @@ import org.springframework.lang.NonNull;
 
 /**
  * Base class of aggregates in the sense of DDD
- * 
+ *
  * @author Jens Kutzsche
  */
 @MappedSuperclass

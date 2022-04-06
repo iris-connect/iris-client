@@ -58,7 +58,7 @@ public class UserUpdateDTO {
 
 	/**
 	 * Get firstName
-	 * 
+	 *
 	 * @return firstName
 	 **/
 	@javax.annotation.Nullable
@@ -81,7 +81,7 @@ public class UserUpdateDTO {
 
 	/**
 	 * Get lastName
-	 * 
+	 *
 	 * @return lastName
 	 **/
 	@javax.annotation.Nullable
@@ -104,7 +104,7 @@ public class UserUpdateDTO {
 
 	/**
 	 * Get userName
-	 * 
+	 *
 	 * @return userName
 	 **/
 	@javax.annotation.Nullable
@@ -127,7 +127,7 @@ public class UserUpdateDTO {
 
 	/**
 	 * Get password
-	 * 
+	 *
 	 * @return password
 	 **/
 	@javax.annotation.Nullable
@@ -150,7 +150,7 @@ public class UserUpdateDTO {
 
 	/**
 	 * Get old password
-	 * 
+	 *
 	 * @return old password
 	 **/
 	@javax.annotation.Nullable
@@ -173,7 +173,7 @@ public class UserUpdateDTO {
 
 	/**
 	 * Get role
-	 * 
+	 *
 	 * @return role
 	 **/
 	@javax.annotation.Nullable

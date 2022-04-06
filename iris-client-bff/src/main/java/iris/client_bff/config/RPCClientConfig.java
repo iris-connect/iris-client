@@ -68,7 +68,7 @@ public class RPCClientConfig {
 	/**
 	 * If no parameters are passed in a JSON-RPC method call, then with JSON-RPC in general or jsonrpc4j in particular, an
 	 * empty object must be serialized so that at the receiver the request is processed properly.
-	 * 
+	 *
 	 * @author Jens Kutzsche
 	 */
 	final class EmptyStringArraySerializer extends JsonSerializer<String[]> {
