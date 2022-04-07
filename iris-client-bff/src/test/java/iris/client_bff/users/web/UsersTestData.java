@@ -5,7 +5,7 @@ package iris.client_bff.users.web;
  */
 public interface UsersTestData {
 
-	static final String VALID_USER = """
+	String VALID_USER = """
 			{
 				"firstName":"first name",
 				"lastName":"last name",
@@ -15,7 +15,7 @@ public interface UsersTestData {
 			}
 			""";
 
-	static final String VALID_UPDATE_ADMIN = """
+	String VALID_UPDATE_ADMIN = """
 			{
 				"firstName":"admin Test",
 				"lastName":"ABC",
@@ -26,11 +26,11 @@ public interface UsersTestData {
 			}
 			""";
 
-	static final String WITHOUT_VALUES = """
+	String WITHOUT_VALUES = """
 			{}
 			""";
 
-	static final String WITH_BLANK_VALUES = """
+	String WITH_BLANK_VALUES = """
 			{
 			"firstName": "",
 			"lastName": "  ",
@@ -39,7 +39,7 @@ public interface UsersTestData {
 			}
 			""";
 
-	static final String WITH_TOO_LONG_VALUES = """
+	String WITH_TOO_LONG_VALUES = """
 			{
 				"firstName": "abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijx",
 				"lastName": "abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijx",
@@ -49,7 +49,7 @@ public interface UsersTestData {
 			}
 			""";
 
-	static final String WITH_FORBIDDEN_SYMBOLS = """
+	String WITH_FORBIDDEN_SYMBOLS = """
 			{
 			  "firstName": "Heiner JAVASCRIPT: Maus",
 			  "lastName": "(Hampelmann",
@@ -59,7 +59,7 @@ public interface UsersTestData {
 			}
 			""";
 
-	static final String INVALID_PASSWORD = """
+	String INVALID_PASSWORD = """
 			{
 				"firstName":"first name",
 				"lastName":"last name",

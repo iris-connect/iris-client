@@ -86,5 +86,5 @@ public class EncryptionService {
 		return new String(cipher.doFinal(decodeFromString(encodedEncryptedData)), UTF_8);
 	}
 
-	public record EncryptedData(String iv, String data) {};
+	public record EncryptedData(String iv, String data) {}
 }

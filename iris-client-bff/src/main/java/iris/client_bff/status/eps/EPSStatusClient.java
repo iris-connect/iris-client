@@ -81,8 +81,8 @@ public class EPSStatusClient {
 	record DirectoryEntry(@NotNull String name, Set<String> groups) {}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	record Ping(String version, ServerInfo serverInfo) {};
+	record Ping(String version, ServerInfo serverInfo) {}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	record ServerInfo(String name) {};
+	record ServerInfo(String name) {}
 }

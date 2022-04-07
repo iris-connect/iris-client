@@ -98,9 +98,9 @@ public class GreenMailSSLSocketFactory extends SSLSocketFactory {
 		@Override
 		public void checkServerTrusted(X509Certificate[] cert, String authType) throws CertificateException {
 
-			var trust = cert[0].getSubjectX500Principal()
-					.getName()
-					.equals("CN=GreenMail selfsigned Test Certificate,OU=GreenMail,O=Icegreen Technologies,C=US");
+			var trust = "CN=GreenMail selfsigned Test Certificate,OU=GreenMail,O=Icegreen Technologies,C=US"
+					.equals(cert[0].getSubjectX500Principal()
+							.getName());
 
 			if (!trust) {
 				throw new CertificateException("Certificate isn't from mail server!");

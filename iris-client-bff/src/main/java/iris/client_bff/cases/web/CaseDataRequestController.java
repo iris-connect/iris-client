@@ -64,9 +64,11 @@ public class CaseDataRequestController {
 
 		if (status != null && StringUtils.isNotEmpty(search)) {
 			return caseDataRequestService.search(status, search, pageable).map(IndexCaseMapper::map);
-		} else if (StringUtils.isNotEmpty(search)) {
+		}
+		if (StringUtils.isNotEmpty(search)) {
 			return caseDataRequestService.search(search, pageable).map(IndexCaseMapper::map);
-		} else if (status != null) {
+		}
+		if (status != null) {
 			return caseDataRequestService.findByStatus(status, pageable).map(IndexCaseMapper::map);
 		}
 

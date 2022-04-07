@@ -32,11 +32,10 @@ public class LocationSearchController {
 	@ResponseStatus(HttpStatus.OK)
 	public LocationQueryResult searchSearchKeywordGet(@Size(min = 4, max = 100) @RequestParam String search,
 			Pageable pageable) {
-		if (isSearchInputValid(search)) {
-			return searchClient.search(search, pageable);
-		} else {
+		if (!isSearchInputValid(search)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
+		return searchClient.search(search, pageable);
 	}
 
 	private boolean isSearchInputValid(String search) {

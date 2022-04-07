@@ -1,5 +1,7 @@
 package iris.client_bff.iris_messages;
 
+import static org.apache.commons.lang3.StringUtils.*;
+
 import io.vavr.control.Try;
 import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.hd_search.HealthDepartment;
@@ -82,7 +84,7 @@ public class IrisMessageService {
 
 	public List<IrisMessageHdContact> getHdContacts(String search) throws IrisMessageException {
 
-		if (search == null || search.equals("")) {
+		if (isEmpty(search)) {
 			return recipientListHolder.get();
 		}
 

@@ -101,9 +101,11 @@ public class EventDataRequestController {
 
 		if (status != null && StringUtils.isNotEmpty(search)) {
 			return dataRequestService.search(status, search, pageable).map(eventMapperFunction);
-		} else if (StringUtils.isNotEmpty(search)) {
+		}
+		if (StringUtils.isNotEmpty(search)) {
 			return dataRequestService.search(search, pageable).map(eventMapperFunction);
-		} else if (status != null) {
+		}
+		if (status != null) {
 			return dataRequestService.findByStatus(status, pageable).map(eventMapperFunction);
 		}
 		return dataRequestService.findAll(pageable).map(eventMapperFunction);
@@ -121,10 +123,9 @@ public class EventDataRequestController {
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
 			return ResponseEntity.of(Optional.of(requestDetails));
-
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
 	@PatchMapping("/{code}")
@@ -141,9 +142,9 @@ public class EventDataRequestController {
 			addSubmissionsToRequest(dataRequest.get(), requestDetails);
 
 			return ResponseEntity.of(Optional.of(requestDetails));
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
 	private EventUpdateDTO validateEventUpdateDTO(EventUpdateDTO patch) {

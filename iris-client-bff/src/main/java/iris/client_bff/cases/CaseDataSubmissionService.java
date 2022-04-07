@@ -59,13 +59,15 @@ public class CaseDataSubmissionService {
 				.map(dataRequest -> {
 
 					var requestStatus = dataRequest.getStatus();
-					if (requestStatus.equals(ABORTED)) {
+					if (ABORTED.equals(requestStatus)) {
 						log.trace("Submission {} for aborted case {}", dataAuthorizationToken, dataRequest.getId());
 						return "Error: Submission not allowed for case " + dataAuthorizationToken + ". Request was aborted.";
-					} else if (requestStatus.equals(CLOSED)) {
+					}
+					if (CLOSED.equals(requestStatus)) {
 						log.trace("Submission {} for closed case {}", dataAuthorizationToken, dataRequest.getId());
 						return "Error: Submission not allowed for case " + dataAuthorizationToken + ". Request already closed.";
-					} else if (requestStatus.equals(DATA_RECEIVED)) {
+					}
+					if (DATA_RECEIVED.equals(requestStatus)) {
 						log.trace("Submission {} for received case {}", dataAuthorizationToken, dataRequest.getId());
 						return "Error: Submission not allowed for case " + dataAuthorizationToken + ". Data already received.";
 					}

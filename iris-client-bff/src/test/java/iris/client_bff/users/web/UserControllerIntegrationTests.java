@@ -135,7 +135,6 @@ class UserControllerIntegrationTests {
 						"lastName", is("last name"),
 						"userName", is(username),
 						"role", is("USER"));
-		;
 
 		assertThat(users.count()).isEqualTo(count + 1);
 	}

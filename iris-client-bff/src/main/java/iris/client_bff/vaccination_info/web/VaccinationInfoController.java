@@ -57,7 +57,7 @@ public class VaccinationInfoController {
 
 		var sort = pageable.getSort();
 		var orders = sort.map(it -> {
-			if (it.getProperty().equals("reportedAt")) {
+			if ("reportedAt".equals(it.getProperty())) {
 				return it.withProperty("metadata.created");
 			}
 

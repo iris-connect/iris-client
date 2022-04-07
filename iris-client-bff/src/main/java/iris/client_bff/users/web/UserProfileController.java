@@ -24,8 +24,7 @@ public class UserProfileController {
 		Optional<UserAccount> byUsername = userService.findByUsername(principal.getName());
 		if (byUsername.isEmpty()) {
 			return null;
-		} else {
-			return UserMappers.map(byUsername.get(), userService);
 		}
+		return UserMappers.map(byUsername.get(), userService);
 	}
 }

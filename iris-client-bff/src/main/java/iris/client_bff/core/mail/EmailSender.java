@@ -31,8 +31,8 @@ import org.springframework.util.Assert;
  */
 public interface EmailSender {
 
-	final String MISSING_FIXED_SENDER = "A fixed sender must be set using the \"spring.mail.properties.fix-sender\" property.";
-	final String FIX_SENDER_PROPERTY_KEY = "fix-sender";
+	String MISSING_FIXED_SENDER = "A fixed sender must be set using the \"spring.mail.properties.fix-sender\" property.";
+	String FIX_SENDER_PROPERTY_KEY = "fix-sender";
 
 	/**
 	 * Verifies the connection to the actual email server.
@@ -57,7 +57,7 @@ public interface EmailSender {
 	 * @author Oliver Drotbohm
 	 * @see AbstractTemplatedEmail
 	 */
-	public static interface TemplatedEmail {
+	public interface TemplatedEmail {
 
 		Key getTemplate();
 
@@ -92,7 +92,7 @@ public interface EmailSender {
 
 		interface InternetAdressSource {
 
-			static final String ADRESS_FORMAT = "%s <%s>";
+			String ADRESS_FORMAT = "%s <%s>";
 
 			String getFullName();
 

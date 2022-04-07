@@ -65,10 +65,9 @@ public class CaseDataControllerImpl implements CaseDataController {
 			log.trace("Start submission {}", dataAuthorizationToken);
 
 			return submissionService.validateAndSaveData(dataAuthorizationToken, contacts, events, dataProvider);
-
-		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 		}
+
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT);
 	}
 
 	private void validatePostLimit(List<?> list, String client, String type) {
@@ -149,14 +148,7 @@ public class CaseDataControllerImpl implements CaseDataController {
 
 	private ContactInformation validateContactInformation(ContactInformation contactInformation) {
 
-		if (contactInformation != null) {
-
-			// TODO validate ContactInformation
-
-			return contactInformation;
-		}
-
-		return null;
+		return contactInformation;
 	}
 
 	private Address validateAddress(Address address) {

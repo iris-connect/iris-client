@@ -117,8 +117,9 @@ public class ValidationHelper {
 			alertService.createAlertTicketAndMessage(String.format("Input validation - to many %s posted", type), msg);
 
 			return true;
+		}
 
-		} else if (list.size() > warnLimit) {
+		if (list.size() > warnLimit) {
 
 			var msg = String.format(
 					"Input from client `%s` contains %d %s at once. This could be an indication of an attack! {threshold = %d}",

@@ -108,8 +108,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if (!isAdmin && isNotBlank(newUserName)) {
 
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change his username!");
+		}
 
-		} else if (isNotBlank(newUserName)
+		if (isNotBlank(newUserName)
 				&& !StringUtils.equals(oldUserName, newUserName)) {
 
 			userAccount.setUserName(newUserName);
@@ -120,8 +121,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if (!isAdmin && newRoleDto != null) {
 
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change his role!");
+		}
 
-		} else if (newRoleDto != null) {
+		if (newRoleDto != null) {
 
 			if (isRemoveLastAdmin(userAccount, newRoleDto)) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The role of the last admin can't be changed!");

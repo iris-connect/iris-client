@@ -81,7 +81,8 @@ public enum AppStatus implements MessageSourceResolvable {
 
 			if (e instanceof EpsConnectionException) {
 				return getCantConnectLocalEps();
-			} else if (e instanceof AppStatusInternalException) {
+			}
+			if (e instanceof AppStatusInternalException) {
 				return getInternalException();
 			}
 

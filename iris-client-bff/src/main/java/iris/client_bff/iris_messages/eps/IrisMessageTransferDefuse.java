@@ -37,8 +37,9 @@ public class IrisMessageTransferDefuse {
 
 	private List<IrisMessageTransferDto.DataAttachment> defuseDataList(
 			List<IrisMessageTransferDto.DataAttachment> dataAttachments) {
-		if (dataAttachments == null)
+		if (dataAttachments == null) {
 			return null;
+		}
 		return dataAttachments.stream().map(this::defuse).toList();
 	}
 
@@ -53,8 +54,9 @@ public class IrisMessageTransferDefuse {
 	}
 
 	private String defuse(String input, String field, int maxLength) {
-		if (input == null)
+		if (input == null) {
 			return null;
+		}
 		if (this.validationHelper.isPossibleAttack(input, field, true)) {
 			return INVALID_INPUT_STRING;
 		}
@@ -62,8 +64,9 @@ public class IrisMessageTransferDefuse {
 	}
 
 	private String defuseDataPayload(String input, String field, int maxLength) {
-		if (input == null)
+		if (input == null) {
 			return null;
+		}
 		if (this.validationHelper.isPossibleAttackForMessageDataPayload(input, field, true) || input.length() > maxLength) {
 			return "";
 		}

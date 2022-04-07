@@ -65,7 +65,8 @@ public @interface NoSignOfAttack {
 
 			if (type == Phone.class) {
 				return !validationHelper.isPossibleAttackForPhone(text, path, true);
-			} else if (type == Password.class) {
+			}
+			if (type == Password.class) {
 				return !validationHelper.isPossibleAttackForPassword(text, path);
 			}
 
