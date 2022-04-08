@@ -17,7 +17,7 @@
   "dependencies": {
     "@fontsource/roboto": "^4.5.5",
     "@mdi/font": "^6.6.96",
-    "@types/lodash": "^4.14.180",
+    "@types/lodash": "^4.14.181",
     "axios": "^0.26.1",
     "chart.js": "^3.7.1",
     "core-js": "^3.21.1",
