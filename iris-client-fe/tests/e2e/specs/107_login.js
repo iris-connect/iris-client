@@ -1,6 +1,6 @@
 // https://docs.cypress.io/api/introduction/api.html
 
-import {getTestAdminCredentials} from "../support/commands";
+import { getTestAdminCredentials } from "../support/commands";
 
 describe("Login", () => {
   beforeEach(() => {
