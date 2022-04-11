@@ -13,5 +13,4 @@ class IrisMessageUpdateDto {
 
 	@NotNull
 	private Boolean isRead;
-
 }

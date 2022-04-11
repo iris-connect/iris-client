@@ -20,10 +20,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 @IrisWebIntegrationTest
+@WithMockUser
 @RequiredArgsConstructor
 class LocationSearchControllerTests {
 
@@ -33,7 +35,8 @@ class LocationSearchControllerTests {
 	private SearchClient searchClient;
 
 	@Test
-	public void endpointShouldBeProtected() throws Exception {
+	@WithAnonymousUser
+	void endpointShouldBeProtected() throws Exception {
 
 		given().mockMvc(mvc)
 				.when().get("/search/{search_keyword}", "Test")
@@ -42,8 +45,7 @@ class LocationSearchControllerTests {
 	}
 
 	@Test
-	@WithMockUser
-	public void serviceIsCalledForRequest() throws Exception {
+	void serviceIsCalledForRequest() throws Exception {
 
 		var searchString = "Test";
 
@@ -64,8 +66,7 @@ class LocationSearchControllerTests {
 	}
 
 	@Test
-	@WithMockUser
-	public void error400_searchStringToShort() throws Exception {
+	void error400_searchStringToShort() throws Exception {
 
 		var searchString = "Tes";
 
@@ -76,8 +77,7 @@ class LocationSearchControllerTests {
 	}
 
 	@Test
-	@WithMockUser
-	public void error_serviceNotAvailable() throws Exception {
+	void error_serviceNotAvailable() throws Exception {
 
 		var searchString = "Test";
 
@@ -90,4 +90,16 @@ class LocationSearchControllerTests {
 				.statusCode(503);
 	}
 
+	@Test
+	void error400_searchStringWithForbiddenCharacter() throws Exception {
+
+		var searchString = "+Test";
+
+		given().mockMvc(mvc)
+				.when().get("/search/?search={search_keyword}", searchString)
+				.then()
+				.statusCode(400);
+
+		verifyNoInteractions(searchClient);
+	}
 }
