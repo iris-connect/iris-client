@@ -1,6 +1,5 @@
 package iris.client_bff.users.web;
 
-import static iris.client_bff.users.web.UserMappers.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.auth.db.UserAccountAuthentication;
@@ -13,7 +12,6 @@ import iris.client_bff.users.web.dto.UserUpdateDTO;
 import lombok.RequiredArgsConstructor;
 
 import java.security.Principal;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -36,13 +34,13 @@ import org.springframework.web.server.ResponseStatusException;
 class UserController {
 
 	private final UserDetailsServiceImpl userService;
+	private final UserMapper userMapper;
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserListDTO getAllUsers() {
 		return new UserListDTO()
-				.users(this.userService.loadAll().stream().map(it -> UserMappers.map(it, userService))
-						.collect(Collectors.toList()));
+				.users(this.userService.loadAll().stream().map(userMapper::toDto).toList());
 	}
 
 	@PostMapping
@@ -52,7 +50,7 @@ class UserController {
 
 		checkUniqueUsername(userInsert.getUserName());
 
-		return map(userService.create(userInsert), userService);
+		return userMapper.toDto(userService.create(userInsert));
 	}
 
 	@PatchMapping("/{id}")
@@ -63,13 +61,14 @@ class UserController {
 		checkUniqueUsername(userUpdateDTO.getUserName(), id);
 		checkOldPassword(userUpdateDTO.getOldPassword(), userUpdateDTO.getPassword(), authentication, id);
 
-		return map(userService.update(id, userUpdateDTO, authentication), userService);
+		return userMapper.toDto(userService.update(id, userUpdateDTO, authentication));
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public void deleteUser(@PathVariable UserAccountIdentifier id, Principal principal) {
+
 		this.userService.deleteById(id, principal.getName());
 	}
 

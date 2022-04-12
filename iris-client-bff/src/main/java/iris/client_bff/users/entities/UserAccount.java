@@ -4,6 +4,7 @@ import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.Id;
 import iris.client_bff.users.entities.UserAccount.UserAccountIdentifier;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,6 +25,7 @@ import javax.persistence.Table;
 @Table(name = "user_accounts")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
 @NoArgsConstructor
 public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
 
