@@ -1,30 +1,34 @@
-
-package iris.client_bff.cases.eps.dto;
+package iris.client_bff.core.web.dto;
 
 import static lombok.AccessLevel.*;
 
 import iris.client_bff.core.serialization.DefuseJsonString;
-import iris.client_bff.core.validation.AttackDetector.Phone;
-import iris.client_bff.core.web.dto.AddressWithDefuseData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @Builder
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
-public class Event {
+public class AddressWithDefuseData {
 
+	@NotBlank
 	@DefuseJsonString(maxLength = 256)
-	String name;
+	private String street;
 
-	@DefuseJsonString(maxLength = 100, payload = Phone.class)
-	String phone;
-
-	AddressWithDefuseData address;
-
+	@NotBlank
 	@DefuseJsonString(maxLength = 256)
-	String additionalInformation;
+	private String houseNumber;
+
+	@NotBlank
+	@DefuseJsonString(maxLength = 10)
+	private String zipCode;
+
+	@NotBlank
+	@DefuseJsonString(maxLength = 256)
+	private String city;
 }

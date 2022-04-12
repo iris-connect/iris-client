@@ -1,5 +1,7 @@
 package iris.client_bff.iris_messages.eps;
 
+import iris.client_bff.core.serialization.DefuseJsonString;
+import iris.client_bff.core.validation.AttackDetector.MessageDataPayload;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageData;
 import iris.client_bff.iris_messages.IrisMessageHdContact;
@@ -31,14 +33,15 @@ public class IrisMessageTransferDto {
 
 	@NotBlank
 	@Size(max = IrisMessage.SUBJECT_MAX_LENGTH)
+	@DefuseJsonString(maxLength = IrisMessage.SUBJECT_MAX_LENGTH)
 	private String subject;
 
 	@NotBlank
 	@Size(max = IrisMessage.BODY_MAX_LENGTH)
+	@DefuseJsonString(maxLength = IrisMessage.BODY_MAX_LENGTH)
 	private String body;
 
-	@Valid
-	private List<DataAttachment> dataAttachments;
+	private List<@Valid DataAttachment> dataAttachments;
 
 	public static IrisMessageTransferDto fromEntity(IrisMessage message) {
 		return IrisMessageTransferDto.builder()
@@ -55,10 +58,12 @@ public class IrisMessageTransferDto {
 
 		@NotBlank
 		@Size(max = IrisMessageHdContact.ID_MAX_LENGTH)
+		@DefuseJsonString(maxLength = IrisMessageHdContact.ID_MAX_LENGTH)
 		private String id;
 
 		@NotBlank
 		@Size(max = IrisMessageHdContact.NAME_MAX_LENGTH)
+		@DefuseJsonString(maxLength = IrisMessageHdContact.NAME_MAX_LENGTH)
 		private String name;
 
 		public static HdContact fromEntity(IrisMessageHdContact contact) {
@@ -73,14 +78,17 @@ public class IrisMessageTransferDto {
 
 		@NotBlank
 		@Size(max = IrisMessageData.DISCRIMINATOR_MAX_LENGTH)
+		@DefuseJsonString(maxLength = IrisMessageData.DISCRIMINATOR_MAX_LENGTH)
 		private String discriminator;
 
 		@NotBlank
 		@Size(max = IrisMessageData.PAYLOAD_MAX_LENGTH)
+		@DefuseJsonString(maxLength = IrisMessageData.PAYLOAD_MAX_LENGTH, payload = MessageDataPayload.class)
 		private String payload;
 
 		@NotBlank
 		@Size(max = IrisMessageData.DESCRIPTION_MAX_LENGTH)
+		@DefuseJsonString(maxLength = IrisMessageData.DESCRIPTION_MAX_LENGTH)
 		private String description;
 
 		public static List<DataAttachment> fromEntity(List<IrisMessageData> dataList) {

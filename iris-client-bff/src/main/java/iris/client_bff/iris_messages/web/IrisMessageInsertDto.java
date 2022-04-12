@@ -1,7 +1,7 @@
 package iris.client_bff.iris_messages.web;
 
+import iris.client_bff.core.validation.AttackDetector.MessageDataPayload;
 import iris.client_bff.core.validation.NoSignOfAttack;
-import iris.client_bff.core.validation.NoSignOfAttack.MessageDataPayload;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessageData;
 import iris.client_bff.iris_messages.IrisMessageHdContact;

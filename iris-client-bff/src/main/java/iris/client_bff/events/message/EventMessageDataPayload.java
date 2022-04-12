@@ -1,5 +1,6 @@
 package iris.client_bff.events.message;
 
+import iris.client_bff.core.serialization.DefuseJsonString;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.Guest;
@@ -29,7 +30,9 @@ public class EventMessageDataPayload {
 	@Data
 	public static class EventDataRequestPayload {
 
+		@DefuseJsonString(maxLength = 500)
 		private String name;
+
 		private Instant requestStart;
 		private Instant requestEnd;
 

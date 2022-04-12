@@ -1,9 +1,10 @@
 package iris.client_bff.events.rpc;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.core.web.dto.Address;
+import iris.client_bff.core.web.dto.AddressWithDefuseData;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestRepository;
 import iris.client_bff.events.EventDataSubmissionRepository;
@@ -19,10 +20,13 @@ import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.UUID;
 
+import javax.validation.ConstraintViolationException;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.github.javafaker.Faker;
 
@@ -34,6 +38,11 @@ class EventDataControllerIntegrationTest {
 	final EventDataRequestRepository requestRepo;
 	final EventDataSubmissionRepository submissionRepo;
 	final Faker faker;
+
+	@BeforeEach
+	void init() {
+		Locale.setDefault(Locale.ENGLISH);
+	}
 
 	@Test
 	void submitGuestList_ok() {
@@ -63,7 +72,7 @@ class EventDataControllerIntegrationTest {
 				.endDate(requestEnd)
 				.dataProvider(GuestListDataProvider.builder()
 						.name(providerName)
-						.address(Address.builder()
+						.address(AddressWithDefuseData.builder()
 								.city("Stadt")
 								.zipCode("0815")
 								.houseNumber("1")
@@ -104,7 +113,7 @@ class EventDataControllerIntegrationTest {
 				.endDate(requestEnd)
 				.dataProvider(GuestListDataProvider.builder()
 						.name(providerName)
-						.address(Address.builder()
+						.address(AddressWithDefuseData.builder()
 								.houseNumber("1")
 								.street("Straße").build())
 						.build())
@@ -112,11 +121,11 @@ class EventDataControllerIntegrationTest {
 				.build();
 
 		// test
-		var e = assertThrows(ResponseStatusException.class,
+		var e = assertThrows(ConstraintViolationException.class,
 				() -> controller.submitGuestList(clientDto, UUID.fromString(dataRequest.getId().toString()), guestList));
 
-		assertTrue(e.getMessage().contains("Eingabedaten sind ungültig")
-				&& e.getMessage().contains("dataProvider.address.city"));
+		assertThat(e.getMessage()).contains("must not be blank")
+				.contains("dataProvider.address.city");
 	}
 
 	@Test
@@ -149,7 +158,7 @@ class EventDataControllerIntegrationTest {
 				.build();
 
 		// test
-		assertThrows(ResponseStatusException.class, () -> {
+		assertThrows(ConstraintViolationException.class, () -> {
 			controller.submitGuestList(clientDto, UUID.fromString(token), guestList);
 		});
 	}

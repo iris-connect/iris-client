@@ -2,13 +2,14 @@ package iris.client_bff.events.web.dto;
 
 import static lombok.AccessLevel.*;
 
-import iris.client_bff.core.web.dto.Person;
+import iris.client_bff.core.web.dto.PersonWithDefuseData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+
+import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -18,13 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-@ToString
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
-public class Guest extends Person {
+public class Guest extends PersonWithDefuseData {
 
 	@JsonIgnore
 	private String guestId;
+
+	@Valid
 	private GuestAttendanceInformation attendanceInformation;
 	private Boolean identityChecked;
 

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequestRepository;
+import iris.client_bff.cases.DtoSupplier;
 import iris.client_bff.cases.eps.CaseDataController;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
 import iris.client_bff.cases.eps.dto.ContactPerson;
@@ -15,9 +16,8 @@ import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.web.CaseDataRequestController;
 import iris.client_bff.cases.web.submission_dto.ContactPersonList;
 import iris.client_bff.cases.web.submission_dto.EventList;
+import iris.client_bff.core.serialization.DefuseJsonString;
 import iris.client_bff.core.token.IdentifierToken;
-import iris.client_bff.ui.messages.ErrorMessages;
-import iris.client_bff.utils.DtoSupplier;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -87,7 +87,7 @@ class CaseDataControllerIntegrationTest {
 		assertEquals(2, submissionData.getContacts().getContactPersons().size());
 		assertEquals(2, submissionData.getEvents().getEvents().size());
 
-		assertThat(submissionData.getContacts()).asString().doesNotContain(ErrorMessages.INVALID_INPUT_STRING);
+		assertThat(submissionData.getContacts()).asString().doesNotContain(DefuseJsonString.INVALID_INPUT_STRING);
 
 		// test repeated data submission is rejected
 		contacts.setContactPersons(dtoSupplier.getContactPersonList(2, 3));
