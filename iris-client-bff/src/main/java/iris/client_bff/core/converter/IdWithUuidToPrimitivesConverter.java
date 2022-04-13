@@ -13,8 +13,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
- * A Spring {@link Converter} to convert from IRIS {@link IdWithUuid} types to both {@link UUID} and {@link String}. We use the
- * methods {@link IdWithUuid#toUuid()} and {@link IdWithUuid#toString()} of {@link IdWithUuid} to convert the value.
+ * A Spring {@link Converter} to convert from IRIS {@link IdWithUuid} types to both {@link UUID} and {@link String}. We
+ * use the methods {@link IdWithUuid#toUuid()} and {@link IdWithUuid#toString()} of {@link IdWithUuid} to convert the
+ * value.
  *
  * @author Jens Kutzsche
  */

@@ -17,8 +17,8 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * A Spring {@link Converter} to convert {@link String} and {@link UUID} values to IRIS {@link IdWithUuid} implementations,
- * assuming they expose a static factory method {@code of(UUID)}.
+ * A Spring {@link Converter} to convert {@link String} and {@link UUID} values to IRIS {@link IdWithUuid}
+ * implementations, assuming they expose a static factory method {@code of(UUID)}.
  *
  * @author Oliver Drotbohm (from Quarano project)
  * @author Jens Kutzsche

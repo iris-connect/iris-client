@@ -1,6 +1,7 @@
 package iris.client_bff.events.message;
 
 import iris.client_bff.events.EventDataRequest;
+import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequestRepository;
 import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.message.dto.ExportSelectionDto;
@@ -22,14 +23,13 @@ public class EventMessageDataBuilder {
 	private final EventDataSubmissionRepository submissionRepository;
 
 	EventMessageDataPayload buildPayload(ExportSelectionDto exportSelectionDto) throws IrisMessageDataException {
-		EventDataRequest.DataRequestIdentifier eventId = EventDataRequest.DataRequestIdentifier
-				.of(exportSelectionDto.getEvent());
+		DataRequestIdentifier eventId = DataRequestIdentifier.of(exportSelectionDto.getEvent());
 		EventDataRequest eventDataRequest = this.getEventDataRequest(eventId);
 		EventDataSubmission eventDataSubmission = this.getEventDataSubmission(eventId);
 		return EventMessageDataPayload.fromModel(eventDataRequest, eventDataSubmission, exportSelectionDto.getGuests());
 	}
 
-	private EventDataRequest getEventDataRequest(EventDataRequest.DataRequestIdentifier eventId)
+	private EventDataRequest getEventDataRequest(DataRequestIdentifier eventId)
 			throws IrisMessageDataException {
 		Optional<EventDataRequest> optionalEventDataRequest = this.requestRepository.findById(eventId);
 		if (optionalEventDataRequest.isEmpty()) {
@@ -38,7 +38,7 @@ public class EventMessageDataBuilder {
 		return optionalEventDataRequest.get();
 	}
 
-	private EventDataSubmission getEventDataSubmission(EventDataRequest.DataRequestIdentifier eventId)
+	private EventDataSubmission getEventDataSubmission(DataRequestIdentifier eventId)
 			throws IrisMessageDataException {
 		EventDataRequest eventDataRequest = this.getEventDataRequest(eventId);
 		Optional<EventDataSubmission> optionalEventDataSubmission = submissionRepository

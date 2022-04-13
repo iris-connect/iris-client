@@ -79,7 +79,7 @@ public class CaseDataRequestController {
 	@GetMapping("/{id}")
 	@ResponseStatus(OK)
 	public ResponseEntity<IndexCaseDetailsDTO> getDetails(@PathVariable DataRequestIdentifier id) {
-		return caseDataRequestService.findDetailed(id.getRequestId()).map((dataRequest -> {
+		return caseDataRequestService.findDetailed(id).map((dataRequest -> {
 			var indexCaseDetailsDTO = mapDetailed(dataRequest, userService);
 
 			submissionService.findByRequest(dataRequest).ifPresent(indexCaseDetailsDTO::setSubmissionData);
@@ -93,7 +93,7 @@ public class CaseDataRequestController {
 	public ResponseEntity<IndexCaseDetailsDTO> update(@PathVariable DataRequestIdentifier id,
 			@RequestBody @Valid IndexCaseUpdateDTO update) {
 
-		return caseDataRequestService.findDetailed(id.getRequestId())
+		return caseDataRequestService.findDetailed(id)
 				.map(it -> caseDataRequestService.update(it, update))
 				.map(it -> mapDetailed(it, userService))
 				.map(ResponseEntity::ok)

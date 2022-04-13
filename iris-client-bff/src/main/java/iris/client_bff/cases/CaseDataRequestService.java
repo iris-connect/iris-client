@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -60,8 +59,7 @@ public class CaseDataRequestService {
 		return search(null, search, pageable);
 	}
 
-	public Optional<CaseDataRequest> findDetailed(UUID uuid) {
-		var id = DataRequestIdentifier.of(uuid);
+	public Optional<CaseDataRequest> findDetailed(DataRequestIdentifier id) {
 		return repository.findById(id);
 	}
 

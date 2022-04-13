@@ -73,11 +73,11 @@ public class JacksonConfig {
 	@JsonSerialize(using = ToStringSerializer.class)
 	@JsonDeserialize(using = IdWithUuidDeserializer.class) // Must be @JsonDeserialize to use ContextualDeserializer
 																													// successful.
-	static interface IdWithUuidMixin {}
+	interface IdWithUuidMixin {}
 
 	/**
 	 * Deserialize blank texts to {@code Null} and trims other texts.
-	 * 
+	 *
 	 * @author Jens Kutzsche
 	 */
 	class IrisStringDeserializer extends JsonDeserializer<String> {
@@ -94,7 +94,7 @@ public class JacksonConfig {
 	/**
 	 * Deserialize strings of UUIDs to subtypes of {@link IdWithUuid} and uses {@link PrimitivesToIdWithUuidConverter} for
 	 * this.
-	 * 
+	 *
 	 * @author Jens Kutzsche
 	 */
 	@RequiredArgsConstructor(staticName = "of")

@@ -3,6 +3,7 @@ package iris.client_bff.events.message;
 import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.core.web.dto.Person;
 import iris.client_bff.events.EventDataRequest;
+import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.EventDataSubmissionService;
@@ -86,7 +87,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	@Override
 	public void importPayload(String payload, UUID importTargetId, String selection) throws IrisMessageDataException {
 		EventMessageDataPayload messagePayload = this.parsePayload(payload);
-		EventDataSubmission eventDataSubmission = this.getEventDataSubmission(importTargetId);
+		EventDataSubmission eventDataSubmission = this.getEventDataSubmission(DataRequestIdentifier.of(importTargetId));
 		ImportSelectionDto importSelection = parseJSON(selection, ImportSelectionDto.class);
 		ModelMapper mapper = new ModelMapper();
 		messagePayload.getEventDataSubmissionPayload().getGuestList().getGuests().stream()
@@ -117,14 +118,14 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 		EventMessageDataPayload.EventDataSubmissionPayload submissionPayload = messagePayload
 				.getEventDataSubmissionPayload();
 		List<Guest> guests = submissionPayload.getGuestList().getGuests();
-		List<String> duplicateGuests = this.getDuplicateGuests(guests, importTargetId);
+		List<String> duplicateGuests = this.getDuplicateGuests(guests, DataRequestIdentifier.of(importTargetId));
 		return ImportSelectionViewPayloadDto.builder()
 				.selectables(ImportSelectionViewPayloadDto.Selectables.builder().guests(guests).build())
 				.duplicates(ImportSelectionViewPayloadDto.Duplicates.builder().guests(duplicateGuests).build())
 				.build();
 	}
 
-	private List<String> getDuplicateGuests(List<Guest> guests, UUID importTargetId) {
+	private List<String> getDuplicateGuests(List<Guest> guests, DataRequestIdentifier importTargetId) {
 		ModelMapper modelMapper = new ModelMapper();
 		EventDataSubmission eventDataSubmission = this.getEventDataSubmission(importTargetId);
 		var targetGuests = eventDataSubmission.getGuests();
@@ -140,7 +141,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 		}).map(Guest::getMessageDataSelectId).toList();
 	}
 
-	private EventDataRequest getEventDataRequest(UUID requestId) {
+	private EventDataRequest getEventDataRequest(DataRequestIdentifier requestId) {
 		Optional<EventDataRequest> eventDataRequest = this.requestService.findById(requestId);
 		if (eventDataRequest.isEmpty()) {
 			throw new IrisMessageDataException(messages.getMessage("iris_message.invalid_message_data_import_target"));
@@ -157,7 +158,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 		return eventDataSubmission.get();
 	}
 
-	private EventDataSubmission getEventDataSubmission(UUID requestId) {
+	private EventDataSubmission getEventDataSubmission(DataRequestIdentifier requestId) {
 		return this.getEventDataSubmission(this.getEventDataRequest(requestId));
 	}
 

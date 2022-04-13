@@ -96,6 +96,10 @@ public class EventDataRequest extends Aggregate<EventDataRequest, EventDataReque
 
 		final UUID requestId;
 
+		public static DataRequestIdentifier of(String id) {
+			return of(UUID.fromString(id));
+		}
+
 		@Override
 		protected UUID getBasicId() {
 			return requestId;

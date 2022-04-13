@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
 import iris.client_bff.cases.CaseDataRequest;
+import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.CaseDataRequestService;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
@@ -63,7 +64,7 @@ class IndexCaseControllerTest {
 
 	// mock responses
 	private final CaseDataRequest MOCK_CASE = getCase();
-	private final UUID MOCK_CASE_ID = UUID.fromString(MOCK_CASE.getId().toString());
+	private final DataRequestIdentifier MOCK_CASE_ID = MOCK_CASE.getId();
 	private final IndexCaseDTO MOCK_CASE_DTO = map(MOCK_CASE);
 	private final Page<CaseDataRequest> casesPage = new RestResponsePage<>(List.of(MOCK_CASE));
 

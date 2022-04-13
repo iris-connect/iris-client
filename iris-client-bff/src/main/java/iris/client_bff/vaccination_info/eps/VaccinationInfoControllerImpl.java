@@ -102,7 +102,7 @@ class VaccinationInfoControllerImpl implements VaccinationInfoController {
 	}
 
 	@Mapper(config = MapStructCentralConfig.class)
-	static interface VaccinationInfoMapper {
+	interface VaccinationInfoMapper {
 
 		VaccinationInfo.Facility fromFacilityDto(Facility facilityDto);
 
