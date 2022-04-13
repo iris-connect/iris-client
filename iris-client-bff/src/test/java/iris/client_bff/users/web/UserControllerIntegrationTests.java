@@ -2,10 +2,13 @@ package iris.client_bff.users.web;
 
 import static io.restassured.http.ContentType.*;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
 import static iris.client_bff.users.web.UsersTestData.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
 import static org.springframework.http.HttpStatus.*;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -29,6 +32,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -55,6 +59,8 @@ class UserControllerIntegrationTests {
 
 	final MockMvc mvc;
 	final ObjectMapper objectMapper;
+
+	@SpyBean
 	final UserAccountsRepository users;
 
 	Faker faker = Faker.instance();
@@ -369,23 +375,23 @@ class UserControllerIntegrationTests {
 	}
 
 	@Test
-	@DisplayName("update user: with blank values ⇒ 💾 nothing + 🔙 validation errors")
+	@DisplayName("update user: with blank values ⇒ 💾 nothing + 🔙 200")
 	void updateUser_WithBlankValues_ReturnsValidationErrors() {
 
-		var count = users.count();
+		reset(users);
+
+		var admin = users.findByUserName("admin").get();
 
 		given()
 				.body(WITH_BLANK_VALUES)
 
 				.when()
-				.patch(DETAILS_URL, UUID.randomUUID())
+				.patch(DETAILS_URL, admin.getId())
 
 				.then()
-				.status(BAD_REQUEST)
-				// TODO Blank body must be fixed as a next step!
-				.body(blankOrNullString());
+				.status(OK);
 
-		assertThat(users.count()).isEqualTo(count);
+		verify(users).save(admin);
 	}
 
 	@Test
