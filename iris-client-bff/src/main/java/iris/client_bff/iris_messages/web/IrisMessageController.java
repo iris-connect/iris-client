@@ -1,5 +1,6 @@
 package iris.client_bff.iris_messages.web;
 
+import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.core.validation.NoSignOfAttack;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
@@ -10,7 +11,6 @@ import iris.client_bff.iris_messages.IrisMessageHdContact;
 import iris.client_bff.iris_messages.IrisMessageService;
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import iris.client_bff.iris_messages.exceptions.IrisMessageException;
-import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 
 import java.net.URI;

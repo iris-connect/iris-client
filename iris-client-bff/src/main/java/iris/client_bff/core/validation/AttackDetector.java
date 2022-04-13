@@ -5,7 +5,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 import iris.client_bff.config.RPCClientProperties;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.log.LogHelper;
-import iris.client_bff.ui.messages.ErrorMessages;
+import iris.client_bff.core.messages.ErrorMessages;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;

@@ -4,10 +4,10 @@ import static org.apache.commons.lang3.RegExUtils.replaceAll;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.config.SuspiciouslyEventRequestProperties;
+import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.core.validation.AttackDetector;
 import iris.client_bff.events.EventDataSubmissionService;
 import iris.client_bff.events.web.dto.GuestList;
-import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

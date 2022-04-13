@@ -1,4 +1,4 @@
-package iris.client_bff.ui.messages;
+package iris.client_bff.core.messages;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

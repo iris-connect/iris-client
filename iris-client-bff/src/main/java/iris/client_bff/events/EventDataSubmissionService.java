@@ -2,6 +2,7 @@ package iris.client_bff.events;
 
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.log.LogHelper;
+import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.model.Guest;
@@ -9,7 +10,6 @@ import iris.client_bff.events.model.GuestListDataProvider;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
-import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

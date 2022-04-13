@@ -1,5 +1,6 @@
 package iris.client_bff.events.message;
 
+import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.core.web.dto.Person;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
@@ -13,7 +14,6 @@ import iris.client_bff.events.web.dto.DataRequestDetails;
 import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.iris_messages.IrisMessageDataProcessor;
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
-import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -3,7 +3,7 @@ package iris.client_bff.core.web.filter;
 import iris.client_bff.config.DataSubmissionConfig;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.log.LogHelper;
-import iris.client_bff.ui.messages.ErrorMessages;
+import iris.client_bff.core.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
