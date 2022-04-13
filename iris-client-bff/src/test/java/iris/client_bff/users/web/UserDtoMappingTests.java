@@ -6,10 +6,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.IrisMapperTest;
-import iris.client_bff.core.ConversionServiceAdapter;
-import iris.client_bff.core.IdWithUuid;
-import iris.client_bff.core.MetadataMapperImpl;
-import iris.client_bff.core.converter.IdWithUuidToPrimitivesConverter;
 import iris.client_bff.users.UserDetailsServiceImpl;
 import iris.client_bff.users.entities.UserAccount;
 import iris.client_bff.users.entities.UserRole;

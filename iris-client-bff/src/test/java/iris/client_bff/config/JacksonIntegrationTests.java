@@ -100,5 +100,5 @@ class JacksonIntegrationTests {
 				.isNull();
 	}
 
-	record Sample(String value) {};
+	record Sample(String value) {}
 }
