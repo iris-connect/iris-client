@@ -14,6 +14,9 @@ import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.WithMockAdmin;
 import iris.client_bff.matchers.IsUuid;
 import iris.client_bff.users.UserAccountsRepository;
+import iris.client_bff.users.web.dto.UserInsertDTO;
+import iris.client_bff.users.web.dto.UserRoleDTO;
+import iris.client_bff.users.web.dto.UserUpdateDTO;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Locale;
@@ -24,11 +27,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
+import com.github.javafaker.service.FakeValuesService;
+import com.github.javafaker.service.RandomService;
 
 @IrisWebIntegrationTest
 @WithMockAdmin
@@ -41,7 +51,10 @@ class UserControllerIntegrationTests {
 	private static final String BASE_URL = "/users";
 	private static final String DETAILS_URL = BASE_URL + "/{id}";
 
+	private static final FakeValuesService fake = new FakeValuesService(Locale.GERMAN, new RandomService());
+
 	final MockMvc mvc;
+	final ObjectMapper objectMapper;
 	final UserAccountsRepository users;
 
 	Faker faker = Faker.instance();
@@ -438,5 +451,52 @@ class UserControllerIntegrationTests {
 				.body(blankOrNullString());
 
 		assertThat(users.count()).isEqualTo(count);
+	}
+
+	@ParameterizedTest(name = "{0} characters ⇒ expect = {1}")
+	@CsvSource({ "0, BAD_REQUEST", "49, CREATED", "50,CREATED", "51, BAD_REQUEST", "1000, BAD_REQUEST" })
+	@DisplayName("create user: field length validation for: userName")
+	void createUser_userNameLength(int wordLength, HttpStatus expectation) throws Exception {
+
+		var userName = createWord(wordLength);
+
+		var dto = new UserInsertDTO().firstName("fn").lastName("ln").userName(userName).password("Password12A_")
+				.role(UserRoleDTO.USER);
+
+		given()
+				.body(toJson(dto))
+
+				.when()
+				.post(BASE_URL)
+
+				.then()
+				.status(expectation);
+	}
+
+	@ParameterizedTest(name = "{0} characters ⇒ expect = {1}")
+	@CsvSource({ "0, OK", "199, OK", "200,OK", "201, BAD_REQUEST", "1000, BAD_REQUEST" })
+	@DisplayName("update user: field length validation for: lastName")
+	void updateUser_lastNameLength(int wordLength, HttpStatus expectation) throws Exception {
+
+		var admin = users.findByUserName("admin").get();
+		var lastName = createWord(wordLength);
+		var dto = new UserUpdateDTO().lastName(lastName);
+
+		given()
+				.body(toJson(dto))
+
+				.when()
+				.patch(DETAILS_URL, admin.getId())
+
+				.then()
+				.status(expectation);
+	}
+
+	private String createWord(int wordLength) {
+		return fake.letterify("?".repeat(wordLength));
+	}
+
+	private String toJson(Object obj) throws JsonProcessingException {
+		return objectMapper.writeValueAsString(obj);
 	}
 }
