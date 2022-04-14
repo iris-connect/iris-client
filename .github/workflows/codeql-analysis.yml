@@ -33,8 +33,9 @@ jobs:
         with:
           distribution: 'liberica'
           java-version: '17'
-          cache: 'maven'
-  
+# There is an error since 12.04. when restoring the cache.
+#          cache: 'maven'
+
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1

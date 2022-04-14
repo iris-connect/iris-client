@@ -33,7 +33,8 @@ jobs:
         with:
           distribution: 'liberica'
           java-version: '17'
-          cache: 'maven'
+# There is an error since 12.04. when restoring the cache.
+#          cache: 'maven'
           
       - name: Login to DockerHub
         uses: docker/login-action@v1 

@@ -34,7 +34,8 @@ jobs:
         with:
           distribution: 'liberica'
           java-version: '17'
-          cache: 'maven'
+# There is an error since 12.04. when restoring the cache.
+#          cache: 'maven'
 
       - name: Create image tag
         id: meta
