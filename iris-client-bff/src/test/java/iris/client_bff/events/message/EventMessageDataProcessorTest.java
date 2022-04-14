@@ -5,6 +5,8 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.config.JacksonConfig;
+import iris.client_bff.core.ConversionServiceAdapter;
+import iris.client_bff.core.MetadataMapperImpl;
 import iris.client_bff.core.validation.AttackDetector;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
@@ -12,6 +14,10 @@ import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataRequestsDataInitializer;
 import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.EventDataSubmissionService;
+import iris.client_bff.events.EventMapper;
+import iris.client_bff.events.EventMapperImpl;
+import iris.client_bff.events.LocationMapper;
+import iris.client_bff.events.LocationMapperImpl;
 import iris.client_bff.events.message.dto.ExportSelectionDto;
 import iris.client_bff.events.message.dto.ImportSelectionDto;
 import iris.client_bff.events.model.EventDataSubmission;
@@ -63,7 +69,12 @@ public class EventMessageDataProcessorTest {
 	@Mock
 	MessageSourceAccessor messages;
 
+	@Mock
+	ConversionServiceAdapter conversionServiceAdapter;
+
 	ObjectMapper objectMapper;
+	LocationMapper locationMapper = new LocationMapperImpl();
+	EventMapper eventMapper = new EventMapperImpl(locationMapper, conversionServiceAdapter, new MetadataMapperImpl());
 
 	@BeforeEach
 	void setUp() {
@@ -81,7 +92,8 @@ public class EventMessageDataProcessorTest {
 				this.dataBuilder,
 				this.validator,
 				this.messages,
-				this.objectMapper);
+				this.objectMapper,
+				eventMapper);
 	}
 
 	@Test

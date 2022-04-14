@@ -24,7 +24,7 @@ import javax.persistence.*;
 public class Contact {
 
 	@Id
-	private UUID contactId = UUID.randomUUID();
+	private final UUID contactId = UUID.randomUUID();
 
 	@ManyToOne //
 	@JoinColumn(name = "submission_id")

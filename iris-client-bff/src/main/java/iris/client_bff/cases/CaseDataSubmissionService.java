@@ -24,7 +24,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,13 +32,12 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class CaseDataSubmissionService {
 
-	private final ModelMapper mapper;
-
 	private final CaseDataSubmissionRepository submissionRepo;
 	private final CaseDataRequestRepository requestRepo;
 	private final ProxyServiceClient proxyClient;
 	private final CaseEmailProvider caseEmailProvider;
 	private final AlertService alertService;
+	private final CaseDataSubmissionMapper mapper;
 
 	// NOTE: Necessary to map here and use Transactional annotation, because of
 	// https://stackoverflow.com/a/42206232
@@ -100,28 +98,15 @@ public class CaseDataSubmissionService {
 	public void save(CaseDataRequest dataRequest, Contacts contacts, Events events, CaseDataProvider dataProvider) {
 		Set<Contact> contactsForDb = new HashSet<>();
 		if (contacts.getContactPersons() != null) {
-			contactsForDb = contacts.getContactPersons().stream().map(it -> {
-				var mapped = mapper.map(it, Contact.class);
-
-				Optional.ofNullable(it.getContactInformation()).ifPresent(contactInformation -> {
-					mapped.setBasicConditions(contactInformation.getBasicConditions());
-					if (contactInformation.getContactCategory() != null) {
-						mapped.setContactCategory(Contact.ContactCategory.valueOf(contactInformation.getContactCategory().name()));
-					}
-					mapped.setFirstContactDate(contactInformation.getFirstContactDate());
-					mapped.setLastContactDate(contactInformation.getLastContactDate());
-				});
-
-				return mapped;
-			}).collect(Collectors.toSet());
+			contactsForDb = contacts.getContactPersons().stream()
+					.map(mapper::fromContactPersonDto)
+					.collect(Collectors.toSet());
 		}
 
 		Set<CaseEvent> eventsForDb = new HashSet<>();
 		if (events.getEvents() != null) {
-			eventsForDb = events.getEvents().stream().map(it -> mapper.map(it, CaseEvent.class)).collect(Collectors.toSet());
+			eventsForDb = events.getEvents().stream().map(mapper::fromEventDto).collect(Collectors.toSet());
 		}
-
-		var dataProviderForDb = mapper.map(dataProvider, iris.client_bff.cases.model.CaseDataProvider.class);
 
 		var submission = new CaseDataSubmission(
 				dataRequest,
@@ -131,7 +116,7 @@ public class CaseDataSubmissionService {
 				eventsForDb,
 				events.getStartDate(),
 				events.getStartDate(),
-				dataProviderForDb);
+				mapper.fromCaseDataProviderDto(dataProvider));
 
 		contactsForDb.forEach(it -> it.setSubmission(submission));
 		eventsForDb.forEach(it -> it.setSubmission(submission));
@@ -142,5 +127,4 @@ public class CaseDataSubmissionService {
 
 		requestRepo.save(dataRequest);
 	}
-
 }

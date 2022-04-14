@@ -7,16 +7,13 @@ import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionRepository;
+import iris.client_bff.events.EventMapper;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.DataRequestClient;
 import iris.client_bff.events.web.dto.DataRequestDetails;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
-import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.events.web.dto.GuestList;
-import iris.client_bff.events.web.dto.GuestListDataProvider;
-import iris.client_bff.events.web.dto.LocationInformation;
-import iris.client_bff.users.UserDetailsServiceImpl;
 import iris.client_bff.users.entities.UserAccount;
 import lombok.AllArgsConstructor;
 
@@ -26,7 +23,6 @@ import java.util.function.Function;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -46,19 +42,13 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class EventDataRequestController {
 
-	private final UserDetailsServiceImpl userService;
 	private final EventDataRequestService dataRequestService;
 	private final EventDataSubmissionRepository submissionRepo;
-	private ModelMapper modelMapper;
+	private EventMapper eventMapper;
 
-	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = (
-			EventDataRequest request) -> {
-		ExistingDataRequestClientWithLocation mapped = EventMapper.map(request);
-		if (request.getLocation() != null) {
-			mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
-		}
-		return mapped;
-	};
+	// Must be a lambda expression instead of a method reference, otherwise it will result in an NPE.
+	private final Function<EventDataRequest, ExistingDataRequestClientWithLocation> eventMapperFunction = it -> eventMapper
+			.toExistingDataRequestClientDto(it);
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -124,20 +114,7 @@ public class EventDataRequestController {
 	}
 
 	private DataRequestDetails mapDataRequestDetails(EventDataRequest request) {
-
-		DataRequestDetails mapped = modelMapper.map(request, DataRequestDetails.class);
-		mapped.setCode(request.getId().toString());
-		mapped.setStart(request.getRequestStart());
-		mapped.setEnd(request.getRequestEnd());
-		if (request.getLocation() != null) {
-			mapped.setLocationInformation(modelMapper.map(request.getLocation(), LocationInformation.class));
-		}
-		mapped.setLastModifiedAt(request.getLastModifiedAt());
-		mapped.setRequestedAt(request.getCreatedAt());
-		mapped.setExternalRequestId(request.getRefId());
-		mapped.setCreatedBy(userService.findByUuid(request.getCreatedBy()).map(this::getFullName).orElse(null));
-		mapped.setLastModifiedBy(userService.findByUuid(request.getLastModifiedBy()).map(this::getFullName).orElse(null));
-		return mapped;
+		return eventMapper.toDataRequestDetailsDto(request);
 	}
 
 	private void addSubmissionsToRequest(EventDataRequest request, DataRequestDetails requestDetails) {
@@ -147,10 +124,10 @@ public class EventDataRequestController {
 
 	private void addSubmissionToRequest(DataRequestDetails requestDetails, EventDataSubmission submission) {
 
-		var dataProvider = modelMapper.map(submission.getDataProvider(), GuestListDataProvider.class);
+		var dataProvider = eventMapper.toGuestListDataProviderDto(submission.getDataProvider());
 
 		var guests = submission.getGuests().stream()
-				.map(it -> modelMapper.map(it, Guest.class))
+				.map(eventMapper::toGuestDto)
 				.toList();
 
 		var guestList = GuestList.builder()

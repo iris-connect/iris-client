@@ -1,8 +1,14 @@
 package iris.client_bff.events.message;
 
+import iris.client_bff.core.ConversionServiceAdapter;
+import iris.client_bff.core.MetadataMapperImpl;
+import iris.client_bff.core.converter.IdWithUuidToPrimitivesConverter;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestsDataInitializer;
 import iris.client_bff.events.EventDataSubmissionsDataInitializer;
+import iris.client_bff.events.EventMapper;
+import iris.client_bff.events.EventMapperImpl;
+import iris.client_bff.events.LocationMapperImpl;
 import iris.client_bff.events.message.dto.ExportSelectionDto;
 import iris.client_bff.events.message.dto.ImportSelectionDto;
 import iris.client_bff.events.message.dto.ImportSelectionViewPayloadDto;
@@ -15,6 +21,7 @@ import iris.client_bff.iris_messages.web.IrisMessageInsertDto;
 
 import java.util.List;
 
+import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -24,6 +31,15 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Component
 public class EventMessageTestData {
+
+	GenericConversionService conversionService = new GenericConversionService();
+	ConversionServiceAdapter conversionServiceAdapter = new ConversionServiceAdapter(conversionService);
+	{
+		conversionService.addConverter(new IdWithUuidToPrimitivesConverter());
+	}
+
+	EventMapper eventMapper = new EventMapperImpl(new LocationMapperImpl(), conversionServiceAdapter,
+			new MetadataMapperImpl());
 
 	public final EventDataRequest MOCK_EVENT_DATA_REQUEST = EventDataRequestsDataInitializer.DATA_REQUEST_1;
 	public final EventDataSubmission MOCK_EVENT_DATA_SUBMISSION = EventDataSubmissionsDataInitializer
@@ -57,7 +73,7 @@ public class EventMessageTestData {
 		return EventMessageDataPayload.fromModel(
 				MOCK_EVENT_DATA_SUBMISSION.getRequest(),
 				MOCK_EVENT_DATA_SUBMISSION,
-				getExportSelection().getGuests());
+				getExportSelection().getGuests(), eventMapper);
 	}
 
 	private IrisMessageInsertDto.DataAttachment getExportDataAttachment() {

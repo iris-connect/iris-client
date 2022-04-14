@@ -7,6 +7,7 @@ import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.EventDataSubmissionService;
+import iris.client_bff.events.EventMapper;
 import iris.client_bff.events.message.dto.ExportSelectionDto;
 import iris.client_bff.events.message.dto.ImportSelectionDto;
 import iris.client_bff.events.message.dto.ImportSelectionViewPayloadDto;
@@ -27,7 +28,6 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 
@@ -50,6 +50,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	private final MessageSourceAccessor messages;
 
 	private final ObjectMapper objectMapper;
+	private final EventMapper eventMapper;
 
 	@Override
 	public void validateExportSelection(String exportSelection) throws IrisMessageDataException {
@@ -89,10 +90,10 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 		EventMessageDataPayload messagePayload = this.parsePayload(payload);
 		EventDataSubmission eventDataSubmission = this.getEventDataSubmission(DataRequestIdentifier.of(importTargetId));
 		ImportSelectionDto importSelection = parseJSON(selection, ImportSelectionDto.class);
-		ModelMapper mapper = new ModelMapper();
+
 		messagePayload.getEventDataSubmissionPayload().getGuestList().getGuests().stream()
 				.filter(it -> importSelection.getGuests().contains(it.getMessageDataSelectId()))
-				.map(it -> mapper.map(it, iris.client_bff.events.model.Guest.class))
+				.map(eventMapper::fromGuestDto)
 				.map(it -> it.setSubmission(eventDataSubmission))
 				.forEach(it -> eventDataSubmission.getGuests().add(it));
 		this.submissionRepository.save(eventDataSubmission);
@@ -126,17 +127,17 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	}
 
 	private List<String> getDuplicateGuests(List<Guest> guests, DataRequestIdentifier importTargetId) {
-		ModelMapper modelMapper = new ModelMapper();
+
 		EventDataSubmission eventDataSubmission = this.getEventDataSubmission(importTargetId);
 		var targetGuests = eventDataSubmission.getGuests();
 		if (guests == null || targetGuests == null) {
 			return null;
 		}
-		List<Person> targetPeople = targetGuests.stream()
-				.map(guest -> modelMapper.map(guest, Person.class)).toList();
-		modelMapper.createTypeMap(Guest.class, Person.class);
+
+		List<Person> targetPeople = targetGuests.stream().map(eventMapper::toPersonDto).toList();
+
 		return guests.stream().filter(guest -> {
-			Person mapped = modelMapper.map(guest, Person.class);
+			Person mapped = eventMapper.toPersonDto(guest);
 			return targetPeople.contains(mapped);
 		}).map(Guest::getMessageDataSelectId).toList();
 	}
