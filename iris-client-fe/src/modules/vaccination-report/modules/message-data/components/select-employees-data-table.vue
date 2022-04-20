@@ -42,32 +42,24 @@
 import { Component, Vue } from "vue-property-decorator";
 import SearchField from "@/components/pageable/search-field.vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
-import {
-  getGuestListTableHeaders,
-  getGuestListTableRows,
-  GuestListTableRow,
-} from "@/views/event-tracking-details/utils/mappedData";
 import { PropType } from "vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { Guest } from "@/api";
+import { VREmployee } from "@/api";
 import ExpandedDataTableItem from "@/components/expanded-data-table-item.vue";
-const SelectGuestsDataTableProps = Vue.extend({
+import {
+  getVREmployeeTableHeaders,
+  getVREmployeeTableRows,
+  VREmployeeTableRow,
+} from "@/modules/vaccination-report/services/mappedData";
+const SelectEmployeesDataTableProps = Vue.extend({
   inheritAttrs: false,
   props: {
     items: {
-      type: Array as PropType<Guest[] | null>,
+      type: Array as PropType<VREmployee[] | null>,
       default: null,
     },
     duplicates: {
       type: Array as PropType<string[] | null>,
-      default: null,
-    },
-    eventStart: {
-      type: String,
-      default: null,
-    },
-    eventEnd: {
-      type: String,
       default: null,
     },
     value: {
@@ -84,8 +76,8 @@ const SelectGuestsDataTableProps = Vue.extend({
     SearchField,
   },
 })
-export default class SelectGuestsDataTable extends SelectGuestsDataTableProps {
-  get selection(): GuestListTableRow[] {
+export default class SelectEmployeesDataTable extends SelectEmployeesDataTableProps {
+  get selection(): VREmployeeTableRow[] {
     if (this.value.length <= 0) return [];
     return this.tableRows.filter((row) => {
       return (
@@ -94,14 +86,14 @@ export default class SelectGuestsDataTable extends SelectGuestsDataTableProps {
       );
     });
   }
-  set selection(rows: GuestListTableRow[]) {
+  set selection(rows: VREmployeeTableRow[]) {
     const sel = rows.map((row) => row.raw.messageDataSelectId).filter((v) => v);
     this.$emit("input", sel);
   }
   search = "";
   expanded = [];
   get tableHeaders() {
-    const headers = getGuestListTableHeaders(true);
+    const headers = getVREmployeeTableHeaders(true);
     if (this.duplicates) {
       headers.headers.splice(1, 0, {
         text: "",
@@ -112,14 +104,14 @@ export default class SelectGuestsDataTable extends SelectGuestsDataTableProps {
     return headers;
   }
 
-  get tableRows(): GuestListTableRow[] {
-    return getGuestListTableRows(this.items, this.eventStart, this.eventEnd);
+  get tableRows(): VREmployeeTableRow[] {
+    return getVREmployeeTableRows(this.items);
   }
 
-  isDuplicate(item: GuestListTableRow): boolean {
+  isDuplicate(item: VREmployeeTableRow): boolean {
     return !!this.duplicates?.find((id) => item.raw.messageDataSelectId === id);
   }
-  itemClass(item: GuestListTableRow): string {
+  itemClass(item: VREmployeeTableRow): string {
     return this.isDuplicate(item) ? "error-lighten-3" : "";
   }
 }

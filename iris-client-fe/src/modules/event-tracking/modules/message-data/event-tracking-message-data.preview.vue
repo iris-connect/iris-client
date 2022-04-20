@@ -7,7 +7,6 @@
     :select-enabled="false"
   />
 </template>
-<style></style>
 <script lang="ts">
 import { DataRequestDetails } from "@/api";
 import { Component, Vue } from "vue-property-decorator";

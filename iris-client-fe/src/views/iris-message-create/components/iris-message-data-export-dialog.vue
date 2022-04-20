@@ -21,17 +21,17 @@
           <v-row>
             <v-col cols="12">
               <v-text-field
-                v-model="form.model.description"
-                label="Kurzbeschreibung"
-                :rules="validationRules.description"
-                maxlength="255"
-                data-test="description"
-              ></v-text-field>
-              <v-text-field
                 disabled
                 v-model="form.model.discriminator"
                 label="Datentyp"
                 :rules="validationRules.discriminator"
+                maxlength="255"
+                data-test="description"
+              ></v-text-field>
+              <v-text-field
+                v-model="form.model.description"
+                label="Kurzbeschreibung"
+                :rules="validationRules.description"
                 maxlength="255"
                 data-test="description"
               ></v-text-field>

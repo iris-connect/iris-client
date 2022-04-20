@@ -38,22 +38,10 @@ import SortableDataTable from "@/components/sortable-data-table.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { vaccinationReportApi } from "@/modules/vaccination-report/services/api";
 import { DataQuery } from "@/api/common";
-import { VaccinationReport, VaccinationStatus } from "@/api";
-import { getFormattedDate } from "@/utils/date";
-import { getFormattedAddress } from "@/utils/address";
-import vaccinationReportConstants from "@/modules/vaccination-report/services/constants";
-import _values from "lodash/values";
-import _sum from "lodash/sum";
-import { getEnumKeys } from "@/utils/data";
-
-const getStatusTableHeader = (status: VaccinationStatus) => {
-  return {
-    text: `#\xa0${vaccinationReportConstants.getStatusName(status)}`,
-    value: "vaccinationStatusCount." + status,
-    sortable: true,
-    width: 0,
-  };
-};
+import {
+  getVaccinationReportTableHeaders,
+  getVaccinationReportTableRows,
+} from "@/modules/vaccination-report/services/mappedData";
 
 @Component({
   components: {
@@ -64,15 +52,7 @@ const getStatusTableHeader = (status: VaccinationStatus) => {
   },
 })
 export default class VaccinationReportListView extends Vue {
-  tableHeaders = [
-    { text: "Einrichtung", value: "facility.name", sortable: true },
-    { text: "Adresse", value: "address", sortable: false },
-    { text: "#\xa0Mitarbeiter", value: "employeeCount", sortable: false },
-    ...getEnumKeys(VaccinationStatus).map((s) =>
-      getStatusTableHeader(VaccinationStatus[s])
-    ),
-    { text: "Meldung vom", value: "reportedAt", sortable: true },
-  ];
+  tableHeaders = getVaccinationReportTableHeaders();
   vrApi = vaccinationReportApi.fetchPageVaccinationReport();
   handleQueryUpdate(newValue: DataQuery) {
     if (newValue) {
@@ -82,21 +62,7 @@ export default class VaccinationReportListView extends Vue {
     }
   }
   get tableRows() {
-    const vaccinationReports: VaccinationReport[] =
-      this.vrApi.state.result?.content || [];
-    return vaccinationReports.map((report) => {
-      const { facility } = report;
-      return {
-        id: report.id,
-        facility: {
-          name: facility?.name || "-",
-        },
-        address: getFormattedAddress(facility?.address),
-        employeeCount: _sum(_values(report.vaccinationStatusCount)),
-        vaccinationStatusCount: report.vaccinationStatusCount,
-        reportedAt: getFormattedDate(report.reportedAt),
-      };
-    });
+    return getVaccinationReportTableRows(this.vrApi.state.result?.content);
   }
   get totalElements(): number | undefined {
     return this.vrApi.state.result?.totalElements;

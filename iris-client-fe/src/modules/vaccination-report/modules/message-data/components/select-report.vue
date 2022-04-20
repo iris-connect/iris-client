@@ -15,7 +15,7 @@
       :item-class="getItemClass"
       :sort.sync="query.sort"
       :items="tableRows"
-      :loading="eventApi.fetchPageEvent.state.loading"
+      :loading="vrApi.state.loading"
       show-select
       single-select
       :page.sync="query.page"
@@ -23,13 +23,10 @@
       :server-items-length="totalElements"
     >
       <template v-slot:item.address="{ item }">
-        <span class="text-pre-wrap"> {{ item.address }} </span>
-      </template>
-      <template v-slot:item.status="{ item }">
-        <data-table-item-status :status="item.status" />
+        <span class="text-pre-line"> {{ item.address }} </span>
       </template>
     </sortable-data-table>
-    <error-message-alert :errors="[eventApi.fetchPageEvent.state.error]" />
+    <error-message-alert :errors="[vrApi.state.error]" />
   </data-query-handler>
 </template>
 
@@ -37,19 +34,20 @@
 import { Component, Vue } from "vue-property-decorator";
 import { PropType } from "vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
-import { DataRequestStatus, Page } from "@/api";
+import { Page } from "@/api";
 import SearchField from "@/components/pageable/search-field.vue";
-import {
-  EventTrackingListTableRow,
-  getEventTrackingListTableRows,
-} from "@/views/event-tracking-list/utils/mappeData";
 import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import { DataQuery } from "@/api/common";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { bundleEventTrackingApi } from "@/modules/event-tracking/services/api";
 import DataTableItemStatus from "@/components/data-table-item-status.vue";
+import { vaccinationReportApi } from "@/modules/vaccination-report/services/api";
+import {
+  getVaccinationReportTableHeaders,
+  getVaccinationReportTableRows,
+  VaccinationReportTableRow,
+} from "@/modules/vaccination-report/services/mappedData";
 
-const SelectEventProps = Vue.extend({
+const SelectReportProps = Vue.extend({
   inheritAttrs: false,
   props: {
     pagination: {
@@ -64,16 +62,8 @@ const SelectEventProps = Vue.extend({
       type: String,
       default: "",
     },
-    description: {
-      type: String,
-      default: "",
-    },
     selectQuery: {
       type: Object as PropType<Partial<DataQuery> | null>,
-      default: null,
-    },
-    selectableStatus: {
-      type: Array as PropType<DataRequestStatus[] | null>,
       default: null,
     },
   },
@@ -87,52 +77,31 @@ const SelectEventProps = Vue.extend({
     SortableDataTable,
   },
 })
-export default class SelectEvent extends SelectEventProps {
-  tableHeaders = [
-    {
-      text: "Ext.ID",
-      align: "start",
-      sortable: true,
-      value: "extID",
-    },
-    { text: "Event", value: "name" },
-    { text: "Ort", value: "address", sortable: false },
-    { text: "Zeit (Start)", value: "startTime" },
-    { text: "Zeit (Ende)", value: "endTime" },
-    { text: "Generiert", value: "generatedTime" },
-    { text: "Status", value: "status" },
-    { text: "Letzte Änderung", value: "lastChange" },
-  ];
-
-  eventApi = bundleEventTrackingApi(["fetchPageEvent"]);
+export default class SelectReport extends SelectReportProps {
+  tableHeaders = getVaccinationReportTableHeaders();
+  vrApi = vaccinationReportApi.fetchPageVaccinationReport();
 
   get tableRows() {
-    return getEventTrackingListTableRows(
-      this.eventApi.fetchPageEvent.state.result?.content || [],
-      this.selectableStatus
-    );
+    return getVaccinationReportTableRows(this.vrApi.state.result?.content);
   }
 
-  get selection(): EventTrackingListTableRow[] {
+  get selection(): VaccinationReportTableRow[] {
     if (this.value.length <= 0) return [];
     return this.tableRows.filter((row) => {
       return row.id === this.value;
     });
   }
-  set selection(rows: EventTrackingListTableRow[]) {
+  set selection(rows: VaccinationReportTableRow[]) {
     const sel = rows.find((row) => row.id);
-    if (!this.description) {
-      this.$emit("update:description", sel?.name || "");
-    }
     this.$emit("input", sel?.id || "");
   }
 
   handleQueryUpdate(query: DataQuery) {
-    this.eventApi.fetchPageEvent.execute(query);
+    this.vrApi.execute(query);
   }
 
   get totalElements(): number | undefined {
-    return this.eventApi.fetchPageEvent.state.result?.totalElements;
+    return this.vrApi.state.result?.totalElements;
   }
   getItemClass(item: { isSelectable?: boolean }): string {
     return item.isSelectable === false ? "is-disabled" : "is-selectable";

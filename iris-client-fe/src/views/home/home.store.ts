@@ -1,7 +1,7 @@
 import {
   DataRequestStatus,
   ExistingDataRequestClientWithLocation,
-  PageEvent,
+  Page,
   Statistics,
 } from "@/api";
 import { RootState } from "@/store/types";
@@ -69,7 +69,8 @@ const home: HomeModule = {
   },
   actions: {
     async fetchEventTrackingList({ commit }) {
-      let eventTrackingList: PageEvent | null = null;
+      let eventTrackingList: Page<ExistingDataRequestClientWithLocation> | null =
+        null;
       commit("setEventTrackingListError", null);
       commit("setEventTrackingListLoading", true);
       const query: DataQuery = {

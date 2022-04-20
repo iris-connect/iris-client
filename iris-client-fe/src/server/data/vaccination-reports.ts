@@ -23,7 +23,7 @@ const createAddress = (): Address => {
   };
 };
 
-const createEmployee = (): VREmployee => {
+const createEmployee = (id: number): VREmployee => {
   const enumKeys = getEnumKeys(VaccinationExtendedStatus);
   return {
     firstName: _sample(["Max", "Bärbel", "Gabi", "Lena", "Klaus"]),
@@ -36,6 +36,7 @@ const createEmployee = (): VREmployee => {
     phone: _sample(["555123456", "321654987"]),
     dateOfBirth: timeAgo(_random(18, 70), "years"),
     sex: _sample([Sex.Female, Sex.Male, Sex.Other]),
+    messageDataSelectId: `${id}`,
   };
 };
 

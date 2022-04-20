@@ -15,6 +15,7 @@
               label="Datentyp"
               :items="discriminatorOptions"
               v-model="form.model.discriminator"
+              @input="handleDiscriminatorChange"
               :rules="validationRules.defined"
               data-test="discriminator"
               :menu-props="{
@@ -91,6 +92,12 @@ const dataComponentSource: IrisMessageDataComponentSource = {
         /* webpackChunkName: "event-tracking-message-data.export" */ "../../../modules/event-tracking/modules/message-data/event-tracking-message-data.export.vue"
       ),
   },
+  [IrisMessageDataDiscriminator.VaccinationReport]: {
+    component: () =>
+      import(
+        /* webpackChunkName: "vaccination-report-message-data.export" */ "../../../modules/vaccination-report/modules/message-data/vaccination-report-message-data.export.vue"
+      ),
+  },
 };
 
 const getDiscriminatorSelectOptions = (): DiscriminatorOption[] => {
@@ -144,6 +151,11 @@ export default class IrisMessageDataSelectForm extends IrisMessageDataSelectForm
       description: this.formValues?.description || "",
     },
   };
+
+  handleDiscriminatorChange() {
+    this.form.model.payload = null;
+    this.form.model.description = "";
+  }
 
   get dataComponentConfig() {
     return {
