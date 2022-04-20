@@ -6,7 +6,6 @@ import iris.client_bff.config.RPCClientProperties;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.log.LogHelper;
 import iris.client_bff.ui.messages.ErrorMessages;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -144,7 +143,11 @@ public class AttackDetector {
 		return false;
 	}
 
-	public boolean isPossibleAttackForMessageDataPayload(@NonNull String input, String field, boolean obfuscateLogging) {
+	public boolean isPossibleAttackForMessageDataPayload(String input, String field, boolean obfuscateLogging) {
+
+		if (input == null) {
+			return false;
+		}
 
 		// strip json structure and extract keys & values
 		String[] inputValues = input.replaceAll("[\":,{}\\[\\]]+", ",").split(",");

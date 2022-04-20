@@ -1,5 +1,7 @@
 package iris.client_bff.core.serialization;
 
+import static org.apache.commons.lang3.StringUtils.*;
+
 import iris.client_bff.config.JacksonConfig;
 import iris.client_bff.core.serialization.DefuseJsonString.DefuseJsonStringDeserializer;
 import iris.client_bff.core.validation.AttackDetector;
@@ -15,7 +17,6 @@ import java.lang.annotation.Target;
 
 import javax.validation.Payload;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
@@ -67,9 +68,8 @@ public @interface DefuseJsonString {
 				attackDetected = attackDetector.isPossibleAttackForPassword(value, path);
 			} else if (type == MessageDataPayload.class) {
 
-				if (value != null
-						&& (attackDetector.isPossibleAttackForMessageDataPayload(value, path, obfuscateLogging)
-								|| value.length() > maxLength)) {
+				if (attackDetector.isPossibleAttackForMessageDataPayload(value, path, obfuscateLogging)
+						|| (isMaxLengthEnabled() && length(value) > maxLength)) {
 
 					return "";
 				}
@@ -81,7 +81,11 @@ public @interface DefuseJsonString {
 			if (attackDetected) {
 				return INVALID_INPUT_STRING;
 			}
-			return maxLength < 0 ? value : StringUtils.truncate(value, maxLength);
+			return isMaxLengthEnabled() ? truncate(value, maxLength) : value;
+		}
+
+		private boolean isMaxLengthEnabled() {
+			return maxLength >= 0;
 		}
 
 		@Override
