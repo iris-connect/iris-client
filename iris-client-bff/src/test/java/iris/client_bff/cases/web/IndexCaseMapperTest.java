@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.cases.CaseDataRequest;
+import iris.client_bff.cases.DtoSupplier;
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
 import iris.client_bff.cases.eps.dto.ContactCategory;
@@ -21,7 +22,6 @@ import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.users.UserDetailsServiceImpl;
 import iris.client_bff.users.entities.UserAccount;
-import iris.client_bff.utils.DtoSupplier;
 
 import java.time.Instant;
 import java.time.LocalDate;

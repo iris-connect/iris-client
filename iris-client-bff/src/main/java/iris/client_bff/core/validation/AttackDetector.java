@@ -2,28 +2,34 @@ package iris.client_bff.core.validation;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
-import iris.client_bff.config.CentralConfigurationService;
+import iris.client_bff.config.RPCClientProperties;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.log.LogHelper;
 import iris.client_bff.ui.messages.ErrorMessages;
-import lombok.RequiredArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+
+import javax.validation.Payload;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-@RequiredArgsConstructor()
-class AttackDetector {
+public class AttackDetector {
 
-	private final AlertService alertService;
-	private final CentralConfigurationService configService;
+	public interface Phone extends Payload {}
+
+	public interface Password extends Payload {}
+
+	public interface MessageDataPayload extends Payload {}
 
 	static final String[] PW_SYMBOLS = "_-#()@§!".split("(?!^)");
 	private static final String[] FORBIDDEN_SYMBOLS = {
@@ -103,6 +109,54 @@ class AttackDetector {
 			{ "DROP", "VIEW" }
 	};
 
+	private final AlertService alertService;
+	private final RPCClientProperties clientProperties;
+
+	AttackDetector(@Lazy AlertService alertService, RPCClientProperties clientProperties) {
+		this.alertService = alertService;
+		this.clientProperties = clientProperties;
+	}
+
+	public boolean isPostOutOfLimit(List<?> list, String client, long postLimit, long warnLimit, String type) {
+
+		if (list == null) {
+			return false;
+		}
+
+		if (list.size() > postLimit) {
+
+			var msg = String.format(
+					"Input from client `%s` contains %d %s at once. We prevent this as a possible attack! {threshold = %d}",
+					client, list.size(), type, postLimit);
+			alertService.createAlertTicketAndMessage(String.format("Input validation - to many %s posted", type), msg);
+
+			return true;
+		}
+
+		if (list.size() > warnLimit) {
+
+			var msg = String.format(
+					"Input from client `%s` contains %d %s at once. This could be an indication of an attack! {threshold = %d}",
+					client, list.size(), type, postLimit);
+			alertService.createAlertMessage(String.format("Input validation - warning about many %s posts", type), msg);
+		}
+
+		return false;
+	}
+
+	public boolean isPossibleAttackForMessageDataPayload(@NonNull String input, String field, boolean obfuscateLogging) {
+
+		// strip json structure and extract keys & values
+		String[] inputValues = input.replaceAll("[\":,{}\\[\\]]+", ",").split(",");
+
+		// remove "+" from forbiddenSymbols as it is allowed for phone numbers
+		String[] forbiddenSymbols = ArrayUtils.removeElement(FORBIDDEN_SYMBOLS, "+");
+
+		// check if any json key or value is a possible attack
+		return Arrays.stream(inputValues)
+				.anyMatch(v -> isPossibleAttack(v, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES, forbiddenSymbols));
+	}
+
 	public boolean isPossibleAttack(String input, String field, boolean obfuscateLogging) {
 		return isPossibleAttack(input, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES, FORBIDDEN_SYMBOLS);
 	}
@@ -117,19 +171,6 @@ class AttackDetector {
 
 		return isPossibleAttack(input, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES,
 				ArrayUtils.removeElement(FORBIDDEN_SYMBOLS, "+"));
-	}
-
-	public boolean isPossibleAttackForMessageDataPayload(String input, String field, boolean obfuscateLogging) {
-
-		// strip json structure and extract keys & values
-		String[] inputValues = input.replaceAll("[\":,{}\\[\\]]+", ",").split(",");
-
-		// remove "+" from forbiddenSymbols as it is allowed for phone numbers
-		String[] forbiddenSymbols = ArrayUtils.removeElement(FORBIDDEN_SYMBOLS, "+");
-
-		// check if any json key or value is a possible attack
-		return Arrays.stream(inputValues)
-				.anyMatch(v -> isPossibleAttack(v, field, obfuscateLogging, FORBIDDEN_KEYWORD_TUPLES, forbiddenSymbols));
 	}
 
 	boolean isPossibleAttack(String input, String field, boolean obfuscateLogging,
@@ -153,7 +194,7 @@ class AttackDetector {
 			alertService.createAlertMessage("Input validation - possible attack",
 					String.format(
 							"Input `%s` in health department with abbreviation `%s` contains the character or keyword `%s` that is a potential attack!",
-							field, configService.getAbbreviation(), logString));
+							field, clientProperties.getOwnEndpoint(), logString));
 
 			return true;
 		}

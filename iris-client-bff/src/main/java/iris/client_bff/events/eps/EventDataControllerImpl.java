@@ -3,10 +3,8 @@ package iris.client_bff.events.eps;
 import static org.apache.commons.lang3.RegExUtils.replaceAll;
 import static org.apache.commons.lang3.StringUtils.*;
 
-import iris.client_bff.config.JsonRpcDataValidator;
 import iris.client_bff.config.SuspiciouslyEventRequestProperties;
-import iris.client_bff.core.utils.ValidationHelper;
-import iris.client_bff.events.EventDataDefuse;
+import iris.client_bff.core.validation.AttackDetector;
 import iris.client_bff.events.EventDataSubmissionService;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.ui.messages.ErrorMessages;
@@ -29,18 +27,15 @@ public class EventDataControllerImpl implements EventDataController {
 	private static final Pattern NUMBER_REPLACE_REGEX = Pattern.compile("[\\s\\-_+#*.,:;()/|]");
 
 	private final EventDataSubmissionService dataSubmissionService;
-	private final ValidationHelper validHelper;
-	private final JsonRpcDataValidator jsonRpcDataValidator;
+	private final AttackDetector attackDetector;
 	private final SuspiciouslyEventRequestProperties suspiciouslyRequest;
-
-	private final EventDataDefuse eventDataDefuse;
 
 	@Override
 	public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
 
 		log.trace("Start submission {}", dataAuthorizationToken);
 
-		if (validHelper.isPostOutOfLimit(guestList.getGuests(), client.getName(),
+		if (attackDetector.isPostOutOfLimit(guestList.getGuests(), client.getName(),
 				suspiciouslyRequest.getDataBlockingThreshold(), suspiciouslyRequest.getDataWarningThreshold(),
 				"guests")) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request content exceeded blocking limit!");
@@ -50,10 +45,6 @@ public class EventDataControllerImpl implements EventDataController {
 			// token invalid
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT + ": data auth token");
 		}
-
-		eventDataDefuse.defuseGuestList(guestList);
-
-		jsonRpcDataValidator.validateData(guestList);
 
 		fixInvalidPhoneNumbersInGuestList(guestList);
 

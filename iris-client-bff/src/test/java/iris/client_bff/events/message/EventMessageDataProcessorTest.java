@@ -4,8 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import iris.client_bff.config.JacksonConfig;
+import iris.client_bff.core.validation.AttackDetector;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestService;
+import iris.client_bff.events.EventDataRequestsDataInitializer;
 import iris.client_bff.events.EventDataSubmissionRepository;
 import iris.client_bff.events.EventDataSubmissionService;
 import iris.client_bff.events.message.dto.ExportSelectionDto;
@@ -28,6 +31,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.util.Streamable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -51,10 +55,10 @@ public class EventMessageDataProcessorTest {
 	EventMessageDataBuilder dataBuilder;
 
 	@Mock
-	EventMessageDataPayloadDefuse payloadDefuse;
+	Validator validator;
 
 	@Mock
-	Validator validator;
+	AttackDetector attackDetector;
 
 	@Mock
 	MessageSourceAccessor messages;
@@ -67,13 +71,14 @@ public class EventMessageDataProcessorTest {
 		this.objectMapper = new ObjectMapper();
 		this.objectMapper.registerModule(new JavaTimeModule());
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		objectMapper
+				.setInjectableValues(new InjectableValues.Std().addValue(JacksonConfig.ATTACK_DETECTOR, attackDetector));
 
 		this.messageDataProcessor = new EventMessageDataProcessor(
 				this.requestService,
 				this.submissionService,
 				this.submissionRepository,
 				this.dataBuilder,
-				this.payloadDefuse,
 				this.validator,
 				this.messages,
 				this.objectMapper);
@@ -118,15 +123,16 @@ public class EventMessageDataProcessorTest {
 	@Test
 	void importPayloadAndAdd() {
 
-		doNothing().when(this.payloadDefuse).defuse(any(EventMessageDataPayload.class));
-
 		when(this.requestService.save(any(EventDataRequest.class)))
 				.thenReturn(this.eventMessageTestData.MOCK_EVENT_DATA_REQUEST);
 		doNothing().when(this.submissionService).save(any(EventDataRequest.class), any(GuestList.class));
 
 		this.messageDataProcessor.importPayload(this.eventMessageTestData.MOCK_EVENT_MESSAGE_DATA_PAYLOAD_STRING);
 
-		verify(this.payloadDefuse).defuse(this.eventMessageTestData.MOCK_EVENT_MESSAGE_DATA_PAYLOAD);
+		verify(this.attackDetector)
+				.isPossibleAttack(EventDataRequestsDataInitializer.DATA_REQUEST_1.getName(),
+						"iris.client_bff.events.message.EventMessageDataPayload$EventDataRequestPayload#name",
+						true);
 
 		verify(this.requestService).save(any(EventDataRequest.class));
 		verify(this.submissionService).save(any(EventDataRequest.class), any(GuestList.class));
@@ -135,8 +141,6 @@ public class EventMessageDataProcessorTest {
 
 	@Test
 	void importPayloadAndUpdate() {
-
-		doNothing().when(this.payloadDefuse).defuse(any(EventMessageDataPayload.class));
 
 		when(this.requestService.findById(any(UUID.class)))
 				.thenReturn(Optional.of(this.eventMessageTestData.MOCK_EVENT_DATA_REQUEST));
@@ -150,30 +154,22 @@ public class EventMessageDataProcessorTest {
 				this.eventMessageTestData.MOCK_EVENT_DATA_REQUEST.getId().toUUID(),
 				this.eventMessageTestData.MOCK_EVENT_MESSAGE_IMPORT_SELECTION_STRING);
 
-		verify(this.payloadDefuse).defuse(this.eventMessageTestData.MOCK_EVENT_MESSAGE_DATA_PAYLOAD);
 		verify(this.requestService).findById(any(UUID.class));
 		verify(this.submissionRepository).findAllByRequest(any(EventDataRequest.class));
 		verify(this.submissionRepository).save(any(EventDataSubmission.class));
-
 	}
 
 	@Test
 	void getViewPayload() {
 
-		doNothing().when(this.payloadDefuse).defuse(any(EventMessageDataPayload.class));
-
 		var result = this.messageDataProcessor
 				.getViewPayload(this.eventMessageTestData.MOCK_EVENT_MESSAGE_DATA_PAYLOAD_STRING);
-
-		verify(this.payloadDefuse).defuse(this.eventMessageTestData.MOCK_EVENT_MESSAGE_DATA_PAYLOAD);
 
 		assertEquals(result, this.eventMessageTestData.MOCK_EVENT_MESSAGE_DATA_VIEW_PAYLOAD);
 	}
 
 	@Test
 	void getImportSelectionViewPayload() {
-
-		doNothing().when(this.payloadDefuse).defuse(any(EventMessageDataPayload.class));
 
 		when(this.requestService.findById(any(UUID.class)))
 				.thenReturn(Optional.of(this.eventMessageTestData.MOCK_EVENT_DATA_REQUEST));
@@ -184,7 +180,6 @@ public class EventMessageDataProcessorTest {
 				this.eventMessageTestData.MOCK_EVENT_MESSAGE_DATA_PAYLOAD_STRING,
 				this.eventMessageTestData.MOCK_EVENT_DATA_REQUEST.getId().toUUID());
 
-		verify(this.payloadDefuse).defuse(this.eventMessageTestData.MOCK_EVENT_MESSAGE_DATA_PAYLOAD);
 		verify(this.requestService).findById(any(UUID.class));
 		verify(this.submissionRepository).findAllByRequest(any(EventDataRequest.class));
 

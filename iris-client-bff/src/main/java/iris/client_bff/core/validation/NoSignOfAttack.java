@@ -3,6 +3,9 @@ package iris.client_bff.core.validation;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
+import iris.client_bff.core.validation.AttackDetector.MessageDataPayload;
+import iris.client_bff.core.validation.AttackDetector.Password;
+import iris.client_bff.core.validation.AttackDetector.Phone;
 import iris.client_bff.core.validation.NoSignOfAttack.NoSignOfAttackValidator;
 
 import java.lang.annotation.Documented;
@@ -34,16 +37,10 @@ public @interface NoSignOfAttack {
 
 	Class<? extends Payload>[] payload() default {};
 
-	public interface Phone extends Payload {}
-
-	public interface Password extends Payload {}
-
-	public interface MessageDataPayload extends Payload {}
-
 	static class NoSignOfAttackValidator implements ConstraintValidator<NoSignOfAttack, String> {
 
 		@Autowired
-		private AttackDetector validationHelper;
+		private AttackDetector attackDetector;
 
 		private Class<? extends Payload> type;
 		private boolean obfuscateLogging;
@@ -70,16 +67,16 @@ public @interface NoSignOfAttack {
 			}
 
 			if (type == Phone.class) {
-				return !validationHelper.isPossibleAttackForPhone(text, path, obfuscateLogging);
+				return !attackDetector.isPossibleAttackForPhone(text, path, obfuscateLogging);
 			}
 			if (type == Password.class) {
-				return !validationHelper.isPossibleAttackForPassword(text, path);
-			} 
+				return !attackDetector.isPossibleAttackForPassword(text, path);
+			}
 			if (type == MessageDataPayload.class) {
-				return !validationHelper.isPossibleAttackForMessageDataPayload(text, path, obfuscateLogging);
+				return !attackDetector.isPossibleAttackForMessageDataPayload(text, path, obfuscateLogging);
 			}
 
-			return !validationHelper.isPossibleAttack(text, path, obfuscateLogging);
+			return !attackDetector.isPossibleAttack(text, path, obfuscateLogging);
 		}
 	}
 }

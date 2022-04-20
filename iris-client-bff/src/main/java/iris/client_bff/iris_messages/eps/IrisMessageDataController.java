@@ -3,10 +3,15 @@ package iris.client_bff.iris_messages.eps;
 import iris.client_bff.iris_messages.exceptions.IrisMessageException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
 
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 
+@Validated
 public interface IrisMessageDataController {
 	IrisMessageTransferDto createIrisMessage(
-			@Valid @JsonRpcParam(value = "irisMessage") IrisMessageTransferDto messageTransfer) throws IrisMessageException;
+			@JsonRpcParam(value = "irisMessage") @NotNull @Valid IrisMessageTransferDto messageTransfer)
+			throws IrisMessageException;
 }

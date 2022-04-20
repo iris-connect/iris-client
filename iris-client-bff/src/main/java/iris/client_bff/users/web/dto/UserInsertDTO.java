@@ -1,7 +1,7 @@
 package iris.client_bff.users.web.dto;
 
+import iris.client_bff.core.validation.AttackDetector.Password;
 import iris.client_bff.core.validation.NoSignOfAttack;
-import iris.client_bff.core.validation.NoSignOfAttack.Password;
 import iris.client_bff.users.web.ValidPassword;
 
 import java.util.Objects;
