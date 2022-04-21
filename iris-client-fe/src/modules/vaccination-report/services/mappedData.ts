@@ -11,7 +11,7 @@ import { getFormattedDate } from "@/utils/date";
 import { getEnumKeys } from "@/utils/data";
 import vaccinationReportConstants from "@/modules/vaccination-report/services/constants";
 import Genders from "@/constants/Genders";
-import { DataTableHeader } from "vuetify";
+import { DataTableHeaders } from "@/components/iris-data-table.vue";
 
 export type VaccinationReportTableRow = {
   id?: string;
@@ -56,10 +56,6 @@ export const getVaccinationReportTableHeaders = () => [
   ),
   { text: "Meldung vom", value: "reportedAt", sortable: true },
 ];
-
-type DataTableHeaders = {
-  [K in "headers" | "expandedHeaders"]: DataTableHeader[];
-};
 
 export const getVREmployeeTableHeaders = (
   selectable: boolean

@@ -30,8 +30,8 @@
         data-test="payload.guests"
       >
         <select-guests-data-table
-          :items="selectableGuests"
-          :duplicates="duplicateGuests"
+          :items="selectables"
+          :duplicates="duplicates"
           v-bind="attrs"
           v-on="on"
         />
@@ -113,11 +113,11 @@ export default class EventTrackingMessageDataImport extends EventTrackingMessage
     }
   }
 
-  get selectableGuests() {
+  get selectables() {
     return this.payload?.selectables?.guests;
   }
 
-  get duplicateGuests() {
+  get duplicates() {
     return this.payload?.duplicates?.guests;
   }
 

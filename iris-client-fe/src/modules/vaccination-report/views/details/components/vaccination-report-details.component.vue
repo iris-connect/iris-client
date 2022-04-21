@@ -14,43 +14,20 @@
           v-model="status"
         />
       </div>
-      <search-field :debounce="0" v-model="search" />
-      <iris-data-table
+      <expandable-data-table
         v-model="table.selection"
-        class="mt-5"
         :headers="table.headers"
+        :expanded-headers="table.expandedHeaders"
         :items="tableRows"
-        :search="search"
         :loading="loading"
-        :show-select="selectEnabled"
-        :show-select-all="selectEnabled"
-        show-expand
-        :expanded.sync="table.expanded"
+        :select-enabled="selectEnabled"
         :filter="dataTableFilter"
         data-test="vaccination-report.employee.data-table"
       >
-        <template v-slot:item.address="{ item }">
-          <span class="text-pre-line"> {{ item.address }} </span>
-        </template>
         <template v-slot:item.vaccinationStatus="{ item }">
-          <v-chip
-            :color="getStatusColor(item.vaccinationStatus)"
-            :data-test="`status.${item.vaccinationStatus}`"
-            dark
-          >
-            {{ getStatusName(item.vaccinationStatus) }}
-          </v-chip>
+          <vaccination-status-chip :status="item.vaccinationStatus" />
         </template>
-        <template v-slot:expanded-item="{ headers, item }">
-          <td v-if="selectEnabled"></td>
-          <td :colspan="selectEnabled ? headers.length - 1 : headers.length">
-            <expanded-data-table-item
-              :expanded-headers="table.expandedHeaders"
-              :item="item"
-            />
-          </td>
-        </template>
-      </iris-data-table>
+      </expandable-data-table>
       <error-message-alert :errors="errors" />
     </v-card-text>
     <slot
@@ -62,24 +39,22 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import SearchField from "@/components/pageable/search-field.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { VaccinationReportDetails, VaccinationStatus } from "@/api";
-import IrisDataTable from "@/components/iris-data-table.vue";
 import vaccinationReportConstants from "@/modules/vaccination-report/services/constants";
 import InfoGrid from "@/components/info-grid.vue";
 import { getFormattedDate } from "@/utils/date";
 import { getEnumKeys } from "@/utils/data";
 import BtnToggleSelect from "@/components/btn-toggle-select.vue";
 import VaccinationReportFacilityInfo from "@/modules/vaccination-report/views/details/components/vaccination-report-facility-info.vue";
-import ExpandedDataTableItem from "@/components/expanded-data-table-item.vue";
 import {
   getVREmployeeTableHeaders,
   getVREmployeeTableRows,
   VREmployeeTableRow,
 } from "@/modules/vaccination-report/services/mappedData";
 import { PropType } from "vue";
-import { ErrorMessage } from "@/utils/axios";
+import VaccinationStatusChip from "@/modules/vaccination-report/components/vaccination-status-chip.vue";
+import ExpandableDataTable from "@/components/expandable-data-table.vue";
 
 const VaccinationReportDetailsComponentProps = Vue.extend({
   inheritAttrs: false,
@@ -93,7 +68,7 @@ const VaccinationReportDetailsComponentProps = Vue.extend({
       default: false,
     },
     errors: {
-      type: Array as PropType<ErrorMessage[]>,
+      type: [Array, String],
       default: () => [],
     },
     selectEnabled: {
@@ -105,26 +80,20 @@ const VaccinationReportDetailsComponentProps = Vue.extend({
 
 @Component({
   components: {
-    ExpandedDataTableItem,
+    ExpandableDataTable,
+    VaccinationStatusChip,
     VaccinationReportFacilityInfo,
     BtnToggleSelect,
     InfoGrid,
-    IrisDataTable,
     ErrorMessageAlert,
-    SearchField,
   },
 })
 export default class VaccinationReportDetailsComponent extends VaccinationReportDetailsComponentProps {
-  search = "";
   status = "";
   table = {
     selection: [],
-    expanded: [],
     ...getVREmployeeTableHeaders(this.selectEnabled),
   };
-  get filteredTableRows() {
-    return this.tableRows;
-  }
   get tableRows(): VREmployeeTableRow[] {
     return getVREmployeeTableRows(this.vaccinationReport?.employees);
   }
@@ -144,8 +113,6 @@ export default class VaccinationReportDetailsComponent extends VaccinationReport
       };
     });
   }
-  getStatusColor = vaccinationReportConstants.getStatusColor;
-  getStatusName = vaccinationReportConstants.getStatusName;
   dataTableFilter(value: VREmployeeTableRow) {
     if (this.status) {
       return value.vaccinationStatus === this.status;

@@ -9,6 +9,7 @@ import { getFormattedDate } from "@/utils/date";
 import Genders from "@/constants/Genders";
 import { getValidPhoneNumber } from "@/utils/misc";
 import { DataTableHeader } from "vuetify";
+import { DataTableHeaders } from "@/components/iris-data-table.vue";
 
 export type FormData = {
   name?: string;
@@ -78,10 +79,6 @@ export const getEventData = (event: DataRequestDetails | null): EventData => {
     location: event?.locationInformation,
     additionalInformation: event?.requestDetails || "-",
   };
-};
-
-type DataTableHeaders = {
-  [K in "headers" | "expandedHeaders"]: DataTableHeader[];
 };
 
 export const getGuestListTableHeaders = (

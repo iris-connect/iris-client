@@ -26,8 +26,8 @@
         data-test="payload.employees"
       >
         <select-employees-data-table
-          :items="selectableEmployees"
-          :duplicates="duplicateEmployees"
+          :items="selectables"
+          :duplicates="duplicates"
           v-bind="attrs"
           v-on="on"
         />
@@ -106,11 +106,11 @@ export default class VaccinationReportMessageDataImport extends VaccinationRepor
     }
   }
 
-  get selectableEmployees() {
+  get selectables() {
     return this.payload?.selectables?.employees;
   }
 
-  get duplicateEmployees() {
+  get duplicates() {
     return this.payload?.duplicates?.employees;
   }
 

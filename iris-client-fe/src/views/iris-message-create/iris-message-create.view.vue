@@ -207,7 +207,7 @@ export default class IrisMessageCreateView extends Vue {
 
   updateDataAttachment(messageData: IrisMessageDataInsert, index: number) {
     if (this.form.model.dataAttachments) {
-      this.form.model.dataAttachments[index] = messageData;
+      Vue.set(this.form.model.dataAttachments, index, messageData);
     }
   }
 

@@ -14,7 +14,7 @@
       <v-card-text>
         <data-query-handler
           ref="queryHandler"
-          @query:update="messageQuery = $event"
+          @update:query="messageQuery = $event"
           #default="{ query }"
         >
           <iris-message-folders-data-tree

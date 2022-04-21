@@ -15,8 +15,8 @@
         <select-event
           v-bind="attrs"
           v-on="on"
-          :description="description"
           :selectable-status="exportableStatus"
+          :description="description"
           @update:description="$emit('update:description', $event)"
         />
       </stepper-input-field>

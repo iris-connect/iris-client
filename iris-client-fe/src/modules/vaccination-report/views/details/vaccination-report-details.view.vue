@@ -1,8 +1,8 @@
 <template>
   <vaccination-report-details-component
     class="my-7"
-    :loading="vrApi.state.loading"
-    :errors="[vrApi.state.error]"
+    :loading="fetchVaccinationReportDetails.state.loading"
+    :errors="fetchVaccinationReportDetails.state.error"
     :vaccination-report="vaccinationReport"
   >
     <template #actions="{ selection, total }">
@@ -58,9 +58,10 @@ import { VREmployeeTableRow } from "@/modules/vaccination-report/services/mapped
 export default class VaccinationReportDetailsView extends Mixins(
   HistoryBack("vaccination-report-list")
 ) {
-  vrApi = vaccinationReportApi.fetchVaccinationReportDetails();
+  fetchVaccinationReportDetails =
+    vaccinationReportApi.fetchVaccinationReportDetails();
   mounted() {
-    this.vrApi.execute(this.$route.params.id);
+    this.fetchVaccinationReportDetails.execute(this.$route.params.id);
   }
 
   messageData(selection: VREmployeeTableRow[]): IrisMessageDataInsert {
@@ -76,7 +77,7 @@ export default class VaccinationReportDetailsView extends Mixins(
   }
 
   get vaccinationReport() {
-    return this.vrApi.state.result;
+    return this.fetchVaccinationReportDetails.state.result;
   }
 }
 </script>

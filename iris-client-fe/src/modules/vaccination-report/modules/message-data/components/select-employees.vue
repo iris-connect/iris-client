@@ -3,9 +3,9 @@
     <select-employees-data-table
       v-bind="{ ...$attrs, ...tableData }"
       v-on="$listeners"
-      :loading="vrApi.state.loading"
+      :loading="fetchVaccinationReportDetails.state.loading"
     />
-    <error-message-alert :errors="[vrApi.state.error]" />
+    <error-message-alert :errors="fetchVaccinationReportDetails.state.error" />
   </div>
 </template>
 
@@ -31,21 +31,22 @@ const SelectEmployeesProps = Vue.extend({
   },
 })
 export default class SelectEmployees extends SelectEmployeesProps {
-  vrApi = vaccinationReportApi.fetchVaccinationReportDetails();
+  fetchVaccinationReportDetails =
+    vaccinationReportApi.fetchVaccinationReportDetails();
 
   @Watch("reportId", { immediate: true })
-  onEventIdChange(reportId: string) {
+  onReportIdChange(reportId: string) {
     if (reportId) {
-      this.vrApi.execute(reportId);
+      this.fetchVaccinationReportDetails.execute(reportId);
     } else {
-      this.vrApi.reset();
+      this.fetchVaccinationReportDetails.reset();
     }
   }
 
   get tableData(): {
     items: VREmployee[];
   } {
-    const details = this.vrApi.state.result;
+    const details = this.fetchVaccinationReportDetails.state.result;
     return {
       items: details?.employees || [],
     };

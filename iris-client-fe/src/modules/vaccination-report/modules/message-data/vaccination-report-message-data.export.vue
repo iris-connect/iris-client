@@ -12,7 +12,12 @@
         #default="{ attrs, on }"
         data-test="payload.vaccination-report"
       >
-        <select-report v-bind="attrs" v-on="on" />
+        <select-report
+          v-bind="attrs"
+          v-on="on"
+          :description="description"
+          @update:description="$emit('update:description', $event)"
+        />
       </stepper-input-field>
     </vertical-stepper-step>
     <vertical-stepper-step :active-step="step" step="2">
@@ -35,7 +40,6 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import SelectEvent from "@/modules/event-tracking/modules/message-data/components/select-event.vue";
 import { IrisMessageDataSelectionPayload } from "@/api";
 import { PropType } from "vue";
 import rules from "@/common/validation-rules";
@@ -73,7 +77,6 @@ const VaccinationReportMessageDataExportProps = Vue.extend({
     VerticalStepper,
     VerticalStepperStep,
     StepperInputField,
-    SelectEvent,
   },
 })
 export default class VaccinationReportMessageDataExport extends VaccinationReportMessageDataExportProps {

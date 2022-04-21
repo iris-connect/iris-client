@@ -1,76 +1,44 @@
 <template>
-  <data-query-handler
-    @query:update="handleQueryUpdate"
-    :route-control="false"
-    :data-query="selectQuery"
-    #default="{ query }"
+  <single-select-query-data-table
+    @update:query="handleQueryUpdate"
+    v-bind="$attrs"
+    v-on="$listeners"
+    @input="handleInput"
+    :headers="tableHeaders"
+    :items="tableRows"
+    :server-items-length="totalElements"
+    :loading="fetchPageEvent.state.loading"
+    :errors="[fetchPageEvent.state.error]"
   >
-    <search-field v-model="query.search" />
-    <sortable-data-table
-      class="mt-5"
-      v-bind="$attrs"
-      v-model="selection"
-      :headers="tableHeaders"
-      item-key="id"
-      :item-class="getItemClass"
-      :sort.sync="query.sort"
-      :items="tableRows"
-      :loading="eventApi.fetchPageEvent.state.loading"
-      show-select
-      single-select
-      :page.sync="query.page"
-      :items-per-page.sync="query.size"
-      :server-items-length="totalElements"
-    >
-      <template v-slot:item.address="{ item }">
-        <span class="text-pre-wrap"> {{ item.address }} </span>
-      </template>
-      <template v-slot:item.status="{ item }">
-        <data-table-item-status :status="item.status" />
-      </template>
-    </sortable-data-table>
-    <error-message-alert :errors="[eventApi.fetchPageEvent.state.error]" />
-  </data-query-handler>
+    <template v-slot:item.address="{ item }">
+      <span class="text-pre-wrap"> {{ item.address }} </span>
+    </template>
+    <template v-slot:item.status="{ item }">
+      <data-table-item-status :status="item.status" />
+    </template>
+  </single-select-query-data-table>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { PropType } from "vue";
 import SortableDataTable from "@/components/sortable-data-table.vue";
-import { DataRequestStatus, Page } from "@/api";
+import { DataRequestStatus } from "@/api";
 import SearchField from "@/components/pageable/search-field.vue";
-import {
-  EventTrackingListTableRow,
-  getEventTrackingListTableRows,
-} from "@/views/event-tracking-list/utils/mappeData";
+import { getEventTrackingListTableRows } from "@/views/event-tracking-list/utils/mappeData";
 import DataQueryHandler from "@/components/pageable/data-query-handler.vue";
 import { DataQuery } from "@/api/common";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { bundleEventTrackingApi } from "@/modules/event-tracking/services/api";
+import { eventTrackingApi } from "@/modules/event-tracking/services/api";
 import DataTableItemStatus from "@/components/data-table-item-status.vue";
+import SingleSelectQueryDataTable from "@/modules/iris-message/modules/message-data/components/single-select-query-data-table.vue";
 
 const SelectEventProps = Vue.extend({
   inheritAttrs: false,
   props: {
-    pagination: {
-      type: Object as PropType<Page<unknown> | null>,
-      default: null,
-    },
-    route: {
-      type: Boolean,
-      default: true,
-    },
-    value: {
-      type: String,
-      default: "",
-    },
     description: {
       type: String,
       default: "",
-    },
-    selectQuery: {
-      type: Object as PropType<Partial<DataQuery> | null>,
-      default: null,
     },
     selectableStatus: {
       type: Array as PropType<DataRequestStatus[] | null>,
@@ -80,6 +48,7 @@ const SelectEventProps = Vue.extend({
 });
 @Component({
   components: {
+    SingleSelectQueryDataTable,
     DataTableItemStatus,
     ErrorMessageAlert,
     DataQueryHandler,
@@ -104,51 +73,28 @@ export default class SelectEvent extends SelectEventProps {
     { text: "Letzte Änderung", value: "lastChange" },
   ];
 
-  eventApi = bundleEventTrackingApi(["fetchPageEvent"]);
+  fetchPageEvent = eventTrackingApi.fetchPageEvent();
 
   get tableRows() {
     return getEventTrackingListTableRows(
-      this.eventApi.fetchPageEvent.state.result?.content || [],
+      this.fetchPageEvent.state.result?.content || [],
       this.selectableStatus
     );
   }
 
-  get selection(): EventTrackingListTableRow[] {
-    if (this.value.length <= 0) return [];
-    return this.tableRows.filter((row) => {
-      return row.id === this.value;
-    });
-  }
-  set selection(rows: EventTrackingListTableRow[]) {
-    const sel = rows.find((row) => row.id);
+  handleInput(value: string) {
     if (!this.description) {
-      this.$emit("update:description", sel?.name || "");
+      const match = this.tableRows.find((row) => row.id === value);
+      this.$emit("update:description", match?.name || "");
     }
-    this.$emit("input", sel?.id || "");
   }
 
   handleQueryUpdate(query: DataQuery) {
-    this.eventApi.fetchPageEvent.execute(query);
+    this.fetchPageEvent.execute(query);
   }
 
   get totalElements(): number | undefined {
-    return this.eventApi.fetchPageEvent.state.result?.totalElements;
-  }
-  getItemClass(item: { isSelectable?: boolean }): string {
-    return item.isSelectable === false ? "is-disabled" : "is-selectable";
+    return this.fetchPageEvent.state.result?.totalElements;
   }
 }
 </script>
-
-<style lang="scss">
-.v-data-table {
-  tbody tr {
-    &.is-disabled {
-      opacity: 0.5;
-      &:hover {
-        background: transparent !important;
-      }
-    }
-  }
-}
-</style>

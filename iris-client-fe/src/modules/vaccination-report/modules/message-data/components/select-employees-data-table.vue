@@ -1,56 +1,27 @@
 <template>
-  <div>
-    <search-field :debounce="0" v-model="search" />
-    <sortable-data-table
-      v-bind="$attrs"
-      v-model="selection"
-      :headers="tableHeaders.headers"
-      :items="tableRows"
-      :search="search"
-      show-select
-      show-select-all
-      show-expand
-      single-expand
-      :expanded.sync="expanded"
-      :item-class="itemClass"
-      class="mt-5"
-    >
-      <template v-slot:item.note="{ item }">
-        <v-tooltip right v-if="isDuplicate(item)">
-          <template v-slot:activator="{ on, attrs }">
-            <v-icon v-on="on" v-bind="attrs" color="error">
-              mdi-alert-octagon
-            </v-icon>
-          </template>
-          Dieser Datensatz existiert bereits im Zielobjekt
-        </v-tooltip>
-      </template>
-      <template v-slot:expanded-item="{ headers, item }">
-        <td></td>
-        <td :colspan="headers.length - 1">
-          <expanded-data-table-item
-            :item="item"
-            :expanded-headers="tableHeaders.expandedHeaders"
-          />
-        </td>
-      </template>
-    </sortable-data-table>
-  </div>
+  <multi-select-data-table
+    v-bind="$attrs"
+    v-on="$listeners"
+    :items="tableRows"
+    :headers="tableHeaders"
+  >
+    <template v-slot:item.vaccinationStatus="{ item }">
+      <vaccination-status-chip :status="item.vaccinationStatus" />
+    </template>
+  </multi-select-data-table>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import SearchField from "@/components/pageable/search-field.vue";
-import SortableDataTable from "@/components/sortable-data-table.vue";
 import { PropType } from "vue";
-import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { VREmployee } from "@/api";
-import ExpandedDataTableItem from "@/components/expanded-data-table-item.vue";
 import {
   getVREmployeeTableHeaders,
   getVREmployeeTableRows,
   VREmployeeTableRow,
 } from "@/modules/vaccination-report/services/mappedData";
+import MultiSelectDataTable from "@/modules/iris-message/modules/message-data/components/multi-select-data-table.vue";
+import VaccinationStatusChip from "@/modules/vaccination-report/components/vaccination-status-chip.vue";
 const SelectEmployeesDataTableProps = Vue.extend({
   inheritAttrs: false,
   props: {
@@ -58,61 +29,20 @@ const SelectEmployeesDataTableProps = Vue.extend({
       type: Array as PropType<VREmployee[] | null>,
       default: null,
     },
-    duplicates: {
-      type: Array as PropType<string[] | null>,
-      default: null,
-    },
-    value: {
-      type: Array as PropType<(string | undefined)[]>,
-      default: () => [],
-    },
   },
 });
 @Component({
   components: {
-    ExpandedDataTableItem,
-    ErrorMessageAlert,
-    SortableDataTable,
-    SearchField,
+    VaccinationStatusChip,
+    MultiSelectDataTable,
   },
 })
 export default class SelectEmployeesDataTable extends SelectEmployeesDataTableProps {
-  get selection(): VREmployeeTableRow[] {
-    if (this.value.length <= 0) return [];
-    return this.tableRows.filter((row) => {
-      return (
-        row.raw.messageDataSelectId &&
-        this.value.indexOf(row.raw.messageDataSelectId) !== -1
-      );
-    });
-  }
-  set selection(rows: VREmployeeTableRow[]) {
-    const sel = rows.map((row) => row.raw.messageDataSelectId).filter((v) => v);
-    this.$emit("input", sel);
-  }
-  search = "";
-  expanded = [];
   get tableHeaders() {
-    const headers = getVREmployeeTableHeaders(true);
-    if (this.duplicates) {
-      headers.headers.splice(1, 0, {
-        text: "",
-        value: "note",
-        sortable: false,
-      });
-    }
-    return headers;
+    return getVREmployeeTableHeaders(true);
   }
-
   get tableRows(): VREmployeeTableRow[] {
     return getVREmployeeTableRows(this.items);
-  }
-
-  isDuplicate(item: VREmployeeTableRow): boolean {
-    return !!this.duplicates?.find((id) => item.raw.messageDataSelectId === id);
-  }
-  itemClass(item: VREmployeeTableRow): string {
-    return this.isDuplicate(item) ? "error-lighten-3" : "";
   }
 }
 </script>

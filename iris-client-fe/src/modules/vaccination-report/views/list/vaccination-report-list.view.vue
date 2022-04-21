@@ -3,7 +3,7 @@
     <v-card-title> Impfpflichtmeldungen </v-card-title>
     <v-card-text>
       <data-query-handler
-        @query:update="handleQueryUpdate"
+        @update:query="handleQueryUpdate"
         #default="{ query }"
       >
         <search-field v-model="query.search" />
@@ -13,7 +13,7 @@
           :headers="tableHeaders"
           :sort.sync="query.sort"
           :items="tableRows"
-          :loading="vrApi.state.loading"
+          :loading="fetchPageVaccinationReport.state.loading"
           :page.sync="query.page"
           :items-per-page.sync="query.size"
           :server-items-length="totalElements"
@@ -24,7 +24,7 @@
             <span class="text-pre-line"> {{ item.address }} </span>
           </template>
         </sortable-data-table>
-        <error-message-alert :errors="[vrApi.state.error]" />
+        <error-message-alert :errors="fetchPageVaccinationReport.state.error" />
       </data-query-handler>
     </v-card-text>
   </v-card>
@@ -53,19 +53,22 @@ import {
 })
 export default class VaccinationReportListView extends Vue {
   tableHeaders = getVaccinationReportTableHeaders();
-  vrApi = vaccinationReportApi.fetchPageVaccinationReport();
+  fetchPageVaccinationReport =
+    vaccinationReportApi.fetchPageVaccinationReport();
   handleQueryUpdate(newValue: DataQuery) {
     if (newValue) {
-      this.vrApi.execute(newValue);
+      this.fetchPageVaccinationReport.execute(newValue);
     } else {
-      this.vrApi.reset(["result"]);
+      this.fetchPageVaccinationReport.reset(["result"]);
     }
   }
   get tableRows() {
-    return getVaccinationReportTableRows(this.vrApi.state.result?.content);
+    return getVaccinationReportTableRows(
+      this.fetchPageVaccinationReport.state.result?.content
+    );
   }
   get totalElements(): number | undefined {
-    return this.vrApi.state.result?.totalElements;
+    return this.fetchPageVaccinationReport.state.result?.totalElements;
   }
   handleRowClick(row: { id?: string }) {
     if (row.id) {

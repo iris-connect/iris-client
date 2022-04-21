@@ -67,7 +67,7 @@ export default class DataQueryHandler extends DataQueryHandlerProps {
     if (this.routeControl) {
       this.updateLocation(query);
     }
-    this.$emit("query:update", query);
+    this.$emit("update:query", query);
   }
 
   updateLocation(query: DataQuery): void {
