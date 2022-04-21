@@ -46,6 +46,7 @@ import IrisMessageDataExportDialog from "@/views/iris-message-create/components/
 import _map from "lodash/map";
 import VaccinationReportDetailsComponent from "@/modules/vaccination-report/views/details/components/vaccination-report-details.component.vue";
 import { VREmployeeTableRow } from "@/modules/vaccination-report/services/mappedData";
+import { getDefaultDescription } from "@/modules/vaccination-report/modules/message-data/services/utils";
 
 @Component({
   components: {
@@ -68,7 +69,7 @@ export default class VaccinationReportDetailsView extends Mixins(
     const employees: string[] = _map(selection, "raw.messageDataSelectId");
     return {
       discriminator: IrisMessageDataDiscriminator.VaccinationReport,
-      description: "",
+      description: getDefaultDescription(this.vaccinationReport),
       payload: {
         report: this.vaccinationReport?.id || "",
         employees,

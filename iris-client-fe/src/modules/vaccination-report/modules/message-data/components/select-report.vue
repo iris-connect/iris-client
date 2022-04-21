@@ -25,8 +25,7 @@ import {
   getVaccinationReportTableRows,
 } from "@/modules/vaccination-report/services/mappedData";
 import SingleSelectQueryDataTable from "@/modules/iris-message/modules/message-data/components/single-select-query-data-table.vue";
-import { join } from "@/utils/misc";
-import { getFormattedDate } from "@/utils/date";
+import { getDefaultDescription } from "@/modules/vaccination-report/modules/message-data/services/utils";
 
 const SelectReportProps = Vue.extend({
   inheritAttrs: false,
@@ -56,10 +55,7 @@ export default class SelectReport extends SelectReportProps {
   handleInput(value: string) {
     if (!this.description) {
       const match = this.tableRows.find((row) => row.id === value);
-      const name = match?.facility?.name;
-      const reportedAt = getFormattedDate(match?.reportedAt, "L", "");
-      const description = name ? join([name, reportedAt], " ") : "";
-      this.$emit("update:description", description);
+      this.$emit("update:description", getDefaultDescription(match));
     }
   }
 
