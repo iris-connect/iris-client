@@ -2,10 +2,10 @@ package iris.client_bff.core.web.error;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
+import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.core.web.filter.ApplicationRequestSizeLimitFilter.BlockLimitExceededException;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
-import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.core.annotation.AnnotationUtils;

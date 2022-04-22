@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.core.alert.AlertService;
-import iris.client_bff.ui.messages.ErrorMessages;
+import iris.client_bff.core.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package iris.client_bff.config;
 
-import iris.client_bff.ui.messages.ErrorMessages;
+import iris.client_bff.core.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
