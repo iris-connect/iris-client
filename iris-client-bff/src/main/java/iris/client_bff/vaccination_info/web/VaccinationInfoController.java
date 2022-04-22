@@ -1,22 +1,16 @@
 package iris.client_bff.vaccination_info.web;
 
 import iris.client_bff.config.MapStructCentralConfig;
-import iris.client_bff.core.Sex;
 import iris.client_bff.core.validation.NoSignOfAttack;
-import iris.client_bff.core.web.dto.Address;
 import iris.client_bff.vaccination_info.VaccinationInfo;
 import iris.client_bff.vaccination_info.VaccinationInfo.Employee;
 import iris.client_bff.vaccination_info.VaccinationInfo.VaccinationInfoIdentifier;
 import iris.client_bff.vaccination_info.VaccinationInfoService;
 import iris.client_bff.vaccination_info.VaccinationStatus;
-import iris.client_bff.vaccination_info.VaccinationType;
 import lombok.RequiredArgsConstructor;
 
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -43,7 +37,7 @@ public class VaccinationInfoController {
 	private final VaccinationInfoMapper mapper;
 
 	@GetMapping()
-	public Page<VaccinationReportDto> getVaccinationInfos(
+	public Page<VaccinationInfoDto.VaccinationReport> getVaccinationInfos(
 			@RequestParam Optional<@NoSignOfAttack String> search,
 			Pageable pageable) {
 
@@ -73,65 +67,28 @@ public class VaccinationInfoController {
 	}
 
 	@GetMapping("/{id}")
-	public VaccinationReportDetailsDto getDetails(@PathVariable VaccinationInfoIdentifier id) {
+	public VaccinationInfoDto.VaccinationReportDetails getDetails(@PathVariable VaccinationInfoIdentifier id) {
 
 		return service.find(id)
 				.map(mapper::toVaccinationReportDetailsDto)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid identifier"));
 	}
 
-	record VaccinationReportDto(
-			String id,
-			FacilityDto facility,
-			Instant reportedAt,
-			Map<VaccinationStatus, Long> vaccinationStatusCount) {}
-
-	record VaccinationReportDetailsDto(
-			String id,
-			FacilityDto facility,
-			Instant reportedAt,
-			Map<VaccinationStatus, Long> vaccinationStatusCount,
-			Set<EmployeeDto> employees) {}
-
-	record FacilityDto(
-
-			String name,
-			Address address,
-			ContactPersonDto contactPerson) {}
-
-	record ContactPersonDto(
-
-			String firstName,
-			String lastName,
-			String eMail,
-			String phone) {}
-
-	record EmployeeDto(
-
-			String firstName,
-			String lastName,
-			LocalDate dateOfBirth,
-			Sex sex,
-			Address address,
-			String phone,
-			String eMail,
-			VaccinationType vaccination,
-			VaccinationStatus vaccinationStatus) {}
-
 	@Mapper(config = MapStructCentralConfig.class)
 	interface VaccinationInfoMapper {
 
 		@Mapping(target = "reportedAt", source = "lastModifiedAt")
-		VaccinationReportDto toVaccinationReportDto(VaccinationInfo vaccInfo);
+		VaccinationInfoDto.VaccinationReport toVaccinationReportDto(VaccinationInfo vaccInfo);
 
 		@Mapping(target = "reportedAt", source = "lastModifiedAt")
-		VaccinationReportDetailsDto toVaccinationReportDetailsDto(VaccinationInfo vaccInfo);
+		VaccinationInfoDto.VaccinationReportDetails toVaccinationReportDetailsDto(VaccinationInfo vaccInfo);
 
 		@Mapping(target = "eMail", source = "EMail")
-		ContactPersonDto toContactPersonDto(VaccinationInfo.ContactPerson contactPerson);
+		VaccinationInfoDto.ContactPerson toContactPersonDto(VaccinationInfo.ContactPerson contactPerson);
 
 		@Mapping(target = "eMail", source = "email")
-		EmployeeDto toEmployeeDto(Employee employee);
+		@Mapping(target = "messageDataSelectId", source = "id")
+		VaccinationInfoDto.Employee toEmployeeDto(Employee employee);
 
 		default Map<VaccinationStatus, Long> vaccinationStatusCount(VaccinationInfo.VaccinationStatusCount statusCount) {
 

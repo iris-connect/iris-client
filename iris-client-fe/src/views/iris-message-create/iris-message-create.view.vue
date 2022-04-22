@@ -83,9 +83,15 @@
                     <iris-message-data-select-dialog
                       :value="dataAttachment"
                       @input="updateDataAttachment($event, index)"
+                      :disabled="disabled"
                     >
                       <template #activator="{ attrs, on }">
-                        <v-btn icon v-bind="attrs" v-on="on">
+                        <v-btn
+                          icon
+                          v-bind="attrs"
+                          v-on="on"
+                          :disabled="disabled"
+                        >
                           <v-icon> mdi-pencil </v-icon>
                         </v-btn>
                       </template>
@@ -96,7 +102,13 @@
                       @confirm="removeDataAttachment(index)"
                     >
                       <template #activator="{ attrs, on }">
-                        <v-btn v-bind="attrs" v-on="on" icon color="error">
+                        <v-btn
+                          v-bind="attrs"
+                          v-on="on"
+                          icon
+                          color="error"
+                          :disabled="disabled"
+                        >
                           <v-icon> mdi-delete </v-icon>
                         </v-btn>
                       </template>
@@ -105,7 +117,10 @@
                 </v-row>
                 <v-divider class="mb-5" />
               </div>
-              <iris-message-data-select-dialog @input="addDataAttachment" />
+              <iris-message-data-select-dialog
+                @input="addDataAttachment"
+                :disabled="disabled"
+              />
             </v-col>
           </v-row>
         </v-card-text>
