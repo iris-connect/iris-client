@@ -1,6 +1,6 @@
 package iris.client_bff.vaccination_info.message.dto;
 
-import java.util.List;
+import java.util.Set;
 
 import iris.client_bff.vaccination_info.web.VaccinationInfoDto;
 import lombok.Builder;
@@ -15,12 +15,12 @@ public class ImportSelectionViewPayloadDto {
 	@Data
 	@Builder
 	public static class Selectables {
-		List<VaccinationInfoDto.Employee> employees;
+		Set<VaccinationInfoDto.Employee> employees;
 	}
 
 	@Data
 	@Builder
 	public static class Duplicates {
-		List<String> employees;
+		Set<String> employees;
 	}
 }

@@ -1,6 +1,6 @@
 package iris.client_bff.vaccination_info.message.dto;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -13,6 +13,6 @@ public class ImportSelectionDto {
 
 	@Valid
 	@NotEmpty
-	List<@NotBlank String> employees;
+	Set<@NotBlank String> employees;
 
 }
