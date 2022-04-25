@@ -28,7 +28,7 @@ jobs:
           
 # The upload is currently not working, but I'm leaving it in in case a later update to the Trivy action fixes it.
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
