@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.events.message.EventMessageDataProcessor;
 import iris.client_bff.events.message.EventMessageTestData;
 import iris.client_bff.iris_messages.IrisMessageData;
 import iris.client_bff.iris_messages.IrisMessageDataProcessor;
@@ -47,7 +48,7 @@ class IrisMessageDataControllerTest {
 	private IrisMessageDataViewProvider irisMessageDataViewProvider;
 
 	@MockBean
-	IrisMessageDataProcessor irisMessageDataProcessor;
+	EventMessageDataProcessor irisMessageDataProcessor;
 
 	@MockBean
 	IrisMessageDataProcessors irisMessageDataProcessors;

@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
+import iris.client_bff.events.message.EventMessageDataProcessor;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
 import iris.client_bff.iris_messages.IrisMessageDataProcessor;
@@ -55,7 +56,7 @@ class IrisMessageControllerTest {
 	private IrisMessageBuilderWeb irisMessageBuilder;
 
 	@MockBean
-	IrisMessageDataProcessor irisMessageDataProcessor;
+	EventMessageDataProcessor irisMessageDataProcessor;
 
 	@MockBean
 	IrisMessageDataProcessors irisMessageDataProcessors;
