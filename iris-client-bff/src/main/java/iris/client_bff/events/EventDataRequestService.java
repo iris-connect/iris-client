@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -69,8 +68,8 @@ public class EventDataRequestService {
 		return search(null, search, pageable);
 	}
 
-	public Optional<EventDataRequest> findById(UUID uuid) {
-		return repository.findById(DataRequestIdentifier.of(uuid));
+	public Optional<EventDataRequest> findById(DataRequestIdentifier id) {
+		return repository.findById(id);
 	}
 
 	public EventDataRequest save(EventDataRequest request) {

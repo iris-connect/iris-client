@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
 public class IndexCaseInsertDTO {
-	
+
 	@NoSignOfAttack
 	private String comment;
 

@@ -1,8 +1,7 @@
 package iris.client_bff.events.eps;
 
+import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.web.dto.GuestList;
-
-import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -22,6 +21,6 @@ public interface EventDataController {
 	})
 	String submitGuestList(
 			@JsonRpcParam(value = "_client") @Valid JsonRpcClientDto client,
-			@JsonRpcParam(value = "dataAuthorizationToken") UUID dataAuthorizationToken,
+			@JsonRpcParam(value = "dataAuthorizationToken") DataRequestIdentifier dataAuthorizationToken,
 			@JsonRpcParam(value = "guestList") @NotNull @Valid GuestList guestList);
 }

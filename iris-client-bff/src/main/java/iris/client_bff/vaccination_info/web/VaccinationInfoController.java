@@ -119,7 +119,7 @@ public class VaccinationInfoController {
 			VaccinationStatus vaccinationStatus) {}
 
 	@Mapper(config = MapStructCentralConfig.class)
-	static interface VaccinationInfoMapper {
+	interface VaccinationInfoMapper {
 
 		@Mapping(target = "reportedAt", source = "lastModifiedAt")
 		VaccinationReportDto toVaccinationReportDto(VaccinationInfo vaccInfo);

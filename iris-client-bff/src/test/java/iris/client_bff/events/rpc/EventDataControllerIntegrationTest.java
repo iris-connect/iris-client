@@ -21,7 +21,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.UUID;
 
 import javax.validation.ConstraintViolationException;
 
@@ -52,7 +51,7 @@ class EventDataControllerIntegrationTest {
 		Instant requestStart = Instant.now().minus(14, ChronoUnit.DAYS);
 		Instant requestEnd = Instant.now();
 		var providerId = faker.idNumber().valid();
-		var location = new Location(new LocationIdentifier(), providerId, faker.idNumber().valid(), null,
+		var location = new Location(LocationIdentifier.random(), providerId, faker.idNumber().valid(), null,
 				null, null, null, null, null, null, null, null, null);
 
 		var dataRequest = EventDataRequest.builder()
@@ -82,7 +81,7 @@ class EventDataControllerIntegrationTest {
 				.build();
 
 		// test
-		var result = controller.submitGuestList(clientDto, UUID.fromString(dataRequest.getId().toString()), guestList);
+		var result = controller.submitGuestList(clientDto, dataRequest.getId(), guestList);
 		assertEquals("OK", result);
 
 		var submissionList = submissionRepo.findAllByRequest(dataRequest).toList();
@@ -122,7 +121,7 @@ class EventDataControllerIntegrationTest {
 
 		// test
 		var e = assertThrows(ConstraintViolationException.class,
-				() -> controller.submitGuestList(clientDto, UUID.fromString(dataRequest.getId().toString()), guestList));
+				() -> controller.submitGuestList(clientDto, dataRequest.getId(), guestList));
 
 		assertThat(e.getMessage()).contains("must not be blank")
 				.contains("dataProvider.address.city");
@@ -141,7 +140,7 @@ class EventDataControllerIntegrationTest {
 		requestRepo.save(dataRequest);
 
 		// prepare data
-		var token = dataRequest.getId().toString();
+		var token = dataRequest.getId();
 		var clientDto = new JsonRpcClientDto();
 		clientDto.setName(refId);
 
@@ -159,7 +158,7 @@ class EventDataControllerIntegrationTest {
 
 		// test
 		assertThrows(ConstraintViolationException.class, () -> {
-			controller.submitGuestList(clientDto, UUID.fromString(token), guestList);
+			controller.submitGuestList(clientDto, token, guestList);
 		});
 	}
 }

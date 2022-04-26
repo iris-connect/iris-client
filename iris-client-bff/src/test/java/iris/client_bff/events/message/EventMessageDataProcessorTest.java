@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import iris.client_bff.config.JacksonConfig;
 import iris.client_bff.core.validation.AttackDetector;
 import iris.client_bff.events.EventDataRequest;
+import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.EventDataRequestsDataInitializer;
 import iris.client_bff.events.EventDataSubmissionRepository;
@@ -18,7 +19,6 @@ import iris.client_bff.events.web.dto.GuestList;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.validation.Validator;
 
@@ -142,7 +142,7 @@ public class EventMessageDataProcessorTest {
 	@Test
 	void importPayloadAndUpdate() {
 
-		when(this.requestService.findById(any(UUID.class)))
+		when(this.requestService.findById(any(DataRequestIdentifier.class)))
 				.thenReturn(Optional.of(this.eventMessageTestData.MOCK_EVENT_DATA_REQUEST));
 		when(this.submissionRepository.findAllByRequest(any(EventDataRequest.class)))
 				.thenReturn(Streamable.of(this.eventMessageTestData.MOCK_EVENT_DATA_SUBMISSION));
@@ -151,10 +151,10 @@ public class EventMessageDataProcessorTest {
 
 		this.messageDataProcessor.importPayload(
 				this.eventMessageTestData.MOCK_EVENT_MESSAGE_DATA_PAYLOAD_STRING,
-				this.eventMessageTestData.MOCK_EVENT_DATA_REQUEST.getId().toUUID(),
+				this.eventMessageTestData.MOCK_EVENT_DATA_REQUEST.getId().toUuid(),
 				this.eventMessageTestData.MOCK_EVENT_MESSAGE_IMPORT_SELECTION_STRING);
 
-		verify(this.requestService).findById(any(UUID.class));
+		verify(this.requestService).findById(any(DataRequestIdentifier.class));
 		verify(this.submissionRepository).findAllByRequest(any(EventDataRequest.class));
 		verify(this.submissionRepository).save(any(EventDataSubmission.class));
 	}
@@ -171,16 +171,16 @@ public class EventMessageDataProcessorTest {
 	@Test
 	void getImportSelectionViewPayload() {
 
-		when(this.requestService.findById(any(UUID.class)))
+		when(this.requestService.findById(any(DataRequestIdentifier.class)))
 				.thenReturn(Optional.of(this.eventMessageTestData.MOCK_EVENT_DATA_REQUEST));
 		when(this.submissionRepository.findAllByRequest(any(EventDataRequest.class)))
 				.thenReturn(Streamable.of(this.eventMessageTestData.MOCK_EVENT_DATA_SUBMISSION));
 
 		var result = this.messageDataProcessor.getImportSelectionViewPayload(
 				this.eventMessageTestData.MOCK_EVENT_MESSAGE_DATA_PAYLOAD_STRING,
-				this.eventMessageTestData.MOCK_EVENT_DATA_REQUEST.getId().toUUID());
+				this.eventMessageTestData.MOCK_EVENT_DATA_REQUEST.getId().toUuid());
 
-		verify(this.requestService).findById(any(UUID.class));
+		verify(this.requestService).findById(any(DataRequestIdentifier.class));
 		verify(this.submissionRepository).findAllByRequest(any(EventDataRequest.class));
 
 		assertEquals(result, this.eventMessageTestData.MOCK_EVENT_MESSAGE_IMPORT_SELECTION_VIEW_PAYLOAD);

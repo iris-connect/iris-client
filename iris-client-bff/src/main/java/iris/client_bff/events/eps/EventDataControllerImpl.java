@@ -6,12 +6,12 @@ import static org.apache.commons.lang3.StringUtils.*;
 import iris.client_bff.config.SuspiciouslyEventRequestProperties;
 import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.core.validation.AttackDetector;
+import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataSubmissionService;
 import iris.client_bff.events.web.dto.GuestList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,8 @@ public class EventDataControllerImpl implements EventDataController {
 	private final SuspiciouslyEventRequestProperties suspiciouslyRequest;
 
 	@Override
-	public String submitGuestList(JsonRpcClientDto client, UUID dataAuthorizationToken, GuestList guestList) {
+	public String submitGuestList(JsonRpcClientDto client, DataRequestIdentifier dataAuthorizationToken,
+			GuestList guestList) {
 
 		log.trace("Start submission {}", dataAuthorizationToken);
 

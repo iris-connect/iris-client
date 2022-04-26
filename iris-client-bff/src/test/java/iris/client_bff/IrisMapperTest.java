@@ -2,7 +2,6 @@ package iris.client_bff;
 
 import iris.client_bff.IrisMapperTest.MapperTestContextBootstrapper;
 import iris.client_bff.IrisMapperTest.MapperTypeExcludeFilter;
-import iris.client_bff.core.AggregateMapper;
 import iris.client_bff.core.ConversionServiceAdapter;
 import iris.client_bff.core.MetadataMapper;
 
@@ -57,7 +56,7 @@ import org.springframework.test.context.web.WebMergedContextConfiguration;
  * (if necessary also:
  * {@code when(userService.findByUuid(any())).thenReturn(Optional.of(new UserAccount("admin", "admin", "admin", "admin", UserRole.ADMIN)));
  * )}
- * 
+ *
  * @author Jens Kutzsche
  */
 @Target(ElementType.TYPE)
@@ -78,7 +77,7 @@ public @interface IrisMapperTest {
 	/**
 	 * Properties in form {@literal key=value} that should be added to the Spring {@link Environment} before the test
 	 * runs.
-	 * 
+	 *
 	 * @return the properties to add
 	 * @since 2.1.0
 	 */
@@ -87,7 +86,7 @@ public @interface IrisMapperTest {
 	/**
 	 * Specifies the mappers to test. This is an alias of {@link #mappers()} which can be used for brevity if no other
 	 * attributes are defined. See {@link #mappers()} for details.
-	 * 
+	 *
 	 * @see #mappers()
 	 * @return the mappers to test
 	 */
@@ -97,7 +96,7 @@ public @interface IrisMapperTest {
 	/**
 	 * Specifies the mappers to test. May be left blank if all MapStruct {@code @Mapper} beans should be added to the
 	 * application context.
-	 * 
+	 *
 	 * @see #value()
 	 * @return the mappers to test
 	 */
@@ -106,7 +105,7 @@ public @interface IrisMapperTest {
 
 	/**
 	 * Determines if default filtering should be used with {@link SpringBootApplication @SpringBootApplication}.
-	 * 
+	 *
 	 * @return if default filters should be used
 	 */
 	boolean useDefaultFilters() default true;
@@ -135,8 +134,7 @@ public @interface IrisMapperTest {
 				GenericConverter.class,
 				GenericConversionService.class,
 				ConversionServiceAdapter.class,
-				MetadataMapper.class,
-				AggregateMapper.class);
+				MetadataMapper.class);
 
 		private final Class<?>[] mappers;
 

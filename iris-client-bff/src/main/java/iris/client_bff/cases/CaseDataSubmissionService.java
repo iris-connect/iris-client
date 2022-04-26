@@ -2,6 +2,7 @@ package iris.client_bff.cases;
 
 import static iris.client_bff.cases.CaseDataRequest.Status.*;
 
+import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
 import iris.client_bff.cases.eps.dto.Contacts;
@@ -54,8 +55,7 @@ public class CaseDataSubmissionService {
 		// Todo check client.getName() vs. providerIdø
 
 		return requestRepo
-				.findByIdOrDataAuthorizationToken(CaseDataRequest.DataRequestIdentifier.of(dataAuthorizationToken),
-						dataAuthorizationToken)
+				.findByIdOrDataAuthorizationToken(DataRequestIdentifier.of(dataAuthorizationToken), dataAuthorizationToken)
 				.map(dataRequest -> {
 
 					var requestStatus = dataRequest.getStatus();

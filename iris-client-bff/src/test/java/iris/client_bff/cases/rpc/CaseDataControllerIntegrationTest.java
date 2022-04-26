@@ -147,7 +147,7 @@ class CaseDataControllerIntegrationTest {
 		requestRepo.save(dataRequest);
 
 		// prepare data
-		var token = dataRequest.getId().toString();
+		var token = dataRequest.getId();
 
 		var contactPersonList = Stream.generate(() -> dtoSupplier.getContactPersonList(0, 2))
 				.flatMap(List<ContactPerson>::stream)
@@ -164,7 +164,7 @@ class CaseDataControllerIntegrationTest {
 
 		// test
 		assertThrows(ResponseStatusException.class, () -> {
-			controller.submitContactAndEventData(token, contacts, events, dataProvider);
+			controller.submitContactAndEventData(token.toString(), contacts, events, dataProvider);
 		});
 	}
 
@@ -179,7 +179,7 @@ class CaseDataControllerIntegrationTest {
 		requestRepo.save(dataRequest);
 
 		// prepare data
-		var token = dataRequest.getId().toString();
+		var token = dataRequest.getId();
 
 		var contactPersonList = dtoSupplier.getContactPersonList(0, 2);
 		var contacts = Contacts.builder().contactPersons(contactPersonList).startDate(requestStart).endDate(requestEnd)
@@ -196,7 +196,7 @@ class CaseDataControllerIntegrationTest {
 
 		// test
 		assertThrows(ResponseStatusException.class, () -> {
-			controller.submitContactAndEventData(token, contacts, events, dataProvider);
+			controller.submitContactAndEventData(token.toString(), contacts, events, dataProvider);
 		});
 	}
 

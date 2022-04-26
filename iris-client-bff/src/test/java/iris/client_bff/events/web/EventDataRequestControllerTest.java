@@ -7,10 +7,12 @@ import static org.mockito.Mockito.*;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
 import iris.client_bff.events.EventDataRequest;
+import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.model.Location;
+import iris.client_bff.events.model.Location.LocationIdentifier;
 import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
@@ -18,7 +20,6 @@ import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -169,7 +170,7 @@ class EventDataRequestControllerTest {
 		dataRequestUpdated.setRefId("refIdSecond");
 		dataRequestUpdated.setStatus(Status.ABORTED);
 
-		Mockito.when(dataRequestManagement.findById(any(UUID.class))).thenReturn(Optional.of(dataRequest));
+		Mockito.when(dataRequestManagement.findById(any(DataRequestIdentifier.class))).thenReturn(Optional.of(dataRequest));
 
 		EventUpdateDTO patch = EventUpdateDTO.builder()
 				.name("new name")
@@ -226,7 +227,7 @@ class EventDataRequestControllerTest {
 
 		Mockito.when(dataRequestManagement.createDataRequest(any())).thenReturn(dataRequest);
 
-		Mockito.when(dataRequestManagement.findById(any(UUID.class))).thenReturn(Optional.of(dataRequest));
+		Mockito.when(dataRequestManagement.findById(any(DataRequestIdentifier.class))).thenReturn(Optional.of(dataRequest));
 
 		mockMvc
 				.perform(
@@ -250,7 +251,7 @@ class EventDataRequestControllerTest {
 
 	private Location getTestLocation() {
 		Location location = new Location();
-		location.setId(new Location.LocationIdentifier());
+		location.setId(LocationIdentifier.random());
 		location.setName("FC Darmstadt");
 		location.setContactAddressCity("Hintertupfingen");
 		location.setContactAddressStreet("Testallee 42");
