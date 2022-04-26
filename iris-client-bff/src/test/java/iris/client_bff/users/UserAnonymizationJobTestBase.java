@@ -6,7 +6,6 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import iris.client_bff.MemoryAppender;
-import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.core.IrisDateTimeProvider;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestRepository;
@@ -22,12 +21,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @author Jens Kutzsche
  */
-public class UserAnonymizationJobTestBase {
+class UserAnonymizationJobTestBase {
 
 	protected final UserAccountsRepository users;
 	private final IrisDateTimeProvider dateTimeProvider;
@@ -63,7 +63,7 @@ public class UserAnonymizationJobTestBase {
 
 		// set security context to include correct createdBy metadata
 		SecurityContextHolder.getContext()
-				.setAuthentication(new UserAccountAuthentication(user, true, null));
+				.setAuthentication(new UsernamePasswordAuthenticationToken(user, null, null));
 
 		// Create second user to verify if the reference in this entity will be ignored.
 		user2 = users.save(createUser("test2"));
@@ -131,7 +131,7 @@ public class UserAnonymizationJobTestBase {
 
 		// set security context to include correct createdBy metadata
 		SecurityContextHolder.getContext()
-				.setAuthentication(new UserAccountAuthentication(user, true, null));
+				.setAuthentication(new UsernamePasswordAuthenticationToken(user, null, null));
 
 		// set time
 		var timeShift = Duration.ofDays(durationDays);

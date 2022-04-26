@@ -8,18 +8,12 @@ import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.core.web.filter.ApplicationRequestSizeLimitFilter.BlockLimitExceededException;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.RequestDispatcher;
 import javax.validation.ConstraintViolationException;
 
-import org.apache.commons.lang3.BooleanUtils;
-import org.springframework.boot.autoconfigure.web.ErrorProperties;
-import org.springframework.boot.autoconfigure.web.ErrorProperties.IncludeAttribute;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.boot.web.error.ErrorAttributeOptions;
-import org.springframework.boot.web.error.ErrorAttributeOptions.Include;
-import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,22 +22,17 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@Slf4j
 @ControllerAdvice
+@RequiredArgsConstructor
+@Slf4j
 class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-	private final ErrorProperties errorProperties;
-	private final ErrorAttributes errorAttributes;
-
-	GlobalControllerExceptionHandler(ServerProperties serverProperties, ErrorAttributes errorAttributes) {
-
-		this.errorProperties = serverProperties.getError();
-		this.errorAttributes = errorAttributes;
-	}
+	private final IrisErrorAttributes errorAttributes;
 
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
@@ -51,8 +40,12 @@ class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
 		request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, status.value(), SCOPE_REQUEST);
 
+		if (request instanceof ServletWebRequest r) {
+			request.setAttribute(RequestDispatcher.ERROR_REQUEST_URI, r.getRequest().getRequestURI(), SCOPE_REQUEST);
+		}
+
 		if (body == null) {
-			body = errorAttributes.getErrorAttributes(request, getErrorAttributeOptions(request));
+			body = errorAttributes.getErrorAttributes(request);
 		}
 
 		return super.handleExceptionInternal(ex, body, headers, status, request);
@@ -77,21 +70,27 @@ class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(ConstraintViolationException.class)
-	ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex, WebRequest request) {
+	ResponseEntity<?> handleConstraintViolation(ConstraintViolationException ex, WebRequest request) {
 		var status = HttpStatus.BAD_REQUEST;
 		return handleExceptionInternal(ex, null, new HttpHeaders(), status, request);
 	}
 
-	@ExceptionHandler({ ResponseStatusException.class, AccessDeniedException.class, AuthenticationException.class })
-	void rethrowHandledFrameworkException(Exception ex) throws Exception {
-		// let the framework handle this exceptions
-		throw ex;
+	@ExceptionHandler(AuthenticationException.class)
+	ResponseEntity<?> handleAccessDeniedException(AuthenticationException ex, WebRequest request) {
+		var status = HttpStatus.UNAUTHORIZED;
+		return handleExceptionInternal(ex, null, new HttpHeaders(), status, request);
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) throws Exception {
+		var status = HttpStatus.FORBIDDEN;
+		return handleExceptionInternal(ex, null, new HttpHeaders(), status, request);
 	}
 
 	@ExceptionHandler(Exception.class)
 	ResponseEntity<?> handleExceptionFallback(Exception ex, WebRequest request) throws Exception {
 		// If the exception is annotated with @ResponseStatus rethrow it and let the framework handle it.
-		if (isResponseStatusAnnotated(ex)) {
+		if (isResponseStatusAnnotated(ex) || ex instanceof ResponseStatusException) {
 			throw ex;
 		}
 
@@ -99,37 +98,6 @@ class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
 		var status = HttpStatus.INTERNAL_SERVER_ERROR;
 		return handleExceptionInternal(ex, null, new HttpHeaders(), status, request);
-	}
-
-	private ErrorAttributeOptions getErrorAttributeOptions(WebRequest request) {
-
-		var options = ErrorAttributeOptions.defaults();
-
-		if (this.errorProperties.isIncludeException()) {
-			options = options.including(Include.EXCEPTION);
-		}
-		if (isIncludeAttribute(errorProperties.getIncludeStacktrace(), request, "trace")) {
-			options = options.including(Include.STACK_TRACE);
-		}
-		if (isIncludeAttribute(errorProperties.getIncludeMessage(), request, "message")) {
-			options = options.including(Include.MESSAGE);
-		}
-		if (isIncludeAttribute(errorProperties.getIncludeBindingErrors(), request, "errors")) {
-			options = options.including(Include.BINDING_ERRORS);
-		}
-		return options;
-	}
-
-	private boolean isIncludeAttribute(IncludeAttribute attribute, WebRequest request, String parameterName) {
-
-		switch (attribute) {
-			case ALWAYS:
-				return true;
-			case ON_PARAM:
-				return BooleanUtils.toBoolean(request.getParameter(parameterName));
-			default:
-				return false;
-		}
 	}
 
 	private String getInternalMessage(Exception ex) {

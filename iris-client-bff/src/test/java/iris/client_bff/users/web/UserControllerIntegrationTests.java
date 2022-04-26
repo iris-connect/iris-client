@@ -113,7 +113,7 @@ class UserControllerIntegrationTests {
 				.patch(DETAILS_URL, UUID.randomUUID())
 
 				.then()
-				.status(FORBIDDEN);
+				.status(UNAUTHORIZED);
 	}
 
 	@Test
@@ -348,7 +348,7 @@ class UserControllerIntegrationTests {
 						"lastName", is("ABC"),
 						"userName", is("admin_abc"),
 						"role", is("ADMIN"),
-						"locked", is(TRUE));
+						"locked", is(FALSE));
 
 		assertThat(users.count()).isEqualTo(count);
 

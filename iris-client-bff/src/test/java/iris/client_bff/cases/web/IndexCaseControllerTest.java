@@ -101,7 +101,7 @@ class IndexCaseControllerTest {
 	@Test
 	@Order(1)
 	void endpointShouldBeProtected() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(status().isForbidden()).andReturn();
+		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(status().isUnauthorized());
 	}
 
 	@Test

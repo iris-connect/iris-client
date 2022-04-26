@@ -55,7 +55,7 @@ class AppStatusControllerTest {
 	void endpointShouldBeProtected() throws Exception {
 
 		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))
-				.andExpect(status().isForbidden());
+				.andExpect(status().isUnauthorized());
 	}
 
 	@Test

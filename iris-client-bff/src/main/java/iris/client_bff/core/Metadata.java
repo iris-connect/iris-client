@@ -1,6 +1,7 @@
 package iris.client_bff.core;
 
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -18,8 +19,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 /**
  * @author Jens Kutzsche
  */
-@Getter
 @Embeddable
+@Getter
+@ToString
 public class Metadata {
 
 	@CreatedDate

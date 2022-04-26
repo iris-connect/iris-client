@@ -69,7 +69,7 @@ class VaccinationInfoControllerIntegrationTest {
 				.get(BASE_URL)
 
 				.then()
-				.status(FORBIDDEN);
+				.status(UNAUTHORIZED);
 	}
 
 	@WithAnonymousUser
@@ -81,7 +81,7 @@ class VaccinationInfoControllerIntegrationTest {
 				.get(DETAILS_URL, UUID.randomUUID())
 
 				.then()
-				.status(FORBIDDEN);
+				.status(UNAUTHORIZED);
 	}
 
 	@Test

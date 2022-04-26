@@ -5,10 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,7 +17,6 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -32,6 +29,9 @@ class UserServiceTests {
 	@Mock
 	UserAccountsRepository userAccountsRepository;
 
+	@Mock(lenient = true)
+	AuthenticatedUserAware authenticationManager;
+
 	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	UserService userDetailsService;
@@ -41,14 +41,9 @@ class UserServiceTests {
 	UserAccount admin = userAccountAdmin();
 	UserAccount user = spy(userAccountUser());
 
-	UserAccountAuthentication adminAuth = new UserAccountAuthentication(admin, true,
-			List.of(new SimpleGrantedAuthority("ADMIN")));
-	UserAccountAuthentication userAuth = new UserAccountAuthentication(user, true,
-			List.of(new SimpleGrantedAuthority("USER")));
-
 	@BeforeEach
 	public void init() {
-		userDetailsService = new UserService(userAccountsRepository, passwordEncoder);
+		userDetailsService = new UserService(userAccountsRepository, passwordEncoder, authenticationManager);
 		reset(user);
 	}
 
@@ -58,7 +53,7 @@ class UserServiceTests {
 		mockUserNotFound();
 
 		assertThrows(RuntimeException.class,
-				() -> userDetailsService.update(notFound, null, null, null, null, null, null, null));
+				() -> userDetailsService.update(notFound, null, null, null, null, null, null));
 	}
 
 	@Test
@@ -67,7 +62,7 @@ class UserServiceTests {
 		mockAdminFound();
 
 		assertThrows(RuntimeException.class,
-				() -> userDetailsService.update(admin.getId(), userAuth, null, null, null, null, null, null));
+				() -> userDetailsService.update(admin.getId(), null, null, null, null, null, null));
 	}
 
 	@Test
@@ -76,7 +71,7 @@ class UserServiceTests {
 		mockUserFound();
 
 		assertThrows(RuntimeException.class,
-				() -> userDetailsService.update(user.getId(), userAuth, null, null, "new", null, null, null));
+				() -> userDetailsService.update(user.getId(), null, null, "new", null, null, null));
 	}
 
 	@Test
@@ -85,26 +80,28 @@ class UserServiceTests {
 		mockUserFound();
 
 		assertThrows(RuntimeException.class,
-				() -> userDetailsService.update(user.getId(), userAuth, null, null, null, null, UserRole.ADMIN, null));
+				() -> userDetailsService.update(user.getId(), null, null, null, null, UserRole.ADMIN, null));
 	}
 
 	@Test
 	void fails_lastAdmin_changeRole() {
 
+		currentUserIsTheAdmin();
 		mockAdminFound();
 		mockCountLastAdmin();
 
 		assertThrows(RuntimeException.class,
-				() -> userDetailsService.update(admin.getId(), adminAuth, null, null, null, null, UserRole.USER, null));
+				() -> userDetailsService.update(admin.getId(), null, null, null, null, UserRole.USER, null));
 	}
 
 	@Test
 	void ok_admin_changeNothing() {
 
+		currentUserIsTheAdmin();
 		mockUserFound();
 		mockSaveUser();
 
-		userDetailsService.update(user.getId(), adminAuth, null, null, null, null, null, null);
+		userDetailsService.update(user.getId(), null, null, null, null, null, null);
 
 		verify(userAccountsRepository).save(user);
 		verify(user, times(2)).getId();
@@ -115,10 +112,11 @@ class UserServiceTests {
 	@Test
 	void ok_admin_changeAll() {
 
+		currentUserIsTheAdmin();
 		mockUserFound();
 		mockSaveUser();
 
-		var ret = userDetailsService.update(user.getId(), adminAuth, "ln", "fn", "un", "pw", UserRole.ADMIN, Boolean.TRUE);
+		var ret = userDetailsService.update(user.getId(), "ln", "fn", "un", "pw", UserRole.ADMIN, Boolean.TRUE);
 
 		assertThat(ret).extracting("firstName", "lastName", "userName", "role")
 				.containsExactly("fn", "ln", "un", UserRole.ADMIN);
@@ -132,18 +130,19 @@ class UserServiceTests {
 	@Test
 	void ok_tokenInvalidateOnRigthChanges() {
 
+		currentUserIsTheAdmin();
 		mockUserFound();
 		mockSaveUser();
 
-		userDetailsService.update(user.getId(), adminAuth, null, null, "un", null, null, null);
+		userDetailsService.update(user.getId(), null, null, "un", null, null, null);
 
 		verify(user).markLoginIncompatiblyUpdated();
 
-		userDetailsService.update(user.getId(), adminAuth, null, null, null, "pw", null, null);
+		userDetailsService.update(user.getId(), null, null, null, "pw", null, null);
 
 		verify(user, times(2)).markLoginIncompatiblyUpdated();
 
-		userDetailsService.update(user.getId(), adminAuth, null, null, null, null, UserRole.ADMIN, null);
+		userDetailsService.update(user.getId(), null, null, null, null, UserRole.ADMIN, null);
 
 		verify(user, times(3)).markLoginIncompatiblyUpdated();
 	}
@@ -177,13 +176,14 @@ class UserServiceTests {
 	@Test // for iris-backlog#235
 	void ok_deleteById() {
 
+		currentUserIsTheAdmin();
 		mockUserFound();
 		var userCaptor = ArgumentCaptor.forClass(UserAccount.class);
 
 		var id = user.getId();
 		var userName = user.getUserName();
 
-		userDetailsService.deleteById(id, "other");
+		userDetailsService.deleteById(id);
 
 		verify(userAccountsRepository).findUserById(id);
 		verify(userAccountsRepository).save(userCaptor.capture());
@@ -218,6 +218,11 @@ class UserServiceTests {
 		account.setRole(UserRole.USER);
 
 		return account;
+	}
+
+	private void currentUserIsTheAdmin() {
+		when(authenticationManager.getCurrentUser()).thenReturn(Optional.of(admin));
+		when(authenticationManager.isAdmin()).thenReturn(true);
 	}
 
 	private void mockUserNotFound() {

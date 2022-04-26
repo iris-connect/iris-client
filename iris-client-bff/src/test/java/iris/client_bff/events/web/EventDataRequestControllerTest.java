@@ -3,6 +3,7 @@ package iris.client_bff.events.web;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
@@ -69,9 +70,8 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	public void endpointShouldBeProtected() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(MockMvcResultMatchers.status().isForbidden())
-				.andReturn();
+	void endpointShouldBeProtected() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(status().isUnauthorized());
 	}
 
 	@Test
