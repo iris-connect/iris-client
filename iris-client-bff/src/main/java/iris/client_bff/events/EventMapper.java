@@ -8,7 +8,6 @@ import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
 import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.events.web.dto.GuestListDataProvider;
 
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -37,13 +36,12 @@ public interface EventMapper {
 	GuestListDataProvider toGuestListDataProviderDto(
 			iris.client_bff.events.model.GuestListDataProvider guestListDataProvider);
 
-	@InheritInverseConfiguration
 	iris.client_bff.events.model.GuestListDataProvider fromGuestListDataProviderDto(
 			GuestListDataProvider guestListDataProvider);
 
 	Guest toGuestDto(iris.client_bff.events.model.Guest guest);
 
-	@InheritInverseConfiguration(name = "toGuestDto")
+	@Mapping(target = "guestId", expression = "java(UUID.randomUUID())")
 	iris.client_bff.events.model.Guest fromGuestDto(Guest guest);
 
 	Person toPersonDto(iris.client_bff.events.model.Guest guest);
