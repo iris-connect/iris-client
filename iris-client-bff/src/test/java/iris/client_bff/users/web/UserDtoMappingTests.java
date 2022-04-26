@@ -21,6 +21,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.github.javafaker.Faker;
 
@@ -35,6 +36,9 @@ class UserDtoMappingTests {
 	@MockBean
 	UserDetailsServiceImpl userService;
 
+	@MockBean
+	PasswordEncoder passwordEncoder;
+
 	final UserMapper mapper;
 
 	final Faker faker = Faker.instance();
@@ -44,7 +48,8 @@ class UserDtoMappingTests {
 	void mapping_fromUserAccount_toUserDTO() {
 
 		when(userService.findByUuid(any()))
-				.thenReturn(Optional.of(new UserAccount("admin", "admin", "admin", "admin", UserRole.ADMIN)));
+				.thenReturn(Optional.of(new UserAccount("admin", "admin", "admin", "admin", UserRole.ADMIN, false, null)));
+		when(passwordEncoder.encode(any())).thenAnswer(it -> it.getArgument(0));
 
 		var firstName = faker.name().firstName();
 		var lastName = faker.name().lastName();

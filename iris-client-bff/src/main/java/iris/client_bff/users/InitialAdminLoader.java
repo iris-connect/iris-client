@@ -1,16 +1,20 @@
-package iris.client_bff.auth.db;
+package iris.client_bff.users;
 
-import iris.client_bff.users.UserAccountsRepository;
 import iris.client_bff.users.entities.UserAccount;
 import iris.client_bff.users.entities.UserRole;
 import lombok.AllArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 @Component
 @AllArgsConstructor
@@ -18,9 +22,9 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(
 		value = "security.auth",
 		havingValue = "db")
-public class InitialAdminLoader {
+class InitialAdminLoader {
 
-	private DbAuthProperties conf;
+	private InitialAdminLoader.Properties conf;
 
 	private UserAccountsRepository repo;
 
@@ -31,7 +35,7 @@ public class InitialAdminLoader {
 
 		var userName = conf.getAdminUserName();
 
-		if (repo.findByUserName(userName).isEmpty()) {
+		if (repo.findByUserNameAndDeletedAtIsNull(userName).isEmpty()) {
 
 			log.info("Create admin user [{}]", userName);
 
@@ -47,5 +51,23 @@ public class InitialAdminLoader {
 		} else {
 			log.info("Admin user [{}] already exists. Skip creating admin user.", userName);
 		}
+	}
+
+	@ConfigurationProperties(prefix = "security.auth.db")
+	@ConstructorBinding
+	@ConditionalOnProperty(
+			value = "security.auth",
+			havingValue = "db")
+	@Validated
+	@Value
+	static class Properties {
+
+		@NotEmpty(
+				message = "The admin user name must be configured! (Environment variable: SECURITY_AUTH_DB_ADMIN_USER_NAME)")
+		private String adminUserName;
+
+		@NotEmpty(
+				message = "The admin user password must be configured! (Environment variable: SECURITY_AUTH_DB_ADMIN_USER_PASSWORD)")
+		private String adminUserPassword;
 	}
 }

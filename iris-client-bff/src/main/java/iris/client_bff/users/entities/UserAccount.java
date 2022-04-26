@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -43,6 +44,21 @@ public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private UserRole role;
+
+	private boolean locked;
+	private Instant deletedAt;
+
+	public boolean isEnabled() {
+		return getDeletedAt() == null;
+	}
+
+	public UserAccount markDeleted() {
+
+		setDeletedAt(Instant.now());
+		setUserName(UUID.randomUUID().toString());
+
+		return this;
+	}
 
 	@EqualsAndHashCode(callSuper = false)
 	@RequiredArgsConstructor(staticName = "of")

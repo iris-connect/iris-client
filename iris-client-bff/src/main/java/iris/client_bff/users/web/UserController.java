@@ -39,8 +39,7 @@ class UserController {
 	@GetMapping
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserListDTO getAllUsers() {
-		return new UserListDTO()
-				.users(this.userService.loadAll().stream().map(userMapper::toDto).toList());
+		return new UserListDTO(this.userService.loadAll().stream().map(userMapper::toDto).toList());
 	}
 
 	@PostMapping
@@ -48,9 +47,9 @@ class UserController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserDTO createUser(@RequestBody @Valid UserInsertDTO userInsert) {
 
-		checkUniqueUsername(userInsert.getUserName());
+		checkUniqueUsername(userInsert.userName());
 
-		return userMapper.toDto(userService.create(userInsert));
+		return userMapper.toDto(userService.create(userMapper.fromDto(userInsert)));
 	}
 
 	@PatchMapping("/{id}")
@@ -58,8 +57,8 @@ class UserController {
 	public UserDTO updateUser(@PathVariable UserAccountIdentifier id, @RequestBody @Valid UserUpdateDTO userUpdateDTO,
 			UserAccountAuthentication authentication) {
 
-		checkUniqueUsername(userUpdateDTO.getUserName(), id);
-		checkOldPassword(userUpdateDTO.getOldPassword(), userUpdateDTO.getPassword(), authentication, id);
+		checkUniqueUsername(userUpdateDTO.userName(), id);
+		checkOldPassword(userUpdateDTO.oldPassword(), userUpdateDTO.password(), authentication, id);
 
 		return userMapper.toDto(userService.update(id, userUpdateDTO, authentication));
 	}

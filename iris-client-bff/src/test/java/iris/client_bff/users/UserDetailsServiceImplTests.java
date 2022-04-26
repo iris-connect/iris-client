@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -80,7 +81,7 @@ class UserDetailsServiceImplTests {
 
 		mockUserFound();
 
-		var dto = new UserUpdateDTO().userName("new");
+		var dto = UserUpdateDTO.builder().userName("new").build();
 
 		assertThrows(RuntimeException.class, () -> userDetailsService.update(user.getId(), dto, userAuth));
 	}
@@ -90,7 +91,7 @@ class UserDetailsServiceImplTests {
 
 		mockUserFound();
 
-		var dto = new UserUpdateDTO().role(UserRoleDTO.ADMIN);
+		var dto = UserUpdateDTO.builder().role(UserRoleDTO.ADMIN).build();
 
 		assertThrows(RuntimeException.class, () -> userDetailsService.update(user.getId(), dto, userAuth));
 	}
@@ -101,7 +102,7 @@ class UserDetailsServiceImplTests {
 		mockAdminFound();
 		mockCountLastAdmin();
 
-		var dto = new UserUpdateDTO().role(UserRoleDTO.USER);
+		var dto = UserUpdateDTO.builder().role(UserRoleDTO.USER).build();
 
 		assertThrows(RuntimeException.class, () -> userDetailsService.update(admin.getId(), dto, adminAuth));
 	}
@@ -112,7 +113,7 @@ class UserDetailsServiceImplTests {
 		mockUserFound();
 		mockSaveUser();
 
-		var dto = new UserUpdateDTO();
+		var dto = UserUpdateDTO.builder().build();
 
 		userDetailsService.update(user.getId(), dto, adminAuth);
 
@@ -126,7 +127,8 @@ class UserDetailsServiceImplTests {
 		mockUserFound();
 		mockSaveUser();
 
-		var dto = new UserUpdateDTO().firstName("fn").lastName("ln").userName("un").password("pw").role(UserRoleDTO.ADMIN);
+		var dto = UserUpdateDTO.builder().firstName("fn").lastName("ln").userName("un").password("pw")
+				.role(UserRoleDTO.ADMIN).build();
 
 		var ret = userDetailsService.update(user.getId(), dto, adminAuth);
 
@@ -145,19 +147,19 @@ class UserDetailsServiceImplTests {
 		mockUserFound();
 		mockSaveUser();
 
-		var dto = new UserUpdateDTO().userName("un");
+		var dto = UserUpdateDTO.builder().userName("un").build();
 
 		userDetailsService.update(user.getId(), dto, adminAuth);
 
 		verify(jwtService).invalidateTokensOfUser("tm");
 
-		dto = new UserUpdateDTO().password("pw");
+		dto = UserUpdateDTO.builder().password("pw").build();
 
 		userDetailsService.update(user.getId(), dto, adminAuth);
 
 		verify(jwtService).invalidateTokensOfUser("un");
 
-		dto = new UserUpdateDTO().role(UserRoleDTO.ADMIN);
+		dto = UserUpdateDTO.builder().role(UserRoleDTO.ADMIN).build();
 
 		userDetailsService.update(user.getId(), dto, adminAuth);
 
@@ -173,7 +175,7 @@ class UserDetailsServiceImplTests {
 
 		assertTrue(value);
 
-		verify(userAccountsRepository).findById(user.getId());
+		verify(userAccountsRepository).findByIdAndDeletedAtIsNull(user.getId());
 		verifyNoMoreInteractions(userAccountsRepository);
 	}
 
@@ -186,7 +188,30 @@ class UserDetailsServiceImplTests {
 
 		assertFalse(value);
 
-		verify(userAccountsRepository).findById(user.getId());
+		verify(userAccountsRepository).findByIdAndDeletedAtIsNull(user.getId());
+		verifyNoMoreInteractions(userAccountsRepository);
+	}
+
+	@Test // for iris-backlog#235
+	void ok_deleteById() {
+
+		mockUserFound();
+		var userCaptor = ArgumentCaptor.forClass(UserAccount.class);
+
+		var id = user.getId();
+		var userName = user.getUserName();
+
+		userDetailsService.deleteById(id, "other");
+
+		verify(userAccountsRepository).findByIdAndDeletedAtIsNull(id);
+		verify(userAccountsRepository).save(userCaptor.capture());
+		verify(jwtService).invalidateTokensOfUser(userName);
+
+		var user = userCaptor.getValue();
+		assertThat(user.getUserName()).isNotEqualTo(userName);
+		assertThat(user.getDeletedAt()).isNotNull();
+		assertThat(user.getId()).isEqualTo(id);
+
 		verifyNoMoreInteractions(userAccountsRepository);
 	}
 
@@ -215,19 +240,19 @@ class UserDetailsServiceImplTests {
 	}
 
 	private void mockUserNotFound() {
-		when(userAccountsRepository.findById(notFound)).thenReturn(Optional.empty());
+		when(userAccountsRepository.findByIdAndDeletedAtIsNull(notFound)).thenReturn(Optional.empty());
 	}
 
 	private void mockAdminFound() {
-		when(userAccountsRepository.findById(admin.getId())).thenReturn(Optional.of(admin));
+		when(userAccountsRepository.findByIdAndDeletedAtIsNull(admin.getId())).thenReturn(Optional.of(admin));
 	}
 
 	private void mockUserFound() {
-		when(userAccountsRepository.findById(user.getId())).thenReturn(Optional.of(user));
+		when(userAccountsRepository.findByIdAndDeletedAtIsNull(user.getId())).thenReturn(Optional.of(user));
 	}
 
 	private void mockCountLastAdmin() {
-		when(userAccountsRepository.countByRole(UserRole.ADMIN)).thenReturn(1l);
+		when(userAccountsRepository.countByRoleAndDeletedAtIsNull(UserRole.ADMIN)).thenReturn(1l);
 	}
 
 	private void mockSaveUser() {
