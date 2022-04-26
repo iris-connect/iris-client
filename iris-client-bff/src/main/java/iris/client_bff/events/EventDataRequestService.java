@@ -1,6 +1,5 @@
 package iris.client_bff.events;
 
-import static iris.client_bff.search_client.eps.LocationMapper.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.core.log.LogHelper;
@@ -43,6 +42,7 @@ public class EventDataRequestService {
 	private final SearchClient searchClient;
 	private final ProxyServiceClient proxyClient;
 	private final DataProviderClient epsDataRequestClient;
+	private final LocationMapper mapper;
 
 	public Page<EventDataRequest> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
@@ -83,7 +83,7 @@ public class EventDataRequestService {
 
 		Location location = null;
 		try {
-			location = map(searchClient.findByProviderIdAndLocationId(providerId, locationId));
+			location = mapper.fromSearchClientDto(searchClient.findByProviderIdAndLocationId(providerId, locationId));
 		} catch (IRISSearchException e) {
 			log.error("Location {} with provider {} could not be obtained: {}", locationId, providerId, e.getMessage());
 

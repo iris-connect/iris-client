@@ -4,6 +4,7 @@ import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequestRepository;
 import iris.client_bff.events.EventDataSubmissionRepository;
+import iris.client_bff.events.EventMapper;
 import iris.client_bff.events.message.dto.ExportSelectionDto;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
@@ -21,12 +22,14 @@ public class EventMessageDataBuilder {
 
 	private final EventDataRequestRepository requestRepository;
 	private final EventDataSubmissionRepository submissionRepository;
+	private final EventMapper mapper;
 
 	EventMessageDataPayload buildPayload(ExportSelectionDto exportSelectionDto) throws IrisMessageDataException {
 		DataRequestIdentifier eventId = DataRequestIdentifier.of(exportSelectionDto.getEvent());
 		EventDataRequest eventDataRequest = this.getEventDataRequest(eventId);
 		EventDataSubmission eventDataSubmission = this.getEventDataSubmission(eventId);
-		return EventMessageDataPayload.fromModel(eventDataRequest, eventDataSubmission, exportSelectionDto.getGuests());
+		return EventMessageDataPayload.fromModel(eventDataRequest, eventDataSubmission, exportSelectionDto.getGuests(),
+				mapper);
 	}
 
 	private EventDataRequest getEventDataRequest(DataRequestIdentifier eventId)

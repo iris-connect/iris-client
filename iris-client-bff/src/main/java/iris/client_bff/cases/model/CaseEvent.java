@@ -23,7 +23,7 @@ import javax.persistence.ManyToOne;
 public class CaseEvent {
 
 	@Id
-	private UUID eventId = UUID.randomUUID();
+	private final UUID eventId = UUID.randomUUID();
 
 	@ManyToOne //
 	@JoinColumn(name = "submission_id")

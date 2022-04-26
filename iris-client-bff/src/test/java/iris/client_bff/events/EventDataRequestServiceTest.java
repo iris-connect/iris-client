@@ -43,7 +43,9 @@ public class EventDataRequestServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		service = new EventDataRequestService(repository, searcher, searchClient, proxyServiceClient, epsDataRequestClient);
+
+		service = new EventDataRequestService(repository, searcher, searchClient, proxyServiceClient, epsDataRequestClient,
+				new LocationMapperImpl());
 	}
 
 	@Test

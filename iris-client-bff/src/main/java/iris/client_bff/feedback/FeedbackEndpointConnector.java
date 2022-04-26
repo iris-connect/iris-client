@@ -1,6 +1,7 @@
 package iris.client_bff.feedback;
 
 import iris.client_bff.config.BackendServiceProperties;
+import iris.client_bff.config.MapStructCentralConfig;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.feedback.web.FeedbackInputDto;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.Map;
 
-import org.modelmapper.ModelMapper;
+import org.mapstruct.Mapper;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class FeedbackEndpointConnector {
 
 	private final BackendServiceProperties config;
 	private final IJsonRpcClient epsRpcClient;
-	private final ModelMapper mapper;
+	private final FeedbackMapper mapper;
 
 	private String version = "";
 	{
@@ -53,7 +54,7 @@ public class FeedbackEndpointConnector {
 
 		log.trace("Submission Feedback - feedback will be send to backend service");
 
-		var feedback = mapper.map(feedbackInput, FeedbackOutputDto.class);
+		var feedback = mapper.inputToOutput(feedbackInput);
 		feedback.setSourceApp(AlertService.APP);
 		feedback.setAppVersion(version);
 
@@ -73,5 +74,11 @@ public class FeedbackEndpointConnector {
 
 			throw new FeedbackSendingException(t);
 		}
+	}
+
+	@Mapper(config = MapStructCentralConfig.class)
+	interface FeedbackMapper {
+
+		FeedbackOutputDto inputToOutput(FeedbackInputDto input);
 	}
 }

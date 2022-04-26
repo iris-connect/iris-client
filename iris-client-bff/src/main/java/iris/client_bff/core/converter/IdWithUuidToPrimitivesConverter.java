@@ -5,8 +5,8 @@ import iris.client_bff.core.IdWithUuid;
 import java.util.Set;
 import java.util.UUID;
 
-import org.modelmapper.Converter;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
