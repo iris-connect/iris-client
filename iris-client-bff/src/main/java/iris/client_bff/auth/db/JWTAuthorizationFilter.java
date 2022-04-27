@@ -3,7 +3,7 @@ package iris.client_bff.auth.db;
 import static iris.client_bff.auth.db.SecurityConstants.*;
 
 import iris.client_bff.auth.db.jwt.JWTVerifier;
-import iris.client_bff.users.UserDetailsServiceImpl;
+import iris.client_bff.users.UserService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -28,9 +28,9 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	private final JWTVerifier jwtVerifier;
-	private final UserDetailsServiceImpl userService;
+	private final UserService userService;
 
-	public JWTAuthorizationFilter(JWTVerifier jwtVerifier, UserDetailsServiceImpl userService) {
+	public JWTAuthorizationFilter(JWTVerifier jwtVerifier, UserService userService) {
 		this.jwtVerifier = jwtVerifier;
 		this.userService = userService;
 	}

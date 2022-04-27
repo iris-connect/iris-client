@@ -1,7 +1,6 @@
 package iris.client_bff.users.web;
 
-import iris.client_bff.users.UserDetailsServiceImpl;
-import iris.client_bff.users.web.dto.UserDTO;
+import iris.client_bff.users.UserService;
 import lombok.AllArgsConstructor;
 
 import java.security.Principal;
@@ -15,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user-profile")
 class UserProfileController {
 
-	private final UserDetailsServiceImpl userService;
+	private final UserService userService;
 	private final UserMapper userMapper;
 
 	@GetMapping
-	public UserDTO getUserProfile(Principal principal) {
+	public UserDtos.Output getUserProfile(Principal principal) {
 
 		var user = userService.findByUsername(principal.getName());
 

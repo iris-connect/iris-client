@@ -1,4 +1,4 @@
-package iris.client_bff.users.web;
+package iris.client_bff.core.validation;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;

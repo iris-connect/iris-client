@@ -1,6 +1,5 @@
 package iris.client_bff.users.web;
 
-import static org.apache.commons.lang3.BooleanUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -8,12 +7,10 @@ import static org.mockito.Mockito.*;
 import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.config.CentralConfigurationService;
 import iris.client_bff.core.alert.AlertService;
-import iris.client_bff.users.UserDetailsServiceImpl;
-import iris.client_bff.users.entities.UserAccount;
-import iris.client_bff.users.entities.UserAccount.UserAccountIdentifier;
-import iris.client_bff.users.entities.UserRole;
-import iris.client_bff.users.web.dto.UserRoleDTO;
-import iris.client_bff.users.web.dto.UserUpdateDTO;
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserAccount.UserAccountIdentifier;
+import iris.client_bff.users.UserRole;
+import iris.client_bff.users.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +32,7 @@ import org.springframework.web.server.ResponseStatusException;
 class UserControllerTests {
 
 	@Mock(lenient = true)
-	UserDetailsServiceImpl userService;
+	UserService userService;
 	@Mock(lenient = true)
 	AlertService alertService;
 	@Mock(lenient = true)
@@ -50,19 +47,6 @@ class UserControllerTests {
 
 		when(hdConfig.getAbbreviation()).thenReturn("1A9");
 		when(userService.create(any(UserAccount.class))).thenAnswer(it -> it.getArgument(0, UserAccount.class));
-		when(userService.update(any(UserAccountIdentifier.class), any(UserUpdateDTO.class),
-				any(UserAccountAuthentication.class)))
-						.thenAnswer(it -> {
-							var user = it.getArgument(1, UserUpdateDTO.class);
-							var account = new UserAccount();
-							account.setFirstName(user.firstName());
-							account.setLastName(user.lastName());
-							account.setPassword(user.password());
-							account.setUserName(user.userName());
-							account.setRole(UserRole.valueOf(user.role().name()));
-							account.setLocked(toBoolean(user.locked()));
-							return account;
-						});
 		when(userService.isOldPasswordCorrect(any(UserAccountIdentifier.class), anyString())).thenReturn(true);
 
 		userController = new UserController(userService, userMapper);
@@ -71,8 +55,8 @@ class UserControllerTests {
 	@Test
 	void testNewUserNameExist() {
 
-		var dto = UserUpdateDTO.builder().firstName("fn1").lastName("ln1").userName("un").password("abcde123")
-				.oldPassword("abcde123").role(UserRoleDTO.USER).build();
+		var dto = UserDtos.Update.builder().firstName("fn1").lastName("ln1").userName("un").password("abcde123")
+				.oldPassword("abcde123").role(UserDtos.Role.USER).build();
 		var authentication = createAuthentication("test");
 
 		var account = new UserAccount();
@@ -91,7 +75,7 @@ class UserControllerTests {
 	@Test
 	void testRootChangePW_ownWithOldPassword() {
 
-		var dto = UserUpdateDTO.builder().password("abcde1234").role(UserRoleDTO.ADMIN).build();
+		var dto = UserDtos.Update.builder().password("abcde1234").role(UserDtos.Role.ADMIN).build();
 		var authentication = createAuthentication("test");
 
 		var account = new UserAccount();
@@ -108,14 +92,15 @@ class UserControllerTests {
 		Assertions.assertThrows(ResponseStatusException.class,
 				() -> userController.updateUser(account.getId(), dto, authentication));
 
-		var dto2 = UserUpdateDTO.builder().password("abcde1234").oldPassword("abcde123").role(UserRoleDTO.ADMIN).build();
+		var dto2 = UserDtos.Update.builder().password("abcde1234").oldPassword("abcde123").role(UserDtos.Role.ADMIN)
+				.build();
 		assertDoesNotThrow(() -> userController.updateUser(account.getId(), dto2, authentication));
 	}
 
 	@Test
 	void testRootChangePW_foreignWithoutOldPassword() {
 
-		var dto = UserUpdateDTO.builder().password("abcde123").role(UserRoleDTO.ADMIN).build();
+		var dto = UserDtos.Update.builder().password("abcde123").role(UserDtos.Role.ADMIN).build();
 		var authentication = createAuthentication("test");
 
 		var account = new UserAccount();

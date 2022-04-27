@@ -1,11 +1,10 @@
 package iris.client_bff.users;
 
-import static iris.client_bff.users.entities.UserRole.*;
+import static iris.client_bff.users.UserRole.*;
 import static java.lang.Boolean.*;
 import static java.time.Instant.*;
 
 import iris.client_bff.users.UserAnonymizationJob.Properties.AnonymizationBase;
-import iris.client_bff.users.entities.UserAccount;
 import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;

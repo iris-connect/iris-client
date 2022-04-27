@@ -1,7 +1,7 @@
 package iris.client_bff.vaccination_info;
 
+import iris.client_bff.users.UserAccount;
 import iris.client_bff.users.UserAnonymizationReferenceChecker;
-import iris.client_bff.users.entities.UserAccount;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Component;

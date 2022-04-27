@@ -1,7 +1,7 @@
 package iris.client_bff.auth.db;
 
-import iris.client_bff.users.entities.UserAccount;
-import iris.client_bff.users.entities.UserRole;
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserRole;
 import lombok.AllArgsConstructor;
 
 import java.util.Collection;

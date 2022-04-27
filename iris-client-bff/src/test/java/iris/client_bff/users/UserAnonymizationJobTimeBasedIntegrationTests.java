@@ -6,7 +6,6 @@ import ch.qos.logback.classic.Level;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.core.IrisDateTimeProvider;
 import iris.client_bff.events.EventDataRequestRepository;
-import iris.client_bff.users.entities.UserAccount;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

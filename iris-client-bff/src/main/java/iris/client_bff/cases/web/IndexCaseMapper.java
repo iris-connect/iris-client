@@ -18,8 +18,8 @@ import iris.client_bff.cases.web.submission_dto.Event;
 import iris.client_bff.cases.web.submission_dto.EventList;
 import iris.client_bff.core.Sex;
 import iris.client_bff.core.web.dto.Address;
-import iris.client_bff.users.UserDetailsServiceImpl;
-import iris.client_bff.users.entities.UserAccount;
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserService;
 import lombok.NoArgsConstructor;
 
 import java.util.Optional;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = PRIVATE)
 public class IndexCaseMapper {
 
-	public static IndexCaseDetailsDTO mapDetailed(CaseDataRequest indexCase, UserDetailsServiceImpl userService) {
+	public static IndexCaseDetailsDTO mapDetailed(CaseDataRequest indexCase, UserService userService) {
 
 		return IndexCaseDetailsDTO.builder()
 				.caseId(indexCase.getId().toString())

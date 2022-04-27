@@ -18,8 +18,8 @@ import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
-import iris.client_bff.users.UserDetailsServiceImpl;
-import iris.client_bff.users.entities.UserAccount;
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserService;
 
 import java.time.Instant;
 import java.util.List;
@@ -60,7 +60,7 @@ class IndexCaseControllerTest {
 	@MockBean
 	CaseDataRequestService service;
 	@MockBean
-	UserDetailsServiceImpl userService;
+	UserService userService;
 
 	// mock responses
 	private final CaseDataRequest MOCK_CASE = getCase();

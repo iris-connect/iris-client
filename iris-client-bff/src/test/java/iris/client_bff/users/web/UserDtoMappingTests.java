@@ -6,11 +6,9 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.IrisMapperTest;
-import iris.client_bff.users.UserDetailsServiceImpl;
-import iris.client_bff.users.entities.UserAccount;
-import iris.client_bff.users.entities.UserRole;
-import iris.client_bff.users.web.dto.UserDTO;
-import iris.client_bff.users.web.dto.UserRoleDTO;
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserRole;
+import iris.client_bff.users.UserService;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
@@ -34,7 +32,7 @@ import com.github.javafaker.Faker;
 class UserDtoMappingTests {
 
 	@MockBean
-	UserDetailsServiceImpl userService;
+	UserService userService;
 
 	@MockBean
 	PasswordEncoder passwordEncoder;
@@ -68,12 +66,12 @@ class UserDtoMappingTests {
 
 		var dto = mapper.toDto(user);
 
-		var expected = UserDTO.builder()
+		var expected = UserDtos.Output.builder()
 				.id(user.getId().toString())
 				.firstName(firstName)
 				.lastName(lastName)
 				.userName(userName)
-				.role(UserRoleDTO.USER)
+				.role(UserDtos.Role.USER)
 				.createdAt(createdAt)
 				.lastModifiedAt(lastModified)
 				.createdBy("admin admin")
