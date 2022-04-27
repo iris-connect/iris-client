@@ -10,16 +10,23 @@ import iris.client_bff.vaccination_info.VaccinationInfo.Facility;
 import iris.client_bff.vaccination_info.VaccinationInfo.VaccinationInfoIdentifier;
 import iris.client_bff.vaccination_info.VaccinationInfoAnnouncement.AnnouncementIdentifier;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @author Jens Kutzsche
@@ -35,7 +42,7 @@ public class VaccinationInfoService {
 	private final ProxyServiceClient proxyClient;
 	private final VaccinationInfoAnnouncementRepository announcements;
 	private final VaccinationInfoRepository vaccInfos;
-	private final VaccinationInfoProperties properties;
+	private final VaccinationInfoService.Properties properties;
 	private final AlertService alertService;
 	private final HibernateSearcher searcher;
 
@@ -108,5 +115,18 @@ public class VaccinationInfoService {
 
 	public Optional<VaccinationInfo> find(VaccinationInfoIdentifier id) {
 		return vaccInfos.findById(id);
+	}
+
+	@ConfigurationProperties("iris.client.vaccinfo")
+	@ConstructorBinding
+	@Validated
+	@Value
+	static class Properties {
+
+		/**
+		 * Defines the {@link Duration} after that a vaccination info announcement will be expire.
+		 */
+		@NotNull
+		private Duration expirationDuration;
 	}
 }

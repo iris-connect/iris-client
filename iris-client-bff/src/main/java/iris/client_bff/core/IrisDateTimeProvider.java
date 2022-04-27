@@ -1,8 +1,8 @@
 package iris.client_bff.core;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.Value;
 
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -45,11 +45,11 @@ public class IrisDateTimeProvider implements DateTimeProvider {
 		return Optional.of(LocalDateTime.now().plus(delta));
 	}
 
-	@ConstructorBinding
 	@ConfigurationProperties("date-time")
-	@RequiredArgsConstructor
+	@ConstructorBinding
+	@Value
 	// @Profile("!prod")
-	public static class DateTimeProperties {
+	static class DateTimeProperties {
 
 		private final Period delta;
 

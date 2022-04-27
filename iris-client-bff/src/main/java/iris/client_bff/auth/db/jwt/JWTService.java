@@ -1,13 +1,19 @@
 package iris.client_bff.auth.db.jwt;
 
 import lombok.AllArgsConstructor;
+import lombok.Value;
 
 import java.time.Instant;
 import java.util.Optional;
 
+import javax.validation.constraints.NotBlank;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator.Builder;
@@ -23,7 +29,7 @@ public class JWTService implements JWTVerifier, JWTSigner {
 
 	private final AllowedTokenRepository allowedTokenRepository;
 
-	private JwtProperties jwtProperties;
+	private JWTService.Properties jwtProperties;
 
 	@Override
 	public String sign(Builder builder) {
@@ -64,5 +70,17 @@ public class JWTService implements JWTVerifier, JWTSigner {
 
 	private String hashToken(String jwt) {
 		return DigestUtils.sha256Hex(jwt);
+	}
+
+	@ConfigurationProperties(prefix = "security.jwt")
+	@ConstructorBinding
+	@ConditionalOnProperty(
+			value = "security.auth",
+			havingValue = "db")
+	@Validated
+	@Value
+	static class Properties {
+
+		private @NotBlank String sharedSecret;
 	}
 }

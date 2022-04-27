@@ -28,7 +28,7 @@ import org.springframework.util.unit.DataSize;
 @ConfigurationProperties(prefix = "iris.suspiciously.request")
 @ConstructorBinding
 @RequiredArgsConstructor
-public class SuspiciouslyRequestProperties {
+class SuspiciouslyRequestProperties {
 
 	@Autowired
 	private Validator validator;

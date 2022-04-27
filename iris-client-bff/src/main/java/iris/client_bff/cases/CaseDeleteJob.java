@@ -1,9 +1,9 @@
 package iris.client_bff.cases;
 
 import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
@@ -62,11 +62,10 @@ class CaseDeleteJob {
 				oldRequests.get(0).getCreatedAt());
 	}
 
-	@ConstructorBinding
-	@RequiredArgsConstructor
 	@ConfigurationProperties("iris.client.case")
-	@Getter
-	public static class CaseDeletionProperties {
+	@ConstructorBinding
+	@Value
+	static class CaseDeletionProperties {
 
 		/**
 		 * Defines the {@link Period} after that a case will be deleted starting from the creation date.
