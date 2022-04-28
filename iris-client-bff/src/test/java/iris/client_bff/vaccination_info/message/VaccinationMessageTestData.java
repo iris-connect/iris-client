@@ -72,7 +72,7 @@ public class VaccinationMessageTestData {
 				.map((employee -> employee.getId().toString()))
 				.collect(Collectors.toSet());
 		return new ExportSelectionDto()
-				.setReport(MOCK_VACCINATION_INFO.getId().toString())
+				.setReport(MOCK_VACCINATION_INFO.getId().toUuid())
 				.setEmployees(employees);
 	}
 

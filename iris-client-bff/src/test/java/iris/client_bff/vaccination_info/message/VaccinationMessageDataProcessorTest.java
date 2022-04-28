@@ -153,7 +153,7 @@ public class VaccinationMessageDataProcessorTest {
 
 		this.messageDataProcessor.importPayload(
 				this.messageTestData.MOCK_MESSAGE_DATA_PAYLOAD_STRING,
-				this.messageTestData.MOCK_VACCINATION_INFO.getId().getId(),
+				this.messageTestData.MOCK_VACCINATION_INFO.getId().toUuid(),
 				this.messageTestData.MOCK_MESSAGE_IMPORT_SELECTION_STRING
 		);
 
@@ -183,7 +183,7 @@ public class VaccinationMessageDataProcessorTest {
 
 		var result = this.messageDataProcessor.getImportSelectionViewPayload(
 				this.messageTestData.MOCK_MESSAGE_DATA_PAYLOAD_STRING,
-				this.messageTestData.MOCK_VACCINATION_INFO.getId().getId());
+				this.messageTestData.MOCK_VACCINATION_INFO.getId().toUuid());
 
 		verify(this.vaccinationInfoRepository).findById(any(VaccinationInfo.VaccinationInfoIdentifier.class));
 

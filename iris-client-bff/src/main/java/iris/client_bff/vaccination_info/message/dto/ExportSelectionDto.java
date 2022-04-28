@@ -1,6 +1,7 @@
 package iris.client_bff.vaccination_info.message.dto;
 
 import java.util.Set;
+import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -12,7 +13,7 @@ import lombok.Data;
 public class ExportSelectionDto {
 
 	@NotBlank
-	String report;
+	UUID report;
 
 	@Valid
 	@NotEmpty

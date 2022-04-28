@@ -9,7 +9,6 @@ import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.events.message.EventMessageDataProcessor;
 import iris.client_bff.events.message.EventMessageTestData;
 import iris.client_bff.iris_messages.IrisMessageData;
-import iris.client_bff.iris_messages.IrisMessageDataProcessor;
 import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.IrisMessageDataService;
 import iris.client_bff.iris_messages.IrisMessageDataTestData;
