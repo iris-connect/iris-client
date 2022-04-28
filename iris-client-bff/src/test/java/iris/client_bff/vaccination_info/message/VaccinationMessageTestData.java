@@ -1,8 +1,8 @@
 package iris.client_bff.vaccination_info.message;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import iris.client_bff.iris_messages.IrisMessage;
+import iris.client_bff.iris_messages.IrisMessageData;
+import iris.client_bff.iris_messages.web.IrisMessageInsertDto;
 import iris.client_bff.vaccination_info.VaccinationInfo;
 import iris.client_bff.vaccination_info.VaccinationInfoDataInitializer;
 import iris.client_bff.vaccination_info.message.dto.ExportSelectionDto;
@@ -10,6 +10,10 @@ import iris.client_bff.vaccination_info.message.dto.ImportSelectionDto;
 import iris.client_bff.vaccination_info.message.dto.ImportSelectionViewPayloadDto;
 import iris.client_bff.vaccination_info.web.VaccinationInfoDto;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
@@ -18,15 +22,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import iris.client_bff.iris_messages.IrisMessage;
-import iris.client_bff.iris_messages.IrisMessageData;
-import iris.client_bff.iris_messages.web.IrisMessageInsertDto;
-
 @Component
 @Slf4j
 public class VaccinationMessageTestData {
 
-	public static final VaccinationMessageDataMapper vaccinationMessageDataMapper = Mappers.getMapper(VaccinationMessageDataMapper.class);
+	public static final VaccinationMessageDataMapper vaccinationMessageDataMapper = Mappers
+			.getMapper(VaccinationMessageDataMapper.class);
 
 	public final VaccinationInfo MOCK_VACCINATION_INFO = VaccinationInfoDataInitializer.createVaccinationInfo();
 
@@ -79,7 +80,8 @@ public class VaccinationMessageTestData {
 	private ImportSelectionViewPayloadDto getImportSelectionDataViewPayload() {
 		var employees = MOCK_MESSAGE_DATA_PAYLOAD.getEmployees();
 		var employeesDto = vaccinationMessageDataMapper.toEmployeesDto(employees);
-		var employeeIds = employees.stream().map(VaccinationMessageDataPayload.Employee::messageDataSelectId).collect(Collectors.toSet());
+		var employeeIds = employees.stream().map(VaccinationMessageDataPayload.Employee::messageDataSelectId)
+				.collect(Collectors.toSet());
 		return ImportSelectionViewPayloadDto.builder()
 				.selectables(ImportSelectionViewPayloadDto.Selectables.builder().employees(employeesDto).build())
 				.duplicates(ImportSelectionViewPayloadDto.Duplicates.builder().employees(employeeIds).build())

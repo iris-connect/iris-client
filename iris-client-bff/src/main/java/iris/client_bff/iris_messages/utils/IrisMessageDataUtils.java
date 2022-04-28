@@ -1,15 +1,18 @@
 package iris.client_bff.iris_messages.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 @AllArgsConstructor
@@ -24,7 +27,7 @@ public class IrisMessageDataUtils {
 			throw new IrisMessageDataException(ErrorMessages.INVALID_INPUT + ": "
 					+ constraintViolations.stream().map(
 							violation -> String.format("%s: %s", violation.getPropertyPath(), violation.getMessage()))
-					.collect(Collectors.joining(", ")));
+							.collect(Collectors.joining(", ")));
 		}
 	}
 

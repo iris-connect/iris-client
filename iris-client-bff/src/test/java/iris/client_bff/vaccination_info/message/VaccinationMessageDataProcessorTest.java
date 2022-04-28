@@ -1,21 +1,23 @@
 package iris.client_bff.vaccination_info.message;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import iris.client_bff.config.JacksonConfig;
+import iris.client_bff.core.validation.AttackDetector;
+import iris.client_bff.iris_messages.utils.IrisMessageDataUtils;
+import iris.client_bff.vaccination_info.VaccinationInfo;
+import iris.client_bff.vaccination_info.VaccinationInfoRepository;
+import iris.client_bff.vaccination_info.message.dto.ExportSelectionDto;
+import iris.client_bff.vaccination_info.message.dto.ImportSelectionDto;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.Validator;
 
-import iris.client_bff.vaccination_info.VaccinationInfo;
-import iris.client_bff.vaccination_info.VaccinationInfoRepository;
-import iris.client_bff.vaccination_info.message.dto.ExportSelectionDto;
-import iris.client_bff.vaccination_info.message.dto.ImportSelectionDto;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,10 +31,6 @@ import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import iris.client_bff.config.JacksonConfig;
-import iris.client_bff.core.validation.AttackDetector;
-import iris.client_bff.iris_messages.utils.IrisMessageDataUtils;
-
 @ExtendWith(MockitoExtension.class)
 @Slf4j
 public class VaccinationMessageDataProcessorTest {
@@ -41,9 +39,11 @@ public class VaccinationMessageDataProcessorTest {
 
 	VaccinationMessageDataProcessor messageDataProcessor;
 
-	private final VaccinationMessageDataMapper vaccinationMessageDataMapper = Mappers.getMapper(VaccinationMessageDataMapper.class);
+	private final VaccinationMessageDataMapper vaccinationMessageDataMapper = Mappers
+			.getMapper(VaccinationMessageDataMapper.class);
 
-	private final VaccinationMessageDataProcessor.ComparableMapper comparableMapper = Mappers.getMapper(VaccinationMessageDataProcessor.ComparableMapper.class);
+	private final VaccinationMessageDataProcessor.ComparableMapper comparableMapper = Mappers
+			.getMapper(VaccinationMessageDataProcessor.ComparableMapper.class);
 
 	@Mock
 	VaccinationInfoRepository vaccinationInfoRepository;
@@ -77,8 +77,7 @@ public class VaccinationMessageDataProcessorTest {
 				this.messageDataUtils,
 				this.messages,
 				this.vaccinationMessageDataMapper,
-				this.comparableMapper
-		);
+				this.comparableMapper);
 	}
 
 	@Test
@@ -154,8 +153,7 @@ public class VaccinationMessageDataProcessorTest {
 		this.messageDataProcessor.importPayload(
 				this.messageTestData.MOCK_MESSAGE_DATA_PAYLOAD_STRING,
 				this.messageTestData.MOCK_VACCINATION_INFO.getId().toUuid(),
-				this.messageTestData.MOCK_MESSAGE_IMPORT_SELECTION_STRING
-		);
+				this.messageTestData.MOCK_MESSAGE_IMPORT_SELECTION_STRING);
 
 		verify(this.attackDetector)
 				.isPossibleAttack(this.messageTestData.MOCK_MESSAGE_DATA_PAYLOAD.getFacility().name(),

@@ -5,10 +5,10 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.cases.CaseDataRequest;
-import iris.client_bff.cases.DtoSupplier;
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.CaseDataSubmissionMapper;
 import iris.client_bff.cases.CaseDataSubmissionMapperImpl;
+import iris.client_bff.cases.DtoSupplier;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
 import iris.client_bff.cases.eps.dto.ContactCategory;
 import iris.client_bff.cases.eps.dto.ContactInformation;

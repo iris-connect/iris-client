@@ -8,11 +8,12 @@ import iris.client_bff.vaccination_info.VaccinationStatus;
 import iris.client_bff.vaccination_info.VaccinationType;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.util.Set;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import java.time.LocalDate;
-import java.util.Set;
 
 // @TODO: test to verify that values are defused!
 
