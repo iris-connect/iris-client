@@ -34,12 +34,12 @@ public class VaccinationInfoDataInitializer implements DataInitializer {
 	static final String EXTERNAL_ID = "ec3ca901-762a-4832-be49-90d09d41ff94";
 	static final String ANNOUNCEMENT_TOKEN = "dc9970d7-9cba-4830-8f30-0b63bbd21a47.proxy.dev.test-gesundheitsamt.de";
 
+	private static final Faker faker = Faker.instance(Locale.GERMANY);
+
 	private final VaccinationInfoAnnouncementRepository announcements;
 	private final VaccinationInfoRepository vaccInfos;
 
 	private List<VaccinationInfo> infoList = new ArrayList<>();
-
-	private static final Faker faker = Faker.instance(Locale.GERMANY);
 
 	@Override
 	public void initialize() {

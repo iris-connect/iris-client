@@ -17,7 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -86,7 +85,7 @@ class VaccinationMessageDataProcessor implements IrisMessageDataProcessor {
 		messagePayload.getEmployees().stream()
 				.filter(employee -> selection.getEmployees().contains(employee.messageDataSelectId()))
 				.map(vaccinationMessageDataMapper::fromEmployeePayload)
-				.forEach(employee -> vaccinationInfo.getEmployees().add(employee));
+				.forEach(vaccinationInfo.getEmployees()::add);
 		vaccinationInfoRepository.save(vaccinationInfo);
 	}
 
@@ -125,11 +124,9 @@ class VaccinationMessageDataProcessor implements IrisMessageDataProcessor {
 	}
 
 	private VaccinationInfo getVaccinationInfo(VaccinationInfo.VaccinationInfoIdentifier id) {
-		Optional<VaccinationInfo> vaccinationInfo = this.vaccinationInfoRepository.findById(id);
-		if (vaccinationInfo.isEmpty()) {
-			throw new IrisMessageDataException(messages.getMessage("iris_message.invalid_message_data_import_target"));
-		}
-		return vaccinationInfo.get();
+		return this.vaccinationInfoRepository.findById(id)
+				.orElseThrow(
+						() -> new IrisMessageDataException(messages.getMessage("iris_message.invalid_message_data_import_target")));
 	}
 
 	private VaccinationMessageDataPayload parsePayload(String payload) throws IrisMessageDataException {

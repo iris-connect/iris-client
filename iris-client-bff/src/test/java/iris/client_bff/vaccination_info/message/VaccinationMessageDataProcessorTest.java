@@ -11,7 +11,6 @@ import iris.client_bff.vaccination_info.VaccinationInfo;
 import iris.client_bff.vaccination_info.VaccinationInfoRepository;
 import iris.client_bff.vaccination_info.message.dto.ExportSelectionDto;
 import iris.client_bff.vaccination_info.message.dto.ImportSelectionDto;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 import java.util.Set;
@@ -32,8 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @ExtendWith(MockitoExtension.class)
-@Slf4j
-public class VaccinationMessageDataProcessorTest {
+class VaccinationMessageDataProcessorTest {
 
 	VaccinationMessageTestData messageTestData;
 

@@ -7,6 +7,7 @@ import iris.client_bff.vaccination_info.web.VaccinationInfoDto;
 import java.util.Set;
 import java.util.UUID;
 
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -35,6 +36,6 @@ public interface VaccinationMessageDataMapper {
 
 	Set<VaccinationInfo.Employee> fromEmployeesPayload(Set<VaccinationMessageDataPayload.Employee> employees);
 
-	@Mapping(target = "email", source = "eMail")
+	@InheritInverseConfiguration
 	VaccinationInfo.Employee fromEmployeePayload(VaccinationMessageDataPayload.Employee employee);
 }

@@ -18,7 +18,7 @@ import javax.validation.constraints.Past;
 // @TODO: test to verify that values are defused!
 
 @Data
-public class VaccinationMessageDataPayload {
+class VaccinationMessageDataPayload {
 
 	private Facility facility;
 	private Set<Employee> employees;

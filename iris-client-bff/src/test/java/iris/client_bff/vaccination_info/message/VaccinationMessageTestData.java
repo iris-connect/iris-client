@@ -9,7 +9,6 @@ import iris.client_bff.vaccination_info.message.dto.ExportSelectionDto;
 import iris.client_bff.vaccination_info.message.dto.ImportSelectionDto;
 import iris.client_bff.vaccination_info.message.dto.ImportSelectionViewPayloadDto;
 import iris.client_bff.vaccination_info.web.VaccinationInfoDto;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,17 +16,22 @@ import java.util.stream.Collectors;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Component
-@Slf4j
-public class VaccinationMessageTestData {
+class VaccinationMessageTestData {
 
 	public static final VaccinationMessageDataMapper vaccinationMessageDataMapper = Mappers
 			.getMapper(VaccinationMessageDataMapper.class);
+
+	public static final ObjectMapper objectMapper;
+	static {
+		objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.setSerializationInclusion(Include.NON_NULL);
+	}
 
 	public final VaccinationInfo MOCK_VACCINATION_INFO = VaccinationInfoDataInitializer.createVaccinationInfo();
 
@@ -65,7 +69,7 @@ public class VaccinationMessageTestData {
 		return new IrisMessageInsertDto.DataAttachment()
 				.setDiscriminator("vaccination-report")
 				.setDescription("test description")
-				.setPayload(getPayloadPojo(this.getExportSelection()).toString());
+				.setPayload(stringifyJSON(this.getExportSelection()));
 	}
 
 	private ExportSelectionDto getExportSelection() {
@@ -101,24 +105,9 @@ public class VaccinationMessageTestData {
 
 	private <T> String stringifyJSON(T value) {
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule());
-			objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 			return objectMapper.writeValueAsString(value);
 		} catch (Exception e) {
-			return "";
+			throw new RuntimeException(e);
 		}
-	}
-
-	private Object getPayloadPojo(Object payload) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule());
-			String json = stringifyJSON(payload);
-			return objectMapper.readValue(json, Object.class);
-		} catch (JsonProcessingException e) {
-			// ignored
-		}
-		return "";
 	}
 }
