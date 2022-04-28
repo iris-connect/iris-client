@@ -39,7 +39,7 @@ public class VaccinationInfoDataInitializer implements DataInitializer {
 
 	private List<VaccinationInfo> infoList = new ArrayList<>();
 
-	private Faker faker = Faker.instance(Locale.GERMANY);
+	private static final Faker faker = Faker.instance(Locale.GERMANY);
 
 	@Override
 	public void initialize() {
@@ -65,7 +65,11 @@ public class VaccinationInfoDataInitializer implements DataInitializer {
 		infoList.add(vaccInfos.save(VaccinationInfo.of(EXTERNAL_ID, createFacility(), createEmployees(5))));
 	}
 
-	private Facility createFacility() {
+	public static VaccinationInfo createVaccinationInfo() {
+		return VaccinationInfo.of(EXTERNAL_ID, createFacility(), createEmployees(3));
+	}
+
+	private static Facility createFacility() {
 
 		return Facility.of(
 				faker.company().name(),
@@ -73,7 +77,7 @@ public class VaccinationInfoDataInitializer implements DataInitializer {
 				createPerson());
 	}
 
-	private Address createAddress() {
+	private static Address createAddress() {
 
 		var addressFaker = faker.address();
 
@@ -85,7 +89,7 @@ public class VaccinationInfoDataInitializer implements DataInitializer {
 				.build();
 	}
 
-	private ContactPerson createPerson() {
+	private static ContactPerson createPerson() {
 
 		return ContactPerson.of(
 				faker.name().firstName(),
@@ -94,14 +98,14 @@ public class VaccinationInfoDataInitializer implements DataInitializer {
 				faker.phoneNumber().phoneNumber());
 	}
 
-	private Set<Employee> createEmployees(int count) {
+	private static Set<Employee> createEmployees(int count) {
 
-		return Stream.generate(this::createEmployee)
+		return Stream.generate(VaccinationInfoDataInitializer::createEmployee)
 				.limit(count)
 				.collect(Collectors.toSet());
 	}
 
-	private Employee createEmployee() {
+	private static Employee createEmployee() {
 
 		return Employee.of(
 				faker.name().firstName(),

@@ -26,8 +26,6 @@ import java.util.UUID;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Component
 @Getter
 @AllArgsConstructor
@@ -44,7 +42,6 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	private final IrisMessageDataUtils messageDataUtils;
 	private final MessageSourceAccessor messages;
 
-	private final ObjectMapper objectMapper;
 	private final EventMapper eventMapper;
 
 	@Override
@@ -84,7 +81,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	public void importPayload(String payload, UUID importTargetId, String selection) throws IrisMessageDataException {
 		EventMessageDataPayload messagePayload = this.parsePayload(payload);
 		EventDataSubmission eventDataSubmission = this.getEventDataSubmission(DataRequestIdentifier.of(importTargetId));
-		ImportSelectionDto importSelection = parseJSON(selection, ImportSelectionDto.class);
+		ImportSelectionDto importSelection = messageDataUtils.parseJSON(selection, ImportSelectionDto.class);
 
 		messagePayload.getEventDataSubmissionPayload().getGuestList().getGuests().stream()
 				.filter(it -> importSelection.getGuests().contains(it.getMessageDataSelectId()))

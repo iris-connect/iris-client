@@ -33,10 +33,10 @@ public class VaccinationMessageDataProcessor implements IrisMessageDataProcessor
 
 	private final String discriminator = "vaccination-report";
 
+	private final VaccinationInfoRepository vaccinationInfoRepository;
 	private final IrisMessageDataUtils messageDataUtils;
 	private final MessageSourceAccessor messages;
 	private final VaccinationMessageDataMapper vaccinationMessageDataMapper;
-	private final VaccinationInfoRepository vaccinationInfoRepository;
 	private final ComparableMapper comparableMapper;
 
 	@Override

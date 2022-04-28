@@ -97,7 +97,6 @@ public class EventMessageDataProcessorTest {
 				this.dataBuilder,
 				this.messageDataUtils,
 				this.messages,
-				this.objectMapper,
 				eventMapper);
 	}
 
