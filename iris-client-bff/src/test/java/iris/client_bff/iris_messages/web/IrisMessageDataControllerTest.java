@@ -6,9 +6,9 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.events.message.EventMessageDataProcessor;
 import iris.client_bff.events.message.EventMessageTestData;
 import iris.client_bff.iris_messages.IrisMessageData;
+import iris.client_bff.iris_messages.IrisMessageDataProcessor;
 import iris.client_bff.iris_messages.IrisMessageDataProcessors;
 import iris.client_bff.iris_messages.IrisMessageDataService;
 import iris.client_bff.iris_messages.IrisMessageDataTestData;
@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -46,8 +47,8 @@ class IrisMessageDataControllerTest {
 	@MockBean
 	private IrisMessageDataViewProvider irisMessageDataViewProvider;
 
-	@MockBean
-	EventMessageDataProcessor irisMessageDataProcessor;
+	@Mock
+	IrisMessageDataProcessor irisMessageDataProcessor;
 
 	@MockBean
 	IrisMessageDataProcessors irisMessageDataProcessors;

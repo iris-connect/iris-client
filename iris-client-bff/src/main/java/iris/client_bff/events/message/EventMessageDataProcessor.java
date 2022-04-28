@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 @AllArgsConstructor
-public class EventMessageDataProcessor implements IrisMessageDataProcessor {
+class EventMessageDataProcessor implements IrisMessageDataProcessor {
 
 	private final String discriminator = "event-tracking";
 

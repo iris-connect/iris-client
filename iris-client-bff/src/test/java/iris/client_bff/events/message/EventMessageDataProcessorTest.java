@@ -22,13 +22,13 @@ import iris.client_bff.events.message.dto.ExportSelectionDto;
 import iris.client_bff.events.message.dto.ImportSelectionDto;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.GuestList;
+import iris.client_bff.iris_messages.utils.IrisMessageDataUtils;
 
 import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.Validator;
 
-import iris.client_bff.iris_messages.utils.IrisMessageDataUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -70,8 +70,6 @@ public class EventMessageDataProcessorTest {
 	@Mock
 	MessageSourceAccessor messages;
 
-	IrisMessageDataUtils messageDataUtils;
-
 	@Mock
 	ConversionServiceAdapter conversionServiceAdapter;
 
@@ -88,14 +86,14 @@ public class EventMessageDataProcessorTest {
 		objectMapper
 				.setInjectableValues(new InjectableValues.Std().addValue(JacksonConfig.ATTACK_DETECTOR, attackDetector));
 
-		this.messageDataUtils = new IrisMessageDataUtils(this.validator, this.objectMapper);
+		var messageDataUtils = new IrisMessageDataUtils(this.validator, this.objectMapper);
 
 		this.messageDataProcessor = new EventMessageDataProcessor(
 				this.requestService,
 				this.submissionService,
 				this.submissionRepository,
 				this.dataBuilder,
-				this.messageDataUtils,
+				messageDataUtils,
 				this.messages,
 				eventMapper);
 	}

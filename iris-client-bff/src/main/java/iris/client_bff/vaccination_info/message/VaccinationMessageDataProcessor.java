@@ -15,10 +15,6 @@ import iris.client_bff.vaccination_info.message.dto.ImportSelectionDto;
 import iris.client_bff.vaccination_info.message.dto.ImportSelectionViewPayloadDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -26,10 +22,15 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Component;
+
 @Component
 @Getter
 @AllArgsConstructor
-public class VaccinationMessageDataProcessor implements IrisMessageDataProcessor {
+class VaccinationMessageDataProcessor implements IrisMessageDataProcessor {
 
 	private final String discriminator = "vaccination-report";
 
@@ -54,7 +55,8 @@ public class VaccinationMessageDataProcessor implements IrisMessageDataProcessor
 	@Override
 	public String buildPayload(String exportSelection) throws IrisMessageDataException {
 		ExportSelectionDto exportSelectionDto = messageDataUtils.parseJSON(exportSelection, ExportSelectionDto.class);
-		VaccinationInfo vaccinationInfo = getVaccinationInfo(VaccinationInfo.VaccinationInfoIdentifier.of(exportSelectionDto.getReport()));
+		VaccinationInfo vaccinationInfo = getVaccinationInfo(
+				VaccinationInfo.VaccinationInfoIdentifier.of(exportSelectionDto.getReport()));
 		Set<String> selectedEmployees = exportSelectionDto.getEmployees();
 		Set<VaccinationInfo.Employee> employees = vaccinationInfo.getEmployees().stream()
 				.filter((employee -> selectedEmployees.isEmpty() || selectedEmployees.contains(employee.getId().toString())))
@@ -71,13 +73,13 @@ public class VaccinationMessageDataProcessor implements IrisMessageDataProcessor
 		VaccinationInfo vaccinationInfo = VaccinationInfo.of(
 				messages.getMessage("iris_message.message_data_substitution"),
 				vaccinationMessageDataMapper.fromFacilityPayload(messagePayload.getFacility()),
-				vaccinationMessageDataMapper.fromEmployeesPayload(messagePayload.getEmployees())
-		);
+				vaccinationMessageDataMapper.fromEmployeesPayload(messagePayload.getEmployees()));
 		vaccinationInfoRepository.save(vaccinationInfo);
 	}
 
 	@Override
-	public void importPayload(String payload, UUID importTargetId, String importSelection) throws IrisMessageDataException {
+	public void importPayload(String payload, UUID importTargetId, String importSelection)
+			throws IrisMessageDataException {
 		VaccinationInfo vaccinationInfo = getVaccinationInfo(VaccinationInfo.VaccinationInfoIdentifier.of(importTargetId));
 		VaccinationMessageDataPayload messagePayload = this.parsePayload(payload);
 		ImportSelectionDto selection = messageDataUtils.parseJSON(importSelection, ImportSelectionDto.class);
@@ -105,7 +107,8 @@ public class VaccinationMessageDataProcessor implements IrisMessageDataProcessor
 				.build();
 	}
 
-	private Set<String> getDuplicateEmployees(Set<VaccinationMessageDataPayload.Employee> employees, UUID importTargetId) {
+	private Set<String> getDuplicateEmployees(Set<VaccinationMessageDataPayload.Employee> employees,
+			UUID importTargetId) {
 		VaccinationInfo vaccinationInfo = getVaccinationInfo(VaccinationInfo.VaccinationInfoIdentifier.of(importTargetId));
 		var targetEmployees = vaccinationInfo.getEmployees();
 		if (employees == null || targetEmployees == null) {
@@ -136,9 +139,12 @@ public class VaccinationMessageDataProcessor implements IrisMessageDataProcessor
 	@Mapper(config = MapStructCentralConfig.class)
 	interface ComparableMapper {
 		Set<Employee> fromEmployees(Set<VaccinationInfo.Employee> employees);
+
 		@Mapping(target = "eMail", source = "email")
 		Employee fromEmployee(VaccinationInfo.Employee employee);
+
 		Employee fromPayloadEmployee(VaccinationMessageDataPayload.Employee employee);
+
 		record Employee(
 				String firstName,
 				String lastName,
