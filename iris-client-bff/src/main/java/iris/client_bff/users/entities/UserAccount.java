@@ -55,7 +55,7 @@ public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
 	public UserAccount markDeleted() {
 
 		setDeletedAt(Instant.now());
-		setUserName(UUID.randomUUID().toString());
+		setUserName(getId().toString());
 
 		return this;
 	}

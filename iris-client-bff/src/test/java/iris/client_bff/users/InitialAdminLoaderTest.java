@@ -37,7 +37,7 @@ class InitialAdminLoaderTest {
 	void shouldCreateAnAdminUserIfItDoesNotExist() {
 
 		// when
-		Mockito.when(repo.findByUserNameAndDeletedAtIsNull(eq("admin"))).thenReturn(Optional.empty());
+		Mockito.when(repo.findUserByUsername(eq("admin"))).thenReturn(Optional.empty());
 
 		// then
 		loader.createAdminUserIfNotExists();
@@ -54,7 +54,7 @@ class InitialAdminLoaderTest {
 		var existingUser = new UserAccount();
 		existingUser.setUserName("admin");
 
-		Mockito.when(repo.findByUserNameAndDeletedAtIsNull(eq("admin"))).thenReturn(Optional.of(existingUser));
+		Mockito.when(repo.findUserByUsername(eq("admin"))).thenReturn(Optional.of(existingUser));
 
 		// then
 		loader.createAdminUserIfNotExists();

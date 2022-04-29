@@ -35,7 +35,7 @@ class InitialAdminLoader {
 
 		var userName = conf.getAdminUserName();
 
-		if (repo.findByUserNameAndDeletedAtIsNull(userName).isEmpty()) {
+		if (repo.findUserByUsername(userName).isEmpty()) {
 
 			log.info("Create admin user [{}]", userName);
 

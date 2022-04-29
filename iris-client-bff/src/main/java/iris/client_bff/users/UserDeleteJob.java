@@ -2,6 +2,7 @@ package iris.client_bff.users;
 
 import static java.time.Instant.*;
 
+import iris.client_bff.users.entities.UserAccount;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +35,7 @@ class UserDeleteJob {
 	@Scheduled(cron = "${iris.client.user.delete-cron:-}")
 	void deleteUsers() {
 
-		var deletedUsers = users.findAllByDeletedAtIsNotNull();
-
-		deletedUsers.forEach(it -> {
+		users.findAllDeleted().forEach(it -> {
 
 			log.debug("Try to delete marked user with ID = {}!", it.getId());
 
@@ -47,11 +46,15 @@ class UserDeleteJob {
 
 			} catch (DataIntegrityViolationException e) {
 
-				if (now().minus(properties.getDeleteErrorWarningAfter()).isAfter(it.getDeletedAt())) {
+				if (shouldBeLoggedAsToOldSoftDelete(it)) {
 					log.warn("User with ID = {} could not be deleted!", it.getId());
 				}
 			}
 		});
+	}
+
+	private boolean shouldBeLoggedAsToOldSoftDelete(UserAccount user) {
+		return now().minus(properties.getDeleteErrorWarningAfter()).isAfter(user.getDeletedAt());
 	}
 
 	@ConfigurationProperties("iris.client.user")
@@ -61,7 +64,7 @@ class UserDeleteJob {
 	static class UserDeletionProperties {
 
 		/**
-		 * Defines the {@link Duration} after that errors during deletion () will be locked.
+		 * Defines the {@link Duration} after that errors during deletion () will be logged.
 		 */
 		private final Duration deleteErrorWarningAfter;
 	}

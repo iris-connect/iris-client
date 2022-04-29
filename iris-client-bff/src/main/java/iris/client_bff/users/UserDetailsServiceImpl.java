@@ -41,7 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) {
 
-		UserAccount userAccount = userAccountsRepository.findByUserNameAndDeletedAtIsNull(username)
+		UserAccount userAccount = userAccountsRepository.findUserByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException(username));
 
 		// By convention we expect that there exists only one authority and it represents the role
@@ -57,19 +57,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	public Optional<UserAccount> findByUsername(String username) {
-		return userAccountsRepository.findByUserNameAndDeletedAtIsNull(username);
+		return userAccountsRepository.findUserByUsername(username);
 	}
 
 	public boolean isOldPasswordCorrect(@NonNull UserAccountIdentifier id, @NonNull String oldPassword) {
 
-		return userAccountsRepository.findByIdAndDeletedAtIsNull(id)
+		return userAccountsRepository.findUserById(id)
 				.map(UserAccount::getPassword)
 				.filter(it -> passwordEncoder.matches(oldPassword, it))
 				.isPresent();
 	}
 
 	public List<UserAccount> loadAll() {
-		return userAccountsRepository.findAllByDeletedAtIsNull();
+		return userAccountsRepository.findAllUsers();
 	}
 
 	public UserAccount create(UserAccount user) {
@@ -176,7 +176,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	public void deleteById(UserAccountIdentifier id, String currentUserName) {
 
-		userAccountsRepository.findByIdAndDeletedAtIsNull(id)
+		userAccountsRepository.findUserById(id)
 				.ifPresent(account -> {
 
 					if (account.getUserName().equals(currentUserName)) {
@@ -200,7 +200,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	private UserAccount loadUser(UserAccountIdentifier userId) {
 
-		return userAccountsRepository.findByIdAndDeletedAtIsNull(userId)
+		return userAccountsRepository.findUserById(userId)
 				.orElseThrow(() -> {
 					var error = "User not found: " + userId.toString();
 					log.error(error);
@@ -211,6 +211,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private boolean isRemoveLastAdmin(UserAccount userAccount, UserRoleDTO newRoleDto) {
 		return newRoleDto != UserRoleDTO.ADMIN
 				&& userAccount.getRole() == UserRole.ADMIN
-				&& userAccountsRepository.countByRoleAndDeletedAtIsNull(UserRole.ADMIN) == 1;
+				&& userAccountsRepository.countUsersByRole(UserRole.ADMIN) == 1;
 	}
 }

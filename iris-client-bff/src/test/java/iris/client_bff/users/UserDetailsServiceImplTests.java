@@ -175,7 +175,7 @@ class UserDetailsServiceImplTests {
 
 		assertTrue(value);
 
-		verify(userAccountsRepository).findByIdAndDeletedAtIsNull(user.getId());
+		verify(userAccountsRepository).findUserById(user.getId());
 		verifyNoMoreInteractions(userAccountsRepository);
 	}
 
@@ -188,7 +188,7 @@ class UserDetailsServiceImplTests {
 
 		assertFalse(value);
 
-		verify(userAccountsRepository).findByIdAndDeletedAtIsNull(user.getId());
+		verify(userAccountsRepository).findUserById(user.getId());
 		verifyNoMoreInteractions(userAccountsRepository);
 	}
 
@@ -203,7 +203,7 @@ class UserDetailsServiceImplTests {
 
 		userDetailsService.deleteById(id, "other");
 
-		verify(userAccountsRepository).findByIdAndDeletedAtIsNull(id);
+		verify(userAccountsRepository).findUserById(id);
 		verify(userAccountsRepository).save(userCaptor.capture());
 		verify(jwtService).invalidateTokensOfUser(userName);
 
@@ -240,19 +240,19 @@ class UserDetailsServiceImplTests {
 	}
 
 	private void mockUserNotFound() {
-		when(userAccountsRepository.findByIdAndDeletedAtIsNull(notFound)).thenReturn(Optional.empty());
+		when(userAccountsRepository.findUserById(notFound)).thenReturn(Optional.empty());
 	}
 
 	private void mockAdminFound() {
-		when(userAccountsRepository.findByIdAndDeletedAtIsNull(admin.getId())).thenReturn(Optional.of(admin));
+		when(userAccountsRepository.findUserById(admin.getId())).thenReturn(Optional.of(admin));
 	}
 
 	private void mockUserFound() {
-		when(userAccountsRepository.findByIdAndDeletedAtIsNull(user.getId())).thenReturn(Optional.of(user));
+		when(userAccountsRepository.findUserById(user.getId())).thenReturn(Optional.of(user));
 	}
 
 	private void mockCountLastAdmin() {
-		when(userAccountsRepository.countByRoleAndDeletedAtIsNull(UserRole.ADMIN)).thenReturn(1l);
+		when(userAccountsRepository.countUsersByRole(UserRole.ADMIN)).thenReturn(1l);
 	}
 
 	private void mockSaveUser() {
