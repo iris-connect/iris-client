@@ -26,14 +26,20 @@ import { bundleIrisMessageApi } from "@/modules/iris-message/services/api";
 import { ErrorMessage } from "@/utils/axios";
 import { getApiErrorMessages } from "@/utils/api";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { DataRequestDetails, IrisMessageDataDiscriminator } from "@/api";
+import {
+  DataRequestDetails,
+  IrisMessageDataDiscriminator,
+  VaccinationReportDetails,
+} from "@/api";
 import { normalizeDataRequestDetails } from "@/views/event-tracking-details/event-tracking-details.data";
 import IrisMessageDataView, {
   IrisMessageDataViewSource,
 } from "@/modules/iris-message/modules/message-data/components/iris-message-data-view.vue";
+import { normalizeVaccinationReportDetails } from "@/modules/vaccination-report/services/normalizer";
 
 type IrisMessageDataViewPayload = {
   [IrisMessageDataDiscriminator.EventTracking]: DataRequestDetails;
+  [IrisMessageDataDiscriminator.VaccinationReport]: VaccinationReportDetails;
 };
 
 type DataViewSource = IrisMessageDataViewSource<IrisMessageDataViewPayload>;
@@ -44,6 +50,13 @@ const dataViewSource: DataViewSource = {
     component: () =>
       import(
         /* webpackChunkName: "event-tracking-message-data.preview" */ "../../../modules/event-tracking/modules/message-data/event-tracking-message-data.preview.vue"
+      ),
+  },
+  [IrisMessageDataDiscriminator.VaccinationReport]: {
+    normalize: normalizeVaccinationReportDetails,
+    component: () =>
+      import(
+        /* webpackChunkName: "vaccination-report-message-data.preview" */ "../../../modules/vaccination-report/modules/message-data/vaccination-report-message-data.preview.vue"
       ),
   },
 };

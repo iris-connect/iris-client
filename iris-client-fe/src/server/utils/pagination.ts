@@ -1,4 +1,4 @@
-import { Page, PageEvent, PageIndexCase } from "@/api";
+import { Page } from "@/api";
 import { DataQuery } from "@/api/common";
 import { DEFAULT_PAGE_SIZE } from "@/utils/pagination";
 import _orderBy from "lodash/orderBy";
@@ -21,7 +21,7 @@ type Named = {
 export function paginated<T extends Named>(
   items: T[],
   page?: number | string
-): PageEvent | PageIndexCase {
+): Page<T> {
   const pageId = Number(page || 0);
   return {
     totalElements: items.length,

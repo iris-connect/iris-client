@@ -33,6 +33,11 @@ import { Component, Vue } from "vue-property-decorator";
 import DataTableSelectAll from "@/components/data-table-select-all.vue";
 import { PropType } from "vue";
 import _omit from "lodash/omit";
+import { DataTableHeader } from "vuetify";
+
+export type DataTableHeaders = {
+  [K in "headers" | "expandedHeaders"]: DataTableHeader[];
+};
 
 type FilterFunction = <T>(value: T, index: number, array: T[]) => boolean;
 
@@ -90,3 +95,16 @@ export default class IrisDataTable extends IrisDataTableProps {
   }
 }
 </script>
+
+<style lang="scss">
+.v-data-table {
+  tbody tr {
+    &.is-disabled {
+      opacity: 0.5;
+      &:hover {
+        background: transparent !important;
+      }
+    }
+  }
+}
+</style>

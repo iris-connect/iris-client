@@ -22,6 +22,7 @@ import iris.client_bff.events.message.dto.ExportSelectionDto;
 import iris.client_bff.events.message.dto.ImportSelectionDto;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.web.dto.GuestList;
+import iris.client_bff.iris_messages.utils.IrisMessageDataUtils;
 
 import java.util.Optional;
 import java.util.Set;
@@ -85,14 +86,15 @@ public class EventMessageDataProcessorTest {
 		objectMapper
 				.setInjectableValues(new InjectableValues.Std().addValue(JacksonConfig.ATTACK_DETECTOR, attackDetector));
 
+		var messageDataUtils = new IrisMessageDataUtils(this.validator, this.objectMapper);
+
 		this.messageDataProcessor = new EventMessageDataProcessor(
 				this.requestService,
 				this.submissionService,
 				this.submissionRepository,
 				this.dataBuilder,
-				this.validator,
+				messageDataUtils,
 				this.messages,
-				this.objectMapper,
 				eventMapper);
 	}
 

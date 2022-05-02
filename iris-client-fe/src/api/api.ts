@@ -1780,80 +1780,6 @@ export interface PageIndexCase {
 /**
  *
  * @export
- * @interface PageEvent
- */
-export interface PageEvent {
-  /**
-   *
-   * @type {number}
-   * @memberof PageEvent
-   */
-  totalElements?: any;
-  /**
-   *
-   * @type {number}
-   * @memberof PageEvent
-   */
-  totalPages?: any;
-  /**
-   *
-   * @type {number}
-   * @memberof PageEvent
-   */
-  size?: any;
-  /**
-   *
-   * @type {Array&lt;ExistingDataRequestClientWithLocation&gt;}
-   * @memberof PageEvent
-   */
-  content: Array<ExistingDataRequestClientWithLocation>;
-  /**
-   *
-   * @type {number}
-   * @memberof PageEvent
-   */
-  number?: any;
-  /**
-   *
-   * @type {Sort}
-   * @memberof PageEvent
-   */
-  sort?: any;
-  /**
-   *
-   * @type {boolean}
-   * @memberof PageEvent
-   */
-  first?: any;
-  /**
-   *
-   * @type {boolean}
-   * @memberof PageEvent
-   */
-  last?: any;
-  /**
-   *
-   * @type {number}
-   * @memberof PageEvent
-   */
-  numberOfElements?: any;
-  /**
-   *
-   * @type {Pageable}
-   * @memberof PageEvent
-   */
-  pageable?: any;
-  /**
-   *
-   * @type {boolean}
-   * @memberof PageEvent
-   */
-  empty?: any;
-}
-
-/**
- *
- * @export
  * @interface CheckinApp
  */
 export interface CheckinApp {
@@ -1951,6 +1877,7 @@ export type IrisMessageDataSelectionPayload = {
 
 export enum IrisMessageDataDiscriminator {
   EventTracking = "event-tracking",
+  VaccinationReport = "vaccination-report",
 }
 
 export interface IrisMessageDataInsert {
@@ -2030,6 +1957,7 @@ export interface VREmployee {
   phone?: string;
   dateOfBirth?: string;
   sex?: Sex;
+  messageDataSelectId?: string;
 }
 
 export type VaccinationStatusCount = {
@@ -2153,7 +2081,7 @@ export class IrisClientFrontendApi extends BaseAPI {
    */
   public dataRequestsClientLocationsGet(
     options?: RequestOptions
-  ): ApiResponse<PageEvent> {
+  ): ApiResponse<Page<ExistingDataRequestClientWithLocation>> {
     return this.apiRequest(
       "GET",
       "/data-requests-client/events",

@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -54,7 +55,7 @@ class IrisMessageControllerTest {
 	@MockBean
 	private IrisMessageBuilderWeb irisMessageBuilder;
 
-	@MockBean
+	@Mock
 	IrisMessageDataProcessor irisMessageDataProcessor;
 
 	@MockBean

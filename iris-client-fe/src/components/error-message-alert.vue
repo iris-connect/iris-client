@@ -13,11 +13,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import _castArray from "lodash/castArray";
 
 const ErrorMessageAlertProps = Vue.extend({
   props: {
     errors: {
-      type: Array,
+      type: [Array, String],
       default: () => [],
     },
     dense: {
@@ -30,7 +31,7 @@ const ErrorMessageAlertProps = Vue.extend({
 @Component
 export default class ErrorMessageAlert extends ErrorMessageAlertProps {
   get errorMessages(): Array<unknown> {
-    return this.errors.filter((e) => {
+    return _castArray(this.errors).filter((e) => {
       return typeof e === "string" && e.length > 0;
     });
   }

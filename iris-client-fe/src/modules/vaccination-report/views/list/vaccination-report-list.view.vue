@@ -3,7 +3,7 @@
     <v-card-title> Impfpflichtmeldungen </v-card-title>
     <v-card-text>
       <data-query-handler
-        @query:update="handleQueryUpdate"
+        @update:query="handleQueryUpdate"
         #default="{ query }"
       >
         <search-field v-model="query.search" />
@@ -13,7 +13,7 @@
           :headers="tableHeaders"
           :sort.sync="query.sort"
           :items="tableRows"
-          :loading="vrApi.state.loading"
+          :loading="fetchPageVaccinationReport.state.loading"
           :page.sync="query.page"
           :items-per-page.sync="query.size"
           :server-items-length="totalElements"
@@ -24,7 +24,7 @@
             <span class="text-pre-line"> {{ item.address }} </span>
           </template>
         </sortable-data-table>
-        <error-message-alert :errors="[vrApi.state.error]" />
+        <error-message-alert :errors="fetchPageVaccinationReport.state.error" />
       </data-query-handler>
     </v-card-text>
   </v-card>
@@ -38,22 +38,10 @@ import SortableDataTable from "@/components/sortable-data-table.vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
 import { vaccinationReportApi } from "@/modules/vaccination-report/services/api";
 import { DataQuery } from "@/api/common";
-import { VaccinationReport, VaccinationStatus } from "@/api";
-import { getFormattedDate } from "@/utils/date";
-import { getFormattedAddress } from "@/utils/address";
-import vaccinationReportConstants from "@/modules/vaccination-report/services/constants";
-import _values from "lodash/values";
-import _sum from "lodash/sum";
-import { getEnumKeys } from "@/utils/data";
-
-const getStatusTableHeader = (status: VaccinationStatus) => {
-  return {
-    text: `#\xa0${vaccinationReportConstants.getStatusName(status)}`,
-    value: "vaccinationStatusCount." + status,
-    sortable: true,
-    width: 0,
-  };
-};
+import {
+  getVaccinationReportTableHeaders,
+  getVaccinationReportTableRows,
+} from "@/modules/vaccination-report/services/mappedData";
 
 @Component({
   components: {
@@ -64,42 +52,23 @@ const getStatusTableHeader = (status: VaccinationStatus) => {
   },
 })
 export default class VaccinationReportListView extends Vue {
-  tableHeaders = [
-    { text: "Einrichtung", value: "facility.name", sortable: true },
-    { text: "Adresse", value: "address", sortable: false },
-    { text: "#\xa0Mitarbeiter", value: "employeeCount", sortable: false },
-    ...getEnumKeys(VaccinationStatus).map((s) =>
-      getStatusTableHeader(VaccinationStatus[s])
-    ),
-    { text: "Meldung vom", value: "reportedAt", sortable: true },
-  ];
-  vrApi = vaccinationReportApi.fetchPageVaccinationReport();
+  tableHeaders = getVaccinationReportTableHeaders();
+  fetchPageVaccinationReport =
+    vaccinationReportApi.fetchPageVaccinationReport();
   handleQueryUpdate(newValue: DataQuery) {
     if (newValue) {
-      this.vrApi.execute(newValue);
+      this.fetchPageVaccinationReport.execute(newValue);
     } else {
-      this.vrApi.reset(["result"]);
+      this.fetchPageVaccinationReport.reset(["result"]);
     }
   }
   get tableRows() {
-    const vaccinationReports: VaccinationReport[] =
-      this.vrApi.state.result?.content || [];
-    return vaccinationReports.map((report) => {
-      const { facility } = report;
-      return {
-        id: report.id,
-        facility: {
-          name: facility?.name || "-",
-        },
-        address: getFormattedAddress(facility?.address),
-        employeeCount: _sum(_values(report.vaccinationStatusCount)),
-        vaccinationStatusCount: report.vaccinationStatusCount,
-        reportedAt: getFormattedDate(report.reportedAt),
-      };
-    });
+    return getVaccinationReportTableRows(
+      this.fetchPageVaccinationReport.state.result?.content
+    );
   }
   get totalElements(): number | undefined {
-    return this.vrApi.state.result?.totalElements;
+    return this.fetchPageVaccinationReport.state.result?.totalElements;
   }
   handleRowClick(row: { id?: string }) {
     if (row.id) {

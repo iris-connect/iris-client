@@ -1,6 +1,5 @@
 package iris.client_bff.events.message;
 
-import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.core.web.dto.Person;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
@@ -16,27 +15,21 @@ import iris.client_bff.events.web.dto.DataRequestDetails;
 import iris.client_bff.events.web.dto.Guest;
 import iris.client_bff.iris_messages.IrisMessageDataProcessor;
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
+import iris.client_bff.iris_messages.utils.IrisMessageDataUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Component
 @Getter
 @AllArgsConstructor
-public class EventMessageDataProcessor implements IrisMessageDataProcessor {
+class EventMessageDataProcessor implements IrisMessageDataProcessor {
 
 	private final String discriminator = "event-tracking";
 
@@ -46,29 +39,28 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 
 	private final EventMessageDataBuilder dataBuilder;
 
-	private final Validator validator;
+	private final IrisMessageDataUtils messageDataUtils;
 	private final MessageSourceAccessor messages;
 
-	private final ObjectMapper objectMapper;
 	private final EventMapper eventMapper;
 
 	@Override
 	public void validateExportSelection(String exportSelection) throws IrisMessageDataException {
-		ExportSelectionDto payload = parseJSON(exportSelection, ExportSelectionDto.class);
-		this.validatePayload(payload);
+		ExportSelectionDto payload = messageDataUtils.parseJSON(exportSelection, ExportSelectionDto.class);
+		messageDataUtils.validatePayload(payload);
 	}
 
 	@Override
 	public void validateImportSelection(String importSelection) throws IrisMessageDataException {
-		ImportSelectionDto payload = parseJSON(importSelection, ImportSelectionDto.class);
-		this.validatePayload(payload);
+		ImportSelectionDto payload = messageDataUtils.parseJSON(importSelection, ImportSelectionDto.class);
+		messageDataUtils.validatePayload(payload);
 	}
 
 	@Override
 	public String buildPayload(String exportSelection) throws IrisMessageDataException {
-		ExportSelectionDto exportSelectionDto = parseJSON(exportSelection, ExportSelectionDto.class);
+		ExportSelectionDto exportSelectionDto = messageDataUtils.parseJSON(exportSelection, ExportSelectionDto.class);
 		EventMessageDataPayload payload = this.dataBuilder.buildPayload(exportSelectionDto);
-		return this.stringifyJSON(payload);
+		return messageDataUtils.stringifyJSON(payload);
 	}
 
 	@Override
@@ -89,7 +81,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	public void importPayload(String payload, UUID importTargetId, String selection) throws IrisMessageDataException {
 		EventMessageDataPayload messagePayload = this.parsePayload(payload);
 		EventDataSubmission eventDataSubmission = this.getEventDataSubmission(DataRequestIdentifier.of(importTargetId));
-		ImportSelectionDto importSelection = parseJSON(selection, ImportSelectionDto.class);
+		ImportSelectionDto importSelection = messageDataUtils.parseJSON(selection, ImportSelectionDto.class);
 
 		messagePayload.getEventDataSubmissionPayload().getGuestList().getGuests().stream()
 				.filter(it -> importSelection.getGuests().contains(it.getMessageDataSelectId()))
@@ -164,33 +156,7 @@ public class EventMessageDataProcessor implements IrisMessageDataProcessor {
 	}
 
 	private EventMessageDataPayload parsePayload(String payload) throws IrisMessageDataException {
-		return this.parseJSON(payload, EventMessageDataPayload.class);
-	}
-
-	private <T> void validatePayload(T payload) {
-		Set<ConstraintViolation<T>> constraintViolations = validator.validate(payload);
-		if (!constraintViolations.isEmpty()) {
-			throw new IrisMessageDataException(ErrorMessages.INVALID_INPUT + ": "
-					+ constraintViolations.stream().map(
-							violation -> String.format("%s: %s", violation.getPropertyPath(), violation.getMessage()))
-							.collect(Collectors.joining(", ")));
-		}
-	}
-
-	private <T> T parseJSON(String value, Class<T> valueType) {
-		try {
-			return objectMapper.readValue(value, valueType);
-		} catch (Exception e) {
-			throw new IrisMessageDataException("iris_message.invalid_message_data");
-		}
-	}
-
-	private <T> String stringifyJSON(T value) {
-		try {
-			return objectMapper.writeValueAsString(value);
-		} catch (Exception e) {
-			throw new IrisMessageDataException("iris_message.invalid_message_data");
-		}
+		return messageDataUtils.parseJSON(payload, EventMessageDataPayload.class);
 	}
 
 }

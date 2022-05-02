@@ -1,29 +1,23 @@
 <template>
-  <data-export-label
-    :selected="selection.length"
-    :total="total"
-    :label="['Mitarbeiterdaten']"
-    #default="{ exportLabel }"
+  <data-export-dialog
+    :title="exportLabel"
+    :disabled="selection.length <= 0"
+    :items="exportFormatList"
+    @export-csv-standard="exportStandard('csv')"
+    @export-xlsx-standard="exportStandard('xlsx')"
   >
-    <data-export-dialog
-      :title="exportLabel"
-      :disabled="selection.length <= 0"
-      :items="exportFormatList"
-      @export-csv-standard="exportStandard('csv')"
-      @export-xlsx-standard="exportStandard('xlsx')"
-    >
-      <template #activator.prepend>
-        <v-btn
-          color="primary"
-          :disabled="selection.length <= 0"
-          data-test="export.default"
-          @click="exportStandard('csv')"
-        >
-          {{ exportLabel }}
-        </v-btn>
-      </template>
-    </data-export-dialog>
-  </data-export-label>
+    <template #activator="{ attrs, on }">
+      <v-btn
+        v-on="on"
+        v-bind="attrs"
+        color="primary"
+        :disabled="selection.length <= 0"
+        data-test="export-dialog.activator"
+      >
+        exportieren
+      </v-btn>
+    </template>
+  </data-export-dialog>
 </template>
 
 <script lang="ts">
@@ -31,14 +25,14 @@ import { Component, Vue } from "vue-property-decorator";
 import { PropType } from "vue";
 import { VaccinationReportDetails } from "@/api";
 import InfoGrid from "@/components/info-grid.vue";
-import DataExportLabel from "@/components/data-export/data-export-label.vue";
 import DataExportDialog, {
   DataExportFormat,
 } from "@/components/data-export/data-export-dialog.vue";
 import { ExportFileType } from "@/utils/data-export/data-export";
 import { getFormattedDate } from "@/utils/date";
-import { VREmployeeTableRow } from "@/modules/vaccination-report/views/details/vaccination-report-details.view.vue";
 import exportStandard from "@/modules/vaccination-report/views/details/modules/data-export/services/exportStandard";
+import { VREmployeeTableRow } from "@/modules/vaccination-report/services/mappedData";
+import { getExportLabel } from "@/utils/data-export/common";
 
 const VaccinationReportDataExportProps = Vue.extend({
   inheritAttrs: false,
@@ -61,7 +55,6 @@ const VaccinationReportDataExportProps = Vue.extend({
 @Component({
   components: {
     DataExportDialog,
-    DataExportLabel,
     InfoGrid,
   },
 })
@@ -87,6 +80,12 @@ export default class VaccinationReportDataExport extends VaccinationReportDataEx
     const exporter =
       type === "xlsx" ? exportStandard.exportXlsx : exportStandard.exportCsv;
     exporter(this.selection, fileName);
+  }
+
+  get exportLabel(): string {
+    return getExportLabel(this.selection.length, this.total, [
+      "Mitarbeiterdaten",
+    ]);
   }
 }
 </script>

@@ -39,9 +39,9 @@ import {
   dummyIrisMessageList,
   dummyIrisMessageHdContacts,
   getDummyMessageFromRequest,
-  getDummyIrisMessageEventImportSelection,
-  getDummyIrisMessageEventViewData,
-  dummyIrisMessageData,
+  getDummyIrisMessageImportSelection,
+  getDummyIrisMessageViewData,
+  getDummyIrisMessageData,
 } from "@/server/data/dummy-iris-messages";
 import { DataQuery } from "@/api/common";
 import { vaccinationReportList } from "@/server/data/vaccination-reports";
@@ -359,12 +359,8 @@ export function makeMockAPIServer() {
       });
 
       this.post("/iris-messages/data/:id/import", (schema, request) => {
-        dummyIrisMessageData.isImported = true;
-        return authResponse(request);
-      });
-
-      this.post("/iris-messages/data/:id/import", (schema, request) => {
-        dummyIrisMessageData.isImported = true;
+        const messageData = getDummyIrisMessageData(request.params.id);
+        messageData.isImported = true;
         return authResponse(request);
       });
 
@@ -372,16 +368,13 @@ export function makeMockAPIServer() {
         "/iris-messages/data/:id/import-selection-view",
         (schema, request) => {
           const id = request.params.id;
-          return authResponse(
-            request,
-            getDummyIrisMessageEventImportSelection(id)
-          );
+          return authResponse(request, getDummyIrisMessageImportSelection(id));
         }
       );
 
       this.get("/iris-messages/data/:id/view", (schema, request) => {
         const id = request.params.id;
-        return authResponse(request, getDummyIrisMessageEventViewData(id));
+        return authResponse(request, getDummyIrisMessageViewData(id));
       });
 
       this.get("/vaccination-reports", (schema, request) => {

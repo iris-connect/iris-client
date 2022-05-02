@@ -33,9 +33,14 @@ import {
   normalizeEventTrackingMessageDataImportSelection,
 } from "@/modules/event-tracking/modules/message-data/services/normalizer";
 import IrisMessageDataImportForm from "@/views/iris-message-details/components/iris-message-data-import-form.vue";
+import {
+  normalizeVaccinationReportMessageDataImportSelection,
+  VaccinationReportMessageDataImportSelection,
+} from "@/modules/vaccination-report/modules/message-data/services/normalizer";
 
 type IrisMessageDataViewPayload = {
   [IrisMessageDataDiscriminator.EventTracking]: EventTrackingMessageDataImportSelection;
+  [IrisMessageDataDiscriminator.VaccinationReport]: VaccinationReportMessageDataImportSelection;
 };
 
 export type DataViewSource =
@@ -47,6 +52,13 @@ const dataViewSource: DataViewSource = {
     component: () =>
       import(
         /* webpackChunkName: "event-tracking-message-data.import" */ "../../../modules/event-tracking/modules/message-data/event-tracking-message-data.import.vue"
+      ),
+  },
+  [IrisMessageDataDiscriminator.VaccinationReport]: {
+    normalize: normalizeVaccinationReportMessageDataImportSelection,
+    component: () =>
+      import(
+        /* webpackChunkName: "vaccination-report-message-data.import" */ "../../../modules/vaccination-report/modules/message-data/vaccination-report-message-data.import.vue"
       ),
   },
 };

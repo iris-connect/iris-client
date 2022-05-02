@@ -3,9 +3,9 @@
     <select-guests-data-table
       v-bind="{ ...$attrs, ...tableData }"
       v-on="$listeners"
-      :loading="eventApi.fetchEventDetails.state.loading"
+      :loading="fetchEventDetails.state.loading"
     />
-    <error-message-alert :errors="[eventApi.fetchEventDetails.state.error]" />
+    <error-message-alert :errors="fetchEventDetails.state.error" />
   </div>
 </template>
 
@@ -13,7 +13,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { PropType } from "vue";
 import ErrorMessageAlert from "@/components/error-message-alert.vue";
-import { bundleEventTrackingApi } from "@/modules/event-tracking/services/api";
+import { eventTrackingApi } from "@/modules/event-tracking/services/api";
 import { Guest } from "@/api";
 import SelectGuestsDataTable from "@/modules/event-tracking/modules/message-data/components/select-guests-data-table.vue";
 const SelectGuestsProps = Vue.extend({
@@ -44,14 +44,14 @@ const SelectGuestsProps = Vue.extend({
   },
 })
 export default class SelectGuests extends SelectGuestsProps {
-  eventApi = bundleEventTrackingApi(["fetchEventDetails"]);
+  fetchEventDetails = eventTrackingApi.fetchEventDetails();
 
   @Watch("eventId", { immediate: true })
   onEventIdChange(eventId: string) {
     if (eventId) {
-      this.eventApi.fetchEventDetails.execute(eventId);
+      this.fetchEventDetails.execute(eventId);
     } else {
-      this.eventApi.fetchEventDetails.reset();
+      this.fetchEventDetails.reset();
     }
   }
 
@@ -60,7 +60,7 @@ export default class SelectGuests extends SelectGuestsProps {
     eventStart?: string;
     eventEnd?: string;
   } {
-    const eventDetails = this.eventApi.fetchEventDetails.state.result;
+    const eventDetails = this.fetchEventDetails.state.result;
     return {
       items: eventDetails?.submissionData?.guests || [],
       eventStart: eventDetails?.start,

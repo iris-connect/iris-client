@@ -12,6 +12,8 @@ import {
 import { Request } from "miragejs";
 import { getDummyDetailsWithStatus } from "@/server/data/data-requests";
 import { EventTrackingMessageDataImportSelection } from "@/modules/event-tracking/modules/message-data/services/normalizer";
+import { vaccinationReportList } from "@/server/data/vaccination-reports";
+import { VaccinationReportMessageDataImportSelection } from "@/modules/vaccination-report/modules/message-data/services/normalizer";
 
 export const dummyIrisMessageFolders: IrisMessageFolder[] = [
   {
@@ -74,9 +76,21 @@ export const dummyIrisMessageHdContacts: IrisMessageHdContact[] = [
   },
 ];
 
-export const getDummyIrisMessageEventViewData = (
+export enum DummyMessageDataId {
+  EventTracking = "m1_md_et1",
+  VaccinationReport = "m1_md_vr1",
+}
+
+export const getDummyIrisMessageViewData = (
   messageDataId: string
 ): IrisMessageDataViewData => {
+  if (messageDataId === DummyMessageDataId.VaccinationReport) {
+    return {
+      discriminator: IrisMessageDataDiscriminator.VaccinationReport,
+      id: messageDataId,
+      payload: vaccinationReportList[0],
+    };
+  }
   const requestDetails = getDummyDetailsWithStatus("");
   return {
     discriminator: IrisMessageDataDiscriminator.EventTracking,
@@ -85,7 +99,36 @@ export const getDummyIrisMessageEventViewData = (
   };
 };
 
-export const getDummyIrisMessageEventImportSelection = (
+export const getDummyIrisMessageImportSelection = (
+  messageDataId: string
+): IrisMessageDataViewData => {
+  if (messageDataId === DummyMessageDataId.VaccinationReport) {
+    return getDummyIrisMessageVRImportSelection(messageDataId);
+  }
+  return getDummyIrisMessageEventImportSelection(messageDataId);
+};
+
+const getDummyIrisMessageVRImportSelection = (
+  messageDataId: string
+): IrisMessageDataViewData => {
+  const vaccinationReport = vaccinationReportList[0];
+  const employees = vaccinationReport.employees || [];
+  const payload: VaccinationReportMessageDataImportSelection = {
+    selectables: {
+      employees,
+    },
+    duplicates: {
+      employees: [employees?.[0]?.messageDataSelectId || ""].filter((v) => v),
+    },
+  };
+  return {
+    discriminator: IrisMessageDataDiscriminator.VaccinationReport,
+    id: messageDataId,
+    payload,
+  };
+};
+
+const getDummyIrisMessageEventImportSelection = (
   messageDataId: string
 ): IrisMessageDataViewData => {
   const sourceEvent = getDummyDetailsWithStatus("");
@@ -105,11 +148,25 @@ export const getDummyIrisMessageEventImportSelection = (
   };
 };
 
-export const dummyIrisMessageData: IrisMessageDataAttachment = {
-  id: "m1md1",
+export const dummyIrisMessageDataEventTracking: IrisMessageDataAttachment = {
+  id: DummyMessageDataId.EventTracking,
   discriminator: IrisMessageDataDiscriminator.EventTracking,
   isImported: false,
   description: "event tracking data attachment",
+};
+
+const dummyIrisMessageDataVaccinationReport: IrisMessageDataAttachment = {
+  id: DummyMessageDataId.VaccinationReport,
+  discriminator: IrisMessageDataDiscriminator.VaccinationReport,
+  isImported: false,
+  description: "vaccination report data attachment",
+};
+
+export const getDummyIrisMessageData = (messageDataId: string) => {
+  if (messageDataId === DummyMessageDataId.VaccinationReport) {
+    return dummyIrisMessageDataVaccinationReport;
+  }
+  return dummyIrisMessageDataEventTracking;
 };
 
 export const dummyIrisMessageList: IrisMessageDetails[] = [
@@ -123,9 +180,12 @@ export const dummyIrisMessageList: IrisMessageDetails[] = [
     body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     createdAt: daysAgo(3),
     isRead: false,
-    dataAttachments: [dummyIrisMessageData],
+    dataAttachments: [
+      dummyIrisMessageDataEventTracking,
+      dummyIrisMessageDataVaccinationReport,
+    ],
     attachmentCount: {
-      total: 1,
+      total: 2,
       imported: 0,
     },
   },

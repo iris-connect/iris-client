@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -46,7 +47,7 @@ class IrisMessageDataControllerTest {
 	@MockBean
 	private IrisMessageDataViewProvider irisMessageDataViewProvider;
 
-	@MockBean
+	@Mock
 	IrisMessageDataProcessor irisMessageDataProcessor;
 
 	@MockBean

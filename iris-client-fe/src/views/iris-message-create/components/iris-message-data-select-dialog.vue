@@ -3,8 +3,7 @@
     <template v-slot:activator="{ attrs, on }">
       <slot name="activator" v-bind="{ attrs, on }">
         <v-btn
-          color="red lighten-2"
-          dark
+          color="red lighten-2 white--text"
           v-on="on"
           v-bind="attrs"
           data-test="message-data.export-dialog.activator"

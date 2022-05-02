@@ -1,6 +1,6 @@
 <template>
   <div>
-    <data-query-handler @query:update="handleQueryUpdate" #default="{ query }">
+    <data-query-handler @update:query="handleQueryUpdate" #default="{ query }">
       <v-row>
         <v-col cols="12">
           <div class="mb-6">
