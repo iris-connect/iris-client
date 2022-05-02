@@ -11,12 +11,6 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.Set;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-
-// @TODO: test to verify that values are defused!
-
 @Data
 class VaccinationMessageDataPayload {
 
@@ -24,9 +18,9 @@ class VaccinationMessageDataPayload {
 	private Set<Employee> employees;
 
 	record Facility(
-			@NotBlank @DefuseJsonString(maxLength = 100) String name,
-			@NotNull AddressWithDefuseData address,
-			@NotNull ContactPerson contactPerson) {}
+			@DefuseJsonString(maxLength = 100) String name,
+			AddressWithDefuseData address,
+			ContactPerson contactPerson) {}
 
 	record ContactPerson(
 			@DefuseJsonString(maxLength = 100) String firstName,
@@ -37,12 +31,12 @@ class VaccinationMessageDataPayload {
 	record Employee(
 			@DefuseJsonString(maxLength = 100) String firstName,
 			@DefuseJsonString(maxLength = 100) String lastName,
-			@Past LocalDate dateOfBirth,
-			@NotNull Sex sex,
-			@NotNull AddressWithDefuseData address,
+			LocalDate dateOfBirth,
+			Sex sex,
+			AddressWithDefuseData address,
 			@DefuseJsonString(maxLength = 100, payload = AttackDetector.Phone.class) String phone,
 			@DefuseJsonString(maxLength = 100) String eMail,
-			@NotNull VaccinationType vaccination,
-			@NotNull VaccinationStatus vaccinationStatus,
-			@NotBlank String messageDataSelectId) {}
+			VaccinationType vaccination,
+			VaccinationStatus vaccinationStatus,
+			String messageDataSelectId) {}
 }
