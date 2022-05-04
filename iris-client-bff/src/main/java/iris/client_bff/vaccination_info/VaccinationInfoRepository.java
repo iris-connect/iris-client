@@ -3,8 +3,10 @@ package iris.client_bff.vaccination_info;
 import iris.client_bff.vaccination_info.VaccinationInfo.VaccinationInfoIdentifier;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.util.Streamable;
 
 /**
@@ -19,4 +21,7 @@ public interface VaccinationInfoRepository extends JpaRepository<VaccinationInfo
 	 * @return
 	 */
 	Streamable<VaccinationInfo> findByMetadataCreatedIsBefore(Instant refDate);
+
+	@Query("select count(v)>0 from VaccinationInfo v where v.metadata.createdBy = :userId OR v.metadata.lastModifiedBy = :userId")
+	boolean isReferencedToUser(UUID userId);
 }

@@ -1,6 +1,7 @@
 package iris.client_bff.iris_messages;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +26,7 @@ public interface IrisMessageRepository extends JpaRepository<IrisMessage, IrisMe
 	 * @return
 	 */
 	Streamable<IrisMessage> findByMetadataCreatedIsBefore(Instant refDate);
+
+	@Query("select count(m)>0 from IrisMessage m where m.metadata.createdBy = :userId OR m.metadata.lastModifiedBy = :userId")
+	boolean isReferencedToUser(UUID userId);
 }

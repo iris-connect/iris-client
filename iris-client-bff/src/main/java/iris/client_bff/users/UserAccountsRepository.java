@@ -13,7 +13,7 @@ import org.springframework.data.util.Streamable;
 
 interface UserAccountsRepository extends JpaRepository<UserAccount, UserAccountIdentifier> {
 
-	String SELECT_BASE = "SELECT u from UserAccount u where ";
+	String SELECT_BASE = "SELECT u from UserAccount u where u.role != iris.client_bff.users.entities.UserRole.DELETED AND ";
 
 	@Query(SELECT_BASE + "u.userName = :userName AND u.deletedAt IS NULL")
 	Optional<UserAccount> findUserByUsername(String userName);

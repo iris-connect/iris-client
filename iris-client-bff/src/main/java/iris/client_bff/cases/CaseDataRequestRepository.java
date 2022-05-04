@@ -5,6 +5,7 @@ import iris.client_bff.cases.CaseDataRequest.Status;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,4 +35,7 @@ public interface CaseDataRequestRepository extends JpaRepository<CaseDataRequest
 	Streamable<CaseDataRequest> findByMetadataCreatedIsBefore(Instant refDate);
 
 	Optional<CaseDataRequest> findByIdOrDataAuthorizationToken(DataRequestIdentifier id, String dataAuthorizationToken);
+
+	@Query("select count(r)>0 from CaseDataRequest r where r.metadata.createdBy = :userId OR r.metadata.lastModifiedBy = :userId")
+	boolean isReferencedToUser(UUID userId);
 }

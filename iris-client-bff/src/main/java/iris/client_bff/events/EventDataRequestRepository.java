@@ -4,6 +4,7 @@ import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,4 +32,7 @@ public interface EventDataRequestRepository extends JpaRepository<EventDataReque
 	 * @return
 	 */
 	Streamable<EventDataRequest> findByMetadataCreatedIsBefore(Instant refDate);
+
+	@Query("select count(r)>0 from EventDataRequest r where r.metadata.createdBy = :userId OR r.metadata.lastModifiedBy = :userId")
+	boolean isReferencedToUser(UUID userId);
 }

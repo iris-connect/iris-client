@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.MemoryAppender;
 import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.core.IrisDateTimeProvider;
@@ -15,7 +14,6 @@ import iris.client_bff.events.model.Location;
 import iris.client_bff.events.model.Location.LocationIdentifier;
 import iris.client_bff.users.entities.UserAccount;
 import iris.client_bff.users.entities.UserRole;
-import lombok.RequiredArgsConstructor;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -24,52 +22,64 @@ import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @author Jens Kutzsche
  */
-@IrisWebIntegrationTest
-@RequiredArgsConstructor
-@Tag("users")
-@Tag("delete-job")
-@DisplayName("IT of delete job for users")
-class UserDeleteJobIntegrationTests {
+public class UserAnonymizationJobTestBase {
 
-	private final UserAccountsRepository users;
+	protected final UserAccountsRepository users;
 	private final IrisDateTimeProvider dateTimeProvider;
-	private final UserDeleteJob deleteJob;
-	private final PasswordEncoder passwordEncoder;
-	private final EventDataRequestRepository events;
+	protected final UserAnonymizationJob anonymizationJob;
+	protected final EventDataRequestRepository events;
 
-	private MemoryAppender memoryAppender;
-	private UserAccount user;
+	protected MemoryAppender memoryAppender;
+	protected UserAccount user;
+	private UserAccount user2;
+
+	public UserAnonymizationJobTestBase(UserAccountsRepository users,
+			IrisDateTimeProvider dateTimeProvider,
+			UserAnonymizationJob anonymizationJob,
+			EventDataRequestRepository events) {
+
+		this.users = users;
+		this.dateTimeProvider = dateTimeProvider;
+		this.anonymizationJob = anonymizationJob;
+		this.events = events;
+	}
 
 	@BeforeEach
 	void setup() {
 
-		Logger logger = (Logger) LoggerFactory.getLogger(UserDeleteJob.class);
+		Logger logger = (Logger) LoggerFactory.getLogger(UserAnonymizationJob.class);
 		memoryAppender = new MemoryAppender();
 		memoryAppender.setContext((LoggerContext) LoggerFactory.getILoggerFactory());
 		logger.setLevel(Level.INFO);
 		logger.addAppender(memoryAppender);
 		memoryAppender.start();
 
-		user = createUser("test");
+		user = users.save(createUser("test"));
+
+		// set security context to include correct createdBy metadata
+		SecurityContextHolder.getContext()
+				.setAuthentication(new UserAccountAuthentication(user, true, null));
+
+		// Create second user to verify if the reference in this entity will be ignored.
+		user2 = users.save(createUser("test2"));
 	}
 
 	@AfterEach
 	void cleanUp() {
+		users.delete(user2);
 		users.delete(user);
 	}
 
 	@Test
-	@DisplayName("deleteUsers: without marked users ⇒ delete nothing")
-	void deleteUsers_WithoutMarked_DeleteNothing() {
+	@DisplayName("processUsers: without marked users ⇒ anonymize nothing")
+	void processUsers_WithoutMarked_AnonymizeNothing() {
 
 		var usersSize = users.findAll().size();
 
@@ -77,40 +87,15 @@ class UserDeleteJobIntegrationTests {
 		assertThat(users.findAll()).extracting(UserAccount::getLastName).contains(user.getLastName());
 		assertThat(user.getUserName()).isEqualTo(user.getUserName());
 
-		deleteJob.deleteUsers();
+		anonymizationJob.processUsers();
 
 		assertThat(users.findAll()).hasSize(usersSize).extracting(UserAccount::getLastName)
 				.contains(user.getLastName());
 	}
 
 	@Test
-	@DisplayName("deleteUsers: marked user without referenz ⇒ delete")
-	void deleteUsers_WithoutRef_Delete() {
-
-		var usersSize = users.findAll().size();
-
-		user.markDeleted();
-		users.save(user);
-
-		// extra elements from data initialization
-		assertThat(users.findAll()).extracting(UserAccount::getLastName)
-				.contains(user.getLastName());
-		assertThat(user.getUserName()).isNotEqualTo("test");
-
-		deleteJob.deleteUsers();
-
-		assertThat(users.findAll()).hasSize(usersSize - 1).extracting(UserAccount::getLastName)
-				.doesNotContain(user.getLastName());
-
-		assertThat(memoryAppender.countEventsForLogger(UserDeleteJob.class)).isNotZero();
-		assertThat(memoryAppender.contains(
-				String.format("User with ID = %s deleted!", user.getId().toString()),
-				Level.INFO)).isTrue();
-	}
-
-	@Test
-	@DisplayName("deleteUsers: user with referenz + before warning period ⇒ delete nothing + without warning")
-	void deleteUsers_WithRefBeforeWarnPeriod_DeleteNothingWithoutWarning() {
+	@DisplayName("processUsers: user with referenz + before anonymization and warning periods ⇒ anonymize nothing + without warning")
+	void processUsers_WithRefBeforeWarnPeriod_AnonymizeNothingWithoutWarning() {
 
 		var usersSize = users.findAll().size();
 
@@ -121,59 +106,30 @@ class UserDeleteJobIntegrationTests {
 				.contains(user.getLastName());
 		assertThat(user.getUserName()).isNotEqualTo("test");
 
-		deleteJob.deleteUsers();
+		anonymizationJob.processUsers();
 
 		assertThat(users.findAll()).hasSize(usersSize).extracting(UserAccount::getLastName)
 				.contains(user.getLastName());
 
-		assertThat(memoryAppender.countEventsForLogger(UserDeleteJob.class)).isZero();
+		assertThat(memoryAppender.countEventsForLogger(UserAnonymizationJob.class)).isZero();
 
 		// clean up
 		events.delete(request);
 	}
 
-	@Test
-	@DisplayName("deleteUsers: user with referenz + after warning period ⇒ delete nothing + with warning")
-	void deleteUsers_WithRefAfterWarnPeriod_DeleteNothingWithWarning() {
-
-		var usersSize = users.findAll().size();
-
-		var request = createReferenzToUserAndDeleateUser(187);
-
-		// extra elements from data initialization
-		assertThat(users.findAll()).extracting(UserAccount::getLastName)
-				.contains(user.getLastName());
-		assertThat(user.getUserName()).isNotEqualTo("test");
-
-		deleteJob.deleteUsers();
-
-		assertThat(users.findAll()).hasSize(usersSize).extracting(UserAccount::getLastName)
-				.contains(user.getLastName());
-
-		assertThat(memoryAppender.countEventsForLogger(UserDeleteJob.class)).isNotZero();
-		assertThat(memoryAppender.contains(
-				String.format("User with ID = %s could not be deleted!", user.getId().toString()),
-				Level.WARN)).isTrue();
-
-		// clean up
-		events.delete(request);
-	}
-
-	private UserAccount createUser(String name) {
+	UserAccount createUser(String name) {
 
 		var userAccount = new UserAccount();
 		userAccount.setUserName(name);
-		userAccount.setPassword(passwordEncoder.encode(name));
+		userAccount.setPassword(name);
 		userAccount.setFirstName(name);
 		userAccount.setLastName(name);
 		userAccount.setRole(UserRole.ADMIN);
 
-		users.save(userAccount);
-
 		return userAccount;
 	}
 
-	private EventDataRequest createReferenzToUserAndDeleateUser(int durationDays) {
+	protected EventDataRequest createReferenzToUserAndDeleateUser(int durationDays) {
 
 		// set security context to include correct createdBy metadata
 		SecurityContextHolder.getContext()
@@ -196,7 +152,7 @@ class UserDeleteJobIntegrationTests {
 		return request;
 	}
 
-	private EventDataRequest createRequest(String name, String refId, Instant date) {
+	EventDataRequest createRequest(String name, String refId, Instant date) {
 
 		var location = new Location(LocationIdentifier.random(), "providerId", "locationId", null,
 				null, null, null, null, null, null, null, null, null);
@@ -209,4 +165,5 @@ class UserDeleteJobIntegrationTests {
 				.location(location)
 				.build());
 	}
+
 }
