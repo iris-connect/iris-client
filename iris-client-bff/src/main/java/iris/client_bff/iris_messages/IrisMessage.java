@@ -69,7 +69,7 @@ public class IrisMessage extends Aggregate<IrisMessage, IrisMessage.IrisMessageI
 
 	private boolean isRead;
 
-	@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<IrisMessageData> dataAttachments = new ArrayList<>();
 
 	@EqualsAndHashCode(callSuper = false)
