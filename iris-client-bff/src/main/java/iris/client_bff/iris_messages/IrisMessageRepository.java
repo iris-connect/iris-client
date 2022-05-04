@@ -1,9 +1,12 @@
 package iris.client_bff.iris_messages;
 
+import java.time.Instant;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.util.Streamable;
 
 public interface IrisMessageRepository extends JpaRepository<IrisMessage, IrisMessage.IrisMessageIdentifier> {
 
@@ -15,4 +18,11 @@ public interface IrisMessageRepository extends JpaRepository<IrisMessage, IrisMe
 	Page<IrisMessage> findAllByFolderIdOrderByIsReadAsc(IrisMessageFolder.IrisMessageFolderIdentifier folder,
 			Pageable pageable);
 
+	/**
+	 * Returns the {@link IrisMessage}s created before the given {@link Instant}.
+	 *
+	 * @param refDate must not be {@literal null}.
+	 * @return
+	 */
+	Streamable<IrisMessage> findByMetadataCreatedIsBefore(Instant refDate);
 }
