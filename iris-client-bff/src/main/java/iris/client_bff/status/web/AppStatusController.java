@@ -8,6 +8,7 @@ import iris.client_bff.status.StatusService;
 import iris.client_bff.status.web.AppStatusController.AppStatusInfo.Info;
 import lombok.AllArgsConstructor;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @RequestMapping("/status/checkin-apps")
 @Validated
 @AllArgsConstructor
+@Slf4j
 public class AppStatusController {
 
 	private StatusService statusService;
@@ -37,6 +39,9 @@ public class AppStatusController {
 		try {
 			return statusService.getApps().toList();
 		} catch (Exception e) {
+
+			log.error("Can't get apps from StatusService: ", e);
+
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 	}
