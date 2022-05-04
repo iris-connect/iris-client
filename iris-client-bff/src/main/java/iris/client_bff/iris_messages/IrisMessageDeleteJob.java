@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class IrisMessageDeleteJob {
 
-	private final @NonNull IrisMessageRepository messages;
+	private final @NonNull IrisMessageRepository messageRepo;
 	private final @NonNull Properties properties;
 
 	@Transactional
@@ -36,27 +36,27 @@ class IrisMessageDeleteJob {
 
 		var refDate = Instant.now().minus(properties.getDeleteAfter());
 
-		var oldRequests = messages.findByMetadataCreatedIsBefore(refDate).toList();
+		var oldMessages = messageRepo.findByMetadataCreatedIsBefore(refDate).toList();
 
-		if (oldRequests.isEmpty()) {
+		if (oldMessages.isEmpty()) {
 			return;
 		}
 
 		log.debug("{} IRIS message(s) are deleted with period {} after their creation!",
-				oldRequests.size(),
+				oldMessages.size(),
 				properties.getDeleteAfter(),
-				oldRequests.get(0).getCreatedAt());
+				oldMessages.get(0).getCreatedAt());
 
-		messages.deleteAll(oldRequests);
+		messageRepo.deleteAll(oldMessages);
 
 		log.info("{} IRIS message(s) (IDs: {}) were deleted with period {} after their creation at {}!",
-				oldRequests.size(),
-				oldRequests.stream()
+				oldMessages.size(),
+				oldMessages.stream()
 						.map(IrisMessage::getId)
 						.map(IrisMessageIdentifier::toString)
 						.collect(Collectors.joining(", ")),
 				properties.getDeleteAfter(),
-				oldRequests.get(0).getCreatedAt());
+				oldMessages.get(0).getCreatedAt());
 	}
 
 	@ConstructorBinding

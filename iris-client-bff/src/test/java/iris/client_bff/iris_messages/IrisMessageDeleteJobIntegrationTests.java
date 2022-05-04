@@ -16,17 +16,17 @@ import org.junit.jupiter.api.Test;
 @RequiredArgsConstructor
 class IrisMessageDeleteJobIntegrationTests {
 
-	private final IrisMessageRepository messages;
-	private final IrisMessageDataRepository data;
-	private final IrisMessageFolderRepository folders;
+	private final IrisMessageRepository messageRepo;
+	private final IrisMessageDataRepository dataRepo;
+	private final IrisMessageFolderRepository folderRepo;
 	private final IrisDateTimeProvider dateTimeProvider;
 	private final IrisMessageDeleteJob deleteJob;
 
 	@Test
 	void testDeleteMessages() {
 
-		var messagesSize = messages.findAll().size();
-		var dataSize = data.findAll().size();
+		var messagesSize = messageRepo.findAll().size();
+		var dataSize = dataRepo.findAll().size();
 
 		// in time
 		dateTimeProvider.setDelta(ofDays(-179));
@@ -41,21 +41,21 @@ class IrisMessageDeleteJobIntegrationTests {
 		dateTimeProvider.reset();
 
 		// extra element from data initialization
-		assertThat(messages.findAll()).hasSize(messagesSize + 2);
-		assertThat(data.findAll()).hasSize(dataSize + 2);
+		assertThat(messageRepo.findAll()).hasSize(messagesSize + 2);
+		assertThat(dataRepo.findAll()).hasSize(dataSize + 2);
 
 		deleteJob.deleteMessages();
 
-		assertThat(messages.findAll()).hasSize(messagesSize + 1);
-		assertThat(data.findAll()).hasSize(dataSize + 1);
+		assertThat(messageRepo.findAll()).hasSize(messagesSize + 1);
+		assertThat(dataRepo.findAll()).hasSize(dataSize + 1);
 	}
 
 	private void createMessage() {
 
 		var testData = new IrisMessageTestData();
 
-		var folder = this.folders.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX).get();
+		var folder = this.folderRepo.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX).get();
 
-		messages.save(testData.getTestInboxMessage(folder));
+		messageRepo.save(testData.getTestInboxMessage(folder));
 	}
 }
