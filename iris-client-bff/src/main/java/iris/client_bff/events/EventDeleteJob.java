@@ -1,8 +1,8 @@
 package iris.client_bff.events;
 
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
@@ -61,11 +61,10 @@ class EventDeleteJob {
 				oldRequests.get(0).getCreatedAt());
 	}
 
-	@ConstructorBinding
-	@RequiredArgsConstructor
 	@ConfigurationProperties("iris.client.event")
-	@Getter
-	public static class EventDeletionProperties {
+	@ConstructorBinding
+	@Value
+	static class EventDeletionProperties {
 
 		/**
 		 * Defines the {@link Period} after that a event will be deleted starting from the creation date.

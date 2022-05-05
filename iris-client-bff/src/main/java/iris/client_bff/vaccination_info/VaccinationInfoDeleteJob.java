@@ -64,7 +64,7 @@ class VaccinationInfoDeleteJob {
 	@ConfigurationProperties("iris.client.vaccinfo")
 	@ConstructorBinding
 	@Value
-	public static class Properties {
+	static class Properties {
 
 		/**
 		 * Defines the {@link Period} after that a vaccination info will be deleted starting from the creation date.

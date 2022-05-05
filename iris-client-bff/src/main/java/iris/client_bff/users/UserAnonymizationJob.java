@@ -36,11 +36,12 @@ class UserAnonymizationJob {
 	static final String ANONYMOUS_TEXT = "#####";
 
 	private final @NonNull UserAccountsRepository userRepo;
-	private final @NonNull Properties properties;
+	private final @NonNull UserAnonymizationJob.Properties properties;
 
 	private final Predicate<UserAccount> shouldAnonymizePredicate;
 
-	public UserAnonymizationJob(@NonNull UserAccountsRepository userRepo, @NonNull Properties properties,
+	public UserAnonymizationJob(@NonNull UserAccountsRepository userRepo,
+			@NonNull UserAnonymizationJob.Properties properties,
 			@NonNull List<UserAnonymizationReferenceChecker> referenceCheckers) {
 
 		this.userRepo = userRepo;
@@ -123,7 +124,7 @@ class UserAnonymizationJob {
 		 */
 		@NotNull
 		@DurationMin(days = 0)
-		private final Duration anonymizationAfter;
+		Duration anonymizationAfter;
 
 		/**
 		 * Defines the {@link Duration} after which to warn via logs about old references that prevent anonymization. This
@@ -131,14 +132,14 @@ class UserAnonymizationJob {
 		 */
 		@NotNull
 		@DurationMin(days = 0)
-		private final Duration oldReferenceWarningAfter;
+		Duration oldReferenceWarningAfter;
 
 		/**
 		 * Defines the {@link AnonymizationBase} for determining whether a user can be anonymized and thus finally
 		 * eliminated after his "soft deletion".
 		 */
 		@NotNull
-		private final AnonymizationBase anonymizationBase;
+		AnonymizationBase anonymizationBase;
 
 		enum AnonymizationBase {
 			/**

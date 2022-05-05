@@ -4,15 +4,23 @@ import static java.time.Instant.*;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
+import javax.validation.constraints.Positive;
+
 import org.apache.commons.codec.digest.DigestUtils;
+import org.hibernate.validator.constraints.time.DurationMin;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +28,7 @@ import org.springframework.stereotype.Service;
 public class LoginAttemptsService {
 
 	private final @NonNull LoginAttemptsRepository loginAttempts;
-	private final @NonNull LoginAttemptsProperties properties;
+	private final @NonNull LoginAttemptsService.Properties properties;
 
 	public void loginSucceeded(String key) {
 
@@ -80,5 +88,26 @@ public class LoginAttemptsService {
 		loginAttempts.deleteBylastModifiedBefore(time);
 
 		log.trace("Login Attemts Cleaner - cleaning finished");
+	}
+
+	/**
+	 * @author Jens Kutzsche
+	 */
+	@ConfigurationProperties(prefix = "security.login.attempts")
+	@ConstructorBinding
+	@Validated
+	@Value
+	static class Properties {
+
+		@Positive
+		private int firstWarningThreshold;
+		@Positive
+		private int warningThresholdMultiplier;
+		@DurationMin(seconds = 1)
+		private Duration firstWaitingTime;
+		@Positive
+		private int waitingTimeMultiplier;
+		@DurationMin(hours = 1)
+		private Duration ignoreOldAttemptsAfter;
 	}
 }
