@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/user-profile")
-public class UserProfileController {
+class UserProfileController {
 
 	private final UserDetailsServiceImpl userService;
 	private final UserMapper userMapper;
