@@ -1,8 +1,6 @@
 package iris.client_bff.iris_messages;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import iris.client_bff.core.AggregateRepository;
+import iris.client_bff.iris_messages.IrisMessageData.IrisMessageDataIdentifier;
 
-public interface IrisMessageDataRepository
-		extends JpaRepository<IrisMessageData, IrisMessageData.IrisMessageDataIdentifier> {
-
-}
+interface IrisMessageDataRepository extends AggregateRepository<IrisMessageData, IrisMessageDataIdentifier> {}
