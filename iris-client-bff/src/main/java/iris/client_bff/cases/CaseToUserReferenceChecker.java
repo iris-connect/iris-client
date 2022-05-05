@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class CaseToUserReferenceChecker implements UserAnonymizationReferenceChecker {
+class CaseToUserReferenceChecker implements UserAnonymizationReferenceChecker {
 
 	private final CaseDataRequestRepository caseRepo;
 	private final CaseDataSubmissionRepository submissionRepo;

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class EventToUserReferenceChecker implements UserAnonymizationReferenceChecker {
+class EventToUserReferenceChecker implements UserAnonymizationReferenceChecker {
 
 	private final EventDataRequestRepository eventRepo;
 	private final EventDataSubmissionRepository submissionRepo;

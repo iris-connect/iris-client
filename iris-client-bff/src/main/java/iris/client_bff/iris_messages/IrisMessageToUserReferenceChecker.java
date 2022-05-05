@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class IrisMessageToUserReferenceChecker implements UserAnonymizationReferenceChecker {
+class IrisMessageToUserReferenceChecker implements UserAnonymizationReferenceChecker {
 
 	private final IrisMessageRepository messageRepo;
 

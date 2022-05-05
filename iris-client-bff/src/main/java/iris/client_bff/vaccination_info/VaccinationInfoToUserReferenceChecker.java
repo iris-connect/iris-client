@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class VaccinationInfoToUserReferenceChecker implements UserAnonymizationReferenceChecker {
+class VaccinationInfoToUserReferenceChecker implements UserAnonymizationReferenceChecker {
 
 	private final VaccinationInfoRepository vaccRepo;
 	private final VaccinationInfoAnnouncementRepository announcementRepo;
