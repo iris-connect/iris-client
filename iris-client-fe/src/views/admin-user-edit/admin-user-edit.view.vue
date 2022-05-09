@@ -99,6 +99,17 @@
               </v-alert>
             </v-col>
           </v-row>
+          <conditional-field :config="fieldsConfig['locked']" v-slot="scope">
+            <v-row>
+              <v-col cols="12">
+                <v-switch
+                  v-bind="scope"
+                  v-model="form.model.locked"
+                  label="Benutzer sperren"
+                ></v-switch>
+              </v-col>
+            </v-row>
+          </conditional-field>
           <v-row v-if="hasError">
             <v-col>
               <v-alert v-if="userLoadingError" text type="error">
@@ -202,6 +213,9 @@ const fieldsConfigByRole: Record<UserRole, FieldsConfig> = {
     role: {
       edit: false,
     },
+    locked: {
+      show: false,
+    },
   },
 };
 
@@ -264,7 +278,14 @@ export default class AdminUserEditView extends Vue {
 
   get fieldsConfig(): FieldsConfig {
     const userRole = store.state.userLogin.user?.role;
-    return userRole ? fieldsConfigByRole[userRole] : {};
+    return userRole
+      ? {
+          ...fieldsConfigByRole[userRole],
+          locked: {
+            show: !this.isCurrentUser,
+          },
+        }
+      : {};
   }
 
   get validationRules(): Record<string, Array<unknown>> {
@@ -286,6 +307,7 @@ export default class AdminUserEditView extends Vue {
       password: undefined,
       oldPassword: undefined,
       role: undefined,
+      locked: undefined,
     },
     valid: false,
   };

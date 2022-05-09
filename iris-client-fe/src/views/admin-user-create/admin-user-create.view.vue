@@ -59,6 +59,14 @@
             />
           </v-col>
         </v-row>
+        <v-row>
+          <v-col>
+            <v-switch
+              v-model="form.model.locked"
+              label="Benutzer sperren"
+            ></v-switch>
+          </v-col>
+        </v-row>
         <v-alert v-if="userCreationError" text type="error">{{
           userCreationError
         }}</v-alert>
@@ -153,6 +161,7 @@ export default class AdminUserCreateView extends Vue {
       userName: "",
       password: "",
       role: UserRole.User,
+      locked: false,
     },
     valid: false,
   };
