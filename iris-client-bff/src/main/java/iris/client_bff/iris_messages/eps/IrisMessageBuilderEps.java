@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,14 +22,13 @@ class IrisMessageBuilderEps {
 
 	private final IrisMessageFolderRepository folderRepository;
 	private final EPSIrisMessageClient irisMessageClient;
-	private final MessageSourceAccessor messages;
 
 	public IrisMessage build(IrisMessageTransferDto messageTransfer) throws IrisMessageException {
 
 		Optional<IrisMessageFolder> folder = this.folderRepository
 				.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
 		if (folder.isEmpty()) {
-			throw new IrisMessageException(messages.getMessage("iris_message.invalid_folder"));
+			throw new IrisMessageException("iris_message.invalid_folder");
 		}
 
 		IrisMessageHdContact hdAuthor = new IrisMessageHdContact(
@@ -44,7 +42,7 @@ class IrisMessageBuilderEps {
 		// ensure that the message was sent to the correct recipient
 		IrisMessageHdContact hdOwn = this.irisMessageClient.getOwnIrisMessageHdContact();
 		if (!Objects.equals(hdOwn.getId(), hdRecipient.getId())) {
-			throw new IrisMessageException(messages.getMessage("iris_message.invalid_recipient"));
+			throw new IrisMessageException("iris_message.invalid_recipient");
 		}
 
 		IrisMessage message = new IrisMessage();
@@ -62,7 +60,7 @@ class IrisMessageBuilderEps {
 				}
 			}
 		} catch (Exception e) {
-			throw new IrisMessageException(messages.getMessage("iris_message.invalid_message_data"));
+			throw new IrisMessageException("iris_message.invalid_message_data");
 		}
 
 		message

@@ -15,10 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.support.MessageSourceAccessor;
 
 @ExtendWith(MockitoExtension.class)
-public class IrisMessageBuilderEpsTest {
+class IrisMessageBuilderEpsTest {
 
 	IrisMessageTestData testData;
 
@@ -28,9 +27,6 @@ public class IrisMessageBuilderEpsTest {
 	@Mock
 	EPSIrisMessageClient irisMessageClient;
 
-	@Mock
-	MessageSourceAccessor messages;
-
 	IrisMessageBuilderEps builder;
 
 	@BeforeEach
@@ -38,8 +34,7 @@ public class IrisMessageBuilderEpsTest {
 		this.testData = new IrisMessageTestData();
 		this.builder = new IrisMessageBuilderEps(
 				this.folderRepository,
-				this.irisMessageClient,
-				this.messages);
+				this.irisMessageClient);
 	}
 
 	@Test
@@ -61,6 +56,5 @@ public class IrisMessageBuilderEpsTest {
 
 		// messages should be identical except ID: toString removes the ID
 		assertEquals(message.toString(), builtMessage.toString());
-
 	}
 }
