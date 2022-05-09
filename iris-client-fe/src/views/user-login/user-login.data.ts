@@ -12,6 +12,7 @@ export const normalizeUser = (source?: User, parse?: boolean): User => {
         lastName: normalizer("lastName", undefined),
         userName: normalizer("userName", ""),
         role: normalizer("role", UserRole.User),
+        locked: normalizer("locked", false, "boolean"),
         ...normalizeMetaData(source),
       };
     },

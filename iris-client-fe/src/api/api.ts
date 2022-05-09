@@ -1529,6 +1529,7 @@ export interface User extends MetaData {
    * @memberof User
    */
   role: UserRole;
+  locked: boolean;
 }
 /**
  *
@@ -1566,6 +1567,7 @@ export interface UserInsert {
    * @memberof UserInsert
    */
   role: UserRole;
+  locked: boolean;
 }
 /**
  *
@@ -1632,6 +1634,7 @@ export interface UserUpdate {
    * @memberof UserUpdate
    */
   role?: UserRole;
+  locked?: boolean;
 }
 /**
  *

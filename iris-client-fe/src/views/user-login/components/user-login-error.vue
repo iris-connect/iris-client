@@ -55,7 +55,7 @@ export default class UserLoginError extends UserLoginErrorProps {
         // shows error message with remaining block time
         return this.error.replace(
           blockedRegExp,
-          `Diese Anmeldedaten sind leider nicht korrekt, bitte versuchen Sie es in ${seconds} ${
+          `Diese Anmeldedaten sind leider nicht gültig, bitte versuchen Sie es in ${seconds} ${
             seconds === 1 ? "Sekunde" : "Sekunden"
           } noch einmal.`
         );
@@ -63,13 +63,13 @@ export default class UserLoginError extends UserLoginErrorProps {
       // shows generic auth error message if blockedUntil date is passed
       return this.error.replace(
         blockedRegExp,
-        "Diese Anmeldedaten sind leider nicht korrekt."
+        "Diese Anmeldedaten sind leider nicht gültig."
       );
     }
     if (this.error && unauthorizedRegExp.test(this.error)) {
       return this.error.replace(
         unauthorizedRegExp,
-        "Diese Anmeldedaten sind leider nicht korrekt."
+        "Diese Anmeldedaten sind leider nicht gültig."
       );
     }
     return this.error;

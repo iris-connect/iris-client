@@ -37,6 +37,10 @@
                   :search="tableData.search"
                   data-test="view.data-table"
                 >
+                  <template #item.locked="{ item }">
+                    <v-icon v-if="item.locked" color="error">mdi-lock</v-icon>
+                    <v-icon v-else color="success">mdi-check-circle</v-icon>
+                  </template>
                   <template #item.actions="{ item }">
                     <v-btn
                       icon
@@ -141,6 +145,11 @@ export default class AdminUserListView extends Vue {
         value: "role",
       },
       {
+        text: "Status",
+        value: "locked",
+        align: "end",
+      },
+      {
         text: "",
         value: "actions",
         sortable: false,
@@ -177,13 +186,14 @@ export default class AdminUserListView extends Vue {
   get userList(): TableRow[] {
     const users: Array<User> = store.state.adminUserList.userList?.users || [];
     return users.map((user) => {
-      const { id, lastName, firstName, userName, role } = user;
+      const { id, lastName, firstName, userName, role, locked } = user;
       return {
         id,
         lastName,
         firstName,
         userName,
         role: UserRoleName.get(role) ?? "-",
+        locked,
       };
     });
   }
