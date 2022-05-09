@@ -37,6 +37,22 @@ import IrisMessageDataView, {
 } from "@/modules/iris-message/modules/message-data/components/iris-message-data-view.vue";
 import { normalizeVaccinationReportDetails } from "@/modules/vaccination-report/services/normalizer";
 
+/**
+ * Please provide a preview of a specific MessageData type.
+ * If present, using existing code of the details-view might be the best approach as it saves a lot of time.
+ *
+ * For implementation, follow these steps:
+ * 1. Create (or reuse) a typed normalizer for the MessageData
+ * 2. Add the type to the IrisMessageDataViewPayload type
+ * 3. Create (or reuse) a vue component for the preview
+ * 4. Add a new entry to the DataViewSource containing the normalizer and the vue component
+ *
+ * The normalizer is used to cleanup the preview data, provided by the API.
+ *
+ * The preview in the vue component should be as similar as the details-view representation as possible.
+ * If you are reusing the details-view component, make sure to disable any unwanted functionality like form fields, selection, data export, etc.
+ */
+
 type IrisMessageDataViewPayload = {
   [IrisMessageDataDiscriminator.EventTracking]: DataRequestDetails;
   [IrisMessageDataDiscriminator.VaccinationReport]: VaccinationReportDetails;

@@ -196,7 +196,7 @@ public interface IrisMessageDataProcessor {
 	 * 
 	 * For implementation: Using existing code for the details view (DetailsDto,
 	 * frontend components, etc.) might be the best approach as it saves a lot of
-	 * work.
+	 * time.
 	 * 
 	 * @param payload JSON String representation of the MessageDataPayload
 	 * @return A Web Dto that is sufficient to display a detailed view of the

@@ -1875,6 +1875,29 @@ export type IrisMessageDataSelectionPayload = {
     | IrisMessageDataSelectionPayload[];
 };
 
+/**
+ * The IrisMessageDataDiscriminator enum is used to identify the type of IrisMessageData.
+ * This discriminator has to be unique and identical in the frontend and backend parts of the application.
+ *
+ * When implementing a new IrisMessageData type, add a new entry to the following Enum.
+ * The linter will show the locations in the code where you have to implement functionality.
+ *
+ * For a complete data flow, you have to extend the following iris-message-data components:
+ *
+ * Export:
+ * @see iris-message-data-select-form
+ *
+ * Preview:
+ * @see iris-message-data-preview-dialog
+ *
+ * Import:
+ * @see iris-message-data-import-dialog
+ *
+ * Optionally you can add export functionality to the details-view of your IrisMessageData type:
+ * @see iris-message-data-export-dialog
+ * Please note, that you have to provide the IrisMessageDataInsert value to the export dialog:
+ * @example vaccination-report-details.view, event-tracking-details.view
+ */
 export enum IrisMessageDataDiscriminator {
   EventTracking = "event-tracking",
   VaccinationReport = "vaccination-report",
