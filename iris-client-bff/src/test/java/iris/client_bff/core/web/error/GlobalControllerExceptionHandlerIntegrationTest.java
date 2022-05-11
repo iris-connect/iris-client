@@ -18,10 +18,12 @@ import java.util.Locale;
 
 import javax.validation.ConstraintViolationException;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -46,6 +48,13 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 				.setMockMvc(mvc)
 				.setContentType(JSON)
 				.setBasePath(PATH).build();
+	}
+
+	@AfterAll
+	void cleanup() {
+
+		// Must be done, otherwise other tests may break using RestAssured.
+		RestAssuredMockMvc.requestSpecification = null;
 	}
 
 	@Test
@@ -301,10 +310,32 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 				.status(status);
 	}
 
+	@Test
+	@WithMockUser
+	@DisplayName("Test forbidden access")
+	void getAllUsers_ForbiddenAccess() {
+
+		setSpecForUsers();
+
+		when()
+				.get()
+
+				.then()
+				.log().all()
+				.status(FORBIDDEN);
+	}
+
 	private void setSpecForLogin() {
 		RestAssuredMockMvc.requestSpecification = new MockMvcRequestSpecBuilder()
 				.setMockMvc(mvc)
 				.setContentType(JSON)
 				.setBasePath("/login").build();
+	}
+
+	private void setSpecForUsers() {
+		RestAssuredMockMvc.requestSpecification = new MockMvcRequestSpecBuilder()
+				.setMockMvc(mvc)
+				.setContentType(JSON)
+				.setBasePath("/users").build();
 	}
 }

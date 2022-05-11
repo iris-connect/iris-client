@@ -20,6 +20,7 @@ import iris.client_bff.users.web.dto.UserRoleDTO;
 import iris.client_bff.users.web.dto.UserUpdateDTO;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -34,6 +35,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -169,8 +171,7 @@ class UserControllerIntegrationTests {
 
 				.then()
 				.status(BAD_REQUEST)
-				// TODO Blank body must be fixed as a next step!
-				.body(blankOrNullString());
+				.body("message", containsString("Required request body is missing"));
 
 		given()
 				.body(WITHOUT_VALUES)
@@ -180,8 +181,11 @@ class UserControllerIntegrationTests {
 
 				.then()
 				.status(BAD_REQUEST)
-				// TODO Blank body must be fixed as a next step!
-				.body(blankOrNullString());
+				.body("message", containsString("Validation failed for object='userInsertDTO'. Error count: 3"))
+				.body("errors.password[0]", containsString("must not be blank"),
+						violationChecks(
+								"role", "must not be null",
+								"userName", "must not be blank"));
 
 		assertThat(users.count()).isEqualTo(count);
 	}
@@ -200,8 +204,10 @@ class UserControllerIntegrationTests {
 
 				.then()
 				.status(BAD_REQUEST)
-				// TODO Blank body must be fixed as a next step!
-				.body(blankOrNullString());
+				.body("errors.password[0]", containsString("must not be blank"),
+						violationChecks(
+								"role", "must not be null",
+								"userName", "must not be blank"));
 
 		assertThat(users.count()).isEqualTo(count);
 	}
@@ -220,8 +226,14 @@ class UserControllerIntegrationTests {
 
 				.then()
 				.status(BAD_REQUEST)
-				// TODO Blank body must be fixed as a next step!
-				.body(blankOrNullString());
+				.body("errors.password",
+						containsInAnyOrder(
+								containsString("size must be between 0 and 200"),
+								containsString("The specified password does not follow the password policy")),
+						violationChecks(
+								"lastName", "size must be between 0 and 200",
+								"firstName", "size must be between 0 and 200",
+								"userName", "size must be between 0 and 50"));
 
 		assertThat(users.count()).isEqualTo(count);
 	}
@@ -240,13 +252,7 @@ class UserControllerIntegrationTests {
 
 				.then()
 				.status(BAD_REQUEST)
-				// TODO Blank body must be fixed as a next step!
-				.body(blankOrNullString());
-		// .body(allOf(
-		// containsString("firstName: Contains illegal characters"),
-		// containsString("lastName: Contains illegal characters"),
-		// containsString("userName: Contains illegal characters"),
-		// containsString("password: Contains illegal characters")));
+				.body("message", containsString("JSON parse error"));
 
 		assertThat(users.count()).isEqualTo(count);
 	}
@@ -265,8 +271,7 @@ class UserControllerIntegrationTests {
 
 				.then()
 				.status(BAD_REQUEST)
-				// TODO Blank body must be fixed as a next step!
-				.body(blankOrNullString());
+				.body("errors.password[0]", containsString("The specified password does not follow the password policy"));
 
 		assertThat(users.count()).isEqualTo(count);
 	}
@@ -367,8 +372,7 @@ class UserControllerIntegrationTests {
 
 				.then()
 				.status(BAD_REQUEST)
-				// TODO Blank body must be fixed as a next step!
-				.body(blankOrNullString());
+				.body("message", containsString("Required request body is missing"));
 
 		assertThat(users.count()).isEqualTo(count);
 	}
@@ -405,8 +409,14 @@ class UserControllerIntegrationTests {
 
 				.then()
 				.status(BAD_REQUEST)
-				// TODO Blank body must be fixed as a next step!
-				.body(blankOrNullString());
+				.body("errors.password",
+						containsInAnyOrder(
+								containsString("size must be between 0 and 200"),
+								containsString("The specified password does not follow the password policy")),
+						violationChecks(
+								"lastName", "size must be between 0 and 200",
+								"firstName", "size must be between 0 and 200",
+								"userName", "size must be between 0 and 50"));
 
 		assertThat(users.count()).isEqualTo(count);
 	}
@@ -425,13 +435,7 @@ class UserControllerIntegrationTests {
 
 				.then()
 				.status(BAD_REQUEST)
-				// TODO Blank body must be fixed as a next step!
-				.body(blankOrNullString());
-		// .body(allOf(
-		// containsString("firstName: Contains illegal characters"),
-		// containsString("lastName: Contains illegal characters"),
-		// containsString("userName: Contains illegal characters"),
-		// containsString("password: Contains illegal characters")));
+				.body("message", containsString("JSON parse error"));
 
 		assertThat(users.count()).isEqualTo(count);
 	}
@@ -450,8 +454,7 @@ class UserControllerIntegrationTests {
 
 				.then()
 				.status(BAD_REQUEST)
-				// TODO Blank body must be fixed as a next step!
-				.body(blankOrNullString());
+				.body("errors.password[0]", containsString("The specified password does not follow the password policy"));
 
 		assertThat(users.count()).isEqualTo(count);
 	}
@@ -500,5 +503,20 @@ class UserControllerIntegrationTests {
 
 	private String toJson(Object obj) throws JsonProcessingException {
 		return objectMapper.writeValueAsString(obj);
+	}
+
+	private Object[] violationChecks(String... violationPairs) {
+
+		Assert.isTrue(violationPairs.length % 2 == 0, "The violationPairs must have an even number of elements.");
+
+		var ret = new ArrayList<Object>();
+
+		for (int i = 0; i < violationPairs.length; i++) {
+
+			ret.add(String.format("errors.%s[0]", violationPairs[i]));
+			ret.add(containsString(violationPairs[++i]));
+		}
+
+		return ret.toArray();
 	}
 }

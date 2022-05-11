@@ -23,6 +23,8 @@ import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -80,10 +82,16 @@ class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, null, new HttpHeaders(), status, request);
 	}
 
+	@ExceptionHandler({ ResponseStatusException.class, AccessDeniedException.class, AuthenticationException.class })
+	void rethrowHandledFrameworkException(Exception ex) throws Exception {
+		// let the framework handle this exceptions
+		throw ex;
+	}
+
 	@ExceptionHandler(Exception.class)
 	ResponseEntity<?> handleExceptionFallback(Exception ex, WebRequest request) throws Exception {
 		// If the exception is annotated with @ResponseStatus rethrow it and let the framework handle it.
-		if (isResponseStatusAnnotated(ex) || ex instanceof ResponseStatusException) {
+		if (isResponseStatusAnnotated(ex)) {
 			throw ex;
 		}
 
