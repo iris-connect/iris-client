@@ -38,6 +38,28 @@ import {
   VaccinationReportMessageDataImportSelection,
 } from "@/modules/vaccination-report/modules/message-data/services/normalizer";
 
+/**
+ * Please provide a user-interface for selecting which data should be updated on an existing entry in the database.
+ *
+ * For implementation, follow these steps:
+ * 1. Create a typed normalizer for the MessageDataImportSelection
+ * 2. Add the type to the IrisMessageDataViewPayload type
+ * 3. Create a new vue component for the user to select the data (s)he wants to import
+ * 4. Add a new entry to the DataViewSource containing the normalizer and the vue component
+ *
+ * The normalizer usually contains a combination of selectables and duplicates.
+ * It is used to cleanup the ImportSelectionViewData, provided by the API.
+ *
+ * The vue component has to provide a validated user-interface for selecting the ID of the import target Object.
+ * After an import target is selected, the user has to be able to define which elements of the source Object s(he) wants to import.
+ * The processed value has to be an Object, containing ...
+ * ... a "target" property, representing the ID of the target Object
+ * ... a "selection" property for the elements of the source Object, the user wants to import. Please use the "messageDataSelectId" to identify collection items of the selection.
+ * If the ID of the target Object is changed, make sure to reset the "selection" and emit the new ID, using "@update:target".
+ * "@update:target" will trigger a fetch of the ImportSelectionViewData, usually containing a list of selectables and duplicates (if present).
+ * As soon as the user has selected all required information, mark the value as valid. This will enable the import Button.
+ */
+
 type IrisMessageDataViewPayload = {
   [IrisMessageDataDiscriminator.EventTracking]: EventTrackingMessageDataImportSelection;
   [IrisMessageDataDiscriminator.VaccinationReport]: VaccinationReportMessageDataImportSelection;

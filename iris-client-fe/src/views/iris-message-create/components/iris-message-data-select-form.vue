@@ -71,6 +71,22 @@ import IrisMessageDataComponent, {
   IrisMessageDataComponentSource,
 } from "@/modules/iris-message/modules/message-data/components/iris-message-data-component.vue";
 
+/**
+ * Please provide a user-interface for selecting the payload of the MessageData a user wants to send to another Health-Department.
+ *
+ * For implementation, follow these steps:
+ * 1. Create a new vue component for the selection of a IrisMessageDataSelectionPayload
+ * 2. Add a new entry to the IrisMessageDataComponentSource containing the vue component
+ *
+ * The vue component has to provide a validated user-interface for selecting the source Object and - if required - a sub-selection of elements.
+ * If the ID of the source Object is changed, make sure to reset dependent values.
+ * As soon as the user has provided all required information, mark the vModel as valid. This will enable the submit Button.
+ *
+ * Please note:
+ * You don't have to take care of the discriminator and description fields.
+ * You can however change the description by dispatching the "update:description" event.
+ */
+
 type IrisMessageDataForm = {
   model: {
     discriminator: IrisMessageDataDiscriminator | null;
