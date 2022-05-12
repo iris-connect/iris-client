@@ -509,7 +509,7 @@ class UserControllerIntegrationTests {
 
 		Assert.isTrue(violationPairs.length % 2 == 0, "The violationPairs must have an even number of elements.");
 
-		var ret = new ArrayList<Object>();
+		var ret = new ArrayList<>();
 
 		for (int i = 0; i < violationPairs.length; i++) {
 

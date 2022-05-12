@@ -19,7 +19,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
 /**
  * Inspired by: https://jworks.io/phone-number-validation-using-custom-hibernate-validators/
- * 
+ *
  * @author Jens Kutzsche
  */
 @Target({ METHOD, FIELD, ANNOTATION_TYPE })
