@@ -225,6 +225,10 @@ public interface IrisMessageDataProcessor {
 	 * frontend components, etc.) might be the best approach as it saves a lot of
 	 * time.
 	 * 
+	 * Use @DefuseJsonString(maxLength = …) in the MessageDataPayload Object to
+	 * annotate String fields that need to be defused. The class
+	 * IrisMessageDataUtils can be used to parse from or serialize to JSON.
+	 * 
 	 * @param payload JSON String representation of the MessageDataPayload
 	 * @return A Web Dto that is sufficient to display a detailed view of the
 	 *         received data in the frontend
@@ -262,6 +266,10 @@ public interface IrisMessageDataProcessor {
 	 * 
 	 * 5. return an ImportSelectionViewPayloadDto containing the selectables and
 	 * duplicates
+	 * 
+	 * Use @DefuseJsonString(maxLength = …) in the MessageDataPayload Object to
+	 * annotate String fields that need to be defused. The class
+	 * IrisMessageDataUtils can be used to parse from or serialize to JSON.
 	 * 
 	 * @param payload        JSON String representation of the MessageDataPayload
 	 * @param importTargetId The UUID of the importTarget, the user wants to update
