@@ -134,6 +134,46 @@ class IrisMessageDataControllerTest {
 				.body("result.subject", equalTo("Test Mail"));
 	}
 
+	@Test
+	void createIrisMessage_shouldFail_differentRecipientToClient() {
+
+		var json = """
+				{
+				    "id":"1",
+				    "jsonrpc":"2.0",
+				    "method":"createIrisMessage",
+				    "params":{
+				    		"irisMessage":{
+						        "hdAuthor":{
+							        	"id":"hd-1",
+							        	"name":"HD 1"
+						       	},
+										"hdRecipient":{
+												"id":"wrongRecipientId",
+												"name":"wrongRecipient"
+										},
+										"subject":"Test Mail",
+										"body":"This is a Test Mail"
+								},
+				        "_client":{"name":"hd-1"}
+				    }
+				}
+				""";
+
+		given().mockMvc(mvc)
+				.contentType(ContentType.JSON)
+				.body(json)
+
+				.when()
+				.post("/data-submission-rpc")
+
+				.then()
+				.contentType(JSON_RPC)
+				.parser(JSON_RPC, Parser.JSON)
+				.body("error.message", equalTo("The recipient of the message is invalid."))
+				.body("error.data.message", equalTo("The recipient of the message is invalid."));
+	}
+
 	private IrisMessage getMessage() {
 
 		IrisMessageTestData testData = new IrisMessageTestData();
