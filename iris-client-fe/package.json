@@ -54,7 +54,7 @@
     "husky": "^8.0.1",
     "license-checker": "^25.0.1",
     "lint-staged": "^12.4.1",
-    "miragejs": "^0.1.43",
+    "miragejs": "^0.1.44",
     "prettier": "^2.6.2",
     "sass": "~1.50.0",
     "sass-loader": "^12.6.0",
