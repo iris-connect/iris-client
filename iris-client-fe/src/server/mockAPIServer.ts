@@ -187,7 +187,7 @@ export function makeMockAPIServer() {
       });
 
       this.get("/data-requests-client/events", (schema, request) => {
-        const { page, status } = request.queryParams;
+        const { page, status } = request.queryParams || {};
         return authResponse(
           request,
           paginated(
@@ -235,7 +235,7 @@ export function makeMockAPIServer() {
       });
 
       this.get("/data-requests-client/cases", (schema, request) => {
-        const { page, status } = request.queryParams;
+        const { page, status } = request.queryParams || {};
         return authResponse(
           request,
           paginated(
@@ -255,7 +255,7 @@ export function makeMockAPIServer() {
       this.get("/search", (schema, request) => {
         let data;
 
-        const searchQuery = request.queryParams.search.toLowerCase();
+        const searchQuery = request.queryParams?.search.toLowerCase();
 
         if (searchMatches(searchQuery, ["pizza", "musterstraße", "mio"])) {
           data = {
@@ -307,7 +307,7 @@ export function makeMockAPIServer() {
       });
 
       this.get("/iris-messages", (schema, request) => {
-        const query: Partial<DataQuery> = request.queryParams;
+        const query: Partial<DataQuery> = request.queryParams || {};
         return authResponse(
           request,
           queriedPage(dummyIrisMessageList as IrisMessage[], query)
@@ -378,7 +378,7 @@ export function makeMockAPIServer() {
       });
 
       this.get("/vaccination-reports", (schema, request) => {
-        const query: Partial<DataQuery> = request.queryParams;
+        const query: Partial<DataQuery> = request.queryParams || {};
         return authResponse(
           request,
           queriedPage(vaccinationReportList as VaccinationReport[], query)
