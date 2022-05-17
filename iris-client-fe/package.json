@@ -15,18 +15,18 @@
     "convert-licenses": "(csv2md licenses-prod.csv > licenses-prod.md || true) && csv2md licenses-dev.csv > licenses-dev.md"
   },
   "dependencies": {
-    "@fontsource/roboto": "^4.5.5",
-    "@mdi/font": "^6.6.96",
+    "@fontsource/roboto": "^4.5.7",
+    "@mdi/font": "^6.7.96",
     "@types/lodash": "^4.14.182",
     "axios": "^0.27.2",
     "chart.js": "^3.7.1",
-    "core-js": "^3.22.4",
+    "core-js": "^3.22.5",
     "dayjs": "^1.11.2",
     "lodash": "^4.17.21",
     "vue": "^2.6.14",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",
-    "vue-router": "^3.5.3",
+    "vue-router": "^3.5.4",
     "vuetify": "^2.6.5",
     "vuex": "^3.6.2",
     "vuex-persistedstate": "^4.1.0",
@@ -54,15 +54,15 @@
     "husky": "^8.0.1",
     "license-checker": "^25.0.1",
     "lint-staged": "^12.4.1",
-    "miragejs": "^0.1.43",
+    "miragejs": "^0.1.44",
     "prettier": "^2.6.2",
-    "sass": "~1.50.0",
+    "sass": "~1.51.0",
     "sass-loader": "^12.6.0",
     "typescript": "~4.5.5",
     "vue-cli-plugin-vuetify": "~2.4.8",
     "vue-template-compiler": "^2.6.14",
     "vuetify-loader": "^1.7.3",
-    "webpack": "^5.72.0"
+    "webpack": "^5.72.1"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
