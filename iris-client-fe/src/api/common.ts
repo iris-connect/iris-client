@@ -11,6 +11,7 @@ import globalAxios, {
 } from "axios";
 import _castArray from "lodash/castArray";
 import { join } from "@/utils/misc";
+import qs from "qs";
 /**
  *
  * @export
@@ -147,6 +148,9 @@ export const apiRequestBuilder =
       data,
       method,
       ...options,
+      paramsSerializer: (p: any) => {
+        return qs.stringify(p, { indices: false, allowDots: true });
+      },
     });
   };
 

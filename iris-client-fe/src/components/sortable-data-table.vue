@@ -22,6 +22,7 @@ import { PropType } from "vue";
 import { DEFAULT_ITEMS_PER_PAGE_OPTIONS } from "@/utils/pagination";
 import _map from "lodash/map";
 import _castArray from "lodash/castArray";
+import _isEqual from "lodash/isEqual";
 
 export const getSortDir = (dir: unknown): TableSortDirection | undefined => {
   switch (dir) {
@@ -81,8 +82,7 @@ export default class SortableDataTable extends SortableDataTableProps {
   }
 
   get sortBy(): string | string[] | undefined {
-    const s = _map(this.sortModel, "col");
-    return s.length <= 1 ? s[0] : s;
+    return _map(this.sortModel, "col");
   }
 
   set sortBy(value: string | string[] | undefined) {
@@ -98,12 +98,11 @@ export default class SortableDataTable extends SortableDataTableProps {
     }
   }
 
-  get sortDesc(): boolean[] | boolean | undefined {
-    const s = this.sortModel.map((s) => s.dir === TableSortDirection.DESC);
-    return s.length <= 1 ? s[0] : s;
+  get sortDesc(): boolean | boolean[] | undefined {
+    return this.sortModel.map((s) => s.dir === TableSortDirection.DESC);
   }
 
-  set sortDesc(value: boolean[] | boolean | undefined) {
+  set sortDesc(value: boolean | boolean[] | undefined) {
     this.sortModel = this.sortModel.map((s, index) => {
       const sortDesc = Array.isArray(value) ? value[index] : value;
       return {
@@ -128,10 +127,11 @@ export default class SortableDataTable extends SortableDataTableProps {
   }
 
   set sortModel(value: TableSort[]) {
+    if (_isEqual(value, this.sortModel)) return;
     const sort = this.querySort
       ? value.map((s) => [s.col, s.dir].join(","))
       : value;
-    this.$emit("update:sort", sort.length <= 1 ? sort[0] : sort);
+    this.$emit("update:sort", sort);
   }
 }
 </script>

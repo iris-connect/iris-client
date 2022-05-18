@@ -79,7 +79,9 @@ export default class IrisMessageListView extends Vue {
 
   mounted() {
     this.messageApi.fetchMessageFolders.execute();
-    fetchUnreadMessageCountApi.execute();
+    fetchUnreadMessageCountApi.execute().catch(() => {
+      // ignored
+    });
   }
 
   get errors() {
