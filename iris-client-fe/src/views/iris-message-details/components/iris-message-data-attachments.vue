@@ -42,7 +42,6 @@
           </v-list-item-action>
         </v-list-item>
         <v-divider
-          inset
           :key="`divider_${index}`"
           v-if="index < dataAttachments.length - 1"
         />
