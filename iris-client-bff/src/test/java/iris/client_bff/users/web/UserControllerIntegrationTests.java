@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.http.HttpStatus.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecBuilder;
@@ -67,7 +68,9 @@ class UserControllerIntegrationTests {
 
 		RestAssuredMockMvc.requestSpecification = new MockMvcRequestSpecBuilder()
 				.setMockMvc(mvc)
-				.setContentType(JSON).build();
+				.setContentType(JSON)
+				.setAuth(auth -> auth.postProcessors(csrf()))
+				.build();
 	}
 
 	@AfterAll

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -109,7 +110,8 @@ class IrisMessageControllerTest {
 				.perform(
 						MockMvcRequestBuilders.post(baseUrl)
 								.content(objectMapper.writeValueAsString(messageInsert))
-								.contentType(MediaType.APPLICATION_JSON))
+								.contentType(MediaType.APPLICATION_JSON)
+								.with(csrf()))
 				.andExpect(MockMvcResultMatchers.status().isCreated())
 				.andReturn();
 
@@ -205,7 +207,8 @@ class IrisMessageControllerTest {
 				.perform(
 						MockMvcRequestBuilders.patch(baseUrl + "/" + updatedMessage.getId())
 								.content(om.writeValueAsString(messageUpdate))
-								.contentType(MediaType.APPLICATION_JSON))
+								.contentType(MediaType.APPLICATION_JSON)
+								.with(csrf()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 

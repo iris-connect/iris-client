@@ -3,6 +3,7 @@ package iris.client_bff.events.web;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
@@ -186,7 +187,8 @@ class EventDataRequestControllerTest {
 				.perform(
 						MockMvcRequestBuilders.patch(baseUrl + "/d1893f10-b6e3-11eb-8529-0242ac130003")
 								.content(patchBody)
-								.contentType(MediaType.APPLICATION_JSON))
+								.contentType(MediaType.APPLICATION_JSON)
+								.with(csrf()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 	}
@@ -204,7 +206,8 @@ class EventDataRequestControllerTest {
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.post(baseUrl).content(TestData.DATA_REQUEST)
-						.contentType(MediaType.APPLICATION_JSON))
+						.contentType(MediaType.APPLICATION_JSON)
+						.with(csrf()))
 				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
 	}
 
@@ -231,7 +234,10 @@ class EventDataRequestControllerTest {
 
 		mockMvc
 				.perform(
-						MockMvcRequestBuilders.post(baseUrl).content(TestData.DATA_REQUEST).contentType(MediaType.APPLICATION_JSON))
+						MockMvcRequestBuilders.post(baseUrl)
+								.content(TestData.DATA_REQUEST)
+								.contentType(MediaType.APPLICATION_JSON)
+								.with(csrf()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 	}

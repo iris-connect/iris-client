@@ -17,6 +17,7 @@ package iris.client_bff.web.filter;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -54,7 +55,8 @@ class ApplicationRequestSizeLimitFilterTests {
 
 		mvc.perform(post("/data-requests-client/events")
 				.content("Test Content ABCDEFGHIJK")
-				.contentType(MediaType.APPLICATION_JSON))
+				.contentType(MediaType.APPLICATION_JSON)
+				.with(csrf()))
 				.andExpect(status().isPayloadTooLarge());
 
 		verify(alertService).createAlertTicketAndMessage(any(String.class), any(String.class));

@@ -4,6 +4,7 @@ import static io.restassured.http.ContentType.*;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.http.HttpStatus.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecBuilder;
@@ -44,7 +45,9 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 				.setMockMvc(mvc)
 				.setContentType(JSON)
 				.addHeader("Accept-Language", "de")
-				.setBasePath(PATH).build();
+				.setBasePath(PATH)
+				.setAuth(auth -> auth.postProcessors(csrf()))
+				.build();
 	}
 
 	@AfterAll

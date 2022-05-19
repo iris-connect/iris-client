@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -32,11 +33,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
-import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @ConditionalOnProperty(
@@ -45,6 +46,8 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class DbAuthSecurityConfig extends WebSecurityConfigurerAdapter {
+
+	private static final String LOGIN = "/login";
 
 	private static final String USER_NOT_FOUND = "User: %s, not found";
 
@@ -73,7 +76,9 @@ public class DbAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 		}
 
 		http.cors().and()
-				.csrf().disable()
+				.csrf(it -> it
+						.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+						.ignoringAntMatchers(LOGIN, DATA_SUBMISSION_ENDPOINT, DATA_SUBMISSION_ENDPOINT_WITH_SLASH))
 				.oauth2ResourceServer(it -> it
 						.bearerTokenResolver(bearerTokenResolver())
 						.authenticationEntryPoint(authenticationEntryPoint)
@@ -87,7 +92,7 @@ public class DbAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 						.requestMatchers(EndpointRequest.toAnyEndpoint()).hasAuthority(UserRole.ADMIN.name())
 						.antMatchers(HttpMethod.POST, DATA_SUBMISSION_ENDPOINT).permitAll()
 						.antMatchers(HttpMethod.POST, DATA_SUBMISSION_ENDPOINT_WITH_SLASH).permitAll()
-						.antMatchers("/login", "/error").permitAll()
+						.antMatchers(LOGIN, "/error").permitAll()
 						.anyRequest().authenticated())
 				.logout(it -> it
 						.logoutUrl("/user/logout")
@@ -121,7 +126,7 @@ public class DbAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	BearerTokenResolver bearerTokenResolver() {
-		return new DefaultBearerTokenResolver();
+		return jwtService.createTokenResolver();
 	}
 
 	@Bean
@@ -136,11 +141,12 @@ public class DbAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	LogoutHandler logoutHandler() {
 
-		return (req, __, ___) -> Try.success(req)
+		return (req, res, ___) -> Try.success(req)
 				.map(bearerTokenResolver()::resolve)
 				.map(jwtDecoder()::decode)
 				.map(Jwt::getSubject)
-				.onSuccess(jwtService::invalidateTokensOfUser);
+				.onSuccess(jwtService::invalidateTokensOfUser)
+				.onSuccess(__ -> res.addHeader(HttpHeaders.SET_COOKIE, jwtService.createCleanJwtCookie().toString()));
 	}
 
 	private UserAccount findUser(String username) {
