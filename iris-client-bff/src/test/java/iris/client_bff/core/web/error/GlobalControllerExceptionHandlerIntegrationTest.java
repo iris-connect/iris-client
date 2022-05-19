@@ -42,11 +42,12 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 	@BeforeEach
 	void init() {
 
-		Locale.setDefault(Locale.ENGLISH);
+		Locale.setDefault(Locale.GERMAN);
 
 		RestAssuredMockMvc.requestSpecification = new MockMvcRequestSpecBuilder()
 				.setMockMvc(mvc)
 				.setContentType(JSON)
+				.addHeader("Accept-Language", "de")
 				.setBasePath(PATH).build();
 	}
 
@@ -88,8 +89,8 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 				.status(status)
 				.body("status", is(status.value()),
 						"error", is(status.getReasonPhrase()),
-						"message", is("Validation failed for object='dto'. Error count: 2"),
-						"errors.text[0]", containsString("size must be between 2"),
+						"message", startsWith("Bitte prüfen sie ihre Eingabe: [text2 ⇒ Größe muss zwischen 2 und 2147483647 sein;"),
+						"errors.text[0]", is("Größe muss zwischen 2 und 2147483647 sein"),
 						"timestamp", not(emptyOrNullString()),
 						"trace", containsString(MethodArgumentNotValidException.class.getSimpleName()));
 	}
@@ -111,8 +112,8 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 				.status(status)
 				.body("status", is(status.value()),
 						"error", is(status.getReasonPhrase()),
-						"message", containsString("text: size must be between 2"),
-						"errors.text[0]", containsString("size must be between 2"),
+						"message", startsWith("Bitte prüfen sie ihre Eingabe: [text2 ⇒ Größe muss zwischen 2 und 2147483647 sein;"),
+						"errors.text[0]", is("Größe muss zwischen 2 und 2147483647 sein"),
 						"timestamp", not(emptyOrNullString()),
 						"trace", containsString(ConstraintViolationException.class.getSimpleName()));
 	}
@@ -134,8 +135,9 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 				.status(status)
 				.body("status", is(status.value()),
 						"error", is(status.getReasonPhrase()),
-						"message", containsString("withoutBody.param: size must be between 2"),
-						"errors.'withoutBody.param'[0]", containsString("size must be between 2"),
+						"message",
+						is("Bitte prüfen sie ihre Eingabe: [withoutBody.param ⇒ Größe muss zwischen 2 und 2147483647 sein]"),
+						"errors.'withoutBody.param'[0]", is("Größe muss zwischen 2 und 2147483647 sein"),
 						"timestamp", not(emptyOrNullString()),
 						"trace", containsString(ConstraintViolationException.class.getSimpleName()));
 	}

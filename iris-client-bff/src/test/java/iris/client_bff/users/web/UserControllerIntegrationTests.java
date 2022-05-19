@@ -181,7 +181,7 @@ class UserControllerIntegrationTests {
 
 				.then()
 				.status(BAD_REQUEST)
-				.body("message", containsString("Validation failed for object='userInsertDTO'. Error count: 3"))
+				.body("message", startsWith("Please check your input: [password ⇒ must not be blank;"))
 				.body("errors.password[0]", containsString("must not be blank"),
 						violationChecks(
 								"role", "must not be null",
