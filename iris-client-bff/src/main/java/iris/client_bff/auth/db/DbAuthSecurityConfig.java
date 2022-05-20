@@ -2,8 +2,8 @@ package iris.client_bff.auth.db;
 
 import static iris.client_bff.config.DataSubmissionConfig.*;
 
-import io.vavr.control.Try;
 import iris.client_bff.auth.db.jwt.JWTService;
+import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.users.UserAccount;
 import iris.client_bff.users.UserRole;
 import iris.client_bff.users.UserService;
@@ -49,8 +49,6 @@ public class DbAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final String LOGIN = "/login";
 
-	private static final String USER_NOT_FOUND = "User: %s, not found";
-
 	private static final String[] SWAGGER_WHITELIST = {
 			"/swagger-ui.html",
 			"/swagger-ui/**",
@@ -92,7 +90,7 @@ public class DbAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 						.requestMatchers(EndpointRequest.toAnyEndpoint()).hasAuthority(UserRole.ADMIN.name())
 						.antMatchers(HttpMethod.POST, DATA_SUBMISSION_ENDPOINT).permitAll()
 						.antMatchers(HttpMethod.POST, DATA_SUBMISSION_ENDPOINT_WITH_SLASH).permitAll()
-						.antMatchers(LOGIN, "/error").permitAll()
+						.antMatchers(LOGIN, "/refreshtoken", "/error").permitAll()
 						.anyRequest().authenticated())
 				.logout(it -> it
 						.logoutUrl("/user/logout")
@@ -131,7 +129,7 @@ public class DbAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	JwtDecoder jwtDecoder() {
-		return jwtService.createJwtDecoder();
+		return jwtService.getJwtDecoder();
 	}
 
 	Converter<Jwt, AbstractAuthenticationToken> authenticationConverter() {
@@ -141,17 +139,16 @@ public class DbAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	LogoutHandler logoutHandler() {
 
-		return (req, res, ___) -> Try.success(req)
-				.map(bearerTokenResolver()::resolve)
-				.map(jwtDecoder()::decode)
+		return (req, res, ___) -> jwtService.getTokenFromCookie(req)
 				.map(Jwt::getSubject)
 				.onSuccess(jwtService::invalidateTokensOfUser)
-				.onSuccess(__ -> res.addHeader(HttpHeaders.SET_COOKIE, jwtService.createCleanJwtCookie().toString()));
+				.onSuccess(__ -> res.addHeader(HttpHeaders.SET_COOKIE, jwtService.createCleanJwtCookie().toString()))
+				.onSuccess(__ -> res.addHeader(HttpHeaders.SET_COOKIE, jwtService.createCleanRefreshCookie().toString()));
 	}
 
 	private UserAccount findUser(String username) {
 
 		return userService.findByUsername(username)
-				.orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, username)));
+				.orElseThrow(() -> new UsernameNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, username)));
 	}
 }

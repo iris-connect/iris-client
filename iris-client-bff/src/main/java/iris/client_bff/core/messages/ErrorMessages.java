@@ -11,4 +11,5 @@ public class ErrorMessages {
 	public static final String LOCATION_SEARCH = "Fehler: Ereignisortsuche fehlgeschlagen.";
 	public static final String CASE_DATA_REQUEST_CREATION = "Indexfall-Datenanforderung konnte nicht angelegt werden.";
 	public static final String INVALID_INPUT = "Eingabedaten sind ungültig";
+	public static final String USER_NOT_FOUND = "User: %s, not found";
 }
