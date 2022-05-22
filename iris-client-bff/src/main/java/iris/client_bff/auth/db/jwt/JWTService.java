@@ -6,16 +6,26 @@ import static org.apache.commons.lang3.StringUtils.*;
 
 import io.vavr.control.Option;
 import io.vavr.control.Try;
+import iris.client_bff.core.settings.Setting;
+import iris.client_bff.core.settings.Setting.Name;
+import iris.client_bff.core.settings.SettingsRepository;
 import lombok.Value;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +34,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.validator.constraints.time.DurationMin;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
@@ -247,8 +259,17 @@ public class JWTService {
 	@Value
 	static class Properties {
 
-		@NotBlank
+		private static final Random random = new SecureRandom();
+
+		@Autowired
+		SettingsRepository settings;
+
+		@Nullable
+		@NonFinal
 		String sharedSecret;
+
+		@NotNull
+		Period saveSecretFor;
 
 		@NotNull
 		@DurationMin(seconds = 1)
@@ -268,13 +289,47 @@ public class JWTService {
 		@NotNull
 		@Valid
 		RefreshProperties refresh;
+
+		@PostConstruct
+		void initSecrets() {
+
+			if (isBlank(sharedSecret)) {
+
+				var setting = settings.findById(Name.JWT_SECRET)
+						.filter(it -> it.getSavedAt().plus(saveSecretFor).isAfter(LocalDate.now()))
+						.orElseGet(() -> createNewRandomSecret(Name.JWT_SECRET));
+
+				sharedSecret = setting.getValue();
+			}
+
+			if (isBlank(refresh.getSharedSecret())) {
+
+				var setting = settings.findById(Name.REFRESH_SECRET)
+						.filter(it -> it.getSavedAt().plus(refresh.getSaveSecretFor()).isAfter(LocalDate.now()))
+						.orElseGet(() -> createNewRandomSecret(Name.REFRESH_SECRET));
+
+				refresh.sharedSecret = setting.getValue();
+			}
+		}
+
+		private Setting createNewRandomSecret(Name name) {
+
+			// 64 Bytes of printable Ascii characters
+			var secret = RandomStringUtils.random(64, 32, 127, false, false, null, random);
+
+			return settings.save(new Setting(name, secret, LocalDate.now()));
+		}
 	}
 
 	@Value
 	static class RefreshProperties {
 
-		@NotBlank
+		@Nullable
+		@NonFinal
 		String sharedSecret;
+
+		@NotNull
+		Period saveSecretFor;
 
 		@NotNull
 		@DurationMin(seconds = 1)
