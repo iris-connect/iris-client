@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,7 @@ public class AuthenticationController {
 	private final LoginAttemptsService loginAttempts;
 	private final JWTService jwtService;
 	private final UserDetailsService userService;
+	private final MessageSourceAccessor messages;
 
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequestDto login, HttpServletRequest req) {
@@ -79,18 +81,20 @@ public class AuthenticationController {
 		log.debug("Refresh token request from remote address: " + LogHelper.obfuscateLastThree(req.getRemoteAddr()));
 
 		var username = jwtService.getTokenFromCookie(req)
-				.toEither("There isn't a usable JWT, but this is required for refresh the token.")
+				.toEither("AuthenticationController.missing_jwt")
 				.filterOrElse(it -> it.getExpiresAt().isBefore(Instant.now()),
-						__ -> "The JWT isn't expired and you can't refresh a not expired token.")
+						__ -> "AuthenticationController.not_expired_jwt")
 				.map(Jwt::getSubject)
+				.mapLeft(messages::getMessage)
 				.getOrElseThrow(it -> new ResponseStatusException(HttpStatus.BAD_REQUEST, it));
 
 		var jwtCookie = jwtService.getTokenFromRefreshCookie(req)
-				.toEither("A usable Refresh JWT is missing!")
+				.toEither("AuthenticationController.missing_refresh_jwt")
 				.map(Jwt::getSubject)
-				.filterOrElse(username::equals, __ -> "Subjects of JWT and Refresh JWT don't match!")
+				.filterOrElse(username::equals, __ -> "AuthenticationController.subjects_dont_match")
 				.map(userService::loadUserByUsername)
 				.map(jwtService::createJwtCookie)
+				.mapLeft(messages::getMessage)
 				.getOrElseThrow(it -> new ResponseStatusException(HttpStatus.BAD_REQUEST, it));
 
 		return ResponseEntity.noContent()
