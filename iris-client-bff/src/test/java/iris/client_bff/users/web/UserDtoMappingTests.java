@@ -46,7 +46,8 @@ class UserDtoMappingTests {
 	void mapping_fromUserAccount_toUserDTO() {
 
 		when(userService.findByUuid(any()))
-				.thenReturn(Optional.of(new UserAccount("admin", "admin", "admin", "admin", UserRole.ADMIN, false, null)));
+				.thenReturn(
+						Optional.of(new UserAccount("admin", "admin", "admin", "admin", UserRole.ADMIN, false, null, null, false)));
 		when(passwordEncoder.encode(any())).thenAnswer(it -> it.getArgument(0));
 
 		var firstName = faker.name().firstName();

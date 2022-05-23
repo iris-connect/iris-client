@@ -160,16 +160,4 @@ class RefreshTokenIntegrationTest {
 				.status(NO_CONTENT)
 				.cookie(IRIS_COOKIE, not(cookies.get(IRIS_COOKIE)));
 	}
-
-	// @Test
-	@DisplayName("create user: without CSRF Token ⇒ 🔙 403")
-	void createUser_WithoutCsrfToken_ReturnsForbidden() throws Throwable {
-
-	}
-
-	// @Test
-	@DisplayName("create user: with wrong CSRF Token ⇒ 🔙 403")
-	void createUser_WithWrongCsrfToken_ReturnsForbidden() throws Throwable {
-
-	}
 }

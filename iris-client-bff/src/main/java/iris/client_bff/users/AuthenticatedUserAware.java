@@ -4,6 +4,7 @@ import static iris.client_bff.users.UserRole.*;
 
 import lombok.NonNull;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -48,6 +49,7 @@ public class AuthenticatedUserAware {
 
 		return Stream.of(SecurityContextHolder.getContext())
 				.map(SecurityContext::getAuthentication)
+				.filter(Objects::nonNull)
 				.flatMap(it -> it.getAuthorities().stream())
 				.map(GrantedAuthority::getAuthority);
 	}

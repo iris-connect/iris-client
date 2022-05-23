@@ -1,5 +1,7 @@
 package iris.client_bff.config;
 
+import dev.samstevens.totp.code.HashingAlgorithm;
+
 import java.security.Security;
 
 import javax.annotation.PostConstruct;
@@ -22,5 +24,10 @@ public class SecurityConfig {
 
 		Security.addProvider(new BouncyCastleFipsProvider());
 		Security.setProperty("crypto.policy", "unlimited");
+	}
+
+	@Bean
+	public HashingAlgorithm totpHashingAlgorithm() {
+		return HashingAlgorithm.SHA256;
 	}
 }

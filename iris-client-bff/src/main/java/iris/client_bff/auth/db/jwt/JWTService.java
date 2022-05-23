@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 
 import io.vavr.control.Option;
 import io.vavr.control.Try;
+import iris.client_bff.auth.db.AuthenticationStatus;
 import iris.client_bff.core.setting.Setting;
 import iris.client_bff.core.setting.Setting.Name;
 import iris.client_bff.core.setting.SettingsRepository;
@@ -41,7 +42,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
@@ -102,18 +102,18 @@ public class JWTService {
 		return decoder;
 	}
 
-	public ResponseCookie createJwtCookie(UserDetails user) {
+	public ResponseCookie createJwtCookie(String username) {
 
-		var refreshExpirationTime = jwtProperties.getRefresh().getExpirationTime();
-		var jwt = createToken(user, jwtProperties.getExpirationTime(), refreshExpirationTime, this::signToken);
+		return createJwtCookie(new JwtCookieData(username, null, jwtProperties.getCookieName(),
+				jwtProperties.getExpirationTime(), jwtProperties.getRefresh().getExpirationTime(), jwtProperties.isSetSecure(),
+				PATH, jwtProperties.getSameSiteStr(), this::signToken));
+	}
 
-		return ResponseCookie.from(jwtProperties.getCookieName(), jwt)
-				.maxAge(refreshExpirationTime.toSeconds())
-				.secure(jwtProperties.isSetSecure())
-				.path(PATH)
-				.httpOnly(true)
-				.sameSite(jwtProperties.getSameSiteStr())
-				.build();
+	public ResponseCookie createPreAuthJwtCookie(String username, AuthenticationStatus authStatus) {
+
+		var expirationTime = Duration.ofMinutes(5);
+		return createJwtCookie(new JwtCookieData(username, authStatus, jwtProperties.getCookieName(), expirationTime,
+				expirationTime, jwtProperties.isSetSecure(), PATH, jwtProperties.getSameSiteStr(), this::signToken));
 	}
 
 	public ResponseCookie createCleanJwtCookie() {
@@ -122,19 +122,13 @@ public class JWTService {
 		return ResponseCookie.from(jwtProperties.getCookieName(), null).maxAge(0).path(PATH).build();
 	}
 
-	public ResponseCookie createRefreshCookie(UserDetails user) {
+	public ResponseCookie createRefreshCookie(String username) {
 
 		var refresh = jwtProperties.getRefresh();
 		var expirationTime = refresh.getExpirationTime();
-		var jwt = createToken(user, expirationTime, expirationTime, this::signRefreshToken);
 
-		return ResponseCookie.from(refresh.getCookieName(), jwt)
-				.maxAge(expirationTime.toSeconds())
-				.secure(jwtProperties.isSetSecure())
-				.path(REFRESH_PATH)
-				.httpOnly(true)
-				.sameSite(jwtProperties.getSameSiteStr())
-				.build();
+		return createJwtCookie(new JwtCookieData(username, null, refresh.getCookieName(), expirationTime, expirationTime,
+				jwtProperties.isSetSecure(), REFRESH_PATH, jwtProperties.getSameSiteStr(), this::signRefreshToken));
 	}
 
 	public ResponseCookie createCleanRefreshCookie() {
@@ -210,20 +204,35 @@ public class JWTService {
 		return OAuth2TokenValidatorResult.failure(error);
 	}
 
-	private String createToken(UserDetails user, Duration tokenExpirationDuration, Duration entityExpirationDuration,
-			Function<Builder, String> signFunction) {
+	private ResponseCookie createJwtCookie(JwtCookieData data) {
 
-		var username = user.getUsername();
+		var jwt = createToken(data.username(), data.authStatus, data.tokenExpirationDuration(),
+				data.cookieExpirationDuration(), data.signFunction());
 
-		// By convention we expect that there exists only one authority and it represents the role
-		var role = user.getAuthorities().iterator().next().getAuthority();
+		return ResponseCookie.from(data.cookieName(), jwt)
+				.maxAge(data.cookieExpirationDuration().toSeconds())
+				.secure(data.secure())
+				.path(data.path())
+				.httpOnly(true)
+				.sameSite(data.sameSite())
+				.build();
+	}
+
+	private String createToken(String username, AuthenticationStatus authStatus, Duration tokenExpirationDuration,
+			Duration entityExpirationDuration, Function<Builder, String> signFunction) {
+
 		var issuedAt = Instant.now();
 
-		var token = signFunction.apply(JWT.create()
+		var jwtBuilder = JWT.create()
 				.withSubject(username)
-				.withClaim(JWT_CLAIM_USER_ROLE, role)
 				.withIssuedAt(Date.from(issuedAt))
-				.withExpiresAt(Date.from(issuedAt.plus(tokenExpirationDuration))));
+				.withExpiresAt(Date.from(issuedAt.plus(tokenExpirationDuration)));
+
+		if (authStatus != null) {
+			jwtBuilder = jwtBuilder.withClaim(JWT_CLAIM_AUTH_STATUS, authStatus.toString());
+		}
+
+		var token = signFunction.apply(jwtBuilder);
 
 		saveToken(token, username, issuedAt.plus(entityExpirationDuration), issuedAt);
 
@@ -342,4 +351,14 @@ public class JWTService {
 	enum SameSite {
 		Strict, Lax, None
 	}
+
+	static record JwtCookieData(String username,
+			AuthenticationStatus authStatus,
+			String cookieName,
+			Duration tokenExpirationDuration,
+			Duration cookieExpirationDuration,
+			boolean secure,
+			String path,
+			String sameSite,
+			Function<Builder, String> signFunction) {}
 }
