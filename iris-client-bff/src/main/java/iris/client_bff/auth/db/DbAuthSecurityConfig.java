@@ -22,6 +22,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -56,14 +57,11 @@ public class DbAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 	};
 
 	private final Environment env;
-
 	private final UserService userService;
-
 	private final JWTService jwtService;
-
 	private final AuthenticationEntryPoint authenticationEntryPoint;
-
 	private final AccessDeniedHandler accessDeniedHandler;
+	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -91,13 +89,17 @@ public class DbAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 						.antMatchers(HttpMethod.POST, DATA_SUBMISSION_ENDPOINT).permitAll()
 						.antMatchers(HttpMethod.POST, DATA_SUBMISSION_ENDPOINT_WITH_SLASH).permitAll()
 						.antMatchers(LOGIN, "/refreshtoken", "/error").permitAll()
-						.anyRequest().authenticated())
+						.antMatchers("/mfa/otp").hasAnyAuthority(AuthenticationStatus.PRE_AUTHENTICATED_MFA_REQUIRED.name(),
+								AuthenticationStatus.PRE_AUTHENTICATED_ENROLLMENT_REQUIRED.name())
+						.anyRequest().hasAnyAuthority(UserRole.ADMIN.name(), UserRole.USER.name()))
 				.logout(it -> it
 						.logoutUrl("/user/logout")
 						.addLogoutHandler(logoutHandler())
 						.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT))
 						.permitAll())
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+		authenticationManagerBuilder.authenticationProvider(new OtpAuthenticationProvider(userService));
 	}
 
 	@Bean

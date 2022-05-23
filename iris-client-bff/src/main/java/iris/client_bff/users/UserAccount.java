@@ -1,5 +1,6 @@
 package iris.client_bff.users;
 
+import dev.samstevens.totp.secret.SecretGenerator;
 import iris.client_bff.core.model.Aggregate;
 import iris.client_bff.core.model.IdWithUuid;
 import iris.client_bff.users.UserAccount.UserAccountIdentifier;
@@ -10,17 +11,21 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.Value;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+
+import org.apache.commons.lang3.StringUtils;
 
 @Entity
 @Table(name = "user_accounts")
@@ -53,12 +58,24 @@ public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
 	private boolean locked;
 	private Instant deletedAt;
 
+	private String mfaSecret;
+	@Setter(AccessLevel.PRIVATE)
+	private boolean mfaSecretEnrolled;
+
 	public boolean isEnabled() {
 		return getDeletedAt() == null;
 	}
 
 	public boolean isAdmin() {
 		return getRole() == UserRole.ADMIN;
+	}
+
+	private UserAccount setMfaSecret(String secret) {
+
+		mfaSecret = secret;
+		setMfaSecretEnrolled(false);
+
+		return this;
 	}
 
 	public UserAccount markDeleted() {
@@ -78,6 +95,35 @@ public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
 		registerEvent(UserLoginIncompatiblyUpdated.of(id, getUserName()));
 
 		return this;
+	}
+
+	/**
+	 * Creates a secret with the given {@link SecretGenerator} and sets it to {@link #mfaSecret}.
+	 *
+	 * @param secretGenerator
+	 * @return This {@link UserAccount}
+	 */
+	UserAccount createMfaSecret(Supplier<String> secretGenerator) {
+
+		String secret = secretGenerator.get();
+
+		if (StringUtils.isBlank(secret)) {
+			throw new RuntimeException("Generated secret for MFA is null or blank!");
+		}
+
+		return setMfaSecret(secret);
+	}
+
+	UserAccount deleteMfaSecret() {
+		return setMfaSecret(null);
+	}
+
+	public boolean usesMfa() {
+		return getMfaSecret() != null;
+	}
+
+	public UserAccount markAsEnrolled() {
+		return setMfaSecretEnrolled(true);
 	}
 
 	@EqualsAndHashCode(callSuper = false)

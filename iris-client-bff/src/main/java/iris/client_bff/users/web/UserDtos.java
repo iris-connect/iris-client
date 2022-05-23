@@ -28,6 +28,8 @@ interface UserDtos {
 			String userName,
 			Role role,
 			boolean locked,
+			boolean useMfa,
+			boolean mfaSecretEnrolled,
 
 			Instant createdAt,
 			Instant lastModifiedAt,
@@ -48,7 +50,9 @@ interface UserDtos {
 
 			@NotNull Role role,
 
-			boolean locked) {}
+			boolean locked,
+
+			boolean useMfa) {}
 
 	@Builder
 	record Update(
@@ -65,7 +69,9 @@ interface UserDtos {
 
 			@Nullable Role role,
 
-			@Nullable Boolean locked) {}
+			@Nullable Boolean locked,
+
+			@Nullable Boolean useMfa) {}
 
 	enum Role {
 		ADMIN, USER, DELETED, ANONYMOUS
