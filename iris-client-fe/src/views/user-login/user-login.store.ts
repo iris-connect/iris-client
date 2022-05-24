@@ -1,5 +1,5 @@
 import { Credentials, User, UserRole } from "@/api";
-import authClient, { baseClient, sessionFromResponse } from "@/api-client";
+import authClient, { baseClient } from "@/api-client";
 import store from "@/store";
 import { RootState } from "@/store/types";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
@@ -19,7 +19,7 @@ export type UserLoginState = {
 };
 
 export type UserSession = {
-  token: string;
+  authenticated: boolean;
 };
 
 export interface UserLoginModule extends Module<UserLoginState, RootState> {
@@ -100,8 +100,8 @@ const userLogin: UserLoginModule = {
       commit("setAuthenticating", true);
       let session: UserSession | null | unknown = null;
       try {
-        const response = await baseClient.login(credentials);
-        session = sessionFromResponse(response);
+        await baseClient.login(credentials);
+        session = { authenticated: true };
       } catch (e) {
         commit("setAuthenticationError", getErrorMessage(e));
         throw e;
@@ -143,7 +143,7 @@ const userLogin: UserLoginModule = {
   },
   getters: {
     isAuthenticated(): boolean {
-      return !!store.state.userLogin.session?.token;
+      return !!store.state.userLogin.session?.authenticated;
     },
     isAdmin(): boolean {
       return store.state.userLogin.user?.role === UserRole.Admin;

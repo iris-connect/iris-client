@@ -89,7 +89,9 @@ public class JWTService {
 	}
 
 	public ResponseCookie createCleanJwtCookie() {
-		return ResponseCookie.from(jwtProperties.getCookieName(), null).build();
+		// Without setting maxAge >= 0, we would create a session cookie.
+		// Setting it to 0 will delete the cookie.
+		return ResponseCookie.from(jwtProperties.getCookieName(), null).maxAge(0).build();
 	}
 
 	public boolean isTokenWhitelisted(String token) {
