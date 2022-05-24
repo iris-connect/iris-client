@@ -28,6 +28,7 @@ import { PropType } from "vue";
 import { DataTableHeaders } from "@/components/iris-data-table.vue";
 import _cloneDeep from "lodash/cloneDeep";
 import ExpandableDataTable from "@/components/expandable-data-table.vue";
+import { join } from "@/utils/misc";
 
 type SelectableTableRow = {
   raw?: {
@@ -97,7 +98,10 @@ export default class MultiSelectDataTable extends MultiSelectDataTableProps {
   }
 
   itemClass(item: SelectableTableRow): string {
-    return this.isDuplicate(item) ? "error-lighten-3" : "";
+    return join(
+      ["is-selectable", this.isDuplicate(item) ? "error-lighten-3" : ""],
+      " "
+    );
   }
 }
 </script>

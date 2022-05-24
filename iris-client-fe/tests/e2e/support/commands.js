@@ -316,6 +316,27 @@ Cypress.Commands.add(
   }
 );
 
+Cypress.Commands.add("selectStepperInputDataTableRow", (accessor) => {
+  cy.getBy(accessor).as("field");
+  cy.get("@field")
+    .should("exist")
+    .find(".v-stepper__step")
+    .should("have.class", "v-stepper__step--active");
+  cy.get("@field")
+    .find(".v-data-table")
+    .should("exist")
+    .should("not.have.class", "is-loading")
+    .should("not.have.class", "is-empty")
+    .within(() => {
+      cy.get("tbody tr.is-selectable")
+        .should("have.length.at.least", 1)
+        .first()
+        .find(".v-simple-checkbox")
+        .should("exist")
+        .click();
+    });
+});
+
 Cypress.Commands.add("visitUserByAccessor", (accessor) => {
   cy.location("pathname").should("equal", "/admin/user/list");
   cy.getDataTableRow("view.data-table", accessor).within(() => {

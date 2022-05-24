@@ -85,6 +85,7 @@ declare global {
         accessor: string,
         search?: boolean
       ): Chainable<Subject>;
+      selectStepperInputDataTableRow(accessor: string): Chainable<Subject>;
       editInputField(
         selector: string,
         config?: {
