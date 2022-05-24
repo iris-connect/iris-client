@@ -41,6 +41,9 @@ describe("IrisMessages", () => {
   });
   it("should display the create message link, navigate to the message creation page and cancel the message creation", () => {
     cy.visit("/iris-messages/list");
+    cy.getBy("view.data-table")
+      .should("exist")
+      .should("not.have.class", "is-loading");
     cy.getBy("view.link.create")
       .should("have.attr", "href", "/iris-messages/create")
       .click();
