@@ -4,7 +4,6 @@ import iris.client_bff.core.validation.AttackDetector.Password;
 import iris.client_bff.core.validation.NoSignOfAttack;
 import iris.client_bff.users.web.ValidPassword;
 import lombok.Builder;
-import lombok.With;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.Size;

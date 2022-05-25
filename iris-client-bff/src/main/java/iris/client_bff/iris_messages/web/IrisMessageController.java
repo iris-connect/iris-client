@@ -1,6 +1,5 @@
 package iris.client_bff.iris_messages.web;
 
-import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.core.validation.NoSignOfAttack;
 import iris.client_bff.iris_messages.IrisMessage;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
@@ -27,7 +25,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -63,10 +60,8 @@ public class IrisMessageController {
 
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<URI> createAndSendMessage(@RequestBody @Valid IrisMessageInsertDto irisMessageInsert,
-			BindingResult bindingResult) {
+	public ResponseEntity<URI> createAndSendMessage(@RequestBody @Valid IrisMessageInsertDto irisMessageInsert) {
 
-		this.validateConstraints(bindingResult);
 		this.validateIrisMessageInsert(irisMessageInsert);
 
 		try {
@@ -114,10 +109,7 @@ public class IrisMessageController {
 	@PatchMapping("/{messageId}")
 	public ResponseEntity<IrisMessageDetailsDto> updateMessage(
 			@PathVariable IrisMessageIdentifier messageId,
-			@RequestBody @Valid IrisMessageUpdateDto irisMessageUpdate,
-			BindingResult bindingResult) {
-
-		this.validateConstraints(bindingResult);
+			@RequestBody @Valid IrisMessageUpdateDto irisMessageUpdate) {
 
 		var updatedMessage = this.irisMessageService.updateReadState(messageId, irisMessageUpdate.getIsRead());
 
@@ -168,14 +160,5 @@ public class IrisMessageController {
 				: irisMessageService.getCountUnreadByFolderId(folder);
 
 		return ResponseEntity.ok(count);
-	}
-
-	private void validateConstraints(BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			String message = ErrorMessages.INVALID_INPUT + ": " + bindingResult.getFieldErrors().stream()
-					.map(fieldError -> String.format("%s: %s", fieldError.getField(), fieldError.getDefaultMessage()))
-					.collect(Collectors.joining(", "));
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
-		}
 	}
 }

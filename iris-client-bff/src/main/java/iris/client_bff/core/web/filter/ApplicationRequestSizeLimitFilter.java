@@ -247,7 +247,7 @@ public class ApplicationRequestSizeLimitFilter extends OncePerRequestFilter {
 		}
 	}
 
-	public class BlockLimitExceededException extends RuntimeException {
+	public static class BlockLimitExceededException extends RuntimeException {
 
 		private static final long serialVersionUID = 3987483052714783027L;
 

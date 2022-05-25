@@ -47,15 +47,13 @@ public class JacksonConfig {
 	Jackson2ObjectMapperBuilderCustomizer jsonCustomizer(AttackDetector attackDetector,
 			PrimitivesToIdWithUuidConverter converter) {
 
-		return builder -> {
-			builder.postConfigurer(it -> {
-				// for SORMAS timestamps
-				it.disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
+		return builder -> builder.postConfigurer(it -> {
+			// for SORMAS timestamps
+			it.disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
 
-				it.setInjectableValues(new InjectableValues.Std().addValue(ATTACK_DETECTOR, attackDetector)
-						.addValue(ID_WITH_UUID_CONVERTER, converter));
-			});
-		};
+			it.setInjectableValues(new InjectableValues.Std().addValue(ATTACK_DETECTOR, attackDetector)
+					.addValue(ID_WITH_UUID_CONVERTER, converter));
+		});
 	}
 
 	@Bean
@@ -74,22 +72,6 @@ public class JacksonConfig {
 	@JsonDeserialize(using = IdWithUuidDeserializer.class) // Must be @JsonDeserialize to use ContextualDeserializer
 																													// successful.
 	interface IdWithUuidMixin {}
-
-	/**
-	 * Deserialize blank texts to {@code Null} and trims other texts.
-	 *
-	 * @author Jens Kutzsche
-	 */
-	class IrisStringDeserializer extends JsonDeserializer<String> {
-
-		@Override
-		public String deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-
-			return isBlank(jp.getText())
-					? null
-					: StringDeserializer.instance.deserialize(jp, ctxt).trim();
-		}
-	}
 
 	/**
 	 * Deserialize strings of UUIDs to subtypes of {@link IdWithUuid} and uses {@link PrimitivesToIdWithUuidConverter} for
@@ -125,6 +107,22 @@ public class JacksonConfig {
 					.findInjectableValue(ID_WITH_UUID_CONVERTER, null, null);
 
 			return new IdWithUuidDeserializer(converter, targetType);
+		}
+	}
+
+	/**
+	 * Deserialize blank texts to {@code Null} and trims other texts.
+	 *
+	 * @author Jens Kutzsche
+	 */
+	class IrisStringDeserializer extends JsonDeserializer<String> {
+
+		@Override
+		public String deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+
+			return isBlank(jp.getText())
+					? null
+					: StringDeserializer.instance.deserialize(jp, ctxt).trim();
 		}
 	}
 
