@@ -1,7 +1,5 @@
 package iris.client_bff.users;
 
-import iris.client_bff.users.entities.UserAccount;
-
 import java.util.Objects;
 import java.util.function.Predicate;
 

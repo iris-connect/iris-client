@@ -1,7 +1,6 @@
 package iris.client_bff.users;
 
-import iris.client_bff.users.entities.UserAccount;
-import iris.client_bff.users.entities.UserAccount.UserAccountIdentifier;
+import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

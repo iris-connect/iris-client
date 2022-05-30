@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.users.entities.UserAccount;
-import iris.client_bff.users.entities.UserAccount.UserAccountIdentifier;
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;

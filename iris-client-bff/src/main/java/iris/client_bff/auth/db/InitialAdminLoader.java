@@ -1,8 +1,10 @@
-package iris.client_bff.users;
+package iris.client_bff.auth.db;
 
-import iris.client_bff.users.entities.UserAccount;
-import iris.client_bff.users.entities.UserRole;
-import lombok.AllArgsConstructor;
+import static iris.client_bff.users.UserRole.*;
+
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,36 +19,36 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 @Component
-@AllArgsConstructor
-@Slf4j
 @ConditionalOnProperty(
 		value = "security.auth",
 		havingValue = "db")
+@RequiredArgsConstructor
+@Slf4j
 class InitialAdminLoader {
 
-	private InitialAdminLoader.Properties conf;
+	private final InitialAdminLoader.Properties conf;
 
-	private UserAccountsRepository repo;
+	private final UserService userService;
 
-	private PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
 	@PostConstruct
 	protected void createAdminUserIfNotExists() {
 
 		var userName = conf.getAdminUserName();
 
-		if (repo.findUserByUsername(userName).isEmpty()) {
+		if (userService.findByUsername(userName).isEmpty()) {
 
-			log.info("Create admin user [{}]", userName);
+			log.info("Admin user [{}] does not exist yet.", userName);
 
 			var userAccount = new UserAccount();
 			userAccount.setUserName(userName);
 			userAccount.setPassword(passwordEncoder.encode(conf.getAdminUserPassword()));
 			userAccount.setFirstName("admin");
 			userAccount.setLastName("admin");
-			userAccount.setRole(UserRole.ADMIN);
+			userAccount.setRole(ADMIN);
 
-			repo.save(userAccount);
+			userService.create(userAccount);
 
 		} else {
 			log.info("Admin user [{}] already exists. Skip creating admin user.", userName);

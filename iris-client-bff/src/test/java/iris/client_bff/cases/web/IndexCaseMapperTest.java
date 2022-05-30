@@ -20,8 +20,8 @@ import iris.client_bff.cases.model.CaseDataSubmission;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
-import iris.client_bff.users.UserDetailsServiceImpl;
-import iris.client_bff.users.entities.UserAccount;
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserService;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -51,7 +51,7 @@ class IndexCaseMapperTest {
 	@Test
 	void mapDetailed() {
 
-		var userService = mock(UserDetailsServiceImpl.class);
+		var userService = mock(UserService.class);
 		when(userService.findByUuid(any()))
 				.thenReturn(Optional.of(new UserAccount().setFirstName("Max").setLastName("Muster")));
 

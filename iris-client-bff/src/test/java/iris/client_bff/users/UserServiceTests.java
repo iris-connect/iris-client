@@ -6,12 +6,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.auth.db.UserAccountAuthentication;
-import iris.client_bff.auth.db.jwt.JWTService;
-import iris.client_bff.users.entities.UserAccount;
-import iris.client_bff.users.entities.UserAccount.UserAccountIdentifier;
-import iris.client_bff.users.entities.UserRole;
-import iris.client_bff.users.web.dto.UserRoleDTO;
-import iris.client_bff.users.web.dto.UserUpdateDTO;
+import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,17 +27,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @author Jens Kutzsche
  */
 @ExtendWith(MockitoExtension.class)
-class UserDetailsServiceImplTests {
+class UserServiceTests {
 
 	@Mock
 	UserAccountsRepository userAccountsRepository;
 
 	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-	@Mock
-	JWTService jwtService;
-
-	UserDetailsServiceImpl userDetailsService;
+	UserService userDetailsService;
 
 	UserAccountIdentifier notFound = UserAccountIdentifier.of(UUID.randomUUID());
 
@@ -56,7 +48,7 @@ class UserDetailsServiceImplTests {
 
 	@BeforeEach
 	public void init() {
-		userDetailsService = new UserDetailsServiceImpl(userAccountsRepository, passwordEncoder, jwtService);
+		userDetailsService = new UserService(userAccountsRepository, passwordEncoder);
 		reset(user);
 	}
 
@@ -65,7 +57,8 @@ class UserDetailsServiceImplTests {
 
 		mockUserNotFound();
 
-		assertThrows(RuntimeException.class, () -> userDetailsService.update(notFound, null, null));
+		assertThrows(RuntimeException.class,
+				() -> userDetailsService.update(notFound, null, null, null, null, null, null, null));
 	}
 
 	@Test
@@ -73,7 +66,8 @@ class UserDetailsServiceImplTests {
 
 		mockAdminFound();
 
-		assertThrows(RuntimeException.class, () -> userDetailsService.update(admin.getId(), null, userAuth));
+		assertThrows(RuntimeException.class,
+				() -> userDetailsService.update(admin.getId(), userAuth, null, null, null, null, null, null));
 	}
 
 	@Test
@@ -81,9 +75,8 @@ class UserDetailsServiceImplTests {
 
 		mockUserFound();
 
-		var dto = UserUpdateDTO.builder().userName("new").build();
-
-		assertThrows(RuntimeException.class, () -> userDetailsService.update(user.getId(), dto, userAuth));
+		assertThrows(RuntimeException.class,
+				() -> userDetailsService.update(user.getId(), userAuth, null, null, "new", null, null, null));
 	}
 
 	@Test
@@ -91,9 +84,8 @@ class UserDetailsServiceImplTests {
 
 		mockUserFound();
 
-		var dto = UserUpdateDTO.builder().role(UserRoleDTO.ADMIN).build();
-
-		assertThrows(RuntimeException.class, () -> userDetailsService.update(user.getId(), dto, userAuth));
+		assertThrows(RuntimeException.class,
+				() -> userDetailsService.update(user.getId(), userAuth, null, null, null, null, UserRole.ADMIN, null));
 	}
 
 	@Test
@@ -102,9 +94,8 @@ class UserDetailsServiceImplTests {
 		mockAdminFound();
 		mockCountLastAdmin();
 
-		var dto = UserUpdateDTO.builder().role(UserRoleDTO.USER).build();
-
-		assertThrows(RuntimeException.class, () -> userDetailsService.update(admin.getId(), dto, adminAuth));
+		assertThrows(RuntimeException.class,
+				() -> userDetailsService.update(admin.getId(), adminAuth, null, null, null, null, UserRole.USER, null));
 	}
 
 	@Test
@@ -113,12 +104,12 @@ class UserDetailsServiceImplTests {
 		mockUserFound();
 		mockSaveUser();
 
-		var dto = UserUpdateDTO.builder().build();
-
-		userDetailsService.update(user.getId(), dto, adminAuth);
+		userDetailsService.update(user.getId(), adminAuth, null, null, null, null, null, null);
 
 		verify(userAccountsRepository).save(user);
-		verifyNoMoreInteractions(jwtService, userAccountsRepository);
+		verify(user, times(2)).getId();
+		verify(user).getUserName();
+		verifyNoMoreInteractions(user, userAccountsRepository);
 	}
 
 	@Test
@@ -127,18 +118,15 @@ class UserDetailsServiceImplTests {
 		mockUserFound();
 		mockSaveUser();
 
-		var dto = UserUpdateDTO.builder().firstName("fn").lastName("ln").userName("un").password("pw")
-				.role(UserRoleDTO.ADMIN).build();
-
-		var ret = userDetailsService.update(user.getId(), dto, adminAuth);
+		var ret = userDetailsService.update(user.getId(), adminAuth, "ln", "fn", "un", "pw", UserRole.ADMIN, Boolean.TRUE);
 
 		assertThat(ret).extracting("firstName", "lastName", "userName", "role")
 				.containsExactly("fn", "ln", "un", UserRole.ADMIN);
 		assertThat(ret).extracting(UserAccount::getPassword).matches(it -> passwordEncoder.matches("pw", it));
 
-		verify(jwtService).invalidateTokensOfUser("tm");
+		verify(user).markLoginIncompatiblyUpdated();
 		verify(userAccountsRepository).save(user);
-		verifyNoMoreInteractions(jwtService, userAccountsRepository);
+		verifyNoMoreInteractions(userAccountsRepository);
 	}
 
 	@Test
@@ -147,23 +135,17 @@ class UserDetailsServiceImplTests {
 		mockUserFound();
 		mockSaveUser();
 
-		var dto = UserUpdateDTO.builder().userName("un").build();
+		userDetailsService.update(user.getId(), adminAuth, null, null, "un", null, null, null);
 
-		userDetailsService.update(user.getId(), dto, adminAuth);
+		verify(user).markLoginIncompatiblyUpdated();
 
-		verify(jwtService).invalidateTokensOfUser("tm");
+		userDetailsService.update(user.getId(), adminAuth, null, null, null, "pw", null, null);
 
-		dto = UserUpdateDTO.builder().password("pw").build();
+		verify(user, times(2)).markLoginIncompatiblyUpdated();
 
-		userDetailsService.update(user.getId(), dto, adminAuth);
+		userDetailsService.update(user.getId(), adminAuth, null, null, null, null, UserRole.ADMIN, null);
 
-		verify(jwtService).invalidateTokensOfUser("un");
-
-		dto = UserUpdateDTO.builder().role(UserRoleDTO.ADMIN).build();
-
-		userDetailsService.update(user.getId(), dto, adminAuth);
-
-		verify(jwtService, times(2)).invalidateTokensOfUser("un");
+		verify(user, times(3)).markLoginIncompatiblyUpdated();
 	}
 
 	@Test
@@ -205,7 +187,6 @@ class UserDetailsServiceImplTests {
 
 		verify(userAccountsRepository).findUserById(id);
 		verify(userAccountsRepository).save(userCaptor.capture());
-		verify(jwtService).invalidateTokensOfUser(userName);
 
 		var user = userCaptor.getValue();
 		assertThat(user.getUserName()).isNotEqualTo(userName);

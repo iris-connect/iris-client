@@ -4,12 +4,7 @@ import static java.util.Objects.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.auth.db.UserAccountAuthentication;
-import iris.client_bff.auth.db.jwt.JWTService;
-import iris.client_bff.users.entities.UserAccount;
-import iris.client_bff.users.entities.UserAccount.UserAccountIdentifier;
-import iris.client_bff.users.entities.UserRole;
-import iris.client_bff.users.web.dto.UserRoleDTO;
-import iris.client_bff.users.web.dto.UserUpdateDTO;
+import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,67 +13,50 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-@Slf4j
-@RequiredArgsConstructor
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+@RequiredArgsConstructor
+@Slf4j
+public class UserService {
 
-	private final UserAccountsRepository userAccountsRepository;
+	private final UserAccountsRepository users;
 	private final PasswordEncoder passwordEncoder;
-	private final JWTService jwtService;
-
-	@Override
-	public UserDetails loadUserByUsername(String username) {
-
-		UserAccount userAccount = userAccountsRepository.findUserByUsername(username)
-				.orElseThrow(() -> new UsernameNotFoundException(username));
-
-		// By convention we expect that there exists only one authority and it represents the role
-		var role = userAccount.getRole().name();
-		var authorities = List.of(new SimpleGrantedAuthority(role));
-
-		return new User(userAccount.getUserName(), userAccount.getPassword(), userAccount.isEnabled(), true, true,
-				!userAccount.isLocked(), authorities);
-	}
 
 	public Optional<UserAccount> findByUuid(UUID id) {
-		return userAccountsRepository.findById(UserAccountIdentifier.of(id));
+		return users.findById(UserAccountIdentifier.of(id));
 	}
 
 	public Optional<UserAccount> findByUsername(String username) {
-		return userAccountsRepository.findUserByUsername(username);
+		return users.findUserByUsername(username);
 	}
 
 	public boolean isOldPasswordCorrect(@NonNull UserAccountIdentifier id, @NonNull String oldPassword) {
 
-		return userAccountsRepository.findUserById(id)
+		return users.findUserById(id)
 				.map(UserAccount::getPassword)
 				.filter(it -> passwordEncoder.matches(oldPassword, it))
 				.isPresent();
 	}
 
 	public List<UserAccount> loadAll() {
-		return userAccountsRepository.findAllUsers();
+		return users.findAllUsers();
 	}
 
 	public UserAccount create(UserAccount user) {
 		log.info("Create user {}", user.getUserName());
-		return userAccountsRepository.save(user);
+		return users.save(user);
 	}
 
-	public UserAccount update(UserAccountIdentifier userId, UserUpdateDTO userUpdateDTO,
-			UserAccountAuthentication authentication) {
+	public UserAccount update(UserAccountIdentifier userId,
+			UserAccountAuthentication authentication, @Nullable String lastName, @Nullable String firstName,
+			@Nullable String userName, @Nullable String password, @Nullable UserRole role, @Nullable Boolean locked) {
 
 		log.info("Update user: {}", userId);
 
@@ -92,67 +70,58 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change other users!");
 		}
 
-		var lastName = userUpdateDTO.lastName();
 		if (nonNull(lastName)) {
 			userAccount.setLastName(lastName);
 		}
 
-		var firstName = userUpdateDTO.firstName();
 		if (nonNull(firstName)) {
 			userAccount.setFirstName(firstName);
 		}
 
-		var newUserName = userUpdateDTO.userName();
-		if (!isAdmin && isNotBlank(newUserName)) {
+		if (!isAdmin && isNotBlank(userName)) {
 
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change his username!");
 		}
 
-		if (isNotBlank(newUserName)
-				&& !StringUtils.equals(oldUserName, newUserName)) {
+		if (isNotBlank(userName)
+				&& !StringUtils.equals(oldUserName, userName)) {
 
-			userAccount.setUserName(newUserName);
+			userAccount.setUserName(userName);
 			invalidateTokens = true;
 		}
 
-		var newRoleDto = userUpdateDTO.role();
-		if (!isAdmin && newRoleDto != null) {
+		if (role != null) {
 
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change his role!");
-		}
+			if (!isAdmin) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change his role!");
+			}
 
-		if (newRoleDto != null) {
-
-			if (isRemoveLastAdmin(userAccount, newRoleDto)) {
+			if (isRemoveLastAdmin(userAccount, role)) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The role of the last admin can't be changed!");
 			}
 
-			var newRole = UserRole.valueOf(newRoleDto.name());
-
-			if (userAccount.getRole() != newRole) {
-				userAccount.setRole(newRole);
+			if (userAccount.getRole() != role) {
+				userAccount.setRole(role);
 				invalidateTokens = true;
 			}
 		}
 
-		var newPassword = userUpdateDTO.password();
-		if (isNotBlank(newPassword) && !passwordEncoder.matches(newPassword, userAccount.getPassword())) {
+		if (isNotBlank(password) && !passwordEncoder.matches(password, userAccount.getPassword())) {
 
-			userAccount.setPassword(passwordEncoder.encode(newPassword));
+			userAccount.setPassword(passwordEncoder.encode(password));
 			invalidateTokens = true;
 		}
 
-		var locked = userUpdateDTO.locked();
 		if (locked != null) {
 			var changed = updateLockState(authentication, userAccount, locked);
 			invalidateTokens = changed || invalidateTokens;
 		}
 
 		if (invalidateTokens) {
-			jwtService.invalidateTokensOfUser(oldUserName);
+			userAccount.markLoginIncompatiblyUpdated();
 		}
 
-		return userAccountsRepository.save(userAccount);
+		return users.save(userAccount);
 	}
 
 	private boolean updateLockState(UserAccountAuthentication authentication, UserAccount userAccount, boolean locked) {
@@ -176,7 +145,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	public void deleteById(UserAccountIdentifier id, String currentUserName) {
 
-		userAccountsRepository.findUserById(id)
+		users.findUserById(id)
 				.ifPresent(account -> {
 
 					if (account.getUserName().equals(currentUserName)) {
@@ -185,9 +154,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 					log.info("Delete User: {}", id);
 
-					jwtService.invalidateTokensOfUser(account.getUserName());
-
-					userAccountsRepository.save(account.markDeleted());
+					users.save(account.markDeleted());
 				});
 	}
 
@@ -200,7 +167,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	private UserAccount loadUser(UserAccountIdentifier userId) {
 
-		return userAccountsRepository.findUserById(userId)
+		return users.findUserById(userId)
 				.orElseThrow(() -> {
 					var error = "User not found: " + userId.toString();
 					log.error(error);
@@ -208,9 +175,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				});
 	}
 
-	private boolean isRemoveLastAdmin(UserAccount userAccount, UserRoleDTO newRoleDto) {
-		return newRoleDto != UserRoleDTO.ADMIN
+	private boolean isRemoveLastAdmin(UserAccount userAccount, UserRole newRole) {
+		return newRole != UserRole.ADMIN
 				&& userAccount.getRole() == UserRole.ADMIN
-				&& userAccountsRepository.countUsersByRole(UserRole.ADMIN) == 1;
+				&& users.countUsersByRole(UserRole.ADMIN) == 1;
 	}
 }

@@ -1,7 +1,7 @@
 package iris.client_bff.auth.db;
 
-import iris.client_bff.users.entities.UserAccount;
-import iris.client_bff.users.entities.UserAccount.UserAccountIdentifier;
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 
 import java.util.Optional;
 import java.util.UUID;

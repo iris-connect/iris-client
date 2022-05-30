@@ -13,7 +13,7 @@ import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
-import iris.client_bff.users.UserDetailsServiceImpl;
+import iris.client_bff.users.UserService;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.Valid;
@@ -42,7 +42,7 @@ public class CaseDataRequestController {
 	private final CaseDataRequestService caseDataRequestService;
 
 	private final CaseDataSubmissionService submissionService;
-	private final UserDetailsServiceImpl userService;
+	private final UserService userService;
 
 	@GetMapping
 	@ResponseStatus(OK)

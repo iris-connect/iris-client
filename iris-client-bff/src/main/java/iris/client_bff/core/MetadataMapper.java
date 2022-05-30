@@ -1,8 +1,8 @@
 package iris.client_bff.core;
 
 import iris.client_bff.config.MapStructCentralConfig;
-import iris.client_bff.users.UserDetailsServiceImpl;
-import iris.client_bff.users.entities.UserAccount;
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserService;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -19,7 +19,7 @@ public abstract class MetadataMapper {
 	// public abstract class MetadataMapper implements Converter<Id, String> {
 
 	@Autowired
-	protected UserDetailsServiceImpl userService;
+	protected UserService userService;
 
 	@UserNameMetadata
 	public String map(UUID value) {

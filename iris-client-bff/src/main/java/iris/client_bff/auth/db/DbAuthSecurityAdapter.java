@@ -5,8 +5,8 @@ import static iris.client_bff.config.DataSubmissionConfig.*;
 import iris.client_bff.auth.db.jwt.JWTSigner;
 import iris.client_bff.auth.db.jwt.JWTVerifier;
 import iris.client_bff.auth.db.login_attempts.LoginAttemptsService;
-import iris.client_bff.users.UserDetailsServiceImpl;
-import iris.client_bff.users.entities.UserRole;
+import iris.client_bff.users.UserRole;
+import iris.client_bff.users.UserService;
 import lombok.AllArgsConstructor;
 
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +24,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
@@ -50,7 +51,7 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 	private Environment env;
 
 	@Autowired
-	private UserDetailsServiceImpl userService;
+	private UserService userService;
 
 	private PasswordEncoder passwordEncoder;
 
@@ -58,7 +59,7 @@ public class DbAuthSecurityAdapter extends WebSecurityConfigurerAdapter {
 
 	private JWTSigner jwtSigner;
 
-	private UserDetailsServiceImpl userDetailsService;
+	private UserDetailsService userDetailsService;
 
 	private final LoginAttemptsService loginAttempts;
 

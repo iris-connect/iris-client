@@ -12,8 +12,6 @@ import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestRepository;
 import iris.client_bff.events.model.Location;
 import iris.client_bff.events.model.Location.LocationIdentifier;
-import iris.client_bff.users.entities.UserAccount;
-import iris.client_bff.users.entities.UserRole;
 
 import java.time.Duration;
 import java.time.Instant;

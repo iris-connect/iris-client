@@ -2,7 +2,7 @@ package iris.client_bff;
 
 import iris.client_bff.WithMockAdmin.WithIrisUserMockSecurityContextFactory;
 import iris.client_bff.auth.db.UserAccountAuthentication;
-import iris.client_bff.users.UserDetailsServiceImpl;
+import iris.client_bff.users.UserService;
 import lombok.RequiredArgsConstructor;
 
 import java.lang.annotation.Documented;
@@ -30,7 +30,7 @@ public @interface WithMockAdmin {
 	@RequiredArgsConstructor
 	static class WithIrisUserMockSecurityContextFactory implements WithSecurityContextFactory<WithMockAdmin> {
 
-		private final UserDetailsServiceImpl userService;
+		private final UserService userService;
 
 		@Override
 		public SecurityContext createSecurityContext(WithMockAdmin annotation) {

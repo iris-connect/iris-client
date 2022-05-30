@@ -1,14 +1,15 @@
-package iris.client_bff.users.entities;
+package iris.client_bff.users;
 
 import iris.client_bff.core.Aggregate;
 import iris.client_bff.core.IdWithUuid;
-import iris.client_bff.users.entities.UserAccount.UserAccountIdentifier;
+import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -54,8 +55,19 @@ public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
 
 	public UserAccount markDeleted() {
 
+		var name = getUserName();
+
 		setDeletedAt(Instant.now());
 		setUserName(getId().toString());
+
+		registerEvent(UserMarkedDeleted.of(id, name));
+
+		return this;
+	}
+
+	public UserAccount markLoginIncompatiblyUpdated() {
+
+		registerEvent(UserLoginIncompatiblyUpdated.of(id, getUserName()));
 
 		return this;
 	}
@@ -77,5 +89,19 @@ public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
 		protected UUID getBasicId() {
 			return userId;
 		}
+	}
+
+	@Value(staticConstructor = "of")
+	public static class UserMarkedDeleted {
+
+		UserAccountIdentifier userId;
+		String userName;
+	}
+
+	@Value(staticConstructor = "of")
+	public static class UserLoginIncompatiblyUpdated {
+
+		UserAccountIdentifier userId;
+		String userName;
 	}
 }

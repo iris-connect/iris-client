@@ -3,12 +3,8 @@ package iris.client_bff.users.web;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.auth.db.UserAccountAuthentication;
-import iris.client_bff.users.UserDetailsServiceImpl;
-import iris.client_bff.users.entities.UserAccount.UserAccountIdentifier;
-import iris.client_bff.users.web.dto.UserDTO;
-import iris.client_bff.users.web.dto.UserInsertDTO;
-import iris.client_bff.users.web.dto.UserListDTO;
-import iris.client_bff.users.web.dto.UserUpdateDTO;
+import iris.client_bff.users.UserAccount.UserAccountIdentifier;
+import iris.client_bff.users.UserService;
 import lombok.RequiredArgsConstructor;
 
 import java.security.Principal;
@@ -33,19 +29,21 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 class UserController {
 
-	private final UserDetailsServiceImpl userService;
+	private static final String AS_ADMIN = "hasAuthority('ADMIN')";
+
+	private final UserService userService;
 	private final UserMapper userMapper;
 
 	@GetMapping
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public UserListDTO getAllUsers() {
-		return new UserListDTO(this.userService.loadAll().stream().map(userMapper::toDto).toList());
+	@PreAuthorize(AS_ADMIN)
+	public UserDtos.OutputList getAllUsers() {
+		return new UserDtos.OutputList(this.userService.loadAll().stream().map(userMapper::toDto).toList());
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public UserDTO createUser(@RequestBody @Valid UserInsertDTO userInsert) {
+	@PreAuthorize(AS_ADMIN)
+	public UserDtos.Output createUser(@RequestBody @Valid UserDtos.Insert userInsert) {
 
 		checkUniqueUsername(userInsert.userName());
 
@@ -54,18 +52,26 @@ class UserController {
 
 	@PatchMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public UserDTO updateUser(@PathVariable UserAccountIdentifier id, @RequestBody @Valid UserUpdateDTO userUpdateDTO,
+	public UserDtos.Output updateUser(@PathVariable UserAccountIdentifier id,
+			@RequestBody @Valid UserDtos.Update userUpdateDTO,
 			UserAccountAuthentication authentication) {
 
 		checkUniqueUsername(userUpdateDTO.userName(), id);
 		checkOldPassword(userUpdateDTO.oldPassword(), userUpdateDTO.password(), authentication, id);
 
-		return userMapper.toDto(userService.update(id, userUpdateDTO, authentication));
+		return userMapper.toDto(userService.update(id,
+				authentication,
+				userUpdateDTO.lastName(),
+				userUpdateDTO.firstName(),
+				userUpdateDTO.userName(),
+				userUpdateDTO.password(),
+				userMapper.fromDto(userUpdateDTO.role()),
+				userUpdateDTO.locked()));
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize(AS_ADMIN)
 	public void deleteUser(@PathVariable UserAccountIdentifier id, Principal principal) {
 
 		this.userService.deleteById(id, principal.getName());
