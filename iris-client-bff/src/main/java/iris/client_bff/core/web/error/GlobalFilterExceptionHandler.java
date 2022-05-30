@@ -36,11 +36,11 @@ class GlobalFilterExceptionHandler implements AuthenticationEntryPoint, AccessDe
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
 			throws IOException, ServletException {
 
+		authenticationEntryPoint.commence(request, response, authException);
+
 		// If there is an existing http only cookie containing an invalid token, it has to be deleted.
 		// Otherwise, the user won't be able to login, because the invalid token gets rejected with every login request.
 		response.addHeader(HttpHeaders.SET_COOKIE, jwtService.createCleanJwtCookie().toString());
-
-		authenticationEntryPoint.commence(request, response, authException);
 		response.sendError(response.getStatus());
 
 		errorAttributes.resolveException(request, response, authenticationEntryPoint, authException);
