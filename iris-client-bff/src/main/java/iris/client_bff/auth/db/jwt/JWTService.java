@@ -299,7 +299,7 @@ public class JWTService {
 						.filter(it -> it.getSavedAt().plus(saveSecretFor).isAfter(LocalDate.now()))
 						.orElseGet(() -> createNewRandomSecret(Name.JWT_SECRET));
 
-				sharedSecret = setting.getValue();
+				sharedSecret = setting.getStoredValue();
 			}
 
 			if (isBlank(refresh.getSharedSecret())) {
@@ -308,7 +308,7 @@ public class JWTService {
 						.filter(it -> it.getSavedAt().plus(refresh.getSaveSecretFor()).isAfter(LocalDate.now()))
 						.orElseGet(() -> createNewRandomSecret(Name.REFRESH_SECRET));
 
-				refresh.sharedSecret = setting.getValue();
+				refresh.sharedSecret = setting.getStoredValue();
 			}
 		}
 

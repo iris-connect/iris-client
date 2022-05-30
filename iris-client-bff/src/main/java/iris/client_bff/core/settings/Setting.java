@@ -30,7 +30,7 @@ public class Setting {
 	private Name name;
 
 	@Size(max = 1000)
-	private String value;
+	private String storedValue; // value is a keyword for DBMS
 
 	private LocalDate savedAt = LocalDate.now();
 
