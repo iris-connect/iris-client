@@ -68,6 +68,6 @@ interface UserDtos {
 			@Nullable Boolean locked) {}
 
 	enum Role {
-		ADMIN, USER, DELETED
+		ADMIN, USER, DELETED, ANONYMOUS
 	}
 }

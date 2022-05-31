@@ -11,20 +11,22 @@ import org.springframework.data.util.Streamable;
 
 interface UserAccountsRepository extends JpaRepository<UserAccount, UserAccountIdentifier> {
 
-	String SELECT_BASE = "SELECT u from UserAccount u where u.role != iris.client_bff.users.UserRole.DELETED AND ";
+	String SELECT_BASE = "SELECT u from UserAccount u where u.role != iris.client_bff.users.UserRole.DELETED";
+	String DELETED_NULL = " AND u.deletedAt IS NULL";
+	String NOT_ANONYMOUS = " AND u.role != iris.client_bff.users.UserRole.ANONYMOUS";
 
-	@Query(SELECT_BASE + "u.userName = :userName AND u.deletedAt IS NULL")
+	@Query(SELECT_BASE + DELETED_NULL + " AND u.userName = :userName")
 	Optional<UserAccount> findUserByUsername(String userName);
 
-	@Query(SELECT_BASE + "u.deletedAt IS NULL")
+	@Query(SELECT_BASE + DELETED_NULL + NOT_ANONYMOUS)
 	List<UserAccount> findAllUsers();
 
-	@Query(SELECT_BASE + "u.deletedAt IS NOT NULL")
+	@Query(SELECT_BASE + " AND u.deletedAt IS NOT NULL")
 	Streamable<UserAccount> findAllDeleted();
 
-	@Query(SELECT_BASE + "u.id = :id AND u.deletedAt IS NULL")
+	@Query(SELECT_BASE + DELETED_NULL + " AND u.id = :id")
 	Optional<UserAccount> findUserById(UserAccountIdentifier id);
 
-	@Query("SELECT count(u) from UserAccount u where u.role = :role AND u.deletedAt IS NULL")
+	@Query("SELECT count(u) from UserAccount u where u.role = :role" + DELETED_NULL)
 	long countUsersByRole(UserRole role);
 }

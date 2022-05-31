@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public enum UserRole {
 
-	ADMIN, USER, DELETED;
+	ADMIN, USER, DELETED, ANONYMOUS;
 
 	public static boolean isUserRole(@NonNull String candidate) {
 
