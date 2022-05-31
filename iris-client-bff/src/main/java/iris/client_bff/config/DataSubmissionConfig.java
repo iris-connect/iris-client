@@ -1,5 +1,8 @@
 package iris.client_bff.config;
 
+import static com.googlecode.jsonrpc4j.ErrorResolver.JsonError.*;
+import static java.net.HttpURLConnection.*;
+
 import iris.client_bff.cases.eps.CaseDataController;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.events.eps.EventDataController;
@@ -10,7 +13,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.IntStream;
+
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +35,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.googlecode.jsonrpc4j.AnnotationsErrorResolver;
 import com.googlecode.jsonrpc4j.DefaultErrorResolver;
 import com.googlecode.jsonrpc4j.ErrorData;
+import com.googlecode.jsonrpc4j.ErrorResolver;
+import com.googlecode.jsonrpc4j.HttpStatusCodeProvider;
 import com.googlecode.jsonrpc4j.JsonRpcInterceptor;
 import com.googlecode.jsonrpc4j.MultipleErrorResolver;
 import com.googlecode.jsonrpc4j.ProxyUtil;
@@ -35,8 +48,31 @@ import com.googlecode.jsonrpc4j.spring.JsonServiceExporter;
 public class DataSubmissionConfig {
 
 	public static final String DATA_SUBMISSION_ENDPOINT = "/data-submission-rpc";
-
 	public static final String DATA_SUBMISSION_ENDPOINT_WITH_SLASH = "/data-submission-rpc/";
+
+	private final Map<Class<? extends Throwable>, Integer> exception2CodeMap = Map.of(
+			ConstraintViolationException.class, METHOD_PARAMS_INVALID.code,
+			IllegalArgumentException.class, METHOD_PARAMS_INVALID.code);
+
+	private final Map<Integer, Integer> jsonError2HttpStatusMap = new HashMap<>(Map.of(
+			OK.code, HttpURLConnection.HTTP_OK,
+			INTERNAL_ERROR.code, HTTP_INTERNAL_ERROR,
+			ERROR_NOT_HANDLED.code, HTTP_INTERNAL_ERROR,
+			BULK_ERROR.code, HTTP_INTERNAL_ERROR,
+			PARSE_ERROR.code, HTTP_BAD_REQUEST,
+			INVALID_REQUEST.code, HTTP_BAD_REQUEST,
+			METHOD_PARAMS_INVALID.code, HTTP_BAD_REQUEST,
+			METHOD_NOT_FOUND.code, HTTP_NOT_FOUND));
+	{
+		IntStream.rangeClosed(CUSTOM_SERVER_ERROR_LOWER, CUSTOM_SERVER_ERROR_UPPER)
+				.forEach(it -> jsonError2HttpStatusMap.computeIfAbsent(it, __ -> HTTP_INTERNAL_ERROR));
+	}
+
+	private final Map<Integer, ErrorResolver.JsonError> httpStatus2JsonErrorMap = Map.of(
+			HttpURLConnection.HTTP_OK, OK,
+			HttpURLConnection.HTTP_INTERNAL_ERROR, INTERNAL_ERROR,
+			HttpURLConnection.HTTP_NOT_FOUND, METHOD_NOT_FOUND,
+			HttpURLConnection.HTTP_BAD_REQUEST, PARSE_ERROR);
 
 	private final MessageSourceAccessor messages;
 	private final UserService userService;
@@ -83,6 +119,7 @@ public class DataSubmissionConfig {
 		jsonServiceExporter.setAllowLessParams(true);
 
 		jsonServiceExporter.setErrorResolver(new MessageResolvingErrorResolver());
+		jsonServiceExporter.setHttpStatusCodeProvider(new IrisHttpStatusCodeProvider());
 		jsonServiceExporter.setInterceptorList(List.of(new ClientAsUserInterceptor()));
 
 		return jsonServiceExporter;
@@ -94,7 +131,7 @@ public class DataSubmissionConfig {
 	private final class MessageResolvingErrorResolver extends MultipleErrorResolver {
 
 		private MessageResolvingErrorResolver() {
-			super(AnnotationsErrorResolver.INSTANCE, DefaultErrorResolver.INSTANCE);
+			super(AnnotationsErrorResolver.INSTANCE, new IrisErrorResolver(), DefaultErrorResolver.INSTANCE);
 		}
 
 		@Override
@@ -116,6 +153,45 @@ public class DataSubmissionConfig {
 
 				return error;
 			}
+		}
+	}
+
+	private class IrisErrorResolver implements ErrorResolver {
+
+		@Override
+		public JsonError resolveError(Throwable t, Method method, List<JsonNode> arguments) {
+
+			return determineCode(t)
+					.map(code -> new JsonError(code, t.getMessage(), new ErrorData(t.getClass().getName(), t.getMessage())))
+					.orElse(null);
+		}
+
+		private Optional<Integer> determineCode(Throwable t) {
+
+			return exception2CodeMap.entrySet().stream()
+					.filter(it -> it.getKey().isAssignableFrom(t.getClass()))
+					.map(Entry::getValue)
+					.findAny();
+		}
+	}
+
+	private class IrisHttpStatusCodeProvider implements HttpStatusCodeProvider {
+
+		@Override
+		public int getHttpStatusCode(int resultCode) {
+
+			return jsonError2HttpStatusMap.entrySet().stream()
+					.filter(it -> it.getKey() == resultCode)
+					.map(Entry::getValue)
+					.findAny()
+					.orElse(HttpURLConnection.HTTP_OK);
+		}
+
+		@Override
+		public Integer getJsonRpcCode(int httpStatusCode) {
+			return httpStatus2JsonErrorMap.containsKey(httpStatusCode)
+					? httpStatus2JsonErrorMap.get(httpStatusCode).code
+					: null;
 		}
 	}
 
