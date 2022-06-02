@@ -3,13 +3,13 @@ package iris.client_bff.users;
 import static java.util.Objects.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
-import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,6 +28,7 @@ public class UserService {
 
 	private final UserAccountsRepository users;
 	private final PasswordEncoder passwordEncoder;
+	private final AuthenticatedUserAware authManager;
 
 	public Optional<UserAccount> findByUuid(UUID id) {
 		return users.findById(UserAccountIdentifier.of(id));
@@ -55,18 +56,18 @@ public class UserService {
 	}
 
 	public UserAccount update(UserAccountIdentifier userId,
-			UserAccountAuthentication authentication, @Nullable String lastName, @Nullable String firstName,
+			@Nullable String lastName, @Nullable String firstName,
 			@Nullable String userName, @Nullable String password, @Nullable UserRole role, @Nullable Boolean locked) {
 
 		log.info("Update user: {}", userId);
 
 		var userAccount = loadUser(userId);
 
-		var isAdmin = authentication.isAdmin();
+		var isAdmin = authManager.isAdmin();
 		var oldUserName = userAccount.getUserName();
 		var invalidateTokens = false;
 
-		if (!isAdmin && !isItCurrentUser(userId, authentication)) {
+		if (!isAdmin && !isItCurrentUser(userId)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A non admin user can't change other users!");
 		}
 
@@ -113,7 +114,7 @@ public class UserService {
 		}
 
 		if (locked != null) {
-			var changed = updateLockState(authentication, userAccount, locked);
+			var changed = updateLockState(userAccount, locked);
 			invalidateTokens = changed || invalidateTokens;
 		}
 
@@ -124,33 +125,33 @@ public class UserService {
 		return users.save(userAccount);
 	}
 
-	private boolean updateLockState(UserAccountAuthentication authentication, UserAccount userAccount, boolean locked) {
+	private boolean updateLockState(UserAccount userAccount, boolean locked) {
 
-		if (userAccount.isLocked() == locked) {
-			return false;
-		}
-
-		if (!authentication.isAdmin()) {
+		if (!authManager.isAdmin()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					"Only an admin user can change the lock state of an user!");
 		}
 
-		if (isItCurrentUser(userAccount.getId(), authentication)) {
+		if (isItCurrentUser(userAccount.getId())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A user may not change his own lock state!");
+		}
+
+		if (userAccount.isLocked() == locked) {
+			return false;
 		}
 
 		userAccount.setLocked(locked);
 		return true;
 	}
 
-	public void deleteById(UserAccountIdentifier id, String currentUserName) {
+	public void deleteById(UserAccountIdentifier id) {
+
+		if (isItCurrentUser(id)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A user may not delete himself!");
+		}
 
 		users.findUserById(id)
 				.ifPresent(account -> {
-
-					if (account.getUserName().equals(currentUserName)) {
-						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A user may not delete himself!");
-					}
 
 					log.info("Delete User: {}", id);
 
@@ -158,11 +159,12 @@ public class UserService {
 				});
 	}
 
-	public boolean isItCurrentUser(UserAccountIdentifier userId, UserAccountAuthentication authentication) {
+	public boolean isItCurrentUser(UserAccountIdentifier userId) {
+		return Objects.equals(userId, getCurrentUser().getId());
+	}
 
-		var userAccount = loadUser(userId);
-
-		return authentication.getName().equals(userAccount.getUserName());
+	private UserAccount getCurrentUser() {
+		return authManager.getCurrentUser().orElseThrow();
 	}
 
 	private UserAccount loadUser(UserAccountIdentifier userId) {

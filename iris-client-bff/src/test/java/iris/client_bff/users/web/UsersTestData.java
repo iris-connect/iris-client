@@ -23,8 +23,7 @@ public interface UsersTestData {
 				"userName":"admin_abc",
 				"password":"passwort1234",
 				"oldPassword":"admin",
-				"role":"ADMIN",
-				"locked": true
+				"role":"ADMIN"
 			}
 			""";
 

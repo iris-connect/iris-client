@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
-public class StatisticsControllerTest {
+class StatisticsControllerTest {
 	private final String baseUrl = "/data-requests-client/statistics";
 
 	@Autowired
@@ -58,8 +58,7 @@ public class StatisticsControllerTest {
 	@Test
 	void endpointShouldBeProtected() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))
-				.andExpect(status().isForbidden())
-				.andReturn();
+				.andExpect(status().isUnauthorized());
 	}
 
 	@Test

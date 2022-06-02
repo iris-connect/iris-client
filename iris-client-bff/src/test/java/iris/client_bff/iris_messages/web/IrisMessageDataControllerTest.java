@@ -56,8 +56,7 @@ class IrisMessageDataControllerTest {
 	@Test
 	void endpointShouldBeProtected() throws Exception {
 		mockMvc.perform(get(baseUrl))
-				.andExpect(MockMvcResultMatchers.status().isForbidden())
-				.andReturn();
+				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
 	}
 
 	@Test

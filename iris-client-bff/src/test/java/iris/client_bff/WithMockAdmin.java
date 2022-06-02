@@ -1,7 +1,8 @@
 package iris.client_bff;
 
+import static org.springframework.security.core.authority.AuthorityUtils.*;
+
 import iris.client_bff.WithMockAdmin.WithIrisUserMockSecurityContextFactory;
-import iris.client_bff.auth.db.UserAccountAuthentication;
 import iris.client_bff.users.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -11,9 +12,8 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.List;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContext;
@@ -37,8 +37,8 @@ public @interface WithMockAdmin {
 
 			var user = userService.findByUsername("admin").get();
 
-			var authority = new SimpleGrantedAuthority(user.getRole().toString());
-			var authentication = new UserAccountAuthentication(user, true, List.of(authority));
+			var authorities = createAuthorityList(user.getRole().toString());
+			var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
 
 			var context = SecurityContextHolder.createEmptyContext();
 			context.setAuthentication(authentication);

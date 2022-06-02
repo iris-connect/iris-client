@@ -2,9 +2,7 @@ package iris.client_bff.core.web.error;
 
 import static io.restassured.http.ContentType.*;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
-import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.not;
 import static org.springframework.http.HttpStatus.*;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -26,8 +24,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
 @IrisWebIntegrationTest
 @WithMockAdmin
@@ -248,14 +244,21 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 
 		setSpecForLogin();
 
-		assertThatExceptionOfType(RuntimeException.class)
-				.isThrownBy(() -> when().post())
-				.withRootCauseInstanceOf(MismatchedInputException.class);
+		when()
+				.post()
+
+				.then()
+				.log().all()
+				.status(BAD_REQUEST)
+				.body("message", containsString("Required request body is missing"));
 	}
 
 	@Test
 	@DisplayName("Test login with wrong userName")
 	void login_WrongUserName() throws Throwable {
+
+		// sleep to avoid blocking
+		Thread.sleep(2000);
 
 		var status = UNAUTHORIZED;
 
@@ -269,12 +272,16 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 
 				.then()
 				.log().all()
-				.status(status);
+				.status(status)
+				.body("message", containsString("Ungültige Anmeldedaten"));
 	}
 
 	@Test
 	@DisplayName("Test login with wrong password")
 	void login_WrongPassword() throws Throwable {
+
+		// sleep to avoid blocking
+		Thread.sleep(2000);
 
 		var status = UNAUTHORIZED;
 
@@ -288,12 +295,16 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 
 				.then()
 				.log().all()
-				.status(status);
+				.status(status)
+				.body("message", containsString("Ungültige Anmeldedaten"));
 	}
 
 	@Test
 	@DisplayName("Test login with blocked user")
 	void login_BlockedUser() throws Throwable {
+
+		// sleep to avoid blocking
+		Thread.sleep(2000);
 
 		var status = UNAUTHORIZED;
 
@@ -309,7 +320,8 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 
 				.then()
 				.log().all()
-				.status(status);
+				.status(status)
+				.body("message", containsString("User blocked!"));
 	}
 
 	@Test
@@ -324,7 +336,8 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 
 				.then()
 				.log().all()
-				.status(FORBIDDEN);
+				.status(FORBIDDEN)
+				.body("message", containsString("Zugriff verweigert"));
 	}
 
 	private void setSpecForLogin() {

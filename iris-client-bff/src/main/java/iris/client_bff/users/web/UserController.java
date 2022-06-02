@@ -2,17 +2,16 @@ package iris.client_bff.users.web;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
-import iris.client_bff.auth.db.UserAccountAuthentication;
+import iris.client_bff.users.UserAccount;
 import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 import iris.client_bff.users.UserService;
 import lombok.RequiredArgsConstructor;
-
-import java.security.Principal;
 
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -54,13 +53,12 @@ class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public UserDtos.Output updateUser(@PathVariable UserAccountIdentifier id,
 			@RequestBody @Valid UserDtos.Update userUpdateDTO,
-			UserAccountAuthentication authentication) {
+			@AuthenticationPrincipal UserAccount principal) {
 
 		checkUniqueUsername(userUpdateDTO.userName(), id);
-		checkOldPassword(userUpdateDTO.oldPassword(), userUpdateDTO.password(), authentication, id);
+		checkOldPassword(principal, id, userUpdateDTO.oldPassword(), userUpdateDTO.password());
 
 		return userMapper.toDto(userService.update(id,
-				authentication,
 				userUpdateDTO.lastName(),
 				userUpdateDTO.firstName(),
 				userUpdateDTO.userName(),
@@ -72,9 +70,8 @@ class UserController {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize(AS_ADMIN)
-	public void deleteUser(@PathVariable UserAccountIdentifier id, Principal principal) {
-
-		this.userService.deleteById(id, principal.getName());
+	public void deleteUser(@PathVariable UserAccountIdentifier id) {
+		this.userService.deleteById(id);
 	}
 
 	private void checkUniqueUsername(String username) {
@@ -98,11 +95,9 @@ class UserController {
 				});
 	}
 
-	private void checkOldPassword(String oldPassword, String password, UserAccountAuthentication authentication,
-			UserAccountIdentifier id) {
+	private void checkOldPassword(UserAccount principal, UserAccountIdentifier id, String oldPassword, String password) {
 
-		if (isBlank(password)
-				|| (authentication.isAdmin() && !userService.isItCurrentUser(id, authentication))) {
+		if (isBlank(password) || (principal.isAdmin() && !userService.isItCurrentUser(id))) {
 			return;
 		}
 

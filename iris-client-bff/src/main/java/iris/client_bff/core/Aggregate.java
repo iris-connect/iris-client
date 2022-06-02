@@ -2,6 +2,7 @@ package iris.client_bff.core;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -27,15 +28,19 @@ import org.springframework.lang.NonNull;
  */
 @MappedSuperclass
 @Getter
-@EqualsAndHashCode(of = "id", callSuper = false)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@ToString(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Aggregate<T extends Aggregate<T, ID>, ID extends Id> extends AbstractAggregateRoot<T>
 		implements Persistable<ID> {
 
 	@NonNull
+	@EqualsAndHashCode.Include
+	@ToString.Include
 	protected @EmbeddedId ID id;
 
 	@IndexedEmbedded
+	@ToString.Include
 	private Metadata metadata = new Metadata();
 	private @Transient boolean isNew = true;
 

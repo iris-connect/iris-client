@@ -15,6 +15,7 @@ import javax.validation.constraints.Positive;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.validator.constraints.time.DurationMin;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -23,6 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 @Service
+@ConditionalOnProperty(
+		value = "security.auth",
+		havingValue = "db")
 @RequiredArgsConstructor
 @Slf4j
 public class LoginAttemptsService {

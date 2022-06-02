@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.Value;
 
 import java.time.Instant;
@@ -24,6 +25,7 @@ import javax.persistence.Table;
 @Table(name = "user_accounts")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
@@ -51,6 +53,10 @@ public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
 
 	public boolean isEnabled() {
 		return getDeletedAt() == null;
+	}
+
+	public boolean isAdmin() {
+		return getRole() == UserRole.ADMIN;
 	}
 
 	public UserAccount markDeleted() {
