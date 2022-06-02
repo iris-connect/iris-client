@@ -38,6 +38,7 @@ class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
 
+		// Sets attributes needed and used by `IrisErrorAttributes`.
 		request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, status.value(), SCOPE_REQUEST);
 
 		if (request instanceof ServletWebRequest r) {
