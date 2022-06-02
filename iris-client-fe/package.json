@@ -54,7 +54,7 @@
     "eslint-plugin-vue": "^8.7.1",
     "husky": "^8.0.1",
     "license-checker": "^25.0.1",
-    "lint-staged": "^12.4.1",
+    "lint-staged": "^12.4.3",
     "miragejs": "^0.1.44",
     "prettier": "^2.6.2",
     "sass": "~1.51.0",
