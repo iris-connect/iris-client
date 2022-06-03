@@ -84,7 +84,7 @@ public class JWTService {
 				.maxAge(jwtProperties.getExpirationTime().toSeconds())
 				.secure(jwtProperties.isSetSecure())
 				.httpOnly(true)
-				.sameSite("Strict")
+				.sameSite(jwtProperties.getSameSiteStr())
 				.build();
 	}
 
@@ -185,5 +185,15 @@ public class JWTService {
 		String cookieName;
 
 		boolean setSecure;
+
+		SameSite sameSite;
+
+		String getSameSiteStr() {
+			return getSameSite().name();
+		}
+
+		enum SameSite {
+			Strict, Lax
+		}
 	}
 }
