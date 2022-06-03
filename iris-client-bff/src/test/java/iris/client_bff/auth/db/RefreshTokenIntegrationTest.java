@@ -73,7 +73,7 @@ class RefreshTokenIntegrationTest {
 	}
 
 	@Test
-	@DisplayName("refresh token: with not expired token ⇒ 🔙 400")
+	@DisplayName("refresh token: with not expired token ⇒ 🔙 401")
 	void refreshtoken_TokenNotExpired_BadRequest() throws Throwable {
 
 		var jwtCookie = given()
@@ -91,7 +91,7 @@ class RefreshTokenIntegrationTest {
 				.get(REFRESH_URL)
 
 				.then()
-				.status(BAD_REQUEST)
+				.status(UNAUTHORIZED)
 				.statusLine(containsString("There isn't a usable JWT, but this is required for refresh the token."));
 
 		given()
@@ -101,12 +101,12 @@ class RefreshTokenIntegrationTest {
 				.get(REFRESH_URL)
 
 				.then()
-				.status(BAD_REQUEST)
+				.status(UNAUTHORIZED)
 				.statusLine(containsString("The JWT isn't expired and you can't refresh a not expired token."));
 	}
 
 	@Test
-	@DisplayName("refresh token: without refresh cookie ⇒ 🔙 400")
+	@DisplayName("refresh token: without refresh cookie ⇒ 🔙 401")
 	void refreshtoken_MissingRefreshCookie_BadRequest() throws Throwable {
 
 		var jwtCookie = given()
@@ -129,7 +129,7 @@ class RefreshTokenIntegrationTest {
 				.get(REFRESH_URL)
 
 				.then()
-				.status(BAD_REQUEST)
+				.status(UNAUTHORIZED)
 				.statusLine(containsString("A usable Refresh JWT is missing!"));
 	}
 

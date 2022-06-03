@@ -1,5 +1,6 @@
 package iris.client_bff.auth.db.web;
 
+import iris.client_bff.auth.db.RefreshTokenException;
 import iris.client_bff.auth.db.jwt.JWTService;
 import iris.client_bff.auth.db.login_attempts.LoginAttemptsService;
 import iris.client_bff.core.log.LogHelper;
@@ -14,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.LockedException;
@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  * @author Jens Kutzsche
@@ -86,7 +85,7 @@ public class AuthenticationController {
 						__ -> "AuthenticationController.not_expired_jwt")
 				.map(Jwt::getSubject)
 				.mapLeft(messages::getMessage)
-				.getOrElseThrow(it -> new ResponseStatusException(HttpStatus.BAD_REQUEST, it));
+				.getOrElseThrow(this::createException);
 
 		var jwtCookie = jwtService.getTokenFromRefreshCookie(req)
 				.toEither("AuthenticationController.missing_refresh_jwt")
@@ -95,11 +94,15 @@ public class AuthenticationController {
 				.map(userService::loadUserByUsername)
 				.map(jwtService::createJwtCookie)
 				.mapLeft(messages::getMessage)
-				.getOrElseThrow(it -> new ResponseStatusException(HttpStatus.BAD_REQUEST, it));
+				.getOrElseThrow(this::createException);
 
 		return ResponseEntity.noContent()
 				.header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
 				.build();
+	}
+
+	private RuntimeException createException(String reason) {
+		return new RefreshTokenException(reason);
 	}
 
 	static record LoginRequestDto(@NotBlank String userName, @NotBlank String password) {}
