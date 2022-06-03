@@ -2176,6 +2176,17 @@ export class IrisClientFrontendApi extends BaseAPI {
 
   /**
    *
+   * @summary Extends the session by refreshing the token
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public refreshToken(options?: RequestOptions): ApiResponse<UserSession> {
+    return this.apiRequest("GET", "/refreshtoken", null, options);
+  }
+
+  /**
+   *
    * @param {*} [options] Override http request option.
    * @memberof IrisClientFrontendApi
    */

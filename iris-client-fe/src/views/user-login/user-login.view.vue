@@ -91,11 +91,17 @@ export default class UserLoginView extends Vue {
     return this.$store.state.userLogin.authenticating;
   }
 
-  async submit(): Promise<void> {
+  submit(): void {
     const valid = this.$refs.form.validate() as boolean;
     if (valid) {
-      await store.dispatch("userLogin/authenticate", this.formModel);
-      await this.$router.push(store.state.userLogin.interceptedRoute);
+      store
+        .dispatch("userLogin/authenticate", this.formModel)
+        .then(() => {
+          this.$router.push(store.state.userLogin.interceptedRoute);
+        })
+        .catch(() => {
+          // ignored
+        });
     }
   }
 }
