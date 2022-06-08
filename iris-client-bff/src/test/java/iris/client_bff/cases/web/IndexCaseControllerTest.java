@@ -4,6 +4,7 @@ import static iris.client_bff.cases.web.IndexCaseMapper.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
@@ -161,7 +162,10 @@ class IndexCaseControllerTest {
 
 		var insert = om.writeValueAsString(IndexCaseInsertDTO.builder().start(Instant.now()).build());
 
-		mockMvc.perform(MockMvcRequestBuilders.post(baseUrl).content(insert).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.post(baseUrl)
+				.content(insert)
+				.contentType(MediaType.APPLICATION_JSON)
+				.with(csrf()))
 				.andExpect(status().isOk())
 				.andReturn();
 	}
@@ -172,7 +176,10 @@ class IndexCaseControllerTest {
 
 		var insert = om.writeValueAsString(IndexCaseInsertDTO.builder().start(null).build());
 
-		mockMvc.perform(MockMvcRequestBuilders.post(baseUrl).content(insert).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.post(baseUrl)
+				.content(insert)
+				.contentType(MediaType.APPLICATION_JSON)
+				.with(csrf()))
 				.andExpect(status().isBadRequest())
 				.andReturn();
 	}
@@ -217,7 +224,10 @@ class IndexCaseControllerTest {
 
 		var url = baseUrl + "/" + MOCK_CASE_ID.toString();
 		var res = mockMvc
-				.perform(MockMvcRequestBuilders.patch(url).content(payload).contentType(MediaType.APPLICATION_JSON))
+				.perform(MockMvcRequestBuilders.patch(url)
+						.content(payload)
+						.contentType(MediaType.APPLICATION_JSON)
+						.with(csrf()))
 				.andExpect(status().isOk())
 				.andReturn();
 
@@ -248,7 +258,10 @@ class IndexCaseControllerTest {
 						.externalCaseId(updatedExternalCaseId)
 						.build());
 
-		mockMvc.perform(MockMvcRequestBuilders.patch(url_404).content(payload).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.patch(url_404)
+				.content(payload)
+				.contentType(MediaType.APPLICATION_JSON)
+				.with(csrf()))
 				.andExpect(status().isNotFound())
 				.andReturn();
 	}
@@ -259,7 +272,9 @@ class IndexCaseControllerTest {
 
 		var url = baseUrl + "/" + MOCK_CASE_ID.toString();
 
-		mockMvc.perform(MockMvcRequestBuilders.patch(url)).andExpect(status().isBadRequest()).andReturn();
+		mockMvc.perform(MockMvcRequestBuilders.patch(url)
+				.with(csrf()))
+				.andExpect(status().isBadRequest()).andReturn();
 	}
 
 	private CaseDataRequest getCase() {

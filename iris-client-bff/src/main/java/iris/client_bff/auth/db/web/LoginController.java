@@ -24,9 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
-
 /**
  * @author Jens Kutzsche
  */
@@ -39,16 +36,12 @@ import com.fasterxml.jackson.databind.DatabindException;
 @Slf4j
 public class LoginController {
 
-	public static final String AUTHENTICATION_INFO = "Authentication-Info";
-	public static final String BEARER_TOKEN_PREFIX = "Bearer ";
-
 	private final AuthenticationManager authManager;
 	private final LoginAttemptsService loginAttempts;
 	private final JWTService jwtService;
 
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginRequestDto login, HttpServletRequest req)
-			throws StreamReadException, DatabindException, IOException {
+	public ResponseEntity<?> login(@RequestBody LoginRequestDto login, HttpServletRequest req) throws IOException {
 
 		log.debug("Login request from remote address: " + LogHelper.obfuscateLastThree(req.getRemoteAddr()));
 
@@ -66,19 +59,10 @@ public class LoginController {
 
 		var user = (UserDetails) authManager.authenticate(authToken).getPrincipal();
 
-		var token = jwtService.createToken(user);
+		var jwtCookie = jwtService.createJwtCookie(user);
 
-		var headers = new HttpHeaders();
-		headers.add(AUTHENTICATION_INFO, BEARER_TOKEN_PREFIX + token);
-		headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, AUTHENTICATION_INFO);
-
-		return ResponseEntity.ok().headers(headers).body(new LoginResponseDto(token));
+		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).build();
 	}
-
-	// @ExceptionHandler
-	// ResponseEntity<?> heandleLockedException(LockedException e) {
-	// return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-	// }
 
 	static record LoginRequestDto(@NotBlank String userName, @NotBlank String password) {}
 

@@ -1,23 +1,28 @@
 package iris.client_bff.auth.db.jwt;
 
 import static iris.client_bff.auth.db.jwt.JwtConstants.*;
+import static java.util.Optional.*;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.Cookie;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2Error;
@@ -29,8 +34,10 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.util.WebUtils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator.Builder;
@@ -48,6 +55,13 @@ public class JWTService {
 
 	private final JWTService.Properties jwtProperties;
 
+	public BearerTokenResolver createTokenResolver() {
+
+		return request -> ofNullable(WebUtils.getCookie(request, jwtProperties.getCookieName()))
+				.map(Cookie::getValue)
+				.orElse(null);
+	}
+
 	public JwtDecoder createJwtDecoder() {
 
 		var algorithmName = getAlgorithm().getName();
@@ -62,25 +76,22 @@ public class JWTService {
 		return decoder;
 	}
 
-	public String createToken(UserDetails user) {
+	public ResponseCookie createJwtCookie(UserDetails user) {
 
-		var username = user.getUsername();
+		var jwt = createToken(user);
 
-		// By convention we expect that there exists only one authority and it represents the role
-		var role = user.getAuthorities().iterator().next().getAuthority();
+		return ResponseCookie.from(jwtProperties.getCookieName(), jwt)
+				.maxAge(jwtProperties.getExpirationTime().toSeconds())
+				.secure(jwtProperties.isSetSecure())
+				.httpOnly(true)
+				.sameSite(jwtProperties.getSameSiteStr())
+				.build();
+	}
 
-		var issuedAt = Instant.now();
-		var expirationTime = issuedAt.plus(EXPIRATION_TIME);
-
-		var token = sign(JWT.create()
-				.withSubject(username)
-				.withClaim(JWT_CLAIM_USER_ROLE, role)
-				.withIssuedAt(Date.from(issuedAt))
-				.withExpiresAt(Date.from(expirationTime)));
-
-		saveToken(token, username, expirationTime, issuedAt);
-
-		return token;
+	public ResponseCookie createCleanJwtCookie() {
+		// Without setting maxAge >= 0, we would create a session cookie.
+		// Setting it to 0 will delete the cookie.
+		return ResponseCookie.from(jwtProperties.getCookieName(), null).maxAge(0).build();
 	}
 
 	public boolean isTokenWhitelisted(String token) {
@@ -118,6 +129,27 @@ public class JWTService {
 		return OAuth2TokenValidatorResult.failure(error);
 	}
 
+	private String createToken(UserDetails user) {
+
+		var username = user.getUsername();
+
+		// By convention we expect that there exists only one authority and it represents the role
+		var role = user.getAuthorities().iterator().next().getAuthority();
+
+		var issuedAt = Instant.now();
+		var expirationTime = issuedAt.plus(jwtProperties.getExpirationTime());
+
+		var token = sign(JWT.create()
+				.withSubject(username)
+				.withClaim(JWT_CLAIM_USER_ROLE, role)
+				.withIssuedAt(Date.from(issuedAt))
+				.withExpiresAt(Date.from(expirationTime)));
+
+		saveToken(token, username, expirationTime, issuedAt);
+
+		return token;
+	}
+
 	private String sign(Builder builder) {
 		return builder.sign(getAlgorithm());
 	}
@@ -143,6 +175,25 @@ public class JWTService {
 	@Value
 	static class Properties {
 
-		private @NotBlank String sharedSecret;
+		@NotBlank
+		String sharedSecret;
+
+		@NotNull
+		Duration expirationTime;
+
+		@NotBlank
+		String cookieName;
+
+		boolean setSecure;
+
+		SameSite sameSite;
+
+		String getSameSiteStr() {
+			return getSameSite().name();
+		}
+
+		enum SameSite {
+			Strict, Lax
+		}
 	}
 }

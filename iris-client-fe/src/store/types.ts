@@ -14,6 +14,7 @@ import { ChunkLoaderState } from "@/views/app-settings/chunk-loader.store";
 import { CheckinAppStatusListState } from "@/views/checkin-app-status-list/checkin-app-status-list.store";
 import { IrisMessageCreateState } from "@/views/iris-message-create/iris-message-create.store";
 import { E2ETestsStoreState } from "@/modules/e2e-tests/e2e-tests.store";
+import { MockApiStoreState } from "@/modules/mock-api/mock-api.store";
 
 export type RootState = {
   home: HomeState;
@@ -32,4 +33,5 @@ export type RootState = {
   checkinAppStatusList: CheckinAppStatusListState;
   irisMessageCreate: IrisMessageCreateState;
   e2eTests: E2ETestsStoreState;
+  mockApi: MockApiStoreState;
 };

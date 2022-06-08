@@ -64,11 +64,11 @@ server {
     set $cors_header "";
     set $cors_method "";
     set $cors_maxage "";
-    if ( $http_origin ~* ((https:\/\/iris.staging.iris-gateway\.de|http:\/\/localhost:8080)$)) {
+    if ( $http_origin ~* ((https:\/\/iris.staging.iris-gateway\.de|https:\/\/client.dev.iris-gateway\.de|http:\/\/localhost:8080|http:\/\/localhost:8081)$)) {
             set $cors_origin $http_origin;
             set $cors_cred   true;
-            set $cors_header "*";
-            set $cors_method "*";
+            set $cors_header $http_access_control_request_headers;
+            set $cors_method $http_access_control_request_method;
             set $cors_maxage "86400";
     }
 

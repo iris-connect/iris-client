@@ -14,6 +14,7 @@ import chunkLoader from "@/views/app-settings/chunk-loader.store";
 import checkinAppStatusList from "@/views/checkin-app-status-list/checkin-app-status-list.store";
 import irisMessageCreate from "@/views/iris-message-create/iris-message-create.store";
 import e2eTests from "@/modules/e2e-tests/e2e-tests.store";
+import mockApi from "@/modules/mock-api/mock-api.store";
 
 import { StoreOptions } from "vuex";
 import { RootState } from "@/store/types";
@@ -42,12 +43,14 @@ export const storeOptions: StoreOptions<RootState> = {
     checkinAppStatusList,
     irisMessageCreate,
     e2eTests,
+    mockApi,
   },
   plugins: [
     createPersistedState({
       key: "iris-client-frontend",
       paths: [
         "userLogin.session",
+        "mockApi",
         "normalizeSettings.logEnabled",
         // @todo - indexTracking: optional remove next line once index cases are permanently activated again
         "indexTrackingSettings.indexTrackingEnabled",

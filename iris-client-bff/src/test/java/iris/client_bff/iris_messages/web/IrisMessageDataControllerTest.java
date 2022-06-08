@@ -3,6 +3,7 @@ package iris.client_bff.iris_messages.web;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
@@ -71,7 +72,8 @@ class IrisMessageDataControllerTest {
 
 		var result = mockMvc
 				.perform(
-						MockMvcRequestBuilders.post(baseUrl + "/" + messageData.getId() + "/import"))
+						post(baseUrl + "/" + messageData.getId() + "/import")
+								.with(csrf()))
 				.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 				.andReturn();
 
@@ -101,10 +103,11 @@ class IrisMessageDataControllerTest {
 
 		var result = mockMvc
 				.perform(
-						MockMvcRequestBuilders.post(baseUrl + "/" + messageData.getId() + "/import")
+						post(baseUrl + "/" + messageData.getId() + "/import")
 								.queryParam("importTargetId", UUID.randomUUID().toString())
 								.content(this.eventMessageTestData.MOCK_EVENT_MESSAGE_IMPORT_SELECTION_STRING)
-								.contentType(MediaType.APPLICATION_JSON))
+								.contentType(MediaType.APPLICATION_JSON)
+								.with(csrf()))
 				.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 				.andReturn();
 

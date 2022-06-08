@@ -2016,7 +2016,7 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @memberof IrisClientFrontendApi
    */
   public logout(options?: RequestOptions): ApiResponse {
-    return this.apiRequest("GET", "/user/logout", null, options);
+    return this.apiRequest("POST", "/user/logout", null, options);
   }
 
   /**
