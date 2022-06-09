@@ -1,4 +1,4 @@
-package iris.client_bff.core.settings;
+package iris.client_bff.core.setting;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
