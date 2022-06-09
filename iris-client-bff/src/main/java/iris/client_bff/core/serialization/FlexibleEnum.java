@@ -1,4 +1,4 @@
-package iris.client_bff.core.model;
+package iris.client_bff.core.serialization;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
