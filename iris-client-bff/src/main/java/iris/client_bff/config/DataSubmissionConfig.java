@@ -1,12 +1,9 @@
 package iris.client_bff.config;
 
-import static iris.client_bff.users.UserRole.*;
-
 import iris.client_bff.cases.eps.CaseDataController;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.events.eps.EventDataController;
 import iris.client_bff.iris_messages.eps.IrisMessageDataController;
-import iris.client_bff.users.UserAccount;
 import iris.client_bff.users.UserService;
 import iris.client_bff.vaccination_info.eps.VaccinationInfoController;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.annotation.Bean;
@@ -137,30 +133,30 @@ public class DataSubmissionConfig {
 				var clientName = json.findPath("params").findPath("_client").findPath("name");
 				if (clientName.isTextual()) {
 
-					var clientNameTxt = CLIENT_USER_PREFIX + clientName.asText();
+					var username = CLIENT_USER_PREFIX + clientName.asText();
 
-					var user = userService.findByUsername(clientNameTxt)
-							.orElseGet(() -> createUser(clientNameTxt, clientName.asText()));
+					var user = userService.findOrCreateUser(username, it -> it
+							.firstName("IRIS-Client")
+							.lastName(clientName.asText()));
 
 					SecurityContextHolder.getContext()
-							.setAuthentication(new AnonymousAuthenticationToken(clientNameTxt, user,
+							.setAuthentication(new AnonymousAuthenticationToken(username, user,
 									AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS")));
-
 				}
+
 			} catch (Exception e) {
+
+				// This is to ensure that proper error handling always takes place and no errors go unnoticed. Exceptions are
+				// not handled sufficiently by jsonrcp4j here: "In case preHandleJson throws exception, it will generate HTTP
+				// code 400 "Bad Request" with empty body."
+				//
+				// However, I do not expect exceptions here.
 
 				var msg = "Can't determine user account for the client of a JSON-RPC request.";
 				log.error(msg, e);
 				alertService.createAlertMessage("Error: Determine user for JSON-RPC client",
 						msg + " Exception message: " + e.getMessage());
 			}
-		}
-
-		private UserAccount createUser(String username, String name) {
-
-			var user = new UserAccount(username, UUID.randomUUID().toString(), "IRIS-Client", name, ANONYMOUS, true, null);
-
-			return userService.create(user);
 		}
 
 		@Override

@@ -5,6 +5,7 @@ import iris.client_bff.core.IdWithUuid;
 import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ import javax.persistence.Table;
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserAccount extends Aggregate<UserAccount, UserAccountIdentifier> {
 
 	{

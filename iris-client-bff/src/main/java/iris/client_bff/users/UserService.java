@@ -1,8 +1,10 @@
 package iris.client_bff.users;
 
+import static iris.client_bff.users.UserRole.*;
 import static java.util.Objects.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
+import iris.client_bff.users.UserAccount.UserAccountBuilder;
 import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 
 import javax.annotation.Nullable;
 
@@ -161,6 +164,38 @@ public class UserService {
 
 	public boolean isItCurrentUser(UserAccountIdentifier userId) {
 		return Objects.equals(userId, getCurrentUser().getId());
+	}
+
+	/**
+	 * If the user does not exist yet, it will be created.
+	 * <p/>
+	 * Default values are included:
+	 * <ul>
+	 * <li>`userName` = value of `{username}`</li>
+	 * <li>`password` = random UUID</li>
+	 * <li>`role` = `ANONYMOUS`</li>
+	 * <li>`locked` = `false`</li>
+	 * <li>`deletedAt` = null</li>
+	 * </ul>
+	 * 
+	 * @param username
+	 * @param defineUserFunction
+	 * @return The found or newly created user.
+	 */
+	public UserAccount findOrCreateUser(String username, UnaryOperator<UserAccountBuilder> defineUserFunction) {
+
+		return findByUsername(username)
+				.orElseGet(() -> {
+
+					var builder = UserAccount.builder()
+							.userName(username)
+							.password(UUID.randomUUID().toString())
+							.role(ANONYMOUS);
+
+					var user = defineUserFunction.apply(builder).build();
+
+					return create(user);
+				});
 	}
 
 	private UserAccount getCurrentUser() {
