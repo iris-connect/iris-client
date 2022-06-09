@@ -177,7 +177,7 @@ public class UserService {
 	 * <li>`locked` = `false`</li>
 	 * <li>`deletedAt` = null</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param username
 	 * @param defineUserFunction
 	 * @return The found or newly created user.

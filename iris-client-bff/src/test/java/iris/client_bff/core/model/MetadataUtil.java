@@ -1,8 +1,5 @@
 package iris.client_bff.core.model;
 
-import iris.client_bff.core.model.Aggregate;
-import iris.client_bff.core.model.Metadata;
-
 import java.time.Instant;
 import java.util.UUID;
 
