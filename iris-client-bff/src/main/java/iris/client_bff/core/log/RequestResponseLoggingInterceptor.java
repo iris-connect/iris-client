@@ -1,4 +1,4 @@
-package iris.client_bff.core;
+package iris.client_bff.core.log;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

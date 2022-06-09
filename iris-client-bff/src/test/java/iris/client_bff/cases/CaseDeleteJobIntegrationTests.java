@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.cases.model.CaseDataSubmission;
-import iris.client_bff.core.IrisDateTimeProvider;
 import iris.client_bff.core.token.IdentifierToken;
+import iris.client_bff.core.utils.IrisDateTimeProvider;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;

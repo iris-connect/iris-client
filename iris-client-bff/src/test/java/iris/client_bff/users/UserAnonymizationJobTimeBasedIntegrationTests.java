@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import ch.qos.logback.classic.Level;
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.core.IrisDateTimeProvider;
+import iris.client_bff.core.utils.IrisDateTimeProvider;
 import iris.client_bff.events.EventDataRequestRepository;
 
 import org.junit.jupiter.api.DisplayName;
