@@ -29,6 +29,7 @@ server {
 
     location /api/ {
         proxy_pass  http://iris-client:8092/;
+        proxy_cookie_path / /api/;
     }
 
     # SECURITY
