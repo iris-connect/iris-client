@@ -3,9 +3,9 @@ package iris.client_bff.cases.eps.dto;
 
 import static lombok.AccessLevel.*;
 
+import iris.client_bff.core.api.dto.AddressWithDefuseData;
 import iris.client_bff.core.serialization.DefuseJsonString;
 import iris.client_bff.core.validation.AttackDetector.Phone;
-import iris.client_bff.core.web.dto.AddressWithDefuseData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

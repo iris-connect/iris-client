@@ -1,6 +1,6 @@
-package iris.client_bff.core.web.error;
+package iris.client_bff.core.api.web.error;
 
-import iris.client_bff.core.web.filter.ApplicationRequestSizeLimitFilter.BlockLimitExceededException;
+import iris.client_bff.core.api.filter.ApplicationRequestSizeLimitFilter.BlockLimitExceededException;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
 import lombok.RequiredArgsConstructor;

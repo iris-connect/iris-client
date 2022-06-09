@@ -1,7 +1,7 @@
 package iris.client_bff.vaccination_info.web;
 
 import iris.client_bff.core.Sex;
-import iris.client_bff.core.web.dto.Address;
+import iris.client_bff.core.api.dto.Address;
 import iris.client_bff.vaccination_info.VaccinationStatus;
 import iris.client_bff.vaccination_info.VaccinationType;
 

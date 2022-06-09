@@ -1,4 +1,4 @@
-package iris.client_bff.core.web.error;
+package iris.client_bff.core.api.web.error;
 
 import static io.restassured.http.ContentType.*;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
@@ -10,7 +10,7 @@ import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecBuilder;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.WithMockAdmin;
-import iris.client_bff.core.web.error.TestController.TestException;
+import iris.client_bff.core.api.web.error.TestController.TestException;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Locale;

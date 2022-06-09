@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.core.web.dto.AddressWithDefuseData;
+import iris.client_bff.core.api.dto.AddressWithDefuseData;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestRepository;
 import iris.client_bff.events.EventDataSubmissionRepository;

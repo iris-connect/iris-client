@@ -1,6 +1,6 @@
 package iris.client_bff.events.message;
 
-import iris.client_bff.core.web.dto.Person;
+import iris.client_bff.core.api.dto.Person;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequestService;

@@ -1,4 +1,4 @@
-package iris.client_bff.core.web.error;
+package iris.client_bff.core.api.web.error;
 
 import static java.util.stream.Collectors.*;
 

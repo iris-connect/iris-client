@@ -3,7 +3,7 @@ package iris.client_bff.cases.eps.dto;
 
 import static lombok.AccessLevel.*;
 
-import iris.client_bff.core.web.dto.PersonWithDefuseData;
+import iris.client_bff.core.api.dto.PersonWithDefuseData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

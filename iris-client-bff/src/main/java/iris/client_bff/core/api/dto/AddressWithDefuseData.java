@@ -1,4 +1,4 @@
-package iris.client_bff.core.web.dto;
+package iris.client_bff.core.api.dto;
 
 import static lombok.AccessLevel.*;
 

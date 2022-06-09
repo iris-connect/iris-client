@@ -1,4 +1,4 @@
-package iris.client_bff.core.web.filter;
+package iris.client_bff.core.api.filter;
 
 import iris.client_bff.config.DataSubmissionConfig;
 import iris.client_bff.core.alert.AlertService;

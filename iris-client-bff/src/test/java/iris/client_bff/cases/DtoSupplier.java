@@ -2,7 +2,7 @@ package iris.client_bff.cases;
 
 import iris.client_bff.cases.eps.dto.ContactPerson;
 import iris.client_bff.cases.eps.dto.Event;
-import iris.client_bff.core.web.dto.AddressWithDefuseData;
+import iris.client_bff.core.api.dto.AddressWithDefuseData;
 
 import java.util.ArrayList;
 import java.util.List;

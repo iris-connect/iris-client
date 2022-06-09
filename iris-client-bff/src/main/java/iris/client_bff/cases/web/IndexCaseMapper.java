@@ -17,7 +17,7 @@ import iris.client_bff.cases.web.submission_dto.ContactsAndEventsDataProvider;
 import iris.client_bff.cases.web.submission_dto.Event;
 import iris.client_bff.cases.web.submission_dto.EventList;
 import iris.client_bff.core.Sex;
-import iris.client_bff.core.web.dto.Address;
+import iris.client_bff.core.api.dto.Address;
 import iris.client_bff.users.UserAccount;
 import iris.client_bff.users.UserService;
 import lombok.NoArgsConstructor;
