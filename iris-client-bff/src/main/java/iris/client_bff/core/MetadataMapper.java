@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(config = MapStructCentralConfig.class)
 public abstract class MetadataMapper {
-	// public abstract class MetadataMapper implements Converter<Id, String> {
 
 	@Autowired
 	protected UserService userService;
