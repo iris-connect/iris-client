@@ -6,7 +6,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import iris.client_bff.MemoryAppender;
-import iris.client_bff.core.utils.IrisDateTimeProvider;
+import iris.client_bff.core.database.IrisDateTimeProvider;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestRepository;
 import iris.client_bff.events.model.Location;

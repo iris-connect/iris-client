@@ -1,4 +1,4 @@
-package iris.client_bff.core.utils;
+package iris.client_bff.core.database;
 
 import lombok.Getter;
 import lombok.Setter;

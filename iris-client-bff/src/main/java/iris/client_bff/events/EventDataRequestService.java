@@ -2,8 +2,8 @@ package iris.client_bff.events;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
+import iris.client_bff.core.database.HibernateSearcher;
 import iris.client_bff.core.log.LogHelper;
-import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.eps.DataProviderClient;

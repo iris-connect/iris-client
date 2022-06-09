@@ -3,7 +3,7 @@ package iris.client_bff.events;
 import static org.assertj.core.api.Assertions.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.core.utils.IrisDateTimeProvider;
+import iris.client_bff.core.database.IrisDateTimeProvider;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.model.Location;
 import iris.client_bff.events.model.Location.LocationIdentifier;

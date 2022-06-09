@@ -1,8 +1,8 @@
 package iris.client_bff.vaccination_info;
 
 import iris.client_bff.core.alert.AlertService;
+import iris.client_bff.core.database.HibernateSearcher;
 import iris.client_bff.core.log.LogHelper;
-import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
 import iris.client_bff.vaccination_info.VaccinationInfo.Employee;
