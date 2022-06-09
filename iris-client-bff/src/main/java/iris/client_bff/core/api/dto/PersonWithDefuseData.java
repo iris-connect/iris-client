@@ -2,7 +2,7 @@ package iris.client_bff.core.api.dto;
 
 import static lombok.AccessLevel.*;
 
-import iris.client_bff.core.Sex;
+import iris.client_bff.core.model.Sex;
 import iris.client_bff.core.serialization.DefuseJsonString;
 import iris.client_bff.core.validation.AttackDetector.Phone;
 import lombok.AllArgsConstructor;

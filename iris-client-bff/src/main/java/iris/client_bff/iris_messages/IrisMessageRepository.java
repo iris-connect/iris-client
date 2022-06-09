@@ -1,6 +1,6 @@
 package iris.client_bff.iris_messages;
 
-import iris.client_bff.core.AggregateRepository;
+import iris.client_bff.core.model.AggregateRepository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

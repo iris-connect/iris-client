@@ -1,6 +1,6 @@
 package iris.client_bff.users.web;
 
-import static iris.client_bff.core.MetadataUtil.*;
+import static iris.client_bff.core.model.MetadataUtil.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;

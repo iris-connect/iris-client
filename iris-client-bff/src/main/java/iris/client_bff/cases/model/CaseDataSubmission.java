@@ -1,8 +1,8 @@
 package iris.client_bff.cases.model;
 
 import iris.client_bff.cases.CaseDataRequest;
-import iris.client_bff.core.Aggregate;
-import iris.client_bff.core.IdWithUuid;
+import iris.client_bff.core.model.Aggregate;
+import iris.client_bff.core.model.IdWithUuid;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

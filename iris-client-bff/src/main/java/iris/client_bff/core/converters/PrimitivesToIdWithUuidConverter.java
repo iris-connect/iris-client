@@ -1,6 +1,6 @@
 package iris.client_bff.core.converters;
 
-import iris.client_bff.core.IdWithUuid;
+import iris.client_bff.core.model.IdWithUuid;
 
 import java.lang.reflect.Method;
 import java.util.Map;

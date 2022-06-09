@@ -1,7 +1,7 @@
 package iris.client_bff.users.web;
 
 import iris.client_bff.config.MapStructCentralConfig;
-import iris.client_bff.core.MetadataMapper.UserNameMetadata;
+import iris.client_bff.core.mappers.MetadataMapper.UserNameMetadata;
 import iris.client_bff.users.UserAccount;
 import iris.client_bff.users.UserRole;
 

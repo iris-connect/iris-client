@@ -1,7 +1,7 @@
 package iris.client_bff.cases.model;
 
-import iris.client_bff.core.Sex;
 import iris.client_bff.core.model.Address;
+import iris.client_bff.core.model.Sex;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

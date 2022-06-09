@@ -2,8 +2,8 @@ package iris.client_bff;
 
 import iris.client_bff.IrisMapperTest.MapperTestContextBootstrapper;
 import iris.client_bff.IrisMapperTest.MapperTypeExcludeFilter;
-import iris.client_bff.core.ConversionServiceAdapter;
-import iris.client_bff.core.MetadataMapper;
+import iris.client_bff.core.mappers.ConversionServiceAdapter;
+import iris.client_bff.core.mappers.MetadataMapper;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

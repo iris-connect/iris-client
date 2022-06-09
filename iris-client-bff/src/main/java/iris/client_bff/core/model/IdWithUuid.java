@@ -1,4 +1,4 @@
-package iris.client_bff.core;
+package iris.client_bff.core.model;
 
 import java.util.UUID;
 

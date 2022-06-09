@@ -1,4 +1,4 @@
-package iris.client_bff.core;
+package iris.client_bff.core.mappers;
 
 import iris.client_bff.config.MapStructCentralConfig;
 import iris.client_bff.users.UserAccount;

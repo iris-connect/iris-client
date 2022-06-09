@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.core.IdWithUuid;
+import iris.client_bff.core.model.IdWithUuid;
 import iris.client_bff.users.UserAccount;
 import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 import lombok.NonNull;

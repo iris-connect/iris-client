@@ -1,8 +1,8 @@
 package iris.client_bff.events;
 
 import iris.client_bff.config.MapStructCentralConfig;
-import iris.client_bff.core.MetadataMapper.UserNameMetadata;
 import iris.client_bff.core.api.dto.Person;
+import iris.client_bff.core.mappers.MetadataMapper.UserNameMetadata;
 import iris.client_bff.events.web.dto.DataRequestDetails;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
 import iris.client_bff.events.web.dto.Guest;

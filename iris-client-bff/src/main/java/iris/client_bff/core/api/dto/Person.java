@@ -2,7 +2,7 @@ package iris.client_bff.core.api.dto;
 
 import static lombok.AccessLevel.*;
 
-import iris.client_bff.core.Sex;
+import iris.client_bff.core.model.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

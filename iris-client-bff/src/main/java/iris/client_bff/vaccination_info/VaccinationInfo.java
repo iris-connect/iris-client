@@ -2,10 +2,10 @@ package iris.client_bff.vaccination_info;
 
 import static iris.client_bff.vaccination_info.VaccinationStatus.*;
 
-import iris.client_bff.core.Aggregate;
-import iris.client_bff.core.IdWithUuid;
-import iris.client_bff.core.Sex;
 import iris.client_bff.core.model.Address;
+import iris.client_bff.core.model.Aggregate;
+import iris.client_bff.core.model.IdWithUuid;
+import iris.client_bff.core.model.Sex;
 import iris.client_bff.vaccination_info.VaccinationInfo.VaccinationInfoIdentifier;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

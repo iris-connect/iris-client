@@ -1,6 +1,6 @@
 package iris.client_bff.events.model;
 
-import iris.client_bff.core.IdWithUuid;
+import iris.client_bff.core.model.IdWithUuid;
 import iris.client_bff.events.EventDataRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
