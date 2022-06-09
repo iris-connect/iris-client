@@ -3,7 +3,7 @@ package iris.client_bff.config;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import iris.client_bff.core.IdWithUuid;
-import iris.client_bff.core.converter.PrimitivesToIdWithUuidConverter;
+import iris.client_bff.core.converters.PrimitivesToIdWithUuidConverter;
 import iris.client_bff.core.validation.AttackDetector;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package iris.client_bff.core.converter;
+package iris.client_bff.core.converters;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;

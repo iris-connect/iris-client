@@ -1,4 +1,4 @@
-package iris.client_bff.core.converter;
+package iris.client_bff.core.converters;
 
 import iris.client_bff.core.IdWithUuid;
 

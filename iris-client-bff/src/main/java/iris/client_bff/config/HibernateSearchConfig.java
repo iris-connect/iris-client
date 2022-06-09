@@ -2,7 +2,7 @@ package iris.client_bff.config;
 
 import iris.client_bff.IrisClientBffApplication;
 import iris.client_bff.core.IdWithUuid;
-import iris.client_bff.core.converter.PrimitivesToIdWithUuidConverter;
+import iris.client_bff.core.converters.PrimitivesToIdWithUuidConverter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
