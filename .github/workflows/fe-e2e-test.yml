@@ -22,7 +22,7 @@ jobs:
 
       - name: Cypress run
         # Install NPM dependencies, cache them correctly and run all Cypress tests
-        uses: cypress-io/github-action@v3.1.0
+        uses: cypress-io/github-action@v4.1.0
         timeout-minutes: 20
         with:
           browser: chrome
