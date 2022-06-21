@@ -38,6 +38,7 @@ export interface UserLoginModule extends Module<UserLoginState, RootState> {
       { commit }: { commit: Commit },
       formData: Credentials
     ): Promise<void>;
+    refreshToken(): Promise<void>;
     fetchAuthenticatedUser(
       { commit }: { commit: Commit },
       silent?: boolean
@@ -109,6 +110,9 @@ const userLogin: UserLoginModule = {
         commit("setSession", session);
         commit("setAuthenticating", false);
       }
+    },
+    async refreshToken(): Promise<void> {
+      await baseClient.refreshToken();
     },
     async fetchAuthenticatedUser({ commit }, silent): Promise<void> {
       let user = null;

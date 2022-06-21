@@ -1,6 +1,5 @@
 package iris.client_bff.core.web.error;
 
-import iris.client_bff.auth.db.jwt.JWTService;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
@@ -9,7 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
@@ -27,8 +25,6 @@ class GlobalFilterExceptionHandler implements AuthenticationEntryPoint, AccessDe
 
 	private final IrisErrorAttributes errorAttributes;
 
-	private final JWTService jwtService;
-
 	/**
 	 * handle authentication error
 	 */
@@ -38,9 +34,6 @@ class GlobalFilterExceptionHandler implements AuthenticationEntryPoint, AccessDe
 
 		authenticationEntryPoint.commence(request, response, authException);
 
-		// If there is an existing http only cookie containing an invalid token, it has to be deleted.
-		// Otherwise, the user won't be able to login, because the invalid token gets rejected with every login request.
-		response.addHeader(HttpHeaders.SET_COOKIE, jwtService.createCleanJwtCookie().toString());
 		response.sendError(response.getStatus());
 
 		errorAttributes.resolveException(request, response, authenticationEntryPoint, authException);

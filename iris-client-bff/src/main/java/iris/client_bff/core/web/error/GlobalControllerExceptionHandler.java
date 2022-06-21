@@ -4,6 +4,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 import static org.springframework.core.annotation.AnnotationUtils.*;
 import static org.springframework.web.context.request.RequestAttributes.*;
 
+import iris.client_bff.auth.db.jwt.JWTService;
 import iris.client_bff.core.messages.ErrorMessages;
 import iris.client_bff.core.web.filter.ApplicationRequestSizeLimitFilter.BlockLimitExceededException;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
@@ -33,6 +34,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private final IrisErrorAttributes errorAttributes;
+
+	private final JWTService jwtService;
 
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
@@ -78,8 +81,16 @@ class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(AuthenticationException.class)
 	ResponseEntity<?> handleAccessDeniedException(AuthenticationException ex, WebRequest request) {
+
 		var status = HttpStatus.UNAUTHORIZED;
-		return handleExceptionInternal(ex, null, new HttpHeaders(), status, request);
+
+		// If an AuthenticationException is thrown in a controller (authentication error on login or refresh token), then
+		// the http only cookies in the client should be deleted.
+		var headers = new HttpHeaders();
+		headers.add(HttpHeaders.SET_COOKIE, jwtService.createCleanJwtCookie().toString());
+		headers.add(HttpHeaders.SET_COOKIE, jwtService.createCleanRefreshCookie().toString());
+
+		return handleExceptionInternal(ex, null, headers, status, request);
 	}
 
 	@ExceptionHandler(AccessDeniedException.class)
