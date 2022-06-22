@@ -1,5 +1,37 @@
 # Changelog
 
+# [1.6.0-rc.1](https://github.com/iris-connect/iris-client/compare/v1.5.1...v1.6.0-rc.1) (2022-06-22)
+
+
+### Bug Fixes
+
+* add support for multi-column sort query parameters (fixes broken table sort of iris-message list) ([9daf6a1](https://github.com/iris-connect/iris-client/commit/9daf6a161565304342235b3df8708972d1f59802)), closes [#801](https://github.com/iris-connect/iris-client/issues/801)
+* **Dependencies:** Updates version of jackson-databind to fix the vulnerability: avd.aquasec.com/nvd/cve-2020-36518 ([84a4b04](https://github.com/iris-connect/iris-client/commit/84a4b049f5d43e7a07b376d28d189b62ebba1a14))
+* **Deps:** updates Spring Boot to 2.6.6 to fix the vulnerability avd.aquasec.com/nvd/cve-2022-22965 ([46a50b5](https://github.com/iris-connect/iris-client/commit/46a50b5ad1dd69a9ad891149f6b5ff4f987f87f7))
+* fix dependabot security alert and update multiple npm dependencies ([7b71e64](https://github.com/iris-connect/iris-client/commit/7b71e64fa55f39599f18de84440696e443e4f34b)), closes [#729](https://github.com/iris-connect/iris-client/issues/729)
+* fix e2e tests by correcting the spec order ([53fd088](https://github.com/iris-connect/iris-client/commit/53fd088ca7075319439ed3140587cc95ccea27e5)), closes [#764](https://github.com/iris-connect/iris-client/issues/764)
+* Fixes a validation error when changing user data of admins. This could lead to an admin not being able to change their data under certain circumstances (only admin and role not transferred with). ([61f6bc3](https://github.com/iris-connect/iris-client/commit/61f6bc3d9a92484ac2d6a0bf6a2ab36b1359d5ad)), closes [#703](https://github.com/iris-connect/iris-client/issues/703)
+* ga-gotham config tls communication between internal eps ([4b6cf41](https://github.com/iris-connect/iris-client/commit/4b6cf413cf05cf172cf3b0fdd444eb87a40324b4))
+* removed line breaks at the end of certificates. ([64104a0](https://github.com/iris-connect/iris-client/commit/64104a02aefd32b680a2215abbb6e92b6f94e91c))
+
+
+### Features
+
+* For JSON-RPC calls (calls from EPS), the client name submitted by EPS is now used as user (if available). Thus, the metadata of records created via JSON-RPC now also contain a user as creator and it is easier to see by whom the data was created. ([71ff56f](https://github.com/iris-connect/iris-client/commit/71ff56f71af4077dd8186773dda81f53633c826b)), closes [#826](https://github.com/iris-connect/iris-client/issues/826)
+* **Messages:** Messages can now be used to exchange guests of events between health departments. This makes it possible to transmit the guests received through a data request to the responsible department. The data can be transferred directly from the event overview to a message or can also be added to a message as an attachment. This is the beginning, more data types will follow. ([9c3c8cd](https://github.com/iris-connect/iris-client/commit/9c3c8cd92ec68075c448e52618a4c2ea071eea8e)), closes [#640](https://github.com/iris-connect/iris-client/issues/640)
+* **Messages:** Messages can now be used to exchange vaccination reports between health departments. This makes it possible to transmit received records to the appropriate department through a data transfer. The data can be transferred directly from the vaccination report overview to a message or can also be added as an attachment to a message. ([64636ba](https://github.com/iris-connect/iris-client/commit/64636bae940c3e795b898d078428c60cee73c1ae)), closes [#762](https://github.com/iris-connect/iris-client/issues/762)
+* Old messages are deleted after a configurable time (default is after 180 days) with all associated data. ([d768632](https://github.com/iris-connect/iris-client/commit/d768632dbe98ba663a5a279a700b71dc93180ed9)), closes [#773](https://github.com/iris-connect/iris-client/issues/773)
+* The authentication tokens (JWT) now retain their validity beyond the restart of the IRIS client. This means that, ideally, users notice only little of a restart of the application. ([2442685](https://github.com/iris-connect/iris-client/commit/2442685b856548a5a30f6e8bc2c54343b3904e2e)), closes [#804](https://github.com/iris-connect/iris-client/issues/804)
+* The client backend now also supports the use of a refresh token, which can be used to extend the short validity of the authentication. This makes it more convenient to use, especially in conjunction with a two-factor authentication. ([b20ed86](https://github.com/iris-connect/iris-client/commit/b20ed86df8673bbcbf7af5ee5df8a976362c2a4f)), closes [#803](https://github.com/iris-connect/iris-client/issues/803)
+* The client is now a bit more secure against attacks and authentication token (JWT) stealing. For this, the JWT is now transferred and processed in HTTP-only cookies. In this context, XSRF protection with XSRF-TOKEN cookies has also been enabled. ([ae25da8](https://github.com/iris-connect/iris-client/commit/ae25da844dd390bc2494e11738ac23ea4608e6de)), closes [#802](https://github.com/iris-connect/iris-client/issues/802)
+* Users are no longer deleted immediately, but marked as deleted. The marked users can no longer be used and are no longer displayed. However, the data is still available, for example, for working with the audit logs. After all references to the users are deleted according to the respective deadline or after a specified time, the users are finally anonymized. Procedure and time periods are configurable. ([a913eaf](https://github.com/iris-connect/iris-client/commit/a913eafa9b9b1c53f2c0db81dc7c3a24c59e371f)), closes [iris-connect/iris-backlog#235](https://github.com/iris-connect/iris-backlog/issues/235) [#761](https://github.com/iris-connect/iris-client/issues/761)
+* Users can be marked as locked. This makes it possible to temporarily lock users when they are absent. The locked users are not deleted, they are still available in the overview, but cannot be used for a login. ([68d55ec](https://github.com/iris-connect/iris-client/commit/68d55ec5b4edda9a05a4e2bb1e8533c0e5497b0b)), closes [#775](https://github.com/iris-connect/iris-client/issues/775)
+
+
+### Reverts
+
+* Revert "chore(Deps): removes unnecessary Postgres version (spring declares the same) and improves jackson dependency" ([90bb5fa](https://github.com/iris-connect/iris-client/commit/90bb5fa74e589796d1d3a44aafda8473dafee96f))
+
 ## [1.5.1](https://github.com/iris-connect/iris-client/compare/v1.5.0...v1.5.1) (2022-03-29)
 
 
