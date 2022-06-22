@@ -1,6 +1,6 @@
 package iris.client_bff.events;
 
-import iris.client_bff.core.AggregateRepository;
+import iris.client_bff.core.model.AggregateRepository;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 

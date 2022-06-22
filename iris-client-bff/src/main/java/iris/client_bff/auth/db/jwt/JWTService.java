@@ -6,9 +6,9 @@ import static org.apache.commons.lang3.StringUtils.*;
 
 import io.vavr.control.Option;
 import io.vavr.control.Try;
-import iris.client_bff.core.settings.Setting;
-import iris.client_bff.core.settings.Setting.Name;
-import iris.client_bff.core.settings.SettingsRepository;
+import iris.client_bff.core.setting.Setting;
+import iris.client_bff.core.setting.Setting.Name;
+import iris.client_bff.core.setting.SettingsRepository;
 import lombok.Value;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;

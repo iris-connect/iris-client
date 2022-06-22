@@ -2,8 +2,8 @@ package iris.client_bff.cases.web.submission_dto;
 
 import static lombok.AccessLevel.*;
 
-import iris.client_bff.core.Sex;
-import iris.client_bff.core.web.dto.Address;
+import iris.client_bff.core.api.dto.Address;
+import iris.client_bff.core.model.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

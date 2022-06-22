@@ -5,8 +5,8 @@ import iris.client_bff.cases.model.CaseDataProvider;
 import iris.client_bff.cases.model.CaseDataSubmission;
 import iris.client_bff.cases.model.CaseEvent;
 import iris.client_bff.cases.model.Contact;
-import iris.client_bff.core.Sex;
 import iris.client_bff.core.model.Address;
+import iris.client_bff.core.model.Sex;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

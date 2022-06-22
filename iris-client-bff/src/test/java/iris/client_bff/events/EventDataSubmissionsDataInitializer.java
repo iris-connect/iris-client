@@ -3,8 +3,8 @@ package iris.client_bff.events;
 import static java.time.temporal.ChronoUnit.*;
 
 import iris.client_bff.DataInitializer;
-import iris.client_bff.core.Sex;
 import iris.client_bff.core.model.Address;
+import iris.client_bff.core.model.Sex;
 import iris.client_bff.events.model.AttendanceInformation;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.model.Guest;

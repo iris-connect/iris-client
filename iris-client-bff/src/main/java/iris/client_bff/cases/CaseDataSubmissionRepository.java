@@ -2,7 +2,7 @@ package iris.client_bff.cases;
 
 import iris.client_bff.cases.model.CaseDataSubmission;
 import iris.client_bff.cases.model.CaseDataSubmission.DataSubmissionIdentifier;
-import iris.client_bff.core.AggregateRepository;
+import iris.client_bff.core.model.AggregateRepository;
 
 import javax.transaction.Transactional;
 

@@ -1,9 +1,9 @@
 package iris.client_bff.vaccination_info.message;
 
-import iris.client_bff.core.Sex;
+import iris.client_bff.core.api.dto.AddressWithDefuseData;
+import iris.client_bff.core.model.Sex;
 import iris.client_bff.core.serialization.DefuseJsonString;
 import iris.client_bff.core.validation.AttackDetector;
-import iris.client_bff.core.web.dto.AddressWithDefuseData;
 import iris.client_bff.vaccination_info.VaccinationStatus;
 import iris.client_bff.vaccination_info.VaccinationType;
 import lombok.Data;

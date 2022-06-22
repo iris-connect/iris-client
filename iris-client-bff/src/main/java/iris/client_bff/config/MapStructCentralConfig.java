@@ -1,8 +1,8 @@
 package iris.client_bff.config;
 
-import iris.client_bff.core.ConversionServiceAdapter;
-import iris.client_bff.core.IdWithUuid;
-import iris.client_bff.core.MetadataMapper;
+import iris.client_bff.core.mappers.ConversionServiceAdapter;
+import iris.client_bff.core.mappers.MetadataMapper;
+import iris.client_bff.core.model.IdWithUuid;
 
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ import org.mapstruct.extensions.spring.SpringMapperConfig;
 		uses = { ConversionServiceAdapter.class, MetadataMapper.class },
 		componentModel = ComponentModel.SPRING,
 		injectionStrategy = InjectionStrategy.CONSTRUCTOR)
-@SpringMapperConfig(conversionServiceAdapterPackage = "iris.client_bff.core",
+@SpringMapperConfig(conversionServiceAdapterPackage = "iris.client_bff.core.mappers",
 		externalConversions = { // Conversions from Spring’s Conversion Service
 				@ExternalConversion(sourceType = String.class, targetType = IdWithUuid.class),
 				@ExternalConversion(sourceType = UUID.class, targetType = IdWithUuid.class),

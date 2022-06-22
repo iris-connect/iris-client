@@ -1,8 +1,8 @@
 package iris.client_bff.vaccination_info.message;
 
 import iris.client_bff.config.MapStructCentralConfig;
-import iris.client_bff.core.Sex;
-import iris.client_bff.core.web.dto.AddressWithDefuseData;
+import iris.client_bff.core.api.dto.AddressWithDefuseData;
+import iris.client_bff.core.model.Sex;
 import iris.client_bff.iris_messages.IrisMessageDataProcessor;
 import iris.client_bff.iris_messages.exceptions.IrisMessageDataException;
 import iris.client_bff.iris_messages.utils.IrisMessageDataUtils;

@@ -1,11 +1,11 @@
 package iris.client_bff.vaccination_info.eps;
 
-import iris.client_bff.core.Sex;
+import iris.client_bff.core.api.dto.Address;
+import iris.client_bff.core.model.Sex;
 import iris.client_bff.core.validation.AttackDetector.Phone;
 import iris.client_bff.core.validation.Base64;
 import iris.client_bff.core.validation.NoSignOfAttack;
 import iris.client_bff.core.validation.PhoneNumber;
-import iris.client_bff.core.web.dto.Address;
 import iris.client_bff.vaccination_info.VaccinationStatus;
 import iris.client_bff.vaccination_info.VaccinationType;
 

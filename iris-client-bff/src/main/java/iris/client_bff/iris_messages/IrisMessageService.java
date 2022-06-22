@@ -3,7 +3,7 @@ package iris.client_bff.iris_messages;
 import static org.apache.commons.lang3.StringUtils.*;
 
 import io.vavr.control.Try;
-import iris.client_bff.core.utils.HibernateSearcher;
+import iris.client_bff.core.database.HibernateSearcher;
 import iris.client_bff.hd_search.HealthDepartment;
 import iris.client_bff.hd_search.eps.EPSHdSearchClient;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;

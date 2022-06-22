@@ -1,8 +1,8 @@
 package iris.client_bff.events.message;
 
-import iris.client_bff.core.ConversionServiceAdapter;
-import iris.client_bff.core.MetadataMapperImpl;
-import iris.client_bff.core.converter.IdWithUuidToPrimitivesConverter;
+import iris.client_bff.core.converters.IdWithUuidToPrimitivesConverter;
+import iris.client_bff.core.mappers.ConversionServiceAdapter;
+import iris.client_bff.core.mappers.MetadataMapperImpl;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestsDataInitializer;
 import iris.client_bff.events.EventDataSubmissionsDataInitializer;

@@ -5,8 +5,8 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.config.JacksonConfig;
-import iris.client_bff.core.ConversionServiceAdapter;
-import iris.client_bff.core.MetadataMapperImpl;
+import iris.client_bff.core.mappers.ConversionServiceAdapter;
+import iris.client_bff.core.mappers.MetadataMapperImpl;
 import iris.client_bff.core.validation.AttackDetector;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;

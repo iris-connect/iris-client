@@ -1,6 +1,6 @@
 package iris.client_bff.config;
 
-import iris.client_bff.core.utils.ValidatedProperties;
+import iris.client_bff.core.validation.ValidatedProperties;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

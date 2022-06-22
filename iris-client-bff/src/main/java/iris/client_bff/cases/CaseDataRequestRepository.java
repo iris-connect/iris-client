@@ -2,7 +2,7 @@ package iris.client_bff.cases;
 
 import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
-import iris.client_bff.core.AggregateRepository;
+import iris.client_bff.core.model.AggregateRepository;
 
 import java.time.Instant;
 import java.util.Optional;

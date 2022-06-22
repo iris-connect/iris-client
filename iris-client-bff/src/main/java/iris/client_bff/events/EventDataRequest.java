@@ -1,7 +1,7 @@
 package iris.client_bff.events;
 
-import iris.client_bff.core.Aggregate;
-import iris.client_bff.core.IdWithUuid;
+import iris.client_bff.core.model.Aggregate;
+import iris.client_bff.core.model.IdWithUuid;
 import iris.client_bff.events.model.Location;
 import lombok.AccessLevel;
 import lombok.Builder;

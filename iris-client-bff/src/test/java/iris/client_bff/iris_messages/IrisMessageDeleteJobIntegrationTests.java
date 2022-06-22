@@ -4,7 +4,7 @@ import static java.time.Duration.*;
 import static org.assertj.core.api.Assertions.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.core.IrisDateTimeProvider;
+import iris.client_bff.core.database.IrisDateTimeProvider;
 import lombok.RequiredArgsConstructor;
 
 import org.junit.jupiter.api.Test;

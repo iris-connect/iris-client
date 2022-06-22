@@ -5,8 +5,8 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import iris.client_bff.cases.CaseDataRequest.Status;
+import iris.client_bff.core.database.HibernateSearcher;
 import iris.client_bff.core.token.TokenGenerator;
-import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.proxy.ProxyServiceClient;
 
 import java.time.Instant;
