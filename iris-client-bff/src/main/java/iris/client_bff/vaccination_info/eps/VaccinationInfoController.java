@@ -35,7 +35,7 @@ import com.googlecode.jsonrpc4j.JsonRpcParam;
 public interface VaccinationInfoController {
 
 	@JsonRpcErrors({
-			@JsonRpcError(exception = InvalidPublicKeyException.class, code = -32602),
+			@JsonRpcError(exception = InvalidPublicKeyException.class, code = -32600),
 			@JsonRpcError(exception = VaccinationInfoAnnouncementException.class, code = -32603)
 	})
 	AnnouncementResultDto announceVaccinationInfoList(
