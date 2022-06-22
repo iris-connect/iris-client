@@ -14,12 +14,12 @@ import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.CaseDataRequestService;
+import iris.client_bff.cases.exceptions.IRISDataRequestException;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
-import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.users.UserAccount;
 import iris.client_bff.users.UserService;
 

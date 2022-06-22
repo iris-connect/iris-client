@@ -5,9 +5,9 @@ import static org.springframework.core.annotation.AnnotationUtils.*;
 import static org.springframework.web.context.request.RequestAttributes.*;
 
 import iris.client_bff.auth.db.jwt.JWTService;
+import iris.client_bff.cases.exceptions.IRISDataRequestException;
 import iris.client_bff.core.api.filter.ApplicationRequestSizeLimitFilter.BlockLimitExceededException;
 import iris.client_bff.core.messages.ErrorMessages;
-import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

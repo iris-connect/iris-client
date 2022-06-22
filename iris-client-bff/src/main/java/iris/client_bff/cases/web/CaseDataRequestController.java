@@ -7,12 +7,12 @@ import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.CaseDataRequestService;
 import iris.client_bff.cases.CaseDataSubmissionService;
+import iris.client_bff.cases.exceptions.IRISDataRequestException;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.core.messages.ErrorMessages;
-import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.users.UserService;
 import lombok.RequiredArgsConstructor;
 

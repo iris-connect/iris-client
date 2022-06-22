@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = { "iris.client_bff", "org.pf4j.spring" })
 @ConfigurationPropertiesScan
 public class IrisClientBffApplication {
 

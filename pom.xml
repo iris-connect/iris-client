@@ -19,6 +19,7 @@
 
     <modules>
         <module>iris-client-bff</module>
+        <module>plugins</module>
     </modules>
 
     <build>

@@ -2,7 +2,6 @@ package iris.client_bff.config;
 
 import iris.client_bff.cases.eps.CaseDataController;
 import iris.client_bff.core.alert.AlertService;
-import iris.client_bff.events.eps.EventDataController;
 import iris.client_bff.iris_messages.eps.IrisMessageDataController;
 import iris.client_bff.users.UserService;
 import iris.client_bff.vaccination_info.eps.VaccinationInfoController;
@@ -43,7 +42,7 @@ public class DataSubmissionConfig {
 	private final AlertService alertService;
 
 	private final CaseDataController caseDataController;
-	private final EventDataController eventDataController;
+	// private final EventDataController eventDataController;
 	private final IrisMessageDataController irisMessageDataController;
 	private final VaccinationInfoController vaccinationProofController;
 
@@ -61,12 +60,12 @@ public class DataSubmissionConfig {
 
 		Object[] services = {
 				caseDataController,
-				eventDataController,
+				// eventDataController,
 				irisMessageDataController,
 				vaccinationProofController };
 		Class<?>[] serviceInterfaces = {
 				CaseDataController.class,
-				EventDataController.class,
+				// EventDataController.class,
 				IrisMessageDataController.class,
 				VaccinationInfoController.class };
 

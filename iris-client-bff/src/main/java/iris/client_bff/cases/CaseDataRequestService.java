@@ -2,13 +2,13 @@ package iris.client_bff.cases;
 
 import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
+import iris.client_bff.cases.exceptions.IRISDataRequestException;
 import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.core.database.HibernateSearcher;
 import iris.client_bff.core.log.LogHelper;
 import iris.client_bff.core.token.IdentifierToken;
 import iris.client_bff.core.token.TokenGenerator;
-import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
 import lombok.AllArgsConstructor;

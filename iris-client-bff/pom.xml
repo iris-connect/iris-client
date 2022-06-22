@@ -359,6 +359,12 @@
 			<version>1.6.9</version>
 		</dependency>
 
+		<!-- PF4J - Plugin System -->
+        <dependency>
+            <groupId>org.pf4j</groupId>
+            <artifactId>pf4j</artifactId>
+            <version>3.6.0</version>
+        </dependency>
 	</dependencies>
 
 	<build>

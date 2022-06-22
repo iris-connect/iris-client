@@ -4,8 +4,6 @@ import static org.springframework.http.HttpStatus.*;
 
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequestService;
-import iris.client_bff.events.EventDataRequest;
-import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.statistics.web.dto.StatisticsDTO;
 import lombok.AllArgsConstructor;
 
@@ -23,16 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class StatisticsController {
 
 	private CaseDataRequestService caseDataRequestService;
-	private EventDataRequestService eventService;
+	// private EventDataRequestService eventService;
 
 	@GetMapping
 	@ResponseStatus(OK)
 	public StatisticsDTO getWeeklyData() {
 		Instant oneWeekAgo = Instant.now().minus(7, ChronoUnit.DAYS);
 		int indexCasesCount = caseDataRequestService.getCountSinceDate(oneWeekAgo);
-		int eventsCount = eventService.getCountSinceDate(oneWeekAgo);
+		int eventsCount = 0;// eventService.getCountSinceDate(oneWeekAgo);
 		int sumStatus = caseDataRequestService.getCountWithStatus(CaseDataRequest.Status.DATA_RECEIVED)
-				+ eventService.getCountWithStatus(EventDataRequest.Status.DATA_RECEIVED);
+				+ 0;// eventService.getCountWithStatus(EventDataRequest.Status.DATA_RECEIVED);
 
 		return StatisticsDTO.builder()
 				.indexCasesCount(indexCasesCount)
