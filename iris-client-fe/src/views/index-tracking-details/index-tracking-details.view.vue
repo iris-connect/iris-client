@@ -501,7 +501,7 @@ export default class IndexTrackingDetailsView extends Vue {
       this.openAlert();
     }
 
-    let query = Object.assign({}, this.$route.query);
+    const query = Object.assign({}, this.$route.query);
 
     if (query.is_created) {
       delete query.is_created;
