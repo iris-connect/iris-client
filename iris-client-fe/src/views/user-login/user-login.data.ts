@@ -13,6 +13,8 @@ export const normalizeUser = (source?: User, parse?: boolean): User => {
         userName: normalizer("userName", ""),
         role: normalizer("role", UserRole.User),
         locked: normalizer("locked", false, "boolean"),
+        useMfa: normalizer("useMfa", false, "boolean"),
+        mfaSecretEnrolled: normalizer("mfaSecretEnrolled", false, "boolean"),
         ...normalizeMetaData(source),
       };
     },

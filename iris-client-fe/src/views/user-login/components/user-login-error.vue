@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <v-alert v-if="errorMessage" text type="error" data-test="user-login-error">
-      {{ errorMessage }}
-    </v-alert>
+  <div data-test="user-login-error">
+    <error-message-alert :errors="errorMessage"></error-message-alert>
     <v-progress-linear
       :value="100 - blockedRemainingPercent"
       :active="blockedRemainingPercent > 0"
@@ -15,6 +13,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
+import ErrorMessageAlert from "@/components/error-message-alert.vue";
 
 const unauthorizedRegExp = /Unauthorized/i;
 const blockedRegExp = /User blocked! \((.*)\)/i;
@@ -27,7 +26,11 @@ const UserLoginErrorProps = Vue.extend({
     },
   },
 });
-@Component
+@Component({
+  components: {
+    ErrorMessageAlert,
+  },
+})
 export default class UserLoginError extends UserLoginErrorProps {
   blockedUntilMs = 0;
   blockedRemainingPercent = 0;

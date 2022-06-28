@@ -21,7 +21,11 @@ abstract class UserMapper {
 
 	@Mapping(target = "createdBy", qualifiedBy = UserNameMetadata.class)
 	@Mapping(target = "lastModifiedBy", qualifiedBy = UserNameMetadata.class)
+	@Mapping(target = "useMfa", source = "source")
 	public abstract UserDtos.Output toDto(UserAccount source);
+	boolean mapUseMfa(UserAccount source) {
+		return source.usesMfa();
+	}
 
 	@Mapping(target = "password", expression = "java(passwordEncoder.encode(source.password()))")
 	public abstract UserAccount fromDto(UserDtos.Insert source);

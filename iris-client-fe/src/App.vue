@@ -136,6 +136,7 @@ export default Vue.extend({
               // this is triggered if an existing session expires (caused by API response status codes 401 and 403).
               setInterceptRoute(this.$router.currentRoute);
             }
+            this.$store.commit("userLogin/setUser");
             this.$router.push("/user/login");
           }
         }
