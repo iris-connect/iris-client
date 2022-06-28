@@ -23,6 +23,7 @@ import iris.client_bff.core.model.EmailAddress;
 import lombok.AccessLevel;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -79,8 +80,8 @@ public class EventEmailProvider extends EmailProvider {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("eventId", eventData.getName());
 		parameters.put("externalId", eventData.getRefId());
-		parameters.put("startTime", eventData.getRequestStart());
-		parameters.put("endTime", eventData.getRequestEnd());
+		parameters.put("startTime", Date.from(eventData.getRequestStart()));
+		parameters.put("endTime", Date.from(eventData.getRequestEnd()));
 		parameters.put("eventUrl", basePath + "/events/details/" + eventData.getId());
 
 		var subject = messages.getMessage("EventDataReceivedEmail.subject");
