@@ -326,10 +326,9 @@
 			<version>1.6</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.xml.ws</groupId>
-			<artifactId>jaxws-ri</artifactId>
-			<version>4.0.0</version><!-- Must be <3 because jsonrpc4j need javax.jws.WebParam! -->
-			<type>pom</type>
+			<groupId>jakarta.jws</groupId>
+			<artifactId>jakarta.jws-api</artifactId>
+			<version>2.1.0</version><!-- Must be <3 because jsonrpc4j need javax.jws.WebParam! -->
 		</dependency>
 
 		<!-- fuzzy search -->
