@@ -1,4 +1,5 @@
 import {
+  AuthenticationStatus,
   Credentials,
   DataRequestCaseClient,
   DataRequestCaseData,
@@ -102,7 +103,9 @@ export function makeMockAPIServer() {
           "mockApi/setAuthenticatedUserRole",
           credentials.userName === "user" ? UserRole.User : UserRole.Admin
         );
-        return new Response(200);
+        return new Response(200, undefined, {
+          authenticationStatus: AuthenticationStatus.AUTHENTICATED,
+        });
       });
 
       this.post("/user/logout", () => {
