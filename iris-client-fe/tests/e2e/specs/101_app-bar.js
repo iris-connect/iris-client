@@ -41,6 +41,7 @@ describe("AppBar", () => {
             .click()
             .should("have.class", "v-btn--active");
           cy.location("pathname").should("equal", navLinks[key]);
+          cy.wait(1000);
         });
         cy.getBy("app-menu.activator").should("exist").click();
         cy.getBy("user-menu.activator").should("exist").click();
