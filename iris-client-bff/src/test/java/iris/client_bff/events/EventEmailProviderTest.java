@@ -9,6 +9,7 @@ import iris.client_bff.core.mail.EmailSenderReal;
 import iris.client_bff.core.mail.EmailTemplates;
 
 import java.time.Instant;
+import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.support.MessageSourceAccessor;
 
 @ExtendWith(MockitoExtension.class)
-public class EventEmailProviderTest {
+class EventEmailProviderTest {
 
 	EventEmailProvider systemUnderTest;
 
@@ -61,12 +62,15 @@ public class EventEmailProviderTest {
 		verify(emailSender, times(1)).sendMail(any());
 		verify(emailSender).sendMail(argument.capture());
 
-		assertEquals(subject, argument.getValue().getSubject());
-		assertEquals(eventData.getName(), argument.getValue().getPlaceholders().get("eventId"));
-		assertEquals(eventData.getRefId(), argument.getValue().getPlaceholders().get("externalId"));
-		assertEquals(eventData.getRequestStart(), argument.getValue().getPlaceholders().get("startTime"));
-		assertEquals(eventData.getRequestEnd(), argument.getValue().getPlaceholders().get("endTime"));
-		assertTrue(argument.getValue().getPlaceholders().get("eventUrl").toString().contains(eventData.getId().toString()));
-		assertEquals(EmailTemplates.Keys.EVENT_DATA_RECEIVED_MAIL_FTLH, argument.getValue().getTemplate());
+		var value = argument.getValue();
+		var placeholders = value.getPlaceholders();
+
+		assertEquals(subject, value.getSubject());
+		assertEquals(eventData.getName(), placeholders.get("eventId"));
+		assertEquals(eventData.getRefId(), placeholders.get("externalId"));
+		assertEquals(Date.from(eventData.getRequestStart()), placeholders.get("startTime"));
+		assertEquals(Date.from(eventData.getRequestEnd()), placeholders.get("endTime"));
+		assertTrue(placeholders.get("eventUrl").toString().contains(eventData.getId().toString()));
+		assertEquals(EmailTemplates.Keys.EVENT_DATA_RECEIVED_MAIL_FTLH, value.getTemplate());
 	}
 }
