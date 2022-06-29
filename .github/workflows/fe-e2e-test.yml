@@ -26,7 +26,6 @@ jobs:
         timeout-minutes: 20
         with:
           browser: chrome
-          headless: true
           working-directory: ./iris-client-fe
           build: npm ci --legacy-peer-deps
           start: npm run serve -- --mode e2e_test
