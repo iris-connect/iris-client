@@ -1,6 +1,0 @@
-{
-  "pluginsFile": "tests/e2e/plugins/index.js",
-  "env": {
-    "FAIL_FAST_ENABLED": false
-  }
-}

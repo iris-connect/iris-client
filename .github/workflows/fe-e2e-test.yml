@@ -22,7 +22,7 @@ jobs:
 
       - name: Cypress run
         # Install NPM dependencies, cache them correctly and run all Cypress tests
-        uses: cypress-io/github-action@v3.1.0
+        uses: cypress-io/github-action@v4
         timeout-minutes: 20
         with:
           browser: chrome
@@ -32,7 +32,7 @@ jobs:
           start: npm run serve -- --mode e2e_test
           wait-on: http://localhost:8080/
           wait-on-timeout: 300
-          config-file: cypress.json
+          config-file: cypress.config.ts
           spec: "tests/e2e/**/*"
         env:
           CYPRESS_baseUrl: http://localhost:8080/
