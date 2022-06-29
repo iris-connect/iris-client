@@ -340,6 +340,6 @@ public class JWTService {
 	}
 
 	enum SameSite {
-		Strict, Lax
+		Strict, Lax, None
 	}
 }
