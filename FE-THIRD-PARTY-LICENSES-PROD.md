@@ -24,7 +24,7 @@ function-bind@1.1.1 | MIT | https://github.com/Raynos/function-bind
 get-intrinsic@1.1.1 | MIT | https://github.com/ljharb/get-intrinsic
 has-symbols@1.0.2 | MIT | https://github.com/inspect-js/has-symbols
 has@1.0.3 | MIT | https://github.com/tarruda/has
-iris-client-frontend@1.6.0-rc.2-POST-RELEASE | UNLICENSED | 
+iris-client-frontend@1.6.0-POST-RELEASE | UNLICENSED | 
 lodash@4.17.21 | MIT | https://github.com/lodash/lodash
 mime-db@1.51.0 | MIT | https://github.com/jshttp/mime-db
 mime-types@2.1.34 | MIT | https://github.com/jshttp/mime-types
