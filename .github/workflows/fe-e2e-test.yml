@@ -25,7 +25,6 @@ jobs:
         uses: cypress-io/github-action@v4
         timeout-minutes: 20
         with:
-          browser: chrome
           working-directory: ./iris-client-fe
           build: npm ci --legacy-peer-deps
           start: npm run serve -- --mode e2e_test
