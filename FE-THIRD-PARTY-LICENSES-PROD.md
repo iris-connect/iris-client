@@ -8,12 +8,12 @@ asynckit@0.4.0 | MIT | https://github.com/alexindigo/asynckit
 axios@0.27.2 | MIT | https://github.com/axios/axios
 call-bind@1.0.2 | MIT | https://github.com/ljharb/call-bind
 cfb@1.2.1 | Apache-2.0 | https://github.com/SheetJS/js-cfb
-chart.js@3.7.1 | MIT | https://github.com/chartjs/Chart.js
+chart.js@3.8.0 | MIT | https://github.com/chartjs/Chart.js
 codepage@1.15.0 | Apache-2.0 | https://github.com/SheetJS/js-codepage
 combined-stream@1.0.8 | MIT | https://github.com/felixge/node-combined-stream
-core-js@3.22.7 | MIT | https://github.com/zloirock/core-js
+core-js@3.23.3 | MIT | https://github.com/zloirock/core-js
 crc-32@1.2.1 | Apache-2.0 | https://github.com/SheetJS/js-crc32
-dayjs@1.11.2 | MIT | https://github.com/iamkun/dayjs
+dayjs@1.11.3 | MIT | https://github.com/iamkun/dayjs
 deepmerge@4.2.2 | MIT | https://github.com/TehShrike/deepmerge
 delayed-stream@1.0.0 | MIT | https://github.com/felixge/node-delayed-stream
 exit-on-epipe@1.0.1 | Apache-2.0 | https://github.com/SheetJS/node-exit-on-epipe
@@ -24,7 +24,7 @@ function-bind@1.1.1 | MIT | https://github.com/Raynos/function-bind
 get-intrinsic@1.1.1 | MIT | https://github.com/ljharb/get-intrinsic
 has-symbols@1.0.2 | MIT | https://github.com/inspect-js/has-symbols
 has@1.0.3 | MIT | https://github.com/tarruda/has
-iris-client-frontend@1.6.0-rc.1-POST-RELEASE | UNLICENSED | 
+iris-client-frontend@1.6.0-rc.2-POST-RELEASE | UNLICENSED | 
 lodash@4.17.21 | MIT | https://github.com/lodash/lodash
 mime-db@1.51.0 | MIT | https://github.com/jshttp/mime-db
 mime-types@2.1.34 | MIT | https://github.com/jshttp/mime-types
@@ -32,7 +32,7 @@ object-inspect@1.12.2 | MIT | https://github.com/inspect-js/object-inspect
 printj@1.2.3 | Apache-2.0 | https://github.com/SheetJS/printj
 printj@1.3.0 | Apache-2.0 | https://github.com/SheetJS/printj
 printj@1.3.1 | Apache-2.0 | https://github.com/SheetJS/printj
-qs@6.10.3 | BSD-3-Clause | https://github.com/ljharb/qs
+qs@6.11.0 | BSD-3-Clause | https://github.com/ljharb/qs
 shvl@2.0.3 | MIT | https://github.com/robinvdvleuten/shvl
 side-channel@1.0.4 | MIT | https://github.com/ljharb/side-channel
 ssf@0.11.2 | Apache-2.0 | https://github.com/SheetJS/ssf

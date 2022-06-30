@@ -1,5 +1,21 @@
 # Changelog
 
+# [1.6.0-rc.2](https://github.com/iris-connect/iris-client/compare/v1.6.0-rc.1...v1.6.0-rc.2) (2022-06-30)
+
+
+### Bug Fixes
+
+* Changes NGINX Content-Security-Policy configuration to allow data urls as image src and adds `data:` to the forbidden keywords. ([cedf240](https://github.com/iris-connect/iris-client/commit/cedf2409ab92df6d3470fe7c60b2545d6b9b00f4)), closes [#862](https://github.com/iris-connect/iris-client/issues/862)
+* Fixes an occasional `ConstraintViolationException` that can only be caused by parallel processing of multiple requests from the same IP. ([71c1c98](https://github.com/iris-connect/iris-client/commit/71c1c9859047865518a350484a6340be2c832e86)), closes [#828](https://github.com/iris-connect/iris-client/issues/828)
+* HTTP status code is now set correctly for validation errors with JSON-RPC (400). Related to this, there is now a central place to handle exceptions with JSON-RPC and to configure the correct HTTP status code. ([e0b98f7](https://github.com/iris-connect/iris-client/commit/e0b98f71c30248b31a28e60eff426aec615e1698)), closes [#827](https://github.com/iris-connect/iris-client/issues/827)
+* When checking incoming and entered data for possible attacks, case is now ignored for keywords. ([a378e58](https://github.com/iris-connect/iris-client/commit/a378e58995be66b44b9fd3d263728b89c7b6c71b)), closes [#864](https://github.com/iris-connect/iris-client/issues/864)
+
+
+### Features
+
+* In the `.env` (see `.env.sample`) now the configuration for the mail dispatch can be done. With this it is now possible to send notifications when new data has been transferred to the IRIS client (at the moment implemented for the data of an event). ([4310bd0](https://github.com/iris-connect/iris-client/commit/4310bd07f94231f1728a3ce3753a0eb6392fb41d)), closes [#557](https://github.com/iris-connect/iris-client/issues/557) [#858](https://github.com/iris-connect/iris-client/issues/858)
+* Users can now use two-factor authentication with time-based one-time password (TOTP). If it is enabled, a TOTP is expected and verified by a corresponding app after the conventional login. To set up the app, the user is displayed a QR code by IRIS. It is also possible for the admin to activate this mandatorily via environment variable. If a 2FA is expected but has not yet been finally configured for a user with a successful verification, the QR code is displayed after the successful conventional login and the verification is performed. ([03b915c](https://github.com/iris-connect/iris-client/commit/03b915c4cecb27142aa998939c297d99088e9b71)), closes [iris-connect/iris-backlog#251](https://github.com/iris-connect/iris-backlog/issues/251) [#840](https://github.com/iris-connect/iris-client/issues/840)
+
 # [1.6.0-rc.1](https://github.com/iris-connect/iris-client/compare/v1.5.1...v1.6.0-rc.1) (2022-06-22)
 
 
