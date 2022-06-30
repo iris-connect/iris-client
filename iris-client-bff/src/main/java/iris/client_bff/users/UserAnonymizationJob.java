@@ -57,7 +57,7 @@ class UserAnonymizationJob {
 		if (anonymizationBase.isReferenceBased()) {
 
 			Predicate<UserAccount> referenceBasedPredicate = referenceCheckers.stream()
-					.reduce(__ -> TRUE, UserAnonymizationReferenceChecker::and);
+					.reduce(__ -> TRUE, UserAnonymizationReferenceChecker::concat);
 			predicate = predicate.or(referenceBasedPredicate);
 		}
 

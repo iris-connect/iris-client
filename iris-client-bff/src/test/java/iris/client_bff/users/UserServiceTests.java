@@ -201,10 +201,10 @@ class UserServiceTests {
 		verify(userAccountsRepository).findUserById(id);
 		verify(userAccountsRepository).save(userCaptor.capture());
 
-		var user = userCaptor.getValue();
-		assertThat(user.getUserName()).isNotEqualTo(userName);
-		assertThat(user.getDeletedAt()).isNotNull();
-		assertThat(user.getId()).isEqualTo(id);
+		var savedUser = userCaptor.getValue();
+		assertThat(savedUser.getUserName()).isNotEqualTo(userName);
+		assertThat(savedUser.getDeletedAt()).isNotNull();
+		assertThat(savedUser.getId()).isEqualTo(id);
 
 		verifyNoMoreInteractions(userAccountsRepository);
 	}

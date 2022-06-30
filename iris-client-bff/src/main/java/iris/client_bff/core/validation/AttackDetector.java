@@ -95,6 +95,7 @@ public class AttackDetector {
 	private static final String[][] FORBIDDEN_KEYWORD_TUPLES = {
 			{ "<SCRIPT" },
 			{ "JAVASCRIPT:" },
+			{ "DATA:" },
 			{ "SELECT", "FROM" },
 			{ "INSERT", "INTO" },
 			{ "UPDATE", "SET" },
@@ -231,7 +232,7 @@ public class AttackDetector {
 	private static Optional<Range<Integer>> findKeywordTuple(String input, String[] keywordTuple) {
 
 		for (var keyword : keywordTuple) {
-			if (indexOf(input, keyword) < 0) {
+			if (indexOfIgnoreCase(input, keyword) < 0) {
 				return Optional.empty();
 			}
 		}
@@ -239,7 +240,8 @@ public class AttackDetector {
 		var lastKeyword = keywordTuple[keywordTuple.length - 1];
 
 		return Optional
-				.of(Range.between(indexOf(input, keywordTuple[0]), indexOf(input, lastKeyword) + lastKeyword.length() - 1));
+				.of(Range.between(indexOfIgnoreCase(input, keywordTuple[0]),
+						indexOfIgnoreCase(input, lastKeyword) + lastKeyword.length() - 1));
 	}
 
 	private static Optional<Range<Integer>> findSymbolsAtStart(String input, String[] forbiddenSymbolsArray) {
