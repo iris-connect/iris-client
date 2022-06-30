@@ -29,9 +29,10 @@ public interface UserAnonymizationReferenceChecker extends Predicate<UserAccount
 	 */
 	boolean canUserBeAnonymized(UserAccount user);
 
-	default UserAnonymizationReferenceChecker and(UserAnonymizationReferenceChecker other) {
+	default UserAnonymizationReferenceChecker concat(UserAnonymizationReferenceChecker other) {
 
 		Objects.requireNonNull(other);
+
 		return it -> test(it) && other.test(it);
 	}
 }
