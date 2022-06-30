@@ -40,7 +40,7 @@ server {
     # X Frame Options - no iframes allowed
     add_header X-Frame-Options DENY;
     # Content Security Policy - no iframes or external resources allowed
-    add_header Content-Security-Policy "default-src 'self'; child-src 'none'; frame-ancestors 'none';";
+    add_header Content-Security-Policy "default-src 'self'; child-src 'none'; frame-ancestors 'none'; object-src 'none'; img-src 'self' data:;";
     # X-XSS-Protection - legacy, should be covered by CSP
     add_header X-XSS-Protection "1; mode=block";
     # Referrer-Policy
