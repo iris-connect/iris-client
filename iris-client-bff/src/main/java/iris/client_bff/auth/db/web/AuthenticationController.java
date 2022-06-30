@@ -158,6 +158,7 @@ public class AuthenticationController {
 
 		return ResponseEntity.ok()
 				.header(HttpHeaders.SET_COOKIE, cookies)
+				.header("Content-Security-Policy", String.format("img-src 'self' %s;", qrCodeImageUri))
 				.body(new ResponseDto(authStatus, qrCodeImageUri, mfaSecret));
 	}
 
