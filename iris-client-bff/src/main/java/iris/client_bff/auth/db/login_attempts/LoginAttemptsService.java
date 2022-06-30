@@ -48,10 +48,7 @@ public class LoginAttemptsService {
 		var keyHash = DigestUtils.md5Hex(key);
 
 		var attempt = loginAttempts.findById(keyHash)
-				.map(it -> {
-					it.setWaitingTime(it.getWaitingTime().multipliedBy(properties.getWaitingTimeMultiplier()));
-					return it;
-				})
+				.map(it -> it.setWaitingTime(it.getWaitingTime().multipliedBy(properties.getWaitingTimeMultiplier())))
 				.orElseGet(() -> LoginAttempts.builder()
 						.reference(keyHash)
 						.nextWarningThreshold(properties.getFirstWarningThreshold())

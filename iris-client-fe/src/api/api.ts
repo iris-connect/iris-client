@@ -2,7 +2,6 @@
 
 import { ApiResponse, assertParamExists, RequestOptions } from "./common";
 import { BaseAPI } from "./base";
-import { UserSession } from "@/views/user-login/user-login.store";
 
 /**
  *
@@ -1530,6 +1529,8 @@ export interface User extends MetaData {
    */
   role: UserRole;
   locked: boolean;
+  useMfa: boolean;
+  mfaSecretEnrolled: boolean;
 }
 /**
  *
@@ -1568,6 +1569,7 @@ export interface UserInsert {
    */
   role: UserRole;
   locked: boolean;
+  useMfa: boolean;
 }
 /**
  *
@@ -1635,6 +1637,7 @@ export interface UserUpdate {
    */
   role?: UserRole;
   locked?: boolean;
+  useMfa?: boolean;
 }
 /**
  *
@@ -2001,6 +2004,33 @@ export interface VaccinationReportDetails extends VaccinationReport {
   employees?: VREmployee[];
 }
 
+export enum AuthenticationStatus {
+  AUTHENTICATED = "AUTHENTICATED",
+  PRE_AUTHENTICATED_MFA_REQUIRED = "PRE_AUTHENTICATED_MFA_REQUIRED",
+  PRE_AUTHENTICATED_ENROLLMENT_REQUIRED = "PRE_AUTHENTICATED_ENROLLMENT_REQUIRED",
+}
+
+export enum MfaOption {
+  ALWAYS = "ALWAYS",
+  OPTIONAL_DEFAULT_TRUE = "OPTIONAL_DEFAULT_TRUE",
+  OPTIONAL_DEFAULT_FALSE = "OPTIONAL_DEFAULT_FALSE",
+  DISABLED = "DISABLED",
+}
+
+export interface MfaConfig {
+  mfaOption: MfaOption;
+}
+
+export interface MfaAuthentication {
+  authenticationStatus: AuthenticationStatus;
+  mfaSecret: string;
+  qrCodeImageUri: string;
+}
+
+export interface MfaVerification {
+  otp: string;
+}
+
 /**
  * IrisClientFrontendApi - object-oriented interface
  * @export
@@ -2169,7 +2199,7 @@ export class IrisClientFrontendApi extends BaseAPI {
   public login(
     credentials: Credentials,
     options?: RequestOptions
-  ): ApiResponse<UserSession> {
+  ): ApiResponse<MfaAuthentication> {
     assertParamExists("login", "credentials", credentials);
     return this.apiRequest("POST", "/login", credentials, options);
   }
@@ -2181,7 +2211,7 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof IrisClientFrontendApi
    */
-  public refreshToken(options?: RequestOptions): ApiResponse<UserSession> {
+  public refreshToken(options?: RequestOptions): ApiResponse {
     return this.apiRequest("GET", "/refreshtoken", null, options);
   }
 
@@ -2538,5 +2568,47 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("vaccinationReportDetailsGet", "id", id);
     const path = `/vaccination-reports/${encodeURIComponent(id)}`;
     return this.apiRequest("GET", path, null, options);
+  }
+
+  /**
+   * @summary Fetches two step authentication config
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public mfaConfigGet(options?: RequestOptions): ApiResponse<MfaConfig> {
+    return this.apiRequest("GET", "/mfa/config", null, options);
+  }
+
+  /**
+   * @summary Verification of two step authentication one time password
+   * @param {string} otp time password.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public mfaOtpPost(
+    otp: string,
+    options?: RequestOptions
+  ): ApiResponse<MfaAuthentication> {
+    assertParamExists("mfaOtpPost", "otp", otp);
+    return this.apiRequest("POST", "/mfa/otp", { otp }, options);
+  }
+
+  /**
+   *
+   * @summary Delete IRIS user MFA secret
+   * @param {string} id The ID of an IRIS Client user.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public usersMfaSecretDelete(
+    id: string,
+    options?: RequestOptions
+  ): ApiResponse {
+    assertParamExists("usersMfaSecretDelete", "userId", id);
+    const path = `/users/${encodeURIComponent(id)}/mfa`;
+    return this.apiRequest("DELETE", path, null, options);
   }
 }

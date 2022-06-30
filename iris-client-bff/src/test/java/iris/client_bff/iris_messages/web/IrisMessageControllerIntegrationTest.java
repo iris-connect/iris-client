@@ -5,13 +5,13 @@ import static org.hamcrest.Matchers.*;
 
 import io.restassured.http.ContentType;
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.iris_messages.IrisMessageDataInitializer;
 import lombok.RequiredArgsConstructor;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
@@ -27,7 +27,7 @@ class IrisMessageControllerIntegrationTest {
 	private final IrisMessageDataInitializer initializer;
 
 	@Test
-	@WithMockUser()
+	@WithMockIrisUser
 	@DisplayName("Tests getMessage to search with folder and search string")
 	void getMessage_WithFolderAndSearchString_ReturnsMessage() throws Exception {
 

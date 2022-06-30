@@ -5,6 +5,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import dev.samstevens.totp.code.DefaultCodeGenerator;
+import dev.samstevens.totp.code.DefaultCodeVerifier;
+import dev.samstevens.totp.code.HashingAlgorithm;
+import dev.samstevens.totp.qr.QrDataFactory;
+import dev.samstevens.totp.qr.ZxingPngQrGenerator;
+import dev.samstevens.totp.secret.DefaultSecretGenerator;
+import dev.samstevens.totp.time.SystemTimeProvider;
+import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 
 import java.util.Optional;
@@ -32,18 +40,23 @@ class UserServiceTests {
 	@Mock(lenient = true)
 	AuthenticatedUserAware authenticationManager;
 
+	@Mock(lenient = true)
+	AlertService alertService;
+
 	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	UserService userDetailsService;
 
 	UserAccountIdentifier notFound = UserAccountIdentifier.of(UUID.randomUUID());
 
-	UserAccount admin = userAccountAdmin();
+	UserAccount admin = spy(userAccountAdmin());
 	UserAccount user = spy(userAccountUser());
 
 	@BeforeEach
 	public void init() {
-		userDetailsService = new UserService(userAccountsRepository, passwordEncoder, authenticationManager);
+		userDetailsService = new UserService(userAccountsRepository, passwordEncoder, authenticationManager,
+				new DefaultSecretGenerator(), new QrDataFactory(HashingAlgorithm.SHA256, 6, 30), new ZxingPngQrGenerator(),
+				alertService, new DefaultCodeVerifier(new DefaultCodeGenerator(), new SystemTimeProvider()));
 		reset(user);
 	}
 
@@ -53,7 +66,7 @@ class UserServiceTests {
 		mockUserNotFound();
 
 		assertThrows(RuntimeException.class,
-				() -> userDetailsService.update(notFound, null, null, null, null, null, null));
+				() -> userDetailsService.update(notFound, null, null, null, null, null, null, null));
 	}
 
 	@Test
@@ -62,7 +75,7 @@ class UserServiceTests {
 		mockAdminFound();
 
 		assertThrows(RuntimeException.class,
-				() -> userDetailsService.update(admin.getId(), null, null, null, null, null, null));
+				() -> userDetailsService.update(admin.getId(), null, null, null, null, null, null, null));
 	}
 
 	@Test
@@ -71,7 +84,7 @@ class UserServiceTests {
 		mockUserFound();
 
 		assertThrows(RuntimeException.class,
-				() -> userDetailsService.update(user.getId(), null, null, "new", null, null, null));
+				() -> userDetailsService.update(user.getId(), null, null, "new", null, null, null, null));
 	}
 
 	@Test
@@ -80,7 +93,7 @@ class UserServiceTests {
 		mockUserFound();
 
 		assertThrows(RuntimeException.class,
-				() -> userDetailsService.update(user.getId(), null, null, null, null, UserRole.ADMIN, null));
+				() -> userDetailsService.update(user.getId(), null, null, null, null, UserRole.ADMIN, null, null));
 	}
 
 	@Test
@@ -91,7 +104,7 @@ class UserServiceTests {
 		mockCountLastAdmin();
 
 		assertThrows(RuntimeException.class,
-				() -> userDetailsService.update(admin.getId(), null, null, null, null, UserRole.USER, null));
+				() -> userDetailsService.update(admin.getId(), null, null, null, null, UserRole.USER, null, null));
 	}
 
 	@Test
@@ -101,7 +114,7 @@ class UserServiceTests {
 		mockUserFound();
 		mockSaveUser();
 
-		userDetailsService.update(user.getId(), null, null, null, null, null, null);
+		userDetailsService.update(user.getId(), null, null, null, null, null, null, null);
 
 		verify(userAccountsRepository).save(user);
 		verify(user, times(2)).getId();
@@ -116,7 +129,7 @@ class UserServiceTests {
 		mockUserFound();
 		mockSaveUser();
 
-		var ret = userDetailsService.update(user.getId(), "ln", "fn", "un", "pw", UserRole.ADMIN, Boolean.TRUE);
+		var ret = userDetailsService.update(user.getId(), "ln", "fn", "un", "pw", UserRole.ADMIN, Boolean.TRUE, null);
 
 		assertThat(ret).extracting("firstName", "lastName", "userName", "role")
 				.containsExactly("fn", "ln", "un", UserRole.ADMIN);
@@ -134,15 +147,15 @@ class UserServiceTests {
 		mockUserFound();
 		mockSaveUser();
 
-		userDetailsService.update(user.getId(), null, null, "un", null, null, null);
+		userDetailsService.update(user.getId(), null, null, "un", null, null, null, null);
 
 		verify(user).markLoginIncompatiblyUpdated();
 
-		userDetailsService.update(user.getId(), null, null, null, "pw", null, null);
+		userDetailsService.update(user.getId(), null, null, null, "pw", null, null, null);
 
 		verify(user, times(2)).markLoginIncompatiblyUpdated();
 
-		userDetailsService.update(user.getId(), null, null, null, null, UserRole.ADMIN, null);
+		userDetailsService.update(user.getId(), null, null, null, null, UserRole.ADMIN, null, null);
 
 		verify(user, times(3)).markLoginIncompatiblyUpdated();
 	}
@@ -194,6 +207,156 @@ class UserServiceTests {
 		assertThat(user.getId()).isEqualTo(id);
 
 		verifyNoMoreInteractions(userAccountsRepository);
+	}
+
+	@Test // for iris-backlog#251
+	void ok_generateQrCodeImageUri() {
+
+		currentUserIsTheAdmin();
+
+		when(userAccountsRepository.save(any())).then(it -> it.getArgument(0));
+
+		var qr = userDetailsService.generateQrCodeImageUri(userDetailsService.updateUseMfa(admin, true));
+
+		assertThat(qr).startsWith("data:image/png;base64,");
+	}
+
+	@Test // for iris-backlog#251
+	void fails_notCurrentUser_generateQrCodeImageUri() {
+
+		currentUserIsTheAdmin();
+
+		assertThatIllegalArgumentException()
+				.isThrownBy(() -> userDetailsService.generateQrCodeImageUri(userDetailsService.updateUseMfa(user, true)));
+	}
+
+	@Test // for iris-backlog#251
+	void fails_mfaIsDeactivated_generateQrCodeImageUri() {
+
+		currentUserIsTheAdmin();
+
+		assertThatIllegalArgumentException()
+				.isThrownBy(() -> userDetailsService.generateQrCodeImageUri(userDetailsService.updateUseMfa(admin, false)));
+	}
+
+	@Test // for iris-backlog#251
+	void ok_updateUseMfa_sameValue() {
+
+		currentUserIsTheAdmin();
+
+		userDetailsService.updateUseMfa(admin, false);
+
+		verify(admin, never()).deleteMfaSecret();
+		verify(admin, never()).createMfaSecret(any());
+		verify(userAccountsRepository, never()).save(any());
+	}
+
+	@Test // for iris-backlog#251
+	void ok_updateUseMfa_changedValue() {
+
+		currentUserIsTheAdmin();
+
+		userDetailsService.updateUseMfa(user, true);
+
+		verify(user).createMfaSecret(any());
+		verify(user, never()).deleteMfaSecret();
+		reset(user);
+
+		userDetailsService.updateUseMfa(user, false);
+
+		verify(user).deleteMfaSecret();
+		verify(user, never()).createMfaSecret(any());
+
+		verify(userAccountsRepository, times(2)).save(user);
+	}
+
+	@Test // for iris-backlog#251
+	void fails_notAdmin_updateUseMfa() {
+
+		assertThatIllegalArgumentException()
+				.isThrownBy(() -> userDetailsService.updateUseMfa(user, true));
+	}
+
+	@Test // for iris-backlog#251
+	void ok_resetMfaSecret() {
+
+		currentUserIsTheAdmin();
+
+		userDetailsService.updateUseMfa(user, true);
+
+		userDetailsService.resetMfaSecret(user);
+
+		verify(user, times(2)).createMfaSecret(any());
+		verify(userAccountsRepository, times(2)).save(user);
+	}
+
+	@Test // for iris-backlog#251
+	void fails_notAdmin_resetMfaSecret() {
+
+		assertThatIllegalArgumentException()
+				.isThrownBy(() -> userDetailsService.resetMfaSecret(user));
+	}
+
+	@Test // for iris-backlog#251
+	void fails_mfaIsDeactivated_resetMfaSecret() {
+
+		currentUserIsTheAdmin();
+
+		assertThatIllegalArgumentException()
+				.isThrownBy(() -> userDetailsService.resetMfaSecret(user));
+	}
+
+	@Test // for iris-backlog#251
+	void ok_finishEnrollment() throws Exception {
+
+		currentUserIsTheAdmin();
+
+		when(userAccountsRepository.save(any())).then(it -> it.getArgument(0));
+
+		var u = userDetailsService.updateUseMfa(admin, true);
+
+		reset(admin, userAccountsRepository);
+
+		var code = new DefaultCodeGenerator().generate(u.getMfaSecret(),
+				Math.floorDiv(new SystemTimeProvider().getTime(), 30));
+
+		userDetailsService.finishEnrollment(admin, code);
+
+		verify(admin).markAsEnrolled();
+		verify(userAccountsRepository).save(admin);
+	}
+
+	@Test // for iris-backlog#251
+	void fails_notCurrentUser_finishEnrollment() {
+
+		currentUserIsTheAdmin();
+
+		assertThatIllegalArgumentException()
+				.isThrownBy(() -> userDetailsService.finishEnrollment(user, ""));
+	}
+
+	@Test // for iris-backlog#251
+	void fails_mfaIsDeactivated_finishEnrollment() {
+
+		currentUserIsTheAdmin();
+
+		assertThatIllegalArgumentException()
+				.isThrownBy(() -> userDetailsService.finishEnrollment(admin, ""));
+	}
+
+	@Test // for iris-backlog#251
+	void fails_wrongCode_finishEnrollment() {
+
+		currentUserIsTheAdmin();
+
+		userDetailsService.updateUseMfa(admin, true);
+		reset(userAccountsRepository);
+
+		var result = userDetailsService.finishEnrollment(admin, "");
+
+		assertThat(result).isFalse();
+		verify(user, never()).markAsEnrolled();
+		verify(userAccountsRepository, never()).save(any());
 	}
 
 	private UserAccount userAccountAdmin() {

@@ -10,6 +10,7 @@ import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecBuilder;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.WithMockAdmin;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.core.api.web.error.TestController.TestException;
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +23,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -328,7 +328,7 @@ class GlobalControllerExceptionHandlerIntegrationTest {
 	}
 
 	@Test
-	@WithMockUser
+	@WithMockIrisUser
 	@DisplayName("Test forbidden access")
 	void getAllUsers_ForbiddenAccess() {
 

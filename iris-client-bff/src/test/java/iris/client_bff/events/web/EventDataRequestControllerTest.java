@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
@@ -31,7 +32,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -40,6 +41,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
+@WithMockIrisUser
 class EventDataRequestControllerTest {
 
 	private final String baseUrl = "/data-requests-client/events";
@@ -71,12 +73,12 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
+	@WithAnonymousUser
 	void endpointShouldBeProtected() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	@WithMockUser()
 	public void getDataRequests() throws Exception {
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
@@ -89,7 +91,6 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	public void getAllWithStatus() throws Exception {
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?status=DATA_REQUESTED"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -103,7 +104,6 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	public void getAllFiltered() throws Exception {
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test"))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
@@ -116,7 +116,6 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	public void getAllWithStatusAndFiltered() throws Exception {
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test&status=DATA_REQUESTED"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -130,7 +129,6 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	public void getDataRequestByCode() throws Exception {
 		postNewDataRequest();
 
@@ -140,7 +138,6 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	public void updateDataRequestByCode() throws Exception {
 		String REFID = "refId";
 		var eventDataRequest = EventDataRequest.builder()
@@ -194,13 +191,11 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	public void createDataRequest() throws Exception {
 		postNewDataRequest();
 	}
 
 	@Test
-	@WithMockUser()
 	public void createDataRequestWithError() throws Exception {
 		when(dataRequestManagement.createDataRequest(any())).thenThrow(new IRISDataRequestException("Data request failed"));
 

@@ -10,6 +10,7 @@ import static org.springframework.http.HttpStatus.*;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
 import iris.client_bff.search_client.web.dto.LocationInformation;
@@ -23,11 +24,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 @IrisWebIntegrationTest
-@WithMockUser
+@WithMockIrisUser
 @RequiredArgsConstructor
 class LocationSearchControllerTests {
 

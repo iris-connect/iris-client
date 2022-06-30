@@ -67,9 +67,13 @@
             ></v-switch>
           </v-col>
         </v-row>
-        <v-alert v-if="userCreationError" text type="error">{{
-          userCreationError
-        }}</v-alert>
+        <mfa-admin-user-fieldset
+          v-model="form.model.useMfa"
+          :apply-config="true"
+        />
+        <v-alert v-if="userCreationError" text type="error">
+          {{ userCreationError }}
+        </v-alert>
       </v-card-text>
       <v-card-actions>
         <v-btn
@@ -100,9 +104,10 @@
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
-import { UserRole, UserInsert } from "@/api";
+import { UserInsert, UserRole } from "@/api";
 import PasswordInputField from "@/components/form/password-input-field.vue";
 import rules from "@/common/validation-rules";
+import MfaAdminUserFieldset from "@/modules/mfa/components/mfa-admin-user-fieldset.vue";
 
 type AdminUserCreateForm = {
   model: UserInsert;
@@ -111,6 +116,7 @@ type AdminUserCreateForm = {
 
 @Component({
   components: {
+    MfaAdminUserFieldset,
     PasswordInputField,
   },
   beforeRouteLeave(to, from, next) {
@@ -162,6 +168,7 @@ export default class AdminUserCreateView extends Vue {
       password: "",
       role: UserRole.User,
       locked: false,
+      useMfa: false,
     },
     valid: false,
   };

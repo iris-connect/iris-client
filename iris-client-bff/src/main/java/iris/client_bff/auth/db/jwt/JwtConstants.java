@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-class JwtConstants {
+public class JwtConstants {
 
-	public static final String JWT_CLAIM_USER_ROLE = "role";
+	public static final String JWT_CLAIM_AUTH_STATUS = "AUTH_STATUS";
 }

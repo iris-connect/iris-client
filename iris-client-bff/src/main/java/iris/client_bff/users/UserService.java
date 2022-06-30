@@ -1,27 +1,39 @@
 package iris.client_bff.users;
 
+import static dev.samstevens.totp.util.Utils.*;
 import static iris.client_bff.users.UserRole.*;
 import static java.util.Objects.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
+import dev.samstevens.totp.code.CodeVerifier;
+import dev.samstevens.totp.exceptions.QrGenerationException;
+import dev.samstevens.totp.qr.QrData;
+import dev.samstevens.totp.qr.QrDataFactory;
+import dev.samstevens.totp.qr.QrGenerator;
+import dev.samstevens.totp.secret.SecretGenerator;
+import io.vavr.control.Try;
+import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.users.UserAccount.UserAccountBuilder;
 import iris.client_bff.users.UserAccount.UserAccountIdentifier;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -29,9 +41,16 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 public class UserService {
 
+	public static final String APP_NAME = "IRIS Client";
+
 	private final UserAccountsRepository users;
 	private final PasswordEncoder passwordEncoder;
 	private final AuthenticatedUserAware authManager;
+	private final SecretGenerator secretGenerator;
+	private final QrDataFactory qrDataFactory;
+	private final QrGenerator qrGenerator;
+	private final AlertService alertService;
+	private final CodeVerifier codeVerifier;
 
 	public Optional<UserAccount> findByUuid(UUID id) {
 		return users.findById(UserAccountIdentifier.of(id));
@@ -54,13 +73,19 @@ public class UserService {
 	}
 
 	public UserAccount create(UserAccount user) {
-		log.info("Create user {}", user.getUserName());
-		return users.save(user);
+		return create(user, false);
 	}
 
-	public UserAccount update(UserAccountIdentifier userId,
-			@Nullable String lastName, @Nullable String firstName,
-			@Nullable String userName, @Nullable String password, @Nullable UserRole role, @Nullable Boolean locked) {
+	public UserAccount create(UserAccount user, boolean useMfa) {
+
+		log.info("Create user {}", user.getUserName());
+
+		return users.save(updateUseMfa(user, useMfa));
+	}
+
+	public UserAccount update(UserAccountIdentifier userId, @Nullable String lastName, @Nullable String firstName,
+			@Nullable String userName, @Nullable String password, @Nullable UserRole role, @Nullable Boolean locked,
+			Boolean useMfa) {
 
 		log.info("Update user: {}", userId);
 
@@ -121,6 +146,10 @@ public class UserService {
 			invalidateTokens = changed || invalidateTokens;
 		}
 
+		if (useMfa != null) {
+			updateUseMfa(userAccount, useMfa);
+		}
+
 		if (invalidateTokens) {
 			userAccount.markLoginIncompatiblyUpdated();
 		}
@@ -163,7 +192,10 @@ public class UserService {
 	}
 
 	public boolean isItCurrentUser(UserAccountIdentifier userId) {
-		return Objects.equals(userId, getCurrentUser().getId());
+		return authManager.getCurrentUser()
+				.map(UserAccount::getId)
+				.filter(it -> it.equals(userId))
+				.isPresent();
 	}
 
 	/**
@@ -176,6 +208,7 @@ public class UserService {
 	 * <li>`role` = `ANONYMOUS`</li>
 	 * <li>`locked` = `false`</li>
 	 * <li>`deletedAt` = null</li>
+	 * <li>`useMfa` = `false`</li>
 	 * </ul>
 	 *
 	 * @param username
@@ -194,12 +227,95 @@ public class UserService {
 
 					var user = defineUserFunction.apply(builder).build();
 
-					return create(user);
+					return create(user, user.usesMfa());
 				});
 	}
 
-	private UserAccount getCurrentUser() {
-		return authManager.getCurrentUser().orElseThrow();
+	@SneakyThrows
+	public String generateQrCodeImageUri(@NonNull UserAccount user) {
+
+		Assert.isTrue(isItCurrentUser(user.getId()), "Only the authenticated user can get his own Secret as QR code!");
+		Assert.isTrue(user.usesMfa(), "Can't supply the MFA QR for a user without enabled MFA!");
+
+		QrData data = qrDataFactory.newBuilder()
+				.label(APP_NAME + ":" + user.getUserName())
+				.secret(user.getMfaSecret())
+				.issuer(APP_NAME)
+				.build();
+
+		Supplier<String> errorMessage = () -> "Can't generate the QR code image!";
+
+		// Generate the QR code image data as a base64 string which
+		// can be used in an <img> tag:
+		return Try.of(() -> qrGenerator.generate(data))
+				.map(it -> getDataUriForImage(it, qrGenerator.getImageMimeType()))
+				.onFailure(it -> alertService.createAlertMessage(errorMessage.get(), it.getMessage()))
+				.getOrElseThrow(it -> new QrGenerationException(errorMessage.get(), it.getCause())); // sets a better message
+	}
+
+	/**
+	 * If the parameter {@code useMfa} is {@code True}, a new secret will created for the {@link UserAccount} with
+	 * {@link UserAccount#createMfaSecret(SecretGenerator)}. If the parameter is {@code False}, the secret will deleted
+	 * for the {@link UserAccount}. However, a change is only made if {@code useMfa} is different from the result of
+	 * {@link UserAccount#isUseMfa()}.
+	 * <p />
+	 * This method will only run successful if the current user an admin or the same user as in parameter {@code user}!
+	 *
+	 * @param user
+	 * @param useMfa
+	 * @return The modified and saved {@link UserAccount}.
+	 */
+	@NonNull
+	public UserAccount updateUseMfa(@NonNull UserAccount user, boolean useMfa) {
+
+		if (user.usesMfa() == useMfa) {
+			return user;
+		}
+
+		checkLegitimacyOfCall(user.getId());
+
+		return users.save(useMfa
+				? user.createMfaSecret(secretGenerator::generate)
+				: user.deleteMfaSecret());
+	}
+
+	public Optional<UserAccount> resetMfaSecret(UserAccountIdentifier id) {
+		return users.findUserById(id).map(this::resetMfaSecret);
+	}
+
+	public UserAccount resetMfaSecret(UserAccount user) {
+
+		checkLegitimacyOfCall(user.getId());
+
+		Assert.isTrue(user.usesMfa(), "Only for a user with activated MFA a reset of the secret is possible!");
+
+		return users.save(user.createMfaSecret(secretGenerator::generate));
+	}
+
+	public boolean finishEnrollment(@NotNull UserAccount user, String otp) {
+
+		Assert.isTrue(isItCurrentUser(user.getId()), "Only the authenticated user can verify an OTP for him self!");
+		Assert.isTrue(user.usesMfa(), "Can't verify an OTP for a user without enabled MFA!");
+
+		var validCode = codeVerifier.isValidCode(user.getMfaSecret(), otp);
+
+		if (validCode) {
+			users.save(user.markAsEnrolled());
+		}
+
+		return validCode;
+	}
+
+	public boolean verifyOtp(@NotNull UserAccount user, String otp) {
+
+		if (user.usesMfa()) {
+			return codeVerifier.isValidCode(user.getMfaSecret(), otp);
+		}
+		return false;
+	}
+
+	private void checkLegitimacyOfCall(UserAccountIdentifier id) {
+		Assert.isTrue(authManager.isAdmin() || isItCurrentUser(id), "Only an admin user can change other users!");
 	}
 
 	private UserAccount loadUser(UserAccountIdentifier userId) {
