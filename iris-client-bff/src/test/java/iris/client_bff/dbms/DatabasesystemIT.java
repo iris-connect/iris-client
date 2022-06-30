@@ -2,6 +2,7 @@ package iris.client_bff.dbms;
 
 import static org.assertj.core.api.Assertions.*;
 
+import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequestDataInitializer;
 import iris.client_bff.cases.CaseDataRequestRepository;
 import iris.client_bff.cases.CaseDataRequestService;
@@ -88,7 +89,7 @@ abstract class DatabasesystemIT {
 	void caseRequests() {
 
 		assertThat(caseRequests.findAll()).hasSize(3)
-				.extracting(it -> it.getRefId()).contains(CaseDataRequestDataInitializer.REQ_ID_1.toString(),
+				.extracting(CaseDataRequest::getRefId).contains(CaseDataRequestDataInitializer.REQ_ID_1.toString(),
 						CaseDataRequestDataInitializer.REQ_ID_2.toString(), CaseDataRequestDataInitializer.REQ_ID_3.toString());
 
 		assertThat(caseRequests.getCountSinceDate(Instant.ofEpochMilli(0l))).isEqualTo(3);
@@ -132,15 +133,18 @@ abstract class DatabasesystemIT {
 		List<IrisMessageFolder> inboxRootFolders = irisMessageFolderRepository.findAll();
 		assertThat(inboxRootFolders).hasSize(3);
 
-		Optional<IrisMessageFolder> inboxRootFolder = irisMessageFolderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
+		Optional<IrisMessageFolder> inboxRootFolder = irisMessageFolderRepository
+				.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
 		assertThat(inboxRootFolder.isPresent()).isTrue();
 		assertThat(irisMessageService.search(inboxRootFolder.get().getId(), null, null).toList()).hasSize(2);
 
-		Optional<IrisMessageFolder> outboxRootFolder = irisMessageFolderRepository.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
+		Optional<IrisMessageFolder> outboxRootFolder = irisMessageFolderRepository
+				.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
 		assertThat(outboxRootFolder.isPresent()).isTrue();
 		assertThat(irisMessageService.search(outboxRootFolder.get().getId(), null, null).toList()).hasSize(1);
 
-		List<IrisMessageFolder> inboxNestedFolders = irisMessageFolderRepository.findAllByParentFolder(inboxRootFolder.get().getId());
+		List<IrisMessageFolder> inboxNestedFolders = irisMessageFolderRepository
+				.findAllByParentFolder(inboxRootFolder.get().getId());
 		assertThat(inboxNestedFolders).hasSize(1);
 
 		assertThat(irisMessageService.search(inboxNestedFolders.get(0).getId(), null, null).toList()).hasSize(1);

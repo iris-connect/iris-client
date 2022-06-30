@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import iris.client_bff.core.utils.HibernateSearcher;
+import iris.client_bff.core.database.HibernateSearcher;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.eps.DataProviderClient;
 import iris.client_bff.proxy.ProxyServiceClient;
@@ -43,7 +43,9 @@ public class EventDataRequestServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		service = new EventDataRequestService(repository, searcher, searchClient, proxyServiceClient, epsDataRequestClient);
+
+		service = new EventDataRequestService(repository, searcher, searchClient, proxyServiceClient, epsDataRequestClient,
+				new LocationMapperImpl());
 	}
 
 	@Test

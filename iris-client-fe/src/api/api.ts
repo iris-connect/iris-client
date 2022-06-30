@@ -2,7 +2,6 @@
 
 import { ApiResponse, assertParamExists, RequestOptions } from "./common";
 import { BaseAPI } from "./base";
-import { UserSession } from "@/views/user-login/user-login.store";
 
 /**
  *
@@ -979,6 +978,7 @@ export interface ExistingDataRequestClientWithLocationList {
  * @interface Guest
  */
 export interface Guest {
+  messageDataSelectId?: string;
   /**
    *
    * @type {string}
@@ -1528,6 +1528,9 @@ export interface User extends MetaData {
    * @memberof User
    */
   role: UserRole;
+  locked: boolean;
+  useMfa: boolean;
+  mfaSecretEnrolled: boolean;
 }
 /**
  *
@@ -1565,6 +1568,8 @@ export interface UserInsert {
    * @memberof UserInsert
    */
   role: UserRole;
+  locked: boolean;
+  useMfa: boolean;
 }
 /**
  *
@@ -1631,6 +1636,8 @@ export interface UserUpdate {
    * @memberof UserUpdate
    */
   role?: UserRole;
+  locked?: boolean;
+  useMfa?: boolean;
 }
 /**
  *
@@ -1779,80 +1786,6 @@ export interface PageIndexCase {
 /**
  *
  * @export
- * @interface PageEvent
- */
-export interface PageEvent {
-  /**
-   *
-   * @type {number}
-   * @memberof PageEvent
-   */
-  totalElements?: any;
-  /**
-   *
-   * @type {number}
-   * @memberof PageEvent
-   */
-  totalPages?: any;
-  /**
-   *
-   * @type {number}
-   * @memberof PageEvent
-   */
-  size?: any;
-  /**
-   *
-   * @type {Array&lt;ExistingDataRequestClientWithLocation&gt;}
-   * @memberof PageEvent
-   */
-  content: Array<ExistingDataRequestClientWithLocation>;
-  /**
-   *
-   * @type {number}
-   * @memberof PageEvent
-   */
-  number?: any;
-  /**
-   *
-   * @type {Sort}
-   * @memberof PageEvent
-   */
-  sort?: any;
-  /**
-   *
-   * @type {boolean}
-   * @memberof PageEvent
-   */
-  first?: any;
-  /**
-   *
-   * @type {boolean}
-   * @memberof PageEvent
-   */
-  last?: any;
-  /**
-   *
-   * @type {number}
-   * @memberof PageEvent
-   */
-  numberOfElements?: any;
-  /**
-   *
-   * @type {Pageable}
-   * @memberof PageEvent
-   */
-  pageable?: any;
-  /**
-   *
-   * @type {boolean}
-   * @memberof PageEvent
-   */
-  empty?: any;
-}
-
-/**
- *
- * @export
  * @interface CheckinApp
  */
 export interface CheckinApp {
@@ -1910,6 +1843,18 @@ export interface Page<Content> {
   empty?: boolean;
 }
 
+export interface IrisMessageDataAttachment {
+  id: string;
+  discriminator?: IrisMessageDataDiscriminator;
+  description: string;
+  isImported?: boolean;
+}
+
+export interface IrisMessageDataAttachmentCount {
+  total?: number;
+  imported?: number;
+}
+
 export interface IrisMessage {
   id: string;
   folder: string;
@@ -1920,14 +1865,67 @@ export interface IrisMessage {
   hdRecipient: IrisMessageHdContact;
   createdAt: string;
   isRead?: boolean;
+  attachmentCount?: IrisMessageDataAttachmentCount;
 }
 
-export type IrisMessageDetails = IrisMessage;
+export interface IrisMessageDetails extends IrisMessage {
+  context: IrisMessageContext;
+  dataAttachments?: IrisMessageDataAttachment[];
+}
+
+export type IrisMessageDataSelectionPayload = {
+  [key: string]:
+    | string
+    | string[]
+    | IrisMessageDataSelectionPayload
+    | IrisMessageDataSelectionPayload[];
+};
+
+/**
+ * The IrisMessageDataDiscriminator enum is used to identify the type of IrisMessageData.
+ * This discriminator has to be unique and identical in the frontend and backend parts of the application.
+ *
+ * When implementing a new IrisMessageData type, add a new entry to the following Enum.
+ * The linter will show the locations in the code where you have to implement functionality.
+ *
+ * For a complete data flow, you have to extend the following iris-message-data components:
+ *
+ * Export:
+ * @see iris-message-data-select-form
+ *
+ * Preview:
+ * @see iris-message-data-preview-dialog
+ *
+ * Import:
+ * @see iris-message-data-import-dialog
+ *
+ * Optionally you can add export functionality to the details-view of your IrisMessageData type:
+ * @see iris-message-data-export-dialog
+ * Please note, that you have to provide the IrisMessageDataInsert value to the export dialog:
+ * @example vaccination-report-details.view, event-tracking-details.view
+ */
+export enum IrisMessageDataDiscriminator {
+  EventTracking = "event-tracking",
+  VaccinationReport = "vaccination-report",
+}
+
+export interface IrisMessageDataInsert {
+  description: string;
+  payload: IrisMessageDataSelectionPayload;
+  discriminator: IrisMessageDataDiscriminator;
+}
+
+export type IrisMessageDataViewData = {
+  id: string;
+  discriminator: IrisMessageDataDiscriminator;
+  payload: any;
+};
 
 export interface IrisMessageInsert {
   hdRecipient: string;
   subject: string;
   body: string;
+  dataAttachments?: IrisMessageDataInsert[];
 }
 
 export enum IrisMessageContext {
@@ -1988,6 +1986,7 @@ export interface VREmployee {
   phone?: string;
   dateOfBirth?: string;
   sex?: Sex;
+  messageDataSelectId?: string;
 }
 
 export type VaccinationStatusCount = {
@@ -2005,6 +2004,33 @@ export interface VaccinationReportDetails extends VaccinationReport {
   employees?: VREmployee[];
 }
 
+export enum AuthenticationStatus {
+  AUTHENTICATED = "AUTHENTICATED",
+  PRE_AUTHENTICATED_MFA_REQUIRED = "PRE_AUTHENTICATED_MFA_REQUIRED",
+  PRE_AUTHENTICATED_ENROLLMENT_REQUIRED = "PRE_AUTHENTICATED_ENROLLMENT_REQUIRED",
+}
+
+export enum MfaOption {
+  ALWAYS = "ALWAYS",
+  OPTIONAL_DEFAULT_TRUE = "OPTIONAL_DEFAULT_TRUE",
+  OPTIONAL_DEFAULT_FALSE = "OPTIONAL_DEFAULT_FALSE",
+  DISABLED = "DISABLED",
+}
+
+export interface MfaConfig {
+  mfaOption: MfaOption;
+}
+
+export interface MfaAuthentication {
+  authenticationStatus: AuthenticationStatus;
+  mfaSecret: string;
+  qrCodeImageUri: string;
+}
+
+export interface MfaVerification {
+  otp: string;
+}
+
 /**
  * IrisClientFrontendApi - object-oriented interface
  * @export
@@ -2020,7 +2046,7 @@ export class IrisClientFrontendApi extends BaseAPI {
    * @memberof IrisClientFrontendApi
    */
   public logout(options?: RequestOptions): ApiResponse {
-    return this.apiRequest("GET", "/user/logout", null, options);
+    return this.apiRequest("POST", "/user/logout", null, options);
   }
 
   /**
@@ -2111,7 +2137,7 @@ export class IrisClientFrontendApi extends BaseAPI {
    */
   public dataRequestsClientLocationsGet(
     options?: RequestOptions
-  ): ApiResponse<PageEvent> {
+  ): ApiResponse<Page<ExistingDataRequestClientWithLocation>> {
     return this.apiRequest(
       "GET",
       "/data-requests-client/events",
@@ -2173,9 +2199,20 @@ export class IrisClientFrontendApi extends BaseAPI {
   public login(
     credentials: Credentials,
     options?: RequestOptions
-  ): ApiResponse<UserSession> {
+  ): ApiResponse<MfaAuthentication> {
     assertParamExists("login", "credentials", credentials);
     return this.apiRequest("POST", "/login", credentials, options);
+  }
+
+  /**
+   *
+   * @summary Extends the session by refreshing the token
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public refreshToken(options?: RequestOptions): ApiResponse {
+    return this.apiRequest("GET", "/refreshtoken", null, options);
   }
 
   /**
@@ -2404,6 +2441,107 @@ export class IrisClientFrontendApi extends BaseAPI {
 
   /**
    *
+   * @summary Import data from message attachment
+   * @param {string} messageDataId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public importIrisMessageDataAndAdd(
+    messageDataId: string,
+    options?: RequestOptions
+  ): ApiResponse {
+    assertParamExists("irisMessageDataImport", "messageDataId", messageDataId);
+    const path = `/iris-messages/data/${encodeURIComponent(
+      messageDataId
+    )}/import`;
+    return this.apiRequest("POST", path, null, options);
+  }
+
+  /**
+   *
+   * @summary Import data from message attachment to an existing entry
+   * @param {string} messageDataId
+   * @param {IrisMessageDataSelectionPayload} data
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public importIrisMessageDataAndUpdate(
+    messageDataId: string,
+    data: IrisMessageDataSelectionPayload,
+    options?: RequestOptions
+  ): ApiResponse {
+    assertParamExists(
+      "importIrisMessageDataAndUpdate",
+      "messageDataId",
+      messageDataId
+    );
+    assertParamExists(
+      "importIrisMessageDataAndUpdate",
+      "importTargetId",
+      options?.params?.importTargetId
+    );
+    assertParamExists("importIrisMessageDataAndUpdate", "data", data);
+    const path = `/iris-messages/data/${encodeURIComponent(
+      messageDataId
+    )}/import`;
+    return this.apiRequest("POST", path, data, options);
+  }
+
+  /**
+   *
+   * @summary get select options for importable message attachment
+   * @param {string} messageDataId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public messageDataImportSelectionViewDataGet(
+    messageDataId: string,
+    options?: RequestOptions
+  ): ApiResponse<IrisMessageDataViewData> {
+    assertParamExists(
+      "messageDataImportSelectionViewDataGet",
+      "messageDataId",
+      messageDataId
+    );
+    assertParamExists(
+      "messageDataImportSelectionViewDataGet",
+      "importTargetId",
+      options?.params?.importTargetId
+    );
+    const path = `/iris-messages/data/${encodeURIComponent(
+      messageDataId
+    )}/import-selection-view`;
+    return this.apiRequest("GET", path, null, options);
+  }
+
+  /**
+   *
+   * @summary View data from message attachment
+   * @param {string} messageDataId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public irisMessageDataViewDataGet(
+    messageDataId: string,
+    options?: RequestOptions
+  ): ApiResponse<IrisMessageDataViewData> {
+    assertParamExists(
+      "irisMessageDataViewDataGet",
+      "messageDataId",
+      messageDataId
+    );
+    const path = `/iris-messages/data/${encodeURIComponent(
+      messageDataId
+    )}/view`;
+    return this.apiRequest("GET", path, null, options);
+  }
+
+  /**
+   *
    * @summary Fetches paginated vaccination-report
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -2430,5 +2568,47 @@ export class IrisClientFrontendApi extends BaseAPI {
     assertParamExists("vaccinationReportDetailsGet", "id", id);
     const path = `/vaccination-reports/${encodeURIComponent(id)}`;
     return this.apiRequest("GET", path, null, options);
+  }
+
+  /**
+   * @summary Fetches two step authentication config
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public mfaConfigGet(options?: RequestOptions): ApiResponse<MfaConfig> {
+    return this.apiRequest("GET", "/mfa/config", null, options);
+  }
+
+  /**
+   * @summary Verification of two step authentication one time password
+   * @param {string} otp time password.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public mfaOtpPost(
+    otp: string,
+    options?: RequestOptions
+  ): ApiResponse<MfaAuthentication> {
+    assertParamExists("mfaOtpPost", "otp", otp);
+    return this.apiRequest("POST", "/mfa/otp", { otp }, options);
+  }
+
+  /**
+   *
+   * @summary Delete IRIS user MFA secret
+   * @param {string} id The ID of an IRIS Client user.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof IrisClientFrontendApi
+   */
+  public usersMfaSecretDelete(
+    id: string,
+    options?: RequestOptions
+  ): ApiResponse {
+    assertParamExists("usersMfaSecretDelete", "userId", id);
+    const path = `/users/${encodeURIComponent(id)}/mfa`;
+    return this.apiRequest("DELETE", path, null, options);
   }
 }

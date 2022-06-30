@@ -10,6 +10,7 @@ import iris.client_bff.core.mail.EmailTemplates;
 import iris.client_bff.core.token.IdentifierToken;
 
 import java.time.Instant;
+import java.util.Date;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,13 +58,16 @@ public class CaseEmailProviderTest {
 		verify(emailSender, times(1)).sendMail(any());
 		verify(emailSender).sendMail(argument.capture());
 
-		assertEquals(subject, argument.getValue().getSubject());
-		assertEquals(caseData.getName(), argument.getValue().getPlaceholders().get("caseId"));
-		assertEquals(caseData.getRefId(), argument.getValue().getPlaceholders().get("externalId"));
-		assertEquals(caseData.getRequestStart(), argument.getValue().getPlaceholders().get("startTime"));
-		assertEquals(caseData.getRequestEnd(), argument.getValue().getPlaceholders().get("endTime"));
-		assertTrue(argument.getValue().getPlaceholders().get("caseUrl").toString().contains(caseData.getId().toString()));
-		assertEquals(EmailTemplates.Keys.CASE_DATA_RECEIVED_MAIL_FTLH, argument.getValue().getTemplate());
+		var value = argument.getValue();
+		var placeholders = value.getPlaceholders();
+
+		assertEquals(subject, value.getSubject());
+		assertEquals(caseData.getName(), placeholders.get("caseId"));
+		assertEquals(caseData.getRefId(), placeholders.get("externalId"));
+		assertEquals(Date.from(caseData.getRequestStart()), placeholders.get("startTime"));
+		assertEquals(Date.from(caseData.getRequestEnd()), placeholders.get("endTime"));
+		assertTrue(placeholders.get("caseUrl").toString().contains(caseData.getId().toString()));
+		assertEquals(EmailTemplates.Keys.CASE_DATA_RECEIVED_MAIL_FTLH, value.getTemplate());
 	}
 
 	@Test

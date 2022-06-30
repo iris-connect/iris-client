@@ -15,7 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor(access = PRIVATE)
 public class ContactsAndEvents {
 
-  private ContactPersonList contacts;
-  private EventList events;
-  private ContactsAndEventsDataProvider dataProvider;
+	private ContactPersonList contacts;
+	private EventList events;
+	private ContactsAndEventsDataProvider dataProvider;
 }

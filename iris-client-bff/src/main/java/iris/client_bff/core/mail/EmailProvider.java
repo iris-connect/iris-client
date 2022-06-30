@@ -48,7 +48,7 @@ public class EmailProvider {
 		Assert.notNull(email, "A TemplatedEmail must be passed.");
 		Recipient recipient = email.getFinalRecipient(mailProperties);
 
-		Object[] logArgs = new Object[] {
+		Object[] logArgs = {
 				email.getTemplate(),
 				recipient.getFullName(),
 				recipient.getEmailAddress(),

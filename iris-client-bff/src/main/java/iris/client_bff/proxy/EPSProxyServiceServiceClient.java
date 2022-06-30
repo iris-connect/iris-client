@@ -49,6 +49,7 @@ public class EPSProxyServiceServiceClient implements ProxyServiceClient {
 		return domain;
 	}
 
+	@Override
 	public String announce(Instant expirationTime) throws IRISAnnouncementException {
 		var domain = UUID.randomUUID()
 				+ "."

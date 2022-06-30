@@ -2,7 +2,7 @@ package iris.client_bff.cases.web.submission_dto;
 
 import static lombok.AccessLevel.*;
 
-import iris.client_bff.core.web.dto.Address;
+import iris.client_bff.core.api.dto.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,8 +16,8 @@ import lombok.ToString;
 @AllArgsConstructor(access = PRIVATE)
 public class ContactPersonAllOfWorkPlace {
 
-  private String name;
-  private String pointOfContact;
-  private String phone;
-  private Address address;
+	private String name;
+	private String pointOfContact;
+	private String phone;
+	private Address address;
 }

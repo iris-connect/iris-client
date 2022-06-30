@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * This class was added for testing purposes only and is required for the deserialization of Page JSONs
- * 
+ *
  * @param <T>
  */
 @JsonIgnoreProperties({ "pageable", "last", "first", "numberOfElements", "sort", "totalPages", "empty" })

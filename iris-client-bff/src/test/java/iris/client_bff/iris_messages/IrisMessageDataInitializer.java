@@ -18,39 +18,39 @@ import org.springframework.stereotype.Component;
 @Order(10)
 public class IrisMessageDataInitializer implements DataInitializer {
 
-  private final IrisMessageRepository messageRepository;
+	private final IrisMessageRepository messageRepository;
 
-  private final IrisMessageFolderRepository folderRepository;
+	private final IrisMessageFolderRepository folderRepository;
 
-  private final IrisMessageTestData testData;
+	private final IrisMessageTestData testData;
 
-  @Getter
-  private IrisMessageFolder inboxFolder;
+	@Getter
+	private IrisMessageFolder inboxFolder;
 
-  @Override
-  public void initialize() {
+	@Override
+	public void initialize() {
 
-	log.debug("Test data: creating iris messages …");
+		log.debug("Test data: creating iris messages …");
 
-	Optional<IrisMessageFolder> folder = this.folderRepository
-		.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
-	assertThat(folder).isPresent();
-	this.inboxFolder = folder.get();
-	IrisMessageFolder nestedInboxFolder = this.testData.getTestMessageFolder(inboxFolder, "nested inbox");
+		Optional<IrisMessageFolder> folder = this.folderRepository
+				.findFirstByContextAndParentFolderIsNull(IrisMessageContext.INBOX);
+		assertThat(folder).isPresent();
+		this.inboxFolder = folder.get();
+		IrisMessageFolder nestedInboxFolder = this.testData.getTestMessageFolder(inboxFolder, "nested inbox");
 
-	this.folderRepository.save(nestedInboxFolder);
+		this.folderRepository.save(nestedInboxFolder);
 
-	Optional<IrisMessageFolder> outboxFolder = this.folderRepository
-		.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
-	assertThat(outboxFolder).isPresent();
+		Optional<IrisMessageFolder> outboxFolder = this.folderRepository
+				.findFirstByContextAndParentFolderIsNull(IrisMessageContext.OUTBOX);
+		assertThat(outboxFolder).isPresent();
 
-	var message = this.testData.getTestInboxMessage(inboxFolder);
-	message.setSubject("First test inbox subject");
-	this.messageRepository.save(message);
-	this.messageRepository.save(this.testData.getTestInboxMessage(inboxFolder));
+		var message = this.testData.getTestInboxMessage(inboxFolder);
+		message.setSubject("First test inbox subject");
+		this.messageRepository.save(message);
+		this.messageRepository.save(this.testData.getTestInboxMessage(inboxFolder));
 
-	this.messageRepository.save(this.testData.getTestInboxMessage(nestedInboxFolder));
+		this.messageRepository.save(this.testData.getTestInboxMessage(nestedInboxFolder));
 
-	this.messageRepository.save(this.testData.getTestOutboxMessage(outboxFolder.get()));
-  }
+		this.messageRepository.save(this.testData.getTestOutboxMessage(outboxFolder.get()));
+	}
 }

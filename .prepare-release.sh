@@ -134,7 +134,7 @@ mvn versions:set -DnewVersion=$VERSION$VERSION_SUFFIX -DoldVersion=$VERSION -Dpr
 
 printf "\n  Build FE ZIP  \n\n"
 cd ./iris-client-fe
-npm ci
+npm ci --legacy-peer-deps
 
 # Generate third-party dependencies for FE and move them to root
 # File will be uploaded to github by @semantic-release/github

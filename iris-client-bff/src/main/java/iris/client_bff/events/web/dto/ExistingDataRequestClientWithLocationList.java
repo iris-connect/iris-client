@@ -17,5 +17,5 @@ import java.util.List;
 @AllArgsConstructor(access = PRIVATE)
 public class ExistingDataRequestClientWithLocationList {
 
-  private List<ExistingDataRequestClientWithLocation> dataRequests;
+	private List<ExistingDataRequestClientWithLocation> dataRequests;
 }

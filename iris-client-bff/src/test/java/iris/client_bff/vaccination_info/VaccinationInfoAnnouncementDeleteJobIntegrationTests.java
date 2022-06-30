@@ -3,7 +3,7 @@ package iris.client_bff.vaccination_info;
 import static org.assertj.core.api.Assertions.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.core.IrisDateTimeProvider;
+import iris.client_bff.core.database.IrisDateTimeProvider;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Duration;

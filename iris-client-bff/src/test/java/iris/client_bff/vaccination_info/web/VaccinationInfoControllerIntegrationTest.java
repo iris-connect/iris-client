@@ -8,6 +8,7 @@ import static org.springframework.http.HttpStatus.*;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.vaccination_info.VaccinationInfo;
 import iris.client_bff.vaccination_info.VaccinationInfoDataInitializer;
 import iris.client_bff.vaccination_info.VaccinationInfoRepository;
@@ -27,13 +28,12 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
 
 @IrisWebIntegrationTest
-@WithMockUser
+@WithMockIrisUser
 // removes saved entities before this test so that other tests not affected this one
 @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 @RequiredArgsConstructor
@@ -69,7 +69,7 @@ class VaccinationInfoControllerIntegrationTest {
 				.get(BASE_URL)
 
 				.then()
-				.status(FORBIDDEN);
+				.status(UNAUTHORIZED);
 	}
 
 	@WithAnonymousUser
@@ -81,7 +81,7 @@ class VaccinationInfoControllerIntegrationTest {
 				.get(DETAILS_URL, UUID.randomUUID())
 
 				.then()
-				.status(FORBIDDEN);
+				.status(UNAUTHORIZED);
 	}
 
 	@Test

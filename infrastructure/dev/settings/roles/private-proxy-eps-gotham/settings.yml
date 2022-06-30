@@ -34,8 +34,10 @@ channels: # defines all the channels that we want to open when starting the serv
     type: jsonrpc_server
     settings:
       bind_address: "0.0.0.0:7766"
+      server_name: private-proxy-gotham
       tls:
         ca_certificate_files: [ "/$DIR/../../certs/root.crt" ]
         certificate_file: "/$DIR/../../certs/private-proxy-gotham.crt"
         key_file: "/$DIR/../../certs/private-proxy-gotham.key"
         verify_client: false
+        server_name: private-proxy-gotham

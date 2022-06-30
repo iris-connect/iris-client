@@ -2,7 +2,7 @@ package iris.client_bff.core.validation;
 
 import static org.assertj.core.api.Assertions.*;
 
-import iris.client_bff.core.extension.ValidatorExtension;
+import iris.client_bff.core.extensions.ValidatorExtension;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.ConstraintViolation;

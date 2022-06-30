@@ -62,7 +62,7 @@ class VaccinationInfoAnnouncementDeleteJob {
 	@ConfigurationProperties("iris.client.vaccinfo.announcement")
 	@ConstructorBinding
 	@Value
-	public static class Properties {
+	static class Properties {
 
 		/**
 		 * Defines the {@link Duration} after that a vaccination info announcement will be deleted starting from the

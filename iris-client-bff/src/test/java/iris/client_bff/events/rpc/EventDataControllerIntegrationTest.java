@@ -1,9 +1,10 @@
 package iris.client_bff.events.rpc;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.core.web.dto.Address;
+import iris.client_bff.core.api.dto.AddressWithDefuseData;
 import iris.client_bff.events.EventDataRequest;
 import iris.client_bff.events.EventDataRequestRepository;
 import iris.client_bff.events.EventDataSubmissionRepository;
@@ -19,10 +20,12 @@ import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.UUID;
+import java.util.Locale;
 
+import javax.validation.ConstraintViolationException;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.github.javafaker.Faker;
 
@@ -35,6 +38,11 @@ class EventDataControllerIntegrationTest {
 	final EventDataSubmissionRepository submissionRepo;
 	final Faker faker;
 
+	@BeforeEach
+	void init() {
+		Locale.setDefault(Locale.ENGLISH);
+	}
+
 	@Test
 	void submitGuestList_ok() {
 		// prepare conditions
@@ -43,7 +51,7 @@ class EventDataControllerIntegrationTest {
 		Instant requestStart = Instant.now().minus(14, ChronoUnit.DAYS);
 		Instant requestEnd = Instant.now();
 		var providerId = faker.idNumber().valid();
-		var location = new Location(new LocationIdentifier(), providerId, faker.idNumber().valid(), null,
+		var location = new Location(LocationIdentifier.random(), providerId, faker.idNumber().valid(), null,
 				null, null, null, null, null, null, null, null, null);
 
 		var dataRequest = EventDataRequest.builder()
@@ -63,7 +71,7 @@ class EventDataControllerIntegrationTest {
 				.endDate(requestEnd)
 				.dataProvider(GuestListDataProvider.builder()
 						.name(providerName)
-						.address(Address.builder()
+						.address(AddressWithDefuseData.builder()
 								.city("Stadt")
 								.zipCode("0815")
 								.houseNumber("1")
@@ -73,7 +81,7 @@ class EventDataControllerIntegrationTest {
 				.build();
 
 		// test
-		var result = controller.submitGuestList(clientDto, UUID.fromString(dataRequest.getId().toString()), guestList);
+		var result = controller.submitGuestList(clientDto, dataRequest.getId(), guestList);
 		assertEquals("OK", result);
 
 		var submissionList = submissionRepo.findAllByRequest(dataRequest).toList();
@@ -104,7 +112,7 @@ class EventDataControllerIntegrationTest {
 				.endDate(requestEnd)
 				.dataProvider(GuestListDataProvider.builder()
 						.name(providerName)
-						.address(Address.builder()
+						.address(AddressWithDefuseData.builder()
 								.houseNumber("1")
 								.street("Straße").build())
 						.build())
@@ -112,11 +120,11 @@ class EventDataControllerIntegrationTest {
 				.build();
 
 		// test
-		var e = assertThrows(ResponseStatusException.class,
-				() -> controller.submitGuestList(clientDto, UUID.fromString(dataRequest.getId().toString()), guestList));
+		var e = assertThrows(ConstraintViolationException.class,
+				() -> controller.submitGuestList(clientDto, dataRequest.getId(), guestList));
 
-		assertTrue(e.getMessage().contains("Eingabedaten sind ungültig")
-				&& e.getMessage().contains("dataProvider.address.city"));
+		assertThat(e.getMessage()).contains("must not be blank")
+				.contains("dataProvider.address.city");
 	}
 
 	@Test
@@ -132,13 +140,14 @@ class EventDataControllerIntegrationTest {
 		requestRepo.save(dataRequest);
 
 		// prepare data
-		var token = dataRequest.getId().toString();
+		var token = dataRequest.getId();
 		var clientDto = new JsonRpcClientDto();
 		clientDto.setName(refId);
 
 		var guests = new ArrayList<Guest>(10010);
-		for (int i = 0; i < 10010; i++)
+		for (int i = 0; i < 10010; i++) {
 			guests.add(Guest.builder().firstName("fn").lastName("ln").build());
+		}
 
 		var guestList = GuestList.builder()
 				.startDate(requestStart)
@@ -148,8 +157,8 @@ class EventDataControllerIntegrationTest {
 				.build();
 
 		// test
-		assertThrows(ResponseStatusException.class, () -> {
-			controller.submitGuestList(clientDto, UUID.fromString(token), guestList);
+		assertThrows(ConstraintViolationException.class, () -> {
+			controller.submitGuestList(clientDto, token, guestList);
 		});
 	}
 }

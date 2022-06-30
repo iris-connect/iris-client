@@ -35,7 +35,7 @@ import com.icegreen.greenmail.util.ServerSetup;
  * <p>
  * The received e-mails are logged with their basic data (from, to, date and subject).
  * </p>
- * 
+ *
  * @author Jens Kutzsche
  */
 @Slf4j
@@ -61,10 +61,10 @@ class GreenMailEmailServer implements FactoryBean<GreenMail>, DisposableBean {
 		}
 
 		greenMail = new GreenMail(
-			ServerSetup.verbose(
-				new ServerSetup[] {
-					smtp,
-					imap }));
+				ServerSetup.verbose(
+						new ServerSetup[] {
+								smtp,
+								imap }));
 		greenMail.start();
 
 		var smtpPort = greenMail.getSmtps().getPort();
@@ -84,10 +84,10 @@ class GreenMailEmailServer implements FactoryBean<GreenMail>, DisposableBean {
 			var messages = greenMail.getReceivedMessages();
 
 			Arrays.stream(messages)
-				.filter(it -> deleteOldMessages(it, deleteThreshold))
-				.filter(GreenMailEmailServer::isMailNew)
-				.peek(GreenMailEmailServer::markSeen)
-				.forEach(GreenMailEmailServer::logMessage);
+					.filter(it -> deleteOldMessages(it, deleteThreshold))
+					.filter(GreenMailEmailServer::isMailNew)
+					.peek(GreenMailEmailServer::markSeen)
+					.forEach(GreenMailEmailServer::logMessage);
 		}
 	}
 
@@ -124,8 +124,7 @@ class GreenMailEmailServer implements FactoryBean<GreenMail>, DisposableBean {
 				return false;
 			}
 
-		} catch (MessagingException e) {
-		}
+		} catch (MessagingException e) {}
 
 		return true;
 	}
@@ -143,8 +142,7 @@ class GreenMailEmailServer implements FactoryBean<GreenMail>, DisposableBean {
 
 		try {
 			message.setFlag(Flag.SEEN, true);
-		} catch (MessagingException e) {
-		}
+		} catch (MessagingException e) {}
 	}
 
 	private static void logMessage(MimeMessage message) {
@@ -153,7 +151,8 @@ class GreenMailEmailServer implements FactoryBean<GreenMail>, DisposableBean {
 
 			var from = Arrays.toString(message.getFrom());
 			var to = Arrays.toString(message.getAllRecipients());
-			var date = message.getReceivedDate() == null ? "" : DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT.format(message.getReceivedDate());
+			var date = message.getReceivedDate() == null ? ""
+					: DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT.format(message.getReceivedDate());
 			var subject = String.valueOf(message.getSubject());
 
 			log.debug("Mail received {from {}; to {}; at {}; subject {}}", from, to, date, subject);

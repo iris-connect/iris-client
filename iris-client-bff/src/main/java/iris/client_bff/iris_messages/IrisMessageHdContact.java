@@ -18,25 +18,25 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericFie
 @NoArgsConstructor
 public class IrisMessageHdContact {
 
-    public static final int ID_MAX_LENGTH = 255;
-    public static final int NAME_MAX_LENGTH = 255;
+	public static final int ID_MAX_LENGTH = 255;
+	public static final int NAME_MAX_LENGTH = 255;
 
-    private String id;
+	private String id;
 	@FullTextField(name = "name_search", analyzer = "german")
 	@GenericField(sortable = Sortable.YES)
-    private String name;
+	private String name;
 
-    @ToString.Exclude
-    @Transient
-    private boolean own;
+	@ToString.Exclude
+	@Transient
+	private boolean own;
 
-    public IrisMessageHdContact(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+	public IrisMessageHdContact(String id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
-    public IrisMessageHdContact(String id, String name, boolean isOwn) {
-        this(id, name);
-        this.own = isOwn;
-    }
+	public IrisMessageHdContact(String id, String name, boolean isOwn) {
+		this(id, name);
+		this.own = isOwn;
+	}
 }

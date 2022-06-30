@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -43,6 +44,7 @@ public class EPSStatusClient {
 			return epsRpcClient.invoke(methodName, null, Directory.class).entries().stream()
 					.filter(directoryEntry -> directoryEntry.groups().contains("checkin-apps"))
 					.map(DirectoryEntry::name)
+					.filter(Objects::nonNull)
 					.map(App::new)
 					.collect(collectingAndThen(toList(), Apps::new));
 
@@ -81,8 +83,8 @@ public class EPSStatusClient {
 	record DirectoryEntry(@NotNull String name, Set<String> groups) {}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	record Ping(String version, ServerInfo serverInfo) {};
+	record Ping(String version, ServerInfo serverInfo) {}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	record ServerInfo(String name) {};
+	record ServerInfo(String name) {}
 }

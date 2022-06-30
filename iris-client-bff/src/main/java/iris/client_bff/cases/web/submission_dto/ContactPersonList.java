@@ -19,8 +19,8 @@ import java.util.List;
 @AllArgsConstructor(access = PRIVATE)
 public class ContactPersonList {
 
-  @Builder.Default
-  private List<ContactPerson> contactPersons = new ArrayList<>();
-  private LocalDate startDate;
-  private LocalDate endDate;
+	@Builder.Default
+	private List<ContactPerson> contactPersons = new ArrayList<>();
+	private LocalDate startDate;
+	private LocalDate endDate;
 }

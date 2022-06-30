@@ -6,6 +6,9 @@ import static org.mockito.Mockito.*;
 
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequest.Status;
+import iris.client_bff.cases.CaseDataSubmissionMapper;
+import iris.client_bff.cases.CaseDataSubmissionMapperImpl;
+import iris.client_bff.cases.DtoSupplier;
 import iris.client_bff.cases.eps.dto.CaseDataProvider;
 import iris.client_bff.cases.eps.dto.ContactCategory;
 import iris.client_bff.cases.eps.dto.ContactInformation;
@@ -14,14 +17,11 @@ import iris.client_bff.cases.eps.dto.Contacts;
 import iris.client_bff.cases.eps.dto.Events;
 import iris.client_bff.cases.eps.dto.WorkPlace;
 import iris.client_bff.cases.model.CaseDataSubmission;
-import iris.client_bff.cases.model.CaseEvent;
-import iris.client_bff.cases.model.Contact;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseDetailsDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
-import iris.client_bff.users.UserDetailsServiceImpl;
-import iris.client_bff.users.entities.UserAccount;
-import iris.client_bff.utils.DtoSupplier;
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserService;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -33,13 +33,12 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 
 class IndexCaseMapperTest {
 
 	DtoSupplier dtoSupplier = new DtoSupplier();
 
-	ModelMapper mapper = new ModelMapper();
+	CaseDataSubmissionMapper mapper = new CaseDataSubmissionMapperImpl();
 
 	Instant START = Instant.now();
 	Instant END = Instant.now().plus(1, ChronoUnit.DAYS);
@@ -52,7 +51,7 @@ class IndexCaseMapperTest {
 	@Test
 	void mapDetailed() {
 
-		var userService = mock(UserDetailsServiceImpl.class);
+		var userService = mock(UserService.class);
 		when(userService.findByUuid(any()))
 				.thenReturn(Optional.of(new UserAccount().setFirstName("Max").setLastName("Muster")));
 
@@ -171,16 +170,7 @@ class IndexCaseMapperTest {
 				.build();
 
 		var contactSet = contacts.getContactPersons().stream()
-				.map(it -> {
-					var mapped = mapper.map(it, Contact.class);
-					Optional.ofNullable(it.getContactInformation()).ifPresent(contactInformation -> {
-						mapped.setBasicConditions(contactInformation.getBasicConditions());
-						mapped.setContactCategory(Contact.ContactCategory.valueOf(contactInformation.getContactCategory().name()));
-						mapped.setFirstContactDate(contactInformation.getFirstContactDate());
-						mapped.setLastContactDate(contactInformation.getLastContactDate());
-					});
-					return mapped;
-				})
+				.map(mapper::fromContactPersonDto)
 				.collect(Collectors.toSet());
 
 		Events events = Events.builder()
@@ -190,7 +180,7 @@ class IndexCaseMapperTest {
 				.build();
 
 		var eventSet = events.getEvents().stream()
-				.map(it -> mapper.map(it, CaseEvent.class))
+				.map(mapper::fromEventDto)
 				.collect(Collectors.toSet());
 
 		CaseDataProvider dataProvider = CaseDataProvider.builder()
@@ -198,7 +188,7 @@ class IndexCaseMapperTest {
 				.lastName("Mustermann")
 				.build();
 
-		var caseDataProvider = mapper.map(dataProvider, iris.client_bff.cases.model.CaseDataProvider.class);
+		var caseDataProvider = mapper.fromCaseDataProviderDto(dataProvider);
 
 		return new CaseDataSubmission(getRequest(),
 				contactSet,

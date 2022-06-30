@@ -14,12 +14,9 @@ public interface EmailTemplates {
 	/**
 	 * Expands the template with the given {@link Key} and placeholders in the language of the given locale.
 	 *
-	 * @param key
-	 *            must not be {@literal null}.
-	 * @param locale
-	 *            can be {@literal null}.
-	 * @param placeholders
-	 *            must not be {@literal null}.
+	 * @param key must not be {@literal null}.
+	 * @param locale can be {@literal null}.
+	 * @param placeholders must not be {@literal null}.
 	 * @return will never be {@literal null}.
 	 */
 	String expandTemplate(Key key, @Nullable Locale locale, Map<String, ? extends Object> placeholders);
@@ -27,10 +24,8 @@ public interface EmailTemplates {
 	/**
 	 * Returns the type of the template with the given {@link Key} in the language of the given locale.
 	 *
-	 * @param key
-	 *            must not be {@literal null}.
-	 * @param locale
-	 *            can be {@literal null}.
+	 * @param key must not be {@literal null}.
+	 * @param locale can be {@literal null}.
 	 * @return will never be {@literal null}.
 	 */
 	EmailType getTemplateType(Key key, @Nullable Locale locale);
@@ -58,11 +53,10 @@ public interface EmailTemplates {
 	 * @author Jens Kutzsche
 	 */
 	enum Keys
-		implements
-		Key {
+			implements
+			Key {
 
-		CASE_DATA_RECEIVED_MAIL_FTLH,
-		EVENT_DATA_RECEIVED_MAIL_FTLH;
+		CASE_DATA_RECEIVED_MAIL_FTLH, EVENT_DATA_RECEIVED_MAIL_FTLH;
 
 		@Override
 		public String getKey() {
@@ -71,7 +65,6 @@ public interface EmailTemplates {
 	}
 
 	enum EmailType {
-		HTML,
-		TEXT;
+		HTML, TEXT;
 	}
 }

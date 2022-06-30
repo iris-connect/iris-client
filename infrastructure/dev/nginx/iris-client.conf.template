@@ -29,6 +29,7 @@ server {
 
     location /api/ {
         proxy_pass  http://iris-client:8092/;
+        proxy_cookie_path / /api/;
     }
 
     # SECURITY
@@ -39,7 +40,7 @@ server {
     # X Frame Options - no iframes allowed
     add_header X-Frame-Options DENY;
     # Content Security Policy - no iframes or external resources allowed
-    add_header Content-Security-Policy "default-src 'self'; child-src 'none'; frame-ancestors 'none';";
+    add_header Content-Security-Policy "default-src 'self'; child-src 'none'; frame-ancestors 'none'; object-src 'none'; img-src 'self' data:;";
     # X-XSS-Protection - legacy, should be covered by CSP
     add_header X-XSS-Protection "1; mode=block";
     # Referrer-Policy
@@ -64,11 +65,11 @@ server {
     set $cors_header "";
     set $cors_method "";
     set $cors_maxage "";
-    if ( $http_origin ~* ((https:\/\/iris.staging.iris-gateway\.de|http:\/\/localhost:8080)$)) {
+    if ( $http_origin ~* ((https:\/\/iris.staging.iris-gateway\.de|https:\/\/client.dev.iris-gateway\.de|http:\/\/localhost:8080|http:\/\/localhost:8081)$)) {
             set $cors_origin $http_origin;
             set $cors_cred   true;
-            set $cors_header "*";
-            set $cors_method "*";
+            set $cors_header $http_access_control_request_headers;
+            set $cors_method $http_access_control_request_method;
             set $cors_maxage "86400";
     }
 

@@ -3,9 +3,9 @@ package iris.client_bff.vaccination_info;
 import static org.assertj.core.api.Assertions.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.core.IrisDateTimeProvider;
-import iris.client_bff.core.Sex;
+import iris.client_bff.core.database.IrisDateTimeProvider;
 import iris.client_bff.core.model.Address;
+import iris.client_bff.core.model.Sex;
 import iris.client_bff.vaccination_info.VaccinationInfo.ContactPerson;
 import iris.client_bff.vaccination_info.VaccinationInfo.Employee;
 import iris.client_bff.vaccination_info.VaccinationInfo.Facility;

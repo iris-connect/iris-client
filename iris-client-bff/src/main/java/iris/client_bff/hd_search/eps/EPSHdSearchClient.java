@@ -17,21 +17,21 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 @AllArgsConstructor
 public class EPSHdSearchClient {
 
-    private final JsonRpcHttpClient epsRpcClient;
-    private BackendServiceProperties config;
+	private final JsonRpcHttpClient epsRpcClient;
+	private BackendServiceProperties config;
 
-    public List<HealthDepartment> searchForHd(String search) {
+	public List<HealthDepartment> searchForHd(String search) {
 
-        var methodName = config.getEndpoint() + ".searchForHd";
-        Map<String, String> payload = Map.of("searchKeyword", search, "withDetails", "false",
-    				"alsoNotConnectedHds", "false");
+		var methodName = config.getEndpoint() + ".searchForHd";
+		Map<String, String> payload = Map.of("searchKeyword", search, "withDetails", "false",
+				"alsoNotConnectedHds", "false");
 
-        try {
-        	return Arrays.asList(epsRpcClient.invoke(methodName, payload, HealthDepartment[].class));
-        } catch (Throwable t) {
-            throw new HdSearchException(methodName, t);
-        }
-    }
+		try {
+			return Arrays.asList(epsRpcClient.invoke(methodName, payload, HealthDepartment[].class));
+		} catch (Throwable t) {
+			throw new HdSearchException(methodName, t);
+		}
+	}
 
 	public List<HealthDepartment> getAllHds() {
 

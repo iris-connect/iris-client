@@ -6,8 +6,10 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.status.AppInfo;
 import iris.client_bff.status.AppStatus;
 import iris.client_bff.status.Apps;
@@ -22,16 +24,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
+@WithMockIrisUser
 @RequiredArgsConstructor
 class AppStatusControllerTest {
 
@@ -52,20 +54,20 @@ class AppStatusControllerTest {
 			AppStatus.ACCESS_DENIED);
 
 	@Test
+	@WithAnonymousUser
 	void endpointShouldBeProtected() throws Exception {
+
 		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))
-				.andExpect(MockMvcResultMatchers.status().isForbidden())
-				.andReturn();
+				.andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	@WithMockUser()
 	void getApps() throws Exception {
 
 		when(statusService.getApps()).thenReturn(MOCK_APPS);
 
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))
-				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(status().isOk())
 				.andReturn();
 
 		verify(statusService).getApps();
@@ -80,20 +82,26 @@ class AppStatusControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void getAppStatusInfo_shouldFail() throws Exception {
 
 		when(statusService.getAppInfo(anyString())).thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
 		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/invalid"))
-				.andExpect(MockMvcResultMatchers.status().is4xxClientError())
-				.andReturn();
+				.andExpect(status().is4xxClientError());
 
 		verify(statusService).getAppInfo(eq("invalid"));
 	}
 
 	@Test
-	@WithMockUser()
+	void getAppStatusInfo_forbiddenCharacter_shouldFail() throws Exception {
+
+		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/+invalid"))
+				.andExpect(status().is4xxClientError());
+
+		verifyNoInteractions(statusService);
+	}
+
+	@Test
 	void getAppStatusInfo_statusOK() throws Exception {
 
 		when(statusService.getAppInfo("test.checkin-app.ok")).thenReturn(MOCK_APP_INFO_OK);
@@ -111,7 +119,6 @@ class AppStatusControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void getAppStatusInfo_statusError() throws Exception {
 
 		when(statusService.getAppInfo("test.checkin-app.error")).thenReturn(MOCK_APP_INFO_ERROR);

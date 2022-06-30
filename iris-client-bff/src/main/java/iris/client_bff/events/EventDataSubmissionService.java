@@ -2,21 +2,18 @@ package iris.client_bff.events;
 
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.log.LogHelper;
+import iris.client_bff.core.messages.ErrorMessages;
+import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.model.EventDataSubmission;
-import iris.client_bff.events.model.Guest;
-import iris.client_bff.events.model.GuestListDataProvider;
 import iris.client_bff.events.web.dto.GuestList;
 import iris.client_bff.proxy.IRISAnnouncementException;
 import iris.client_bff.proxy.ProxyServiceClient;
-import iris.client_bff.ui.messages.ErrorMessages;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,7 +25,7 @@ public class EventDataSubmissionService {
 
 	private static final String ERR_SUBM_NOT_ALLOWED = "Error: Submission not allowed for case ";
 
-	private final ModelMapper mapper;
+	private final EventMapper mapper;
 
 	private final EventDataSubmissionRepository submissions;
 
@@ -37,7 +34,8 @@ public class EventDataSubmissionService {
 	private final ProxyServiceClient proxyClient;
 	private final AlertService alertService;
 
-	public String findRequestAndSaveGuestList(UUID dataAuthorizationToken, String clientName, GuestList guestList) {
+	public String findRequestAndSaveGuestList(DataRequestIdentifier dataAuthorizationToken, String clientName,
+			GuestList guestList) {
 		return requestService.findById(dataAuthorizationToken).map(dataRequest -> {
 
 			if (!dataRequest.getLocation().getProviderId().equals(clientName)) {
@@ -87,14 +85,14 @@ public class EventDataSubmissionService {
 		});
 	}
 
-	private void logSubmissionStatus(String status, UUID dataAuthorizationToken) {
+	private void logSubmissionStatus(String status, DataRequestIdentifier dataAuthorizationToken) {
 		log.trace("Submission for {} event {}", status, LogHelper.obfuscateAtStart8(dataAuthorizationToken.toString()));
 	}
 
-	private void save(EventDataRequest dataRequest, GuestList guestList) {
-		var guests = guestList.getGuests().stream().map(it -> mapper.map(it, Guest.class)).collect(Collectors.toSet());
+	public void save(EventDataRequest dataRequest, GuestList guestList) {
+		var guests = guestList.getGuests().stream().map(mapper::fromGuestDto).collect(Collectors.toSet());
 
-		var dataProvider = mapper.map(guestList.getDataProvider(), GuestListDataProvider.class);
+		var dataProvider = mapper.fromGuestListDataProviderDto(guestList.getDataProvider());
 
 		var submission = new EventDataSubmission(
 				dataRequest,

@@ -1,27 +1,33 @@
 package iris.client_bff.search_client.web;
 
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
+import static org.hamcrest.CoreMatchers.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.*;
+
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.search_client.SearchClient;
 import iris.client_bff.search_client.exceptions.IRISSearchException;
 import iris.client_bff.search_client.web.dto.LocationInformation;
 import iris.client_bff.search_client.web.dto.LocationQueryResult;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.net.ConnectException;
 
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.test.web.servlet.MockMvc;
 
 @IrisWebIntegrationTest
+@WithMockIrisUser
 @RequiredArgsConstructor
 class LocationSearchControllerTests {
 
@@ -30,18 +36,24 @@ class LocationSearchControllerTests {
 	@MockBean
 	private SearchClient searchClient;
 
-	@Test
-	public void endpointShouldBeProtected() throws Exception {
-
-		given().mockMvc(mvc)
-				.when().get("/search/{search_keyword}", "Test")
-				.then()
-				.statusCode(HttpStatus.FORBIDDEN.value());
+	@BeforeEach
+	void init() {
+		RestAssuredMockMvc.mockMvc(mvc);
 	}
 
 	@Test
-	@WithMockUser
-	public void serviceIsCalledForRequest() throws Exception {
+	@WithAnonymousUser
+	void endpointShouldBeProtected() throws Exception {
+
+		when()
+				.get("/search/{search_keyword}", "Test")
+
+				.then()
+				.status(UNAUTHORIZED);
+	}
+
+	@Test
+	void serviceIsCalledForRequest() throws Exception {
 
 		var searchString = "Test";
 
@@ -50,8 +62,9 @@ class LocationSearchControllerTests {
 
 		when(searchClient.search(anyString(), any(Pageable.class))).thenReturn(locList);
 
-		given().mockMvc(mvc)
-				.when().get("/search/?search={search_keyword}", searchString)
+		when()
+				.get("/search/?search={search_keyword}", searchString)
+
 				.then()
 				.statusCode(200)
 				.body("locations[0].id", equalTo("id"))
@@ -62,30 +75,43 @@ class LocationSearchControllerTests {
 	}
 
 	@Test
-	@WithMockUser
-	public void error400_searchStringToShort() throws Exception {
+	void error400_searchStringToShort() throws Exception {
 
 		var searchString = "Tes";
 
-		given().mockMvc(mvc)
-				.when().get("/search/?search={search_keyword}", searchString)
+		when()
+				.get("/search/?search={search_keyword}", searchString)
+
 				.then()
 				.statusCode(400);
 	}
 
 	@Test
-	@WithMockUser
-	public void error_serviceNotAvailable() throws Exception {
+	void error_serviceNotAvailable() throws Exception {
 
 		var searchString = "Test";
 
 		when(searchClient.search(anyString(), any(Pageable.class)))
 				.thenThrow(new IRISSearchException(new ConnectException("Connection refused")));
 
-		given().mockMvc(mvc)
-				.when().get("/search/?search={search_keyword}", searchString)
+		when()
+				.get("/search/?search={search_keyword}", searchString)
+
 				.then()
 				.statusCode(503);
 	}
 
+	@Test
+	void error400_searchStringWithForbiddenCharacter() throws Exception {
+
+		var searchString = "+Test";
+
+		when()
+				.get("/search/?search={search_keyword}", searchString)
+
+				.then()
+				.statusCode(400);
+
+		verifyNoInteractions(searchClient);
+	}
 }

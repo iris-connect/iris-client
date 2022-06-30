@@ -1,7 +1,6 @@
 package iris.client_bff.config;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Value;
 
 import java.util.List;
 import java.util.Locale;
@@ -14,10 +13,9 @@ import org.springframework.lang.Nullable;
  * @author Jens Kutzsche
  * @author Oliver Drotbohm
  */
-@Getter
-@RequiredArgsConstructor
-@ConstructorBinding
 @ConfigurationProperties(prefix = "iris.i18n")
+@ConstructorBinding
+@Value
 public class I18nProperties {
 
 	private static final List<Locale> DEFAULT_SUPPORTED_LOCALES = List.of(Locale.GERMAN);

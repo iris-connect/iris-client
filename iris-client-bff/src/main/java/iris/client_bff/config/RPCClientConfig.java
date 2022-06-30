@@ -5,36 +5,20 @@ import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.HashMap;
-import java.util.Optional;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.springframework.boot.actuate.health.Status;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.impl.StringArraySerializer;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
 @Configuration
@@ -46,34 +30,21 @@ public class RPCClientConfig {
 																							// connection.
 
 	private final RPCClientProperties properties;
+	private final Jackson2ObjectMapperBuilder objectMapperBuilder;
 
 	@Bean
-	public JsonRpcHttpClient epsRpcClient()
-			throws NoSuchAlgorithmException, KeyManagementException, MalformedURLException {
+	public JsonRpcHttpClient epsRpcClient() throws MalformedURLException {
 		return epsRpcClient(properties.getEpsClientUrl());
 	}
 
 	@Bean
-	public JsonRpcHttpClient proxyRpcClient()
-			throws NoSuchAlgorithmException, KeyManagementException, MalformedURLException {
+	public JsonRpcHttpClient proxyRpcClient() throws MalformedURLException {
 		return epsRpcClient(properties.getProxyClientUrl());
 	}
 
-	private JsonRpcHttpClient epsRpcClient(String clientUrl)
-			throws MalformedURLException, NoSuchAlgorithmException, KeyManagementException {
+	private JsonRpcHttpClient epsRpcClient(String clientUrl) throws MalformedURLException {
 
-		var jacksonObjectMapper = new ObjectMapper();
-		jacksonObjectMapper.registerModule(new JavaTimeModule());
-
-		var module = new SimpleModule();
-		module.addDeserializer(Status.class, new StatusDeserializer());
-		module.addSerializer(String[].class, new EmptyStringArraySerializer());
-		jacksonObjectMapper.registerModule(module);
-
-		var client = new JsonRpcHttpClient(
-				jacksonObjectMapper,
-				new URL(clientUrl),
-				new HashMap<>());
+		var client = new JsonRpcHttpClient(configureObjectMapper(), new URL(clientUrl), Map.of());
 
 		// NoopHostnameVerifier is needed because the internal eps address is not necessarily part of certs SAN
 		client.setHostNameVerifier(new NoopHostnameVerifier());
@@ -86,7 +57,18 @@ public class RPCClientConfig {
 		return client;
 	}
 
+	private ObjectMapper configureObjectMapper() {
+
+		var module = new SimpleModule()
+				.addSerializer(String[].class, new EmptyStringArraySerializer());
+
+		return objectMapperBuilder.build().registerModule(module);
+	}
+
 	/**
+	 * If no parameters are passed in a JSON-RPC method call, then with JSON-RPC in general or jsonrpc4j in particular, an
+	 * empty object must be serialized so that at the receiver the request is processed properly.
+	 *
 	 * @author Jens Kutzsche
 	 */
 	final class EmptyStringArraySerializer extends JsonSerializer<String[]> {
@@ -99,36 +81,6 @@ public class RPCClientConfig {
 			} else {
 				StringArraySerializer.instance.serialize(value, gen, serializers);
 			}
-		}
-	}
-
-	/**
-	 * @author Jens Kutzsche
-	 */
-	class StatusDeserializer extends StdDeserializer<Status> {
-
-		private static final long serialVersionUID = -314531032736552403L;
-
-		public StatusDeserializer() {
-			this(Status.class);
-		}
-
-		public StatusDeserializer(Class<?> vc) {
-			super(vc);
-		}
-
-		@Override
-		public Status deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-
-			JsonNode node = jp.getCodec().readTree(jp);
-
-			return new Status(
-					Optional.ofNullable(node.get("status"))
-							.map(JsonNode::asText)
-							.orElse(""),
-					Optional.ofNullable(node.get("description"))
-							.map(JsonNode::asText)
-							.orElse(""));
 		}
 	}
 }

@@ -25,7 +25,7 @@ import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
  * The {@link MessageInterpolator} is set and use the {@code messages_en.properties}. English is set as locale for the
  * interpolation in the tests.
  * </p>
- * 
+ *
  * @author Jens Kutzsche
  */
 public class ValidatorExtension implements BeforeAllCallback {
@@ -35,17 +35,17 @@ public class ValidatorExtension implements BeforeAllCallback {
 	 */
 	@Override
 	public void beforeAll(ExtensionContext context) {
-		injectStaticFields(context, context.getRequiredTestClass());
+		injectStaticFields(context.getRequiredTestClass());
 	}
 
-	private void injectStaticFields(ExtensionContext context, Class<?> testClass) {
-		injectFields(context, null, testClass, ReflectionUtils::isStatic);
+	private void injectStaticFields(Class<?> testClass) {
+		injectFields(null, testClass, ReflectionUtils::isStatic);
 	}
 
-	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass,
+	private void injectFields(Object testInstance, Class<?> testClass,
 			Predicate<Field> predicate) {
 
-		findFields(testClass, predicate.and(this::isVatidatorField), HierarchyTraversalMode.TOP_DOWN)
+		findFields(testClass, predicate.and(this::isValidatorField), HierarchyTraversalMode.TOP_DOWN)
 				.forEach(field -> {
 
 					try {
@@ -56,7 +56,7 @@ public class ValidatorExtension implements BeforeAllCallback {
 				});
 	}
 
-	private boolean isVatidatorField(Field field) {
+	private boolean isValidatorField(Field field) {
 		return field.getType() == Validator.class;
 	}
 

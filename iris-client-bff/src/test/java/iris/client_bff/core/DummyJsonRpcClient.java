@@ -25,7 +25,7 @@ public class DummyJsonRpcClient implements IJsonRpcClient {
 	@Override
 	public Object invoke(String methodName, Object argument, Type returnType) throws Throwable {
 
-		if (returnType.getTypeName().equals("String")) {
+		if ("String".equals(returnType.getTypeName())) {
 			return "OK";
 		}
 		return null;
@@ -35,7 +35,7 @@ public class DummyJsonRpcClient implements IJsonRpcClient {
 	public Object invoke(String methodName, Object argument, Type returnType, Map<String, String> extraHeaders)
 			throws Throwable {
 
-		if (returnType.getTypeName().equals("String")) {
+		if ("String".equals(returnType.getTypeName())) {
 			return "OK";
 		}
 		return null;

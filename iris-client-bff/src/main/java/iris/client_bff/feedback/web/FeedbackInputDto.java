@@ -7,7 +7,7 @@ import javax.validation.constraints.Email;
 
 /**
  * This class represents the json structure of a feedback request.
- * 
+ *
  * @author Ostfalia Gruppe 12
  * @author Jens Kutzsche
  */

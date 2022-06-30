@@ -1,4 +1,4 @@
-FROM node:16-alpine as builder
+FROM node:17-alpine as builder
 
 # make the 'app' folder the current working directory
 WORKDIR /app
@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # install project dependencies
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
@@ -16,9 +16,9 @@ ARG VUE_APP_VERSION_ID=production
 ARG VUE_APP_BUILD_ID=local
 
 # build app for production with minification
-RUN npm run build
+RUN npm run build --legacy-peer-deps
 
-FROM caddy:2.4.6-alpine
+FROM caddy:2.5.1-alpine
 
 # copy build artifacts to webserver root
 RUN rm -rf /usr/share/caddy

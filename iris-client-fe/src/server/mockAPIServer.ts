@@ -1,4 +1,5 @@
 import {
+  AuthenticationStatus,
   Credentials,
   DataRequestCaseClient,
   DataRequestCaseData,
@@ -39,34 +40,27 @@ import {
   dummyIrisMessageList,
   dummyIrisMessageHdContacts,
   getDummyMessageFromRequest,
+  getDummyIrisMessageImportSelection,
+  getDummyIrisMessageViewData,
+  getDummyIrisMessageData,
 } from "@/server/data/dummy-iris-messages";
 import { DataQuery } from "@/api/common";
 import { vaccinationReportList } from "@/server/data/vaccination-reports";
+import store from "@/store";
 
-const loginResponse = (role: UserRole): Response => {
-  return new Response(200, {
-    "Authentication-Info": `Bearer TOKEN.${role}`,
-  });
-};
-
-// @todo: find better solution for data type
-const authResponse = (
+const authResponse = <T>(
   request?: Request,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  data?: string | {} | undefined,
+  data?: T,
   headers?: Record<string, string>
 ): Response => {
-  if (request) {
-    if (!validateAuthHeader(request)) {
-      return new Response(401, { error: "not authorized", ...headers });
-    }
+  if (!validateAuthentication()) {
+    return new Response(401, { error: "not authorized", ...headers });
   }
   return new Response(200, headers, data);
 };
 
-const validateAuthHeader = (request: Request): boolean => {
-  const authHeader = request?.requestHeaders?.Authorization;
-  return !!authHeader;
+const validateAuthentication = (): boolean => {
+  return store.state.userLogin.session?.authenticated ?? false;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -105,19 +99,23 @@ export function makeMockAPIServer() {
             );
           }
         }
-        return loginResponse(
+        store.commit(
+          "mockApi/setAuthenticatedUserRole",
           credentials.userName === "user" ? UserRole.User : UserRole.Admin
         );
+        return new Response(200, undefined, {
+          authenticationStatus: AuthenticationStatus.AUTHENTICATED,
+        });
       });
 
-      this.get("/user/logout", () => {
+      this.post("/user/logout", () => {
+        store.commit("mockApi/setAuthenticatedUserRole", null);
         return new Response(200);
       });
 
       this.get("/user-profile", (schema, request) => {
         const role =
-          request?.requestHeaders?.Authorization.match(/(USER|ADMIN)$/)?.[0] ||
-          "ADMIN";
+          store.state.mockApi.authenticatedUserRole || UserRole.Admin;
         const user = dummyUserList.users?.find((usr) => {
           return usr.role === role;
         });
@@ -130,7 +128,7 @@ export function makeMockAPIServer() {
 
       this.post("/users", (schema, request) => {
         try {
-          if (validateAuthHeader(request)) {
+          if (validateAuthentication()) {
             dummyUserList.users?.push(getDummyUserFromRequest(request));
           }
         } catch (e) {
@@ -141,7 +139,7 @@ export function makeMockAPIServer() {
 
       this.patch("/users/:id", (schema, request) => {
         try {
-          if (validateAuthHeader(request)) {
+          if (validateAuthentication()) {
             const id = request.params.id;
             const users: Array<User> = dummyUserList.users || [];
             const index = findIndex(users, (user) => user.id === id);
@@ -158,7 +156,7 @@ export function makeMockAPIServer() {
       });
 
       this.delete("/users/:id", (schema, request) => {
-        if (validateAuthHeader(request)) {
+        if (validateAuthentication()) {
           try {
             const id = request.params.id;
             const users: Array<User> = dummyUserList.users || [];
@@ -184,7 +182,7 @@ export function makeMockAPIServer() {
       });
 
       this.get("/data-requests-client/events", (schema, request) => {
-        const { page, status } = request.queryParams;
+        const { page, status } = request.queryParams || {};
         return authResponse(
           request,
           paginated(
@@ -203,7 +201,7 @@ export function makeMockAPIServer() {
 
       this.patch("/data-requests-client/events/:id", (schema, request) => {
         try {
-          if (validateAuthHeader(request)) {
+          if (validateAuthentication()) {
             const id = request.params.id;
             const dataRequest = dummyDataRequests.find(
               (entry: ExistingDataRequestClientWithLocation) =>
@@ -232,7 +230,7 @@ export function makeMockAPIServer() {
       });
 
       this.get("/data-requests-client/cases", (schema, request) => {
-        const { page, status } = request.queryParams;
+        const { page, status } = request.queryParams || {};
         return authResponse(
           request,
           paginated(
@@ -252,7 +250,7 @@ export function makeMockAPIServer() {
       this.get("/search", (schema, request) => {
         let data;
 
-        const searchQuery = request.queryParams.search.toLowerCase();
+        const searchQuery = request.queryParams?.search.toLowerCase();
 
         if (searchMatches(searchQuery, ["pizza", "musterstraße", "mio"])) {
           data = {
@@ -304,7 +302,7 @@ export function makeMockAPIServer() {
       });
 
       this.get("/iris-messages", (schema, request) => {
-        const query: Partial<DataQuery> = request.queryParams;
+        const query: Partial<DataQuery> = request.queryParams || {};
         return authResponse(
           request,
           queriedPage(dummyIrisMessageList as IrisMessage[], query)
@@ -331,7 +329,7 @@ export function makeMockAPIServer() {
 
       this.post("/iris-messages", (schema, request) => {
         try {
-          if (validateAuthHeader(request)) {
+          if (validateAuthentication()) {
             dummyIrisMessageList.push(getDummyMessageFromRequest(request));
           }
         } catch (e) {
@@ -355,8 +353,27 @@ export function makeMockAPIServer() {
         );
       });
 
+      this.post("/iris-messages/data/:id/import", (schema, request) => {
+        const messageData = getDummyIrisMessageData(request.params.id);
+        messageData.isImported = true;
+        return authResponse(request);
+      });
+
+      this.get(
+        "/iris-messages/data/:id/import-selection-view",
+        (schema, request) => {
+          const id = request.params.id;
+          return authResponse(request, getDummyIrisMessageImportSelection(id));
+        }
+      );
+
+      this.get("/iris-messages/data/:id/view", (schema, request) => {
+        const id = request.params.id;
+        return authResponse(request, getDummyIrisMessageViewData(id));
+      });
+
       this.get("/vaccination-reports", (schema, request) => {
-        const query: Partial<DataQuery> = request.queryParams;
+        const query: Partial<DataQuery> = request.queryParams || {};
         return authResponse(
           request,
           queriedPage(vaccinationReportList as VaccinationReport[], query)

@@ -1,11 +1,12 @@
 package iris.client_bff.statistics.web;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequestService;
 import iris.client_bff.events.EventDataRequest;
@@ -18,14 +19,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
-public class StatisticsControllerTest {
+class StatisticsControllerTest {
 	private final String baseUrl = "/data-requests-client/statistics";
 
 	@Autowired
@@ -35,7 +35,7 @@ public class StatisticsControllerTest {
 	private ObjectMapper om;
 
 	@MockBean
-    CaseDataRequestService caseDataRequestService;
+	CaseDataRequestService caseDataRequestService;
 
 	@MockBean
 	EventDataRequestService eventService;
@@ -58,12 +58,11 @@ public class StatisticsControllerTest {
 	@Test
 	void endpointShouldBeProtected() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))
-				.andExpect(status().isForbidden())
-				.andReturn();
+				.andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	@WithMockUser()
+	@WithMockIrisUser
 	void getWeeklyData() throws Exception {
 
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))

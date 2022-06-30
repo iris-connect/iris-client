@@ -8,7 +8,6 @@ import freemarker.cache.TemplateLookupResult;
 import freemarker.cache.TemplateLookupStrategy;
 import freemarker.core.HTMLOutputFormat;
 import freemarker.template.Configuration;
-import freemarker.template.TemplateException;
 import io.vavr.collection.Array;
 import io.vavr.collection.List;
 import iris.client_bff.core.mail.EmailTemplates;
@@ -68,7 +67,7 @@ class EmailConfig {
 		freeMarkerConfigurer.setPreTemplateLoaders(templateLoaders.toArray(TemplateLoader[]::new));
 
 		var settings = new Properties();
-		settings.put("incompatible_improvements", Configuration.VERSION_2_3_30.toString());
+		settings.put("incompatible_improvements", Configuration.VERSION_2_3_31.toString());
 		freeMarkerConfigurer.setFreemarkerSettings(settings);
 
 		return freeMarkerConfigurer;
@@ -76,7 +75,7 @@ class EmailConfig {
 
 	/**
 	 * Checks if all templates can be loaded in all supported languages.
-	 * 
+	 *
 	 * @param event
 	 * @throws IOException
 	 */
@@ -101,10 +100,9 @@ class EmailConfig {
 			try {
 
 				var key = it._1.getKey().replace(".ftl", "_" + it._2.toLanguageTag() + ".ftl");
-				var template = configuration.getTemplate(key, it._2);
-				FreeMarkerTemplateUtils.processTemplateIntoString(template, null);
+				configuration.getTemplate(key, it._2);
 
-			} catch (IOException | TemplateException e) {
+			} catch (IOException e) {
 				throw new IllegalStateException(String.format("Missing email text for %s!", it));
 			}
 		});

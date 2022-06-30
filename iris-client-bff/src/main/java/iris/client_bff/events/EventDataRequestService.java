@@ -1,10 +1,9 @@
 package iris.client_bff.events;
 
-import static iris.client_bff.search_client.eps.LocationMapper.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
+import iris.client_bff.core.database.HibernateSearcher;
 import iris.client_bff.core.log.LogHelper;
-import iris.client_bff.core.utils.HibernateSearcher;
 import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.eps.DataProviderClient;
@@ -21,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -44,6 +42,7 @@ public class EventDataRequestService {
 	private final SearchClient searchClient;
 	private final ProxyServiceClient proxyClient;
 	private final DataProviderClient epsDataRequestClient;
+	private final LocationMapper mapper;
 
 	public Page<EventDataRequest> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
@@ -69,8 +68,8 @@ public class EventDataRequestService {
 		return search(null, search, pageable);
 	}
 
-	public Optional<EventDataRequest> findById(UUID uuid) {
-		return repository.findById(DataRequestIdentifier.of(uuid));
+	public Optional<EventDataRequest> findById(DataRequestIdentifier id) {
+		return repository.findById(id);
 	}
 
 	public EventDataRequest save(EventDataRequest request) {
@@ -84,7 +83,7 @@ public class EventDataRequestService {
 
 		Location location = null;
 		try {
-			location = map(searchClient.findByProviderIdAndLocationId(providerId, locationId));
+			location = mapper.fromSearchClientDto(searchClient.findByProviderIdAndLocationId(providerId, locationId));
 		} catch (IRISSearchException e) {
 			log.error("Location {} with provider {} could not be obtained: {}", locationId, providerId, e.getMessage());
 

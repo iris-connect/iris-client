@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class IdSearch {
-  private String providerId;
-  private String locationId;
+	private String providerId;
+	private String locationId;
 }

@@ -5,7 +5,7 @@ package iris.client_bff.vaccination_info.eps;
  */
 public interface VaccinationInfoSubmissionTestData {
 
-	static final String JSON_RPC_REQUEST = """
+	String JSON_RPC_REQUEST = """
 			{
 			    "id":"1",
 			    "jsonrpc":"2.0",
@@ -17,7 +17,7 @@ public interface VaccinationInfoSubmissionTestData {
 			}
 			""";
 
-	static final String VALID_SUBMISSION = String.format(JSON_RPC_REQUEST, """
+	String VALID_SUBMISSION = String.format(JSON_RPC_REQUEST, """
 			,"dataAuthorizationToken": "%s",
 			"facility": {
 			  "name": "Pflegeheim Müller",
@@ -68,15 +68,15 @@ public interface VaccinationInfoSubmissionTestData {
 			]
 			""");
 
-	static final String SUBMISSION_WITHOUT_PARAMS = String.format(JSON_RPC_REQUEST, "");
+	String SUBMISSION_WITHOUT_PARAMS = String.format(JSON_RPC_REQUEST, "");
 
-	static final String SUBMISSION_WITHOUT_VALUES = String.format(JSON_RPC_REQUEST, """
+	String SUBMISSION_WITHOUT_VALUES = String.format(JSON_RPC_REQUEST, """
 			,"dataAuthorizationToken": "",
 			"facility": {},
 			"employees": []
 			""");
 
-	static final String SUBMISSION_INVALID_MAIL_PHONE = String.format(JSON_RPC_REQUEST, """
+	String SUBMISSION_INVALID_MAIL_PHONE = String.format(JSON_RPC_REQUEST, """
 			,"dataAuthorizationToken": "9519ac6f-59d7-4a8b-80f7-0a7d0c5ecb14",
 			"facility": {
 			  "name": "Pflegeheim Müller",
@@ -96,7 +96,7 @@ public interface VaccinationInfoSubmissionTestData {
 			"employees": []
 			""");
 
-	static final String SUBMISSION_INVALID_EMPLOYEES = String.format(JSON_RPC_REQUEST, """
+	String SUBMISSION_INVALID_EMPLOYEES = String.format(JSON_RPC_REQUEST, """
 			,"dataAuthorizationToken": "9519ac6f-59d7-4a8b-80f7-0a7d0c5ecb14",
 			"facility": {
 			  "name": "Pflegeheim Müller",
@@ -116,7 +116,7 @@ public interface VaccinationInfoSubmissionTestData {
 			"employees": [{}]
 			""");
 
-	static final String SUBMISSION_WITH_FORBIDDEN_SYMBOLS = String.format(JSON_RPC_REQUEST, """
+	String SUBMISSION_WITH_FORBIDDEN_SYMBOLS = String.format(JSON_RPC_REQUEST, """
 			,"dataAuthorizationToken": "9519ac6f-59d7-4a8b-80f7-0a7d0c5ecb14",
 			"facility": {
 			  "name": "=Pflegeheim Müller",

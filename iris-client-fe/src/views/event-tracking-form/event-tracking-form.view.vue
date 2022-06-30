@@ -46,8 +46,7 @@
                   :rules="validationRules.location"
                 >
                   <v-btn
-                    color="red lighten-2"
-                    dark
+                    color="red lighten-2 white--text"
                     v-bind="attrs"
                     v-on="on"
                     :disabled="eventCreationOngoing"

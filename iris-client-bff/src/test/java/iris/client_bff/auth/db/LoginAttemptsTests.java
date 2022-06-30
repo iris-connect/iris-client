@@ -2,39 +2,52 @@ package iris.client_bff.auth.db;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.http.HttpStatus.*;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import io.restassured.http.ContentType;
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import io.restassured.module.mockmvc.specification.MockMvcRequestSpecBuilder;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.MemoryAppender;
 import iris.client_bff.auth.db.login_attempts.LoginAttemptsService;
+import lombok.RequiredArgsConstructor;
+
+import java.util.Locale;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 /**
  * @author Jens Kutzsche
  */
 @IrisWebIntegrationTest
-public class LoginAttemptsTests {
+@RequiredArgsConstructor
+class LoginAttemptsTests {
 
 	private static final String baseUrl = "/login";
 
-	@Autowired
-	private MockMvc mvc;
+	private final MockMvc mvc;
 
 	private MemoryAppender memoryAppender;
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
+
+		Locale.setDefault(Locale.ENGLISH);
+
+		RestAssuredMockMvc.requestSpecification = new MockMvcRequestSpecBuilder()
+				.setMockMvc(mvc)
+				.setContentType(ContentType.JSON)
+				.build();
+
 		Logger logger = (Logger) LoggerFactory.getLogger(LoginAttemptsService.class);
 		memoryAppender = new MemoryAppender();
 		memoryAppender.setContext((LoggerContext) LoggerFactory.getILoggerFactory());
@@ -43,23 +56,36 @@ public class LoginAttemptsTests {
 		memoryAppender.start();
 	}
 
+	@AfterAll
+	void cleanup() {
+
+		// Must be done, otherwise other tests may break using RestAssured.
+		RestAssuredMockMvc.requestSpecification = null;
+	}
+
 	@Test
 	void successfulLogin() throws Exception {
 
-		mvc.perform(MockMvcRequestBuilders.post(baseUrl)
-				.content("{\"userName\":\"admin\", \"password\":\"admin\"}"))
-				.andExpect(status().is2xxSuccessful());
+		given()
+				.body("{\"userName\":\"admin\", \"password\":\"admin\"}")
+
+				.when().post(baseUrl)
+
+				.then()
+				.status(OK);
 	}
 
 	@Test
 	void failedLogin() throws Exception {
 
-		given().mockMvc(mvc)
+		given()
 				.body("{\"userName\":\"admin2\", \"password\":\"adminX\"}")
+
 				.when().post(baseUrl)
+
 				.then()
-				.statusCode(401)
-				.assertThat(errorContains("Unauthorized"));
+				.status(UNAUTHORIZED)
+				.body("message", is("Bad credentials"));
 	}
 
 	@Test
@@ -67,26 +93,32 @@ public class LoginAttemptsTests {
 
 		var body = "{\"userName\":\"admin3\", \"password\":\"adminX\"}";
 
-		given().mockMvc(mvc)
+		given()
 				.body(body)
-				.when().post(baseUrl)
-				.then()
-				.statusCode(401)
-				.assertThat(errorContains("Unauthorized"));
 
-		given().mockMvc(mvc)
-				.body(body)
 				.when().post(baseUrl)
-				.then()
-				.statusCode(401)
-				.assertThat(errorContains("User blocked"));
 
-		given().mockMvc(mvc)
-				.body(body)
-				.when().post(baseUrl)
 				.then()
-				.statusCode(401)
-				.assertThat(errorContains("User blocked"));
+				.status(UNAUTHORIZED)
+				.body("message", is("Bad credentials"));
+
+		given()
+				.body(body)
+
+				.when().post(baseUrl)
+
+				.then()
+				.status(UNAUTHORIZED)
+				.body("message", startsWith("User blocked"));
+
+		given()
+				.body(body)
+
+				.when().post(baseUrl)
+
+				.then()
+				.status(UNAUTHORIZED)
+				.body("message", startsWith("User blocked"));
 	}
 
 	@Test
@@ -94,30 +126,36 @@ public class LoginAttemptsTests {
 
 		var body = "{\"userName\":\"admin4\", \"password\":\"adminX\"}";
 
-		given().mockMvc(mvc)
+		given()
 				.body(body)
+
 				.when().post(baseUrl)
+
 				.then()
-				.statusCode(401)
-				.assertThat(errorContains("Unauthorized"));
+				.status(UNAUTHORIZED)
+				.body("message", is("Bad credentials"));
 
 		Thread.sleep(4000);
 
-		given().mockMvc(mvc)
+		given()
 				.body(body)
+
 				.when().post(baseUrl)
+
 				.then()
-				.statusCode(401)
-				.assertThat(errorContains("Unauthorized"));
+				.status(UNAUTHORIZED)
+				.body("message", is("Bad credentials"));
 
 		Thread.sleep(7000);
 
-		given().mockMvc(mvc)
+		given()
 				.body(body)
+
 				.when().post(baseUrl)
+
 				.then()
-				.statusCode(401)
-				.assertThat(errorContains("Unauthorized"));
+				.status(UNAUTHORIZED)
+				.body("message", is("Bad credentials"));
 
 		var nameHash = DigestUtils.md5Hex("admin4");
 
@@ -126,9 +164,5 @@ public class LoginAttemptsTests {
 				"For user name (hash: " + nameHash
 						+ ") there were 3 failed attempts to log in to the IRIS client. The next warning occurs at 30.",
 				Level.WARN)).isTrue();
-	}
-
-	ResultMatcher errorContains(final String message) {
-		return result -> assertThat(result.getResponse().getErrorMessage()).contains(message);
 	}
 }

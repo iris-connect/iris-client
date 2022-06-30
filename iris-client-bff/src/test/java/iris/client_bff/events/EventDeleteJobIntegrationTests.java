@@ -3,7 +3,7 @@ package iris.client_bff.events;
 import static org.assertj.core.api.Assertions.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
-import iris.client_bff.core.IrisDateTimeProvider;
+import iris.client_bff.core.database.IrisDateTimeProvider;
 import iris.client_bff.events.model.EventDataSubmission;
 import iris.client_bff.events.model.Location;
 import iris.client_bff.events.model.Location.LocationIdentifier;
@@ -72,7 +72,7 @@ class EventDeleteJobIntegrationTests {
 
 	private EventDataRequest createRequest(String name, String refId, Instant date) {
 
-		var location = new Location(new LocationIdentifier(), faker.idNumber().valid(), faker.idNumber().valid(), null,
+		var location = new Location(LocationIdentifier.random(), faker.idNumber().valid(), faker.idNumber().valid(), null,
 				null, null, null, null, null, null, null, null, null);
 
 		return eventRequests.save(EventDataRequest.builder()

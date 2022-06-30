@@ -2,6 +2,7 @@ package iris.client_bff.events.web.dto;
 
 import static lombok.AccessLevel.*;
 
+import iris.client_bff.core.validation.NoSignOfAttack;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,25 +24,30 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor(access = PRIVATE)
 public class DataRequestClient {
 
-  @NotBlank
-  private String locationId;
+	@NotBlank
+	@NoSignOfAttack
+	private String locationId;
 
-  @NotBlank
-  private String providerId;
+	@NotBlank
+	@NoSignOfAttack
+	private String providerId;
 
-  private String name;
+	@NoSignOfAttack
+	private String name;
 
-  @NotBlank
-  private String externalRequestId;
+	@NotBlank
+	@NoSignOfAttack
+	private String externalRequestId;
 
-  @NotNull
-  private Instant start;
+	@NotNull
+	private Instant start;
 
-  @NotNull
-  private Instant end;
+	@NotNull
+	private Instant end;
 
-  private String requestDetails;
+	@NoSignOfAttack
+	private String requestDetails;
 
-  private String comment;
-
+	@NoSignOfAttack
+	private String comment;
 }

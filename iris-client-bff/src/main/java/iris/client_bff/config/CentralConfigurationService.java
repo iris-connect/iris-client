@@ -120,9 +120,9 @@ public class CentralConfigurationService {
 
 			if (e.getCode() == -1111) {
 				throw new MissingCentralConfigurationException(e.getLocalizedMessage());
-			} else {
-				return handleException(e);
 			}
+
+			return handleException(e);
 
 		} catch (Throwable e) {
 			return handleException(e);
@@ -136,15 +136,13 @@ public class CentralConfigurationService {
 			log.debug("Ignore connection error of central connection service.");
 
 			return config;
-
-		} else {
-
-			alerts.createAlertMessage("Fetch central configuration error", String.format(
-					"Can't fetch the central configuration from backend service. (Exception: %s)",
-					e.getClass().getCanonicalName()));
-
-			throw new CentralConfigurationException("Can't fetch the central configuration from backend service.", e);
 		}
+
+		alerts.createAlertMessage("Fetch central configuration error", String.format(
+				"Can't fetch the central configuration from backend service. (Exception: %s)",
+				e.getClass().getCanonicalName()));
+
+		throw new CentralConfigurationException("Can't fetch the central configuration from backend service.", e);
 	}
 
 	private record Configuration(String abbreviation, String proxyUrl, String catSalt, String datSalt, int catLength,

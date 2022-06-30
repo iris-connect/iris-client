@@ -1,7 +1,7 @@
 package iris.client_bff.events;
 
-import iris.client_bff.core.Aggregate;
-import iris.client_bff.core.Id;
+import iris.client_bff.core.model.Aggregate;
+import iris.client_bff.core.model.IdWithUuid;
 import iris.client_bff.events.model.Location;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,13 +11,11 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -78,8 +76,6 @@ public class EventDataRequest extends Aggregate<EventDataRequest, EventDataReque
 	public EventDataRequest(String refId, String name, Instant requestStart, Instant requestEnd, String comment,
 			String requestDetails, String hdUserId, Location location, String announcementToken) {
 
-		super();
-
 		this.refId = refId;
 		this.name = name;
 		this.requestStart = requestStart;
@@ -91,29 +87,21 @@ public class EventDataRequest extends Aggregate<EventDataRequest, EventDataReque
 		this.announcementToken = announcementToken;
 	}
 
-	@Embeddable
-	@EqualsAndHashCode
+	@EqualsAndHashCode(callSuper = false)
 	@RequiredArgsConstructor(staticName = "of")
 	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-	public static class DataRequestIdentifier implements Id, Serializable {
+	public static class DataRequestIdentifier extends IdWithUuid {
 
-		private static final long serialVersionUID = -8254677010830428881L;
+		private static final long serialVersionUID = -7069968999070254963L;
 
 		final UUID requestId;
 
-		/**
-		 * for JSON deserialization
-		 */
-		public static DataRequestIdentifier of(String uuid) {
-			return of(UUID.fromString(uuid));
+		public static DataRequestIdentifier of(String id) {
+			return of(UUID.fromString(id));
 		}
 
 		@Override
-		public String toString() {
-			return requestId.toString();
-		}
-
-		public UUID toUUID() {
+		protected UUID getBasicId() {
 			return requestId;
 		}
 	}

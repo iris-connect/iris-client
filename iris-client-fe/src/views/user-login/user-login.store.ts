@@ -1,5 +1,11 @@
-import { Credentials, User, UserRole } from "@/api";
-import authClient, { baseClient, sessionFromResponse } from "@/api-client";
+import {
+  AuthenticationStatus,
+  Credentials,
+  MfaAuthentication,
+  User,
+  UserRole,
+} from "@/api";
+import authClient, { baseClient } from "@/api-client";
 import store from "@/store";
 import { RootState } from "@/store/types";
 import { ErrorMessage, getErrorMessage } from "@/utils/axios";
@@ -11,6 +17,7 @@ import { normalizeUser } from "@/views/user-login/user-login.data";
 export type UserLoginState = {
   authenticating: boolean;
   authenticationError: ErrorMessage;
+  mfa: MfaAuthentication | null;
   session: UserSession | null;
   interceptedRoute: RawLocation;
   user: User | null;
@@ -19,7 +26,7 @@ export type UserLoginState = {
 };
 
 export type UserSession = {
-  token: string;
+  authenticated: boolean;
 };
 
 export interface UserLoginModule extends Module<UserLoginState, RootState> {
@@ -28,20 +35,20 @@ export interface UserLoginModule extends Module<UserLoginState, RootState> {
     setAuthenticating(state: UserLoginState, payload: boolean): void;
     setAuthenticationError(state: UserLoginState, payload: ErrorMessage): void;
     setSession(state: UserLoginState, payload: UserSession | null): void;
+    setMfa(state: UserLoginState, payload: MfaAuthentication | null): void;
     setUser(state: UserLoginState, payload: User | null): void;
     setUserLoading(state: UserLoginState, payload: boolean): void;
     setUserLoadingError(state: UserLoginState, payload: ErrorMessage): void;
-    reset(state: UserLoginState, payload: null): void;
+    resetLogin(state: UserLoginState): void;
   };
   actions: {
-    authenticate(
-      { commit }: { commit: Commit },
-      formData: Credentials
-    ): Promise<void>;
+    login({ commit }: { commit: Commit }, formData: Credentials): Promise<void>;
+    refreshToken(): Promise<void>;
     fetchAuthenticatedUser(
       { commit }: { commit: Commit },
       silent?: boolean
     ): Promise<void>;
+    verifyMfaOtp({ commit }: { commit: Commit }, otp: string): Promise<void>;
     logout({ commit }: { commit: Commit }): Promise<void>;
   };
   getters: {
@@ -56,6 +63,7 @@ export interface UserLoginModule extends Module<UserLoginState, RootState> {
 const defaultState: UserLoginState = {
   authenticating: false,
   authenticationError: null,
+  mfa: null,
   session: null,
   interceptedRoute: "/",
   user: null,
@@ -81,6 +89,9 @@ const userLogin: UserLoginModule = {
     setSession(state, session) {
       state.session = session;
     },
+    setMfa(state, payload) {
+      state.mfa = payload;
+    },
     setUser(state: UserLoginState, payload: User | null) {
       state.user = payload;
     },
@@ -90,18 +101,44 @@ const userLogin: UserLoginModule = {
     setUserLoadingError(state: UserLoginState, payload: ErrorMessage) {
       state.userLoadingError = payload;
     },
-    reset(state) {
-      Object.assign(state, { ...omit(defaultState, "session") });
+    resetLogin(state) {
+      Object.assign(state, { ...omit(defaultState, ["session", "user"]) });
     },
   },
   actions: {
-    async authenticate({ commit }, credentials): Promise<void> {
+    async login({ commit }, credentials): Promise<void> {
+      commit("setAuthenticationError", null);
+      commit("setAuthenticating", true);
+      let session: UserSession | null | unknown = null;
+      let mfa: MfaAuthentication | null = null;
+      try {
+        mfa = (await baseClient.login(credentials)).data;
+        session = {
+          authenticated:
+            mfa?.authenticationStatus === AuthenticationStatus.AUTHENTICATED,
+        };
+      } catch (e) {
+        commit("setAuthenticationError", getErrorMessage(e));
+        throw e;
+      } finally {
+        commit("setSession", session);
+        commit("setMfa", mfa);
+        commit("setAuthenticating", false);
+      }
+    },
+    async verifyMfaOtp(
+      { commit }: { commit: Commit },
+      otp: string
+    ): Promise<void> {
       commit("setAuthenticationError", null);
       commit("setAuthenticating", true);
       let session: UserSession | null | unknown = null;
       try {
-        const response = await baseClient.login(credentials);
-        session = sessionFromResponse(response);
+        const status = (await baseClient.mfaOtpPost(otp)).data
+          .authenticationStatus;
+        session = {
+          authenticated: status === AuthenticationStatus.AUTHENTICATED,
+        };
       } catch (e) {
         commit("setAuthenticationError", getErrorMessage(e));
         throw e;
@@ -109,6 +146,9 @@ const userLogin: UserLoginModule = {
         commit("setSession", session);
         commit("setAuthenticating", false);
       }
+    },
+    async refreshToken(): Promise<void> {
+      await baseClient.refreshToken();
     },
     async fetchAuthenticatedUser({ commit }, silent): Promise<void> {
       let user = null;
@@ -143,7 +183,7 @@ const userLogin: UserLoginModule = {
   },
   getters: {
     isAuthenticated(): boolean {
-      return !!store.state.userLogin.session?.token;
+      return !!store.state.userLogin.session?.authenticated;
     },
     isAdmin(): boolean {
       return store.state.userLogin.user?.role === UserRole.Admin;

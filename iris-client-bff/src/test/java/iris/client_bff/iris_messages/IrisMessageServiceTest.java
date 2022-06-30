@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import iris.client_bff.core.utils.HibernateSearcher;
+import iris.client_bff.core.database.HibernateSearcher;
 import iris.client_bff.hd_search.eps.EPSHdSearchClient;
 import iris.client_bff.iris_messages.IrisMessage.IrisMessageIdentifier;
 import iris.client_bff.iris_messages.eps.EPSIrisMessageClient;

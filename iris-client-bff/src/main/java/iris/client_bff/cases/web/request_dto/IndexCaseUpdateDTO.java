@@ -2,6 +2,7 @@ package iris.client_bff.cases.web.request_dto;
 
 import static lombok.AccessLevel.*;
 
+import iris.client_bff.core.validation.NoSignOfAttack;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,8 +15,15 @@ import lombok.ToString;
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
 public class IndexCaseUpdateDTO {
-  private String comment;
-  private String externalCaseId;
-  private String name;
-  private IndexCaseStatusDTO status;
+
+	@NoSignOfAttack
+	private String comment;
+
+	@NoSignOfAttack
+	private String externalCaseId;
+
+	@NoSignOfAttack
+	private String name;
+
+	private IndexCaseStatusDTO status;
 }

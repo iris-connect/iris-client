@@ -2,27 +2,36 @@ package iris.client_bff.vaccination_info;
 
 import static iris.client_bff.vaccination_info.VaccinationStatus.*;
 
-import iris.client_bff.core.Aggregate;
-import iris.client_bff.core.Id;
-import iris.client_bff.core.Sex;
 import iris.client_bff.core.model.Address;
+import iris.client_bff.core.model.Aggregate;
+import iris.client_bff.core.model.IdWithUuid;
+import iris.client_bff.core.model.Sex;
 import iris.client_bff.vaccination_info.VaccinationInfo.VaccinationInfoIdentifier;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
 
 import org.hibernate.search.engine.backend.types.Sortable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
@@ -83,31 +92,22 @@ public class VaccinationInfo extends Aggregate<VaccinationInfo, VaccinationInfoI
 		determineStatusCounts();
 	}
 
-	@Embeddable
-	@EqualsAndHashCode
+	@EqualsAndHashCode(callSuper = false)
 	@RequiredArgsConstructor(staticName = "of")
-	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-	public static class VaccinationInfoIdentifier implements Id, Serializable {
+	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE) // for JPA
+	public static class VaccinationInfoIdentifier extends IdWithUuid {
 
 		private static final long serialVersionUID = 6389647206633809409L;
 
-		@Getter
 		final UUID id;
 
 		static VaccinationInfoIdentifier random() {
 			return of(UUID.randomUUID());
 		}
 
-		/**
-		 * for JSON deserialization
-		 */
-		public static VaccinationInfoIdentifier of(String uuid) {
-			return of(UUID.fromString(uuid));
-		}
-
 		@Override
-		public String toString() {
-			return id.toString();
+		protected UUID getBasicId() {
+			return id;
 		}
 	}
 
@@ -151,6 +151,7 @@ public class VaccinationInfo extends Aggregate<VaccinationInfo, VaccinationInfoI
 	@Embeddable
 	@Data
 	@Setter(AccessLevel.PACKAGE)
+	@Builder
 	@AllArgsConstructor(staticName = "of")
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class Facility {
@@ -168,6 +169,7 @@ public class VaccinationInfo extends Aggregate<VaccinationInfo, VaccinationInfoI
 	@Embeddable
 	@Data
 	@Setter(AccessLevel.PACKAGE)
+	@Builder
 	@AllArgsConstructor(staticName = "of")
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class ContactPerson {
@@ -186,6 +188,7 @@ public class VaccinationInfo extends Aggregate<VaccinationInfo, VaccinationInfoI
 	@Table(name = "employees")
 	@Data
 	@Setter(AccessLevel.PACKAGE)
+	@Builder
 	@AllArgsConstructor(staticName = "of")
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class Employee {

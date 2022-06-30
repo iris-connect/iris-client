@@ -39,6 +39,10 @@ declare global {
         accessor: string,
         context: "INBOX" | "OUTBOX"
       ): Chainable<Subject>;
+      visitMessageDetailsWithAttachments(): Chainable<Subject>;
+      getMessageDataAttachmentItem(
+        imported: boolean | null
+      ): Chainable<Subject>;
       checkTooltip(tooltip: string): Chainable<Subject>;
       checkTooltip(selector: string, tooltip: string): Chainable<Subject>;
       validateDateTimeField(required?: boolean): Chainable<Subject>;
@@ -81,6 +85,7 @@ declare global {
         accessor: string,
         search?: boolean
       ): Chainable<Subject>;
+      selectStepperInputDataTableRow(accessor: string): Chainable<Subject>;
       editInputField(
         selector: string,
         config?: {

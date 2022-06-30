@@ -3,8 +3,8 @@ package iris.client_bff.vaccination_info;
 import static java.time.temporal.ChronoUnit.*;
 
 import iris.client_bff.DataInitializer;
-import iris.client_bff.core.Sex;
 import iris.client_bff.core.model.Address;
+import iris.client_bff.core.model.Sex;
 import iris.client_bff.vaccination_info.VaccinationInfo.ContactPerson;
 import iris.client_bff.vaccination_info.VaccinationInfo.Employee;
 import iris.client_bff.vaccination_info.VaccinationInfo.Facility;
@@ -34,12 +34,12 @@ public class VaccinationInfoDataInitializer implements DataInitializer {
 	static final String EXTERNAL_ID = "ec3ca901-762a-4832-be49-90d09d41ff94";
 	static final String ANNOUNCEMENT_TOKEN = "dc9970d7-9cba-4830-8f30-0b63bbd21a47.proxy.dev.test-gesundheitsamt.de";
 
+	private static final Faker faker = Faker.instance(Locale.GERMANY);
+
 	private final VaccinationInfoAnnouncementRepository announcements;
 	private final VaccinationInfoRepository vaccInfos;
 
 	private List<VaccinationInfo> infoList = new ArrayList<>();
-
-	private Faker faker = Faker.instance(Locale.GERMANY);
 
 	@Override
 	public void initialize() {
@@ -65,7 +65,11 @@ public class VaccinationInfoDataInitializer implements DataInitializer {
 		infoList.add(vaccInfos.save(VaccinationInfo.of(EXTERNAL_ID, createFacility(), createEmployees(5))));
 	}
 
-	private Facility createFacility() {
+	public static VaccinationInfo createVaccinationInfo() {
+		return VaccinationInfo.of(EXTERNAL_ID, createFacility(), createEmployees(3));
+	}
+
+	private static Facility createFacility() {
 
 		return Facility.of(
 				faker.company().name(),
@@ -73,7 +77,7 @@ public class VaccinationInfoDataInitializer implements DataInitializer {
 				createPerson());
 	}
 
-	private Address createAddress() {
+	private static Address createAddress() {
 
 		var addressFaker = faker.address();
 
@@ -85,7 +89,7 @@ public class VaccinationInfoDataInitializer implements DataInitializer {
 				.build();
 	}
 
-	private ContactPerson createPerson() {
+	private static ContactPerson createPerson() {
 
 		return ContactPerson.of(
 				faker.name().firstName(),
@@ -94,14 +98,14 @@ public class VaccinationInfoDataInitializer implements DataInitializer {
 				faker.phoneNumber().phoneNumber());
 	}
 
-	private Set<Employee> createEmployees(int count) {
+	private static Set<Employee> createEmployees(int count) {
 
-		return Stream.generate(this::createEmployee)
+		return Stream.generate(VaccinationInfoDataInitializer::createEmployee)
 				.limit(count)
 				.collect(Collectors.toSet());
 	}
 
-	private Employee createEmployee() {
+	private static Employee createEmployee() {
 
 		return Employee.of(
 				faker.name().firstName(),

@@ -3,14 +3,19 @@ package iris.client_bff.events.web;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.events.EventDataRequest;
+import iris.client_bff.events.EventDataRequest.DataRequestIdentifier;
 import iris.client_bff.events.EventDataRequest.Status;
 import iris.client_bff.events.EventDataRequestService;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
 import iris.client_bff.events.model.Location;
+import iris.client_bff.events.model.Location.LocationIdentifier;
 import iris.client_bff.events.web.dto.EventStatusDTO;
 import iris.client_bff.events.web.dto.EventUpdateDTO;
 import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
@@ -18,7 +23,6 @@ import iris.client_bff.events.web.dto.ExistingDataRequestClientWithLocation;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +32,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -37,6 +41,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
+@WithMockIrisUser
 class EventDataRequestControllerTest {
 
 	private final String baseUrl = "/data-requests-client/events";
@@ -68,13 +73,12 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	public void endpointShouldBeProtected() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(MockMvcResultMatchers.status().isForbidden())
-				.andReturn();
+	@WithAnonymousUser
+	void endpointShouldBeProtected() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	@WithMockUser()
 	public void getDataRequests() throws Exception {
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
@@ -87,7 +91,6 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	public void getAllWithStatus() throws Exception {
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?status=DATA_REQUESTED"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -101,7 +104,6 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	public void getAllFiltered() throws Exception {
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test"))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
@@ -114,7 +116,6 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	public void getAllWithStatusAndFiltered() throws Exception {
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "?search=test&status=DATA_REQUESTED"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -128,7 +129,6 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	public void getDataRequestByCode() throws Exception {
 		postNewDataRequest();
 
@@ -138,7 +138,6 @@ class EventDataRequestControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	public void updateDataRequestByCode() throws Exception {
 		String REFID = "refId";
 		var eventDataRequest = EventDataRequest.builder()
@@ -169,7 +168,7 @@ class EventDataRequestControllerTest {
 		dataRequestUpdated.setRefId("refIdSecond");
 		dataRequestUpdated.setStatus(Status.ABORTED);
 
-		Mockito.when(dataRequestManagement.findById(any(UUID.class))).thenReturn(Optional.of(dataRequest));
+		Mockito.when(dataRequestManagement.findById(any(DataRequestIdentifier.class))).thenReturn(Optional.of(dataRequest));
 
 		EventUpdateDTO patch = EventUpdateDTO.builder()
 				.name("new name")
@@ -185,25 +184,25 @@ class EventDataRequestControllerTest {
 				.perform(
 						MockMvcRequestBuilders.patch(baseUrl + "/d1893f10-b6e3-11eb-8529-0242ac130003")
 								.content(patchBody)
-								.contentType(MediaType.APPLICATION_JSON))
+								.contentType(MediaType.APPLICATION_JSON)
+								.with(csrf()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 	}
 
 	@Test
-	@WithMockUser()
 	public void createDataRequest() throws Exception {
 		postNewDataRequest();
 	}
 
 	@Test
-	@WithMockUser()
 	public void createDataRequestWithError() throws Exception {
 		when(dataRequestManagement.createDataRequest(any())).thenThrow(new IRISDataRequestException("Data request failed"));
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.post(baseUrl).content(TestData.DATA_REQUEST)
-						.contentType(MediaType.APPLICATION_JSON))
+						.contentType(MediaType.APPLICATION_JSON)
+						.with(csrf()))
 				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
 	}
 
@@ -226,11 +225,14 @@ class EventDataRequestControllerTest {
 
 		Mockito.when(dataRequestManagement.createDataRequest(any())).thenReturn(dataRequest);
 
-		Mockito.when(dataRequestManagement.findById(any(UUID.class))).thenReturn(Optional.of(dataRequest));
+		Mockito.when(dataRequestManagement.findById(any(DataRequestIdentifier.class))).thenReturn(Optional.of(dataRequest));
 
 		mockMvc
 				.perform(
-						MockMvcRequestBuilders.post(baseUrl).content(TestData.DATA_REQUEST).contentType(MediaType.APPLICATION_JSON))
+						MockMvcRequestBuilders.post(baseUrl)
+								.content(TestData.DATA_REQUEST)
+								.contentType(MediaType.APPLICATION_JSON)
+								.with(csrf()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 	}
@@ -250,7 +252,7 @@ class EventDataRequestControllerTest {
 
 	private Location getTestLocation() {
 		Location location = new Location();
-		location.setId(new Location.LocationIdentifier());
+		location.setId(LocationIdentifier.random());
 		location.setName("FC Darmstadt");
 		location.setContactAddressCity("Hintertupfingen");
 		location.setContactAddressStreet("Testallee 42");

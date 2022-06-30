@@ -1,6 +1,8 @@
 package iris.client_bff.config;
 
-import iris.client_bff.core.utils.ValidatedProperties;
+import iris.client_bff.core.validation.ValidatedProperties;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.validation.Validator;
 import javax.validation.constraints.NotBlank;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties
+@EqualsAndHashCode(callSuper = false)
+@ToString(callSuper = false)
 public class BackendServiceProperties extends ValidatedProperties {
 
 	BackendServiceProperties(Validator validator) {

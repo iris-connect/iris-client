@@ -1,35 +1,49 @@
 module name | license | repository
 ---|---|---
-@fontsource/roboto@4.5.3 | MIT | https://github.com/fontsource/fontsource
-@mdi/font@6.5.95 | Apache-2.0 | https://github.com/Templarian/MaterialDesign-Webfont
-@types/lodash@4.14.180 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
+@fontsource/roboto@4.5.7 | MIT | https://github.com/fontsource/fontsource
+@mdi/font@6.7.96 | Apache-2.0 | https://github.com/Templarian/MaterialDesign-Webfont
+@types/lodash@4.14.182 | MIT | https://github.com/DefinitelyTyped/DefinitelyTyped
 adler-32@1.3.0 | Apache-2.0 | https://github.com/SheetJS/js-adler32
-axios@0.26.1 | MIT | https://github.com/axios/axios
+asynckit@0.4.0 | MIT | https://github.com/alexindigo/asynckit
+axios@0.27.2 | MIT | https://github.com/axios/axios
+call-bind@1.0.2 | MIT | https://github.com/ljharb/call-bind
 cfb@1.2.1 | Apache-2.0 | https://github.com/SheetJS/js-cfb
-chart.js@3.7.1 | MIT | https://github.com/chartjs/Chart.js
+chart.js@3.8.0 | MIT | https://github.com/chartjs/Chart.js
 codepage@1.15.0 | Apache-2.0 | https://github.com/SheetJS/js-codepage
-core-js@3.21.1 | MIT | https://github.com/zloirock/core-js
+combined-stream@1.0.8 | MIT | https://github.com/felixge/node-combined-stream
+core-js@3.23.3 | MIT | https://github.com/zloirock/core-js
 crc-32@1.2.1 | Apache-2.0 | https://github.com/SheetJS/js-crc32
-dayjs@1.11.0 | MIT | https://github.com/iamkun/dayjs
+dayjs@1.11.3 | MIT | https://github.com/iamkun/dayjs
 deepmerge@4.2.2 | MIT | https://github.com/TehShrike/deepmerge
+delayed-stream@1.0.0 | MIT | https://github.com/felixge/node-delayed-stream
 exit-on-epipe@1.0.1 | Apache-2.0 | https://github.com/SheetJS/node-exit-on-epipe
-follow-redirects@1.14.8 | MIT | https://github.com/follow-redirects/follow-redirects
+follow-redirects@1.14.9 | MIT | https://github.com/follow-redirects/follow-redirects
+form-data@4.0.0 | MIT | https://github.com/form-data/form-data
 frac@1.1.2 | Apache-2.0 | https://github.com/SheetJS/frac
-iris-client-frontend@1.5.1-POST-RELEASE | UNLICENSED | 
+function-bind@1.1.1 | MIT | https://github.com/Raynos/function-bind
+get-intrinsic@1.1.1 | MIT | https://github.com/ljharb/get-intrinsic
+has-symbols@1.0.2 | MIT | https://github.com/inspect-js/has-symbols
+has@1.0.3 | MIT | https://github.com/tarruda/has
+iris-client-frontend@1.6.0-rc.2-POST-RELEASE | UNLICENSED | 
 lodash@4.17.21 | MIT | https://github.com/lodash/lodash
+mime-db@1.51.0 | MIT | https://github.com/jshttp/mime-db
+mime-types@2.1.34 | MIT | https://github.com/jshttp/mime-types
+object-inspect@1.12.2 | MIT | https://github.com/inspect-js/object-inspect
 printj@1.2.3 | Apache-2.0 | https://github.com/SheetJS/printj
 printj@1.3.0 | Apache-2.0 | https://github.com/SheetJS/printj
 printj@1.3.1 | Apache-2.0 | https://github.com/SheetJS/printj
+qs@6.11.0 | BSD-3-Clause | https://github.com/ljharb/qs
 shvl@2.0.3 | MIT | https://github.com/robinvdvleuten/shvl
+side-channel@1.0.4 | MIT | https://github.com/ljharb/side-channel
 ssf@0.11.2 | Apache-2.0 | https://github.com/SheetJS/ssf
 vue-class-component@7.2.6 | MIT | https://github.com/vuejs/vue-class-component
 vue-property-decorator@9.1.2 | MIT | https://github.com/kaorun343/vue-property-decorator
-vue-router@3.5.3 | MIT | https://github.com/vuejs/vue-router
+vue-router@3.5.4 | MIT | https://github.com/vuejs/vue-router
 vue@2.6.14 | MIT | https://github.com/vuejs/vue
-vuetify@2.6.4 | MIT | https://github.com/vuetifyjs/vuetify
+vuetify@2.6.6 | MIT | https://github.com/vuetifyjs/vuetify
 vuex-persistedstate@4.1.0 | MIT | https://github.com/robinvdvleuten/vuex-persistedstate
 vuex@3.6.2 | MIT | https://github.com/vuejs/vuex
 wmf@1.0.2 | Apache-2.0 | https://github.com/SheetJS/js-wmf
 word@0.3.0 | Apache-2.0 | https://github.com/SheetJS/js-word
-xlsx@0.18.4 | Apache-2.0 | https://github.com/SheetJS/sheetjs
+xlsx@0.18.5 | Apache-2.0 | https://github.com/SheetJS/sheetjs
 

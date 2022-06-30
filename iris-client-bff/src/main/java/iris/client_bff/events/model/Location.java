@@ -1,18 +1,16 @@
 package iris.client_bff.events.model;
 
-import iris.client_bff.core.Id;
+import iris.client_bff.core.model.IdWithUuid;
 import iris.client_bff.events.EventDataRequest;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-import java.io.Serializable;
 import java.util.UUID;
 
-import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -61,22 +59,22 @@ public class Location {
 	@OneToOne(mappedBy = "location")
 	private EventDataRequest request;
 
-	@Embeddable
-	@EqualsAndHashCode
-	@Getter
+	@EqualsAndHashCode(callSuper = false)
 	@RequiredArgsConstructor(staticName = "of")
-	public static class LocationIdentifier implements Id, Serializable {
+	@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE) // for JPA
+	public static class LocationIdentifier extends IdWithUuid {
 
-		private static final long serialVersionUID = -6053473869126771751L;
+		private static final long serialVersionUID = 7944836016992870248L;
 
 		private final UUID id;
 
-		public static LocationIdentifier of(String uuid) {
-			return of(UUID.fromString(uuid));
+		public static LocationIdentifier random() {
+			return of(UUID.randomUUID());
 		}
 
-		public LocationIdentifier() {
-			id = UUID.randomUUID();
+		@Override
+		protected UUID getBasicId() {
+			return id;
 		}
 	}
 }

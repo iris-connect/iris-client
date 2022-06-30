@@ -6,16 +6,16 @@
     <body>
 		<p>Dear Sir or Madam,</p>
 		<p><br /></p>
-		<p>New data is available for the Event $(eventId) in your IRIS Portal.</p>
+		<p>New data is available for the Event "${eventId}" in your IRIS Portal.</p>
 		<p>Event:</p>
 		<ul>
-			<li>Event: $(eventId)</li>
-			<li>External Id: $(externalId)</li>
-			<li>Start: $(startTime)</li>
-			<li>End: $(endTime)</li>
+			<li>Event: ${eventId}</li>
+			<li>External Id: ${externalId}</li>
+			<li>Start: ${startTime?datetime?string.long}</li>
+			<li>End: ${endTime?datetime?string.long}</li>
 		</ul>
 		<p>
-        	With the provided data the event can be identified online. Alternatively the following link will redirect to it directly: <a href="$(eventUrl)">Event $(eventId)</a>
+        	With the provided data the event can be identified online. Alternatively the following link will redirect to it directly: <a href="${eventUrl}">Event ${eventId}</a>
 		</p>
 		<p><br /></p>
 		<p>

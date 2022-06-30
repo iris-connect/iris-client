@@ -4,11 +4,14 @@ import static iris.client_bff.cases.web.IndexCaseMapper.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.cases.CaseDataRequest;
+import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
 import iris.client_bff.cases.CaseDataRequestService;
 import iris.client_bff.cases.web.request_dto.IndexCaseDTO;
@@ -17,8 +20,8 @@ import iris.client_bff.cases.web.request_dto.IndexCaseInsertDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseStatusDTO;
 import iris.client_bff.cases.web.request_dto.IndexCaseUpdateDTO;
 import iris.client_bff.events.exceptions.IRISDataRequestException;
-import iris.client_bff.users.UserDetailsServiceImpl;
-import iris.client_bff.users.entities.UserAccount;
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserService;
 
 import java.time.Instant;
 import java.util.List;
@@ -35,7 +38,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -44,6 +47,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@WithMockIrisUser
 class IndexCaseControllerTest {
 
 	private final String baseUrl = "/data-requests-client/cases";
@@ -59,11 +63,11 @@ class IndexCaseControllerTest {
 	@MockBean
 	CaseDataRequestService service;
 	@MockBean
-	UserDetailsServiceImpl userService;
+	UserService userService;
 
 	// mock responses
 	private final CaseDataRequest MOCK_CASE = getCase();
-	private final UUID MOCK_CASE_ID = UUID.fromString(MOCK_CASE.getId().toString());
+	private final DataRequestIdentifier MOCK_CASE_ID = MOCK_CASE.getId();
 	private final IndexCaseDTO MOCK_CASE_DTO = map(MOCK_CASE);
 	private final Page<CaseDataRequest> casesPage = new RestResponsePage<>(List.of(MOCK_CASE));
 
@@ -99,12 +103,12 @@ class IndexCaseControllerTest {
 
 	@Test
 	@Order(1)
+	@WithAnonymousUser
 	void endpointShouldBeProtected() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(status().isForbidden()).andReturn();
+		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	@WithMockUser()
 	@Order(2)
 	void getAll() throws Exception {
 
@@ -116,7 +120,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	@Order(3)
 	void getAllWithStatus() throws Exception {
 
@@ -129,7 +132,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	@Order(4)
 	void getAllFiltered() throws Exception {
 
@@ -142,7 +144,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	@Order(5)
 	void getAllWithStatusAndFiltered() throws Exception {
 
@@ -155,29 +156,32 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void create() throws Exception {
 
 		var insert = om.writeValueAsString(IndexCaseInsertDTO.builder().start(Instant.now()).build());
 
-		mockMvc.perform(MockMvcRequestBuilders.post(baseUrl).content(insert).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.post(baseUrl)
+				.content(insert)
+				.contentType(MediaType.APPLICATION_JSON)
+				.with(csrf()))
 				.andExpect(status().isOk())
 				.andReturn();
 	}
 
 	@Test
-	@WithMockUser()
 	void create_invalidStartDate() throws Exception {
 
 		var insert = om.writeValueAsString(IndexCaseInsertDTO.builder().start(null).build());
 
-		mockMvc.perform(MockMvcRequestBuilders.post(baseUrl).content(insert).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.post(baseUrl)
+				.content(insert)
+				.contentType(MediaType.APPLICATION_JSON)
+				.with(csrf()))
 				.andExpect(status().isBadRequest())
 				.andReturn();
 	}
 
 	@Test
-	@WithMockUser()
 	void getDetails() throws Exception {
 
 		var url = baseUrl + "/" + MOCK_CASE_ID.toString();
@@ -190,7 +194,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void getDetails_notFound() throws Exception {
 
 		var url_404 = baseUrl + "/" + UUID.randomUUID().toString();
@@ -199,7 +202,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void update() throws Exception {
 		String updatedComment = "This is an updated comment";
 		String updatedName = "CASE_UPDATED";
@@ -216,7 +218,10 @@ class IndexCaseControllerTest {
 
 		var url = baseUrl + "/" + MOCK_CASE_ID.toString();
 		var res = mockMvc
-				.perform(MockMvcRequestBuilders.patch(url).content(payload).contentType(MediaType.APPLICATION_JSON))
+				.perform(MockMvcRequestBuilders.patch(url)
+						.content(payload)
+						.contentType(MediaType.APPLICATION_JSON)
+						.with(csrf()))
 				.andExpect(status().isOk())
 				.andReturn();
 
@@ -229,7 +234,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void update_invalidId() throws Exception {
 
 		var url_404 = baseUrl + "/" + UUID.randomUUID().toString();
@@ -247,18 +251,22 @@ class IndexCaseControllerTest {
 						.externalCaseId(updatedExternalCaseId)
 						.build());
 
-		mockMvc.perform(MockMvcRequestBuilders.patch(url_404).content(payload).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.patch(url_404)
+				.content(payload)
+				.contentType(MediaType.APPLICATION_JSON)
+				.with(csrf()))
 				.andExpect(status().isNotFound())
 				.andReturn();
 	}
 
 	@Test
-	@WithMockUser()
 	void update_noBody() throws Exception {
 
 		var url = baseUrl + "/" + MOCK_CASE_ID.toString();
 
-		mockMvc.perform(MockMvcRequestBuilders.patch(url)).andExpect(status().isBadRequest()).andReturn();
+		mockMvc.perform(MockMvcRequestBuilders.patch(url)
+				.with(csrf()))
+				.andExpect(status().isBadRequest()).andReturn();
 	}
 
 	private CaseDataRequest getCase() {

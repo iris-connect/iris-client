@@ -3,7 +3,9 @@ package iris.client_bff.core.validation;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
-import iris.client_bff.core.utils.ValidationHelper;
+import iris.client_bff.core.validation.AttackDetector.MessageDataPayload;
+import iris.client_bff.core.validation.AttackDetector.Password;
+import iris.client_bff.core.validation.AttackDetector.Phone;
 import iris.client_bff.core.validation.NoSignOfAttack.NoSignOfAttackValidator;
 
 import java.lang.annotation.Documented;
@@ -31,20 +33,22 @@ public @interface NoSignOfAttack {
 
 	Class<?>[] groups() default {};
 
+	boolean obfuscateLogging() default true;
+
 	Class<? extends Payload>[] payload() default {};
 
-	public interface Phone extends Payload {}
-
-	public static class NoSignOfAttackValidator implements ConstraintValidator<NoSignOfAttack, String> {
+	static class NoSignOfAttackValidator implements ConstraintValidator<NoSignOfAttack, String> {
 
 		@Autowired
-		private ValidationHelper validationHelper;
+		private AttackDetector attackDetector;
 
 		private Class<? extends Payload> type;
+		private boolean obfuscateLogging;
 
 		@Override
 		public void initialize(NoSignOfAttack constraintAnnotation) {
 
+			obfuscateLogging = constraintAnnotation.obfuscateLogging();
 			var payloads = constraintAnnotation.payload();
 
 			Assert.isTrue(payloads.length <= 1, "Only one type can be defined!");
@@ -63,10 +67,16 @@ public @interface NoSignOfAttack {
 			}
 
 			if (type == Phone.class) {
-				return !validationHelper.isPossibleAttackForPhone(text, path, true);
+				return !attackDetector.isPossibleAttackForPhone(text, path, obfuscateLogging);
+			}
+			if (type == Password.class) {
+				return !attackDetector.isPossibleAttackForPassword(text, path);
+			}
+			if (type == MessageDataPayload.class) {
+				return !attackDetector.isPossibleAttackForMessageDataPayload(text, path, obfuscateLogging);
 			}
 
-			return !validationHelper.isPossibleAttack(text, path, true);
+			return !attackDetector.isPossibleAttack(text, path, obfuscateLogging);
 		}
 	}
 }

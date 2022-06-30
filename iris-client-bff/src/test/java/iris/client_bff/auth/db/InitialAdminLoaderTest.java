@@ -2,8 +2,9 @@ package iris.client_bff.auth.db;
 
 import static org.mockito.ArgumentMatchers.*;
 
-import iris.client_bff.users.UserAccountsRepository;
-import iris.client_bff.users.entities.UserAccount;
+import iris.client_bff.auth.db.InitialAdminLoader.Properties;
+import iris.client_bff.users.UserAccount;
+import iris.client_bff.users.UserService;
 
 import java.util.Optional;
 
@@ -19,10 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 class InitialAdminLoaderTest {
 
 	@Mock
-	private UserAccountsRepository repo;
+	private UserService userService;
 
-	@Mock
-	private DbAuthProperties conf;
+	private InitialAdminLoader.Properties conf = new Properties("admin", "admin");
 
 	@Mock
 	private PasswordEncoder encoder;
@@ -31,42 +31,37 @@ class InitialAdminLoaderTest {
 
 	@BeforeEach
 	public void init() {
-		loader = new InitialAdminLoader(conf, repo, encoder);
+		loader = new InitialAdminLoader(conf, userService, encoder);
 	}
 
 	@Test
 	void shouldCreateAnAdminUserIfItDoesNotExist() {
 
 		// when
-		Mockito.when(conf.getAdminUserName()).thenReturn("admin");
-		Mockito.when(conf.getAdminUserPassword()).thenReturn("admin");
-		Mockito.when(repo.findByUserName(eq("admin"))).thenReturn(Optional.empty());
+		Mockito.when(userService.findByUsername(eq("admin"))).thenReturn(Optional.empty());
 
 		// then
 		loader.createAdminUserIfNotExists();
 
 		// assert
-		Mockito.verify(repo).save(any());
+		Mockito.verify(userService).create(any());
 		Mockito.verify(encoder).encode("admin");
-		Mockito.verifyNoMoreInteractions(repo, conf, encoder);
+		Mockito.verifyNoMoreInteractions(userService, encoder);
 	}
 
 	@Test
 	void shouldNotCreateAnAdminUserIfItDoesExist() {
 
-		// when
-		Mockito.when(conf.getAdminUserName()).thenReturn("admin");
-
 		var existingUser = new UserAccount();
 		existingUser.setUserName("admin");
 
-		Mockito.when(repo.findByUserName(eq("admin"))).thenReturn(Optional.of(existingUser));
+		Mockito.when(userService.findByUsername(eq("admin"))).thenReturn(Optional.of(existingUser));
 
 		// then
 		loader.createAdminUserIfNotExists();
 
 		// assert
-		Mockito.verify(repo, Mockito.never()).save(any());
-		Mockito.verifyNoMoreInteractions(repo, conf, encoder);
+		Mockito.verify(userService, Mockito.never()).create(any());
+		Mockito.verifyNoMoreInteractions(userService, encoder);
 	}
 }

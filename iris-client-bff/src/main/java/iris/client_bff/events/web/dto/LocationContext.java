@@ -18,6 +18,6 @@ import lombok.ToString;
 @AllArgsConstructor(access = PRIVATE)
 public class LocationContext {
 
-  private String id;
-  private String name;
+	private String id;
+	private String name;
 }

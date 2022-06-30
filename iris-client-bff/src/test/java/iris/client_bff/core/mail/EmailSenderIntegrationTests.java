@@ -97,7 +97,7 @@ class EmailSenderIntegrationTests {
 			super(emailSender, messages, mailProperties);
 		}
 
-		ConfiguredRecipient standardRecipient = new ConfiguredRecipient("fix-recipient",
+		ConfiguredRecipient standardRecipient = new ConfiguredRecipient("fix.recipient",
 				EmailAddress.of("fix-recipient@iris-connect.de"));
 
 		Try<Void> sendTestEmailEn() {

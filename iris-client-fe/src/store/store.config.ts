@@ -1,6 +1,4 @@
 import eventTrackingForm from "../views/event-tracking-form/event-tracking-form.store";
-import eventTrackingList from "../views/event-tracking-list/event-tracking-list.store";
-import eventTrackingDetails from "@/views/event-tracking-details/event-tracking-details.store";
 import userLogin from "@/views/user-login/user-login.store";
 import adminUserList from "@/views/admin-user-list/admin-user-list.store";
 import adminUserCreate from "@/views/admin-user-create/admin-user-create.store";
@@ -14,9 +12,9 @@ import indexTrackingSettings from "@/views/app-settings/index-tracking-settings.
 import normalizeSettings from "@/views/app-settings/normalize-settings.store";
 import chunkLoader from "@/views/app-settings/chunk-loader.store";
 import checkinAppStatusList from "@/views/checkin-app-status-list/checkin-app-status-list.store";
-import irisMessageList from "@/views/iris-message-list/iris-message-list.store";
-import irisMessageDetails from "@/views/iris-message-details/iris-message-details.store";
 import irisMessageCreate from "@/views/iris-message-create/iris-message-create.store";
+import e2eTests from "@/modules/e2e-tests/e2e-tests.store";
+import mockApi from "@/modules/mock-api/mock-api.store";
 
 import { StoreOptions } from "vuex";
 import { RootState } from "@/store/types";
@@ -31,8 +29,6 @@ export const storeOptions: StoreOptions<RootState> = {
   modules: {
     home: home,
     eventTrackingForm,
-    eventTrackingList,
-    eventTrackingDetails,
     userLogin,
     adminUserList,
     adminUserCreate,
@@ -45,15 +41,16 @@ export const storeOptions: StoreOptions<RootState> = {
     normalizeSettings,
     chunkLoader,
     checkinAppStatusList,
-    irisMessageList,
-    irisMessageDetails,
     irisMessageCreate,
+    e2eTests,
+    mockApi,
   },
   plugins: [
     createPersistedState({
       key: "iris-client-frontend",
       paths: [
         "userLogin.session",
+        "mockApi",
         "normalizeSettings.logEnabled",
         // @todo - indexTracking: optional remove next line once index cases are permanently activated again
         "indexTrackingSettings.indexTrackingEnabled",

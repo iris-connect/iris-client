@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <v-alert v-if="errorMessage" text type="error" data-test="user-login-error">
-      {{ errorMessage }}
-    </v-alert>
+  <div data-test="user-login-error">
+    <error-message-alert :errors="errorMessage"></error-message-alert>
     <v-progress-linear
       :value="100 - blockedRemainingPercent"
       :active="blockedRemainingPercent > 0"
@@ -15,6 +13,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import dayjs from "@/utils/date";
 import { ErrorMessage } from "@/utils/axios";
+import ErrorMessageAlert from "@/components/error-message-alert.vue";
 
 const unauthorizedRegExp = /Unauthorized/i;
 const blockedRegExp = /User blocked! \((.*)\)/i;
@@ -27,7 +26,11 @@ const UserLoginErrorProps = Vue.extend({
     },
   },
 });
-@Component
+@Component({
+  components: {
+    ErrorMessageAlert,
+  },
+})
 export default class UserLoginError extends UserLoginErrorProps {
   blockedUntilMs = 0;
   blockedRemainingPercent = 0;
@@ -55,7 +58,7 @@ export default class UserLoginError extends UserLoginErrorProps {
         // shows error message with remaining block time
         return this.error.replace(
           blockedRegExp,
-          `Diese Anmeldedaten sind leider nicht korrekt, bitte versuchen Sie es in ${seconds} ${
+          `Diese Anmeldedaten sind leider nicht gültig, bitte versuchen Sie es in ${seconds} ${
             seconds === 1 ? "Sekunde" : "Sekunden"
           } noch einmal.`
         );
@@ -63,13 +66,13 @@ export default class UserLoginError extends UserLoginErrorProps {
       // shows generic auth error message if blockedUntil date is passed
       return this.error.replace(
         blockedRegExp,
-        "Diese Anmeldedaten sind leider nicht korrekt."
+        "Diese Anmeldedaten sind leider nicht gültig."
       );
     }
     if (this.error && unauthorizedRegExp.test(this.error)) {
       return this.error.replace(
         unauthorizedRegExp,
-        "Diese Anmeldedaten sind leider nicht korrekt."
+        "Diese Anmeldedaten sind leider nicht gültig."
       );
     }
     return this.error;

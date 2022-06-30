@@ -18,7 +18,7 @@ import org.springframework.util.Base64Utils;
 
 /**
  * Valid if all characters in the String are valid characters in the Base64 alphabet or if the String is Null or empty.
- * 
+ *
  * @author Jens Kutzsche
  */
 @Target({ METHOD, FIELD, ANNOTATION_TYPE })

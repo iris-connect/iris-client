@@ -2,6 +2,7 @@ package iris.client_bff.cases.web.request_dto;
 
 import static lombok.AccessLevel.*;
 
+import iris.client_bff.core.validation.NoSignOfAttack;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,12 +19,18 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
 public class IndexCaseInsertDTO {
-  private String comment;
-  private String externalCaseId;
-  private String name;
 
-  @NotNull
-  private Instant start;
+	@NoSignOfAttack
+	private String comment;
 
-  private Instant end;
+	@NoSignOfAttack
+	private String externalCaseId;
+
+	@NoSignOfAttack
+	private String name;
+
+	@NotNull
+	private Instant start;
+
+	private Instant end;
 }

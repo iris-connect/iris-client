@@ -18,7 +18,7 @@ import lombok.ToString;
 @AllArgsConstructor(access = PRIVATE)
 public class LocationAddress {
 
-  private String street;
-  private String city;
-  private String zip;
+	private String street;
+	private String city;
+	private String zip;
 }

@@ -2,6 +2,7 @@ package iris.client_bff.events.web.dto;
 
 import static lombok.AccessLevel.*;
 
+import iris.client_bff.core.validation.NoSignOfAttack;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,8 +15,15 @@ import lombok.ToString;
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
 public class EventUpdateDTO {
-  private String comment;
-  private String externalRequestId;
-  private String name;
-  private EventStatusDTO status;
+
+	@NoSignOfAttack
+	private String comment;
+
+	@NoSignOfAttack
+	private String externalRequestId;
+
+	@NoSignOfAttack
+	private String name;
+
+	private EventStatusDTO status;
 }

@@ -21,7 +21,10 @@ const password = (v: string): string | boolean => {
   return `Bitte geben Sie ein gültiges Passwort an: \n${config.passwordRules}`;
 };
 
-const defined = (v: unknown): string | boolean => !!v || "Pflichtfeld";
+const defined = (v: unknown): string | boolean => {
+  if (Array.isArray(v) && v.length <= 0) return "Pflichtfeld";
+  return !!v || "Pflichtfeld";
+};
 
 const location = (v: unknown): string | boolean =>
   !!v || "Bitte wählen Sie einen Ereignisort aus";

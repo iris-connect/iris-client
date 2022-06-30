@@ -1,6 +1,6 @@
 package iris.client_bff.vaccination_info;
 
-import static iris.client_bff.core.model.FlexibleEnum.*;
+import static iris.client_bff.core.serialization.FlexibleEnum.*;
 
 import lombok.NonNull;
 

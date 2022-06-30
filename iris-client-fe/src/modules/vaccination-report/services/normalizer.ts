@@ -26,6 +26,7 @@ export const normalizeVREmployee = (source?: VREmployee, parse?: boolean) => {
         phone: normalizer("phone", undefined),
         dateOfBirth: normalizer("dateOfBirth", undefined, "dateString"),
         sex: normalizer("sex", undefined),
+        messageDataSelectId: normalizer("messageDataSelectId", undefined),
       };
     },
     parse,

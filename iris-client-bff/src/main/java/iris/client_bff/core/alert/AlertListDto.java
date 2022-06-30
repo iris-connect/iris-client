@@ -12,5 +12,5 @@ import java.util.List;
 @Builder
 @Getter
 public class AlertListDto {
-    List<AlertDto> alertList;
+	List<AlertDto> alertList;
 }

@@ -1,8 +1,7 @@
 package iris.client_bff.cases.model;
 
-import iris.client_bff.core.Sex;
 import iris.client_bff.core.model.Address;
-import java.time.Instant;
+import iris.client_bff.core.model.Sex;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -33,7 +33,7 @@ import javax.persistence.ManyToOne;
 public class Contact {
 
 	@Id
-	private UUID contactId = UUID.randomUUID();
+	private final UUID contactId = UUID.randomUUID();
 
 	@ManyToOne //
 	@JoinColumn(name = "submission_id")

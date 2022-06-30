@@ -1,5 +1,5 @@
 import Genders from "@/constants/Genders";
-import { TableRow } from "@/views/event-tracking-details/event-tracking-details.view.vue";
+import { GuestListTableRow } from "@/views/event-tracking-details/utils/mappedData";
 import { DataRequestDetails } from "@/api";
 import { getFormattedDate } from "@/utils/date";
 import { getValidPhoneNumber } from "@/utils/misc";
@@ -78,7 +78,7 @@ const getColFormats = (): Partial<Record<keyof OctowareData, string>> => {
 
 const mapData = (
   event: DataRequestDetails | null,
-  tableRows: TableRow[]
+  tableRows: GuestListTableRow[]
 ): OctowareData[] => {
   const data: OctowareData[] = [];
   const location = event?.locationInformation;

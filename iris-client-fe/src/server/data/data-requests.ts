@@ -104,6 +104,7 @@ export const dummyDataDetails: DataRequestDetails = {
           attendFrom: hoursAgo(9),
           attendTo: hoursAgo(3),
         },
+        messageDataSelectId: "g1",
       },
       {
         firstName: "Martina",
@@ -123,6 +124,7 @@ export const dummyDataDetails: DataRequestDetails = {
           attendFrom: hoursAgo(10),
           attendTo: hoursAgo(8),
         },
+        messageDataSelectId: "g2",
       },
       {
         firstName: "\x3DMeðal-Jón \x3DAyşe",
@@ -142,6 +144,7 @@ export const dummyDataDetails: DataRequestDetails = {
           attendFrom: hoursAgo(10),
           attendTo: hoursAgo(8),
         },
+        messageDataSelectId: "g3",
       },
       {
         firstName: " Must\"er'm'an´;=,n",
@@ -161,6 +164,7 @@ export const dummyDataDetails: DataRequestDetails = {
           attendTo: hoursAgo(5),
           additionalInformation: "=(Security-Test)",
         },
+        messageDataSelectId: "g4",
       },
     ],
     dataProvider: {

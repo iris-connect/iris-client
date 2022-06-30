@@ -2,8 +2,8 @@ package iris.client_bff.cases.web.submission_dto;
 
 import static lombok.AccessLevel.*;
 
-import iris.client_bff.core.Sex;
-import iris.client_bff.core.web.dto.Address;
+import iris.client_bff.core.api.dto.Address;
+import iris.client_bff.core.model.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,25 +22,25 @@ import java.time.LocalDate;
 @AllArgsConstructor(access = PRIVATE)
 public class ContactPerson {
 
-  private String firstName;
+	private String firstName;
 
-  private String lastName;
+	private String lastName;
 
-  private LocalDate dateOfBirth;
+	private LocalDate dateOfBirth;
 
-  @Builder.Default
-  private Sex sex = Sex.UNKNOWN;
+	@Builder.Default
+	private Sex sex = Sex.UNKNOWN;
 
-  private String email;
+	private String email;
 
-  private String phone;
+	private String phone;
 
-  private String mobilePhone;
+	private String mobilePhone;
 
-  private Address address;
+	private Address address;
 
-  private ContactPersonAllOfWorkPlace workPlace;
+	private ContactPersonAllOfWorkPlace workPlace;
 
-  private ContactPersonAllOfContactInformation contactInformation;
+	private ContactPersonAllOfContactInformation contactInformation;
 
 }

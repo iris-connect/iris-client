@@ -5,14 +5,13 @@ import iris.client_bff.cases.model.CaseDataProvider;
 import iris.client_bff.cases.model.CaseDataSubmission;
 import iris.client_bff.cases.model.CaseEvent;
 import iris.client_bff.cases.model.Contact;
-import iris.client_bff.core.Sex;
 import iris.client_bff.core.model.Address;
+import iris.client_bff.core.model.Sex;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.UUID;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -40,18 +39,18 @@ public class CaseDataSubmissionsDataInitializer implements DataInitializer {
 				null, events, null, null, dataProvider);
 
 		address = new Address("Straße A", "1", "Stadt A", "12345");
-		var contact = new Contact(UUID.randomUUID(), submission, "Erster", "Gast",
+		var contact = new Contact(submission, "Erster", "Gast",
 				LocalDate.of(1990, 1, 1), Sex.UNKNOWN, "e@mail.de",
 				"0815", "4711", address, null, null, null, null, null, null, null, null);
 		contacts.add(contact);
 
 		address = new Address("Straße B", "1", "Stadt B", "12345");
-		contact = new Contact(UUID.randomUUID(), submission, "Zweiter", "Gast",
+		contact = new Contact(submission, "Zweiter", "Gast",
 				LocalDate.of(1980, 1, 1), Sex.UNKNOWN, "email@mail.de",
 				"0815", "4711", address, null, null, null, null, null, null, null, null);
 		contacts.add(contact);
 
-		events.add(new CaseEvent(UUID.randomUUID(), submission, "Event", null, null, null));
+		events.add(new CaseEvent(submission, "Event", null, null, null));
 
 		submissions.save(submission);
 	}

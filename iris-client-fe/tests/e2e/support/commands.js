@@ -99,11 +99,12 @@ Cypress.Commands.add("logout", () => {
   cy.clearLocalStorage();
 });
 
+// @todo: this won't work with the new 2-factor authentication! fix it!
 Cypress.Commands.add("login", (credentials) => {
   cy.getApp().then((app) => {
     cy.log("authenticate user");
     const defaultCredentials = getTestAdminCredentials();
-    return app.$store.dispatch("userLogin/authenticate", {
+    return app.$store.dispatch("userLogin/login", {
       userName: credentials?.userName ?? defaultCredentials.userName,
       password: credentials?.password ?? defaultCredentials.password,
     });
@@ -214,7 +215,8 @@ Cypress.Commands.add(
     cy.get("@dataTable")
       .should("not.have.class", "is-loading")
       .contains(accessor, { log: false })
-      .closest("tr");
+      .closest("tr")
+      .first();
   }
 );
 
@@ -237,7 +239,17 @@ Cypress.Commands.add(
       } else {
         cy.get("@dataTable").within(() => {
           cy.get(`tbody tr td:nth-child(${column})`).each(($cell) => {
-            if ($cell.text().match(content) !== null) {
+            let isMatch = false;
+            if (typeof content === "string" && content.startsWith(".")) {
+              if ($cell.find(content).length > 0) {
+                isMatch = true;
+              }
+            } else {
+              if ($cell.text().match(content) !== null) {
+                isMatch = true;
+              }
+            }
+            if (isMatch) {
               cy.wrap($cell).closest("tr").should("exist").as("tableRow");
               return false;
             }
@@ -305,6 +317,27 @@ Cypress.Commands.add(
   }
 );
 
+Cypress.Commands.add("selectStepperInputDataTableRow", (accessor) => {
+  cy.getBy(accessor).as("field");
+  cy.get("@field")
+    .should("exist")
+    .find(".v-stepper__step")
+    .should("have.class", "v-stepper__step--active");
+  cy.get("@field")
+    .find(".v-data-table")
+    .should("exist")
+    .should("not.have.class", "is-loading")
+    .should("not.have.class", "is-empty")
+    .within(() => {
+      cy.get("tbody tr.is-selectable")
+        .should("have.length.at.least", 1)
+        .first()
+        .find(".v-simple-checkbox")
+        .should("exist")
+        .click();
+    });
+});
+
 Cypress.Commands.add("visitUserByAccessor", (accessor) => {
   cy.location("pathname").should("equal", "/admin/user/list");
   cy.getDataTableRow("view.data-table", accessor).within(() => {
@@ -334,6 +367,26 @@ Cypress.Commands.add("getMessageDataTableRow", (accessor, context) => {
   cy.getDataTableRow("view.data-table", accessor).should("exist");
 });
 
+Cypress.Commands.add("visitMessageDetailsWithAttachments", () => {
+  const gteOne = /^[1-9][0-9]*$/;
+  cy.visit("/iris-messages/list");
+  cy.findDataTableRow("view.data-table", 1, gteOne).should("exist").click();
+  cy.location("pathname").should("contain", "/iris-messages/details");
+});
+
+Cypress.Commands.add("getMessageDataAttachmentItem", (imported) => {
+  if (imported === true) {
+    cy.getBy("{message-data.list-item}.is-imported").should("exist").first();
+  } else if (imported === false) {
+    cy.getBy("message-data.list-item")
+      .not(".is-imported")
+      .should("exist")
+      .first();
+  } else {
+    cy.getBy("message-data.list-item").should("exist").first();
+  }
+});
+
 Cypress.Commands.add(
   "selectOwnIrisMessageContact",
   { prevSubject: "optional" },
@@ -347,7 +400,7 @@ Cypress.Commands.add(
     }
     cy.get("@field").closest(".v-input").should("not.have.class", "is-empty");
     cy.getApp().then((app) => {
-      const contacts = app.$store.state.irisMessageCreate.contacts;
+      const contacts = app.$store.state.e2eTests.irisMessageHdContacts;
       const ownContact = contacts.find((c) => c.own === true);
       cy.wrap(ownContact).should("exist").should("not.be.empty");
       cy.get("@field").selectAutocompleteValue(menu, ownContact.name);

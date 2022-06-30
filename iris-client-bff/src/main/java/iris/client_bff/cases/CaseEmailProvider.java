@@ -18,11 +18,12 @@ import io.vavr.control.Try;
 import iris.client_bff.core.mail.EmailProvider;
 import iris.client_bff.core.mail.EmailSender;
 import iris.client_bff.core.mail.EmailSender.TemplatedEmail.ConfiguredRecipient;
-import iris.client_bff.core.model.EmailAddress;
 import iris.client_bff.core.mail.EmailTemplates;
+import iris.client_bff.core.model.EmailAddress;
 import lombok.AccessLevel;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -39,7 +40,7 @@ import org.springframework.util.Assert;
 
 /**
  * Helper to send out emails during index case processing
- * 
+ *
  * @author Jens Kutzsche
  */
 @Component
@@ -76,11 +77,11 @@ public class CaseEmailProvider extends EmailProvider {
 			return AsyncResult.forValue(Try.success(null));
 		}
 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("caseId", caseData.getName());
 		parameters.put("externalId", caseData.getRefId());
-		parameters.put("startTime", caseData.getRequestStart());
-		parameters.put("endTime", caseData.getRequestEnd());
+		parameters.put("startTime", Date.from(caseData.getRequestStart()));
+		parameters.put("endTime", Date.from(caseData.getRequestEnd()));
 		parameters.put("caseUrl", basePath + "/cases/details/" + caseData.getId());
 
 		var subject = messages.getMessage("CaseDataReceivedEmail.subject");

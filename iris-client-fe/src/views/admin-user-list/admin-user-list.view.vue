@@ -30,13 +30,29 @@
                 ></v-text-field>
                 <iris-data-table
                   :loading="isBusy"
-                  :headers="tableData.headers"
+                  :headers="tableHeaders"
                   :items="userList"
                   :items-per-page="5"
                   class="elevation-1 mt-5"
                   :search="tableData.search"
                   data-test="view.data-table"
                 >
+                  <template #item.mfa="{ item }">
+                    <v-icon v-if="item.useMfa === false">mdi-cancel</v-icon>
+                    <template v-else>
+                      <v-icon
+                        v-if="item.mfaSecretEnrolled === false"
+                        color="error"
+                      >
+                        mdi-qrcode-scan
+                      </v-icon>
+                      <v-icon v-else color="success">mdi-check-circle</v-icon>
+                    </template>
+                  </template>
+                  <template #item.locked="{ item }">
+                    <v-icon v-if="item.locked" color="error">mdi-lock</v-icon>
+                    <v-icon v-else color="success">mdi-check-circle</v-icon>
+                  </template>
                   <template #item.actions="{ item }">
                     <v-btn
                       icon
@@ -69,12 +85,12 @@
             </v-row>
             <v-row v-if="hasError">
               <v-col>
-                <v-alert v-if="listLoadingError" text type="error">{{
-                  listLoadingError
-                }}</v-alert>
-                <v-alert v-if="userDeleteError" text type="error">{{
-                  userDeleteError
-                }}</v-alert>
+                <v-alert v-if="listLoadingError" text type="error">
+                  {{ listLoadingError }}
+                </v-alert>
+                <v-alert v-if="userDeleteError" text type="error">
+                  {{ userDeleteError }}
+                </v-alert>
               </v-col>
             </v-row>
           </v-card-text>
@@ -88,9 +104,10 @@
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
 import { ErrorMessage } from "@/utils/axios";
-import { User, UserRole } from "@/api";
+import { MfaOption, User, UserRole } from "@/api";
 import UserDeleteButton from "@/views/admin-user-list/components/user-delete-button.vue";
 import IrisDataTable from "@/components/iris-data-table.vue";
+import { mfaApi } from "@/modules/mfa/services/api";
 
 // @todo: check if id is really optional! Handle, edit & delete actions + vue :key accordingly
 type TableRow = {
@@ -99,6 +116,9 @@ type TableRow = {
   firstName?: string;
   userName: string;
   role: string;
+  useMfa: boolean;
+  mfaSecretEnrolled: boolean;
+  locked: boolean;
 };
 
 const UserRoleName = new Map<UserRole, string>([
@@ -118,11 +138,17 @@ const UserRoleName = new Map<UserRole, string>([
   },
 })
 export default class AdminUserListView extends Vue {
-  tableData = {
-    search: "",
-    expanded: [],
-    select: [],
-    headers: [
+  fetchMfaConfig = mfaApi.fetchMfaConfig();
+  mounted() {
+    this.fetchMfaConfig.execute();
+  }
+
+  get mfaOption(): MfaOption | undefined {
+    return this.fetchMfaConfig.state.result?.mfaOption;
+  }
+
+  get tableHeaders(): Array<unknown> {
+    return [
       {
         text: "Nachname",
         value: "lastName",
@@ -140,6 +166,18 @@ export default class AdminUserListView extends Vue {
         text: "Rolle",
         value: "role",
       },
+      this.mfaOption !== undefined && this.mfaOption !== MfaOption.DISABLED
+        ? {
+            text: "2FA",
+            value: "mfa",
+            align: "end",
+          }
+        : null,
+      {
+        text: "Status",
+        value: "locked",
+        align: "end",
+      },
       {
         text: "",
         value: "actions",
@@ -147,7 +185,13 @@ export default class AdminUserListView extends Vue {
         align: "end",
         cellClass: "text-no-wrap",
       },
-    ],
+    ].filter((v) => v);
+  }
+
+  tableData = {
+    search: "",
+    expanded: [],
+    select: [],
   };
 
   get listLoading(): boolean {
@@ -177,13 +221,25 @@ export default class AdminUserListView extends Vue {
   get userList(): TableRow[] {
     const users: Array<User> = store.state.adminUserList.userList?.users || [];
     return users.map((user) => {
-      const { id, lastName, firstName, userName, role } = user;
+      const {
+        id,
+        lastName,
+        firstName,
+        userName,
+        role,
+        useMfa,
+        mfaSecretEnrolled,
+        locked,
+      } = user;
       return {
         id,
         lastName,
         firstName,
         userName,
         role: UserRoleName.get(role) ?? "-",
+        useMfa,
+        mfaSecretEnrolled,
+        locked,
       };
     });
   }

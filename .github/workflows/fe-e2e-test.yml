@@ -22,16 +22,16 @@ jobs:
 
       - name: Cypress run
         # Install NPM dependencies, cache them correctly and run all Cypress tests
-        uses: cypress-io/github-action@v3.0.2
+        uses: cypress-io/github-action@v4
         timeout-minutes: 20
         with:
           browser: chrome
-          headless: true
           working-directory: ./iris-client-fe
+          build: npm ci --legacy-peer-deps
           start: npm run serve -- --mode e2e_test
           wait-on: http://localhost:8080/
           wait-on-timeout: 300
-          config-file: cypress.json
+          config-file: cypress.config.ts
           spec: "tests/e2e/**/*"
         env:
           CYPRESS_baseUrl: http://localhost:8080/
@@ -44,7 +44,7 @@ jobs:
 
       # NOTE: screenshots will be generated only if E2E test failed thus we store screenshots only on failures
       - name: Store screenshots
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: cypress-screenshots
@@ -52,7 +52,7 @@ jobs:
             **/tests/e2e/screenshots/**/*
       # Test run video was always captured, so this action uses "always()" condition
       - name: Store videos
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: cypress-videos

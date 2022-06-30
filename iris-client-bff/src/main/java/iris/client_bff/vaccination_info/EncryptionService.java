@@ -26,11 +26,11 @@ import org.springframework.stereotype.Service;
 public class EncryptionService {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final String ALGORITHM = "AES/GCM/NoPadding";
 	/**
-	 * 
+	 *
 	 */
 	private static final String PROVIDER = "BCFIPS";
 
@@ -86,5 +86,5 @@ public class EncryptionService {
 		return new String(cipher.doFinal(decodeFromString(encodedEncryptedData)), UTF_8);
 	}
 
-	public record EncryptedData(String iv, String data) {};
+	public record EncryptedData(String iv, String data) {}
 }
