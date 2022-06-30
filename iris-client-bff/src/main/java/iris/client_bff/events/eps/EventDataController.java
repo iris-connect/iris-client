@@ -17,7 +17,7 @@ import com.googlecode.jsonrpc4j.JsonRpcParam;
 public interface EventDataController {
 
 	@JsonRpcErrors({
-			@JsonRpcError(exception = ResponseStatusException.class, code = -32600)
+			@JsonRpcError(exception = ResponseStatusException.class, code = -32602)
 	})
 	String submitGuestList(
 			@JsonRpcParam(value = "_client") @Valid JsonRpcClientDto client,

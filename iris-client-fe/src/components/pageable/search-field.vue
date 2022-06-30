@@ -44,7 +44,7 @@ export default class SearchField extends SearchFieldProps {
       this.debounced = null;
     }
     this.debounced = _debounce(() => {
-      let search = value?.trim();
+      const search = value?.trim();
       if (!search || search.length >= this.minLength) {
         this.$emit("input", search || undefined);
       }

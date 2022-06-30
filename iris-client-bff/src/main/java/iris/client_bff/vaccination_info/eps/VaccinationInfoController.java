@@ -6,6 +6,7 @@ import iris.client_bff.core.validation.AttackDetector.Phone;
 import iris.client_bff.core.validation.Base64;
 import iris.client_bff.core.validation.NoSignOfAttack;
 import iris.client_bff.core.validation.PhoneNumber;
+import iris.client_bff.vaccination_info.VaccinationInfoAnnouncementException;
 import iris.client_bff.vaccination_info.VaccinationStatus;
 import iris.client_bff.vaccination_info.VaccinationType;
 
@@ -14,7 +15,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -35,16 +35,12 @@ import com.googlecode.jsonrpc4j.JsonRpcParam;
 public interface VaccinationInfoController {
 
 	@JsonRpcErrors({
-			@JsonRpcError(exception = ConstraintViolationException.class, code = -32600),
-			@JsonRpcError(exception = InvalidPublicKeyException.class, code = -32600)
+			@JsonRpcError(exception = InvalidPublicKeyException.class, code = -32600),
+			@JsonRpcError(exception = VaccinationInfoAnnouncementException.class, code = -32603)
 	})
 	AnnouncementResultDto announceVaccinationInfoList(
 			@JsonRpcParam(value = "announcementData") @Valid AnnouncementDataDto announcementData);
 
-	@JsonRpcErrors({
-			@JsonRpcError(exception = ConstraintViolationException.class, code = -32600),
-			@JsonRpcError(exception = IllegalArgumentException.class, code = -32600)
-	})
 	String submitVaccinationInfoList(
 			@JsonRpcParam(value = "dataAuthorizationToken") @NotNull UUID dataAuthorizationToken,
 			@JsonRpcParam(value = "facility") @Valid Facility facility,

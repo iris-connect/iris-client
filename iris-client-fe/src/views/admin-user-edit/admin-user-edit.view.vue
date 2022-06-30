@@ -110,6 +110,11 @@
               </v-col>
             </v-row>
           </conditional-field>
+          <mfa-admin-user-fieldset
+            v-model="form.model.useMfa"
+            :user="user"
+            @reset="fetchUser"
+          />
           <v-row v-if="hasError">
             <v-col>
               <v-alert v-if="userLoadingError" text type="error">
@@ -164,6 +169,7 @@ import ConditionalField from "@/views/admin-user-edit/components/conditional-fie
 import _defaults from "lodash/defaults";
 import _isEmpty from "lodash/isEmpty";
 import EntryMetaData from "@/components/entry-meta-data.vue";
+import MfaAdminUserFieldset from "@/modules/mfa/components/mfa-admin-user-fieldset.vue";
 
 type AdminUserEditForm = {
   model: UserUpdate;
@@ -221,6 +227,7 @@ const fieldsConfigByRole: Record<UserRole, FieldsConfig> = {
 
 @Component({
   components: {
+    MfaAdminUserFieldset,
     EntryMetaData,
     ConditionalField,
     PasswordInputField,
@@ -238,6 +245,10 @@ export default class AdminUserEditView extends Vue {
   $refs!: {
     form: HTMLFormElement;
   };
+
+  fetchUser(): void {
+    store.dispatch("adminUserEdit/fetchUser", this.userId);
+  }
 
   get userLoading(): boolean {
     return store.state.adminUserEdit.userLoading;
@@ -308,6 +319,7 @@ export default class AdminUserEditView extends Vue {
       oldPassword: undefined,
       role: undefined,
       locked: undefined,
+      useMfa: undefined,
     },
     valid: false,
   };

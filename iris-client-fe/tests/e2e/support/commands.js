@@ -99,11 +99,12 @@ Cypress.Commands.add("logout", () => {
   cy.clearLocalStorage();
 });
 
+// @todo: this won't work with the new 2-factor authentication! fix it!
 Cypress.Commands.add("login", (credentials) => {
   cy.getApp().then((app) => {
     cy.log("authenticate user");
     const defaultCredentials = getTestAdminCredentials();
-    return app.$store.dispatch("userLogin/authenticate", {
+    return app.$store.dispatch("userLogin/login", {
       userName: credentials?.userName ?? defaultCredentials.userName,
       password: credentials?.password ?? defaultCredentials.password,
     });

@@ -52,6 +52,9 @@ class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 			body = errorAttributes.getErrorAttributes(request);
 		}
 
+		if (headers == null) {
+			headers = new HttpHeaders();
+		}
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
 
@@ -76,7 +79,13 @@ class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(ConstraintViolationException.class)
 	ResponseEntity<?> handleConstraintViolation(ConstraintViolationException ex, WebRequest request) {
 		var status = HttpStatus.BAD_REQUEST;
-		return handleExceptionInternal(ex, null, new HttpHeaders(), status, request);
+		return handleExceptionInternal(ex, null, null, status, request);
+	}
+
+	@ExceptionHandler(IllegalArgumentException.class)
+	ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+		var status = HttpStatus.BAD_REQUEST;
+		return handleExceptionInternal(ex, null, null, status, request);
 	}
 
 	@ExceptionHandler(AuthenticationException.class)
@@ -96,7 +105,7 @@ class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(AccessDeniedException.class)
 	ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) throws Exception {
 		var status = HttpStatus.FORBIDDEN;
-		return handleExceptionInternal(ex, null, new HttpHeaders(), status, request);
+		return handleExceptionInternal(ex, null, null, status, request);
 	}
 
 	@ExceptionHandler(Exception.class)
@@ -109,7 +118,7 @@ class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 		log.warn("Unmapped exception occurred", ex);
 
 		var status = HttpStatus.INTERNAL_SERVER_ERROR;
-		return handleExceptionInternal(ex, null, new HttpHeaders(), status, request);
+		return handleExceptionInternal(ex, null, null, status, request);
 	}
 
 	private String getInternalMessage(Exception ex) {

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequestService;
 import iris.client_bff.events.EventDataRequest;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -62,7 +62,7 @@ class StatisticsControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
+	@WithMockIrisUser
 	void getWeeklyData() throws Exception {
 
 		var res = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl))

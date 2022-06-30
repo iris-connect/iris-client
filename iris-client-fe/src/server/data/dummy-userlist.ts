@@ -10,6 +10,8 @@ export const dummyUserList: UserList = {
       userName: "MaxMuster",
       role: UserRole.Admin,
       locked: false,
+      useMfa: false,
+      mfaSecretEnrolled: false,
     },
     {
       id: "abcdef",
@@ -18,6 +20,8 @@ export const dummyUserList: UserList = {
       userName: "LisaMuster",
       role: UserRole.User,
       locked: false,
+      useMfa: false,
+      mfaSecretEnrolled: false,
     },
     {
       id: "67890",
@@ -26,6 +30,8 @@ export const dummyUserList: UserList = {
       userName: "TestUser",
       role: UserRole.User,
       locked: true,
+      useMfa: false,
+      mfaSecretEnrolled: false,
     },
     {
       id: "321654",
@@ -34,6 +40,8 @@ export const dummyUserList: UserList = {
       userName: "E2ETestUser",
       role: UserRole.User,
       locked: false,
+      useMfa: false,
+      mfaSecretEnrolled: false,
     },
   ],
 };
@@ -42,8 +50,16 @@ export const getDummyUserFromRequest = (
   request: Request,
   id?: string
 ): User => {
-  const { firstName, lastName, userName, role, oldPassword, locked } =
-    JSON.parse(request.requestBody);
+  const {
+    firstName,
+    lastName,
+    userName,
+    role,
+    oldPassword,
+    locked,
+    useMfa,
+    mfaSecretEnrolled,
+  } = JSON.parse(request.requestBody);
   if (oldPassword === "p") {
     throw new Error("Das bisherige Passwort stimmt nicht!");
   }
@@ -54,5 +70,7 @@ export const getDummyUserFromRequest = (
     userName,
     role,
     locked,
+    useMfa,
+    mfaSecretEnrolled,
   };
 };

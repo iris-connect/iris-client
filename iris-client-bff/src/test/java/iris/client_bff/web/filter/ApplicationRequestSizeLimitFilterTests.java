@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.core.messages.ErrorMessages;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -41,6 +41,7 @@ import com.googlecode.jsonrpc4j.ErrorResolver.JsonError;
 @IrisWebIntegrationTest
 @TestPropertySource(properties = { "iris.suspiciously.request.defaults.content-length-blocking-size=15B",
 		"iris.suspiciously.request.for-uri.data-submission-rpc.content-length-blocking-size=15B" })
+@WithMockIrisUser
 @RequiredArgsConstructor
 class ApplicationRequestSizeLimitFilterTests {
 
@@ -50,7 +51,6 @@ class ApplicationRequestSizeLimitFilterTests {
 	AlertService alertService;
 
 	@Test
-	@WithMockUser()
 	void requestTooLarge_RestEndpoint() throws Exception {
 
 		mvc.perform(post("/data-requests-client/events")
@@ -63,7 +63,6 @@ class ApplicationRequestSizeLimitFilterTests {
 	}
 
 	@Test
-	@WithMockUser()
 	void requestTooLarge_JsonRpc() throws Exception {
 
 		var content = mvc.perform(post("/data-submission-rpc")
@@ -77,7 +76,6 @@ class ApplicationRequestSizeLimitFilterTests {
 	}
 
 	@Test
-	@WithMockUser()
 	void wrongContentType_JsonRpc() throws Exception {
 
 		var content = mvc.perform(post("/data-submission-rpc")

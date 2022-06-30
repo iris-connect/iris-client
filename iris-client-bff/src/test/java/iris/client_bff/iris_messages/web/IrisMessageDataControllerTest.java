@@ -7,6 +7,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import iris.client_bff.IrisWebIntegrationTest;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.events.message.EventMessageTestData;
 import iris.client_bff.iris_messages.IrisMessageData;
 import iris.client_bff.iris_messages.IrisMessageDataProcessor;
@@ -22,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -30,6 +31,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
+@WithMockIrisUser
 @RequiredArgsConstructor
 class IrisMessageDataControllerTest {
 
@@ -55,13 +57,13 @@ class IrisMessageDataControllerTest {
 	IrisMessageDataProcessors irisMessageDataProcessors;
 
 	@Test
+	@WithAnonymousUser
 	void endpointShouldBeProtected() throws Exception {
 		mockMvc.perform(get(baseUrl))
 				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
 	}
 
 	@Test
-	@WithMockUser()
 	void importMessageDataAndAdd() throws Exception {
 		IrisMessageData messageData = spy(messageTestData.MOCK_INBOX_MESSAGE.getDataAttachments().get(0));
 
@@ -85,7 +87,6 @@ class IrisMessageDataControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void importMessageDataAndUpdate() throws Exception {
 		IrisMessageData messageData = spy(messageTestData.MOCK_INBOX_MESSAGE.getDataAttachments().get(0));
 
@@ -125,7 +126,6 @@ class IrisMessageDataControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void getMessageDataImportSelectionViewData() throws Exception {
 		var viewDataDto = messageDataTestData.MOCK_IMPORT_SELECTION_VIEW_DATA;
 
@@ -149,7 +149,6 @@ class IrisMessageDataControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void getMessageDataViewData() throws Exception {
 		var viewDataDto = messageDataTestData.MOCK_DATA_VIEW_DATA;
 

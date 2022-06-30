@@ -6,16 +6,16 @@
     <body>
 		<p>Dear Sir or Madam,</p>
 		<p><br /></p>
-		<p>New data is available for the Index Case $(caseId) in your IRIS Portal.</p>
+		<p>New data is available for the Index Case "${caseId}" in your IRIS Portal.</p>
 		<p>Index Case:</p>
 		<ul>
-			<li>Index Case: $(caseId)</li>
-			<li>External Id: $(externalId)</li>
-			<li>Start: $(startTime)</li>
-			<li>End: $(endTime)</li>
+			<li>Index Case: ${caseId}</li>
+			<li>External Id: ${externalId}</li>
+			<li>Start: ${startTime?datetime?string.long}</li>
+			<li>End: ${endTime?datetime?string.long}</li>
 		</ul>
 		<p>
-        	With the provided data the case can be identified online. Alternatively the following link will redirect to it directly: <a href="$(caseUrl)">Index Case $(caseId)</a>
+        	With the provided data the case can be identified online. Alternatively the following link will redirect to it directly: <a href="${caseUrl}">Index Case ${caseId}</a>
 		</p>
 		<p><br /></p>
 		<p>

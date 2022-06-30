@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.RestResponsePage;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.cases.CaseDataRequest;
 import iris.client_bff.cases.CaseDataRequest.DataRequestIdentifier;
 import iris.client_bff.cases.CaseDataRequest.Status;
@@ -37,7 +38,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -46,6 +47,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @IrisWebIntegrationTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@WithMockIrisUser
 class IndexCaseControllerTest {
 
 	private final String baseUrl = "/data-requests-client/cases";
@@ -101,12 +103,12 @@ class IndexCaseControllerTest {
 
 	@Test
 	@Order(1)
+	@WithAnonymousUser
 	void endpointShouldBeProtected() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)).andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	@WithMockUser()
 	@Order(2)
 	void getAll() throws Exception {
 
@@ -118,7 +120,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	@Order(3)
 	void getAllWithStatus() throws Exception {
 
@@ -131,7 +132,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	@Order(4)
 	void getAllFiltered() throws Exception {
 
@@ -144,7 +144,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	@Order(5)
 	void getAllWithStatusAndFiltered() throws Exception {
 
@@ -157,7 +156,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void create() throws Exception {
 
 		var insert = om.writeValueAsString(IndexCaseInsertDTO.builder().start(Instant.now()).build());
@@ -171,7 +169,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void create_invalidStartDate() throws Exception {
 
 		var insert = om.writeValueAsString(IndexCaseInsertDTO.builder().start(null).build());
@@ -185,7 +182,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void getDetails() throws Exception {
 
 		var url = baseUrl + "/" + MOCK_CASE_ID.toString();
@@ -198,7 +194,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void getDetails_notFound() throws Exception {
 
 		var url_404 = baseUrl + "/" + UUID.randomUUID().toString();
@@ -207,7 +202,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void update() throws Exception {
 		String updatedComment = "This is an updated comment";
 		String updatedName = "CASE_UPDATED";
@@ -240,7 +234,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void update_invalidId() throws Exception {
 
 		var url_404 = baseUrl + "/" + UUID.randomUUID().toString();
@@ -267,7 +260,6 @@ class IndexCaseControllerTest {
 	}
 
 	@Test
-	@WithMockUser()
 	void update_noBody() throws Exception {
 
 		var url = baseUrl + "/" + MOCK_CASE_ID.toString();

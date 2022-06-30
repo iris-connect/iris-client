@@ -14,6 +14,7 @@ import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecBuilder;
 import iris.client_bff.IrisWebIntegrationTest;
 import iris.client_bff.WithMockAdmin;
+import iris.client_bff.WithMockIrisUser;
 import iris.client_bff.matchers.IsUuid;
 import iris.client_bff.users.UserAccountsRepositoryForTests;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.Assert;
 
@@ -81,7 +81,7 @@ class UserControllerIntegrationTests {
 	}
 
 	@Test
-	@WithMockUser
+	@WithMockIrisUser
 	@DisplayName("getAllUsers: endpoint 🔒")
 	void getAllUsers_EndpointsProtected() {
 
@@ -93,7 +93,7 @@ class UserControllerIntegrationTests {
 	}
 
 	@Test
-	@WithMockUser
+	@WithMockIrisUser
 	@DisplayName("createUser: endpoint 🔒")
 	void createUser_EndpointProtected() {
 
@@ -120,7 +120,7 @@ class UserControllerIntegrationTests {
 	}
 
 	@Test
-	@WithMockUser
+	@WithMockIrisUser
 	@DisplayName("deleteUser: endpoint 🔒")
 	void deleteUser_EndpointProtected() {
 
@@ -466,7 +466,7 @@ class UserControllerIntegrationTests {
 
 		var userName = createWord(wordLength);
 
-		var dto = new UserDtos.Insert("fn", "ln", userName, "Password12A_", UserDtos.Role.USER, false);
+		var dto = new UserDtos.Insert("fn", "ln", userName, "Password12A_", UserDtos.Role.USER, false, false);
 
 		given()
 				.body(toJson(dto))
@@ -495,6 +495,18 @@ class UserControllerIntegrationTests {
 
 				.then()
 				.status(expectation);
+	}
+
+	@Test // for iris-backlog#251
+	@WithMockIrisUser
+	@DisplayName("deleteMfaSecret: endpoint 🔒")
+	void deleteMfaSecret_EndpointsProtected() {
+
+		when()
+				.delete(DETAILS_URL + "/mfa", UUID.randomUUID())
+
+				.then()
+				.status(FORBIDDEN);
 	}
 
 	private String createWord(int wordLength) {

@@ -6,16 +6,16 @@
     <body>
 		<p>Sehr geehrte Damen or Herren,</p>
 		<p><br /></p>
-		<p>Für das Event $(caseId) sind neue Daten verfügbar. Diese können in Ihrem IRIS Portal begutachtet werden.</p>
+		<p>Für das Event "${eventId}" sind neue Daten verfügbar. Diese können in Ihrem IRIS Portal begutachtet werden.</p>
 		<p>Event:</p>
 		<ul>
-			<li>Event: $(eventId)</li>
-			<li>Externe Id: $(externalId)</li>
-			<li>Startzeit: $(startTime)</li>
-			<li>Endzeit: $(endTime)</li>
+			<li>Event: ${eventId}</li>
+			<li>Externe Id: ${externalId}</li>
+			<li>Startzeit: ${startTime?datetime?string.long}</li>
+			<li>Endzeit: ${endTime?datetime?string.long}</li>
 		</ul>
 		<p>
-        	Mit den gegebenen Daten kann der entsprechende Datensatz identifiziert werden. Alternative der folgende Link führt direkt zum Datensatz: <a href="$(eventUrl)">Event $(eventId)</a>
+        	Mit den gegebenen Daten kann der entsprechende Datensatz identifiziert werden. Alternative der folgende Link führt direkt zum Datensatz: <a href="${eventUrl}">Event ${eventId}</a>
 		</p>
 		<p><br /></p>
 		<p>

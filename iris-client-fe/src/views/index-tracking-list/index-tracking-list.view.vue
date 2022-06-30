@@ -152,7 +152,7 @@ export default class IndexTrackingListView extends Vue {
   );
 
   runSearch = debounce(async (input: string | undefined) => {
-    let search = input?.trim();
+    const search = input?.trim();
     if (!search || search.length > 1) {
       this.$router.replace({
         name: this.$route.name as string | undefined,

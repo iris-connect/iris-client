@@ -46,7 +46,7 @@ class UserController {
 
 		checkUniqueUsername(userInsert.userName());
 
-		return userMapper.toDto(userService.create(userMapper.fromDto(userInsert)));
+		return userMapper.toDto(userService.create(userMapper.fromDto(userInsert), userInsert.useMfa()));
 	}
 
 	@PatchMapping("/{id}")
@@ -64,7 +64,15 @@ class UserController {
 				userUpdateDTO.userName(),
 				userUpdateDTO.password(),
 				userMapper.fromDto(userUpdateDTO.role()),
-				userUpdateDTO.locked()));
+				userUpdateDTO.locked(),
+				userUpdateDTO.useMfa()));
+	}
+
+	@DeleteMapping("/{id}/mfa")
+	@PreAuthorize(AS_ADMIN)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteMfaSecret(@PathVariable UserAccountIdentifier id) {
+		userService.resetMfaSecret(id);
 	}
 
 	@DeleteMapping("/{id}")

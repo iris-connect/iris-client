@@ -31,8 +31,8 @@ import org.springframework.util.Assert;
  */
 public interface EmailSender {
 
-	String MISSING_FIXED_SENDER = "A fixed sender must be set using the \"spring.mail.properties.fix-sender\" property.";
-	String FIX_SENDER_PROPERTY_KEY = "fix-sender";
+	String MISSING_FIXED_SENDER = "A fixed sender must be set using the \"spring.mail.properties.fix.sender\" property.";
+	String FIX_SENDER_PROPERTY_KEY = "fix.sender";
 
 	/**
 	 * Verifies the connection to the actual email server.
@@ -134,10 +134,10 @@ public interface EmailSender {
 		 * from spam protection. With other sender addresses we get the following error:
 		 * <code>550 5.7.60 SMTP; Client does not
 		 * have permissions to send as this sender</code>. To configure the fix sender address use
-		 * <code>spring.mail.properties.fix-sender</code>.
+		 * <code>spring.mail.properties.fix_sender</code>.
 		 */
-		private static final String FIX_SENDER_NAME_PROPERTY_KEY = "fix-sender-name";
-		private static final String FIX_RECIPIENT_PROPERTY_KEY = "fix-recipient";
+		private static final String FIX_SENDER_NAME_PROPERTY_KEY = "fix.sender.name";
+		private static final String FIX_RECIPIENT_PROPERTY_KEY = "fix.recipient";
 		private static final String IRIS_DOMAIN = "@iris-connect.de";
 		private static final String IRIS_DOMAIN2 = "@iris-gateway.de";
 

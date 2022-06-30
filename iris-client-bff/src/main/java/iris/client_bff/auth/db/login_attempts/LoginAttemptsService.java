@@ -4,6 +4,7 @@ import static java.time.Instant.*;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,15 +42,13 @@ public class LoginAttemptsService {
 		} catch (EmptyResultDataAccessException e) {}
 	}
 
+	@Synchronized
 	public void loginFailed(String key) {
 
 		var keyHash = DigestUtils.md5Hex(key);
 
 		var attempt = loginAttempts.findById(keyHash)
-				.map(it -> {
-					it.setWaitingTime(it.getWaitingTime().multipliedBy(properties.getWaitingTimeMultiplier()));
-					return it;
-				})
+				.map(it -> it.setWaitingTime(it.getWaitingTime().multipliedBy(properties.getWaitingTimeMultiplier())))
 				.orElseGet(() -> LoginAttempts.builder()
 						.reference(keyHash)
 						.nextWarningThreshold(properties.getFirstWarningThreshold())

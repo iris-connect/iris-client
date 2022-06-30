@@ -1,5 +1,7 @@
 package iris.client_bff.config;
 
+import static com.googlecode.jsonrpc4j.ErrorResolver.JsonError.*;
+
 import iris.client_bff.cases.eps.CaseDataController;
 import iris.client_bff.core.alert.AlertService;
 import iris.client_bff.events.eps.EventDataController;
@@ -11,6 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +31,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.googlecode.jsonrpc4j.AnnotationsErrorResolver;
 import com.googlecode.jsonrpc4j.DefaultErrorResolver;
 import com.googlecode.jsonrpc4j.ErrorData;
+import com.googlecode.jsonrpc4j.ErrorResolver;
 import com.googlecode.jsonrpc4j.JsonRpcInterceptor;
 import com.googlecode.jsonrpc4j.MultipleErrorResolver;
 import com.googlecode.jsonrpc4j.ProxyUtil;
@@ -35,8 +43,11 @@ import com.googlecode.jsonrpc4j.spring.JsonServiceExporter;
 public class DataSubmissionConfig {
 
 	public static final String DATA_SUBMISSION_ENDPOINT = "/data-submission-rpc";
-
 	public static final String DATA_SUBMISSION_ENDPOINT_WITH_SLASH = "/data-submission-rpc/";
+
+	private final Map<Class<? extends Throwable>, Integer> exception2CodeMap = Map.of(
+			ConstraintViolationException.class, INVALID_REQUEST.code,
+			IllegalArgumentException.class, INVALID_REQUEST.code);
 
 	private final MessageSourceAccessor messages;
 	private final UserService userService;
@@ -94,7 +105,7 @@ public class DataSubmissionConfig {
 	private final class MessageResolvingErrorResolver extends MultipleErrorResolver {
 
 		private MessageResolvingErrorResolver() {
-			super(AnnotationsErrorResolver.INSTANCE, DefaultErrorResolver.INSTANCE);
+			super(AnnotationsErrorResolver.INSTANCE, new IrisErrorResolver(), DefaultErrorResolver.INSTANCE);
 		}
 
 		@Override
@@ -116,6 +127,25 @@ public class DataSubmissionConfig {
 
 				return error;
 			}
+		}
+	}
+
+	private class IrisErrorResolver implements ErrorResolver {
+
+		@Override
+		public JsonError resolveError(Throwable t, Method method, List<JsonNode> arguments) {
+
+			return determineCode(t)
+					.map(code -> new JsonError(code, t.getMessage(), new ErrorData(t.getClass().getName(), t.getMessage())))
+					.orElse(null);
+		}
+
+		private Optional<Integer> determineCode(Throwable t) {
+
+			return exception2CodeMap.entrySet().stream()
+					.filter(it -> it.getKey().isAssignableFrom(t.getClass()))
+					.map(Entry::getValue)
+					.findAny();
 		}
 	}
 
