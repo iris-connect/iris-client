@@ -95,6 +95,7 @@ public class AttackDetector {
 	private static final String[][] FORBIDDEN_KEYWORD_TUPLES = {
 			{ "<SCRIPT" },
 			{ "JAVASCRIPT:" },
+			{ "DATA:" },
 			{ "SELECT", "FROM" },
 			{ "INSERT", "INTO" },
 			{ "UPDATE", "SET" },
