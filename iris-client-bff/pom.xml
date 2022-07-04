@@ -336,7 +336,7 @@
 		<dependency>
 			<groupId>jakarta.jws</groupId>
 			<artifactId>jakarta.jws-api</artifactId>
-			<version>2.1.0</version><!-- Must be <3 because jsonrpc4j need javax.jws.WebParam! -->
+			<version>3.0.0</version><!-- Must be <3 because jsonrpc4j need javax.jws.WebParam! -->
 		</dependency>
 
 		<!-- fuzzy search -->
