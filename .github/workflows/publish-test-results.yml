@@ -25,7 +25,7 @@ jobs:
           path: reports
 
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           files: reports/**/*.xml
           report_individual_runs: true
