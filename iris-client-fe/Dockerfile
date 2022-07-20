@@ -18,7 +18,7 @@ ARG VUE_APP_BUILD_ID=local
 # build app for production with minification
 RUN npm run build --legacy-peer-deps
 
-FROM caddy:2.5.1-alpine
+FROM caddy:2.5.2-alpine
 
 # copy build artifacts to webserver root
 RUN rm -rf /usr/share/caddy
