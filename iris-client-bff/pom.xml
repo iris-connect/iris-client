@@ -34,7 +34,7 @@
 		<mapstruct-spring-version>0.1.2</mapstruct-spring-version>
 		<hibernate-search-version>6.1.5.Final</hibernate-search-version>
 		<totp.version>1.7.1</totp.version>
-		<greenmail-version>1.6.9</greenmail-version>
+		<greenmail-version>1.6.10</greenmail-version>
 		<testcontainers-version>1.17.3</testcontainers-version>
 	</properties>
 
