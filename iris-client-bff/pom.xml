@@ -35,7 +35,7 @@
 		<hibernate-search-version>6.1.7.Final</hibernate-search-version>
 		<totp.version>1.7.1</totp.version>
 		<greenmail-version>1.6.11</greenmail-version>
-		<testcontainers-version>1.17.4</testcontainers-version>
+		<testcontainers-version>1.17.5</testcontainers-version>
 	</properties>
 
 	<profiles>
