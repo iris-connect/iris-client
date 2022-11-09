@@ -1,0 +1,15 @@
+- name: "Create systemd conf for {{ client.name }}"
+  ansible.builtin.template:
+    src: templates/systemd.j2
+    dest: /etc/systemd/system/iris-client-{{ client.name }}.service
+    mode: '0644'
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes        
+
+- name: "Start and enable service for {{ client.name }}"
+  ansible.builtin.systemd:
+    name: "iris-client-{{ client.name }}"
+    state: restarted
+    enabled: yes

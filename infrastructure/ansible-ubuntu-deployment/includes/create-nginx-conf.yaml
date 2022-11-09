@@ -1,0 +1,5 @@
+- name: "Create NGINX site conf for {{ client.name }} -> {{ client.domain }}"
+  ansible.builtin.template:
+    src: templates/nginx.conf.j2
+    dest: /etc/nginx/sites-enabled/iris-client-{{ client.name }}.conf
+    mode: '0644'
