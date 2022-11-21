@@ -50,7 +50,7 @@ jobs:
       - run: node -v; npm -v
   
       - name: Build all and create release with semantic-release
-        uses: cycjimmy/semantic-release-action@v2
+        uses: cycjimmy/semantic-release-action@v3
         # you'll need to add an `id` in order to access output variables
         id: semantic
         with:
