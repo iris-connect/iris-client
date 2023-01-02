@@ -48,7 +48,7 @@
     "csv2md": "^1.1.0",
     "cypress": "^10.3.0",
     "cypress-fail-fast": "^5.0.0",
-    "eslint": "^8.18.0",
+    "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.1.0",
     "eslint-plugin-vue": "^9.1.1",
