@@ -47,7 +47,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PW }}
 
       - name: Build and push to docker.io
-        uses: docker/build-push-action@v3.1.1
+        uses: docker/build-push-action@v3.3.0
         with:
           context: ./infrastructure/docker/nginx/
           tags: ${{ steps.meta.outputs.tags }}
